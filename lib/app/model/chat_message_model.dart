@@ -5,7 +5,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:get/state_manager.dart';
+import 'package:get/get.dart';
 
 List<ChatMessageModel> chatMessageModelFromJson(String str) =>
     List<ChatMessageModel>.from(
@@ -105,16 +105,16 @@ class ChatMessageModel {
         messageId: json["messageId"],
         messageSentTime: json["messageSentTime"].toInt(),
         messageStatus: Platform.isAndroid
-            ? json["messageStatus"]["status"]
+            ? (json["messageStatus"]["status"]).toString().obs
             : json["messageStatus"] == "acknowledge"
-                ? "A"
+                ? "A".obs
                 : json["messageStatus"] == "delivered"
-                    ? "D"
+                    ? "D".obs
                     : json["messageStatus"] == "seen"
-                        ? "S"
+                        ? "S".obs
                         : json["messageStatus"] == "received"
-                            ? "R"
-                            : "N", //"N" for "sent" in iOS
+                            ? "R".obs
+                            : "N".obs, //"N" for "sent" in iOS
         messageTextContent: json["messageTextContent"].toString(),
         messageType: json["messageType"].toString().toUpperCase() == "FILE"
             ? "DOCUMENT"

@@ -653,7 +653,7 @@ class ChatView extends GetView<ChatController> {
                                           controller.forwardSingleMessage(
                                               chatList[index].messageId);
                                         },
-                                        icon: SvgPicture.asset(forwardMedia)),
+                                        icon: SvgPicture.asset(forwardMedia,package: package,)),
                                   ),
                                   Container(
                                     constraints: BoxConstraints(
@@ -729,7 +729,7 @@ class ChatView extends GetView<ChatController> {
                                           controller.forwardSingleMessage(
                                               chatList[index].messageId);
                                         },
-                                        icon: SvgPicture.asset(forwardMedia)),
+                                        icon: SvgPicture.asset(forwardMedia,package: package,)),
                                   ),
                                 ],
                               ),
@@ -842,7 +842,7 @@ class ChatView extends GetView<ChatController> {
                     controller
                         .clearChatSelection(controller.selectedChatList[0]);
                   },
-                  icon: SvgPicture.asset(replyIcon),
+                  icon: SvgPicture.asset(replyIcon,package: package,),
                   tooltip: 'Reply',
                 ),
                 overflowWidget: const Text("Reply"),

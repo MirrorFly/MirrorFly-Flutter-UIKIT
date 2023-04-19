@@ -31,6 +31,7 @@ class MirrorflyUikit {
         licenseKey: licenseKey,//ckIjaccWBoMNvxdbql8LJ2dmKqT5bp//2sdgNtr3sFBSM3bYRa7RKDPEiB38Xo
         iOSContainerID: iOSContainerID,storageFolderName: storageFolderName,enableMobileNumberLogin: enableMobileNumberLogin,isTrialLicenceKey: isTrialLicenceKey,enableDebugLog: enableDebugLog);
     SessionManagement.onInit().then((value) {
+      SessionManagement.setIsTrailLicence(isTrialLicenceKey);
       Get.put<MainController>(MainController());
       if(!SessionManagement.getLogin()) {
         // register('919894940560', token: '');
@@ -39,11 +40,12 @@ class MirrorflyUikit {
 
   }
 
-  static register(String userIdentifier,
-      {String token = ""}){
+  static Future<bool> register(String userIdentifier,
+      {String token = ""}) async {
+    bool response = false;
     if(!SessionManagement.getLogin()) {
       // Mirrorfly.registerUser(userIdentifier,token: token);
-      Mirrorfly.registerUser(
+      /*Mirrorfly.registerUser(
           userIdentifier, token: SessionManagement.getToken() ?? "")
           .then((value) {
         mirrorFlyLog("registerUser", value);
@@ -57,15 +59,34 @@ class MirrorflyUikit {
           // Mirrorfly.setRegionCode(regionCode ?? 'IN');///if its not set then error comes in contact sync delete from phonebook.
           // SessionManagement.setCountryCode((countryCode ?? "").replaceAll('+', ''));
           _setUserJID(userData.data!.username!);
+          return response;
         }
       }).catchError((error) {
         mirrorFlyLog("issue===>", error);
-        /*if(error.code == 403){
-        Get.offAllNamed(Routes.adminBlocked);
+      //   if(error.code == 403){
+      //   Get.offAllNamed(Routes.adminBlocked);
+      // }else{
+      //   toToast(error.message);
+      // }
+        return response;
+      });*/
+      var value  = await Mirrorfly.registerUser(userIdentifier,token: token);
+      if (value.contains("data")) {
+        var userData = registerModelFromJson(value); //message
+        SessionManagement.setLogin(userData.data!.username!.isNotEmpty);
+        SessionManagement.setUser(userData.data!);
+        // if(AppUtils.isNetConnected()) {
+        Mirrorfly.enableDisableArchivedSettings(true);
+        // }
+        // Mirrorfly.setRegionCode(regionCode ?? 'IN');///if its not set then error comes in contact sync delete from phonebook.
+        // SessionManagement.setCountryCode((countryCode ?? "").replaceAll('+', ''));
+        _setUserJID(userData.data!.username!);
+        return response;
       }else{
-        toToast(error.message);
-      }*/
-      });
+        return response;
+      }
+    }else{
+      return Future.value(false);
     }
   }
   static _setUserJID(String username) {

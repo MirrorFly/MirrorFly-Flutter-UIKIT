@@ -165,8 +165,7 @@ class Helper {
     switch (messageType?.toUpperCase()) {
       case Constants.mImage:
         return SvgPicture.asset(
-          mImageIcon,
-          package: package,
+          mImageIcon,package: package,
           fit: BoxFit.contain,
           color: playIconColor,
         );
@@ -200,7 +199,7 @@ class Helper {
         );
       case Constants.mContact:
         return SvgPicture.asset(
-          mContactIcon,
+          mContactIcon,package: package,
           fit: BoxFit.contain,
           color: playIconColor,
         );

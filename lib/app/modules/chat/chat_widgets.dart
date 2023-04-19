@@ -698,19 +698,19 @@ class _AudioMessageViewState extends State<AudioMessageView>
                   alignment: Alignment.center,
                   children: [
                     SvgPicture.asset(
-                      audioMicBg,
+                      audioMicBg,package: package,
                       width: 28,
                       height: 28,
                       fit: BoxFit.contain,
                     ),
                     SvgPicture.asset(
-                      audioMic1,
+                      audioMic1,package: package,
                       fit: BoxFit.contain,
                     ),
                   ],
                 )
                     : SvgPicture.asset(
-                  musicIcon,
+                  musicIcon,package: package,
                   fit: BoxFit.contain,
                 ),
                 getImageOverlay(widget.chatMessage, onAudio: () {
@@ -789,7 +789,7 @@ class _AudioMessageViewState extends State<AudioMessageView>
               mainAxisSize: MainAxisSize.min,
               children: [
                 widget.chatMessage.isMessageStarred
-                    ? SvgPicture.asset(starSmallIcon)
+                    ? SvgPicture.asset(starSmallIcon,package: package,)
                     : const SizedBox.shrink(),
                 const SizedBox(
                   width: 5,
@@ -860,19 +860,19 @@ class _AudioMessageViewState extends State<AudioMessageView>
                   alignment: Alignment.center,
                   children: [
                     SvgPicture.asset(
-                      audioMicBg,
+                      audioMicBg,package: package,
                       width: 28,
                       height: 28,
                       fit: BoxFit.contain,
                     ),
                     SvgPicture.asset(
-                      audioMic1,
+                      audioMic1,package: package,
                       fit: BoxFit.contain,
                     ),
                   ],
                 )
                     : SvgPicture.asset(
-                  musicIcon,
+                  musicIcon,package: package,
                   fit: BoxFit.contain,
                 ),
                 const SizedBox(
@@ -906,11 +906,11 @@ class _AudioMessageViewState extends State<AudioMessageView>
                       padding: const EdgeInsets.all(8.0),
                       child: isPlaying.value
                           ? SvgPicture.asset(
-                        pauseIcon,
+                        pauseIcon,package: package,
                         height: 17,
                       ) //const Icon(Icons.pause)
                           : SvgPicture.asset(
-                        playIcon,
+                        playIcon,package: package,
                         height: 17,
                       ),
                     ),
@@ -1935,13 +1935,13 @@ getMessageIndicator(String? messageStatus, bool isSender, String messageType,
   // debugPrint("Message Status ==> $messageStatus");
   if (isSender && !isRecalled) {
     if (messageStatus == 'A') {
-      return SvgPicture.asset(acknowledgedIcon);
+      return SvgPicture.asset(acknowledgedIcon,package: package,);
     } else if (messageStatus == 'D') {
-      return SvgPicture.asset(deliveredIcon);
+      return SvgPicture.asset(deliveredIcon,package: package);
     } else if (messageStatus == 'S') {
-      return SvgPicture.asset(seenIcon);
+      return SvgPicture.asset(seenIcon,package: package);
     } else if (messageStatus == 'N') {
-      return SvgPicture.asset(unSendIcon);
+      return SvgPicture.asset(unSendIcon,package: package);
     } else {
       return const SizedBox.shrink();
     }

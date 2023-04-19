@@ -15,7 +15,7 @@ class SessionManagement {
     }
   }
   static Future onInit() async {
-    SharedPreferences.setMockInitialValues({});
+    // SharedPreferences.setMockInitialValues({});
     _preferences = await SharedPreferences.getInstance();
   }
 

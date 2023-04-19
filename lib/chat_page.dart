@@ -7,17 +7,17 @@ import 'package:mirrorfly_uikit_plugin/app/routes/app_pages.dart';
 import 'app/common/app_theme.dart';
 import 'app/common/constants.dart';
 import 'app/data/session_management.dart';
+import 'app/model/user_list_model.dart';
 import 'app/modules/chat/bindings/chat_binding.dart';
 import 'app/modules/chat/controllers/chat_controller.dart';
+import 'app/modules/chat/views/chat_view.dart';
 
 class ChatPage {
 
   static GetPage chatPage(){
     return GetPage(
       name: Routes.chat,
-      page: () => ChatView(profile: null,onBack: (){
-
-      },),
+      page: () => ChatView(),
       // arguments: Profile(),
       binding: ChatBinding(),
     );;
@@ -38,6 +38,7 @@ class ChatDashboard extends StatelessWidget {
       theme: MirrorFlyAppTheme.theme,
       onInit: (){
         mirrorFlyLog('Mirrorfly', 'GetMaterialApp onInit');
+        mirrorFlyLog('Mirrorfly', '${SessionManagement.getLogin()}');
       },
       debugShowCheckedModeBanner: false,
       //initialBinding: getBinding(),
@@ -111,7 +112,7 @@ class _ChatPageViewState extends State<ChatPageView> {
         onInit: (){
         },
         getPages: AppPages.routes,
-        home: ChatView(profile: widget.profile,onBack: widget.onBack,)
+        // home: ChatView(profile: widget.profile,onBack: widget.onBack,)
     );
   }
 }

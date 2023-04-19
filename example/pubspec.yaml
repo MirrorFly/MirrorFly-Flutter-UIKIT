@@ -17,8 +17,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  mirrorfly_plugin:
-    path: ../../p078-mirrorfly-flutter-plugin
   mirrorfly_uikit_plugin:
     # When depending on this package from a real application you should use:
     #   mirrorfly_uikit_plugin: ^x.y.z

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
+import 'package:mirrorfly_uikit_plugin/app/models.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 
 void main() {
@@ -16,11 +18,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       /*routes: <String, WidgetBuilder>{
         '/chat':(context) => const ChatPageView(jid: "917010279986@xmpp-uikit-qa.contus.us",profile: ,)
       },*/
-      home: const Dashboard()
+      home: Dashboard()
     );
   }
 
@@ -36,8 +38,12 @@ class Dashboard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextButton(child: const Text('register'),onPressed: (){
-             MirrorflyUikit.register('919894940560');
+            TextButton(child: const Text('register'),onPressed: () async {
+             var response = await MirrorflyUikit.register('919894940560');
+             debugPrint("register user $response");
+             if(response) {
+               toToast('register user successfully');
+             }
             },),
             TextButton(child: const Text('chat page'),onPressed: (){
               // Navigator.pushNamed(context, "/chat",arguments: profile);

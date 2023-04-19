@@ -801,7 +801,7 @@ packages:
     source: hosted
     version: "1.0.4"
   mirrorfly_plugin:
-    dependency: "direct main"
+    dependency: transitive
     description:
       path: "../../p078-mirrorfly-flutter-plugin"
       relative: true

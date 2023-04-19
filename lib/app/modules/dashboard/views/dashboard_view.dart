@@ -389,7 +389,7 @@ class DashboardView extends GetView<DashboardController> {
                 child: ListItem(
                   leading: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: SvgPicture.asset(archive),
+                    child: SvgPicture.asset(archive,package: package,),
                   ),
                   title: const Text(
                     "Archived",
@@ -457,7 +457,7 @@ class DashboardView extends GetView<DashboardController> {
                                 leading: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 16.0),
-                                  child: SvgPicture.asset(archive),
+                                  child: SvgPicture.asset(archive,package: package,),
                                 ),
                                 title: const Text(
                                   "Archived",

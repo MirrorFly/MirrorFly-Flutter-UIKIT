@@ -43,7 +43,7 @@ const Color chatBgColor = Color(0xffD0D8EB);
 const Color previewTextColor = Color(0xff7f7f7f);
 
 //Assets
-const String package = 'mirrorfly_uikit_plugin';
+const String package = 'mirrorfly_uikit_plugin/lib';
 const String registerIcon = 'assets/logos/register_logo.svg';
 const String statusIcon = 'assets/logos/status.svg';
 const String searchIcon = 'assets/logos/magnifying_glass.svg';
@@ -702,38 +702,38 @@ Widget forMessageTypeIcon(String messageType,[MediaChatMessage? mediaChatMessage
   switch (messageType.toUpperCase()) {
     case Constants.mImage:
       return SvgPicture.asset(
-        mImageIcon,
+        mImageIcon,package: package,
         fit: BoxFit.contain,
       );
     case Constants.mAudio:
       return SvgPicture.asset(
-        mediaChatMessage != null ? mediaChatMessage.isAudioRecorded ? mAudioRecordIcon : mAudioIcon : mAudioIcon,
+        mediaChatMessage != null ? mediaChatMessage.isAudioRecorded ? mAudioRecordIcon : mAudioIcon : mAudioIcon,package: package,
         fit: BoxFit.contain,
         color: textColor,
       );
     case Constants.mVideo:
       return SvgPicture.asset(
-        mVideoIcon,
+        mVideoIcon,package: package,
         fit: BoxFit.contain,
       );
     case Constants.mDocument:
       return SvgPicture.asset(
-        mDocumentIcon,
+        mDocumentIcon,package: package,
         fit: BoxFit.contain,
       );
     case Constants.mFile:
       return SvgPicture.asset(
-        mDocumentIcon,
+        mDocumentIcon,package: package,
         fit: BoxFit.contain,
       );
     case Constants.mContact:
       return SvgPicture.asset(
-        mContactIcon,
+        mContactIcon,package: package,
         fit: BoxFit.contain,
       );
     case Constants.mLocation:
       return SvgPicture.asset(
-        mLocationIcon,
+        mLocationIcon,package: package,
         fit: BoxFit.contain,
       );
     default:

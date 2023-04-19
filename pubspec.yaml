@@ -92,10 +92,10 @@ flutter:
 
   # To add assets to your plugin package, add an assets section, like this:
   assets:
-#    - lib/assets/countries.txt
-#    - lib/assets/languages.txt
-#    - lib/assets/logos/
-#    - lib/assets/animation/
+    - lib/assets/countries.txt
+    - lib/assets/languages.txt
+    - lib/assets/logos/
+    - lib/assets/animation/
     - assets/countries.txt
     - assets/languages.txt
     - assets/logos/register_logo.svg
