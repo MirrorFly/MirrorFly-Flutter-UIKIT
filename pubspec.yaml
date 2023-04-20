@@ -4,14 +4,14 @@ version: 0.0.1
 homepage:
 
 environment:
-  sdk: '>=2.19.5 <3.0.0'
+  sdk: '>=2.19.2 <3.0.0'
   flutter: ">=2.5.0"
 
 dependencies:
   flutter:
     sdk: flutter
   get: ^4.6.5
-#  mirrorfly_plugin: ^0.0.3
+#  mirrorfly_plugin: 0.0.3
   mirrorfly_plugin:
     path: ../p078-mirrorfly-flutter-plugin
   plugin_platform_interface: ^2.0.2

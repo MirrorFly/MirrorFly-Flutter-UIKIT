@@ -1,22 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_theme.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/dashboard/views/dashboard_view.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  MirrorflyUikit.initUIKIT(
+  MirrorflyUikit.chatUIKIT(
       baseUrl: 'https://api-uikit-qa.contus.us/api/v1/',
       licenseKey: 'ckIjaccWBoMNvxdbql8LJ2dmKqT5bp',
       //ckIjaccWBoMNvxdbql8LJ2dmKqT5bp//2sdgNtr3sFBSM3bYRa7RKDPEiB38Xo
-      iOSContainerID: 'group.com.mirrorfly.qa',theme: MirrorflyTheme.customTheme(primaryColor: Colors.white,
-      secondaryColor: Colors.grey,
-      scaffoldColor: Colors.white,
-      colorOnPrimary: Colors.black,
-      textPrimaryColor: Colors.black,
-      textSecondaryColor: Colors.black45,
-      chatBubblePrimaryColor: Colors.blue,
-      chatBubbleSecondaryColor: Colors.black12));
+      iOSContainerID: 'group.com.mirrorfly.uikitqa');
   runApp(const MyApp());
 }
 
@@ -25,10 +16,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Dashboard()
+    return MaterialApp(
+      /*routes: <String, WidgetBuilder>{
+        '/chat':(context) => const ChatPageView(jid: "917010279986@xmpp-uikit-qa.contus.us",profile: ,)
+      },*/
+      home: const Dashboard()
     );
   }
+
 }
 
 class Dashboard extends StatelessWidget {
@@ -41,16 +36,12 @@ class Dashboard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextButton(child: const Text('register'),onPressed: () async {
-              try {
-                var response = await MirrorflyUikit.register('919894940560');
-                debugPrint("register user $response");
-              }catch(e){
-
-              }
+            TextButton(child: const Text('register'),onPressed: (){
+             MirrorflyUikit.register('919894940560');
             },),
             TextButton(child: const Text('chat page'),onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (con)=> DashboardView()));
+              // Navigator.pushNamed(context, "/chat",arguments: profile);
+              Navigator.push(context, MaterialPageRoute(builder: (con)=>const HomePage()));
             },),
           ],
         ),
@@ -68,16 +59,49 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var profile = Profile();
   @override
   void initState() {
     super.initState();
-
+    profile.contactType= "unknown_contact";
+    profile.email= "maniflutter@gmail.com";
+    profile.groupCreatedTime= "917010279986";
+    profile.image= "";
+    profile.imagePrivacyFlag= "";
+    profile.isAdminBlocked= false;
+    profile.isBlocked= false;
+    profile.isBlockedMe= false;
+    profile.isGroupAdmin= false;
+    profile.isGroupInOfflineMode= false;
+    profile.isGroupProfile= false;
+    profile.isItSavedContact= false;
+    profile.isMuted= false;
+    profile.isSelected= false;
+    profile.jid= "917010279986@xmpp-uikit-qa.contus.us";
+    profile.lastSeenPrivacyFlag= "";
+    profile.mobileNUmberPrivacyFlag= "";
+    profile.mobileNumber= "917010279986";
+    profile.name= "Mani Flutter jio";
+    profile.nickName= "917010279986";
+    profile.status= "I am in Mirror Fly";
+    // MirrorflyUikit.register('919894940560');
   }
 
   @override
   Widget build(BuildContext context) {
-    // This is the Return Chat Widget from our UI KIT
+    /*return ChatPageView(profile:profile, jid: '917010279986@xmpp-uikit-qa.contus.us',onBack: (){
+      debugPrint('onBack');
+      Navigator.pop(context);
+    },);*/
     return const ChatDashboard();
+    /*return Scaffold(
+      body: Center(
+        child: TextButton(child: const Text('chat page'),onPressed: (){
+          // Navigator.pushNamed(context, "/chat",arguments: profile);
+          Navigator.push(context, MaterialPageRoute(builder: (con)=>ChatPageView(profile:profile, jid: '',)));
+        },),
+      ),
+    );*/
   }
 }
 
