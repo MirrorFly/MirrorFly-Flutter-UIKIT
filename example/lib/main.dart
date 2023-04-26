@@ -59,11 +59,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var profile = Profile();
+  // var profile = Profile();
   @override
   void initState() {
     super.initState();
-    profile.contactType= "unknown_contact";
+    /*profile.contactType= "unknown_contact";
     profile.email= "maniflutter@gmail.com";
     profile.groupCreatedTime= "917010279986";
     profile.image= "";
@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> {
     profile.mobileNumber= "917010279986";
     profile.name= "Mani Flutter jio";
     profile.nickName= "917010279986";
-    profile.status= "I am in Mirror Fly";
+    profile.status= "I am in Mirror Fly";*/
     // MirrorflyUikit.register('919894940560');
   }
 
