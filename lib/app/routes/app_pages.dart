@@ -99,7 +99,7 @@ class AppPages {
         name: _Paths.otp, page: () => const OtpView(), binding: LoginBinding()),
     GetPage(
       name: _Paths.dashboard,
-      page: () => const DashboardView(),
+      page: () => DashboardView(),
       binding: DashboardBinding(),
     ),
     GetPage(
@@ -174,7 +174,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.contacts,
-      page: () => const ContactListView(),
+      page: () => ContactListView(),
       binding: ContactListBinding(),
     ),
     GetPage(

@@ -13,10 +13,10 @@ import '../../../widgets/custom_action_bar_icons.dart';
 import '../../chat/chat_widgets.dart';
 import '../../dashboard/controllers/dashboard_controller.dart';
 
-class DashboardView extends GetView<DashboardController> {
-  const DashboardView({Key? key}) : super(key: key);
+class DashboardView extends StatelessWidget {
+  DashboardView({Key? key}) : super(key: key);
 
-  //final themeController = Get.put(DashboardController());
+  final controller = Get.put(DashboardController());
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +67,7 @@ class DashboardView extends GetView<DashboardController> {
                           pinned: true,
                           floating: !controller.selected.value ||
                               !controller.isSearching.value,
-                          automaticallyImplyLeading: false,
+                          automaticallyImplyLeading: true,
                           leading: controller.selected.value ? IconButton(
                             icon: const Icon(Icons.clear),
                             onPressed: () {
@@ -79,7 +79,13 @@ class DashboardView extends GetView<DashboardController> {
                             onPressed: () {
                               controller.getBackFromSearch();
                             },
-                          ) : null,
+                          ) : IconButton(
+                        icon: const Icon(
+                        Icons.arrow_back, color: iconColor),
+                        onPressed: () {
+                          // Get.back();
+                          Navigator.pop(context);
+                        }),
                           title: controller.selected.value
                               ? Text(
                               (controller.selectedChats.length).toString())
@@ -135,7 +141,7 @@ class DashboardView extends GetView<DashboardController> {
                                       onPressed: () {
                                         controller.deleteChats();
                                       },
-                                      icon: SvgPicture.asset(delete,package: package,),
+                                      icon: SvgPicture.asset(delete,package: package),
                                       tooltip: 'Delete',),
                                     overflowWidget: const Text("Delete"),
                                     showAsAction: controller.delete.value

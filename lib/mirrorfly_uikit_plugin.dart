@@ -1,7 +1,6 @@
-
 import 'package:get/get.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_theme.dart';
 
 import 'app/common/main_controller.dart';
 import 'app/data/apputils.dart';
@@ -12,94 +11,87 @@ import 'app/modules/chat/views/chat_view.dart';
 import 'mirrorfly_uikit_plugin_platform_interface.dart';
 
 class MirrorflyUikit {
+  static MirrorflyTheme myTheme = MirrorflyTheme.lightTheme;
+  static bool isTrial = true;
 
   static Future<String?> getPlatformVersion() {
     return MirrorflyUikitPluginPlatform.instance.getPlatformVersion();
   }
-  static chatUIKIT({required String baseUrl,
-    required String licenseKey,
-    required String iOSContainerID,
-    String? storageFolderName,
-    bool enableMobileNumberLogin = true,
-    bool isTrialLicenceKey = true,
-    // int? maximumRecentChatPin,
-    // GroupConfig? groupConfig,
-    // String? ivKey,
-    bool enableDebugLog = false}){
+  ///Used as a initUIKIT class for [MirrorflyUikit]
+  /// * [baseUrl] provides the base url for making api calls
+  /// * [licenseKey] provides the License Key
+  /// * [iOSContainerID] provides the App Group of the iOS Project
+  /// * [isTrialLicenceKey] to provide trial/live register and contact sync
+  /// * [storageFolderName] provides the Local Storage Folder Name
+  /// * [enableDebugLog] provides the Debug Log.
+  static initUIKIT(
+      {required String baseUrl,
+      required String licenseKey,
+      required String iOSContainerID,
+      MirrorflyTheme theme = MirrorflyTheme.lightTheme,
+      String? storageFolderName,
+      bool enableMobileNumberLogin = true,
+      bool isTrialLicenceKey = true,
+      bool enableDebugLog = false}) {
     Mirrorfly.init(
         baseUrl: baseUrl,
-        licenseKey: licenseKey,//ckIjaccWBoMNvxdbql8LJ2dmKqT5bp//2sdgNtr3sFBSM3bYRa7RKDPEiB38Xo
-        iOSContainerID: iOSContainerID,storageFolderName: storageFolderName,enableMobileNumberLogin: enableMobileNumberLogin,isTrialLicenceKey: isTrialLicenceKey,enableDebugLog: enableDebugLog);
+        licenseKey: licenseKey,
+        //ckIjaccWBoMNvxdbql8LJ2dmKqT5bp//2sdgNtr3sFBSM3bYRa7RKDPEiB38Xo
+        iOSContainerID: iOSContainerID,
+        storageFolderName: storageFolderName,
+        enableMobileNumberLogin: enableMobileNumberLogin,
+        isTrialLicenceKey: isTrialLicenceKey,
+        enableDebugLog: enableDebugLog);
+    myTheme = theme;
+    isTrial = isTrialLicenceKey;
     SessionManagement.onInit().then((value) {
       SessionManagement.setIsTrailLicence(isTrialLicenceKey);
       Get.put<MainController>(MainController());
-      if(!SessionManagement.getLogin()) {
-        // register('919894940560', token: '');
-      }
     });
-
   }
 
-  static Future<bool> register(String userIdentifier,
+  static MirrorflyTheme get getTheme => myTheme;
+  static bool get isTrialLicence => isTrial;
+
+  ///Used as a register class for [MirrorflyUikit]
+  ///
+  ///* [userIdentifier] provide the Unique Id to Register the User
+  ///* [token] provide the FCM token this is an optional
+  static Future<Map> register(String userIdentifier,
       {String token = ""}) async {
-    bool response = false;
-    if(!SessionManagement.getLogin()) {
-      // Mirrorfly.registerUser(userIdentifier,token: token);
-      /*Mirrorfly.registerUser(
-          userIdentifier, token: SessionManagement.getToken() ?? "")
-          .then((value) {
-        mirrorFlyLog("registerUser", value);
-        if (value.contains("data")) {
-          var userData = registerModelFromJson(value); //message
+    if (await AppUtils.isNetConnected()) {
+      var value = await Mirrorfly.registerUser(userIdentifier, token: token);
+      try {
+        var userData = registerModelFromJson(value); //message
+        if(userData.data != null) {
           SessionManagement.setLogin(userData.data!.username!.isNotEmpty);
           SessionManagement.setUser(userData.data!);
-          // if(AppUtils.isNetConnected()) {
           Mirrorfly.enableDisableArchivedSettings(true);
-          // }
           // Mirrorfly.setRegionCode(regionCode ?? 'IN');///if its not set then error comes in contact sync delete from phonebook.
           // SessionManagement.setCountryCode((countryCode ?? "").replaceAll('+', ''));
           _setUserJID(userData.data!.username!);
-          return response;
+          return {'status': true, 'message': ''};
+        }else{
+          return {'status': false, 'message': '${userData.message}'};
         }
-      }).catchError((error) {
-        mirrorFlyLog("issue===>", error);
-      //   if(error.code == 403){
-      //   Get.offAllNamed(Routes.adminBlocked);
-      // }else{
-      //   toToast(error.message);
-      // }
-        return response;
-      });*/
-      var value  = await Mirrorfly.registerUser(userIdentifier,token: token);
-      if (value.contains("data")) {
-        var userData = registerModelFromJson(value); //message
-        SessionManagement.setLogin(userData.data!.username!.isNotEmpty);
-        SessionManagement.setUser(userData.data!);
-        // if(AppUtils.isNetConnected()) {
-        Mirrorfly.enableDisableArchivedSettings(true);
-        // }
-        // Mirrorfly.setRegionCode(regionCode ?? 'IN');///if its not set then error comes in contact sync delete from phonebook.
-        // SessionManagement.setCountryCode((countryCode ?? "").replaceAll('+', ''));
-        _setUserJID(userData.data!.username!);
-        return response;
-      }else{
-        return response;
+      } catch(e) {
+        return {'status': false, 'message': '$e'};
       }
-    }else{
-      return Future.value(false);
+    } else {
+      return Future.value({'status': false, 'message': 'Check your internet connection and try again'});
     }
   }
+
   static _setUserJID(String username) {
     Mirrorfly.getAllGroups(true);
     Mirrorfly.getJid(username).then((value) {
       if (value != null) {
         SessionManagement.setUserJID(value);
       }
-    }).catchError((error) {
-    });
+    }).catchError((error) {});
   }
 
-  static ChatView chatPage(){
+  static ChatView chatPage() {
     Get.put<ChatController>(ChatController());
     return const ChatView();
   }

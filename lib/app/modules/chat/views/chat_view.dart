@@ -19,7 +19,6 @@ import '../../../widgets/custom_action_bar_icons.dart';
 import '../../../widgets/lottie_animation.dart';
 import '../chat_widgets.dart';
 import '../controllers/chat_controller.dart';
-import 'package:mirrorfly_plugin/flychat.dart';
 import '../../../models.dart';
 
 class ChatView extends GetView<ChatController> {
@@ -1034,6 +1033,7 @@ class ChatView extends GetView<ChatController> {
       return AppBar(
         automaticallyImplyLeading: false,
         leadingWidth: 80,
+        backgroundColor: Get.context!.theme.appBarTheme.backgroundColor,
         leading: InkWell(
           onTap: () {
             if (controller.showEmoji.value) {

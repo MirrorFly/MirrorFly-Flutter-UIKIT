@@ -10,9 +10,10 @@ import '../../../common/widgets.dart';
 import '../../../routes/app_pages.dart';
 import '../../../widgets/custom_action_bar_icons.dart';
 
-class ContactListView extends GetView<ContactController> {
-  const ContactListView({Key? key}) : super(key: key);
+class ContactListView extends StatelessWidget {
+   ContactListView({Key? key}) : super(key: key);
 
+  final controller = Get.put(ContactController());
   @override
   Widget build(BuildContext context) {
     return Obx(

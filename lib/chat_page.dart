@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
-import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 import 'package:mirrorfly_uikit_plugin/app/routes/app_pages.dart';
 
-import 'app/common/app_theme.dart';
 import 'app/common/constants.dart';
 import 'app/data/session_management.dart';
 import 'app/model/user_list_model.dart';
@@ -20,12 +18,17 @@ class ChatPage {
       page: () => ChatView(),
       // arguments: Profile(),
       binding: ChatBinding(),
-    );;
+    );
   }
 
   static openChatPage({required Profile profile}){
     Get.toNamed(Routes.chat,arguments: profile);
+    Get.to(const ChatDashboard());
   }
+}
+openChatPage({required Profile profile}){
+  Get.toNamed(Routes.chat,arguments: profile);
+  Get.to(const ChatDashboard());
 }
 
 class ChatDashboard extends StatelessWidget {
@@ -35,7 +38,9 @@ class ChatDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      theme: MirrorFlyAppTheme.theme,
+      // theme: MirrorFlyAppTheme.lightTheme,
+      // darkTheme: MirrorFlyAppTheme.darkTheme,
+      // themeMode: ThemeMode.light,
       onInit: (){
         mirrorFlyLog('Mirrorfly', 'GetMaterialApp onInit');
         mirrorFlyLog('Mirrorfly', '${SessionManagement.getLogin()}');

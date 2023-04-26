@@ -122,7 +122,7 @@ class PushNotifications {
   //       var titleContent = data["titleContent"].toString();
   //       var chatMessage = data["chatMessage"].toString();
   //       var cancel = data["cancel"].toString();*/
-  //       /* var channel = AndroidNotificationChannel("id", "name", description: "");
+  //        var channel = AndroidNotificationChannel("id", "name", description: "");
   //       var bigtextstyleinfo = BigTextStyleInformation(
   //           message.body.toString(), htmlFormatBigText: true,
   //           contentTitle: message.title,
@@ -143,7 +143,7 @@ class PushNotifications {
   //           channel);
   //       await flutterLocalNotificationsPlugin.show(
   //           0, message.title, message.body, notificationDetails,
-  //           payload: "chatpage");*/
+  //           payload: "chatpage");
   //     //});
   //   }
   // }
