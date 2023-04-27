@@ -43,7 +43,7 @@ class DashboardView extends StatelessWidget {
           child: DefaultTabController(
             length: 2,
             child: Scaffold(
-              backgroundColor: MirrorflyUikit.getTheme.scaffoldColor,
+              backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
                 floatingActionButton: controller.isSearching.value
                     ? null
                     : FloatingActionButton(
