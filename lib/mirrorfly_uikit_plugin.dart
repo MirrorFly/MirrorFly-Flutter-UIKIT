@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_theme.dart';
 
 import 'app/common/main_controller.dart';
 import 'app/data/apputils.dart';
@@ -11,7 +11,7 @@ import 'app/modules/chat/views/chat_view.dart';
 import 'mirrorfly_uikit_plugin_platform_interface.dart';
 
 class MirrorflyUikit {
-  static MirrorflyTheme? getTheme;// = MirrorflyTheme.lightTheme;
+  static ThemeData? getTheme;// = MirrorflyTheme.lightTheme;
   static bool isTrialLicence = true;
 
   static Future<String?> getPlatformVersion() {
@@ -28,7 +28,7 @@ class MirrorflyUikit {
       {required String baseUrl,
       required String licenseKey,
       required String iOSContainerID,
-      MirrorflyTheme? theme,// = MirrorflyTheme.lightTheme,
+      ThemeData? theme,// = MirrorflyTheme.lightTheme,
       String? storageFolderName,
       bool enableMobileNumberLogin = true,
       bool isTrialLicenceKey = true,

@@ -9,7 +9,14 @@ void main() {
       baseUrl: 'https://api-uikit-qa.contus.us/api/v1/',
       licenseKey: 'ckIjaccWBoMNvxdbql8LJ2dmKqT5bp',
       //ckIjaccWBoMNvxdbql8LJ2dmKqT5bp//2sdgNtr3sFBSM3bYRa7RKDPEiB38Xo
-      iOSContainerID: 'group.com.mirrorfly.qa',theme:MirrorflyTheme.lightTheme);
+      iOSContainerID: 'group.com.mirrorfly.qa',theme: MirrorFlyAppTheme.customTheme(primaryColor: Colors.green,
+      secondaryColor: Colors.greenAccent,
+      scaffoldColor: Colors.white,
+      colorOnPrimary: Colors.white,
+      textPrimaryColor: Colors.black,
+      textSecondaryColor: Colors.grey,
+      chatBubblePrimaryColor: Colors.blue,
+      chatBubbleSecondaryColor: Colors.grey));
   runApp(const MyApp());
 }
 
@@ -19,7 +26,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      themeMode: ThemeMode.dark,
       /*routes: <String, WidgetBuilder>{
         '/chat':(context) => const ChatPageView(jid: "917010279986@xmpp-uikit-qa.contus.us",profile: ,)
       },*/
@@ -35,7 +41,6 @@ class Dashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -49,7 +54,7 @@ class Dashboard extends StatelessWidget {
               }
             },),
             TextButton(child: const Text('chat page'),onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (con)=> DashboardView(title: "Chat",)));
+              Navigator.push(context, MaterialPageRoute(builder: (con)=> DashboardView()));
             },),
           ],
         ),
