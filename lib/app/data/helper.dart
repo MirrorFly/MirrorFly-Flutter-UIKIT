@@ -14,6 +14,7 @@ import 'package:mirrorfly_uikit_plugin/app/routes/app_pages.dart';
 import 'package:open_file_plus/open_file_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../mirrorfly_uikit_plugin.dart';
 import '../common/widgets.dart';
 import '../model/chat_message_model.dart';
 import '../model/group_members_model.dart';
@@ -713,7 +714,7 @@ Future<RecentChatData?> getRecentChatOfJid(String jid) async {
 }
 
 String getName(Profile item) {
-  if (SessionManagement.isTrailLicence()) {
+  if (MirrorflyUikit.isTrialLicence) {
     /*return item.name.toString().checkNull().isEmpty
         ? item.nickName.toString()
         : item.name.toString();*/
@@ -759,7 +760,7 @@ String getName(Profile item) {
 }
 
 String getRecentName(RecentChatData item) {
-  if (SessionManagement.isTrailLicence()) {
+  if (MirrorflyUikit.isTrialLicence) {
     /*return item.name.toString().checkNull().isEmpty
         ? item.nickName.toString()
         : item.name.toString();*/
@@ -787,7 +788,7 @@ String getRecentName(RecentChatData item) {
 }
 
 String getMemberName(Member item) {
-  if (SessionManagement.isTrailLicence()) {
+  if (MirrorflyUikit.isTrialLicence) {
     /*return item.name.toString().checkNull().isEmpty
         ? item.nickName.toString()
         : item.name.toString();*/
@@ -955,7 +956,7 @@ void showQuickProfilePopup({required context, required Function() chatTap,
                         child: Text(
                           profile.value.isGroupProfile!
                               ? profile.value.name.checkNull()
-                              : SessionManagement.isTrailLicence() ? profile.value.mobileNumber.checkNull() : profile.value.nickName.checkNull(),
+                              : MirrorflyUikit.isTrialLicence ? profile.value.mobileNumber.checkNull() : profile.value.nickName.checkNull(),
                           style: const TextStyle(color: Colors.white),
                         ),
                       ),

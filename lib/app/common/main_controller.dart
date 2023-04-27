@@ -22,6 +22,7 @@ import 'package:mirrorfly_uikit_plugin/app/routes/app_pages.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../mirrorfly_uikit_plugin.dart';
 import '../model/user_list_model.dart';
 import '../modules/chatInfo/controllers/chat_info_controller.dart';
 import 'notification_service.dart';
@@ -292,7 +293,7 @@ class MainController extends FullLifeCycleController with BaseController, FullLi
   void onResumed() {
     mirrorFlyLog('mainController', 'onResumed');
     checkShouldShowPin();
-    if(!SessionManagement.isTrailLicence()) {
+    if(!MirrorflyUikit.isTrialLicence) {
       syncContacts();
     }
   }
@@ -321,7 +322,7 @@ class MainController extends FullLifeCycleController with BaseController, FullLi
   void networkDisconnected() {}
 
   void networkConnected() {
-    if(!SessionManagement.isTrailLicence()) {
+    if(!MirrorflyUikit.isTrialLicence) {
       syncContacts();
     }
   }

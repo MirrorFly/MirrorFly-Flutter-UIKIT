@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
 import '../../../data/apputils.dart';
 import '../../../data/session_management.dart';
 import '../../../data/helper.dart';
-import 'package:mirrorfly_plugin/flychat.dart';
 import '../../../models.dart';
 import '../../../routes/app_pages.dart';
 
@@ -32,11 +32,11 @@ class DeleteAccountController extends GetxController {
       }
       mirrorFlyLog("SessionManagement.getMobileNumber()", SessionManagement.getMobileNumber().toString());
       mirrorFlyLog("SessionManagement.getCountryCode()", SessionManagement.getCountryCode().toString());
-      mirrorFlyLog("SessionManagement.isTrailLicence()", SessionManagement.isTrailLicence().toString());
+      mirrorFlyLog("MirrorflyUikit.isTrialLicence", MirrorflyUikit.isTrialLicence.toString());
       mirrorFlyLog("countryCode", countryCode.toString());
       var mobileNumberWithCountryCode = '${countryCode?.replaceAll('+', '')}${mobileNumber.text.trim()}';
       mirrorFlyLog("mobileNumberWithCountryCode", mobileNumberWithCountryCode);
-      if(SessionManagement.isTrailLicence()) {
+      if(MirrorflyUikit.isTrialLicence) {
         if ((mobileNumber.text.trim() != SessionManagement.getMobileNumber() && mobileNumberWithCountryCode != SessionManagement.getMobileNumber()) ||
             SessionManagement.getCountryCode()?.replaceAll('+', '') !=
                 countryCode?.replaceAll('+', '')) {

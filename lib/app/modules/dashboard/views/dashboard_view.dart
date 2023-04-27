@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/dashboard/widgets.dart';
+import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 
 import '../../../common/app_theme.dart';
 import '../../../common/widgets.dart';
@@ -42,6 +43,7 @@ class DashboardView extends StatelessWidget {
           child: DefaultTabController(
             length: 2,
             child: Scaffold(
+              backgroundColor: MirrorflyUikit.getTheme.scaffoldColor,
                 floatingActionButton: controller.isSearching.value
                     ? null
                     : FloatingActionButton(

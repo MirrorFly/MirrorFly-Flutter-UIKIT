@@ -3,9 +3,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
-import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/controllers/contact_controller.dart';
 
+import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/widgets.dart';
 import '../../../routes/app_pages.dart';
 import '../../../widgets/custom_action_bar_icons.dart';
@@ -113,7 +113,7 @@ class ContactListView extends StatelessWidget {
                         controller.refreshContacts(true);
                       },
                     ),
-                    showAsAction: (!SessionManagement.isTrailLicence() && !controller.progressSpinner.value) ? ShowAsAction.never : ShowAsAction.gone,
+                    showAsAction: (!MirrorflyUikit.isTrialLicence && !controller.progressSpinner.value) ? ShowAsAction.never : ShowAsAction.gone,
                     keyValue: 'Refresh',
                     onItemClick: () {
                       // Get.back();

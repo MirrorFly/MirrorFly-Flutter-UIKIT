@@ -9,6 +9,7 @@ import 'app/model/user_list_model.dart';
 import 'app/modules/chat/bindings/chat_binding.dart';
 import 'app/modules/chat/controllers/chat_controller.dart';
 import 'app/modules/chat/views/chat_view.dart';
+import 'mirrorfly_uikit_plugin.dart';
 
 class ChatPage {
 
@@ -67,7 +68,7 @@ String getInitialRoute() {
             .getChatJid()
             .checkNull()
             .isEmpty) {
-          if(!SessionManagement.isTrailLicence()) {
+          if(!MirrorflyUikit.isTrialLicence) {
             // mirrorFlyLog("nonChatUsers", nonChatUsers.toString());
             if (!SessionManagement.isContactSyncDone() /*|| nonChatUsers.isEmpty*/) {
               return AppPages.contactSync;

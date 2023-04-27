@@ -210,7 +210,7 @@ class LoginController extends GetxController {
     showLoading();
     try {
       await _auth.signInWithCredential(credential).then((value) {
-        if(SessionManagement.isTrailLicence()) {
+        if(MirrorflyUikit.isTrialLicence) {
           sendTokenToServer(); // for Mirrorfly user list purpose verify the user
         }else{
           validateDeviceToken('');

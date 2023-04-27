@@ -11,8 +11,8 @@ import 'app/modules/chat/views/chat_view.dart';
 import 'mirrorfly_uikit_plugin_platform_interface.dart';
 
 class MirrorflyUikit {
-  static MirrorflyTheme myTheme = MirrorflyTheme.lightTheme;
-  static bool isTrial = true;
+  static MirrorflyTheme getTheme = MirrorflyTheme.lightTheme;
+  static bool isTrialLicence = true;
 
   static Future<String?> getPlatformVersion() {
     return MirrorflyUikitPluginPlatform.instance.getPlatformVersion();
@@ -42,16 +42,13 @@ class MirrorflyUikit {
         enableMobileNumberLogin: enableMobileNumberLogin,
         isTrialLicenceKey: isTrialLicenceKey,
         enableDebugLog: enableDebugLog);
-    myTheme = theme;
-    isTrial = isTrialLicenceKey;
+    getTheme = theme;
+    isTrialLicence = isTrialLicenceKey;
     SessionManagement.onInit().then((value) {
       SessionManagement.setIsTrailLicence(isTrialLicenceKey);
       Get.put<MainController>(MainController());
     });
   }
-
-  static MirrorflyTheme get getTheme => myTheme;
-  static bool get isTrialLicence => isTrial;
 
   ///Used as a register class for [MirrorflyUikit]
   ///

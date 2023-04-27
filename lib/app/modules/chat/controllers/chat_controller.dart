@@ -22,6 +22,7 @@ import 'package:record/record.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
 import '../../../data/apputils.dart';
 import '../../../data/helper.dart';
@@ -104,7 +105,7 @@ class ChatController extends FullLifeCycleController
   String? nJid;
   String? starredChatMessageId;
 
-  bool get isTrail => SessionManagement.isTrailLicence();
+  bool get isTrail => MirrorflyUikit.isTrialLicence;
 
   @override
   void onInit() async {
@@ -2686,7 +2687,7 @@ class ChatController extends FullLifeCycleController
       Mirrorfly.addContact(parse["international"], userName).then((value) {
         if (value ?? false) {
           toToast("Contact Saved");
-          if (!SessionManagement.isTrailLicence()) {
+          if (!MirrorflyUikit.isTrialLicence) {
             syncContacts();
           }
         }
