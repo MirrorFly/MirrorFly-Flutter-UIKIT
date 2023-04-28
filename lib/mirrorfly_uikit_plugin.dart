@@ -11,7 +11,7 @@ import 'app/modules/chat/views/chat_view.dart';
 import 'mirrorfly_uikit_plugin_platform_interface.dart';
 
 class MirrorflyUikit {
-  static MirrorFlyTheme? getTheme = MirrorFlyAppTheme.mirrorFlyLightTheme;
+  static MirrorFlyTheme? getTheme = MirrorFlyTheme.mirrorFlyLightTheme;
   static bool isTrialLicence = true;
 
   static Future<String?> getPlatformVersion() {

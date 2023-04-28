@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'constants.dart';
 
-class MirrorFlyTheme {
+class MirrorFlyAppTheme {
   final Color primaryColor;
   final Color secondaryColor;
   final Color appBarColor;
@@ -12,7 +12,7 @@ class MirrorFlyTheme {
   final Color chatBubblePrimaryColor; //chat bubble sender
   final Color chatBubbleSecondaryColor; //chat bubble receiver
 
-  MirrorFlyTheme(
+  MirrorFlyAppTheme(
       {required this.primaryColor,
       required this.secondaryColor,
       required this.appBarColor,
@@ -24,8 +24,8 @@ class MirrorFlyTheme {
       required this.chatBubbleSecondaryColor});
 }
 
-class MirrorFlyAppTheme {
-  static get mirrorFlyLightTheme => MirrorFlyTheme(
+class MirrorFlyTheme {
+  static get mirrorFlyLightTheme => MirrorFlyAppTheme(
         primaryColor: buttonBgColor,
         appBarColor: Colors.white,
         secondaryColor: Colors.grey,
@@ -36,7 +36,7 @@ class MirrorFlyAppTheme {
         chatBubblePrimaryColor: Colors.blue,
         chatBubbleSecondaryColor: Colors.black12);
 
-  static get mirrorFlyDarkTheme => MirrorFlyTheme(
+  static get mirrorFlyDarkTheme => MirrorFlyAppTheme(
         primaryColor: Colors.black,
         secondaryColor: Colors.black12,
         appBarColor: Colors.black,
@@ -58,7 +58,7 @@ class MirrorFlyAppTheme {
       required Color textSecondaryColor,
       required Color chatBubblePrimaryColor,
       required Color chatBubbleSecondaryColor}) {
-    return mirrorflyTheme = MirrorFlyTheme(
+    return mirrorflyTheme = MirrorFlyAppTheme(
         primaryColor: primaryColor,
         secondaryColor: secondaryColor,
         appBarColor: primaryColor,
