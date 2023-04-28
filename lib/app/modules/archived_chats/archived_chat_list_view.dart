@@ -9,9 +9,10 @@ import '../../widgets/custom_action_bar_icons.dart';
 import '../dashboard/widgets.dart';
 import 'archived_chat_list_controller.dart';
 
-class ArchivedChatListView extends GetView<ArchivedChatListController> {
-  const ArchivedChatListView({Key? key}) : super(key: key);
+class ArchivedChatListView extends StatelessWidget {
+  ArchivedChatListView({Key? key}) : super(key: key);
 
+  final controller = Get.put(ArchivedChatListController());
   @override
   Widget build(BuildContext context) {
     return FocusDetector(

@@ -273,7 +273,7 @@ class AppPages {
     ),
     GetPage(
         name: _Paths.archivedChats,
-        page: () => const ArchivedChatListView(),
+        page: () => ArchivedChatListView(),
         binding: ArchivedChatListBinding()),
     GetPage(
         name: _Paths.chatSettings,

@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_theme.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/dashboard/views/dashboard_view.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  MirrorflyUikit.chatUIKIT(
+  MirrorflyUikit.initUIKIT(
       baseUrl: 'https://api-uikit-qa.contus.us/api/v1/',
       licenseKey: 'ckIjaccWBoMNvxdbql8LJ2dmKqT5bp',
       //ckIjaccWBoMNvxdbql8LJ2dmKqT5bp//2sdgNtr3sFBSM3bYRa7RKDPEiB38Xo
-      iOSContainerID: 'group.com.mirrorfly.uikitqa');
+      iOSContainerID: 'group.com.mirrorfly.qa',theme:MirrorflyTheme.lightTheme);
   runApp(const MyApp());
 }
 
@@ -16,11 +18,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
+      themeMode: ThemeMode.dark,
       /*routes: <String, WidgetBuilder>{
         '/chat':(context) => const ChatPageView(jid: "917010279986@xmpp-uikit-qa.contus.us",profile: ,)
       },*/
-      home: const Dashboard()
+      home: Dashboard()
     );
   }
 
@@ -32,16 +35,21 @@ class Dashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextButton(child: const Text('register'),onPressed: (){
-             MirrorflyUikit.register('919894940560');
+            TextButton(child: const Text('register'),onPressed: () async {
+              try {
+                var response = await MirrorflyUikit.register('919894940560');
+                debugPrint("register user $response");
+              }catch(e){
+
+              }
             },),
             TextButton(child: const Text('chat page'),onPressed: (){
-              // Navigator.pushNamed(context, "/chat",arguments: profile);
-              Navigator.push(context, MaterialPageRoute(builder: (con)=>const HomePage()));
+              Navigator.push(context, MaterialPageRoute(builder: (con)=> DashboardView(title: "Chat",)));
             },),
           ],
         ),

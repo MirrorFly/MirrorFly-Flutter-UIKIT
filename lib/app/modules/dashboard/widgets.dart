@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 
+import '../../../mirrorfly_uikit_plugin.dart';
 import '../../common/constants.dart';
 import '../../common/widgets.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
@@ -16,17 +17,16 @@ Widget searchHeader(String? type, String count, BuildContext context) {
   return Container(
     width: MediaQuery.of(context).size.width,
     padding: const EdgeInsets.all(8),
-    color: dividerColor,
+    color: MirrorflyUikit.getTheme?.scaffoldColor ?? dividerColor,
     child: Text.rich(TextSpan(text: type, children: [
       TextSpan(
-          text: count.isNotEmpty ? " ($count)" : "",
-          style: const TextStyle(fontWeight: FontWeight.bold))
-    ])),
+          text: count.isNotEmpty ? " ($count)" : "",)
+    ]),style: TextStyle(fontWeight: FontWeight.bold, color: MirrorflyUikit.getTheme?.textPrimaryColor)),
   );
 }
 
 class RecentChatItem extends StatelessWidget {
-  const RecentChatItem(
+  RecentChatItem(
       {Key? key,
       required this.item,
       required this.onTap,
@@ -55,16 +55,16 @@ class RecentChatItem extends StatelessWidget {
   final bool isSelected;
   final String typingUserid;
 
-  final titlestyle = const TextStyle(
+  final titlestyle = TextStyle(
       fontSize: 16.0,
       fontWeight: FontWeight.w700,
       fontFamily: 'sf_ui',
-      color: textHintColor);
-  final typingstyle = const TextStyle(
+      color: MirrorflyUikit.getTheme?.textPrimaryColor ?? textHintColor);
+  final typingstyle =  TextStyle(
       fontSize: 14.0,
       fontWeight: FontWeight.w600,
       fontFamily: 'sf_ui',
-      color: buttonBgColor);
+      color: MirrorflyUikit.getTheme?.primaryColor ?? buttonBgColor);
   final bool archiveEnabled;
 
   @override
@@ -179,8 +179,8 @@ class RecentChatItem extends StatelessWidget {
             fontFamily: 'sf_ui',
             color: returnFormattedCount(item.unreadMessageCount!) != "0"
                 //item.isConversationUnRead!
-                ? buttonBgColor
-                : textColor),
+                ? MirrorflyUikit.getTheme?.primaryColor ?? buttonBgColor
+                : MirrorflyUikit.getTheme?.textSecondaryColor ?? textColor),
       ),
     );
   }
@@ -274,10 +274,10 @@ class RecentChatItem extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 2.0),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4.0),
-              border: Border.all(color: buttonBgColor, width: 0.8)),
-          child: const Text(
+              border: Border.all(color: MirrorflyUikit.getTheme?.primaryColor ?? buttonBgColor, width: 0.8)),
+          child: Text(
             "Archived",
-            style: TextStyle(color: buttonBgColor),
+            style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor ?? buttonBgColor),
           ),
         ) /*SvgPicture.asset(
                                       archive,
@@ -292,6 +292,7 @@ class RecentChatItem extends StatelessWidget {
         visible: !archiveEnabled && item.isMuted!,
         child: SvgPicture.asset(
           mute,package: package,
+          color: MirrorflyUikit.getTheme?.textPrimaryColor,
           width: 13,
           height: 13,
         ));
@@ -302,6 +303,7 @@ class RecentChatItem extends StatelessWidget {
         visible: !item.isChatArchived! && item.isChatPinned!,
         child: SvgPicture.asset(
           pin,package: package,
+          color: MirrorflyUikit.getTheme?.textPrimaryColor,
           width: 18,
           height: 18,
         ));
@@ -353,7 +355,7 @@ class RecentChatItem extends StatelessWidget {
                             chat.messageTextContent == " added you"))
                     ? Text(
                         "${chat.senderUserName.checkNull()}:",
-                        style: Theme.of(context).textTheme.titleSmall,
+                        style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       )
@@ -369,7 +371,7 @@ class RecentChatItem extends StatelessWidget {
                                           ?.mediaCaptionText
                                           .checkNull()) ??
                         chat.messageTextContent.checkNull(),
-                          style: Theme.of(context).textTheme.titleSmall,
+                          style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         )
@@ -384,7 +386,7 @@ class RecentChatItem extends StatelessWidget {
                                           .checkNull()) ??
                           chat.messageTextContent.checkNull(),
                           spanTxt,
-                          Theme.of(context).textTheme.titleSmall),
+                          TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)),
                 ),
               ],
             );
@@ -399,7 +401,7 @@ class RecentChatItem extends StatelessWidget {
             future: getProfileDetails(item.jid!),
             builder: (context, profileData) {
               if (profileData.hasData) {
-                return Text(profileData.data?.status ?? "");
+                return Text(profileData.data?.status ?? "",style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor),);
               }
               return const Text("");
             }));
@@ -415,6 +417,7 @@ class RecentChatItem extends StatelessWidget {
                 data.data ?? "",
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor),
               );
             }
             return const Text("");

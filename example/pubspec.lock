@@ -806,7 +806,7 @@ packages:
       path: "../../p078-mirrorfly-flutter-plugin"
       relative: true
     source: path
-    version: "0.0.3"
+    version: "0.0.4"
   mirrorfly_uikit_plugin:
     dependency: "direct main"
     description:
@@ -1516,5 +1516,5 @@ packages:
     source: hosted
     version: "3.1.1"
 sdks:
-  dart: ">=2.19.5 <3.0.0"
+  dart: ">=2.19.2 <3.0.0"
   flutter: ">=3.3.0"

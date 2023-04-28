@@ -98,21 +98,21 @@ class CustomSafeArea extends StatelessWidget {
 
 enum MirrorflyTheme  {
   lightTheme(
-      primaryColor: Colors.white,
+      primaryColor: buttonBgColor,
       secondaryColor: Colors.grey,
       scaffoldColor: Colors.white,
-      colorOnPrimary: Colors.black,
+      colorOnPrimary: Colors.white,
       textPrimaryColor: Colors.black,
       textSecondaryColor: Colors.black45,
       chatBubblePrimaryColor: Colors.blue,
       chatBubbleSecondaryColor: Colors.black12),
   darkTheme(
-      primaryColor: Colors.black,
+      primaryColor: buttonBgColor,
       secondaryColor: Colors.black12,
       scaffoldColor: Colors.black,
       colorOnPrimary: Colors.white,
       textPrimaryColor: Colors.white,
-      textSecondaryColor: Colors.black12,
+      textSecondaryColor: Colors.white54,
       chatBubblePrimaryColor: Colors.blue,
       chatBubbleSecondaryColor: Colors.black12);
 
@@ -143,7 +143,7 @@ enum MirrorflyTheme  {
     required Color textSecondaryColor,
     required Color chatBubblePrimaryColor,
     required Color chatBubbleSecondaryColor}){
-    return MirrorflyTheme.customTheme(primaryColor: primaryColor, secondaryColor: secondaryColor, scaffoldColor: scaffoldColor, colorOnPrimary: colorOnPrimary, textPrimaryColor: textPrimaryColor, textSecondaryColor: textSecondaryColor, chatBubblePrimaryColor: chatBubblePrimaryColor, chatBubbleSecondaryColor: chatBubbleSecondaryColor);
+    return null;
   }
   // const MirrorflyTheme(this.value);
   // final AppColors value;

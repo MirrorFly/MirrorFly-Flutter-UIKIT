@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 
+import '../../mirrorfly_uikit_plugin.dart';
 import '../common/constants.dart';
 
 class CustomActionBarIcons extends StatelessWidget {
@@ -65,7 +66,10 @@ class CustomActionBarIcons extends StatelessWidget {
               .map((CustomAction customAction) => customAction.visibleWidget),
           if (overflow.isNotEmpty)
             PopupMenuButton(
-              icon: SvgPicture.asset(moreIcon,package: package, width: 3.66, height: 16.31),
+              color: MirrorflyUikit.getTheme?.scaffoldColor,
+              elevation: 4,
+              surfaceTintColor: MirrorflyUikit.getTheme?.textPrimaryColor?.withOpacity(0.5),
+              icon: SvgPicture.asset(moreIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnPrimary, width: 3.66, height: 16.31),
               onCanceled: (){ FocusManager.instance.primaryFocus!.unfocus(); },
               itemBuilder: (BuildContext context) => [
                 for (CustomAction customAction in overflow)

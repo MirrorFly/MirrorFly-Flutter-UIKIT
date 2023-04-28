@@ -21,7 +21,7 @@ class AppDivider extends StatelessWidget {
     return Container(
       margin: padding,
       height: 0.29,
-      color: dividerColor,
+      color: MirrorflyUikit.getTheme?.textPrimaryColor?.withOpacity(0.5) ?? dividerColor,
     );
   }
 }
@@ -313,8 +313,8 @@ Widget memberItem(
       bool isGroup = false,
       required bool blocked,
       required bool unknown}) {
-  var titlestyle = const TextStyle(
-      color: Colors.black, fontSize: 14.0, fontWeight: FontWeight.w700);
+  var titlestyle = TextStyle(
+      color: MirrorflyUikit.getTheme?.textPrimaryColor ?? Colors.black, fontSize: 14.0, fontWeight: FontWeight.w700);
   return Container(
     padding: const EdgeInsets.symmetric(vertical: 4.0),
     child: InkWell(
@@ -361,8 +361,8 @@ Widget memberItem(
                               ),
                         Text(
                           status.checkNull(),
-                          style: const TextStyle(
-                            color: Colors.black,
+                          style: TextStyle(
+                            color: MirrorflyUikit.getTheme?.textSecondaryColor ?? Colors.black,
                             fontSize: 12.0,
                           ),
                           maxLines: 1,
@@ -373,9 +373,9 @@ Widget memberItem(
                   ),
                 ),
                 (isAdmin != null && isAdmin)
-                    ? const Text("Admin",
+                    ? Text("Admin",
                         style: TextStyle(
-                          color: Colors.blue,
+                          color: MirrorflyUikit.getTheme?.primaryColor ?? buttonBgColor,
                           fontSize: 12.0,
                         ))
                     : const SizedBox(),
