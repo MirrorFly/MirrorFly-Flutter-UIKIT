@@ -25,7 +25,7 @@ class MirrorFlyAppTheme {
 }
 
 class MirrorFlyTheme {
-  static get mirrorFlyLightTheme => MirrorFlyAppTheme(
+  static MirrorFlyAppTheme get mirrorFlyLightTheme => MirrorFlyAppTheme(
         primaryColor: buttonBgColor,
         appBarColor: Colors.white,
         secondaryColor: Colors.grey,
@@ -36,7 +36,7 @@ class MirrorFlyTheme {
         chatBubblePrimaryColor: Colors.blue,
         chatBubbleSecondaryColor: Colors.black12);
 
-  static get mirrorFlyDarkTheme => MirrorFlyAppTheme(
+  static MirrorFlyAppTheme get mirrorFlyDarkTheme => MirrorFlyAppTheme(
         primaryColor: Colors.black,
         secondaryColor: Colors.black12,
         appBarColor: Colors.black,
