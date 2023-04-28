@@ -9,7 +9,7 @@ void main() {
       baseUrl: 'https://api-uikit-qa.contus.us/api/v1/',
       licenseKey: 'ckIjaccWBoMNvxdbql8LJ2dmKqT5bp',
       //ckIjaccWBoMNvxdbql8LJ2dmKqT5bp//2sdgNtr3sFBSM3bYRa7RKDPEiB38Xo
-      iOSContainerID: 'group.com.mirrorfly.qa',theme:MirrorFlyTheme.mirrorFlyLightTheme);
+      iOSContainerID: 'group.com.mirrorfly.qa',theme:MirrorFlyTheme.mirrorFlyDarkTheme);
   runApp(const MyApp());
 }
 

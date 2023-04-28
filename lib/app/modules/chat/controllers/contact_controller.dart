@@ -34,15 +34,21 @@ class ContactController extends FullLifeCycleController
   var groupJid = "".obs;
 
   @override
-  Future<void> onInit() async {
+  void onInit(){
     super.onInit();
-    isForward(Get.arguments["forward"]);
+    debugPrint('controller init');
+  }
+
+  Future<void> init({bool forward = false,List<String>? messageIds ,bool group = false,String groupjid = ''}) async {
+    isForward(forward);
     if (isForward.value) {
       isCreateGroup(false);
-      forwardMessageIds.addAll(Get.arguments["messageIds"]);
+      if(messageIds!=null) {
+        forwardMessageIds.addAll(messageIds);
+      }
     } else {
-      isCreateGroup(Get.arguments["group"]);
-      groupJid(Get.arguments["groupJid"]);
+      isCreateGroup(group);
+      groupJid(groupjid);
     }
     scrollController.addListener(_scrollListener);
     //searchQuery.addListener(_searchListener);
@@ -54,7 +60,7 @@ class ContactController extends FullLifeCycleController
     }
     //Mirrorfly.syncContacts(true);
     //Mirrorfly.getRegisteredUsers(true).then((value) => mirrorFlyLog("registeredUsers", value.toString()));
-    progressSpinner(!MirrorflyUikit.isTrialLicence && await Mirrorfly.contactSyncStateValue());
+    // progressSpinner(!MirrorflyUikit.isTrialLicence && await Mirrorfly.contactSyncStateValue());
   }
 
   void userUpdatedHisProfile(String jid) {

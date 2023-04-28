@@ -10,15 +10,32 @@ import '../../../common/widgets.dart';
 import '../../../routes/app_pages.dart';
 import '../../../widgets/custom_action_bar_icons.dart';
 
-class ContactListView extends StatelessWidget {
-   ContactListView({Key? key}) : super(key: key);
+class ContactListView extends StatefulWidget {
+   const ContactListView({Key? key,this.forward = false,this.messageIds,this.group= false,this.groupjid = ''}) : super(key: key);
+   final bool forward;
+   final List<String>? messageIds;
+   final bool group;
+   final String groupjid;
 
-  final controller = Get.put(ContactController());
+   @override
+  State<ContactListView> createState() => _ContactListViewState();
+}
+
+class _ContactListViewState extends State<ContactListView> {
+  ContactController controller = Get.put(ContactController());
+  @override
+  void initState() {
+    controller.init(forward: widget.forward,messageIds: widget.messageIds,group: widget.group,groupjid: widget.groupjid);
+    debugPrint('view init');
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Obx(
       () => Scaffold(
         appBar: AppBar(
+          backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
           leading: IconButton(
             icon: controller.isForward.value
                 ? const Icon(Icons.close)
@@ -31,6 +48,9 @@ class ContactListView extends StatelessWidget {
                       : Get.back();
             },
           ),
+          iconTheme: IconThemeData(
+              color: MirrorflyUikit.getTheme?.colorOnAppbar ??
+                  iconColor),
           title: controller.search
               ? TextField(
                   onChanged: (text) {

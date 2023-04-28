@@ -8,7 +8,6 @@ import 'package:mirrorfly_uikit_plugin/app/modules/archived_chats/archived_chat_
 import 'package:mirrorfly_uikit_plugin/app/modules/dashboard/widgets.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 
-import '../../../common/app_theme.dart';
 import '../../../common/widgets.dart';
 import '../../../widgets/custom_action_bar_icons.dart';
 import '../../chat/chat_widgets.dart';
@@ -41,20 +40,18 @@ class DashboardView extends StatelessWidget {
           }
           return Future.value(true);
         },
-        child: CustomSafeArea(
+        child: SafeArea(
           child: Obx(() {
             return Scaffold(
                 backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
                 appBar: AppBar(
                   backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
                   automaticallyImplyLeading: true,
-                  bottom: const PreferredSize(
-                      preferredSize: Size.fromHeight(1), child: AppDivider()),
                   actionsIconTheme: IconThemeData(
-                      color: MirrorflyUikit.getTheme?.colorOnPrimary ??
+                      color: MirrorflyUikit.getTheme?.colorOnAppbar ??
                           iconColor),
                   iconTheme: IconThemeData(
-                      color: MirrorflyUikit.getTheme?.colorOnPrimary ??
+                      color: MirrorflyUikit.getTheme?.colorOnAppbar ??
                           iconColor),
                   leading: controller.selected.value
                       ? IconButton(
@@ -86,14 +83,14 @@ class DashboardView extends StatelessWidget {
                               autofocus: true,
                               style: TextStyle(
                                   color: MirrorflyUikit
-                                      .getTheme?.colorOnPrimary),
+                                      .getTheme?.colorOnAppbar),
                               cursorColor:
-                                  MirrorflyUikit.getTheme?.colorOnPrimary,
+                                  MirrorflyUikit.getTheme?.colorOnAppbar,
                               decoration: InputDecoration(
                                   hintText: "Search...",
                                   hintStyle: TextStyle(
                                       color: MirrorflyUikit
-                                          .getTheme?.colorOnPrimary),
+                                          .getTheme?.colorOnAppbar),
                                   border: InputBorder.none),
                             )
                           : title != null
@@ -101,7 +98,7 @@ class DashboardView extends StatelessWidget {
                                   title!,
                                   style: TextStyle(
                                       color: MirrorflyUikit
-                                              .getTheme?.colorOnPrimary ??
+                                              .getTheme?.colorOnAppbar ??
                                           Colors.black),
                                 )
                               : null,
@@ -117,7 +114,7 @@ class DashboardView extends StatelessWidget {
                         backgroundColor:
                             MirrorflyUikit.getTheme?.primaryColor,
                         onPressed: () {
-                          controller.gotoContacts();
+                          controller.gotoContacts(context);
                         },
                         /*backgroundColor:
                             MirrorflyUikit.getTheme?.primaryColor ??
@@ -155,7 +152,7 @@ class DashboardView extends StatelessWidget {
               },
               icon: SvgPicture.asset(infoIcon,
                   package: package,
-                  color: MirrorflyUikit.getTheme?.colorOnPrimary),
+                  color: MirrorflyUikit.getTheme?.colorOnAppbar),
               tooltip: 'Info',
             ),
             overflowWidget: const Text("Info"),
@@ -173,7 +170,7 @@ class DashboardView extends StatelessWidget {
               },
               icon: SvgPicture.asset(delete,
                   package: package,
-                  color: MirrorflyUikit.getTheme?.colorOnPrimary),
+                  color: MirrorflyUikit.getTheme?.colorOnAppbar),
               tooltip: 'Delete',
             ),
             overflowWidget: const Text("Delete"),
@@ -192,7 +189,7 @@ class DashboardView extends StatelessWidget {
               },
               icon: SvgPicture.asset(pin,
                   package: package,
-                  color: MirrorflyUikit.getTheme?.colorOnPrimary),
+                  color: MirrorflyUikit.getTheme?.colorOnAppbar),
               tooltip: 'Pin',
             ),
             overflowWidget: const Text("Pin"),
@@ -210,7 +207,7 @@ class DashboardView extends StatelessWidget {
               },
               icon: SvgPicture.asset(unpin,
                   package: package,
-                  color: MirrorflyUikit.getTheme?.colorOnPrimary),
+                  color: MirrorflyUikit.getTheme?.colorOnAppbar),
               tooltip: 'UnPin',
             ),
             overflowWidget: const Text("UnPin"),
@@ -229,7 +226,7 @@ class DashboardView extends StatelessWidget {
               },
               icon: SvgPicture.asset(mute,
                   package: package,
-                  color: MirrorflyUikit.getTheme?.colorOnPrimary),
+                  color: MirrorflyUikit.getTheme?.colorOnAppbar),
               tooltip: 'Mute',
             ),
             overflowWidget: const Text("Mute"),
@@ -247,7 +244,7 @@ class DashboardView extends StatelessWidget {
               },
               icon: SvgPicture.asset(unMute,
                   package: package,
-                  color: MirrorflyUikit.getTheme?.colorOnPrimary),
+                  color: MirrorflyUikit.getTheme?.colorOnAppbar),
               tooltip: 'UnMute',
             ),
             overflowWidget: const Text("UnMute"),
@@ -307,7 +304,7 @@ class DashboardView extends StatelessWidget {
               icon: SvgPicture.asset(
                 searchIcon,
                 package: package,
-                color: MirrorflyUikit.getTheme?.colorOnPrimary,
+                color: MirrorflyUikit.getTheme?.colorOnAppbar,
                 width: 18,
                 height: 18,
                 fit: BoxFit.contain,

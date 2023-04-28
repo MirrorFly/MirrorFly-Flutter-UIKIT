@@ -4,6 +4,7 @@ import 'package:focus_detector/focus_detector.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 
+import '../../../mirrorfly_uikit_plugin.dart';
 import '../../common/constants.dart';
 import '../../widgets/custom_action_bar_icons.dart';
 import '../dashboard/widgets.dart';
@@ -30,6 +31,10 @@ class ArchivedChatListView extends StatelessWidget {
         child: Obx(() {
           return Scaffold(
             appBar: AppBar(
+              backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
+              iconTheme: IconThemeData(
+                  color: MirrorflyUikit.getTheme?.colorOnAppbar ??
+                      iconColor),
               leading: controller.selected.value ? IconButton(
                 icon: const Icon(Icons.clear),
                 onPressed: () {
@@ -39,7 +44,7 @@ class ArchivedChatListView extends StatelessWidget {
               title: controller.selected.value
                   ? Text(
                   (controller.selectedChats.length).toString())
-                  : const Text('Archived Chats'),
+                  : Text('Archived Chats',style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
               actions: [
                 Visibility(
                   visible: controller.selected.value,
@@ -57,7 +62,7 @@ class ArchivedChatListView extends StatelessWidget {
                               onPressed: () {
                                 controller.deleteChats();
                               },
-                              icon: SvgPicture.asset(delete,package: package,),tooltip: 'Delete',),
+                              icon: SvgPicture.asset(delete,package: package, color: MirrorflyUikit.getTheme?.colorOnAppbar),tooltip: 'Delete',),
                           overflowWidget: const Text("Delete"),
                           showAsAction: controller.delete.value ? ShowAsAction.always : ShowAsAction.gone,
                           keyValue: 'Delete',
@@ -70,7 +75,7 @@ class ArchivedChatListView extends StatelessWidget {
                             onPressed: () {
                               controller.muteChats();
                             },
-                            icon: SvgPicture.asset(mute,package: package,),tooltip: 'Mute',),
+                            icon: SvgPicture.asset(mute,package: package, color: MirrorflyUikit.getTheme?.colorOnAppbar),tooltip: 'Mute',),
                           overflowWidget: const Text("Mute"),
                           showAsAction: controller.mute.value
                               ? ShowAsAction.always
@@ -85,7 +90,7 @@ class ArchivedChatListView extends StatelessWidget {
                             onPressed: () {
                               controller.unMuteChats();
                             },
-                            icon: SvgPicture.asset(unMute,package: package,),tooltip: 'UnMute',),
+                            icon: SvgPicture.asset(unMute,package: package, color: MirrorflyUikit.getTheme?.colorOnAppbar),tooltip: 'UnMute',),
                           overflowWidget: const Text("UnMute"),
                           showAsAction: controller.unMute.value
                               ? ShowAsAction.always
@@ -100,7 +105,7 @@ class ArchivedChatListView extends StatelessWidget {
                               onPressed: () {
                                 controller.unArchiveSelectedChats();
                               },
-                              icon: SvgPicture.asset(unarchive,package: package,),tooltip: 'UnArchive',),
+                              icon: SvgPicture.asset(unarchive,package: package, color: MirrorflyUikit.getTheme?.colorOnAppbar),tooltip: 'UnArchive',),
                           overflowWidget: const Text("UnArchive"),
                           showAsAction: ShowAsAction.always,
                           keyValue: 'UnArchive',
@@ -141,8 +146,8 @@ class ArchivedChatListView extends StatelessWidget {
                             },
                           );
                         });
-                      }) : const Center(
-                    child: Text('No archived chats'),
+                      }) : Center(
+                    child: Text('No archived chats',style: TextStyle( color: MirrorflyUikit.getTheme?.textPrimaryColor),),
                   )),
             ),
           );

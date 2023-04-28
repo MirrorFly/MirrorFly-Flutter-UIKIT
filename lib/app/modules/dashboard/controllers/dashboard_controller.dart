@@ -19,6 +19,7 @@ import '../../../common/de_bouncer.dart';
 import '../../../data/apputils.dart';
 import '../../../data/permissions.dart';
 import '../../../routes/app_pages.dart';
+import '../../chat/views/contact_list_view.dart';
 
 class DashboardController extends FullLifeCycleController
     with FullLifeCycleMixin, GetTickerProviderStateMixin {
@@ -1233,10 +1234,10 @@ class DashboardController extends FullLifeCycleController
     });
   }
 
-  Future<void> gotoContacts() async {
+  Future<void> gotoContacts(BuildContext context) async {
     if (MirrorflyUikit.isTrialLicence) {
-      Get.toNamed(Routes.contacts,
-          arguments: {"forward": false, "group": false, "groupJid": ""});
+      // Get.toNamed(Routes.contacts, arguments: {"forward": false, "group": false, "groupJid": ""});
+      Navigator.push(context, MaterialPageRoute(builder: (con)=>const ContactListView(forward: false,group: false,)));
     } else {
       var contactPermissionHandle = await AppPermission.checkPermission(
           Permission.contacts,

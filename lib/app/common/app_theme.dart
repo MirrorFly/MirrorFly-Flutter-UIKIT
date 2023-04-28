@@ -5,6 +5,7 @@ class MirrorFlyAppTheme {
   final Color primaryColor;
   final Color secondaryColor;
   final Color appBarColor;
+  final Color colorOnAppbar;
   final Color scaffoldColor;
   final Color colorOnPrimary;
   final Color textPrimaryColor;
@@ -16,6 +17,7 @@ class MirrorFlyAppTheme {
       {required this.primaryColor,
       required this.secondaryColor,
       required this.appBarColor,
+      required this.colorOnAppbar,
       required this.scaffoldColor,
       required this.colorOnPrimary,
       required this.textPrimaryColor,
@@ -26,26 +28,28 @@ class MirrorFlyAppTheme {
 
 class MirrorFlyTheme {
   static MirrorFlyAppTheme get mirrorFlyLightTheme => MirrorFlyAppTheme(
-        primaryColor: buttonBgColor,
-        appBarColor: Colors.white,
-        secondaryColor: Colors.grey,
-        scaffoldColor: Colors.white,
-        colorOnPrimary: Colors.black,
-        textPrimaryColor: Colors.black,
-        textSecondaryColor: Colors.black45,
-        chatBubblePrimaryColor: Colors.blue,
-        chatBubbleSecondaryColor: Colors.black12);
+      primaryColor: buttonBgColor,
+      appBarColor: Colors.white,
+      colorOnAppbar: Colors.black,
+      secondaryColor: Colors.grey,
+      scaffoldColor: Colors.white,
+      colorOnPrimary: Colors.white,
+      textPrimaryColor: Colors.black,
+      textSecondaryColor: Colors.black45,
+      chatBubblePrimaryColor: Colors.blue,
+      chatBubbleSecondaryColor: Colors.black12);
 
   static MirrorFlyAppTheme get mirrorFlyDarkTheme => MirrorFlyAppTheme(
-        primaryColor: Colors.black,
-        secondaryColor: Colors.black12,
-        appBarColor: Colors.black,
-        scaffoldColor: Colors.black,
-        colorOnPrimary: Colors.white,
-        textPrimaryColor: Colors.white,
-        textSecondaryColor: Colors.black12,
-        chatBubblePrimaryColor: Colors.blue,
-        chatBubbleSecondaryColor: Colors.black12);
+      primaryColor: buttonBgColor,
+      secondaryColor: Colors.black12,
+      appBarColor: const Color(0xff2A2A2A),
+      colorOnAppbar: Colors.white,
+      scaffoldColor: Colors.black,
+      colorOnPrimary: Colors.white,
+      textPrimaryColor: Colors.white,
+      textSecondaryColor: Colors.white60,
+      chatBubblePrimaryColor: Colors.blue,
+      chatBubbleSecondaryColor: Colors.black12);
 
   static late var mirrorflyTheme;
 
@@ -62,6 +66,7 @@ class MirrorFlyTheme {
         primaryColor: primaryColor,
         secondaryColor: secondaryColor,
         appBarColor: primaryColor,
+        colorOnAppbar: colorOnPrimary,
         scaffoldColor: scaffoldColor,
         colorOnPrimary: colorOnPrimary,
         textPrimaryColor: textPrimaryColor,
@@ -91,16 +96,16 @@ class CustomSafeArea extends StatelessWidget {
   final Widget child;
   final Color? color;
 
-  const CustomSafeArea({Key? key, required this.child, this.color}) : super(key: key);
+  const CustomSafeArea({Key? key, required this.child, this.color})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: color ?? appBarColor,
+      // color: color ?? appBarColor,
       child: SafeArea(
         child: child,
       ),
     );
   }
 }
-
