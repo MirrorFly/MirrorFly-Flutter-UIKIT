@@ -381,10 +381,8 @@ extension MemberProfileParsing on MemberProfileDetails {
   }
 }
 
-Future<Profile> getProfileDetails(String jid) async {
-  var value = await Mirrorfly.getProfileDetails(jid.checkNull(), false);
-  // profileDataFromJson(value);
-  debugPrint("update profile--> $value");
+Future<Profile> getProfileDetails(String jid,{bool server=false}) async {
+  var value = await Mirrorfly.getProfileDetails(jid.checkNull(), server);
   var profile = await compute(profiledata, value.toString());
   // var str = Profile.fromJson(json.decode(value.toString()));
   return profile;

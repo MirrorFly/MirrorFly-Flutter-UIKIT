@@ -155,7 +155,7 @@ class DashboardView extends StatelessWidget {
                   color: MirrorflyUikit.getTheme?.colorOnAppbar),
               tooltip: 'Info',
             ),
-            overflowWidget: const Text("Info"),
+            overflowWidget: Text("Info",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),),
             showAsAction:
                 controller.info.value ? ShowAsAction.always : ShowAsAction.gone,
             keyValue: 'Info',
@@ -173,7 +173,7 @@ class DashboardView extends StatelessWidget {
                   color: MirrorflyUikit.getTheme?.colorOnAppbar),
               tooltip: 'Delete',
             ),
-            overflowWidget: const Text("Delete"),
+            overflowWidget: Text("Delete",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction: controller.delete.value
                 ? ShowAsAction.always
                 : ShowAsAction.gone,
@@ -192,7 +192,7 @@ class DashboardView extends StatelessWidget {
                   color: MirrorflyUikit.getTheme?.colorOnAppbar),
               tooltip: 'Pin',
             ),
-            overflowWidget: const Text("Pin"),
+            overflowWidget: Text("Pin",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction:
                 controller.pin.value ? ShowAsAction.always : ShowAsAction.gone,
             keyValue: 'Pin',
@@ -210,7 +210,7 @@ class DashboardView extends StatelessWidget {
                   color: MirrorflyUikit.getTheme?.colorOnAppbar),
               tooltip: 'UnPin',
             ),
-            overflowWidget: const Text("UnPin"),
+            overflowWidget: Text("UnPin",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction: controller.unpin.value
                 ? ShowAsAction.always
                 : ShowAsAction.gone,
@@ -229,7 +229,7 @@ class DashboardView extends StatelessWidget {
                   color: MirrorflyUikit.getTheme?.colorOnAppbar),
               tooltip: 'Mute',
             ),
-            overflowWidget: const Text("Mute"),
+            overflowWidget: Text("Mute",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction:
                 controller.mute.value ? ShowAsAction.always : ShowAsAction.gone,
             keyValue: 'Mute',
@@ -247,7 +247,7 @@ class DashboardView extends StatelessWidget {
                   color: MirrorflyUikit.getTheme?.colorOnAppbar),
               tooltip: 'UnMute',
             ),
-            overflowWidget: const Text("UnMute"),
+            overflowWidget: Text("UnMute",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction: controller.unmute.value
                 ? ShowAsAction.always
                 : ShowAsAction.gone,
@@ -266,7 +266,7 @@ class DashboardView extends StatelessWidget {
                   color: MirrorflyUikit.getTheme?.textPrimaryColor),
               tooltip: 'Archive',
             ),
-            overflowWidget: const Text("Archived"),
+            overflowWidget: Text("Archived",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction: controller.archive.value
                 ? ShowAsAction.always
                 : ShowAsAction.gone,
@@ -311,7 +311,7 @@ class DashboardView extends StatelessWidget {
               ),
               tooltip: 'Search',
             ),
-            overflowWidget: const Text("Search"),
+            overflowWidget: Text("Search",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction:
                 controller.selected.value || controller.isSearching.value
                     ? ShowAsAction.gone
@@ -325,7 +325,7 @@ class DashboardView extends StatelessWidget {
             visibleWidget: IconButton(
                 onPressed: () => controller.onClearPressed(),
                 icon: const Icon(Icons.close)),
-            overflowWidget: const Text("Clear"),
+            overflowWidget: Text("Clear",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction: controller.clearVisible.value
                 ? ShowAsAction.always
                 : ShowAsAction.gone,
@@ -336,7 +336,7 @@ class DashboardView extends StatelessWidget {
           ),
           CustomAction(
             visibleWidget: const Icon(Icons.group_add),
-            overflowWidget: const Text("New Group     "),
+            overflowWidget: Text("New Group     ",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction:
                 controller.selected.value || controller.isSearching.value
                     ? ShowAsAction.gone
@@ -348,7 +348,7 @@ class DashboardView extends StatelessWidget {
           ),
           CustomAction(
             visibleWidget: const Icon(Icons.settings),
-            overflowWidget: const Text("Settings"),
+            overflowWidget: Text("Settings",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction:
                 controller.selected.value || controller.isSearching.value
                     ? ShowAsAction.gone
@@ -360,7 +360,7 @@ class DashboardView extends StatelessWidget {
           ),
           CustomAction(
             visibleWidget: const Icon(Icons.web),
-            overflowWidget: const Text("Web"),
+            overflowWidget: Text("Web",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction:
                 controller.selected.value || controller.isSearching.value
                     ? ShowAsAction.gone
@@ -480,7 +480,7 @@ class DashboardView extends StatelessWidget {
                                             .selectOrRemoveChatfromList(index);
                                       } else {
                                         controller
-                                            .toChatPage(item.jid.checkNull());
+                                            .toChatPage(context,item.jid.checkNull());
                                       }
                                     },
                                     onLongPress: () {
@@ -628,7 +628,7 @@ class DashboardView extends StatelessWidget {
               status: item.status.checkNull(),
               spantext: controller.search.text.toString(),
               onTap: () {
-                controller.toChatPage(item.jid.checkNull());
+                controller.toChatPage(context,item.jid.checkNull());
               },
               isCheckBoxVisible: false,
               isGroup: item.isGroupProfile.checkNull(),
@@ -838,7 +838,7 @@ class DashboardView extends StatelessWidget {
                       ],
                     ),
                     onTap: () {
-                      controller.toChatPage(items.chatUserJid.checkNull());
+                      controller.toChatPage(context,items.chatUserJid.checkNull());
                     },
                   );
                 } else if (snap.hasError) {
@@ -865,7 +865,7 @@ class DashboardView extends StatelessWidget {
                         item: item,
                         spanTxt: controller.search.text,
                         onTap: () {
-                          controller.toChatPage(item.jid.checkNull());
+                          controller.toChatPage(context,item.jid.checkNull());
                         },
                       )
                     : const SizedBox();

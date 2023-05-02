@@ -70,7 +70,7 @@ class RecentChatItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: isSelected ? Colors.black12 : Colors.transparent,
+      color: isSelected ? MirrorflyUikit.getTheme?.textPrimaryColor.withAlpha(50) : Colors.transparent,
       child: Row(
         children: [
           buildProfileImage(),

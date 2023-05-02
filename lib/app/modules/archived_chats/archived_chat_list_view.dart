@@ -30,6 +30,7 @@ class ArchivedChatListView extends StatelessWidget {
         },
         child: Obx(() {
           return Scaffold(
+            backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
             appBar: AppBar(
               backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
               iconTheme: IconThemeData(
@@ -63,7 +64,7 @@ class ArchivedChatListView extends StatelessWidget {
                                 controller.deleteChats();
                               },
                               icon: SvgPicture.asset(delete,package: package, color: MirrorflyUikit.getTheme?.colorOnAppbar),tooltip: 'Delete',),
-                          overflowWidget: const Text("Delete"),
+                          overflowWidget: Text("Delete",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                           showAsAction: controller.delete.value ? ShowAsAction.always : ShowAsAction.gone,
                           keyValue: 'Delete',
                           onItemClick: () {
@@ -76,7 +77,7 @@ class ArchivedChatListView extends StatelessWidget {
                               controller.muteChats();
                             },
                             icon: SvgPicture.asset(mute,package: package, color: MirrorflyUikit.getTheme?.colorOnAppbar),tooltip: 'Mute',),
-                          overflowWidget: const Text("Mute"),
+                          overflowWidget: Text("Mute",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                           showAsAction: controller.mute.value
                               ? ShowAsAction.always
                               : ShowAsAction.gone,
@@ -91,7 +92,7 @@ class ArchivedChatListView extends StatelessWidget {
                               controller.unMuteChats();
                             },
                             icon: SvgPicture.asset(unMute,package: package, color: MirrorflyUikit.getTheme?.colorOnAppbar),tooltip: 'UnMute',),
-                          overflowWidget: const Text("UnMute"),
+                          overflowWidget: Text("UnMute",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                           showAsAction: controller.unMute.value
                               ? ShowAsAction.always
                               : ShowAsAction.gone,
@@ -106,7 +107,7 @@ class ArchivedChatListView extends StatelessWidget {
                                 controller.unArchiveSelectedChats();
                               },
                               icon: SvgPicture.asset(unarchive,package: package, color: MirrorflyUikit.getTheme?.colorOnAppbar),tooltip: 'UnArchive',),
-                          overflowWidget: const Text("UnArchive"),
+                          overflowWidget: Text("UnArchive",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                           showAsAction: ShowAsAction.always,
                           keyValue: 'UnArchive',
                           onItemClick: () {

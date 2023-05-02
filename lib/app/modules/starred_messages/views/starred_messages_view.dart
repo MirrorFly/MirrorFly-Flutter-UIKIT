@@ -4,13 +4,13 @@ import 'package:focus_detector/focus_detector.dart';
 
 import 'package:get/get.dart';
 
+import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
 import '../../../common/widgets.dart';
 import '../../../widgets/custom_action_bar_icons.dart';
 import '../../chat/chat_widgets.dart';
 import '../../chat/views/starred_message_header.dart';
 import '../controllers/starred_messages_controller.dart';
-import 'package:mirrorfly_plugin/flychat.dart';
 import '../../../models.dart';
 
 class StarredMessagesView extends GetView<StarredMessagesController> {
@@ -83,7 +83,7 @@ class StarredMessagesView extends GetView<StarredMessagesController> {
                       color: controller.isSelected.value &&
                           (starredChatList[index].isSelected.value) &&
                           controller.starredChatList.isNotEmpty
-                          ? chatReplyContainerColor
+                          ? MirrorflyUikit.getTheme?.primaryColor.withAlpha(60)
                           : Colors.transparent,
                       padding: const EdgeInsets.only(
                           left: 14, right: 14, top: 5, bottom: 10),

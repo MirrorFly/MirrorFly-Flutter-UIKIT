@@ -3,8 +3,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
+import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
-import 'package:mirrorfly_plugin/flychat.dart';
 import '../../../models.dart';
 
 import '../chat_widgets.dart';
@@ -15,8 +15,8 @@ class ChatSearchView extends GetView<ChatController> {
 
   @override
   Widget build(BuildContext context) {
-    controller.screenHeight = MediaQuery.of(context).size.height;
-    controller.screenWidth = MediaQuery.of(context).size.width;
+    // controller.screenHeight = MediaQuery.of(context).size.height;
+    // controller.screenWidth = MediaQuery.of(context).size.width;
     return WillPopScope(
       onWillPop: () {
         controller.searchInit();
@@ -78,7 +78,7 @@ class ChatSearchView extends GetView<ChatController> {
                     Constants.mNotification)
                 ? Container(
                     color: chatList[index].isSelected.value
-                        ? chatReplyContainerColor
+                        ? MirrorflyUikit.getTheme?.primaryColor.withAlpha(60)
                         : Colors.transparent,
                     margin: const EdgeInsets.only(
                         left: 14, right: 14, top: 5, bottom: 10),
@@ -103,7 +103,7 @@ class ChatSearchView extends GetView<ChatController> {
                           ),
                           Container(
                             constraints: BoxConstraints(
-                                maxWidth: controller.screenWidth * 0.75),
+                                maxWidth: Get.width * 0.75),
                             decoration: BoxDecoration(
                                 borderRadius: chatList[index].isMessageSentByMe
                                     ? const BorderRadius.only(

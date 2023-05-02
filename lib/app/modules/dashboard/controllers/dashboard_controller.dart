@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_libphonenumber/flutter_libphonenumber.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_view.dart';
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../models.dart';
 import 'package:get/get.dart';
@@ -138,17 +139,18 @@ class DashboardController extends FullLifeCycleController
     });
   }
 
-  toChatPage(String jid) async {
+  toChatPage(BuildContext context,String jid) async {
     if (jid.isNotEmpty) {
+      Navigator.push(context, MaterialPageRoute(builder: (con)=>ChatView(jid: jid)));
       // Helper.progressLoading();
-      await Mirrorfly.getProfileDetails(jid, false).then((value) {
+      /*await Mirrorfly.getProfileDetails(jid, false).then((value) {
         if (value != null) {
           Helper.hideLoading();
           // debugPrint("Dashboard Profile===>$value");
           var profile = profiledata(value.toString());
           Get.toNamed(Routes.chat, arguments: profile);
         }
-      });
+      });*/
       // SessionManagement.setChatJid(jid);
       // Get.toNamed(Routes.chat);
     }
@@ -1221,7 +1223,7 @@ class DashboardController extends FullLifeCycleController
             if (selected.value) {
               selectOrRemoveChatfromList(index);
             } else {
-              toChatPage(chatItem.jid.checkNull());
+              toChatPage(context,chatItem.jid.checkNull());
             }
           },
           callTap: () {},

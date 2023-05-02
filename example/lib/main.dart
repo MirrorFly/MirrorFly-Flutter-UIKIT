@@ -19,10 +19,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      themeMode: ThemeMode.dark,
-      /*routes: <String, WidgetBuilder>{
-        '/chat':(context) => const ChatPageView(jid: "917010279986@xmpp-uikit-qa.contus.us",profile: ,)
-      },*/
       home: Dashboard()
     );
   }

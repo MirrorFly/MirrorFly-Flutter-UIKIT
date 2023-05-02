@@ -7,13 +7,14 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:marquee/marquee.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_theme.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/widgets.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 
-import 'package:mirrorfly_uikit_plugin/app/routes/app_pages.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:swipe_to/swipe_to.dart';
 
+import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
 import '../../../widgets/custom_action_bar_icons.dart';
 import '../../../widgets/lottie_animation.dart';
@@ -21,37 +22,49 @@ import '../chat_widgets.dart';
 import '../controllers/chat_controller.dart';
 import '../../../models.dart';
 
-class ChatView extends GetView<ChatController> {
-  const ChatView({Key? key}) : super(key: key);
+class ChatView extends StatefulWidget {
+  const ChatView({Key? key, required this.jid, this.messageId, this.isFromStarred = false}) : super(key: key);
+  final String jid;
+  final bool isFromStarred;
+  final String? messageId;
+  @override
+  State<ChatView> createState() => _ChatViewState();
+}
+
+class _ChatViewState extends State<ChatView> {
+  var controller = Get.put(ChatController());
+
+  @override
+  void initState() {
+    controller.init(jid: widget.jid,isFromStarred: widget.isFromStarred,messageId: widget.messageId);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    controller.screenHeight = MediaQuery.of(context).size.height;
-    controller.screenWidth = MediaQuery.of(context).size.width;
+    // controller.screenHeight = MediaQuery.of(context).size.height;
+    // controller.screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         appBar: getAppBar(),
         body: SafeArea(
           child: Container(
-            width: controller.screenWidth,
-            height: controller.screenHeight,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
+            width: Get.width,//controller.screenWidth,
+            height: Get.height,//controller.screenHeight,
+            decoration: BoxDecoration(
+              color: MirrorflyUikit.getTheme?.scaffoldColor,
+              image: const DecorationImage(
                 image: AssetImage(chatBg,package: package),
                 fit: BoxFit.cover,
               ),
             ),
             child: WillPopScope(
               onWillPop: () {
-                mirrorFlyLog("viewInsets",
-                    MediaQuery.of(context).viewInsets.bottom.toString());
                 if (controller.showEmoji.value) {
                   controller.showEmoji(false);
                 } else if (MediaQuery.of(context).viewInsets.bottom > 0.0) {
-                  //FocusManager.instance.primaryFocus?.unfocus();
                   controller.focusNode.unfocus();
                 } else if (controller.nJid != null) {
-                  // controller.saveUnsentMessage();
-                  Get.offAllNamed(Routes.dashboard);
+                  // Get.offAllNamed(Routes.dashboard);
                   return Future.value(true);
                 } else if (controller.isSelected.value) {
                   controller.clearAllChatSelection();
@@ -75,7 +88,7 @@ class ChatView extends GetView<ChatController> {
                         alignment: Alignment.bottomCenter,
                         child: Obx(() {
                           return Container(
-                            color: Colors.white,
+                            color: MirrorflyUikit.getTheme?.scaffoldColor,
                             child: controller.isBlocked.value
                                 ? userBlocked()
                                 : !controller.isMemberOfGroup
@@ -101,11 +114,7 @@ class ChatView extends GetView<ChatController> {
                                               return const SizedBox.shrink();
                                             }
                                           }),
-                                          const Divider(
-                                            height: 1,
-                                            thickness: 0.29,
-                                            color: textBlackColor,
-                                          ),
+                                          const AppDivider(),
                                           const SizedBox(
                                             height: 10,
                                           ),
@@ -134,7 +143,6 @@ class ChatView extends GetView<ChatController> {
                                                                   .all(
                                                               Radius.circular(
                                                                   40)),
-                                                      color: Colors.white,
                                                     ),
                                                     child: Obx(() {
                                                       return messageTypingView(
@@ -167,7 +175,7 @@ class ChatView extends GetView<ChatController> {
                                                                     right: 8.0,
                                                                     bottom: 8),
                                                             child: SvgPicture.asset(
-                                                                sendIcon,package: package,),
+                                                                sendIcon,package: package,color: MirrorflyUikit.getTheme?.primaryColor),
                                                           ))
                                                       : const SizedBox.shrink();
                                                 }),
@@ -319,7 +327,7 @@ class ChatView extends GetView<ChatController> {
         controller.isAudioRecording.value == Constants.audioRecording ||
                 controller.isAudioRecording.value == Constants.audioRecordDone
             ? Text(controller.timerInit.value,
-                style: const TextStyle(color: buttonBgColor))
+                style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))
             : const SizedBox.shrink(),
         controller.isAudioRecording.value == Constants.audioRecordInitial
             ? InkWell(
@@ -331,7 +339,7 @@ class ChatView extends GetView<ChatController> {
                         Icons.keyboard,
                         color: iconColor,
                       )
-                    : SvgPicture.asset(smileIcon,package: package,))
+                    : SvgPicture.asset(smileIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnPrimary))
             : const SizedBox.shrink(),
         controller.isAudioRecording.value == Constants.audioRecordDelete
             ? const Padding(
@@ -368,14 +376,14 @@ class ChatView extends GetView<ChatController> {
                     }
                   },
                   direction: DismissDirection.endToStart,
-                  child: const Padding(
-                    padding: EdgeInsets.only(right: 15.0),
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 15.0),
                     child: SizedBox(
                         height: 50,
                         child: Align(
                             alignment: Alignment.centerRight,
                             child: Text('< Slide to Cancel',
-                                textAlign: TextAlign.end))),
+                                textAlign: TextAlign.end,style:TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)))),
                   ),
                 ),
               )
@@ -404,6 +412,7 @@ class ChatView extends GetView<ChatController> {
                     controller.isTyping(text);
                   },
                   keyboardType: TextInputType.multiline,
+                  keyboardAppearance: MirrorflyUikit.getTheme==MirrorFlyTheme.mirrorFlyDarkTheme ? Brightness.dark : Brightness.light,
                   minLines: 1,
                   maxLines: 5,
                   enabled: controller.isAudioRecording.value ==
@@ -412,8 +421,10 @@ class ChatView extends GetView<ChatController> {
                       : false,
                   controller: controller.messageController,
                   focusNode: controller.focusNode,
-                  decoration: const InputDecoration(
-                      hintText: "Start Typing...", border: InputBorder.none),
+                  cursorColor: MirrorflyUikit.getTheme!.primaryColor,
+                  style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                  decoration: InputDecoration(
+                      hintText: "Start Typing...", border: InputBorder.none,hintStyle: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)),
                 ),
               )
             : const SizedBox.shrink(),
@@ -422,7 +433,7 @@ class ChatView extends GetView<ChatController> {
                 onPressed: () {
                   controller.showAttachmentsView(context);
                 },
-                icon: SvgPicture.asset(attachIcon,package: package,),
+                icon: SvgPicture.asset(attachIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnPrimary),
               )
             : const SizedBox.shrink(),
         controller.isAudioRecording.value == Constants.audioRecordInitial
@@ -430,7 +441,7 @@ class ChatView extends GetView<ChatController> {
                 onPressed: () {
                   controller.startRecording();
                 },
-                icon: SvgPicture.asset(micIcon,package: package,),
+                icon: SvgPicture.asset(micIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnPrimary),
               )
             : const SizedBox.shrink(),
         const SizedBox(
@@ -443,21 +454,17 @@ class ChatView extends GetView<ChatController> {
   Widget userBlocked() {
     return Column(
       children: [
-        const Divider(
-          height: 1,
-          thickness: 0.29,
-          color: textBlackColor,
-        ),
+        const AppDivider(),
         Padding(
           padding: const EdgeInsets.only(top: 15.0, bottom: 15.0, left: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
+              Text(
                 "You have blocked ",
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 15),
+                style: TextStyle(fontSize: 15,color: MirrorflyUikit.getTheme?.textPrimaryColor),
               ),
               const SizedBox(
                 width: 5,
@@ -468,7 +475,7 @@ class ChatView extends GetView<ChatController> {
                   //controller.profile.name.checkNull(),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 15,color: MirrorflyUikit.getTheme?.textPrimaryColor),
                 ),
               ),
               const SizedBox(
@@ -491,18 +498,14 @@ class ChatView extends GetView<ChatController> {
 
   Widget userNoLonger() {
     return Column(
-      children: const [
-        Divider(
-          height: 1,
-          thickness: 0.29,
-          color: textBlackColor,
-        ),
+      children: [
+        const AppDivider(),
         Padding(
-          padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+          padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
           child: Text(
             "You can't send messages to this group because you're no longer a participant.",
             style: TextStyle(
-              fontSize: 15,
+              fontSize: 15,color: MirrorflyUikit.getTheme?.textPrimaryColor
             ),
             textAlign: TextAlign.center,
           ),
@@ -533,10 +536,10 @@ class ChatView extends GetView<ChatController> {
               gridPadding: EdgeInsets.zero,
               initCategory: Category.RECENT,
               bgColor: const Color(0xFFF2F2F2),
-              indicatorColor: Colors.blue,
-              iconColor: Colors.grey,
-              iconColorSelected: Colors.blue,
-              backspaceColor: Colors.blue,
+              indicatorColor: MirrorflyUikit.getTheme!.primaryColor,
+              iconColor: MirrorflyUikit.getTheme!.colorOnPrimary,
+              iconColorSelected: MirrorflyUikit.getTheme!.primaryColor,
+              backspaceColor: MirrorflyUikit.getTheme!.primaryColor,
               skinToneDialogBgColor: Colors.white,
               skinToneIndicatorColor: Colors.grey,
               enableSkinTones: true,
@@ -630,7 +633,7 @@ class ChatView extends GetView<ChatController> {
                           return Container(
                             key: Key(chatList[index].messageId),
                             color: chatList[index].isSelected.value
-                                ? chatReplyContainerColor
+                                ? MirrorflyUikit.getTheme?.primaryColor.withAlpha(60)
                                 : Colors.transparent,
                             margin: const EdgeInsets.only(
                                 left: 14, right: 14, top: 5, bottom: 10),
@@ -652,12 +655,12 @@ class ChatView extends GetView<ChatController> {
                                           controller.forwardSingleMessage(
                                               chatList[index].messageId);
                                         },
-                                        icon: SvgPicture.asset(forwardMedia,package: package,)),
+                                        icon: SvgPicture.asset(forwardMedia,package: package,color: MirrorflyUikit.getTheme?.textPrimaryColor,)),
                                   ),
                                   Container(
                                     constraints: BoxConstraints(
                                         maxWidth:
-                                            controller.screenWidth * 0.75),
+                                            Get.width * 0.75),
                                     decoration: BoxDecoration(
                                         borderRadius: chatList[index]
                                                 .isMessageSentByMe
@@ -672,11 +675,11 @@ class ChatView extends GetView<ChatController> {
                                                     Radius.circular(10)),
                                         color:
                                             (chatList[index].isMessageSentByMe
-                                                ? chatSentBgColor
+                                                ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor//chatSentBgColor
                                                 : Colors.white),
                                         border: chatList[index]
                                                 .isMessageSentByMe
-                                            ? Border.all(color: chatSentBgColor)
+                                            ? Border.all(color: MirrorflyUikit.getTheme!.chatBubblePrimaryColor)//chatSentBgColor)
                                             : Border.all(
                                                 color: chatBorderColor)),
                                     child: Column(
@@ -815,21 +818,25 @@ class ChatView extends GetView<ChatController> {
       // break;
     }
   }*/
-
   selectedAppBar() {
     return AppBar(
-      // leadingWidth: 25,
-      backgroundColor: Colors.white,
+      backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
+      actionsIconTheme: IconThemeData(
+          color: MirrorflyUikit.getTheme?.colorOnAppbar ??
+              iconColor),
+      iconTheme: IconThemeData(
+          color: MirrorflyUikit.getTheme?.colorOnAppbar ??
+              iconColor),
       leading: IconButton(
         icon: const Icon(Icons.clear),
         onPressed: () {
           controller.clearAllChatSelection();
         },
       ),
-      title: Text(controller.selectedChatList.length.toString()),
+      title: Text(controller.selectedChatList.length.toString(),style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
       actions: [
         CustomActionBarIcons(
-            availableWidth: controller.screenWidth / 2, // half the screen width
+            availableWidth: Get.width / 2, // half the screen width
             actionWidth: 48, // default for IconButtons
             actions: [
               // controller.getOptionStatus('Reply')
@@ -841,10 +848,10 @@ class ChatView extends GetView<ChatController> {
                     controller
                         .clearChatSelection(controller.selectedChatList[0]);
                   },
-                  icon: SvgPicture.asset(replyIcon,package: package,),
+                  icon: SvgPicture.asset(replyIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar),
                   tooltip: 'Reply',
                 ),
-                overflowWidget: const Text("Reply"),
+                overflowWidget: Text("Reply",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: controller.canBeReplied.value
                     ? ShowAsAction.always
                     : ShowAsAction.gone,
@@ -861,10 +868,10 @@ class ChatView extends GetView<ChatController> {
                   onPressed: () {
                     controller.checkBusyStatusForForward();
                   },
-                  icon: SvgPicture.asset(forwardIcon),
+                  icon: SvgPicture.asset(forwardIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar,),
                   tooltip: 'Forward',
                 ),
-                overflowWidget: const Text("Forward"),
+                overflowWidget: Text("Forward",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: controller.canBeForwarded.value
                     ? ShowAsAction.always
                     : ShowAsAction.gone,
@@ -884,10 +891,10 @@ class ChatView extends GetView<ChatController> {
                   },
                   // icon: controller.getOptionStatus('Favourite') ? const Icon(Icons.star_border_outlined)
                   // icon: controller.selectedChatList[0].isMessageStarred
-                  icon: SvgPicture.asset(favouriteIcon),
+                  icon: SvgPicture.asset(favouriteIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar),
                   tooltip: 'Favourite',
                 ),
-                overflowWidget: const Text("Favourite"),
+                overflowWidget: Text("Favourite",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: controller.canBeStarred.value
                     ? ShowAsAction.always
                     : ShowAsAction.gone,
@@ -904,10 +911,10 @@ class ChatView extends GetView<ChatController> {
                   },
                   // icon: controller.getOptionStatus('Favourite') ? const Icon(Icons.star_border_outlined)
                   // icon: controller.selectedChatList[0].isMessageStarred
-                  icon: SvgPicture.asset(unFavouriteIcon),
+                  icon: SvgPicture.asset(unFavouriteIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar),
                   tooltip: 'unFavourite',
                 ),
-                overflowWidget: const Text("unFavourite"),
+                overflowWidget: Text("unFavourite",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: controller.canBeUnStarred.value
                     ? ShowAsAction.always
                     : ShowAsAction.gone,
@@ -922,10 +929,10 @@ class ChatView extends GetView<ChatController> {
                   onPressed: () {
                     controller.deleteMessages();
                   },
-                  icon: SvgPicture.asset(deleteIcon),
+                  icon: SvgPicture.asset(deleteIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar),
                   tooltip: 'Delete',
                 ),
-                overflowWidget: const Text("Delete"),
+                overflowWidget: Text("Delete",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: ShowAsAction.always,
                 keyValue: 'Delete',
                 onItemClick: () {
@@ -942,7 +949,7 @@ class ChatView extends GetView<ChatController> {
                       controller.reportChatOrUser();
                     },
                     icon: const Icon(Icons.report_problem_rounded)),
-                overflowWidget: const Text("Report"),
+                overflowWidget: Text("Report",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: controller.canShowReport.value
                     ? ShowAsAction.never
                     : ShowAsAction.gone,
@@ -966,10 +973,11 @@ class ChatView extends GetView<ChatController> {
                   icon: SvgPicture.asset(
                     copyIcon,
                     fit: BoxFit.contain,
+                    package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar
                   ),
                   tooltip: 'Copy',
                 ),
-                overflowWidget: const Text("Copy"),
+                overflowWidget: Text("Copy",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: controller.canBeCopied.value
                     ? ShowAsAction.never
                     : ShowAsAction.gone,
@@ -991,10 +999,11 @@ class ChatView extends GetView<ChatController> {
                   icon: SvgPicture.asset(
                     infoIcon,
                     fit: BoxFit.contain,
+                    package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar
                   ),
                   tooltip: 'Message Info',
                 ),
-                overflowWidget: const Text("Message Info"),
+                overflowWidget: Text("Message Info",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: controller.canShowInfo.value
                     ? ShowAsAction.never
                     : ShowAsAction.gone,
@@ -1010,10 +1019,10 @@ class ChatView extends GetView<ChatController> {
               CustomAction(
                 visibleWidget: IconButton(
                   onPressed: () {},
-                  icon: SvgPicture.asset(shareIcon),
+                  icon: SvgPicture.asset(shareIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar),
                   tooltip: 'Share',
                 ),
-                overflowWidget: const Text("Share"),
+                overflowWidget: Text("Share",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: controller.canBeShared.value
                     ? ShowAsAction.never
                     : ShowAsAction.gone,
@@ -1031,17 +1040,25 @@ class ChatView extends GetView<ChatController> {
   chatAppBar() {
     return Obx(() {
       return AppBar(
+        backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
+        actionsIconTheme: IconThemeData(
+            color: MirrorflyUikit.getTheme?.colorOnAppbar ??
+                iconColor),
+        iconTheme: IconThemeData(
+            color: MirrorflyUikit.getTheme?.colorOnAppbar ??
+                iconColor),
         automaticallyImplyLeading: false,
         leadingWidth: 80,
-        backgroundColor: Get.context!.theme.appBarTheme.backgroundColor,
         leading: InkWell(
           onTap: () {
             if (controller.showEmoji.value) {
               controller.showEmoji(false);
             } else if (controller.nJid != null) {
-              Get.offAllNamed(Routes.dashboard);
+              // Get.offAllNamed(Routes.dashboard);
+              Navigator.pop(context);
             } else {
-              Get.back();
+              // Get.back();
+              Navigator.pop(context);
             }
           },
           child: Row(
@@ -1087,7 +1104,7 @@ class ChatView extends GetView<ChatController> {
           ),
         ),
         title: SizedBox(
-          width: (controller.screenWidth) / 1.9,
+          width: (Get.width) / 1.9,
           child: InkWell(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1100,20 +1117,21 @@ class ChatView extends GetView<ChatController> {
                       ? controller.profile.nickName.checkNull()
                       : controller.profile.name.checkNull(),*/
                   overflow: TextOverflow.fade,
+                  style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
                 ),
                 Obx(() {
                   return controller.groupParticipantsName.isNotEmpty
                       ? SizedBox(
-                          width: (controller.screenWidth) * 0.90,
+                          width: (Get.width) * 0.90,
                           height: 15,
                           child: Marquee(
                               text:
                                   "${controller.groupParticipantsName}       ",
-                              style: const TextStyle(fontSize: 12)))
+                              style: TextStyle(fontSize: 12,color: MirrorflyUikit.getTheme?.colorOnAppbar)))
                       : controller.subtitle.isNotEmpty
                           ? Text(
                               controller.subtitle,
-                              style: const TextStyle(fontSize: 12),
+                              style: TextStyle(fontSize: 12,color: MirrorflyUikit.getTheme?.colorOnAppbar),
                               overflow: TextOverflow.fade,
                             )
                           : const SizedBox();
@@ -1129,7 +1147,7 @@ class ChatView extends GetView<ChatController> {
         ),
         actions: [
           CustomActionBarIcons(
-            availableWidth: controller.screenWidth / 2, // half the screen width
+            availableWidth: Get.width / 2, // half the screen width
             actionWidth: 48, // default for IconButtons
             actions: [
               CustomAction(
@@ -1139,7 +1157,7 @@ class ChatView extends GetView<ChatController> {
                   },
                   icon: const Icon(Icons.cancel),
                 ),
-                overflowWidget: const Text("Clear Chat"),
+                overflowWidget: Text("Clear Chat",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: ShowAsAction.never,
                 keyValue: 'Clear Chat',
                 onItemClick: () {
@@ -1155,7 +1173,7 @@ class ChatView extends GetView<ChatController> {
                   },
                   icon: const Icon(Icons.report_problem_rounded),
                 ),
-                overflowWidget: const Text("Report"),
+                overflowWidget: Text("Report",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: ShowAsAction.never,
                 keyValue: 'Report',
                 onItemClick: () {
@@ -1172,7 +1190,7 @@ class ChatView extends GetView<ChatController> {
                         },
                         icon: const Icon(Icons.block),
                       ),
-                      overflowWidget: const Text("Unblock"),
+                      overflowWidget: Text("Unblock",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                       showAsAction: ShowAsAction.never,
                       keyValue: 'Unblock',
                       onItemClick: () {
@@ -1188,7 +1206,7 @@ class ChatView extends GetView<ChatController> {
                         },
                         icon: const Icon(Icons.block),
                       ),
-                      overflowWidget: const Text("Block"),
+                      overflowWidget: Text("Block",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                       showAsAction: controller.profile.isGroupProfile ?? false
                           ? ShowAsAction.gone
                           : ShowAsAction.never,
@@ -1203,7 +1221,7 @@ class ChatView extends GetView<ChatController> {
                   onPressed: () {},
                   icon: const Icon(Icons.search),
                 ),
-                overflowWidget: const Text("Search"),
+                overflowWidget: Text("Search",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: ShowAsAction.never,
                 keyValue: 'Search',
                 onItemClick: () {
@@ -1221,7 +1239,7 @@ class ChatView extends GetView<ChatController> {
                     controller.closeKeyBoard();
                     controller.exportChat();
                   },
-                  child: const Text("Email Chat"),
+                  child: Text("Email Chat",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 ),
                 showAsAction: ShowAsAction.never,
                 keyValue: 'EmailChat',
@@ -1235,25 +1253,13 @@ class ChatView extends GetView<ChatController> {
                   onPressed: () {},
                   icon: const Icon(Icons.shortcut),
                 ),
-                overflowWidget: const Text("Add Chat Shortcut"),
+                overflowWidget: Text("Add Chat Shortcut",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: ShowAsAction.never,
                 keyValue: 'Shortcut',
                 onItemClick: () {
                   controller.closeKeyBoard();
                 },
               ),
-              /*CustomAction(
-                visibleWidget: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.call),
-                ),
-                overflowWidget: const Text("Call"),
-                showAsAction: ShowAsAction.always,
-                keyValue: 'Shortcut',
-                onItemClick: () {
-                  controller.makeVoiceCall();
-                },
-              ),*/
             ],
           ),
         ],

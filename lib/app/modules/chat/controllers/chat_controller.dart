@@ -13,6 +13,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/de_bouncer.dart';
+import 'package:mirrorfly_uikit_plugin/app/data/network.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/permissions.dart';
 import 'package:path_provider/path_provider.dart';
@@ -58,8 +59,8 @@ class ChatController extends FullLifeCycleController
   var timerInit = "00:00".obs;
   DateTime? startTime;
 
-  double screenHeight = 0.0;
-  double screenWidth = 0.0;
+  // double screenHeight = 0.0;
+  // double screenWidth = 0.0;
 
   // AudioPlayer player = AudioPlayer();
 
@@ -114,51 +115,45 @@ class ChatController extends FullLifeCycleController
     // var profileDetail = Get.arguments as Profile;
     // profile_.value = profileDetail;
     // if(profile_.value.jid == null){
+
+  }
+
+  init({
+    String? jid,
+    bool isFromStarred = false,
+    String? messageId,
+  }) async {
     var userJid = SessionManagement.getChatJid().checkNull();
-    if (Get.parameters['jid'] != null) {
-      nJid = Get.parameters['jid'];
-      debugPrint("parameter :${Get.parameters['jid']}");
+    if (jid != null) {
+      nJid = jid;
+      debugPrint("parameter :$jid");
       if (nJid != null) {
-        userJid = Get.parameters['jid'] as String;
+        userJid = jid;
       }
-    } else if (Get.parameters['isFromStarred'] == "true") {
-      if (Get.parameters['userJid'] != null) {
-        userJid = Get.parameters['userJid'] as String;
+    } else if (isFromStarred) {
+      if (jid != null) {
+        userJid = jid;
       }
-      if (Get.parameters['messageId'] != null) {
-        starredChatMessageId = Get.parameters['messageId'] as String;
+      if (messageId!= null) {
+        starredChatMessageId = messageId;
       }
     }
-    if (userJid.isEmpty) {
+    /*if (userJid.isEmpty) {
       var profileDetail = Get.arguments as Profile;
       profile_(profileDetail);
       checkAdminBlocked();
       ready();
       // initListeners();
-    } else {
-      getProfileDetails(userJid).then((value) {
+    } else {*/
+
+      getProfileDetails(userJid,server: await NetworkManager.isNetConnected()).then((value) {
         SessionManagement.setChatJid("");
         profile_(value);
         checkAdminBlocked();
         ready();
         // initListeners();
       });
-    }
-    // mirrorFlyLog('savedContact', profile.isItSavedContact.toString());
-
-    /*player.onPlayerCompletion.listen((event) {
-      playingChat!.mediaChatMessage!.isPlaying = false;
-      playingChat!.mediaChatMessage!.currentPos = 0;
-      player.stop();
-      chatList.refresh();
-      playingChat = null;
-    });
-
-    player.onAudioPositionChanged.listen((Duration p) {
-      mirrorFlyLog('p.inMilliseconds', p.inMilliseconds.toString());
-      playingChat?.mediaChatMessage!.currentPos = (p.inMilliseconds);
-      chatList.refresh();
-    });*/
+    // }
 
     setAudioPath();
 
@@ -347,46 +342,50 @@ class ChatController extends FullLifeCycleController
     if (!busyStatus.checkNull()) {
       //if (await AppUtils.isNetConnected()) {
       focusNode.unfocus();
-      showBottomSheetAttachment();
+      showBottomSheetAttachment(context);
       /*} else {
         toToast(Constants.noInternetConnection);
       }*/
     } else {
       //show busy status popup
-      showBusyStatusAlert(showBottomSheetAttachment);
+      showBusyStatusAlert(showBottomSheetAttachment(context));
     }
   }
 
-  showBottomSheetAttachment() {
-    Get.bottomSheet(
-      Container(
-        margin: const EdgeInsets.only(right: 18.0, left: 18.0, bottom: 50),
-        child: BottomSheet(
-            onClosing: () {},
-            backgroundColor: Colors.transparent,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            builder: (builder) => AttachmentsSheetView(onDocument: () {
-                  Get.back();
-                  documentPickUpload();
-                }, onCamera: () {
-                  Get.back();
-                  onCameraClick();
-                }, onGallery: () {
-                  Get.back();
-                  onGalleryClick();
-                }, onAudio: () {
-                  Get.back();
-                  onAudioClick();
-                }, onContact: () {
-                  Get.back();
-                  onContactClick();
-                }, onLocation: () {
-                  Get.back();
-                  onLocationClick();
-                })),
-      ),
-      ignoreSafeArea: true,
+  showBottomSheetAttachment(BuildContext context) {
+    showModalBottomSheet(
+      context:context,
+      backgroundColor: Colors.transparent,
+      enableDrag: false,
+      builder: (BuildContext context) { return Container(
+      margin: const EdgeInsets.only(right: 18.0, left: 18.0, bottom: 18.0),
+      child: BottomSheet(
+          onClosing: () {},
+          enableDrag: false,
+          backgroundColor: Colors.transparent,
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          builder: (builder) => AttachmentsSheetView(onDocument: () {
+            Get.back();
+            documentPickUpload();
+          }, onCamera: () {
+            Get.back();
+            onCameraClick();
+          }, onGallery: () {
+            Get.back();
+            onGalleryClick();
+          }, onAudio: () {
+            Get.back();
+            onAudioClick();
+          }, onContact: () {
+            Get.back();
+            onContactClick();
+          }, onLocation: () {
+            Get.back();
+            onLocationClick();
+          })),
+    );  },
+      useSafeArea: true,
     );
   }
 

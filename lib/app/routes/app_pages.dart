@@ -154,7 +154,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.chat,
-      page: () => const ChatView(),
+      page: () => const ChatView(jid:""),
       // arguments: Profile(),
       binding: ChatBinding(),
     ),

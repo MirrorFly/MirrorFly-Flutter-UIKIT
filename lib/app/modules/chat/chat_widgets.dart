@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
+import '../../../mirrorfly_uikit_plugin.dart';
 import '../../models.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -42,9 +43,9 @@ class ReplyingMessageHeader extends StatelessWidget {
           color: chatSentBgColor,
         ),
         child: Container(
-          decoration: const BoxDecoration(
-            color: chatReplyContainerColor,
-            borderRadius: BorderRadius.all(Radius.circular(5)),
+          decoration: BoxDecoration(
+            color: MirrorflyUikit.getTheme?.primaryColor.withAlpha(60),
+            borderRadius: const BorderRadius.all(Radius.circular(5)),
           ),
           child: Row(
             children: [
@@ -339,7 +340,7 @@ class ReplyMessageHeader extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         color: chatMessage.isMessageSentByMe
-            ? chatReplyContainerColor
+            ? MirrorflyUikit.getTheme?.primaryColor.withAlpha(60)
             : chatReplySenderColor,
       ),
       child: Row(
@@ -671,7 +672,7 @@ class _AudioMessageViewState extends State<AudioMessageView>
       decoration: BoxDecoration(
         border: Border.all(
           color: widget.chatMessage.isMessageSentByMe
-              ? chatReplyContainerColor
+              ? MirrorflyUikit.getTheme!.primaryColor.withAlpha(60)
               : chatReplySenderColor,
         ),
         borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -686,7 +687,7 @@ class _AudioMessageViewState extends State<AudioMessageView>
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10), topRight: Radius.circular(10)),
               color: widget.chatMessage.isMessageSentByMe
-                  ? chatReplyContainerColor
+                  ? MirrorflyUikit.getTheme?.primaryColor.withAlpha(60)
                   : chatReplySenderColor,
             ),
             padding: const EdgeInsets.all(15),
@@ -845,7 +846,7 @@ class _AudioMessageViewState extends State<AudioMessageView>
           child: Container(
             decoration: BoxDecoration(
               color: chatMessage.isMessageSentByMe
-                  ? chatReplyContainerColor
+                  ? MirrorflyUikit.getTheme?.primaryColor.withAlpha(60)
                   : chatReplySenderColor,
             ),
             padding: const EdgeInsets.symmetric(vertical: 15),
@@ -1027,7 +1028,7 @@ class ContactMessageView extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         color: chatMessage.isMessageSentByMe
-            ? chatReplyContainerColor
+            ? MirrorflyUikit.getTheme?.primaryColor.withAlpha(60)
             : chatReplySenderColor,
       ),
       width: screenWidth * 0.60,
@@ -1249,7 +1250,7 @@ class DocumentMessageView extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border.all(
             color: chatMessage.isMessageSentByMe
-                ? chatReplyContainerColor
+                ? MirrorflyUikit.getTheme!.primaryColor.withAlpha(60)
                 : chatReplySenderColor,
           ),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -1268,7 +1269,7 @@ class DocumentMessageView extends StatelessWidget {
                     topLeft: Radius.circular(10),
                     topRight: Radius.circular(10)),
                 color: chatMessage.isMessageSentByMe
-                    ? chatReplyContainerColor
+                    ? MirrorflyUikit.getTheme?.primaryColor.withAlpha(60)
                     : chatReplySenderColor,
               ),
               padding: const EdgeInsets.all(8.0),
@@ -1705,14 +1706,14 @@ class NotificationMessageView extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.all(4),
         padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 20),
-        decoration: const BoxDecoration(
-            color: notificationTextBgColor,
-            borderRadius: BorderRadius.all(Radius.circular(15))),
+        decoration: BoxDecoration(
+            color: MirrorflyUikit.getTheme?.secondaryColor,
+            borderRadius: const BorderRadius.all(Radius.circular(15))),
         child: Text(chatMessage ?? "",
-            style: const TextStyle(
+            style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w400,
-                color: notificationTextColor)),
+                color: MirrorflyUikit.getTheme?.textSecondaryColor)),
       ),
     );
   }
@@ -2285,7 +2286,7 @@ Widget iconCreation(String iconPath, String text, VoidCallback onTap) {
     onTap: onTap,
     child: Column(
       children: [
-        SvgPicture.asset(iconPath),
+        SvgPicture.asset(iconPath,package: package,),
         const SizedBox(
           height: 5,
         ),

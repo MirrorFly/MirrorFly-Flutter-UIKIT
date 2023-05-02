@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
+import 'package:mirrorfly_uikit_plugin/app/model/reply_hash_map.dart';
 
 import 'app/common/app_theme.dart';
 import 'app/common/main_controller.dart';
@@ -43,6 +44,7 @@ class MirrorflyUikit {
         enableDebugLog: enableDebugLog);
     getTheme = theme;
     isTrialLicence = isTrialLicenceKey;
+    ReplyHashMap.init();
     SessionManagement.onInit().then((value) {
       SessionManagement.setIsTrailLicence(isTrialLicenceKey);
       Get.put<MainController>(MainController());
@@ -89,6 +91,6 @@ class MirrorflyUikit {
 
   static ChatView chatPage() {
     Get.put<ChatController>(ChatController());
-    return const ChatView();
+    return const ChatView(jid: "",);
   }
 }

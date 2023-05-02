@@ -16,7 +16,7 @@ class ChatPage {
   static GetPage chatPage(){
     return GetPage(
       name: Routes.chat,
-      page: () => ChatView(),
+      page: () => ChatView(jid:""),
       // arguments: Profile(),
       binding: ChatBinding(),
     );

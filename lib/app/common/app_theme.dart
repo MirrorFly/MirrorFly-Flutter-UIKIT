@@ -31,7 +31,7 @@ class MirrorFlyTheme {
       primaryColor: buttonBgColor,
       appBarColor: Colors.white,
       colorOnAppbar: Colors.black,
-      secondaryColor: Colors.grey,
+      secondaryColor: notificationTextBgColor,
       scaffoldColor: Colors.white,
       colorOnPrimary: Colors.white,
       textPrimaryColor: Colors.black,
@@ -41,14 +41,14 @@ class MirrorFlyTheme {
 
   static MirrorFlyAppTheme get mirrorFlyDarkTheme => MirrorFlyAppTheme(
       primaryColor: buttonBgColor,
-      secondaryColor: Colors.black12,
+      secondaryColor: const Color(0xff676767),
       appBarColor: const Color(0xff2A2A2A),
       colorOnAppbar: Colors.white,
       scaffoldColor: Colors.black,
       colorOnPrimary: Colors.white,
       textPrimaryColor: Colors.white,
-      textSecondaryColor: Colors.white60,
-      chatBubblePrimaryColor: Colors.blue,
+      textSecondaryColor: const Color(0xffFAFAFA),
+      chatBubblePrimaryColor: chatSentBgColor,
       chatBubbleSecondaryColor: Colors.black12);
 
   static late var mirrorflyTheme;
