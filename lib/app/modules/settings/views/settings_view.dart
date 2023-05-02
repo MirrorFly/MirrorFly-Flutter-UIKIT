@@ -1,22 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/settings/controllers/settings_controller.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/settings/views/settings_widgets.dart';
 import 'package:mirrorfly_uikit_plugin/app/routes/app_pages.dart';
+import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit_plugin.dart';
 
 import '../../../common/constants.dart';
 import 'about/about_and_help_view.dart';
 
-class SettingsView extends GetView<SettingsController> {
+class SettingsView extends StatefulWidget {
   const SettingsView({Key? key}) : super(key: key);
+
+  @override
+  State<SettingsView> createState() => _SettingsViewState();
+}
+
+class _SettingsViewState extends State<SettingsView> {
   @override
   Widget build(BuildContext context) {
-
+    final controller = Get.put(SettingsController());
     return Scaffold(
+      backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
       appBar: AppBar(
         title: const Text('Settings'),
         automaticallyImplyLeading: true,
+        backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -92,6 +100,4 @@ class SettingsView extends GetView<SettingsController> {
       ),
     );
   }
-
-
 }

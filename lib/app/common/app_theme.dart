@@ -56,6 +56,8 @@ class MirrorFlyTheme {
   static customTheme(
       {required Color primaryColor,
       required Color secondaryColor,
+      required Color appBarColor,
+      required Color colorOnAppbar,
       required Color scaffoldColor,
       required Color colorOnPrimary,
       required Color textPrimaryColor,
@@ -65,8 +67,8 @@ class MirrorFlyTheme {
     return mirrorflyTheme = MirrorFlyAppTheme(
         primaryColor: primaryColor,
         secondaryColor: secondaryColor,
-        appBarColor: primaryColor,
-        colorOnAppbar: colorOnPrimary,
+        appBarColor: appBarColor,
+        colorOnAppbar: colorOnAppbar,
         scaffoldColor: scaffoldColor,
         colorOnPrimary: colorOnPrimary,
         textPrimaryColor: textPrimaryColor,

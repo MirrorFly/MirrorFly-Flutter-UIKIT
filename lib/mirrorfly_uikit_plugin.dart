@@ -1,9 +1,12 @@
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
-import 'package:mirrorfly_uikit_plugin/app/model/reply_hash_map.dart';
+import 'package:mirrorfly_uikit_plugin/app/model/app_config.dart';
 
 import 'app/common/app_theme.dart';
-import 'app/common/main_controller.dart';
 import 'app/data/apputils.dart';
 import 'app/data/session_management.dart';
 import 'app/model/register_model.dart';
@@ -18,6 +21,7 @@ class MirrorflyUikit {
   static Future<String?> getPlatformVersion() {
     return MirrorflyUikitPluginPlatform.instance.getPlatformVersion();
   }
+
   ///Used as a initUIKIT class for [MirrorflyUikit]
   /// * [baseUrl] provides the base url for making api calls
   /// * [licenseKey] provides the License Key
@@ -25,43 +29,56 @@ class MirrorflyUikit {
   /// * [isTrialLicenceKey] to provide trial/live register and contact sync
   /// * [storageFolderName] provides the Local Storage Folder Name
   /// * [enableDebugLog] provides the Debug Log.
-  static initUIKIT(
-      {required String baseUrl,
-      required String licenseKey,
-      required String iOSContainerID,
-      MirrorFlyAppTheme? theme,// = MirrorflyTheme.lightTheme,
-      String? storageFolderName,
-      bool enableMobileNumberLogin = true,
-      bool isTrialLicenceKey = true,
-      bool enableDebugLog = false}) {
-    Mirrorfly.init(
-        baseUrl: baseUrl,
-        licenseKey: licenseKey,
-        iOSContainerID: iOSContainerID,
-        storageFolderName: storageFolderName,
-        enableMobileNumberLogin: enableMobileNumberLogin,
-        isTrialLicenceKey: isTrialLicenceKey,
-        enableDebugLog: enableDebugLog);
-    getTheme = theme;
-    isTrialLicence = isTrialLicenceKey;
-    ReplyHashMap.init();
-    SessionManagement.onInit().then((value) {
-      SessionManagement.setIsTrailLicence(isTrialLicenceKey);
-      Get.put<MainController>(MainController());
-    });
+  static initUIKIT() async {
+    try {
+      String configFile = await rootBundle.loadString('assets/mirrorfly_config.json');
+      var config = AppConfig.fromJson(json.decode(configFile));
+      Mirrorfly.init(
+          baseUrl: config.projectInfo.serverAddress,
+          licenseKey: config.projectInfo.licenseKey,
+          iOSContainerID: config.projectInfo.iOSContainerId,
+          storageFolderName: config.projectInfo.storageFolderName.isEmpty ? null : config.projectInfo.storageFolderName,
+          enableMobileNumberLogin: config.projectInfo.enableMobileNumberLogin,
+          isTrialLicenceKey: config.projectInfo.isTrialLicenceKey,
+          enableDebugLog: false);
+
+      getTheme = config.appTheme.theme == "light"
+          ? MirrorFlyTheme.mirrorFlyLightTheme
+          : config.appTheme.theme == "dark"
+              ? MirrorFlyTheme.mirrorFlyDarkTheme
+              : MirrorFlyTheme.customTheme(
+                  primaryColor: Color(config.appTheme.customTheme.primaryColor),
+                  secondaryColor: Color(config.appTheme.customTheme.secondaryColor),
+                  scaffoldColor: Color(config.appTheme.customTheme.scaffoldColor),
+                  colorOnPrimary: Color(config.appTheme.customTheme.colorOnPrimary),
+                  textPrimaryColor: Color(config.appTheme.customTheme.textPrimaryColor),
+                  textSecondaryColor: Color(config.appTheme.customTheme.textSecondaryColor),
+                  chatBubblePrimaryColor: Color(config.appTheme.customTheme.chatBubblePrimaryColor),
+                  chatBubbleSecondaryColor: Color(config.appTheme.customTheme.chatBubbleSecondaryColor),
+                  appBarColor: Color(config.appTheme.customTheme.appBarColor),
+                  colorOnAppbar: Color(config.appTheme.customTheme.colorOnAppbar));
+      isTrialLicence = config.projectInfo.isTrialLicenceKey;
+    } catch (e) {
+      throw ("Mirrorfly config file not found in assets");
+    }
+
+    //commenting bcz used as a local variable
+    // SessionManagement.onInit().then((value) {
+    //   SessionManagement.setIsTrailLicence(isTrialLicenceKey);
+    //   Get.put<MainController>(MainController());
+    // });
   }
 
   ///Used as a register class for [MirrorflyUikit]
   ///
   ///* [userIdentifier] provide the Unique Id to Register the User
   ///* [token] provide the FCM token this is an optional
-  static Future<Map> register(String userIdentifier,
-      {String token = ""}) async {
+  static Future<Map> register(String userIdentifier, {String token = ""}) async {
     if (await AppUtils.isNetConnected()) {
       var value = await Mirrorfly.registerUser(userIdentifier, token: token);
       try {
         var userData = registerModelFromJson(value); //message
-        if(userData.data != null) {
+        if (userData.data != null) {
           SessionManagement.setLogin(userData.data!.username!.isNotEmpty);
           SessionManagement.setUser(userData.data!);
           Mirrorfly.enableDisableArchivedSettings(true);
@@ -69,10 +86,10 @@ class MirrorflyUikit {
           // SessionManagement.setCountryCode((countryCode ?? "").replaceAll('+', ''));
           _setUserJID(userData.data!.username!);
           return {'status': true, 'message': ''};
-        }else{
+        } else {
           return {'status': false, 'message': '${userData.message}'};
         }
-      } catch(e) {
+      } catch (e) {
         return {'status': false, 'message': '$e'};
       }
     } else {
@@ -91,6 +108,6 @@ class MirrorflyUikit {
 
   static ChatView chatPage() {
     Get.put<ChatController>(ChatController());
-    return const ChatView(jid: "",);
+    return const ChatView();
   }
 }

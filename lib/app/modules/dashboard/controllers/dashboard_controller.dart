@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_libphonenumber/flutter_libphonenumber.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_view.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/settings/views/settings_view.dart';
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../models.dart';
 import 'package:get/get.dart';
@@ -139,18 +139,17 @@ class DashboardController extends FullLifeCycleController
     });
   }
 
-  toChatPage(BuildContext context,String jid) async {
+  toChatPage(String jid) async {
     if (jid.isNotEmpty) {
-      Navigator.push(context, MaterialPageRoute(builder: (con)=>ChatView(jid: jid)));
       // Helper.progressLoading();
-      /*await Mirrorfly.getProfileDetails(jid, false).then((value) {
+      await Mirrorfly.getProfileDetails(jid, false).then((value) {
         if (value != null) {
           Helper.hideLoading();
           // debugPrint("Dashboard Profile===>$value");
           var profile = profiledata(value.toString());
           Get.toNamed(Routes.chat, arguments: profile);
         }
-      });*/
+      });
       // SessionManagement.setChatJid(jid);
       // Get.toNamed(Routes.chat);
     }
@@ -390,9 +389,12 @@ class DashboardController extends FullLifeCycleController
         () => Get.toNamed(Routes.createGroup));
   }
 
-  gotoSettings() {
+  gotoSettings(BuildContext context) {
     Future.delayed(
-        const Duration(milliseconds: 100), () => Get.toNamed(Routes.settings));
+        const Duration(milliseconds: 100), () => Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const SettingsView()),
+    ));
   }
 
   chatInfo() async {
@@ -1223,7 +1225,7 @@ class DashboardController extends FullLifeCycleController
             if (selected.value) {
               selectOrRemoveChatfromList(index);
             } else {
-              toChatPage(context,chatItem.jid.checkNull());
+              toChatPage(chatItem.jid.checkNull());
             }
           },
           callTap: () {},
