@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/dashboard/views/dashboard_view.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 
@@ -13,12 +14,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       themeMode: ThemeMode.dark,
-      /*routes: <String, WidgetBuilder>{
-        '/chat':(context) => const ChatPageView(jid: "917010279986@xmpp-uikit-qa.contus.us",profile: ,)
-      },*/
-      home: Dashboard()
+      theme: ThemeData(
+          textTheme: GoogleFonts.latoTextTheme()
+      ),
+      home: const Dashboard()
     );
   }
 
@@ -37,7 +38,7 @@ class Dashboard extends StatelessWidget {
           children: [
             TextButton(child: const Text('register'),onPressed: () async {
               try {
-                var response = await MirrorflyUikit.register('919894940560');
+                var response = await MirrorflyUikit.register('918973725802');
                 debugPrint("register user $response");
               }catch(e){
 
