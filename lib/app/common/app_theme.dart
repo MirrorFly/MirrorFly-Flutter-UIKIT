@@ -1,55 +1,32 @@
 import 'package:flutter/material.dart';
+import '../model/app_config.dart';
 import 'constants.dart';
 
-class MirrorFlyAppTheme {
-  final Color primaryColor;
-  final Color secondaryColor;
-  final Color appBarColor;
-  final Color colorOnAppbar;
-  final Color scaffoldColor;
-  final Color colorOnPrimary;
-  final Color textPrimaryColor;
-  final Color textSecondaryColor;
-  final Color chatBubblePrimaryColor; //chat bubble sender
-  final Color chatBubbleSecondaryColor; //chat bubble receiver
-
-  MirrorFlyAppTheme(
-      {required this.primaryColor,
-      required this.secondaryColor,
-      required this.appBarColor,
-      required this.colorOnAppbar,
-      required this.scaffoldColor,
-      required this.colorOnPrimary,
-      required this.textPrimaryColor,
-      required this.textSecondaryColor,
-      required this.chatBubblePrimaryColor,
-      required this.chatBubbleSecondaryColor});
-}
 
 class MirrorFlyTheme {
   static MirrorFlyAppTheme get mirrorFlyLightTheme => MirrorFlyAppTheme(
       primaryColor: buttonBgColor,
       appBarColor: Colors.white,
       colorOnAppbar: Colors.black,
-      secondaryColor: notificationTextBgColor,
+      secondaryColor: Colors.grey,
       scaffoldColor: Colors.white,
       colorOnPrimary: Colors.white,
       textPrimaryColor: Colors.black,
       textSecondaryColor: Colors.black45,
-      chatBubblePrimaryColor: Colors.blue,
-      chatBubbleSecondaryColor: Colors.black12);
+      chatBubblePrimaryColor: ChatBubbleColor(color: const Color(0xffe2e8f7), textPrimaryColor: Colors.black, textSecondaryColor: durationTextColor),
+      chatBubbleSecondaryColor: ChatBubbleColor(color: Colors.white, textPrimaryColor: const Color(0xff313131), textSecondaryColor: const Color(0xff959595)));
 
   static MirrorFlyAppTheme get mirrorFlyDarkTheme => MirrorFlyAppTheme(
       primaryColor: buttonBgColor,
-      secondaryColor: const Color(0xff676767),
+      secondaryColor: Colors.black12,
       appBarColor: const Color(0xff2A2A2A),
       colorOnAppbar: Colors.white,
       scaffoldColor: Colors.black,
       colorOnPrimary: Colors.white,
       textPrimaryColor: Colors.white,
-      textSecondaryColor: const Color(0xffFAFAFA),
-      chatBubblePrimaryColor: chatSentBgColor,
-      chatBubbleSecondaryColor: Colors.black12);
+      textSecondaryColor: Colors.white60,
+      chatBubblePrimaryColor: ChatBubbleColor(color: Colors.blue, textPrimaryColor: Colors.white, textSecondaryColor: Colors.grey),
+      chatBubbleSecondaryColor: ChatBubbleColor(color: const Color(0xff26262a), textPrimaryColor: const Color(0xfffafafa), textSecondaryColor: Colors.grey));
 
   static late var mirrorflyTheme;
 
@@ -62,8 +39,8 @@ class MirrorFlyTheme {
       required Color colorOnPrimary,
       required Color textPrimaryColor,
       required Color textSecondaryColor,
-      required Color chatBubblePrimaryColor,
-      required Color chatBubbleSecondaryColor}) {
+      required ChatBubbleColor chatBubblePrimaryColor,
+      required ChatBubbleColor chatBubbleSecondaryColor}) {
     return mirrorflyTheme = MirrorFlyAppTheme(
         primaryColor: primaryColor,
         secondaryColor: secondaryColor,

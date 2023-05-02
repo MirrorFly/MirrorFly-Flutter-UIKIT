@@ -2,6 +2,8 @@
 //
 //     final appConfig = appConfigFromJson(jsonString);
 
+import 'dart:ui';
+
 import 'dart:convert';
 
 AppConfig appConfigFromJson(String str) => AppConfig.fromJson(json.decode(str));
@@ -30,7 +32,7 @@ class AppConfig {
 
 class AppTheme {
   String theme;
-  CustomTheme customTheme;
+  MirrorFlyAppTheme customTheme;
 
   AppTheme({
     required this.theme,
@@ -39,7 +41,7 @@ class AppTheme {
 
   factory AppTheme.fromJson(Map<String, dynamic> json) => AppTheme(
     theme: json["theme"],
-    customTheme: CustomTheme.fromJson(json["customTheme"]),
+    customTheme: MirrorFlyAppTheme.fromJson(json["customTheme"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -48,19 +50,19 @@ class AppTheme {
   };
 }
 
-class CustomTheme {
-  int primaryColor;
-  int secondaryColor;
-  int appBarColor;
-  int colorOnAppbar;
-  int scaffoldColor;
-  int colorOnPrimary;
-  int textPrimaryColor;
-  int textSecondaryColor;
-  int chatBubblePrimaryColor;
-  int chatBubbleSecondaryColor;
+class MirrorFlyAppTheme {
+  Color primaryColor;
+  Color secondaryColor;
+  Color appBarColor;
+  Color colorOnAppbar;
+  Color scaffoldColor;
+  Color colorOnPrimary;
+  Color textPrimaryColor;
+  Color textSecondaryColor;
+  ChatBubbleColor chatBubblePrimaryColor;
+  ChatBubbleColor chatBubbleSecondaryColor;
 
-  CustomTheme({
+  MirrorFlyAppTheme({
     required this.primaryColor,
     required this.secondaryColor,
     required this.appBarColor,
@@ -73,17 +75,17 @@ class CustomTheme {
     required this.chatBubbleSecondaryColor,
   });
 
-  factory CustomTheme.fromJson(Map<String, dynamic> json) => CustomTheme(
-    primaryColor: int.parse(json["primaryColor"]),
-    secondaryColor: int.parse(json["secondaryColor"]),
-    appBarColor: int.parse(json["appBarColor"]),
-    colorOnAppbar: int.parse(json["colorOnAppbar"]),
-    scaffoldColor: int.parse(json["scaffoldColor"]),
-    colorOnPrimary: int.parse(json["colorOnPrimary"]),
-    textPrimaryColor: int.parse(json["textPrimaryColor"]),
-    textSecondaryColor: int.parse(json["textSecondaryColor"]),
-    chatBubblePrimaryColor: int.parse(json["chatBubblePrimaryColor"]),
-    chatBubbleSecondaryColor: int.parse(json["chatBubbleSecondaryColor"]),
+  factory MirrorFlyAppTheme.fromJson(Map<String, dynamic> json) => MirrorFlyAppTheme(
+    primaryColor: json["primaryColor"].toString().toColor(),
+    secondaryColor: json["secondaryColor"].toString().toColor(),
+    appBarColor: json["appBarColor"].toString().toColor(),
+    colorOnAppbar: json["colorOnAppbar"].toString().toColor(),
+    scaffoldColor: json["scaffoldColor"].toString().toColor(),
+    colorOnPrimary: json["colorOnPrimary"].toString().toColor(),
+    textPrimaryColor: json["textPrimaryColor"].toString().toColor(),
+    textSecondaryColor: json["textSecondaryColor"].toString().toColor(),
+    chatBubblePrimaryColor: ChatBubbleColor.fromJson(json["chatBubblePrimaryColor"]),
+    chatBubbleSecondaryColor: ChatBubbleColor.fromJson(json["chatBubbleSecondaryColor"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -95,9 +97,39 @@ class CustomTheme {
     "colorOnPrimary": colorOnPrimary,
     "textPrimaryColor": textPrimaryColor,
     "textSecondaryColor": textSecondaryColor,
-    "chatBubblePrimaryColor": chatBubblePrimaryColor,
-    "chatBubbleSecondaryColor": chatBubbleSecondaryColor,
+    "chatBubblePrimaryColor": chatBubblePrimaryColor.toJson(),
+    "chatBubbleSecondaryColor": chatBubbleSecondaryColor.toJson(),
   };
+}
+
+class ChatBubbleColor {
+  Color color;
+  Color textPrimaryColor;
+  Color textSecondaryColor;
+
+  ChatBubbleColor({
+    required this.color,
+    required this.textPrimaryColor,
+    required this.textSecondaryColor,
+  });
+
+  factory ChatBubbleColor.fromJson(Map<String, dynamic> json) => ChatBubbleColor(
+    color: json["color"].toString().toColor(),
+    textPrimaryColor: json["textPrimaryColor"].toString().toColor(),
+    textSecondaryColor: json["textSecondaryColor"].toString().toColor(),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "color": color,
+    "textPrimaryColor": textPrimaryColor,
+    "textSecondaryColor": textSecondaryColor,
+  };
+}
+
+extension AppColor on String{
+  Color toColor(){
+    return Color(int.parse(this));
+  }
 }
 
 class ProjectInfo {

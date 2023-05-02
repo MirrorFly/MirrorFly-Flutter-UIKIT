@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:mirrorfly_uikit_plugin/app/model/app_config.dart';
 
 import 'app/common/app_theme.dart';
+import 'app/common/main_controller.dart';
 import 'app/data/apputils.dart';
 import 'app/data/session_management.dart';
 import 'app/model/register_model.dart';
@@ -47,26 +47,27 @@ class MirrorflyUikit {
           : config.appTheme.theme == "dark"
               ? MirrorFlyTheme.mirrorFlyDarkTheme
               : MirrorFlyTheme.customTheme(
-                  primaryColor: Color(config.appTheme.customTheme.primaryColor),
-                  secondaryColor: Color(config.appTheme.customTheme.secondaryColor),
-                  scaffoldColor: Color(config.appTheme.customTheme.scaffoldColor),
-                  colorOnPrimary: Color(config.appTheme.customTheme.colorOnPrimary),
-                  textPrimaryColor: Color(config.appTheme.customTheme.textPrimaryColor),
-                  textSecondaryColor: Color(config.appTheme.customTheme.textSecondaryColor),
-                  chatBubblePrimaryColor: Color(config.appTheme.customTheme.chatBubblePrimaryColor),
-                  chatBubbleSecondaryColor: Color(config.appTheme.customTheme.chatBubbleSecondaryColor),
-                  appBarColor: Color(config.appTheme.customTheme.appBarColor),
-                  colorOnAppbar: Color(config.appTheme.customTheme.colorOnAppbar));
+                  primaryColor: config.appTheme.customTheme.primaryColor,
+                  secondaryColor: config.appTheme.customTheme.secondaryColor,
+                  scaffoldColor: config.appTheme.customTheme.scaffoldColor,
+                  colorOnPrimary: config.appTheme.customTheme.colorOnPrimary,
+                  textPrimaryColor: config.appTheme.customTheme.textPrimaryColor,
+                  textSecondaryColor: config.appTheme.customTheme.textSecondaryColor,
+                  chatBubblePrimaryColor: config.appTheme.customTheme.chatBubblePrimaryColor,
+                  chatBubbleSecondaryColor: config.appTheme.customTheme.chatBubbleSecondaryColor,
+                  appBarColor: config.appTheme.customTheme.appBarColor,
+                  colorOnAppbar: config.appTheme.customTheme.colorOnAppbar);
       isTrialLicence = config.projectInfo.isTrialLicenceKey;
     } catch (e) {
       throw ("Mirrorfly config file not found in assets");
     }
 
     //commenting bcz used as a local variable
-    // SessionManagement.onInit().then((value) {
+    SessionManagement.onInit().then((value) {
     //   SessionManagement.setIsTrailLicence(isTrialLicenceKey);
-    //   Get.put<MainController>(MainController());
-    // });
+      Get.put<MainController>(MainController());
+    });
+
   }
 
   ///Used as a register class for [MirrorflyUikit]
@@ -85,7 +86,7 @@ class MirrorflyUikit {
           // Mirrorfly.setRegionCode(regionCode ?? 'IN');///if its not set then error comes in contact sync delete from phonebook.
           // SessionManagement.setCountryCode((countryCode ?? "").replaceAll('+', ''));
           _setUserJID(userData.data!.username!);
-          return {'status': true, 'message': ''};
+          return {'status': true, 'message': 'Register Success'};
         } else {
           return {'status': false, 'message': '${userData.message}'};
         }

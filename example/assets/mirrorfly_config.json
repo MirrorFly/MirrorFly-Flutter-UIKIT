@@ -19,9 +19,16 @@
             "colorOnPrimary": "0xFFFFFFFF",
             "textPrimaryColor": "0xff000000",
             "textSecondaryColor": "0xff000073",
-            "chatBubblePrimaryColor": "0x2196F3FF",
-            "chatBubbleSecondaryColor": "0xff00001F"
+            "chatBubblePrimaryColor": {
+                "color": "0x2196F3FF",
+                "textPrimaryColor": "0xFFFFFFFF",
+                "textSecondaryColor": "0xff000073"
+            },
+            "chatBubbleSecondaryColor": {
+                "color": "0xff00001F",
+                "textPrimaryColor": "0xFFFFFFFF",
+                "textSecondaryColor": "0xff000073"
+            }
         }
-
     }
 }
