@@ -675,13 +675,13 @@ class _ChatViewState extends State<ChatView> {
                                                     Radius.circular(10)),
                                         color:
                                             (chatList[index].isMessageSentByMe
-                                                ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor//chatSentBgColor
-                                                : Colors.white),
+                                                ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.color//chatSentBgColor
+                                                : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.color),
                                         border: chatList[index]
                                                 .isMessageSentByMe
-                                            ? Border.all(color: MirrorflyUikit.getTheme!.chatBubblePrimaryColor)//chatSentBgColor)
+                                            ? Border.all(color: MirrorflyUikit.getTheme!.chatBubblePrimaryColor.color)//chatSentBgColor)
                                             : Border.all(
-                                                color: chatBorderColor)),
+                                                color:  MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.color)),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
