@@ -20,9 +20,9 @@
             "textPrimaryColor": "0xff063970",
             "textSecondaryColor": "0xff424242",
             "chatBubblePrimaryColor": {
-                "color": "0xffA7FFEB",
+                "color": "0xffE8F5E9",
                 "textPrimaryColor": "0xff000000",
-                "textSecondaryColor": "0xFFFFFFFF"
+                "textSecondaryColor": "0xff43A047"
             },
             "chatBubbleSecondaryColor": {
                 "color": "0xff8BE98C",
