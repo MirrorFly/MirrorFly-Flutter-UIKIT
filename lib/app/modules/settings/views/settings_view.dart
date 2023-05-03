@@ -6,6 +6,8 @@ import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit_plugin.dart';
 
 import '../../../common/constants.dart';
 import '../../profile/views/profile_view.dart';
+import '../../starred_messages/views/starred_messages_view.dart';
+import 'chat_settings/chat_settings_view.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({Key? key}) : super(key: key);
@@ -33,11 +35,13 @@ class _SettingsViewState extends State<SettingsView> {
               // Get.toNamed(Routes.profile,arguments: {"from":Routes.settings})
               settingListItem("Profile", profileIcon, rightArrowIcon, () => Navigator.push(context, MaterialPageRoute(builder: (con)=> const ProfileView()))),
               settingListItem("Chats", chatIcon, rightArrowIcon, () {
-                Get.toNamed(Routes.chatSettings);
+                // Get.toNamed(Routes.chatSettings);
+                Navigator.push(context, MaterialPageRoute(builder: (con)=> ChatSettingsView()));
               }),
               settingListItem(
                   "Starred Messages", staredMsgIcon, rightArrowIcon, () {
-                    Get.toNamed(Routes.starredMessages);
+                    // Get.toNamed(Routes.starredMessages);
+                    Navigator.push(context, MaterialPageRoute(builder: (con)=> const StarredMessagesView()));
               }),
               // settingListItem(
               //     "Notifications", notificationIcon, rightArrowIcon, ()=>Get.toNamed(Routes.notification)),

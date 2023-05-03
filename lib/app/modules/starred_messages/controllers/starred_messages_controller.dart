@@ -6,6 +6,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
+import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 import '../../../models.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:share_plus/share_plus.dart';
@@ -50,9 +51,11 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
     if(!isSelected.value) {
       isListLoading(true);
       Mirrorfly.getFavouriteMessages().then((value) {
-        List<ChatMessageModel> chatMessageModel = chatMessageModelFromJson(
-            value);
-        starredChatList(chatMessageModel.toList());
+        if(value.toString().isNotEmpty) {
+          List<ChatMessageModel> chatMessageModel = chatMessageModelFromJson(
+              value);
+          starredChatList(chatMessageModel.toList());
+        }
         isListLoading(false);
       });
     }
@@ -348,7 +351,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-                "Are you sure you want to delete selected Message${selectedChatList.length > 1 ? "s" : ""}?"),
+                "Are you sure you want to delete selected Message${selectedChatList.length > 1 ? "s" : ""}?", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),),
             isCheckBoxShown
                 ? Column(
                     mainAxisSize: MainAxisSize.min,
@@ -370,8 +373,8 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
                                         "isMediaDelete", value.toString());
                                   });
                             }),
-                            const Expanded(
-                              child: Text("Delete media from my phone"),
+                            Expanded(
+                              child: Text("Delete media from my phone", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                             ),
                           ],
                         ),
@@ -385,12 +388,14 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
         actions: [
           TextButton(
               onPressed: () {
-                Get.back();
+                // Get.back();
+                Navigator.pop(context);
               },
-              child: const Text("CANCEL")),
+              child: Text("CANCEL", style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
           TextButton(
               onPressed: () {
-                Get.back();
+                // Get.back();
+                Navigator.pop(context);
                 for (var item in selectedChatList) {
                   Mirrorfly.deleteMessagesForMe(
                       item.chatUserJid,
@@ -407,7 +412,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
                 isSelected(false);
                 selectedChatList.clear();
               },
-              child: const Text("DELETE FOR ME")),
+              child: Text("DELETE FOR ME", style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
           /*isRecallAvailable
               ? TextButton(
               onPressed: () {

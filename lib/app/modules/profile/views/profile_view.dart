@@ -341,13 +341,14 @@ class _ProfileViewState extends State<ProfileView> {
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
-                                      child: Text("CANCEL", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),)),
+                                      child: Text("CANCEL", style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
                                   TextButton(
                                       onPressed: () {
                                         Navigator.pop(context);
                                         controller.removeProfileImage(context);
                                       },
-                                      child: Text("REMOVE", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)))
+                                      child: Text("REMOVE", style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor)))
+
                                 ], context: context);
                               },
                               style: TextButton.styleFrom(

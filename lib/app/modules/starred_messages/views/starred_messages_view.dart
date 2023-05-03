@@ -13,8 +13,15 @@ import '../../chat/views/starred_message_header.dart';
 import '../controllers/starred_messages_controller.dart';
 import '../../../models.dart';
 
-class StarredMessagesView extends GetView<StarredMessagesController> {
+class StarredMessagesView extends StatefulWidget {
   const StarredMessagesView({Key? key}) : super(key: key);
+
+  @override
+  State<StarredMessagesView> createState() => _StarredMessagesViewState();
+}
+
+class _StarredMessagesViewState extends State<StarredMessagesView> {
+  final controller = Get.put(StarredMessagesController());
   @override
   Widget build(BuildContext context) {
     controller.height = MediaQuery.of(context).size.height;
@@ -35,13 +42,14 @@ class StarredMessagesView extends GetView<StarredMessagesController> {
           return Future.value(true);
         },
         child: Scaffold(
+            backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
           appBar: getAppBar(context),
           body: Obx(() {
             return controller.starredChatList.isNotEmpty ?
             SingleChildScrollView(child: favouriteChatListView(controller.starredChatList)) :
             controller.isListLoading.value ? const Center(child: CircularProgressIndicator(),) : Center(child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 30),
-              child: Text(controller.isSearch.value ? "No result found" : "No Starred Messages Found"),
+              child: Text(controller.isSearch.value ? "No result found" : "No Starred Messages Found", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),),
             ));
           })
         ),
@@ -112,11 +120,11 @@ class StarredMessagesView extends GetView<StarredMessagesController> {
                                       topRight: Radius.circular(10),
                                       bottomRight: Radius.circular(10)),
                                   color: (starredChatList[index].isMessageSentByMe
-                                      ? chatSentBgColor
-                                      : Colors.white),
+                                      ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.color
+                                      : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.color),
                                   border: starredChatList[index].isMessageSentByMe
-                                      ? Border.all(color: chatSentBgColor)
-                                      : Border.all(color: chatBorderColor)),
+                                      ? Border.all(color: MirrorflyUikit.getTheme!.chatBubblePrimaryColor.color)
+                                      : Border.all(color: MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.color)),
                               child: Column(
                                 crossAxisAlignment:
                                 CrossAxisAlignment.start,
@@ -154,7 +162,9 @@ class StarredMessagesView extends GetView<StarredMessagesController> {
       child: Obx(() {
         return Container(
           child: controller.isSelected.value ? selectedAppBar(context) : controller.isSearch.value ? searchBar() : AppBar(
-            title: const Text('Starred Messages'),
+            title: Text('Starred Messages', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
+            iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+            backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
             actions: [
               IconButton(
                 icon: SvgPicture.asset(
@@ -162,6 +172,7 @@ class StarredMessagesView extends GetView<StarredMessagesController> {
                   width: 18,
                   height: 18,
                   fit: BoxFit.contain,
+                  color: MirrorflyUikit.getTheme?.colorOnAppbar,
                 ),
                 onPressed: () {
                   controller.onSearchClick();
@@ -177,15 +188,20 @@ class StarredMessagesView extends GetView<StarredMessagesController> {
   searchBar(){
     return AppBar(
       automaticallyImplyLeading: true,
+      iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+      backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
       title: TextField(
         onChanged: (text) => controller.startSearch(text),
+        style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),
         controller: controller.searchedText,
         focusNode: controller.searchFocus,
+        cursorColor: MirrorflyUikit.getTheme?.primaryColor,
         autofocus: true,
-        decoration: const InputDecoration(
-            hintText: "Search...", border: InputBorder.none),
+        decoration: InputDecoration(
+            hintText: "Search...", border: InputBorder.none, hintStyle: TextStyle(
+            color: MirrorflyUikit
+            .getTheme?.colorOnAppbar),),
       ),
-      iconTheme: const IconThemeData(color: iconColor),
       actions: [
         Visibility(
           visible: controller.clear.value,
@@ -203,7 +219,8 @@ class StarredMessagesView extends GetView<StarredMessagesController> {
   selectedAppBar(BuildContext context) {
     return AppBar(
       // leadingWidth: 25,
-      backgroundColor: Colors.white,
+      iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+      backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
       leading: IconButton(
         icon: const Icon(Icons.clear),
         onPressed: () {
@@ -221,7 +238,7 @@ class StarredMessagesView extends GetView<StarredMessagesController> {
                     onPressed: () {
                       controller.checkBusyStatusForForward(context);
                     },
-                    icon: SvgPicture.asset(forwardIcon,package: package,),tooltip: 'Forward',),
+                    icon: SvgPicture.asset(forwardIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar),tooltip: 'Forward',),
                 overflowWidget: const Text("Forward"),
                 showAsAction: controller.canBeForward.value ? ShowAsAction.always : ShowAsAction.gone,
                 keyValue: 'Forward',
@@ -234,7 +251,7 @@ class StarredMessagesView extends GetView<StarredMessagesController> {
                     onPressed: () {
                       controller.favouriteMessage();
                     },
-                    icon: SvgPicture.asset(unFavouriteIcon,package: package,),tooltip: 'unFavourite',),
+                    icon: SvgPicture.asset(unFavouriteIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar),tooltip: 'unFavourite',),
                 overflowWidget: const Text("unFavourite"),
                 showAsAction: ShowAsAction.always,
                 keyValue: 'unfavoured',
@@ -247,7 +264,7 @@ class StarredMessagesView extends GetView<StarredMessagesController> {
                     onPressed: () {
                       controller.share();
                     },
-                    icon: SvgPicture.asset(shareIcon,package: package,),tooltip: 'Share',),
+                    icon: SvgPicture.asset(shareIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar),tooltip: 'Share',),
                 overflowWidget: const Text("Share"),
                 showAsAction: controller.canBeShare.value ? ShowAsAction.always : ShowAsAction.gone,
                 keyValue: 'Share',
@@ -264,7 +281,7 @@ class StarredMessagesView extends GetView<StarredMessagesController> {
                   },
                   icon: SvgPicture.asset(
                     copyIcon,package: package,
-                    fit: BoxFit.contain,
+                    fit: BoxFit.contain,color: MirrorflyUikit.getTheme?.colorOnAppbar
                   ),
                   tooltip: 'Copy',
                 ),
@@ -280,7 +297,7 @@ class StarredMessagesView extends GetView<StarredMessagesController> {
                     onPressed: () {
                       controller.deleteMessages(context);
                     },
-                    icon: SvgPicture.asset(deleteIcon,package: package,),tooltip: 'Delete',),
+                    icon: SvgPicture.asset(deleteIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar),tooltip: 'Delete',),
                 overflowWidget: const Text("Delete"),
                 showAsAction: ShowAsAction.always,
                 keyValue: 'Delete',

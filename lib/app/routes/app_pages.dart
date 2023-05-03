@@ -269,7 +269,7 @@ class AppPages {
         binding: ArchivedChatListBinding()),
     GetPage(
         name: _Paths.chatSettings,
-        page: () => const ChatSettingsView(),
+        page: () => ChatSettingsView(),
         binding: ChatSettingsBinding()),
     GetPage(
       name: _Paths.galleryPicker,

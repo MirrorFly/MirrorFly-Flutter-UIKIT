@@ -2,20 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/settings/views/chat_settings/chat_settings_controller.dart';
 
+import '../../../../../mirrorfly_uikit_plugin.dart';
 import '../../../../common/constants.dart';
 import '../../../../common/widgets.dart';
 import '../../../../routes/app_pages.dart';
 import '../settings_widgets.dart';
 
-class ChatSettingsView extends GetView<ChatSettingsController> {
-  const ChatSettingsView({Key? key}) : super(key: key);
-
+class ChatSettingsView extends StatelessWidget {
+  ChatSettingsView({Key? key}) : super(key: key);
+  final controller = Get.put(ChatSettingsController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chat'),
+        title: Text('Chat', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
         automaticallyImplyLeading: true,
+        iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+        backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
       ),
       body: Obx(() {
         return SafeArea(
@@ -109,7 +112,7 @@ class ChatSettingsView extends GetView<ChatSettingsController> {
                     ],
                   ), rightArrowIcon, () => controller.chooseLanguage())),*/
               ListItem(
-                  title: const Text('Cleat All Conversation',
+                  title: const Text('Clear All Conversation',
                       style: TextStyle(
                           color: Colors.red,
                           fontSize: 14,
