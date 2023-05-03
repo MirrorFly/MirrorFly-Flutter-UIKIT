@@ -15,6 +15,8 @@ import 'package:intl/intl.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/de_bouncer.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/permissions.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/chatInfo/views/chat_info_view.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/group/views/group_info_view.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -1855,11 +1857,11 @@ class ChatController extends FullLifeCycleController
     record.dispose();
   }
 
-  infoPage() {
+  infoPage(BuildContext context) {
     // Mirrorfly.setOnGoingChatUser("");
     // SessionManagement.setCurrentChatJID("");
     if (profile.isGroupProfile ?? false) {
-      Get.toNamed(Routes.groupInfo, arguments: profile)?.then((value) {
+      Navigator.push(context, MaterialPageRoute(builder: (con)=> GroupInfoView(jid:profile.jid.checkNull()))).then((value){
         if (value != null) {
           profile_(value as Profile);
           isBlocked(profile.isBlocked);
@@ -1873,12 +1875,29 @@ class ChatController extends FullLifeCycleController
           debugPrint("value--> ${profile.isGroupProfile}");
         }
       });
+      /*Get.toNamed(Routes.groupInfo, arguments: profile)?.then((value) {
+        if (value != null) {
+          profile_(value as Profile);
+          isBlocked(profile.isBlocked);
+          checkAdminBlocked();
+          memberOfGroup();
+          Mirrorfly.setOnGoingChatUser(profile.jid!);
+          SessionManagement.setCurrentChatJID(profile.jid.checkNull());
+          getChatHistory();
+          sendReadReceipt();
+          setChatStatus();
+          debugPrint("value--> ${profile.isGroupProfile}");
+        }
+      });*/
     } else {
-      Get.toNamed(Routes.chatInfo, arguments: profile)?.then((value) {
+      Navigator.push(context, MaterialPageRoute(builder: (con)=> ChatInfoView(jid:profile.jid.checkNull()))).then((value){
+
+      });
+      /*Get.toNamed(Routes.chatInfo, arguments: profile)?.then((value) {
         debugPrint("chat info-->$value");
         // Mirrorfly.setOnGoingChatUser(profile.jid!);
         // SessionManagement.setCurrentChatJID(profile.jid.checkNull());
-      });
+      });*/
     }
   }
 

@@ -23,15 +23,21 @@ class ChatInfoController extends GetxController {
   final muteable = false.obs;
   var userPresenceStatus = ''.obs;
 
-  @override
+  /*@override
   void onInit() {
     super.onInit();
     profile_((Get.arguments as Profile));
-    mute(profile.isMuted!);
-    scrollController.addListener(_scrollListener);
-    nameController.text = profile.nickName.checkNull();
-    muteAble();
-    getUserLastSeen();
+  }*/
+
+  init(String jid){
+    getProfileDetails(jid,server: false).then((value) {
+      profile_(value);
+      mute(profile.isMuted!);
+      scrollController.addListener(_scrollListener);
+      nameController.text = profile.nickName.checkNull();
+      muteAble();
+      getUserLastSeen();
+    });
   }
 
   muteAble() async {

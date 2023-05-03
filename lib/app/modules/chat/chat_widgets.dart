@@ -78,6 +78,7 @@ class ReplyingMessageHeader extends StatelessWidget {
                   getReplyImageHolder(
                       context,
                       chatMessage,
+                      null,
                       chatMessage.mediaChatMessage,
                       70,
                       true,
@@ -228,6 +229,7 @@ getReplyMessage(String messageType,
 // chatMessage.locationChatMessage,
 getReplyImageHolder(BuildContext context,
     ChatMessageModel chatMessageModel,
+    ReplyParentChatMessage? replyChatMessageModel,
     MediaChatMessage? mediaChatMessage,
     double size,
     bool isNotChatItem,
@@ -239,7 +241,7 @@ getReplyImageHolder(BuildContext context,
   switch (isReply
       ? mediaChatMessage == null ? "LOCATION" : mediaChatMessage.messageType
       .checkNull().toUpperCase()
-      : chatMessageModel.messageType.checkNull().toUpperCase()) {
+      : replyChatMessageModel?.messageType ?? chatMessageModel.messageType.checkNull().toUpperCase()) {
     case Constants.mImage:
       debugPrint("reply header--> IMAGE");
       return ClipRRect(
@@ -248,7 +250,7 @@ getReplyImageHolder(BuildContext context,
         child: imageFromBase64String(
             isReply
                 ? mediaChatMessage!.mediaThumbImage
-                : chatMessageModel.mediaChatMessage!.mediaThumbImage
+                : replyChatMessageModel?.mediaChatMessage?.mediaThumbImage ?? chatMessageModel.mediaChatMessage!.mediaThumbImage
                 .checkNull(),
             context,
             size,
@@ -258,7 +260,7 @@ getReplyImageHolder(BuildContext context,
     // debugPrint("location mesg--> ${locationChatMessage?.toJson().toString()}");
     // debugPrint("location mesg--> ${chatMessageModel.locationChatMessage?.toJson().toString()}");
       return getLocationImage(
-          isReply ? locationChatMessage : chatMessageModel.locationChatMessage,
+          isReply ? locationChatMessage : replyChatMessageModel?.locationChatMessage ?? chatMessageModel.locationChatMessage,
           size,
           size, isSelected: true);
     case Constants.mVideo:
@@ -268,7 +270,7 @@ getReplyImageHolder(BuildContext context,
         child: imageFromBase64String(
             isReply
                 ? mediaChatMessage!.mediaThumbImage
-                : chatMessageModel.mediaChatMessage!.mediaThumbImage,
+                : replyChatMessageModel?.mediaChatMessage?.mediaThumbImage ?? chatMessageModel.mediaChatMessage!.mediaThumbImage,
             context,
             size,
             size),
@@ -278,7 +280,7 @@ getReplyImageHolder(BuildContext context,
       debugPrint("Document --> $isReply");
       debugPrint("Document --> ${isReply
           ? mediaChatMessage!.mediaFileName
-          : chatMessageModel.mediaChatMessage!.mediaFileName}");
+          : replyChatMessageModel?.mediaChatMessage?.mediaFileName ?? chatMessageModel.mediaChatMessage!.mediaFileName}");
       return isNotChatItem
           ? SizedBox(height: size)
           : Container(
@@ -293,7 +295,7 @@ getReplyImageHolder(BuildContext context,
             child: getImageHolder(
                 isReply
                     ? mediaChatMessage!.mediaFileName
-                    : chatMessageModel.mediaChatMessage!.mediaFileName,
+                    : replyChatMessageModel?.mediaChatMessage?.mediaFileName ?? chatMessageModel.mediaChatMessage!.mediaFileName,
                 30),
           ));
     case Constants.mAudio:
@@ -309,7 +311,7 @@ getReplyImageHolder(BuildContext context,
           color: audioBgColor,
           child: Center(
             child: SvgPicture.asset(
-              mediaChatMessage!.isAudioRecorded.checkNull()
+              (mediaChatMessage?.isAudioRecorded).checkNull()
                   ? mAudioRecordIcon
                   : mAudioIcon,
               package: package,
@@ -371,6 +373,7 @@ class ReplyMessageHeader extends StatelessWidget {
           getReplyImageHolder(
               context,
               chatMessage,
+              chatMessage.replyParentChatMessage!,
               chatMessage.replyParentChatMessage!.mediaChatMessage,
               55,
               false,
@@ -648,23 +651,7 @@ class _AudioMessageViewState extends State<AudioMessageView>
 
   @override
   Widget build(BuildContext context) {
-    var screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
-    var currentPos =
-    0.0; /*double.parse(widget.chatMessage
-        .mediaChatMessage!.currentPos
-        .toString());
-    var maxPos = double.parse(widget.chatMessage
-        .mediaChatMessage!.mediaDuration
-        .toString());
-    if (!(currentPos >= 0.0 && currentPos <= maxPos)) {
-      currentPos = maxPos;
-    }*/
-    /* debugPrint(
-        "currentPos--> ${double.parse(
-            widget.chatMessage.mediaChatMessage!.currentPos.toString())}");*/
+    var currentPos = 0.0;
     debugPrint(
         "max duration--> ${double.parse(
             widget.chatMessage.mediaChatMessage!.mediaDuration.toString())}");
@@ -678,7 +665,7 @@ class _AudioMessageViewState extends State<AudioMessageView>
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         color: Colors.transparent,
       ),
-      width: screenWidth * 0.60,
+      // width: screenWidth * 0.60,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -688,7 +675,7 @@ class _AudioMessageViewState extends State<AudioMessageView>
                   topLeft: Radius.circular(10), topRight: Radius.circular(10)),
               color: widget.chatMessage.isMessageSentByMe
                   ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor.withAlpha(50)
-                  : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor.withAlpha(50),
+                  : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.color.withAlpha(50),
             ),
             padding: const EdgeInsets.all(15),
             child: Row(

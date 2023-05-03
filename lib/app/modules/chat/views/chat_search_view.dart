@@ -103,7 +103,7 @@ class ChatSearchView extends GetView<ChatController> {
                           ),
                           Container(
                             constraints: BoxConstraints(
-                                maxWidth: Get.width * 0.75),
+                                maxWidth: Get.width * 0.60),
                             decoration: BoxDecoration(
                                 borderRadius: chatList[index].isMessageSentByMe
                                     ? const BorderRadius.only(

@@ -39,18 +39,24 @@ class GroupInfoController extends GetxController {
   set isSliverAppBarExpanded(value) => _isSliverAppBarExpanded.value = value;
   bool get isSliverAppBarExpanded => _isSliverAppBarExpanded.value;
   final muteable = false.obs;
-  @override
-  void onInit(){
-    super.onInit();
-    profile_((Get.arguments as Profile));
-    _mute(profile.isMuted!);
-    scrollController.addListener(_scrollListener);
-    getGroupMembers(false);
-    getGroupMembers(null);
-    groupAdmin();
-    memberOfGroup();
-    muteAble();
-    nameController.text=profile.nickName.checkNull();
+  // @override
+  // void onInit(){
+  //   super.onInit();
+  //   // profile_((Get.arguments as Profile));
+  //
+  // }
+  init(String jid){
+    getProfileDetails(jid,server: false).then((value) {
+      profile_(value);
+      _mute(profile.isMuted!);
+      scrollController.addListener(_scrollListener);
+      getGroupMembers(false);
+      getGroupMembers(null);
+      groupAdmin();
+      memberOfGroup();
+      muteAble();
+      nameController.text=profile.nickName.checkNull();
+    });
   }
   muteAble() async {
     muteable(await Mirrorfly.isUserUnArchived(profile.jid.checkNull()));

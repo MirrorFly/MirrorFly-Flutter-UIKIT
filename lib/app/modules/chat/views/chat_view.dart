@@ -41,7 +41,7 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   void dispose() {
-    controller.dispose();
+    Get.delete<ChatController>();
     super.dispose();
   }
 
@@ -665,7 +665,7 @@ class _ChatViewState extends State<ChatView> {
                                   Container(
                                     constraints: BoxConstraints(
                                         maxWidth:
-                                            Get.width * 0.75),
+                                            Get.width * 0.60),
                                     decoration: BoxDecoration(
                                         borderRadius: chatList[index]
                                                 .isMessageSentByMe
@@ -1146,7 +1146,7 @@ class _ChatViewState extends State<ChatView> {
             onTap: () {
               mirrorFlyLog("title clicked",
                   controller.profile.isGroupProfile.toString());
-              controller.infoPage();
+              controller.infoPage(context);
             },
           ),
         ),

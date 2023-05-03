@@ -18,8 +18,6 @@ import '../modules/chat/views/contact_list_view.dart';
 import '../modules/chat/views/forwardchat_view.dart';
 import '../modules/chat/views/image_preview_view.dart';
 import '../modules/chat/views/location_sent_view.dart';
-import '../modules/chatInfo/bindings/chat_info_binding.dart';
-import '../modules/chatInfo/views/chat_info_view.dart';
 import '../modules/contact_sync/bindings/contact_sync_binding.dart';
 import '../modules/contact_sync/views/contact_sync_view.dart';
 import '../modules/dashboard/bindings/dashboard_binding.dart';
@@ -31,9 +29,7 @@ import '../modules/delete_account_reason/views/delete_account_reason_view.dart';
 import '../modules/gallery_picker/bindings/gallery_picker_binding.dart';
 import '../modules/gallery_picker/views/gallery_picker_view.dart';
 import '../modules/group/bindings/group_creation_binding.dart';
-import '../modules/group/bindings/group_info_binding.dart';
 import '../modules/group/views/group_creation_view.dart';
-import '../modules/group/views/group_info_view.dart';
 import '../modules/local_contact/bindings/local_contact_binding.dart';
 import '../modules/local_contact/views/local_contact_view.dart';
 import '../modules/login/bindings/country_binding.dart';
@@ -113,11 +109,11 @@ class AppPages {
       page: () => const GroupCreationView(),
       binding: GroupCreationBinding(),
     ),
-    GetPage(
+    /*GetPage(
       name: _Paths.groupInfo,
       page: () => const GroupInfoView(),
       binding: GroupInfoBinding(),
-    ),
+    ),*/
     GetPage(
       name: _Paths.viewMedia,
       page: () => const ViewAllMediaView(),
@@ -238,11 +234,11 @@ class AppPages {
       page: () => const MessageInfoView(),
       binding: MessageInfoBinding(),
     ),
-    GetPage(
+    /*GetPage(
       name: _Paths.chatInfo,
       page: () => const ChatInfoView(),
       binding: ChatInfoBinding(),
-    ),
+    ),*/
     GetPage(
       name: _Paths.deleteAccount,
       page: () => const DeleteAccountView(),

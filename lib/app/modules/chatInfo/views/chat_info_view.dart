@@ -5,17 +5,38 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 
+import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
 import '../../../common/widgets.dart';
 import '../../../routes/app_pages.dart';
 import '../controllers/chat_info_controller.dart';
 
-class ChatInfoView extends GetView<ChatInfoController> {
-  const ChatInfoView({Key? key}) : super(key: key);
+class ChatInfoView extends StatefulWidget {
+  const ChatInfoView( {Key? key,required this.jid,}) : super(key: key);
+  final String jid;
+
+  @override
+  State<ChatInfoView> createState() => _ChatInfoViewState();
+}
+
+class _ChatInfoViewState extends State<ChatInfoView> {
+  var controller = Get.put(ChatInfoController());
+
+  @override
+  void initState() {
+    controller.init(widget.jid);
+    super.initState();
+  }
+  @override
+  void dispose() {
+    Get.delete<ChatInfoController>();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
       body: NestedScrollView(
         controller: controller.scrollController,
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -27,6 +48,13 @@ class ChatInfoView extends GetView<ChatInfoController> {
           return <Widget>[
             Obx(() {
               return SliverAppBar(
+                backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
+                actionsIconTheme: IconThemeData(
+                    color: MirrorflyUikit.getTheme?.colorOnAppbar ??
+                        iconColor),
+                iconTheme: IconThemeData(
+                    color: MirrorflyUikit.getTheme?.colorOnAppbar ??
+                        iconColor),
                 centerTitle: false,
                 titleSpacing: 0.0,
                 expandedHeight: MediaQuery
@@ -40,9 +68,12 @@ class ChatInfoView extends GetView<ChatInfoController> {
                   icon: Icon(Icons.arrow_back,
                       color: controller.isSliverAppBarExpanded
                           ? Colors.white
-                          : Colors.black),
+                          : MirrorflyUikit
+                          .getTheme?.colorOnAppbar ??
+                          Colors.black,),
                   onPressed: () {
-                    Get.back();
+                    // Get.back();
+                    Navigator.pop(context);
                   },
                 ),
                 title: Visibility(
@@ -52,8 +83,10 @@ class ChatInfoView extends GetView<ChatInfoController> {
                       .isEmpty
                       ? controller.profile.nickName.checkNull()
                       : controller.profile.name.checkNull(),*/
-                      style: const TextStyle(
-                        color: Colors.black,
+                      style: TextStyle(
+                        color: MirrorflyUikit
+                            .getTheme?.colorOnAppbar ??
+                            Colors.black,
                         fontSize: 18.0,
                       )),
                 ),
@@ -306,5 +339,4 @@ class ChatInfoView extends GetView<ChatInfoController> {
       ),
     );
   }
-
 }

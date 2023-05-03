@@ -7,25 +7,51 @@ import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/widgets.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/chatInfo/views/chat_info_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/group/controllers/group_info_controller.dart';
 
+import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
 import '../../../routes/app_pages.dart';
 import '../../../models.dart';
 
 
-class GroupInfoView extends GetView<GroupInfoController> {
-  const GroupInfoView({Key? key}) : super(key: key);
+class GroupInfoView extends StatefulWidget {
+  const GroupInfoView({Key? key, required this.jid}) : super(key: key);
+  final String jid;
+  @override
+  State<GroupInfoView> createState() => _GroupInfoViewState();
+}
 
+class _GroupInfoViewState extends State<GroupInfoView> {
+  var controller = Get.put(GroupInfoController());
+  @override
+  void initState() {
+    controller.init(widget.jid);
+    super.initState();
+  }
+  @override
+  void dispose() {
+    Get.delete<GroupInfoController>();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
         body: NestedScrollView(
           controller: controller.scrollController,
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
               Obx(() {
                 return SliverAppBar(
+                  backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
+                  actionsIconTheme: IconThemeData(
+                      color: MirrorflyUikit.getTheme?.colorOnAppbar ??
+                          iconColor),
+                  iconTheme: IconThemeData(
+                      color: MirrorflyUikit.getTheme?.colorOnAppbar ??
+                          iconColor),
                   centerTitle: false,
                   snap: false,
                   pinned: true,
@@ -34,16 +60,19 @@ class GroupInfoView extends GetView<GroupInfoController> {
                     icon: Icon(Icons.arrow_back,
                         color: controller.isSliverAppBarExpanded
                             ? Colors.white
-                            : Colors.black),
+                            : MirrorflyUikit
+                            .getTheme?.colorOnAppbar ?? Colors.black),
                     onPressed: () {
-                      Get.back();
+                      Navigator.pop(context);
+                      // Get.back();
                     },
                   ),
                   title: Visibility(
                     visible: !controller.isSliverAppBarExpanded,
                     child: Text(controller.profile.nickName.checkNull(),
-                        style: const TextStyle(
-                          color: Colors.black,
+                        style: TextStyle(
+                          color: MirrorflyUikit
+                              .getTheme?.colorOnAppbar ?? Colors.black,
                           fontSize: 18.0,
                         )),
                   ),
@@ -272,31 +301,38 @@ class GroupInfoView extends GetView<GroupInfoController> {
     Helper.showButtonAlert(actions: [
         ListTile(title: const Text("Start Chat", style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16),), onTap: () {
           // Get.toNamed(Routes.CHAT, arguments: item);
-          Get.back();
+          // Get.back();
+          Navigator.pop(context);
           Future.delayed(const Duration(milliseconds: 300),(){
-            Get.back(result: item);
+            Navigator.pop(context,item);
+            // Get.back(result: item);
           });
         },
         visualDensity: const VisualDensity(horizontal: 0, vertical: -3)),
         ListTile(title: const Text("View Info",style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16),), onTap: () {
-          Get.back();
-          Get.toNamed(Routes.chatInfo, arguments: item);
+          // Get.back();
+          Navigator.pop(context);
+          Navigator.push(context, MaterialPageRoute(builder: (con)=>ChatInfoView(jid:item.jid.checkNull())));
+          // Get.toNamed(Routes.chatInfo, arguments: item);
         },
         visualDensity: const VisualDensity(horizontal: 0, vertical: -3)),
         Visibility(visible: controller.isAdmin,
             child: ListTile(title: const Text("Remove from Group",style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16),), onTap: () {
-              Get.back();
+              Navigator.pop(context);
+              // Get.back();
               Helper.showAlert(
                   message: "Are you sure you want to remove ${getName(item)}?",
                   actions: [
                     TextButton(
                         onPressed: () {
-                          Get.back();
+                          Navigator.pop(context);
+                          // Get.back();
                         },
                         child: const Text("NO")),
                     TextButton(
                         onPressed: () {
-                          Get.back();
+                          Navigator.pop(context);
+                          // Get.back();
                           controller.removeUser(item.jid.checkNull(), context);
                         },
                         child: const Text("YES")),
@@ -306,16 +342,19 @@ class GroupInfoView extends GetView<GroupInfoController> {
         Visibility(
             visible: (!item.isGroupAdmin! && controller.isAdmin),
             child: ListTile(title: const Text("Make Admin", style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16),), onTap: () {
-              Get.back();
+              Navigator.pop(context);
+              // Get.back();
               Helper.showAlert(message: "Are you sure you want to make ${getName(item)} the admin?", actions: [
                 TextButton(
                     onPressed: () {
-                      Get.back();
+                      Navigator.pop(context);
+                      // Get.back();
                     },
                     child: const Text("NO")),
                 TextButton(
                     onPressed: () {
-                      Get.back();
+                      Navigator.pop(context);
+                      // Get.back();
                       controller.makeAdmin(item.jid.checkNull(), context);
                     },
                     child: const Text("YES")),
@@ -350,7 +389,8 @@ class GroupInfoView extends GetView<GroupInfoController> {
                       const SizedBox(height: 10,),
                       TextButton(
                           onPressed: () async {
-                            Get.back();
+                            Navigator.pop(context);
+                            // Get.back();
                             controller.camera(context);
                           },
                           style: TextButton.styleFrom(
@@ -361,7 +401,8 @@ class GroupInfoView extends GetView<GroupInfoController> {
                               style: TextStyle(color: textColor, fontWeight: FontWeight.bold))),
                       TextButton(
                           onPressed: () {
-                            Get.back();
+                            Navigator.pop(context);
+                            // Get.back();
                             controller.imagePicker(context);
                           },
                           style: TextButton.styleFrom(
@@ -375,7 +416,8 @@ class GroupInfoView extends GetView<GroupInfoController> {
                           .isNotEmpty
                           ? TextButton(
                           onPressed: () {
-                            Get.back();
+                            Navigator.pop(context);
+                            // Get.back();
                             controller.removeProfileImage(context);
                           },
                           style: TextButton.styleFrom(
