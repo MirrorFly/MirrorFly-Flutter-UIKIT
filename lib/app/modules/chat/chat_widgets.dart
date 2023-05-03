@@ -1998,7 +1998,7 @@ Widget getImageOverlay(ChatMessageModel chatMessage,
           child: downloadView(
               chatMessage.mediaChatMessage!.mediaDownloadStatus,
               chatMessage.mediaChatMessage!.mediaFileSize,
-              chatMessage.messageType.toUpperCase()),
+              chatMessage.messageType.toUpperCase(),chatMessage.isMessageSentByMe),
           onTap: () {
             downloadMedia(chatMessage.messageId);
           },
@@ -2106,39 +2106,41 @@ Future<bool> askStoragePermission() async {
 }
 
 Widget downloadView(int mediaDownloadStatus, int mediaFileSize,
-    String messageType) {
+    String messageType,bool isSentByMe) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 8.0),
     child: messageType == 'AUDIO' || messageType == 'DOCUMENT'
         ? Container(
         decoration: BoxDecoration(
-            border: Border.all(color: borderColor),
+            border: Border.all(color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor,),
             borderRadius: BorderRadius.circular(3)),
         padding: const EdgeInsets.all(5),
         child: SvgPicture.asset(
           downloadIcon,package: package,
-          color: playIconColor,
+          color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor,//playIconColor,
         ))
         : Container(
         width: 80,
         decoration: BoxDecoration(
           border: Border.all(
-            color: textColor,
+            color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor,//textColor,
           ),
           borderRadius: const BorderRadius.all(Radius.circular(5)),
-          color: Colors.black38,
+          color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor.withOpacity(0.5) : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor ,//Colors.black38,
         ),
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset(downloadIcon,package: package,),
+            SvgPicture.asset(downloadIcon,package: package,
+              color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textPrimaryColor,//playIconColor,
+            ),
             const SizedBox(
               width: 5,
             ),
             Text(
               Helper.formatBytes(mediaFileSize, 0),
-              style: const TextStyle(color: Colors.white, fontSize: 10),
+              style: TextStyle(color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textPrimaryColor, fontSize: 10),
             ),
           ],
         )),
@@ -2202,14 +2204,15 @@ downloadingOrUploadingView(String messageType, int progress,bool isSentByMe) {
               SvgPicture.asset(
                 downloading,
                 fit: BoxFit.contain,
+                color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor,
               ),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: SizedBox(
                   height: 2,
                   child: LinearProgressIndicator(
-                    valueColor: const AlwaysStoppedAnimation<Color>(
-                      Colors.white,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                        isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textPrimaryColor,
                     ),
                     value: progress == 0 || progress == 100
                         ? null

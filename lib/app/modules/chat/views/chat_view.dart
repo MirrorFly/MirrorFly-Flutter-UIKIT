@@ -141,7 +141,7 @@ class _ChatViewState extends State<ChatView> {
                                                     width: double.infinity,
                                                     decoration: BoxDecoration(
                                                       border: Border.all(
-                                                        color: textColor,
+                                                        color: MirrorflyUikit.getTheme!.textSecondaryColor,
                                                       ),
                                                       borderRadius:
                                                           const BorderRadius

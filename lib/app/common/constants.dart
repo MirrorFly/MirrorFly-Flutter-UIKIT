@@ -41,6 +41,7 @@ const Color playIconColor = Color(0xff7285B5);
 const Color durationTextColor = Color(0xff455E93);
 const Color chatBgColor = Color(0xffD0D8EB);
 const Color previewTextColor = Color(0xff7f7f7f);
+const Color dummy = Color(0xffe5c8c8);
 
 //Assets
 const String package = 'mirrorfly_uikit_plugin/lib';

@@ -9,18 +9,18 @@
         "enableMobileNumberLogin": true
       },
     "AppTheme": {
-        "theme": "dark",
+        "theme": "custom",
         "customTheme": {
-            "primaryColor": "0xff3276E2",
-            "secondaryColor": "0x9E9E9EFF",
+            "primaryColor": "0xff2f55c7",
+            "secondaryColor": "0xFFFFFFFF",
             "appBarColor": "0xFFFFFFFF",
             "colorOnAppbar": "0xff000000",
-            "scaffoldColor": "0xFFFFFFFF",
+            "scaffoldColor": "0xffF77E7E",
             "colorOnPrimary": "0xFFFFFFFF",
             "textPrimaryColor": "0xff000000",
             "textSecondaryColor": "0xff000073",
             "chatBubblePrimaryColor": {
-                "color": "0x2196F3FF",
+                "color": "0xff2f55c7",
                 "textPrimaryColor": "0xFFFFFFFF",
                 "textSecondaryColor": "0xff000073"
             },
