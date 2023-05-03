@@ -34,8 +34,6 @@ import '../modules/group/bindings/group_creation_binding.dart';
 import '../modules/group/bindings/group_info_binding.dart';
 import '../modules/group/views/group_creation_view.dart';
 import '../modules/group/views/group_info_view.dart';
-import '../modules/image_view/bindings/image_view_binding.dart';
-import '../modules/image_view/views/image_view_view.dart';
 import '../modules/local_contact/bindings/local_contact_binding.dart';
 import '../modules/local_contact/views/local_contact_view.dart';
 import '../modules/login/bindings/country_binding.dart';
@@ -50,9 +48,7 @@ import '../modules/message_info/views/message_info_view.dart';
 import '../modules/preview_contact/bindings/preview_contact_binding.dart';
 import '../modules/preview_contact/views/preview_contact_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
-import '../modules/profile/bindings/status_list_binding.dart';
 import '../modules/profile/views/profile_view.dart';
-import '../modules/profile/views/status_list_view.dart';
 import '../modules/scanner/scanner_binding.dart';
 import '../modules/scanner/scanner_view.dart';
 import '../modules/scanner/web_login_result_view.dart';
@@ -147,11 +143,11 @@ class AppPages {
       page: () => const ProfileView(),
       binding: ProfileBinding(),
     ),
-    GetPage(
-      name: _Paths.statusList,
-      page: () => const StatusListView(),
-      binding: StatusListBinding(),
-    ),
+    // GetPage(
+    //   name: _Paths.statusList,
+    //   page: () => const StatusListView(),
+    //   binding: StatusListBinding(),
+    // ),
     GetPage(
       name: _Paths.chat,
       page: () => const ChatView(jid:""),
@@ -222,11 +218,11 @@ class AppPages {
       page: () => const VideoPlayerView(),
       binding: VideoPlayBinding(),
     ),
-    GetPage(
-      name: _Paths.imageView,
-      page: () => const ImageViewView(),
-      binding: ImageViewBinding(),
-    ),
+    // GetPage(
+    //   name: _Paths.imageView,
+    //   page: () => const ImageViewView(),
+    //   binding: ImageViewBinding(),
+    // ),
     GetPage(
       name: _Paths.localContact,
       page: () => const LocalContactView(),

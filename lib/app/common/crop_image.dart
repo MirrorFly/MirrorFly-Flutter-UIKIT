@@ -75,7 +75,7 @@ class _CropImageState extends State<CropImage> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () async {
-                      Helper.showLoading(message: "Image Cropping...");
+                      Helper.showLoading(message: "Image Cropping...", buildContext: context);
                       await controller.onCropImage().then((image){
                         Helper.hideLoading();
                         Get.back(result: image);

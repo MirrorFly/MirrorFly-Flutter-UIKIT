@@ -6,8 +6,23 @@ import 'package:mirrorfly_uikit_plugin/app/modules/profile/controllers/status_co
 
 import '../../../common/constants.dart';
 
-class AddStatusView extends GetView<StatusListController> {
-  const AddStatusView({Key? key}) : super(key: key);
+class AddStatusView extends StatefulWidget {
+  const AddStatusView({Key? key, required this.status}) : super(key: key);
+
+  final String status;
+  @override
+  State<AddStatusView> createState() => _AddStatusViewState();
+}
+
+class _AddStatusViewState extends State<AddStatusView> {
+  // var controller = Get.find(StatusListController());
+  final StatusListController controller = Get.find();
+
+  @override
+  void initState() {
+    super.initState();
+    controller.selectedStatus.value = widget.status;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +36,8 @@ class AddStatusView extends GetView<StatusListController> {
           if (controller.showEmoji.value) {
             controller.showEmoji(false);
           } else {
-            Get.back();
+            // Get.back();
+            Navigator.pop(context);
           }
           return Future.value(false);
         },
@@ -95,7 +111,7 @@ class AddStatusView extends GetView<StatusListController> {
             Row(children: [
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () => Get.back(),
+                  onPressed: () =>  Navigator.pop(context),
                   style: ElevatedButton.styleFrom(
                       backgroundColor: MaterialStateColor.resolveWith(
                               (states) => Colors.white),
@@ -114,7 +130,7 @@ class AddStatusView extends GetView<StatusListController> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: () {
-                    controller.validateAndFinish();
+                    controller.validateAndFinish(context);
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: MaterialStateColor.resolveWith(

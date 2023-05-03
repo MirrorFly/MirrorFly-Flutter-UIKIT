@@ -6,16 +6,16 @@ class ImageViewController extends GetxController {
   var imageName = ''.obs;
   var imagePath = ''.obs;
   var imageUrl = ''.obs;
-  @override
-  void onInit() {
-    super.onInit();
-    imageName(Get.arguments['imageName']);
-    imagePath(Get.arguments['imagePath']);
-    if(Get.arguments['imageUrl'].toString().startsWith("http")) {
-      imageUrl(Get.arguments['imageUrl']);
+
+
+  void init({required String imageName, String? imagePath, String? imageUrl}) {
+    this.imageName(imageName);
+    this.imagePath(imagePath);
+    if(imageUrl.toString().startsWith("http")) {
+      this.imageUrl(imageUrl);
     }else {
-      imageUrl(SessionManagement.getMediaEndPoint().checkNull() +
-          Get.arguments['imageUrl'].toString());
+      this.imageUrl(SessionManagement.getMediaEndPoint().checkNull() +
+          imageUrl.toString());
     }
   }
 

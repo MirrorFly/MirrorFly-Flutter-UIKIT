@@ -270,7 +270,7 @@ class MediaPreviewView extends GetView<MediaPreviewController> {
                                   ),
                                   InkWell(
                                       onTap: () {
-                                        controller.sendMedia();
+                                        controller.sendMedia(context);
                                         // controller.sendMessage(controller.profile);
                                       },
                                       child: SvgPicture.asset(

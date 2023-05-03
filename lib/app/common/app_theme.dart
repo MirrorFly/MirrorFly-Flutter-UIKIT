@@ -25,8 +25,8 @@ class MirrorFlyTheme {
       colorOnPrimary: Colors.white,
       textPrimaryColor: Colors.white,
       textSecondaryColor: const Color(0xff767676),
-      chatBubblePrimaryColor: ChatBubbleColor(color: const Color(0xff4879F9), textPrimaryColor: Colors.white, textSecondaryColor: const Color(0xffB6CAFF)),
-      chatBubbleSecondaryColor: ChatBubbleColor(color: const Color(0xff26262a), textPrimaryColor: const Color(0xfffafafa), textSecondaryColor: const Color(0xff959595)));
+      chatBubblePrimaryColor: ChatBubbleColor(color: Colors.blue, textPrimaryColor: Colors.white, textSecondaryColor: Colors.grey),
+      chatBubbleSecondaryColor: ChatBubbleColor(color: const Color(0xff26262a), textPrimaryColor: const Color(0xfffafafa), textSecondaryColor: Colors.grey));
 
   static late var mirrorflyTheme;
 

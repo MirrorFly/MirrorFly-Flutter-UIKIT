@@ -109,7 +109,7 @@ class BusyStatusView extends GetView<BusyStatusController> {
                                   index, item.status.checkNull());
                             },
                             onLongPress: () {
-                              controller.deleteBusyStatus(item);
+                              controller.deleteBusyStatus(item, context);
                             },
                           );
                         }) : const SizedBox();

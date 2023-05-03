@@ -126,7 +126,7 @@ class LoginView extends GetView<LoginController> {
                                 fontWeight: FontWeight.w500),
                             shape: const StadiumBorder()),
                         onPressed: () {
-                          controller.registerUser();
+                          controller.registerUser(context);
                         },
                         child: const Text(
                           'Continue',

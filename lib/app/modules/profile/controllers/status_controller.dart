@@ -25,15 +25,23 @@ class StatusListController extends FullLifeCycleController with FullLifeCycleMix
     count(139 - addStatusController.text.characters.length);
   }
 
-  @override
-  void onInit() {
-    super.onInit();
-    selectedStatus.value = Get.arguments['status'];
-    addStatusController.text=selectedStatus.value;
-    onChanged();
+  void init(String status) {
+    selectedStatus.value = status;
+    addStatusController.text = selectedStatus.value;
+    // onChanged();
     getStatusList();
     onChanged();
   }
+
+  // @override
+  // void onInit() {
+  //   super.onInit();
+  //   selectedStatus.value = Get.arguments['status'];
+  //   addStatusController.text=selectedStatus.value;
+  //   onChanged();
+  //   getStatusList();
+  //   onChanged();
+  // }
   getStatusList(){
     loading.value=true;
     Mirrorfly.getProfileStatusList().then((value){
@@ -49,16 +57,16 @@ class StatusListController extends FullLifeCycleController with FullLifeCycleMix
     });
   }
 
-  updateStatus([String? statusText, String? statusId]) async {
+  updateStatus(BuildContext context, [String? statusText, String? statusId]) async {
     debugPrint("updating item details--> $statusId");
     if(await AppUtils.isNetConnected()) {
-      Helper.showLoading();
+      Helper.showLoading(buildContext: context);
       Mirrorfly.setMyProfileStatus(statusText!, statusId!).then((value){
         selectedStatus.value= statusText;
         addStatusController.text= statusText;
         var data = json.decode(value.toString());
         toToast('Status update successfully');
-        Helper.hideLoading();
+        Navigator.pop(context);
         if(data['status']) {
           getStatusList();
         }
@@ -70,16 +78,17 @@ class StatusListController extends FullLifeCycleController with FullLifeCycleMix
     }
   }
 
-  insertStatus() async{
+  insertStatus(BuildContext context) async{
     if(await AppUtils.isNetConnected()){
-      Helper.showLoading();
+      Helper.showLoading(buildContext: context);
         Mirrorfly.insertNewProfileStatus(addStatusController.text.trim().toString())
             .then((value) {
           selectedStatus.value = addStatusController.text.trim().toString();
           addStatusController.text = addStatusController.text.trim().toString();
           var data = json.decode(value.toString());
           toToast('Status update successfully');
-          Helper.hideLoading();
+          // Helper.hideLoading();
+          Navigator.pop(context);
           if (data['status']) {
             getStatusList();
           }
@@ -91,14 +100,16 @@ class StatusListController extends FullLifeCycleController with FullLifeCycleMix
     }
   }
 
-  validateAndFinish()async{
+  validateAndFinish(BuildContext context)async{
     if(addStatusController.text.trim().isNotEmpty) {
       if(await AppUtils.isNetConnected()) {
-        Get.back(result: addStatusController.text
-            .trim().toString());
+        // Get.back(result: addStatusController.text
+        //     .trim().toString());
+        if (context.mounted) Navigator.pop(context, addStatusController.text.trim().toString());
       }else{
         toToast(Constants.noInternetConnection);
-        Get.back();
+        // Get.back();
+        if (context.mounted) Navigator.pop(context);
       }
     }else{
       toToast("Status cannot be empty");
@@ -129,7 +140,7 @@ class StatusListController extends FullLifeCycleController with FullLifeCycleMix
     }
   }
 
-  void deleteStatus(StatusData item) {
+  void deleteStatus(StatusData item, BuildContext context) {
     debugPrint("item delete status-->${item.isCurrentStatus}");
     debugPrint("item delete status-->${item.id}");
     debugPrint("item delete status-->${item.status}");
@@ -143,32 +154,36 @@ class StatusListController extends FullLifeCycleController with FullLifeCycleMix
                   fontWeight: FontWeight.normal)),
 
           onTap: () {
-            Get.back();
-            statusDeleteConfirmation(item);
+            Navigator.pop(context);
+            statusDeleteConfirmation(item, context);
           },
         ),
       ]);
     }
   }
 
-  void statusDeleteConfirmation(StatusData item) {
+  void statusDeleteConfirmation(StatusData item, BuildContext context) {
     Helper.showAlert(message: "Do you want to delete the status?", actions: [
       TextButton(
           onPressed: () {
-            Get.back();
+            // Get.back();
+            Navigator.pop(context);
           },
           child: const Text("No")),
       TextButton(
           onPressed: () async {
             if (await AppUtils.isNetConnected()) {
-              Get.back();
-              Helper.showLoading(message: "Deleting Status");
+              // Get.back();
+              if(context.mounted) Navigator.pop(context);
+              Helper.showLoading(message: "Deleting Status", buildContext: context);
               Mirrorfly.deleteProfileStatus(item.id!, item.status!, item.isCurrentStatus!)
                   .then((value) {
                 statusList.remove(item);
-                Helper.hideLoading();
+                // Helper.hideLoading();
+                Navigator.pop(context);
               }).catchError((error) {
-                Helper.hideLoading();
+                // Helper.hideLoading();
+                Navigator.pop(context);
                 toToast("Unable to delete the Busy Status");
               });
             } else {
@@ -178,4 +193,6 @@ class StatusListController extends FullLifeCycleController with FullLifeCycleMix
           child: const Text("Yes")),
     ]);
   }
+
+
 }

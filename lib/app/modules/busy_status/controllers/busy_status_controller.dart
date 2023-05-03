@@ -74,7 +74,7 @@ class BusyStatusController extends FullLifeCycleController with FullLifeCycleMix
     setCurrentStatus(status);
   }
 
-  void deleteBusyStatus(StatusData item) {
+  void deleteBusyStatus(StatusData item, BuildContext context) {
 
     if(!item.isCurrentStatus!){
       Helper.showButtonAlert(actions: [
@@ -87,7 +87,7 @@ class BusyStatusController extends FullLifeCycleController with FullLifeCycleMix
 
           onTap: () {
             Get.back();
-            busyDeleteConfirmation(item);
+            busyDeleteConfirmation(item, context);
           },
         ),
       ]);
@@ -134,7 +134,7 @@ class BusyStatusController extends FullLifeCycleController with FullLifeCycleMix
     });
   }
 
-  void busyDeleteConfirmation(StatusData item) {
+  void busyDeleteConfirmation(StatusData item, BuildContext context) {
     Helper.showAlert(message: "Do you want to delete the status?", actions: [
       TextButton(
           onPressed: () {
@@ -145,7 +145,7 @@ class BusyStatusController extends FullLifeCycleController with FullLifeCycleMix
           onPressed: () async {
             if (await AppUtils.isNetConnected()) {
               Get.back();
-              Helper.showLoading(message: "Deleting Busy Status");
+              Helper.showLoading(message: "Deleting Busy Status", buildContext: context);
               Mirrorfly.deleteBusyStatus(
                   item.id!, item.status!, item.isCurrentStatus!)
                   .then((value) {

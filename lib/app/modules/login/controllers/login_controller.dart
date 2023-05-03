@@ -45,8 +45,8 @@ class LoginController extends GetxController {
 
   // void registerUser(BuildContext context) {
 
-  showLoading() {
-    Helper.showLoading(message: "Please Wait...");
+  showLoading(BuildContext context) {
+    Helper.showLoading(message: "Please Wait...", buildContext: context);
   }
 
   hideLoading() {
@@ -85,12 +85,12 @@ class LoginController extends GetxController {
     countdownTimer!.cancel();
   }
 
-  void registerUser() {
+  void registerUser(BuildContext context) {
     if (mobileNumber.text.isEmpty) {
       toToast("Please Enter Mobile Number");
     } else {
       // phoneAuth();
-      registerAccount();
+      registerAccount(context);
     }
   }
 
@@ -288,18 +288,18 @@ class LoginController extends GetxController {
     // navigateToUserRegisterMethod(deviceToken, firebaseToken);
   }
 
-  navigateToUserRegisterMethod(String? deviceToken, String? firebaseToken) {
+  navigateToUserRegisterMethod(String? deviceToken, String? firebaseToken, BuildContext context) {
     //OTP validated successfully
     if (deviceToken.checkNull().isEmpty || deviceToken == "null" || deviceToken == firebaseToken) {
-      registerAccount();
+      registerAccount(context);
     } else {
-      showUserAccountDeviceStatus();
+      showUserAccountDeviceStatus(context);
     }
   }
 
-  registerAccount() async {
+  registerAccount(BuildContext context) async {
     if (await AppUtils.isNetConnected()) {
-      showLoading();
+      showLoading(context);
       Mirrorfly.registerUser(
         countryCode!.replaceAll('+', '') + mobileNumber.text, token:SessionManagement.getToken().checkNull())
           .then((value) {
@@ -339,7 +339,7 @@ class LoginController extends GetxController {
 
   var verifyVisible = true.obs;
 
-  showUserAccountDeviceStatus() {
+  showUserAccountDeviceStatus(BuildContext context) {
     //Already Logged Popup
     hideLoading();
     verifyVisible(false);
@@ -358,7 +358,7 @@ class LoginController extends GetxController {
           TextButton(
               onPressed: () {
                 Get.back();
-                registerAccount();
+                registerAccount(context);
               },
               child: const Text("YES")),
         ]);

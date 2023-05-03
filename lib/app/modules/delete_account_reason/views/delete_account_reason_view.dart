@@ -87,7 +87,7 @@ class DeleteAccountReasonView extends GetView<DeleteAccountReasonController> {
                                       fontWeight: FontWeight.w500),
                                   shape: const StadiumBorder()),
                               onPressed: () {
-                                controller.deleteAccount();
+                                controller.deleteAccount(context);
                               },
                               child: const Text(
                                 'Delete My Account',

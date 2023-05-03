@@ -8,8 +8,23 @@ import 'package:mirrorfly_uikit_plugin/app/modules/profile/controllers/status_co
 import '../../../common/constants.dart';
 import 'add_status_view.dart';
 
-class StatusListView extends GetView<StatusListController> {
-  const StatusListView({Key? key}) : super(key: key);
+class StatusListView extends StatefulWidget {
+  const StatusListView({Key? key, required this.status}) : super(key: key);
+
+  final String status;
+
+  @override
+  State<StatusListView> createState() => _StatusListViewState();
+}
+
+class _StatusListViewState extends State<StatusListView> {
+  var controller = Get.put(StatusListController());
+
+  @override
+  void initState() {
+    controller.init(widget.status);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +35,8 @@ class StatusListView extends GetView<StatusListController> {
       ),
       body: WillPopScope(
         onWillPop: () {
-          Get.back(result: controller.selectedStatus.value);
+          // Get.back(result: controller.selectedStatus.value);
+          Navigator.pop(context, controller.selectedStatus.value);
           return Future.value(false);
         },
         child: Container(
@@ -47,14 +63,18 @@ class StatusListView extends GetView<StatusListController> {
                     pencilEditIcon,package: package,
                     fit: BoxFit.contain,
                   ),
-                  onTap: () {
-                    Get.to(const AddStatusView(), arguments: {
-                      "status": controller.selectedStatus.value
-                    })?.then((value) {
-                      if (value != null) {
-                        controller.insertStatus();
-                      }
-                    });
+                  onTap: () async {
+                    // Get.to(const AddStatusView(), arguments: {
+                    //   "status": controller.selectedStatus.value
+                    // })?.then((value) {
+                    //   if (value != null) {
+                    //     controller.insertStatus();
+                    //   }
+                    // });
+                    final result = await Navigator.push(context, MaterialPageRoute(builder: (con)=> AddStatusView(status: controller.selectedStatus.value)));
+                    if (result != null) {
+                      controller.insertStatus(context);
+                    }
                   },
                 ),
               ),
@@ -94,12 +114,12 @@ class StatusListView extends GetView<StatusListController> {
                                         )
                                       : const SizedBox(),
                               onTap: () {
-                                controller.updateStatus(item.status.checkNull(),
+                                controller.updateStatus(context, item.status.checkNull(),
                                     item.id.checkNull());
                               },
                               onLongPress: (){
                                 debugPrint("Status list long press");
-                                controller.deleteStatus(item);
+                                controller.deleteStatus(item, context);
                               },
                             );
                           }),

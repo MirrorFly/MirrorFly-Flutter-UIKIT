@@ -442,7 +442,7 @@ class ChatController extends FullLifeCycleController
         ]);
   }
 
-  disableBusyChatAndSend() async {
+  disableBusyChatAndSend(BuildContext context) async {
     if (messageObject != null) {
       switch (messageObject!.messageType) {
         case Constants.mText:
@@ -470,7 +470,7 @@ class ChatController extends FullLifeCycleController
           break;
         case Constants.mVideo:
           sendVideoMessage(messageObject!.file!, messageObject!.caption!,
-              messageObject!.replyMessageId!);
+              messageObject!.replyMessageId!, context);
           break;
       }
     }
@@ -718,7 +718,7 @@ class ChatController extends FullLifeCycleController
   }
 
   sendVideoMessage(
-      String videoPath, String caption, String replyMessageID) async {
+      String videoPath, String caption, String replyMessageID, BuildContext context) async {
     var busyStatus = !profile.isGroupProfile.checkNull()
         ? await Mirrorfly.isBusyStatusEnabled()
         : false;
@@ -727,7 +727,7 @@ class ChatController extends FullLifeCycleController
         replyMessageID = replyChatMessage.messageId;
       }
       isReplying(false);
-      Platform.isIOS ? Helper.showLoading(message: "Compressing Video") : null;
+      Platform.isIOS ? Helper.showLoading(message: "Compressing Video", buildContext: context) : null;
       return Mirrorfly.sendVideoMessage(
               profile.jid!, videoPath, caption, replyMessageID)
           .then((value) {
@@ -1363,7 +1363,7 @@ class ChatController extends FullLifeCycleController
         ));
   }
 
-  blockUser() {
+  blockUser(BuildContext context) {
     Future.delayed(const Duration(milliseconds: 100), () async {
       Helper.showAlert(
           message: "Are you sure you want to Block ${getName(profile)}?",
@@ -1377,7 +1377,7 @@ class ChatController extends FullLifeCycleController
                 onPressed: () async {
                   if (await AppUtils.isNetConnected()) {
                     Get.back();
-                    Helper.showLoading(message: "Blocking User");
+                    Helper.showLoading(message: "Blocking User", buildContext: context);
                     Mirrorfly.blockUser(profile.jid!).then((value) {
                       debugPrint(value);
                       profile.isBlocked = true;

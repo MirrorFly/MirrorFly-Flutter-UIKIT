@@ -98,7 +98,7 @@ class VideoPreviewView extends GetView<VideoPreviewController> {
                             ),
                             InkWell(
                                 onTap: () {
-                                  controller.sendVideoMessage();
+                                  controller.sendVideoMessage(context);
 
                                 },
                                 child: SvgPicture.asset(

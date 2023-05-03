@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 
 import '../../../common/constants.dart';
 import '../../../common/widgets.dart';
@@ -84,14 +85,15 @@ Widget settingListItem(
           children: [
             leading != null ? Padding(
               padding: const EdgeInsets.all(18.0),
-              child: SvgPicture.asset(leading,package: package,),
-            ) :  const SizedBox(height: 4,),
+              child: SvgPicture.asset(leading,package: package, color: MirrorflyUikit.getTheme?.textSecondaryColor,),
+            ) : const SizedBox(height: 4,),
             Expanded(
                 child: Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 15.0,
                       fontFamily: 'sf_ui',
+                      color: MirrorflyUikit.getTheme?.textPrimaryColor,
                       fontWeight: FontWeight.w400),
                 )),
             Padding(

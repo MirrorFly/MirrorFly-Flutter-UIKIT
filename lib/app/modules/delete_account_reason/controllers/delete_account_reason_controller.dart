@@ -3,7 +3,6 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
-import '../../../models.dart';
 
 import '../../../data/apputils.dart';
 import '../../../data/session_management.dart';
@@ -25,7 +24,7 @@ class DeleteAccountReasonController extends FullLifeCycleController
 
   get focusNode => FocusNode();
 
-  deleteAccount() {
+  deleteAccount(BuildContext context) {
     Helper.showAlert(
         title: "Proceed to delete your account?",
         message:
@@ -39,17 +38,17 @@ class DeleteAccountReasonController extends FullLifeCycleController
           TextButton(
               onPressed: () async {
                 // Get.back();
-                deleteUserAccount();
+                deleteUserAccount(context);
               },
               child: const Text("OK")),
         ]);
   }
 
-  Future<void> deleteUserAccount() async {
+  Future<void> deleteUserAccount(BuildContext context) async {
     if (await AppUtils.isNetConnected()) {
       Get.back();
       // Future.delayed(const Duration(milliseconds: 100), () {
-       Helper.showLoading(message: "Deleting Account");
+       Helper.showLoading(message: "Deleting Account", buildContext: context);
       debugPrint("on DeleteAccount");
       SessionManagement.setLogin(false);
       Mirrorfly.deleteAccount(reasonValue.value, feedback.text).then((value) {

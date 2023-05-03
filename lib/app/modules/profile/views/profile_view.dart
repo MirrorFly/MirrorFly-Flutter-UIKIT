@@ -8,13 +8,23 @@ import 'package:focus_detector/focus_detector.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/image_view/views/image_view_view.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/profile/views/status_list_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/routes/app_pages.dart';
 
+import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/widgets.dart';
 import '../controllers/profile_controller.dart';
 
-class ProfileView extends GetView<ProfileController> {
+class ProfileView extends StatefulWidget {
   const ProfileView({Key? key}) : super(key: key);
+
+  @override
+  State<ProfileView> createState() => _ProfileViewState();
+}
+
+class _ProfileViewState extends State<ProfileView> {
+  var controller = Get.put(ProfileController());
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +45,14 @@ class ProfileView extends GetView<ProfileController> {
         }
       },
       child: Scaffold(
+          backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
           appBar: AppBar(
-            title: const Text(
-              'Profile',
-              style: TextStyle(color: appbarTextColor),
+            title: Text(
+              'Profile', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar)
             ),
             centerTitle: true,
+            iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+            backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
             automaticallyImplyLeading: controller.from.value == Routes.login ? false : true,
           ),
           body: SafeArea(
@@ -96,17 +108,20 @@ class ProfileView extends GetView<ProfileController> {
                                       if (controller.imagePath.value
                                           .checkNull()
                                           .isNotEmpty) {
-                                        Get.toNamed(Routes.imageView, arguments: {
-                                          'imageName': controller.profileName.text,
-                                          'imagePath': controller.imagePath.value.checkNull()
-                                        });
+                                        // Get.toNamed(Routes.imageView, arguments: {
+                                        //   'imageName': controller.profileName.text,
+                                        //   'imagePath': controller.imagePath.value.checkNull()
+                                        // });
+                                        Navigator.push(context, MaterialPageRoute(builder: (con)=> ImageViewView(imageName: controller.profileName.text, imagePath: controller.imagePath.value.checkNull())));
                                       } else if (controller.userImgUrl.value
                                           .checkNull()
                                           .isNotEmpty) {
-                                        Get.toNamed(Routes.imageView, arguments: {
-                                          'imageName': controller.profileName.text,
-                                          'imageUrl': controller.userImgUrl.value.checkNull()
-                                        });
+                                        // Get.toNamed(Routes.imageView, arguments: {
+                                        //   'imageName': controller.profileName.text,
+                                        //   'imageUrl': controller.userImgUrl.value.checkNull()
+                                        // });
+                                        Navigator.push(context, MaterialPageRoute(builder: (con)=> ImageViewView(imageName: controller.profileName.text, imageUrl: controller.userImgUrl.value.checkNull())));
+
                                       }
                                     },
                                   );
@@ -152,7 +167,7 @@ class ProfileView extends GetView<ProfileController> {
                               hintText: 'Username',
                               counterText: '',
                             ),
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            style: TextStyle(fontWeight: FontWeight.bold, color: MirrorflyUikit.getTheme?.textPrimaryColor),
                           ),
                         );
                       }),
@@ -160,9 +175,9 @@ class ProfileView extends GetView<ProfileController> {
                     const SizedBox(
                       height: 20,
                     ),
-                    const Text(
+                    Text(
                       'Email',
-                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: MirrorflyUikit.getTheme?.textPrimaryColor),
                     ),
                     TextField(
                       keyboardType: TextInputType.emailAddress,
@@ -173,17 +188,17 @@ class ProfileView extends GetView<ProfileController> {
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Enter Email Id',
-                        icon: SvgPicture.asset(emailIcon,package: package,),
+                        icon: SvgPicture.asset(emailIcon,package: package, color: MirrorflyUikit.getTheme?.textSecondaryColor,),
                       ),
-                      style: const TextStyle(fontWeight: FontWeight.normal, color: textColor),
+                      style: TextStyle(fontWeight: FontWeight.normal, color: MirrorflyUikit.getTheme?.textSecondaryColor),
                     ),
                     const AppDivider(),
                     const SizedBox(
                       height: 20,
                     ),
-                    const Text(
+                    Text(
                       'Mobile Number',
-                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: MirrorflyUikit.getTheme?.textPrimaryColor),
                     ),
                     TextField(
                       controller: controller.profileMobile,
@@ -191,17 +206,17 @@ class ProfileView extends GetView<ProfileController> {
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Enter Mobile Number',
-                        icon: SvgPicture.asset(phoneIcon,package: package,),
+                        icon: SvgPicture.asset(phoneIcon,package: package,color: MirrorflyUikit.getTheme?.textSecondaryColor),
                       ),
-                      style: const TextStyle(fontWeight: FontWeight.normal, color: textColor),
+                      style: TextStyle(fontWeight: FontWeight.normal, color: MirrorflyUikit.getTheme?.textSecondaryColor),
                     ),
                     const AppDivider(),
                     const SizedBox(
                       height: 20,
                     ),
-                    const Text(
+                    Text(
                       'Status',
-                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: MirrorflyUikit.getTheme?.textPrimaryColor),
                     ),
                     Obx(() => ListTile(
                           contentPadding: EdgeInsets.zero,
@@ -210,18 +225,23 @@ class ProfileView extends GetView<ProfileController> {
                                 ? controller.profileStatus.value
                                 : Constants.defaultStatus,
                             style: TextStyle(
-                                color: controller.profileStatus.value.isNotEmpty ? textColor : Colors.black38,
+                                color: controller.profileStatus.value.isNotEmpty ? MirrorflyUikit.getTheme?.textSecondaryColor : Colors.black38,
                                 fontWeight: FontWeight.normal),
                           ),
                           minLeadingWidth: 10,
-                          leading: SvgPicture.asset(statusIcon,package: package,),
-                          onTap: () {
-                            Get.toNamed(Routes.statusList, arguments: {'status': controller.profileStatus.value})
-                                ?.then((value) {
-                              if (value != null) {
-                                controller.profileStatus.value = value;
-                              }
-                            });
+                          leading: SvgPicture.asset(statusIcon,package: package,color: MirrorflyUikit.getTheme?.textSecondaryColor),
+                          onTap: () async {
+                            // Get.toNamed(Routes.statusList, arguments: {'status': controller.profileStatus.value})
+                            //     ?.then((value) {
+                            //   if (value != null) {
+                            //     controller.profileStatus.value = value;
+                            //   }
+                            // });
+                            final result = await Navigator.push(context, MaterialPageRoute(builder: (con)=> StatusListView(status: controller.profileStatus.value)));
+                            if (result != null) {
+                              controller.profileStatus.value = result;
+                            }
+
                           },
                         )),
                     const AppDivider(
@@ -233,6 +253,7 @@ class ProfileView extends GetView<ProfileController> {
                           style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                               textStyle: const TextStyle(fontSize: 14),
+                              backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
                               shape: const StadiumBorder()),
                           onPressed: controller.loading.value
                               ? null
@@ -240,7 +261,7 @@ class ProfileView extends GetView<ProfileController> {
                                   ? () {
                                       FocusScope.of(context).unfocus();
                                       if (!controller.loading.value) {
-                                        controller.save();
+                                        controller.save(context: context);
                                       }
                                     }
                                   : null,
@@ -250,7 +271,7 @@ class ProfileView extends GetView<ProfileController> {
                                 : controller.changed.value
                                     ? 'Update & Continue'
                                     : 'Save',
-                            style: const TextStyle(fontWeight: FontWeight.w600),
+                            style: TextStyle(fontWeight: FontWeight.w600, color: MirrorflyUikit.getTheme?.textPrimaryColor),
                           ),
                         ),
                       ),
@@ -272,8 +293,10 @@ class ProfileView extends GetView<ProfileController> {
           return SafeArea(
             child: SizedBox(
               child: Card(
-                shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30))),
+                color: MirrorflyUikit.getTheme?.scaffoldColor,
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(color: MirrorflyUikit.getTheme!.textSecondaryColor),
+                    borderRadius: const BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: Column(
@@ -283,46 +306,46 @@ class ProfileView extends GetView<ProfileController> {
                       const SizedBox(
                         height: 10,
                       ),
-                      const Text("Options"),
+                      Text("Options", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),),
                       const SizedBox(
                         height: 10,
                       ),
                       TextButton(
                           onPressed: () async {
-                            Get.back();
-                            controller.camera();
+                            Navigator.pop(context);
+                            controller.camera(context);
                           },
                           style: TextButton.styleFrom(
                               padding: EdgeInsets.zero,
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               alignment: Alignment.centerLeft),
-                          child: const Text("Take Photo",
-                              style: TextStyle(color: textColor, fontWeight: FontWeight.bold))),
+                          child: Text("Take Photo",
+                              style: TextStyle(color:  MirrorflyUikit.getTheme?.textPrimaryColor, fontWeight: FontWeight.bold))),
                       TextButton(
                           onPressed: () {
-                            Get.back();
+                            Navigator.pop(context);
                             controller.imagePicker(context);
                           },
                           style: TextButton.styleFrom(
                               padding: EdgeInsets.zero,
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               alignment: Alignment.centerLeft),
-                          child: const Text("Choose from Gallery",
-                              style: TextStyle(color: textColor, fontWeight: FontWeight.bold))),
+                          child: Text("Choose from Gallery",
+                              style: TextStyle(color:  MirrorflyUikit.getTheme?.textPrimaryColor, fontWeight: FontWeight.bold))),
                       controller.userImgUrl.value.isNotEmpty
                           ? TextButton(
                               onPressed: () {
-                                Get.back();
+                                Navigator.pop(context);
                                 Helper.showAlert(message: "Are you sure you want to remove the photo?", actions: [
                                   TextButton(
                                       onPressed: () {
-                                        Get.back();
+                                        Navigator.pop(context);
                                       },
                                       child: const Text("CANCEL")),
                                   TextButton(
                                       onPressed: () {
-                                        Get.back();
-                                        controller.removeProfileImage();
+                                        Navigator.pop(context);
+                                        controller.removeProfileImage(context);
                                       },
                                       child: const Text("REMOVE"))
                                 ]);

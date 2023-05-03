@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
-import '../../../models.dart';
 import 'package:mirrorfly_uikit_plugin/app/routes/app_pages.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 
@@ -43,12 +42,12 @@ class GroupCreationController extends GetxController {
     debugPrint("length--> ${groupName.text.length}");
     _count((25 - groupName.text.characters.length));
   }
-  goToAddParticipantsPage(){
+  goToAddParticipantsPage(BuildContext context){
     if(groupName.text.trim().isNotEmpty) {
       //Get.toNamed(Routes.ADD_PARTICIPANTS);
       Get.toNamed(Routes.contacts, arguments: {"forward" : false,"group":true,"groupJid":"" })?.then((value){
         if(value!=null){
-          createGroup(value as List<String>);
+          createGroup(value as List<String>, context);
         }
       });
     }else{
@@ -112,11 +111,11 @@ class GroupCreationController extends GetxController {
     }
   }
 
-  createGroup(List<String> users,){
+  createGroup(List<String> users, BuildContext context){
     mirrorFlyLog("group name", groupName.text);
     mirrorFlyLog("users", users.toString());
     mirrorFlyLog("group image", imagePath.value);
-    Helper.showLoading();
+    Helper.showLoading(buildContext: context);
     Mirrorfly.createGroup(groupName.text.toString(),users,imagePath.value).then((value){
       Helper.hideLoading();
       if(value!=null) {

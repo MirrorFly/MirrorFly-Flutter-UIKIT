@@ -18,6 +18,7 @@ import '../../../models.dart';
 
 import '../../../data/apputils.dart';
 import '../../../data/permissions.dart';
+import '../../dashboard/views/dashboard_view.dart';
 
 class ProfileController extends GetxController {
   TextEditingController profileName = TextEditingController();
@@ -33,7 +34,7 @@ class ProfileController extends GetxController {
   var changed = false.obs;
 
   dynamic imageBytes;
-  var from = Routes.login.obs;
+  var from = Routes.settings.obs;
 
   var name = "".obs;
 
@@ -47,7 +48,7 @@ class ProfileController extends GetxController {
     userImgUrl.value = SessionManagement.getUserImage() ?? "";
     mirrorFlyLog("auth : ", SessionManagement.getAuthToken().toString());
     if (Get.arguments != null) {
-      from(Get.arguments["from"]);
+      // from(Get.arguments["from"]);
       if (from.value == Routes.login) {
         profileMobile.text = Get.arguments['mobile'] ?? "";
       }
@@ -81,7 +82,7 @@ class ProfileController extends GetxController {
     }
   }
 
-  Future<void> save({bool frmImage=false}) async {
+  Future<void> save({bool frmImage = false, required BuildContext context}) async {
     if (await askStoragePermission()) {
       if (profileName.text
           .trim()
@@ -104,7 +105,7 @@ class ProfileController extends GetxController {
         showLoader();
         if (imagePath.value.isNotEmpty) {
           debugPrint("profile image update");
-          updateProfileImage(imagePath.value, update: true);
+          updateProfileImage(path: imagePath.value, update: true, context: context);
         } else {
           if (await AppUtils.isNetConnected()) {
             debugPrint("profile update");
@@ -138,7 +139,9 @@ class ProfileController extends GetxController {
                     if (from.value == Routes.login) {
                       Mirrorfly.isTrailLicence().then((trail){
                         if(trail.checkNull()) {
-                          Get.offNamed(Routes.dashboard);
+                          // Get.offNamed(Routes.dashboard);
+                          Navigator.push(context, MaterialPageRoute(builder: (con)=> DashboardView()));
+
                         }else{
                           Get.offNamed(Routes.contactSync);
                         }
@@ -165,7 +168,7 @@ class ProfileController extends GetxController {
     }
   }
 
-  updateProfileImage(String path, {bool update = false}) async {
+  updateProfileImage({required String path, bool update = false, required BuildContext context}) async {
     if(await AppUtils.isNetConnected()) {
       loading.value = true;
 
@@ -180,7 +183,7 @@ class ProfileController extends GetxController {
           SessionManagement.setUserImage(data['data']['image'].toString());
           hideLoader();
           if (update) {
-            save();
+            save(context: context);
           }
         }).catchError((onError) {
           debugPrint("Profile Update on error--> ${onError.toString()}");
@@ -196,7 +199,7 @@ class ProfileController extends GetxController {
 
   }
 
-  removeProfileImage() async {
+  removeProfileImage(BuildContext context) async {
     if(await AppUtils.isNetConnected()) {
       showLoader();
       loading.value = true;
@@ -211,7 +214,7 @@ class ProfileController extends GetxController {
           if (from.value == Routes.login) {
             changed(true);
           } else {
-            save(frmImage: true);
+            save(frmImage: true, context: context);
           }
           update();
         }
@@ -334,7 +337,7 @@ class ProfileController extends GetxController {
               } else {
                 imagePath(value.path);
                 changed(true);
-                updateProfileImage(value.path, update: true);
+                updateProfileImage(path: value.path, update: true, context: context);
               }
             });
           });
@@ -351,7 +354,7 @@ class ProfileController extends GetxController {
   }
 
   final ImagePicker _picker = ImagePicker();
-  camera() async {
+  camera(BuildContext context) async {
     if(await AppUtils.isNetConnected()) {
       final XFile? photo = await _picker.pickImage(
           source: ImageSource.camera);
@@ -370,7 +373,7 @@ class ProfileController extends GetxController {
             } else {
               imagePath(value.path);
               changed(true);
-              updateProfileImage(value.path, update: true);
+              updateProfileImage(path: value.path, update: true, context: context);
             }
           });
         });

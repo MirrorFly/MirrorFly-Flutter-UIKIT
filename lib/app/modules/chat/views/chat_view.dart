@@ -7,7 +7,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:marquee/marquee.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_theme.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/widgets.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 
@@ -291,7 +290,7 @@ class _ChatViewState extends State<ChatView> {
                                           .checkNull()) {
                                         controller.unBlockUser();
                                       } else {
-                                        controller.blockUser();
+                                        controller.blockUser(context);
                                       }
                                     }),
                                 const SizedBox(
@@ -418,7 +417,7 @@ class _ChatViewState extends State<ChatView> {
                     controller.isTyping(text);
                   },
                   keyboardType: TextInputType.multiline,
-                  keyboardAppearance: MirrorflyUikit.getTheme==MirrorFlyTheme.mirrorFlyDarkTheme ? Brightness.dark : Brightness.light,
+                  keyboardAppearance: MirrorflyUikit.theme == "dark" ? Brightness.dark : Brightness.light,
                   minLines: 1,
                   maxLines: 5,
                   enabled: controller.isAudioRecording.value ==
@@ -1208,7 +1207,7 @@ class _ChatViewState extends State<ChatView> {
                       visibleWidget: IconButton(
                         onPressed: () {
                           // Get.back();
-                          controller.blockUser();
+                          controller.blockUser(context);
                         },
                         icon: const Icon(Icons.block),
                       ),
@@ -1219,7 +1218,7 @@ class _ChatViewState extends State<ChatView> {
                       keyValue: 'Block',
                       onItemClick: () {
                         controller.closeKeyBoard();
-                        controller.blockUser();
+                        controller.blockUser(context);
                       },
                     ),
               CustomAction(

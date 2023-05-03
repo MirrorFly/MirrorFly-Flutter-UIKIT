@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:mirrorfly_plugin/flychat.dart';
 import '../../../models.dart';
 import 'package:get/get.dart';
 
@@ -61,13 +60,13 @@ class MediaPreviewController extends FullLifeCycleController with FullLifeCycleM
     // count(139 - addStatusController.text.length);
   }
 
-  sendMedia() async {
+  sendMedia(BuildContext context) async {
     debugPrint("send media");
     var previousRoute = Get.previousRoute;
     // if (await AppUtils.isNetConnected()) {
     try {
       int i = 0;
-      Platform.isIOS ? Helper.showLoading(message: "Compressing files") : null;
+      Platform.isIOS ? Helper.showLoading(message: "Compressing files", buildContext: context) : null;
       for (var data in filePath) {
         /// show image
         debugPrint(data.type);
@@ -82,7 +81,7 @@ class MediaPreviewController extends FullLifeCycleController with FullLifeCycleM
         } else if (data.type == 'video') {
           debugPrint("sending video");
           var response = await Get.find<ChatController>()
-              .sendVideoMessage(data.path, captionMessage[i], "");
+              .sendVideoMessage(data.path, captionMessage[i], "", context);
           debugPrint("Preview View ==> $response");
           if (response != null) {
             debugPrint("Video send Success");

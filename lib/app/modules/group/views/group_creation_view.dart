@@ -22,7 +22,7 @@ class GroupCreationView extends GetView<GroupCreationController> {
         ),
         actions: [
           TextButton(
-              onPressed: () => controller.goToAddParticipantsPage(),
+              onPressed: () => controller.goToAddParticipantsPage(context),
               child: const Text(
                 "NEXT", style: TextStyle(color: Colors.black),)),
         ],

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:mirrorfly_uikit_plugin/app/model/app_config.dart';
+import 'package:mirrorfly_uikit_plugin/app/model/reply_hash_map.dart';
 
 import 'app/common/app_theme.dart';
 import 'app/common/main_controller.dart';
@@ -17,6 +18,8 @@ import 'mirrorfly_uikit_plugin_platform_interface.dart';
 class MirrorflyUikit {
   static MirrorFlyAppTheme? getTheme = MirrorFlyTheme.mirrorFlyLightTheme;
   static bool isTrialLicence = true;
+  static bool isSDKInitialized = false;
+  static String theme = "light";
 
   static Future<String?> getPlatformVersion() {
     return MirrorflyUikitPluginPlatform.instance.getPlatformVersion();
@@ -42,6 +45,7 @@ class MirrorflyUikit {
           isTrialLicenceKey: config.projectInfo.isTrialLicenceKey,
           enableDebugLog: false);
 
+      theme = config.appTheme.theme;
       getTheme = config.appTheme.theme == "light"
           ? MirrorFlyTheme.mirrorFlyLightTheme
           : config.appTheme.theme == "dark"
@@ -58,7 +62,10 @@ class MirrorflyUikit {
                   appBarColor: config.appTheme.customTheme.appBarColor,
                   colorOnAppbar: config.appTheme.customTheme.colorOnAppbar);
       isTrialLicence = config.projectInfo.isTrialLicenceKey;
+      ReplyHashMap.init();
+      isSDKInitialized = true;
     } catch (e) {
+      isSDKInitialized = false;
       throw ("Mirrorfly config file not found in assets");
     }
 
@@ -75,6 +82,9 @@ class MirrorflyUikit {
   ///* [userIdentifier] provide the Unique Id to Register the User
   ///* [token] provide the FCM token this is an optional
   static Future<Map> register(String userIdentifier, {String token = ""}) async {
+    if(!isSDKInitialized){
+      return {'status': false, 'message': 'SDK Not Initialized'};
+    }
     if (await AppUtils.isNetConnected()) {
       var value = await Mirrorfly.registerUser(userIdentifier, token: token);
       try {
@@ -109,6 +119,6 @@ class MirrorflyUikit {
 
   static ChatView chatPage() {
     Get.put<ChatController>(ChatController());
-    return const ChatView();
+    return const ChatView(jid: "",);
   }
 }

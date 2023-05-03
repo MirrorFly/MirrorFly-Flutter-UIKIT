@@ -25,27 +25,27 @@ import '../modules/chat/chat_widgets.dart';
 import 'apputils.dart';
 
 class Helper {
-  static void showLoading({String? message, bool dismiss = false}) {
-    Get.dialog(
-      Dialog(
-        child: WillPopScope(
-          onWillPop: () async {
-            return Future.value(dismiss);
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const CircularProgressIndicator(),
-                const SizedBox(width: 16),
-                Text(message ?? 'Loading...'),
-              ],
-            ),
+  static void showLoading({String? message, bool dismiss = false, required BuildContext buildContext}) {
+    showDialog(
+      barrierDismissible: false,
+      context: buildContext, builder: (BuildContext context) { return Dialog(
+      child: WillPopScope(
+        onWillPop: () async {
+          return Future.value(dismiss);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(width: 16),
+              Text(message ?? 'Loading...'),
+            ],
           ),
         ),
       ),
-      barrierDismissible: false,
+    ); },
     );
   }
 
@@ -120,11 +120,12 @@ class Helper {
 
 //hide loading
   static void hideLoading() {
-    if (Get.isDialogOpen!) {
-      Get.back(
-        canPop: true,
-      );
-    }
+    // if (Get.isDialogOpen!) {
+    //   Get.back(
+    //     canPop: true,
+    //   );
+    // }
+
   }
 
   static String formatBytes(int bytes, int decimals) {

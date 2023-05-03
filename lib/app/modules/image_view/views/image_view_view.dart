@@ -9,8 +9,25 @@ import 'package:photo_view/photo_view.dart';
 
 import '../controllers/image_view_controller.dart';
 
-class ImageViewView extends GetView<ImageViewController> {
-  const ImageViewView({Key? key}) : super(key: key);
+class ImageViewView extends StatefulWidget {
+  const ImageViewView({Key? key, required this.imageName, this.imagePath, this.imageUrl}) : super(key: key);
+
+  final String imageName;
+  final String? imagePath;
+  final String? imageUrl;
+
+  @override
+  State<ImageViewView> createState() => _ImageViewViewState();
+}
+
+class _ImageViewViewState extends State<ImageViewView> {
+  var controller = Get.put(ImageViewController());
+
+  @override
+  void initState() {
+    controller.init(imageName: widget.imageName, imagePath: widget.imagePath, imageUrl: widget.imageUrl);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
