@@ -181,7 +181,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.blockedList,
-      page: () => const BlockedListView(),
+      page: () => BlockedListView(),
       binding: BlockedListBinding(),
     ),
     GetPage(

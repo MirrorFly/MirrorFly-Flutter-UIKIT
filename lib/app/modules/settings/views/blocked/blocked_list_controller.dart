@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
+import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 
 import '../../../../data/apputils.dart';
 import '../../../../models.dart';
@@ -18,10 +19,12 @@ class BlockedListController extends GetxController {
   @override
   void onInit(){
     super.onInit();
+    debugPrint("oninit");
     getUsersIBlocked(false);
   }
 
   getUsersIBlocked(bool server){
+    debugPrint("getting blockked user");
     Mirrorfly.getUsersIBlocked(server).then((value){
       if(value!=null && value != ""){
         var list = memberFromJson(value);
@@ -55,13 +58,15 @@ class BlockedListController extends GetxController {
     Helper.showAlert(message: "Unblock ${getMemberName(item)}?", actions: [
       TextButton(
           onPressed: () {
-            Get.back();
+            // Get.back();
+            Navigator.pop(context);
           },
-          child: const Text("NO")),
+          child: Text("NO", style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
       TextButton(
           onPressed: () async {
             if(await AppUtils.isNetConnected()) {
-              Get.back();
+              // Get.back();
+              Navigator.pop(context);
               Helper.progressLoading(context: context);
               Mirrorfly.unblockUser(item.jid.checkNull()).then((value) {
                 Helper.hideLoading(context: context);
@@ -76,9 +81,8 @@ class BlockedListController extends GetxController {
             }else{
               toToast(Constants.noInternetConnection);
             }
-
           },
-          child: const Text("YES")),
+          child: Text("YES", style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
     ], context: context);
   }
 

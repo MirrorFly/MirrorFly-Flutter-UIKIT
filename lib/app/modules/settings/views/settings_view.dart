@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/settings/views/settings_widgets.dart';
-import 'package:mirrorfly_uikit_plugin/app/routes/app_pages.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit_plugin.dart';
 
 import '../../../common/constants.dart';
 import '../../profile/views/profile_view.dart';
 import '../../starred_messages/views/starred_messages_view.dart';
+import 'blocked/blocked_list_view.dart';
 import 'chat_settings/chat_settings_view.dart';
 
 class SettingsView extends StatefulWidget {
@@ -46,7 +45,7 @@ class _SettingsViewState extends State<SettingsView> {
               // settingListItem(
               //     "Notifications", notificationIcon, rightArrowIcon, ()=>Get.toNamed(Routes.notification)),
               settingListItem(
-                  "Blocked Contacts", blockedIcon, rightArrowIcon, ()=>Get.toNamed(Routes.blockedList)),
+                  "Blocked Contacts", blockedIcon, rightArrowIcon, ()=>Navigator.push(context, MaterialPageRoute(builder: (con)=> BlockedListView()))),
               // settingListItem("App Lock", lockIcon, rightArrowIcon, ()=>Get.toNamed(Routes.appLock)),
               // settingListItem("About and Help", aboutIcon, rightArrowIcon, () =>Get.to(const AboutAndHelpView())),
               // settingListItem(

@@ -280,8 +280,8 @@ class ChatController extends FullLifeCycleController
 
   @override
   void dispose() {
-    super.dispose();
     debugPrint("dispose");
+    super.dispose();
   }
 
   clearMessage() {
@@ -1372,13 +1372,15 @@ class ChatController extends FullLifeCycleController
           actions: [
             TextButton(
                 onPressed: () {
-                  Get.back();
+                  // Get.back();
+                  Navigator.pop(context);
                 },
                 child: const Text("CANCEL")),
             TextButton(
                 onPressed: () async {
                   if (await AppUtils.isNetConnected()) {
-                    Get.back();
+                    // Get.back();
+                    Navigator.pop(context);
                     Helper.showLoading(message: "Blocking User", buildContext: context);
                     Mirrorfly.blockUser(profile.jid!).then((value) {
                       debugPrint(value);
