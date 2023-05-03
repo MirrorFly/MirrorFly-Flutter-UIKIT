@@ -39,12 +39,12 @@ class ReplyingMessageHeader extends StatelessWidget {
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(6),
-        decoration: const BoxDecoration(
-          color: chatSentBgColor,
+        decoration: BoxDecoration(
+          color: MirrorflyUikit.getTheme?.chatBubblePrimaryColor.color.withAlpha(70),
         ),
         child: Container(
           decoration: BoxDecoration(
-            color: MirrorflyUikit.getTheme?.primaryColor.withAlpha(60),
+            color: MirrorflyUikit.getTheme?.chatBubblePrimaryColor.color,
             borderRadius: const BorderRadius.all(Radius.circular(5)),
           ),
           child: Row(
@@ -67,7 +67,7 @@ class ReplyingMessageHeader extends StatelessWidget {
                           chatMessage.contactChatMessage?.contactName,
                           chatMessage.mediaChatMessage?.mediaFileName,
                           chatMessage.mediaChatMessage,
-                          true),
+                          true,MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor,),
                     ),
                   ],
                 ),
@@ -105,12 +105,12 @@ class ReplyingMessageHeader extends StatelessWidget {
 
 getReplyTitle(bool isMessageSentByMe, String senderUserName) {
   return isMessageSentByMe
-      ? const Text(
+      ? Text(
     'You',
-    style: TextStyle(fontWeight: FontWeight.bold),
+    style: TextStyle(fontWeight: FontWeight.bold,color:MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textPrimaryColor,),
   )
       : Text(senderUserName,
-      style: const TextStyle(fontWeight: FontWeight.bold));
+      style: TextStyle(fontWeight: FontWeight.bold,color:MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textPrimaryColor,));
 }
 
 getReplyMessage(String messageType,
@@ -118,14 +118,14 @@ getReplyMessage(String messageType,
     String? contactName,
     String? mediaFileName,
     MediaChatMessage? mediaChatMessage,
-    bool isReplying) {
+    bool isReplying, Color? color) {
   debugPrint(messageType);
   switch (messageType) {
     case Constants.mText:
       return Row(
         children: [
           Helper.forMessageTypeIcon(Constants.mText),
-          Text(messageTextContent!),
+          Text(messageTextContent!,style: TextStyle(color: color),),
         ],
       );
     case Constants.mImage:
@@ -135,7 +135,7 @@ getReplyMessage(String messageType,
           const SizedBox(
             width: 5,
           ),
-          Text(Helper.capitalize(Constants.mImage)),
+          Text(Helper.capitalize(Constants.mImage),style: TextStyle(color: color)),
         ],
       );
     case Constants.mVideo:
@@ -145,7 +145,7 @@ getReplyMessage(String messageType,
           const SizedBox(
             width: 5,
           ),
-          Text(Helper.capitalize(Constants.mVideo)),
+          Text(Helper.capitalize(Constants.mVideo),style: TextStyle(color: color)),
         ],
       );
     case Constants.mAudio:
@@ -167,7 +167,8 @@ getReplyMessage(String messageType,
             Helper.durationToString(Duration(
                 milliseconds: mediaChatMessage != null
                     ? mediaChatMessage.mediaDuration
-                    : 0)),
+                    : 0)),style: TextStyle(color: color)
+
           ),
           const SizedBox(
             width: 5,
@@ -182,7 +183,7 @@ getReplyMessage(String messageType,
           const SizedBox(
             width: 5,
           ),
-          Text("${Helper.capitalize(Constants.mContact)} :"),
+          Text("${Helper.capitalize(Constants.mContact)} :",style: TextStyle(color: color)),
           const SizedBox(
             width: 5,
           ),
@@ -192,7 +193,7 @@ getReplyMessage(String messageType,
                 contactName!,
                 maxLines: 1,
                 softWrap: false,
-                overflow: TextOverflow.ellipsis,
+                overflow: TextOverflow.ellipsis,style: TextStyle(color: color)
               )),
         ],
       );
@@ -203,7 +204,7 @@ getReplyMessage(String messageType,
           const SizedBox(
             width: 5,
           ),
-          Text(Helper.capitalize(Constants.mLocation)),
+          Text(Helper.capitalize(Constants.mLocation),style: TextStyle(color: color)),
         ],
       );
     case Constants.mDocument:
@@ -214,7 +215,7 @@ getReplyMessage(String messageType,
             width: 5,
           ),
           Flexible(child: Text(
-            mediaFileName!, overflow: TextOverflow.ellipsis, maxLines: 1,)),
+            mediaFileName!, overflow: TextOverflow.ellipsis, maxLines: 1,style: TextStyle(color: color))),
         ],
       );
     default:
@@ -340,8 +341,8 @@ class ReplyMessageHeader extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         color: chatMessage.isMessageSentByMe
-            ? MirrorflyUikit.getTheme?.primaryColor.withAlpha(60)
-            : chatReplySenderColor,
+            ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor.withAlpha(30)
+            : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor.withAlpha(30),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -362,7 +363,8 @@ class ReplyMessageHeader extends StatelessWidget {
                     chatMessage.replyParentChatMessage?.mediaChatMessage
                         ?.mediaFileName,
                     chatMessage.replyParentChatMessage?.mediaChatMessage,
-                    false),
+                    false,chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor
+                    : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor,),
               ],
             ),
           ),
@@ -536,9 +538,7 @@ class LocationMessageView extends StatelessWidget {
                   getChatTime(context, chatMessage.messageSentTime.toInt()),
                   style: TextStyle(
                       fontSize: 12,
-                      color: chatMessage.isMessageSentByMe
-                          ? durationTextColor
-                          : textHintColor),
+                      color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor),
                 ),
               ],
             ),
@@ -672,8 +672,8 @@ class _AudioMessageViewState extends State<AudioMessageView>
       decoration: BoxDecoration(
         border: Border.all(
           color: widget.chatMessage.isMessageSentByMe
-              ? MirrorflyUikit.getTheme!.primaryColor.withAlpha(60)
-              : chatReplySenderColor,
+              ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.color.withAlpha(60)
+              : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.color.withAlpha(60)//chatReplySenderColor,
         ),
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         color: Colors.transparent,
@@ -687,8 +687,8 @@ class _AudioMessageViewState extends State<AudioMessageView>
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10), topRight: Radius.circular(10)),
               color: widget.chatMessage.isMessageSentByMe
-                  ? MirrorflyUikit.getTheme?.primaryColor.withAlpha(60)
-                  : chatReplySenderColor,
+                  ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor.withAlpha(30)
+                  : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor.withAlpha(30),
             ),
             padding: const EdgeInsets.all(15),
             child: Row(
@@ -727,7 +727,7 @@ class _AudioMessageViewState extends State<AudioMessageView>
                         padding: const EdgeInsets.only(top: 8),
                         child: SliderTheme(
                           data: SliderThemeData(
-                            thumbColor: audioColorDark,
+                            thumbColor: widget.chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor,
                             trackHeight: 2,
                             overlayShape: SliderComponentShape.noThumb,
                             thumbShape: const RoundSliderThumbShape(
@@ -739,9 +739,9 @@ class _AudioMessageViewState extends State<AudioMessageView>
                                 .mediaChatMessage!.currentPos
                                 .toString()),*/
                             min: 0.0,
-                            activeColor: Colors.white,
-                            thumbColor: audioColorDark,
-                            inactiveColor: borderColor,
+                            activeColor: widget.chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textPrimaryColor,
+                            thumbColor: widget.chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor,
+                            inactiveColor: widget.chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor.withAlpha(60) : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor.withAlpha(60),
                             max: double.parse(widget
                                 .chatMessage.mediaChatMessage!.mediaDuration
                                 .toString()),
@@ -769,8 +769,8 @@ class _AudioMessageViewState extends State<AudioMessageView>
                                           0*/
                                   : widget.chatMessage.mediaChatMessage!
                                   .mediaDuration)),
-                          style: const TextStyle(
-                              color: durationTextColor,
+                          style: TextStyle(
+                              color: widget.chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor,
                               fontSize: 8,
                               fontWeight: FontWeight.w300),
                         ),
@@ -790,7 +790,7 @@ class _AudioMessageViewState extends State<AudioMessageView>
               mainAxisSize: MainAxisSize.min,
               children: [
                 widget.chatMessage.isMessageStarred
-                    ? SvgPicture.asset(starSmallIcon,package: package,)
+                    ? SvgPicture.asset(starSmallIcon,package: package,color: widget.chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor)
                     : const SizedBox.shrink(),
                 const SizedBox(
                   width: 5,
@@ -810,9 +810,7 @@ class _AudioMessageViewState extends State<AudioMessageView>
                       context, widget.chatMessage.messageSentTime.toInt()),
                   style: TextStyle(
                       fontSize: 12,
-                      color: widget.chatMessage.isMessageSentByMe
-                          ? durationTextColor
-                          : textHintColor),
+                      color: widget.chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor),
                 ),
                 const SizedBox(
                   width: 10,
@@ -834,155 +832,158 @@ class _AudioMessageViewState extends State<AudioMessageView>
     /*if(!(currentPos >= 0.0 && currentPos <= maxPos)){
       currentPos(maxPos);
     }*/
-    Get.dialog(
-      Dialog(
-        child: WillPopScope(
-          onWillPop: () {
-            // currentPos(0);
-            isPlaying(false);
-            player.stop();
-            return Future.value(true);
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              color: chatMessage.isMessageSentByMe
-                  ? MirrorflyUikit.getTheme?.primaryColor.withAlpha(60)
-                  : chatReplySenderColor,
-            ),
-            padding: const EdgeInsets.symmetric(vertical: 15),
-            child: Row(
-              // mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(
-                  width: 10,
-                ),
-                widget.chatMessage.mediaChatMessage!.isAudioRecorded
-                    ? Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    SvgPicture.asset(
-                      audioMicBg,package: package,
-                      width: 28,
-                      height: 28,
-                      fit: BoxFit.contain,
-                    ),
-                    SvgPicture.asset(
-                      audioMic1,package: package,
-                      fit: BoxFit.contain,
-                    ),
-                  ],
-                )
-                    : SvgPicture.asset(
-                  musicIcon,package: package,
-                  fit: BoxFit.contain,
-                ),
-                const SizedBox(
-                  width: 4,
-                ),
-                Obx(() {
-                  return InkWell(
-                    onTap: () async {
-                      if (!isPlaying.value) {
-                        int result = await player.play(
-                            chatMessage.mediaChatMessage!.mediaLocalStoragePath,
-                            position: Duration(
-                                milliseconds:
-                                chatMessage.mediaChatMessage!.currentPos),
-                            isLocal: true);
-                        if (result == 1) {
-                          isPlaying(true);
-                        } else {
-                          mirrorFlyLog("", "Error while playing audio.");
-                        }
-                      } else {
-                        int result = await player.pause();
-                        if (result == 1) {
-                          isPlaying(false);
-                        } else {
-                          mirrorFlyLog("", "Error on pause audio.");
-                        }
-                      }
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: isPlaying.value
-                          ? SvgPicture.asset(
-                        pauseIcon,package: package,
-                        height: 17,
-                      ) //const Icon(Icons.pause)
-                          : SvgPicture.asset(
-                        playIcon,package: package,
-                        height: 17,
-                      ),
-                    ),
-                  );
-                }),
-                Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
+    showDialog(
+      context: context, builder: (BuildContext context) {
+        return Dialog(
+          child: WillPopScope(
+            onWillPop: () {
+              // currentPos(0);
+              isPlaying(false);
+              player.stop();
+              return Future.value(true);
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: chatMessage.isMessageSentByMe
+                    ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.color
+                    : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.color
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 15),
+              child: Row(
+                // mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  widget.chatMessage.mediaChatMessage!.isAudioRecorded
+                      ? Stack(
+                    alignment: Alignment.center,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: SliderTheme(
-                          data: SliderThemeData(
-                            thumbColor: audioColorDark,
-                            trackHeight: 2,
-                            overlayShape: SliderComponentShape.noOverlay,
-                            thumbShape: const RoundSliderThumbShape(
-                                enabledThumbRadius: 6),
-                          ),
-                          child: Obx(() {
-                            return Slider(
-                              value: (!(currentPos.value >= 0.0 &&
-                                  currentPos.value <= maxPos))
-                                  ? maxPos
-                                  : currentPos.value,
-                              /*double.parse(chatMessage
-                                .mediaChatMessage!.currentPos
-                                .toString()),*/
-                              min: 0.0,
-                              activeColor: Colors.white,
-                              thumbColor: audioColorDark,
-                              inactiveColor: borderColor,
-                              max: double.parse(chatMessage
-                                  .mediaChatMessage!.mediaDuration
-                                  .toString()),
-                              divisions:
-                              chatMessage.mediaChatMessage!.mediaDuration,
-                              onChanged: (double value) {
-                                // debugPrint('onChanged $value');
-                                player.seek(
-                                    Duration(milliseconds: value.toInt()));
-                                // currentPos(value);
-                                /*setState(() {
-                              currentPos = value;
-                            });*/
-                                //widget.onSeekbarChange(value);
-                              },
-                            );
-                          }),
+                      SvgPicture.asset(
+                        audioMicBg,package: package,
+                        width: 28,
+                        height: 28,
+                        fit: BoxFit.contain,
+                      ),
+                      SvgPicture.asset(
+                        audioMic1,package: package,
+                        fit: BoxFit.contain,
+                      ),
+                    ],
+                  )
+                      : SvgPicture.asset(
+                    musicIcon,package: package,
+                    fit: BoxFit.contain,
+                  ),
+                  const SizedBox(
+                    width: 4,
+                  ),
+                  Obx(() {
+                    return InkWell(
+                      onTap: () async {
+                        if (!isPlaying.value) {
+                          int result = await player.play(
+                              chatMessage.mediaChatMessage!.mediaLocalStoragePath,
+                              position: Duration(
+                                  milliseconds:
+                                  chatMessage.mediaChatMessage!.currentPos),
+                              isLocal: true);
+                          if (result == 1) {
+                            isPlaying(true);
+                          } else {
+                            mirrorFlyLog("", "Error while playing audio.");
+                          }
+                        } else {
+                          int result = await player.pause();
+                          if (result == 1) {
+                            isPlaying(false);
+                          } else {
+                            mirrorFlyLog("", "Error on pause audio.");
+                          }
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: isPlaying.value
+                            ? SvgPicture.asset(
+                          pauseIcon,package: package,
+                          height: 17,
+                          color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor,
+                        ) //const Icon(Icons.pause)
+                            : SvgPicture.asset(
+                          playIcon,package: package,
+                          height: 17,
+                          color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor,
                         ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Obx(() {
-                            return Padding(
-                              padding: const EdgeInsets.only(left: 5.0),
-                              child: Text(
-                                Helper.durationToString(Duration(
-                                    milliseconds: currentPos.value == 0.0
-                                        ? widget.chatMessage.mediaChatMessage!
-                                        .mediaDuration
-                                        : currentPos.value.toInt())),
-                                style: const TextStyle(
-                                    color: durationTextColor,
-                                    fontSize: 8,
-                                    fontWeight: FontWeight.w300),
-                              ),
-                            );
-                          }),
-                          /*Padding(
+                    );
+                  }),
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: SliderTheme(
+                            data: SliderThemeData(
+                              thumbColor: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor,
+                              trackHeight: 2,
+                              overlayShape: SliderComponentShape.noOverlay,
+                              thumbShape: const RoundSliderThumbShape(
+                                  enabledThumbRadius: 6),
+                            ),
+                            child: Obx(() {
+                              return Slider(
+                                value: (!(currentPos.value >= 0.0 &&
+                                    currentPos.value <= maxPos))
+                                    ? maxPos
+                                    : currentPos.value,
+                                /*double.parse(chatMessage
+                                .mediaChatMessage!.currentPos
+                                .toString()),*/
+                                min: 0.0,
+                                activeColor: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textPrimaryColor,
+                                thumbColor: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor,
+                                inactiveColor: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textPrimaryColor.withAlpha(60) : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textPrimaryColor.withAlpha(60),
+                                max: double.parse(chatMessage
+                                    .mediaChatMessage!.mediaDuration
+                                    .toString()),
+                                divisions:
+                                chatMessage.mediaChatMessage!.mediaDuration,
+                                onChanged: (double value) {
+                                  // debugPrint('onChanged $value');
+                                  player.seek(
+                                      Duration(milliseconds: value.toInt()));
+                                  // currentPos(value);
+                                  /*setState(() {
+                              currentPos = value;
+                            });*/
+                                  //widget.onSeekbarChange(value);
+                                },
+                              );
+                            }),
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Obx(() {
+                              return Padding(
+                                padding: const EdgeInsets.only(left: 5.0),
+                                child: Text(
+                                  Helper.durationToString(Duration(
+                                      milliseconds: currentPos.value == 0.0
+                                          ? chatMessage.mediaChatMessage!
+                                          .mediaDuration
+                                          : currentPos.value.toInt())),
+                                  style: TextStyle(
+                                      color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor,
+                                      fontSize: 8,
+                                      fontWeight: FontWeight.w300),
+                                ),
+                              );
+                            }),
+                            /*Padding(
                           padding: const EdgeInsets.only(left: 5.0),
                           child: Text(
                             Helper.durationToString(Duration(
@@ -994,16 +995,17 @@ class _AudioMessageViewState extends State<AudioMessageView>
                                 fontWeight: FontWeight.w400),
                           ),
                         ),*/
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+    },
     );
   }
 }
@@ -1028,8 +1030,8 @@ class ContactMessageView extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         color: chatMessage.isMessageSentByMe
-            ? MirrorflyUikit.getTheme?.primaryColor.withAlpha(60)
-            : chatReplySenderColor,
+            ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor.withAlpha(30)
+            : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor.withAlpha(30),
       ),
       width: screenWidth * 0.60,
       child: Column(
@@ -1050,12 +1052,13 @@ class ContactMessageView extends StatelessWidget {
                     child: search.isEmpty
                         ? textMessageSpannableText(
                         chatMessage.contactChatMessage!.contactName
-                            .checkNull(),
+                            .checkNull(),chatMessage.isMessageSentByMe,
                         maxLines: 2)
                         : chatSpannedText(
                         chatMessage.contactChatMessage!.contactName,
                         search,
-                        const TextStyle(fontSize: 14, color: textHintColor),
+                        TextStyle(fontSize: 14, color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textPrimaryColor),
+                        chatMessage.isMessageSentByMe,
                         maxLines:
                         2) /*,Text(
                   chatMessage.contactChatMessage!.contactName,
@@ -1089,9 +1092,7 @@ class ContactMessageView extends StatelessWidget {
                   getChatTime(context, chatMessage.messageSentTime.toInt()),
                   style: TextStyle(
                       fontSize: 11,
-                      color: chatMessage.isMessageSentByMe
-                          ? durationTextColor
-                          : textHintColor),
+                      color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor),
                 ),
                 const SizedBox(
                   width: 10,
@@ -1250,8 +1251,8 @@ class DocumentMessageView extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border.all(
             color: chatMessage.isMessageSentByMe
-                ? MirrorflyUikit.getTheme!.primaryColor.withAlpha(60)
-                : chatReplySenderColor,
+                ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor.withAlpha(30)
+                : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor.withAlpha(30),
           ),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
           color: Colors.transparent,
@@ -1269,8 +1270,8 @@ class DocumentMessageView extends StatelessWidget {
                     topLeft: Radius.circular(10),
                     topRight: Radius.circular(10)),
                 color: chatMessage.isMessageSentByMe
-                    ? MirrorflyUikit.getTheme?.primaryColor.withAlpha(60)
-                    : chatReplySenderColor,
+                    ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor.withAlpha(30)
+                    : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor.withAlpha(30),
               ),
               padding: const EdgeInsets.all(8.0),
               child: Row(
@@ -1283,8 +1284,8 @@ class DocumentMessageView extends StatelessWidget {
                   Expanded(
                     child: search.isEmpty
                         ? Text(chatMessage.mediaChatMessage!.mediaFileName,
-                      style: const TextStyle(
-                        fontSize: 12,), maxLines: 2,) /*textMessageSpannableText(
+                      style: TextStyle(
+                        fontSize: 12,color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textPrimaryColor), maxLines: 2,) /*textMessageSpannableText(
                             chatMessage.mediaChatMessage!.mediaFileName
                                 .checkNull(),
                             maxLines: 2,
@@ -1293,9 +1294,9 @@ class DocumentMessageView extends StatelessWidget {
                         chatMessage.mediaChatMessage!.mediaFileName
                             .checkNull(),
                         search,
-                        const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w400),
+                        TextStyle(
+                            color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textPrimaryColor,
+                            fontWeight: FontWeight.w400),chatMessage.isMessageSentByMe,
                         maxLines:
                         2), /*Text(
                     chatMessage.mediaChatMessage!.mediaFileName,
@@ -1321,14 +1322,14 @@ class DocumentMessageView extends StatelessWidget {
                   Text(
                     Helper.formatBytes(
                         chatMessage.mediaChatMessage?.mediaFileSize ?? 0, 0),
-                    style: const TextStyle(
-                        color: Colors.black,
+                    style: TextStyle(
+                        color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor,
                         fontSize: 7,
                         fontWeight: FontWeight.w400),
                   ),
                   const Spacer(),
                   chatMessage.isMessageStarred
-                      ? SvgPicture.asset(starSmallIcon)
+                      ? SvgPicture.asset(starSmallIcon,package: package,color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor)
                       : const SizedBox.shrink(),
                   const SizedBox(
                     width: 5,
@@ -1345,9 +1346,7 @@ class DocumentMessageView extends StatelessWidget {
                     getChatTime(context, chatMessage.messageSentTime.toInt()),
                     style: TextStyle(
                         fontSize: 12,
-                        color: chatMessage.isMessageSentByMe
-                            ? durationTextColor
-                            : textHintColor),
+                        color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor),
                   ),
                   const SizedBox(
                     width: 10,
@@ -1367,7 +1366,7 @@ class DocumentMessageView extends StatelessWidget {
 
 Widget getImageHolder(String mediaFileName, double size) {
   debugPrint("mediaFileName--> $mediaFileName");
-  return SvgPicture.asset(getDocAsset(mediaFileName),
+  return SvgPicture.asset(getDocAsset(mediaFileName),package: package,
       width: size, height: size);
 }
 
@@ -1450,7 +1449,7 @@ class VideoMessageView extends StatelessWidget {
                     Text(
                       Helper.durationToString(
                           Duration(milliseconds: mediaMessage.mediaDuration)),
-                      style: const TextStyle(fontSize: 11, color: Colors.white),
+                      style: TextStyle(fontSize: 11, color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor),
                     ),
                   ],
                 ),
@@ -1467,7 +1466,7 @@ class VideoMessageView extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     chatMessage.isMessageStarred
-                        ? SvgPicture.asset(starSmallIcon)
+                        ? SvgPicture.asset(starSmallIcon,package: package,color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor,)
                         : const SizedBox.shrink(),
                     const SizedBox(
                       width: 5,
@@ -1487,9 +1486,7 @@ class VideoMessageView extends StatelessWidget {
                           context, chatMessage.messageSentTime.toInt()),
                       style: TextStyle(
                           fontSize: 11,
-                          color: chatMessage.isMessageSentByMe
-                              ? durationTextColor
-                              : textHintColor),
+                          color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor),
                     ),
                   ],
                 ),
@@ -1558,7 +1555,7 @@ class ImageMessageView extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         chatMessage.isMessageStarred
-                            ? SvgPicture.asset(starSmallIcon)
+                            ? SvgPicture.asset(starSmallIcon,package: package,color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor,)
                             : const SizedBox.shrink(),
                         const SizedBox(
                           width: 5,
@@ -1578,9 +1575,7 @@ class ImageMessageView extends StatelessWidget {
                               chatMessage.messageSentTime.toInt()),
                           style: TextStyle(
                               fontSize: 11,
-                              color: chatMessage.isMessageSentByMe
-                                  ? durationTextColor
-                                  : textButtonColor),
+                              color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor),
                         ),
                       ],
                     ),
@@ -1657,17 +1652,17 @@ Widget setCaptionMessage(MediaChatMessage mediaMessage,
       children: [
         search.isEmpty
             ? textMessageSpannableText(
-            mediaMessage.mediaCaptionText.checkNull())
+            mediaMessage.mediaCaptionText.checkNull(),chatMessage.isMessageSentByMe)
             : chatSpannedText(
           mediaMessage.mediaCaptionText.checkNull(),
           search,
-          const TextStyle(fontSize: 14, color: textHintColor),
+          TextStyle(fontSize: 14, color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textPrimaryColor),chatMessage.isMessageSentByMe,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             chatMessage.isMessageStarred
-                ? SvgPicture.asset(starSmallIcon)
+                ? SvgPicture.asset(starSmallIcon,package: package,color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor,)
                 : const SizedBox.shrink(),
             const SizedBox(
               width: 5,
@@ -1684,9 +1679,7 @@ Widget setCaptionMessage(MediaChatMessage mediaMessage,
               getChatTime(context, chatMessage.messageSentTime.toInt()),
               style: TextStyle(
                   fontSize: 12,
-                  color: chatMessage.isMessageSentByMe
-                      ? durationTextColor
-                      : textHintColor),
+                  color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor),
             ),
           ],
         ),
@@ -1713,7 +1706,7 @@ class NotificationMessageView extends StatelessWidget {
             style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w400,
-                color: MirrorflyUikit.getTheme?.textSecondaryColor)),
+                color: MirrorflyUikit.getTheme?.textPrimaryColor)),
       ),
     );
   }
@@ -1833,11 +1826,12 @@ class TextMessageView extends StatelessWidget {
         children: [
           Flexible(
             child: search.isEmpty
-                ? textMessageSpannableText(chatMessage.messageTextContent ?? "")
+                ? textMessageSpannableText(chatMessage.messageTextContent ?? "",chatMessage.isMessageSentByMe)
                 : chatSpannedText(
               chatMessage.messageTextContent ?? "",
               search,
-              const TextStyle(fontSize: 14, color: textHintColor),
+              TextStyle(fontSize: 14, color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textPrimaryColor),
+                chatMessage.isMessageSentByMe
             ),
           ),
           const SizedBox(
@@ -1846,7 +1840,7 @@ class TextMessageView extends StatelessWidget {
           Row(
             children: [
               chatMessage.isMessageStarred
-                  ? SvgPicture.asset(starSmallIcon)
+                  ? SvgPicture.asset(starSmallIcon,package: package,)
                   : const SizedBox.shrink(),
               const SizedBox(
                 width: 5,
@@ -1863,9 +1857,7 @@ class TextMessageView extends StatelessWidget {
                 getChatTime(context, chatMessage.messageSentTime.toInt()),
                 style: TextStyle(
                     fontSize: 12,
-                    color: chatMessage.isMessageSentByMe
-                        ? durationTextColor
-                        : textHintColor),
+                    color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor),
               ),
             ],
           ),
@@ -1964,9 +1956,9 @@ Widget getImageOverlay(ChatMessageModel chatMessage,
       return FloatingActionButton.small(
         onPressed: onVideo,
         backgroundColor: Colors.white,
-        child: const Icon(
+        child:  Icon(
           Icons.play_arrow_rounded,
-          color: buttonBgColor,
+          color: MirrorflyUikit.getTheme?.primaryColor,
         ),
       );
     } else if (chatMessage.messageType.toUpperCase() == 'AUDIO') {
@@ -1976,11 +1968,13 @@ Widget getImageOverlay(ChatMessageModel chatMessage,
           padding: const EdgeInsets.all(8.0),
           child: chatMessage.mediaChatMessage!.isPlaying
               ? SvgPicture.asset(
-            pauseIcon,
+            pauseIcon,package: package,
+            color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor,
             height: 17,
           ) //const Icon(Icons.pause)
               : SvgPicture.asset(
-            playIcon,
+            playIcon,package: package,
+            color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor,
             height: 17,
           ),
         ),
@@ -2027,7 +2021,7 @@ Widget getImageOverlay(ChatMessageModel chatMessage,
             },
             child: Obx(() {
               return downloadingOrUploadingView(chatMessage.messageType,
-                  chatMessage.mediaChatMessage!.mediaProgressStatus.value);
+                  chatMessage.mediaChatMessage!.mediaProgressStatus.value,chatMessage.isMessageSentByMe);
             }));
       default:
         return const SizedBox.shrink();
@@ -2122,7 +2116,7 @@ Widget downloadView(int mediaDownloadStatus, int mediaFileSize,
             borderRadius: BorderRadius.circular(3)),
         padding: const EdgeInsets.all(5),
         child: SvgPicture.asset(
-          downloadIcon,
+          downloadIcon,package: package,
           color: playIconColor,
         ))
         : Container(
@@ -2138,7 +2132,7 @@ Widget downloadView(int mediaDownloadStatus, int mediaFileSize,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset(downloadIcon),
+            SvgPicture.asset(downloadIcon,package: package,),
             const SizedBox(
               width: 5,
             ),
@@ -2151,7 +2145,7 @@ Widget downloadView(int mediaDownloadStatus, int mediaFileSize,
   );
 }
 
-downloadingOrUploadingView(String messageType, int progress) {
+downloadingOrUploadingView(String messageType, int progress,bool isSentByMe) {
   // debugPrint('downloadingOrUploadingView progress $progress');
   if (messageType == "AUDIO" || messageType == "DOCUMENT") {
     return Padding(
@@ -2161,7 +2155,7 @@ downloadingOrUploadingView(String messageType, int progress) {
           height: 30,
           decoration: BoxDecoration(
             border: Border.all(
-              color: borderColor,
+              color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textPrimaryColor,//borderColor,
             ),
             borderRadius: const BorderRadius.all(Radius.circular(3)),
             // color: Colors.black45,
@@ -2173,15 +2167,15 @@ downloadingOrUploadingView(String messageType, int progress) {
                 SvgPicture.asset(
                   downloading,
                   fit: BoxFit.contain,
-                  color: playIconColor,
+                  color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor,//playIconColor,
                 ),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: SizedBox(
                     height: 2,
                     child: LinearProgressIndicator(
-                      valueColor: const AlwaysStoppedAnimation<Color>(
-                        playIconColor,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor,
                       ),
                       value: progress == 0 || progress == 100
                           ? null
@@ -2299,7 +2293,7 @@ Widget iconCreation(String iconPath, String text, VoidCallback onTap) {
   );
 }
 
-Widget chatSpannedText(String text, String spannableText, TextStyle? style,
+Widget chatSpannedText(String text, String spannableText, TextStyle? style,bool isSentbyMe,
     {int? maxLines}) {
   var startIndex = text.toLowerCase().contains(spannableText.toLowerCase())
       ? text.toLowerCase().indexOf(spannableText.toLowerCase())
@@ -2322,7 +2316,7 @@ Widget chatSpannedText(String text, String spannableText, TextStyle? style,
       overflow: TextOverflow.ellipsis,
     );
   } else {
-    return textMessageSpannableText(text,
+    return textMessageSpannableText(text,isSentbyMe,
         maxLines: maxLines); //Text(text, style: style);
   }
 }

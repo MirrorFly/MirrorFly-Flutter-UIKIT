@@ -13,7 +13,6 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/de_bouncer.dart';
-import 'package:mirrorfly_uikit_plugin/app/data/network.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/permissions.dart';
 import 'package:path_provider/path_provider.dart';
@@ -108,15 +107,6 @@ class ChatController extends FullLifeCycleController
 
   bool get isTrail => MirrorflyUikit.isTrialLicence;
 
-  @override
-  void onInit() async {
-    super.onInit();
-    //await Mirrorfly.enableDisableBusyStatus(true);
-    // var profileDetail = Get.arguments as Profile;
-    // profile_.value = profileDetail;
-    // if(profile_.value.jid == null){
-
-  }
 
   init({
     String? jid,
@@ -146,7 +136,7 @@ class ChatController extends FullLifeCycleController
       // initListeners();
     } else {*/
 
-      getProfileDetails(userJid,server: await NetworkManager.isNetConnected()).then((value) {
+      getProfileDetails(userJid,server: false).then((value) {
         SessionManagement.setChatJid("");
         profile_(value);
         checkAdminBlocked();
@@ -366,22 +356,22 @@ class ChatController extends FullLifeCycleController
           shape:
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           builder: (builder) => AttachmentsSheetView(onDocument: () {
-            Get.back();
+            Navigator.pop(context);
             documentPickUpload();
           }, onCamera: () {
-            Get.back();
+            Navigator.pop(context);
             onCameraClick();
           }, onGallery: () {
-            Get.back();
+            Navigator.pop(context);
             onGalleryClick();
           }, onAudio: () {
-            Get.back();
+            Navigator.pop(context);
             onAudioClick();
           }, onContact: () {
-            Get.back();
+            Navigator.pop(context);
             onContactClick();
           }, onLocation: () {
-            Get.back();
+            Navigator.pop(context);
             onLocationClick();
           })),
     );  },

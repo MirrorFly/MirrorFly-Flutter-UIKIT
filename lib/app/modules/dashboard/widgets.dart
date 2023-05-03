@@ -510,13 +510,13 @@ bool isCountryCode(String text) {
   return false;
 }
 
-Widget textMessageSpannableText(String message, {int? maxLines}) {
+Widget textMessageSpannableText(String message,bool isSentByMe, {int? maxLines}) {
   //final GlobalKey textKey = GlobalKey();
   TextStyle underlineStyle = const TextStyle(
       decoration: TextDecoration.underline,
       fontSize: 14,
       color: Colors.blueAccent);
-  TextStyle normalStyle = const TextStyle(fontSize: 14, color: textHintColor);
+  TextStyle normalStyle = TextStyle(fontSize: 14, color: isSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textPrimaryColor);
   var prevValue = "";
   return Text.rich(
     customTextSpan(message, prevValue, normalStyle, underlineStyle),

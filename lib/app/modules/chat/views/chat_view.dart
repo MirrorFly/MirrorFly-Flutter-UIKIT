@@ -41,6 +41,12 @@ class _ChatViewState extends State<ChatView> {
   }
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // controller.screenHeight = MediaQuery.of(context).size.height;
     // controller.screenWidth = MediaQuery.of(context).size.width;
@@ -335,11 +341,11 @@ class _ChatViewState extends State<ChatView> {
                   controller.showHideEmoji(context);
                 },
                 child: controller.showEmoji.value
-                    ? const Icon(
+                    ? Icon(
                         Icons.keyboard,
-                        color: iconColor,
+                        color: MirrorflyUikit.getTheme?.textPrimaryColor,
                       )
-                    : SvgPicture.asset(smileIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnPrimary))
+                    : SvgPicture.asset(smileIcon,package: package,color: MirrorflyUikit.getTheme?.textPrimaryColor))
             : const SizedBox.shrink(),
         controller.isAudioRecording.value == Constants.audioRecordDelete
             ? const Padding(
@@ -433,7 +439,7 @@ class _ChatViewState extends State<ChatView> {
                 onPressed: () {
                   controller.showAttachmentsView(context);
                 },
-                icon: SvgPicture.asset(attachIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnPrimary),
+                icon: SvgPicture.asset(attachIcon,package: package,color: MirrorflyUikit.getTheme?.textPrimaryColor),
               )
             : const SizedBox.shrink(),
         controller.isAudioRecording.value == Constants.audioRecordInitial
@@ -441,7 +447,7 @@ class _ChatViewState extends State<ChatView> {
                 onPressed: () {
                   controller.startRecording();
                 },
-                icon: SvgPicture.asset(micIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnPrimary),
+                icon: SvgPicture.asset(micIcon,package: package,color: MirrorflyUikit.getTheme?.textPrimaryColor),
               )
             : const SizedBox.shrink(),
         const SizedBox(
@@ -535,13 +541,13 @@ class _ChatViewState extends State<ChatView> {
               horizontalSpacing: 0,
               gridPadding: EdgeInsets.zero,
               initCategory: Category.RECENT,
-              bgColor: const Color(0xFFF2F2F2),
+              bgColor: MirrorflyUikit.getTheme!.scaffoldColor,
               indicatorColor: MirrorflyUikit.getTheme!.primaryColor,
-              iconColor: MirrorflyUikit.getTheme!.colorOnPrimary,
+              iconColor: MirrorflyUikit.getTheme!.textPrimaryColor,
               iconColorSelected: MirrorflyUikit.getTheme!.primaryColor,
               backspaceColor: MirrorflyUikit.getTheme!.primaryColor,
-              skinToneDialogBgColor: Colors.white,
-              skinToneIndicatorColor: Colors.grey,
+              skinToneDialogBgColor: MirrorflyUikit.getTheme!.textPrimaryColor,
+              skinToneIndicatorColor: MirrorflyUikit.getTheme!.textPrimaryColor,
               enableSkinTones: true,
               showRecentsTab: true,
               recentsLimit: 28,

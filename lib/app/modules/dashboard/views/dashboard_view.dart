@@ -40,100 +40,100 @@ class DashboardView extends StatelessWidget {
           }
           return Future.value(true);
         },
-        child: SafeArea(
-          child: Obx(() {
-            return Scaffold(
-                backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-                appBar: AppBar(
-                  backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-                  automaticallyImplyLeading: true,
-                  actionsIconTheme: IconThemeData(
-                      color: MirrorflyUikit.getTheme?.colorOnAppbar ??
-                          iconColor),
-                  iconTheme: IconThemeData(
-                      color: MirrorflyUikit.getTheme?.colorOnAppbar ??
-                          iconColor),
-                  leading: controller.selected.value
-                      ? IconButton(
-                          icon: const Icon(Icons.clear),
-                          onPressed: () {
-                            controller.clearAllChatSelection();
-                          },
-                        )
-                      : controller.isSearching.value
-                          ? IconButton(
-                              icon: const Icon(Icons.arrow_back),
-                              onPressed: () {
-                                controller.getBackFromSearch();
-                              },
-                            )
-                          : IconButton(
-                              icon: const Icon(Icons.arrow_back),
-                              onPressed: () {
-                                // Get.back();
-                                Navigator.pop(context);
-                              }),
-                  title: controller.selected.value
-                      ? Text((controller.selectedChats.length).toString())
-                      : controller.isSearching.value
-                          ? TextField(
-                              focusNode: controller.searchFocusNode,
-                              onChanged: (text) => controller.onChange(text),
-                              controller: controller.search,
-                              autofocus: true,
-                              style: TextStyle(
-                                  color: MirrorflyUikit
-                                      .getTheme?.colorOnAppbar),
-                              cursorColor:
-                                  MirrorflyUikit.getTheme?.colorOnAppbar,
-                              decoration: InputDecoration(
-                                  hintText: "Search...",
-                                  hintStyle: TextStyle(
-                                      color: MirrorflyUikit
-                                          .getTheme?.colorOnAppbar),
-                                  border: InputBorder.none),
-                            )
-                          : title != null
-                              ? Text(
-                                  title!,
-                                  style: TextStyle(
-                                      color: MirrorflyUikit
-                                              .getTheme?.colorOnAppbar ??
-                                          Colors.black),
-                                )
-                              : null,
-                  actions: [
-                    buildRecentChatActionBarIcons(context),
-                  ],
-                ),
-                floatingActionButton: controller.isSearching.value
-                    ? null
-                    : FloatingActionButton(
-                        tooltip: "New Chat",
-                        elevation: 8,
-                        backgroundColor:
-                            MirrorflyUikit.getTheme?.primaryColor,
+        child: Obx(() {
+          return Scaffold(
+              backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
+              appBar: AppBar(
+                backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
+                automaticallyImplyLeading: true,
+                actionsIconTheme: IconThemeData(
+                    color: MirrorflyUikit.getTheme?.colorOnAppbar ??
+                        iconColor),
+                iconTheme: IconThemeData(
+                    color: MirrorflyUikit.getTheme?.colorOnAppbar ??
+                        iconColor),
+                leading: controller.selected.value
+                    ? IconButton(
+                        icon: const Icon(Icons.clear),
                         onPressed: () {
-                          controller.gotoContacts(context);
+                          controller.clearAllChatSelection();
                         },
-                        /*backgroundColor:
-                            MirrorflyUikit.getTheme?.primaryColor ??
-                                buttonBgColor,*/
-                        child: SvgPicture.asset(
-                          chatFabIcon,
-                          package: package,
-                          width: 18,
-                          height: 18,
-                          fit: BoxFit.contain,
-                          color: MirrorflyUikit.getTheme?.colorOnPrimary ??
-                              Colors.white,
-                        ),
+                      )
+                    : controller.isSearching.value
+                        ? IconButton(
+                            icon: const Icon(Icons.arrow_back),
+                            onPressed: () {
+                              controller.getBackFromSearch();
+                            },
+                          )
+                        : IconButton(
+                            icon: const Icon(Icons.arrow_back),
+                            onPressed: () {
+                              // Get.back();
+                              Navigator.pop(context);
+                            }),
+                title: controller.selected.value
+                    ? Text((controller.selectedChats.length).toString())
+                    : controller.isSearching.value
+                        ? TextField(
+                            focusNode: controller.searchFocusNode,
+                            onChanged: (text) => controller.onChange(text),
+                            controller: controller.search,
+                            autofocus: true,
+                            style: TextStyle(
+                                color: MirrorflyUikit
+                                    .getTheme?.colorOnAppbar),
+                            cursorColor:
+                                MirrorflyUikit.getTheme?.colorOnAppbar,
+                            decoration: InputDecoration(
+                                hintText: "Search...",
+                                hintStyle: TextStyle(
+                                    color: MirrorflyUikit
+                                        .getTheme?.colorOnAppbar),
+                                border: InputBorder.none),
+                          )
+                        : title != null
+                            ? Text(
+                                title!,
+                                style: TextStyle(
+                                    color: MirrorflyUikit
+                                            .getTheme?.colorOnAppbar ??
+                                        Colors.black),
+                              )
+                            : null,
+                actions: [
+                  buildRecentChatActionBarIcons(context),
+                ],
+              ),
+              floatingActionButton: controller.isSearching.value
+                  ? null
+                  : FloatingActionButton(
+                      tooltip: "New Chat",
+                      elevation: 8,
+                      backgroundColor:
+                          MirrorflyUikit.getTheme?.primaryColor,
+                      onPressed: () {
+                        controller.gotoContacts(context);
+                      },
+                      /*backgroundColor:
+                          MirrorflyUikit.getTheme?.primaryColor ??
+                              buttonBgColor,*/
+                      child: SvgPicture.asset(
+                        chatFabIcon,
+                        package: package,
+                        width: 18,
+                        height: 18,
+                        fit: BoxFit.contain,
+                        color: MirrorflyUikit.getTheme?.colorOnPrimary ??
+                            Colors.white,
                       ),
-                body: Obx(() {
+                    ),
+              body: SafeArea(
+                child: Obx(() {
                   return chatView(context);
-                }));
-          }),
-        ),
+                }),
+              ));
+        }),
       ),
     );
   }
@@ -457,8 +457,8 @@ class DashboardView extends StatelessWidget {
                   builder: (c, d) {*/
                           Obx(() {
                     return controller.recentChatLoding.value
-                        ? const Center(
-                            child: CircularProgressIndicator(),
+                        ? Center(
+                            child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
                           )
                         : ListView.builder(
                             padding: EdgeInsets.zero,
@@ -579,8 +579,8 @@ class DashboardView extends StatelessWidget {
               ),
               Visibility(
                   visible: controller.searchLoading.value,
-                  child: const Center(
-                    child: CircularProgressIndicator(),
+                  child: Center(
+                    child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
                   )),
               Visibility(
                 visible: controller.userList.isNotEmpty &&
@@ -619,7 +619,7 @@ class DashboardView extends StatelessWidget {
         itemBuilder: (context, index) {
           if (index >= controller.userList.length &&
               controller.scrollable.value) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,));
           } else {
             var item = controller.userList[index];
             return memberItem(
@@ -797,13 +797,10 @@ class DashboardView extends StatelessWidget {
                                                   item.messageTextContent
                                                       .toString(),
                                                   controller.search.text,
-                                                  Theme.of(context)
-                                                      .textTheme
-                                                      .titleSmall
-                                                      ?.copyWith(
-                                                          color: MirrorflyUikit
-                                                              .getTheme
-                                                              ?.textPrimaryColor),
+                                            TextStyle(
+                                                fontSize: 14.0,
+                                                fontWeight: FontWeight.w600,
+                                                color: MirrorflyUikit.getTheme?.textPrimaryColor),
                                                 )
                                               : Text(
                                                   forMessageTypeString(
@@ -814,13 +811,7 @@ class DashboardView extends StatelessWidget {
                                                               .checkNull()) ??
                                                       item.messageTextContent
                                                           .toString(),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .titleSmall
-                                                      ?.copyWith(
-                                                          color: MirrorflyUikit
-                                                              .getTheme
-                                                              ?.textPrimaryColor),
+                                                  style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),
                                                   maxLines: 1,
                                                   overflow:
                                                       TextOverflow.ellipsis,
@@ -887,9 +878,7 @@ class DashboardView extends StatelessWidget {
           Text(
             'No new messages',
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color:
-                    MirrorflyUikit.getTheme?.textPrimaryColor ?? Colors.black),
+            style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),
           ),
           const SizedBox(
             height: 8,
@@ -897,9 +886,7 @@ class DashboardView extends StatelessWidget {
           Text(
             'Any new messages will appear here',
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                color:
-                    MirrorflyUikit.getTheme?.textPrimaryColor ?? Colors.black),
+            style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),
           ),
         ],
       ),

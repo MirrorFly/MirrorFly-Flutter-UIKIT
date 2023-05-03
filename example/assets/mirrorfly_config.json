@@ -5,7 +5,7 @@
         "licenseKey": "ckIjaccWBoMNvxdbql8LJ2dmKqT5bp",
         "iOSContainerId": "group.com.mirrorfly.qa",
         "storageFolderName": "",
-        "isTrialLicenceKey" : false,
+        "isTrialLicenceKey" : true,
         "enableMobileNumberLogin": true
       },
     "AppTheme": {
