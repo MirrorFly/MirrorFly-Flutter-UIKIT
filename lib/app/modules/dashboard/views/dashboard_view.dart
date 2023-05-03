@@ -166,7 +166,7 @@ class DashboardView extends StatelessWidget {
           CustomAction(
             visibleWidget: IconButton(
               onPressed: () {
-                controller.deleteChats();
+                controller.deleteChats(context);
               },
               icon: SvgPicture.asset(delete,
                   package: package,
@@ -179,7 +179,7 @@ class DashboardView extends StatelessWidget {
                 : ShowAsAction.gone,
             keyValue: 'Delete',
             onItemClick: () {
-              controller.deleteChats();
+              controller.deleteChats(context);
             },
           ),
           CustomAction(

@@ -100,7 +100,7 @@ class ChatSettingsController extends GetxController {
     });
   }
 
-  void clearAllConversation(){
+  void clearAllConversation(BuildContext context){
     Helper.showAlert(message: 'Are you sure want to clear your conversation history?',actions: [
       TextButton(
           onPressed: () {
@@ -113,7 +113,7 @@ class ChatSettingsController extends GetxController {
             clearAllConv();
           },
           child: const Text("YES")),
-    ]);
+    ], context: context);
   }
 
   Future<void> clearAllConv() async {

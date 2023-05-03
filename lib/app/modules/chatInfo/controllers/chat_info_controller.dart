@@ -109,7 +109,7 @@ class ChatInfoController extends GetxController {
     getUserLastSeen();
   }
 
-  reportChatOrUser() {
+  reportChatOrUser(BuildContext context) {
     Future.delayed(const Duration(milliseconds: 100), () {
       Helper.showAlert(
           title: "Report ${profile.name}?",
@@ -141,7 +141,7 @@ class ChatInfoController extends GetxController {
                   Get.back();
                 },
                 child: const Text("CANCEL")),
-          ]);
+          ], context: context);
     });
   }
 

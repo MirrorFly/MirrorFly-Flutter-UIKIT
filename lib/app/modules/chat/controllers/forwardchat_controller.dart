@@ -256,15 +256,15 @@ class ForwardChatController extends GetxController {
 
   bool isChecked(String jid) => selectedJids.value.contains(jid);
 
-  void onItemSelect(String jid, String name,bool isBlocked){
+  void onItemSelect(String jid, String name,bool isBlocked, BuildContext context){
     if(isBlocked.checkNull()){
-      unBlock(jid,name);
+      unBlock(jid,name, context);
     }else{
       onItemClicked(jid,name);
     }
   }
 
-  unBlock(String jid, String name,){
+  unBlock(String jid, String name, BuildContext context,){
     Helper.showAlert(message: "Unblock $name?", actions: [
       TextButton(
           onPressed: () {
@@ -292,7 +292,7 @@ class ForwardChatController extends GetxController {
 
           },
           child: const Text("YES")),
-    ]);
+    ], context: context);
   }
 
   void onItemClicked(String jid, String name) {

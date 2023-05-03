@@ -18,7 +18,7 @@ class DeleteAccountController extends GetxController {
   TextEditingController mobileNumber = TextEditingController();
 
 
-  deleteAccount() async {
+  deleteAccount(BuildContext context) async {
     if(await AppUtils.isNetConnected()) {
       if(mobileNumber.text.isEmpty){
         Helper.showAlert(message: "Please enter your mobile number", actions: [
@@ -27,7 +27,7 @@ class DeleteAccountController extends GetxController {
                 Get.back();
               },
               child: const Text("Ok")),
-        ]);
+        ], context: context);
         return;
       }
       mirrorFlyLog("SessionManagement.getMobileNumber()", SessionManagement.getMobileNumber().toString());
@@ -48,7 +48,7 @@ class DeleteAccountController extends GetxController {
                       Get.back();
                     },
                     child: const Text("Ok")),
-              ]);
+              ], context: context);
           return;
         }
       }else{
@@ -62,7 +62,7 @@ class DeleteAccountController extends GetxController {
                       Get.back();
                     },
                     child: const Text("Ok")),
-              ]);
+              ], context: context);
           return;
         }
       }

@@ -35,7 +35,7 @@ class StarredMessagesView extends GetView<StarredMessagesController> {
           return Future.value(true);
         },
         child: Scaffold(
-          appBar: getAppBar(),
+          appBar: getAppBar(context),
           body: Obx(() {
             return controller.starredChatList.isNotEmpty ?
             SingleChildScrollView(child: favouriteChatListView(controller.starredChatList)) :
@@ -148,12 +148,12 @@ class StarredMessagesView extends GetView<StarredMessagesController> {
     );
   }
 
-  getAppBar() {
+  getAppBar(BuildContext context) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(55.0),
       child: Obx(() {
         return Container(
-          child: controller.isSelected.value ? selectedAppBar() : controller.isSearch.value ? searchBar() : AppBar(
+          child: controller.isSelected.value ? selectedAppBar(context) : controller.isSearch.value ? searchBar() : AppBar(
             title: const Text('Starred Messages'),
             actions: [
               IconButton(
@@ -200,7 +200,7 @@ class StarredMessagesView extends GetView<StarredMessagesController> {
     );
   }
 
-  selectedAppBar() {
+  selectedAppBar(BuildContext context) {
     return AppBar(
       // leadingWidth: 25,
       backgroundColor: Colors.white,
@@ -219,14 +219,14 @@ class StarredMessagesView extends GetView<StarredMessagesController> {
               CustomAction(
                 visibleWidget: IconButton(
                     onPressed: () {
-                      controller.checkBusyStatusForForward();
+                      controller.checkBusyStatusForForward(context);
                     },
                     icon: SvgPicture.asset(forwardIcon,package: package,),tooltip: 'Forward',),
                 overflowWidget: const Text("Forward"),
                 showAsAction: controller.canBeForward.value ? ShowAsAction.always : ShowAsAction.gone,
                 keyValue: 'Forward',
                 onItemClick: () {
-                  controller.checkBusyStatusForForward();
+                  controller.checkBusyStatusForForward(context);
                 },
               ),
               CustomAction(
@@ -278,14 +278,14 @@ class StarredMessagesView extends GetView<StarredMessagesController> {
               CustomAction(
                 visibleWidget: IconButton(
                     onPressed: () {
-                      controller.deleteMessages();
+                      controller.deleteMessages(context);
                     },
                     icon: SvgPicture.asset(deleteIcon,package: package,),tooltip: 'Delete',),
                 overflowWidget: const Text("Delete"),
                 showAsAction: ShowAsAction.always,
                 keyValue: 'Delete',
                 onItemClick: () {
-                  controller.deleteMessages();
+                  controller.deleteMessages(context);
                 },
               ),
             ]),

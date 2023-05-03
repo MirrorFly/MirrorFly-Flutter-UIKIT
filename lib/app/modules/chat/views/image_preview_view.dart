@@ -142,7 +142,7 @@ class ImagePreviewView extends GetView<ImagePreviewController> {
                             ),
                             InkWell(
                                 onTap: () {
-                                  controller.sendImageMessage();
+                                  controller.sendImageMessage(context);
                                   // controller.sendMessage(controller.profile);
                                 },
                                 child: SvgPicture.asset(

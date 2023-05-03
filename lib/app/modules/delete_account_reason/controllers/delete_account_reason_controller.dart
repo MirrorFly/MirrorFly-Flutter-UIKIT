@@ -41,7 +41,7 @@ class DeleteAccountReasonController extends FullLifeCycleController
                 deleteUserAccount(context);
               },
               child: const Text("OK")),
-        ]);
+        ], context: context);
   }
 
   Future<void> deleteUserAccount(BuildContext context) async {

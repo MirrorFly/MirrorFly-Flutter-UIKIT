@@ -361,7 +361,7 @@ class LoginController extends GetxController {
                 registerAccount(context);
               },
               child: const Text("YES")),
-        ]);
+        ], context: context);
   }
 
   gotoLogin() {

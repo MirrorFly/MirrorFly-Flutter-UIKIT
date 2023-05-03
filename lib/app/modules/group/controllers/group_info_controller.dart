@@ -188,7 +188,7 @@ class GroupInfoController extends GetxController {
     });
   }
 
-  reportGroup(){
+  reportGroup(BuildContext context){
     Helper.showAlert(title: "Report this group?",message: "The last 5 messages from this group will be forwarded to admin. No one in this group will be notified.",actions: [
       TextButton(
           onPressed: () {
@@ -213,18 +213,18 @@ class GroupInfoController extends GetxController {
             });
           },
           child: const Text("REPORT")),
-    ]);
+    ], context: context);
   }
-  exitOrDeleteGroup(){
+  exitOrDeleteGroup(BuildContext context){
     if(!isMemberOfGroup){
-      deleteGroup();
+      deleteGroup(context);
     }else{
       if(profile.isGroupProfile!) {
-        leaveGroup();
+        leaveGroup(context);
       }
     }
   }
-  leaveGroup(){
+  leaveGroup(BuildContext context){
     Helper.showAlert(message: "Are you sure you want to leave from group?.",actions: [
       TextButton(
           onPressed: () {
@@ -237,7 +237,7 @@ class GroupInfoController extends GetxController {
             exitFromGroup();
           },
           child: const Text("LEAVE")),
-    ]);
+    ], context: context);
   }
   exitFromGroup()async{
     if(await AppUtils.isNetConnected()) {
@@ -256,7 +256,7 @@ class GroupInfoController extends GetxController {
       toToast(Constants.noInternetConnection);
     }
   }
-  deleteGroup(){
+  deleteGroup(BuildContext context){
     Helper.showAlert(message: "Are you sure you want to delete this group?.",actions: [
       TextButton(
           onPressed: () {
@@ -284,7 +284,7 @@ class GroupInfoController extends GetxController {
 
           },
           child: const Text("DELETE")),
-    ]);
+    ], context: context);
   }
 
   var imagePath = "".obs;
@@ -362,7 +362,7 @@ class GroupInfoController extends GetxController {
     });
   }
 
-  removeProfileImage() {
+  removeProfileImage(BuildContext context) {
     Helper.showAlert(message: "Are you sure you want to remove the group photo?",actions: [
       TextButton(
           onPressed: () {
@@ -375,7 +375,7 @@ class GroupInfoController extends GetxController {
             revokeAccessForProfileImage();
           },
           child: const Text("REMOVE")),
-    ]);
+    ], context: context);
   }
 
   revokeAccessForProfileImage()async{

@@ -21,7 +21,7 @@ class AppDivider extends StatelessWidget {
     return Container(
       margin: padding,
       height: 0.29,
-      color: MirrorflyUikit.getTheme?.textPrimaryColor?.withOpacity(0.5) ?? dividerColor,
+      color: MirrorflyUikit.getTheme?.textPrimaryColor.withOpacity(0.5) ?? dividerColor,
     );
   }
 }
@@ -423,13 +423,13 @@ class EmojiLayout extends StatelessWidget {
           horizontalSpacing: 0,
           gridPadding: EdgeInsets.zero,
           initCategory: Category.RECENT,
-          bgColor: const Color(0xFFF2F2F2),
-          indicatorColor: Colors.blue,
-          iconColor: Colors.grey,
-          iconColorSelected: Colors.blue,
-          backspaceColor: Colors.blue,
-          skinToneDialogBgColor: Colors.white,
-          skinToneIndicatorColor: Colors.grey,
+          bgColor: MirrorflyUikit.getTheme!.scaffoldColor,
+          indicatorColor: MirrorflyUikit.getTheme!.primaryColor,
+          iconColor: MirrorflyUikit.getTheme!.textPrimaryColor,
+          iconColorSelected: MirrorflyUikit.getTheme!.primaryColor,
+          backspaceColor: MirrorflyUikit.getTheme!.primaryColor,
+          skinToneDialogBgColor: MirrorflyUikit.getTheme!.textPrimaryColor,
+          skinToneIndicatorColor: MirrorflyUikit.getTheme!.textPrimaryColor,
           enableSkinTones: true,
           showRecentsTab: true,
           recentsLimit: 28,

@@ -90,7 +90,7 @@ class BusyStatusController extends FullLifeCycleController with FullLifeCycleMix
             busyDeleteConfirmation(item, context);
           },
         ),
-      ]);
+      ], context: context);
     }
   }
 
@@ -160,7 +160,7 @@ class BusyStatusController extends FullLifeCycleController with FullLifeCycleMix
             }
           },
           child: const Text("Yes")),
-    ]);
+    ], context: context);
   }
 
   @override

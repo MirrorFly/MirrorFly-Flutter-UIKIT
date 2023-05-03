@@ -342,10 +342,10 @@ class ContactController extends FullLifeCycleController
     }
   }
 
-  onListItemPressed(Profile item) {
+  onListItemPressed(Profile item, BuildContext context) {
     if (isForward.value || isCreateGroup.value) {
       if (item.isBlocked.checkNull()) {
-        unBlock(item);
+        unBlock(item, context);
       } else {
         contactSelected(item);
       }
@@ -355,7 +355,7 @@ class ContactController extends FullLifeCycleController
     }
   }
 
-  unBlock(Profile item) {
+  unBlock(Profile item, BuildContext context) {
     Helper.showAlert(message: "Unblock ${getName(item)}?", actions: [
       TextButton(
           onPressed: () {
@@ -382,7 +382,7 @@ class ContactController extends FullLifeCycleController
             }
           },
           child: const Text("YES")),
-    ]);
+    ], context: context);
   }
 
   backToCreateGroup() async {
@@ -512,12 +512,12 @@ class ContactController extends FullLifeCycleController
     userUpdatedHisProfile(jid);
   }
 
-  showProfilePopup(Rx<Profile> profile){
+  showProfilePopup(Rx<Profile> profile, BuildContext context){
     showQuickProfilePopup(context: Get.context,
         // chatItem: chatItem,
         chatTap: () {
           Get.back();
-          onListItemPressed(profile.value);
+          onListItemPressed(profile.value, context);
         },
         callTap: () {},
         videoTap: () {},

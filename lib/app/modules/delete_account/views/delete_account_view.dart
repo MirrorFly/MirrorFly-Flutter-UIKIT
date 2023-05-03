@@ -142,7 +142,7 @@ class DeleteAccountView extends GetView<DeleteAccountController> {
                             fontWeight: FontWeight.w500),
                         shape: const StadiumBorder()),
                     onPressed: () {
-                      controller.deleteAccount();
+                      controller.deleteAccount(context);
                     },
                     child: const Text(
                       'Continue',

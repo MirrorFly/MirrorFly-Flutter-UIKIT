@@ -61,7 +61,7 @@ class PreviewContactController extends GetxController {
         "";
   }
 
-  shareContact() async {
+  shareContact(BuildContext context) async {
     // if(await AppUtils.isNetConnected()) {
     //   if(contactList.isNotEmpty) {
     //     var response = await Get.find<ChatController>().sendContactMessage(
@@ -107,7 +107,7 @@ class PreviewContactController extends GetxController {
         debugPrint("sending contact--> ${contactItem.contactNo}");
 
         var response = await Get.find<ChatController>()
-            .sendContactMessage(contactItem.contactNo, contactItem.userName);
+            .sendContactMessage(contactItem.contactNo, contactItem.userName, context);
         debugPrint("ContactResponse ==> $response");
       }
 

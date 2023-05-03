@@ -1142,7 +1142,7 @@ class ContactMessageView extends StatelessWidget {
             onTap: () {
               (userJid != null && userJid.isNotEmpty)
                   ? sendToChatPage(userJid)
-                  : showInvitePopup(contactChatMessage);
+                  : showInvitePopup(contactChatMessage, context);
             },
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -1178,7 +1178,7 @@ class ContactMessageView extends StatelessWidget {
     }
   }
 
-  showInvitePopup(ContactChatMessage contactChatMessage) {
+  showInvitePopup(ContactChatMessage contactChatMessage, BuildContext context) {
     Helper.showButtonAlert(actions: [
       const ListTile(
         contentPadding: EdgeInsets.only(left: 10),
@@ -1205,7 +1205,7 @@ class ContactMessageView extends StatelessWidget {
           sendSMS(contactChatMessage.contactPhoneNumbers[0]);
         },
       ),
-    ]);
+    ], context: context);
   }
 
   void sendSMS(String contactPhoneNumber) async {

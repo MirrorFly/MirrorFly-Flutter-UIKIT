@@ -51,7 +51,7 @@ class BlockedListController extends GetxController {
     }
 
   }
-  unBlock(Member item){
+  unBlock(Member item, BuildContext context){
     Helper.showAlert(message: "Unblock ${getMemberName(item)}?", actions: [
       TextButton(
           onPressed: () {
@@ -79,7 +79,7 @@ class BlockedListController extends GetxController {
 
           },
           child: const Text("YES")),
-    ]);
+    ], context: context);
   }
 
   void userDeletedHisProfile(String jid) {

@@ -137,7 +137,7 @@ class ScannerController extends GetxController {
     });
   }
 
-  logoutWeb() {
+  logoutWeb(BuildContext context) {
     Helper.showAlert(message: "Are you want to logout?", actions: [
       TextButton(
           onPressed: () {
@@ -150,6 +150,6 @@ class ScannerController extends GetxController {
             logoutWebUser();
           },
           child: const Text("YES")),
-    ]);
+    ], context: context);
   }
 }

@@ -50,7 +50,7 @@ class _ChatViewState extends State<ChatView> {
     // controller.screenHeight = MediaQuery.of(context).size.height;
     // controller.screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-        appBar: getAppBar(),
+        appBar: getAppBar(context),
         body: SafeArea(
           child: Container(
             width: Get.width,//controller.screenWidth,
@@ -166,11 +166,11 @@ class _ChatViewState extends State<ChatView> {
                                                                     Constants
                                                                         .audioRecordDone
                                                                 ? controller
-                                                                    .sendRecordedAudioMessage()
+                                                                    .sendRecordedAudioMessage(context)
                                                                 : controller
                                                                     .sendMessage(
                                                                         controller
-                                                                            .profile);
+                                                                            .profile, context);
                                                           },
                                                           child: Padding(
                                                             padding:
@@ -288,7 +288,7 @@ class _ChatViewState extends State<ChatView> {
                                     onClick: () {
                                       if (controller.profile.isBlocked
                                           .checkNull()) {
-                                        controller.unBlockUser();
+                                        controller.unBlockUser(context);
                                       } else {
                                         controller.blockUser(context);
                                       }
@@ -444,7 +444,7 @@ class _ChatViewState extends State<ChatView> {
         controller.isAudioRecording.value == Constants.audioRecordInitial
             ? IconButton(
                 onPressed: () {
-                  controller.startRecording();
+                  controller.startRecording(context);
                 },
                 icon: SvgPicture.asset(micIcon,package: package,color: MirrorflyUikit.getTheme?.textPrimaryColor),
               )
@@ -492,7 +492,7 @@ class _ChatViewState extends State<ChatView> {
                   style: TextStyle(
                       decoration: TextDecoration.underline, color: Colors.blue),
                 ),
-                onTap: () => controller.unBlockUser(),
+                onTap: () => controller.unBlockUser(context),
               ),
             ],
           ),
@@ -871,7 +871,7 @@ class _ChatViewState extends State<ChatView> {
               CustomAction(
                 visibleWidget: IconButton(
                   onPressed: () {
-                    controller.checkBusyStatusForForward();
+                    controller.checkBusyStatusForForward(context);
                   },
                   icon: SvgPicture.asset(forwardIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar,),
                   tooltip: 'Forward',
@@ -883,7 +883,7 @@ class _ChatViewState extends State<ChatView> {
                 keyValue: 'Forward',
                 onItemClick: () {
                   controller.closeKeyBoard();
-                  controller.checkBusyStatusForForward();
+                  controller.checkBusyStatusForForward(context);
                 },
               ),
               /*controller.getOptionStatus('Favourite')
@@ -932,7 +932,7 @@ class _ChatViewState extends State<ChatView> {
               CustomAction(
                 visibleWidget: IconButton(
                   onPressed: () {
-                    controller.deleteMessages();
+                    controller.deleteMessages(context);
                   },
                   icon: SvgPicture.asset(deleteIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar),
                   tooltip: 'Delete',
@@ -942,7 +942,7 @@ class _ChatViewState extends State<ChatView> {
                 keyValue: 'Delete',
                 onItemClick: () {
                   controller.closeKeyBoard();
-                  controller.deleteMessages();
+                  controller.deleteMessages(context);
                 },
               ),
               /*controller.getOptionStatus('Report')
@@ -951,7 +951,7 @@ class _ChatViewState extends State<ChatView> {
               CustomAction(
                 visibleWidget: IconButton(
                     onPressed: () {
-                      controller.reportChatOrUser();
+                      controller.reportChatOrUser(context);
                     },
                     icon: const Icon(Icons.report_problem_rounded)),
                 overflowWidget: Text("Report",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
@@ -961,7 +961,7 @@ class _ChatViewState extends State<ChatView> {
                 keyValue: 'Report',
                 onItemClick: () {
                   controller.closeKeyBoard();
-                  controller.reportChatOrUser();
+                  controller.reportChatOrUser(context);
                 },
               ),
               /*controller.selectedChatList.length > 1 ||
@@ -1158,7 +1158,7 @@ class _ChatViewState extends State<ChatView> {
               CustomAction(
                 visibleWidget: IconButton(
                   onPressed: () {
-                    controller.clearUserChatHistory();
+                    controller.clearUserChatHistory(context);
                   },
                   icon: const Icon(Icons.cancel),
                 ),
@@ -1168,13 +1168,13 @@ class _ChatViewState extends State<ChatView> {
                 onItemClick: () {
                   controller.closeKeyBoard();
                   debugPrint("Clear chat tap");
-                  controller.clearUserChatHistory();
+                  controller.clearUserChatHistory(context);
                 },
               ),
               CustomAction(
                 visibleWidget: IconButton(
                   onPressed: () {
-                    controller.reportChatOrUser();
+                    controller.reportChatOrUser(context);
                   },
                   icon: const Icon(Icons.report_problem_rounded),
                 ),
@@ -1183,7 +1183,7 @@ class _ChatViewState extends State<ChatView> {
                 keyValue: 'Report',
                 onItemClick: () {
                   controller.closeKeyBoard();
-                  controller.reportChatOrUser();
+                  controller.reportChatOrUser(context);
                 },
               ),
               controller.isBlocked.value
@@ -1191,7 +1191,7 @@ class _ChatViewState extends State<ChatView> {
                       visibleWidget: IconButton(
                         onPressed: () {
                           // Get.back();
-                          controller.unBlockUser();
+                          controller.unBlockUser(context);
                         },
                         icon: const Icon(Icons.block),
                       ),
@@ -1200,7 +1200,7 @@ class _ChatViewState extends State<ChatView> {
                       keyValue: 'Unblock',
                       onItemClick: () {
                         debugPrint('onItemClick unblock');
-                        controller.unBlockUser();
+                        controller.unBlockUser(context);
                       },
                     )
                   : CustomAction(
@@ -1272,7 +1272,7 @@ class _ChatViewState extends State<ChatView> {
     });
   }
 
-  getAppBar() {
+  getAppBar(BuildContext context) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(55.0),
       child: Obx(() {

@@ -298,7 +298,7 @@ class ChatInfoView extends GetView<ChatInfoController> {
                         fontWeight: FontWeight.w500)),
                 onTap: () =>
                 {
-                  controller.reportChatOrUser()
+                  controller.reportChatOrUser(context)
                 }
             ),
           ],

@@ -155,10 +155,14 @@ class StatusListController extends FullLifeCycleController with FullLifeCycleMix
 
           onTap: () {
             Navigator.pop(context);
-            statusDeleteConfirmation(item, context);
+            Future.delayed(const Duration(milliseconds: 10), ()
+            {
+              statusDeleteConfirmation(item, context);
+            });
+
           },
         ),
-      ]);
+      ], context: context);
     }
   }
 
@@ -191,7 +195,7 @@ class StatusListController extends FullLifeCycleController with FullLifeCycleMix
             }
           },
           child: const Text("Yes")),
-    ]);
+    ], context: context);
   }
 
 

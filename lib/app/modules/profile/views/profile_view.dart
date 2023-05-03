@@ -348,7 +348,7 @@ class _ProfileViewState extends State<ProfileView> {
                                         controller.removeProfileImage(context);
                                       },
                                       child: const Text("REMOVE"))
-                                ]);
+                                ], context: context);
                               },
                               style: TextButton.styleFrom(
                                   padding: EdgeInsets.zero,

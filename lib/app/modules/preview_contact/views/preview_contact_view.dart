@@ -114,7 +114,7 @@ class PreviewContactView extends GetView<PreviewContactController> {
                       right: 20,
                       child: InkWell(
                         onTap: () {
-                          controller.shareContact();
+                          controller.shareContact(context);
                         },
                         child: const CircleAvatar(
                             backgroundColor: Colors.blueAccent,

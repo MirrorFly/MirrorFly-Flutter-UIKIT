@@ -58,7 +58,7 @@ class WebLoginResultView extends GetView<ScannerController> {
                 SizedBox(width: 8,),
                 Text("LOGOUT FROM ALL COMPUTERS"),
               ],
-            ), onTap: () =>controller.logoutWeb()),
+            ), onTap: () =>controller.logoutWeb(context)),
             const Text("Visit ${Constants.webChatLogin}",
               style: TextStyle(color: textColor, fontSize: 14),),
           ],

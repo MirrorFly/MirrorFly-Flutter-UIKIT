@@ -253,7 +253,7 @@ class AppPermission {
     }
   }
 
-  static permissionDeniedDialog({required String content}){
+  static permissionDeniedDialog({required String content, required BuildContext context}){
     Helper.showAlert(
         message:
         content,
@@ -265,7 +265,7 @@ class AppPermission {
                 openAppSettings();
               },
               child: const Text("OK")),
-        ]);
+        ], context: context);
   }
   static mirrorFlyPermissionDialog(
       {required Function() notNowBtn,

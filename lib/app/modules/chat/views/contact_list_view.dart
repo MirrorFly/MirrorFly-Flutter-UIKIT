@@ -233,7 +233,7 @@ class _ContactListViewState extends State<ContactListView> {
                                               unknown: (!item.isItSavedContact.checkNull() || item.isDeletedContact()),isGroup: item.isGroupProfile.checkNull(),
                                             )),
                                         onTap: (){
-                                          controller.showProfilePopup(item.obs);
+                                          controller.showProfilePopup(item.obs, context);
                                         },
                                       ),
                                       Expanded(
@@ -270,14 +270,14 @@ class _ContactListViewState extends State<ContactListView> {
                                           value: controller.selectedUsersJIDList
                                               .contains(item.jid),
                                           onChanged: (value) {
-                                            controller.onListItemPressed(item);
+                                            controller.onListItemPressed(item, context);
                                           },
                                         ),
                                       ),
                                     ],
                                   ),
                                   onTap: () {
-                                    controller.onListItemPressed(item);
+                                    controller.onListItemPressed(item, context);
                                   },
                                 ),
                               );

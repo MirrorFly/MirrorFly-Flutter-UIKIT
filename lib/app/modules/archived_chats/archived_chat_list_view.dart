@@ -61,14 +61,14 @@ class ArchivedChatListView extends StatelessWidget {
                         CustomAction(
                           visibleWidget: IconButton(
                               onPressed: () {
-                                controller.deleteChats();
+                                controller.deleteChats(context);
                               },
                               icon: SvgPicture.asset(delete,package: package, color: MirrorflyUikit.getTheme?.colorOnAppbar),tooltip: 'Delete',),
                           overflowWidget: Text("Delete",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                           showAsAction: controller.delete.value ? ShowAsAction.always : ShowAsAction.gone,
                           keyValue: 'Delete',
                           onItemClick: () {
-                            controller.deleteChats();
+                            controller.deleteChats(context);
                           },
                         ),
                         CustomAction(

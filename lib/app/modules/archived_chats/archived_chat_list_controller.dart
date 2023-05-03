@@ -340,7 +340,7 @@ class ArchivedChatListController extends GetxController {
     Mirrorfly.updateChatMuteStatus(selectedChats[index], false);
   }
 
-  deleteChats() {
+  deleteChats(BuildContext context) {
     String? profile = '';
     profile = archivedChats
         .firstWhere((element) => selectedChats.first == element.jid)
@@ -366,7 +366,7 @@ class ArchivedChatListController extends GetxController {
               },
               child: const Text("YES")),
         ],
-        message: '');
+        message: '', context: context);
   }
 
   _itemDelete(int index) {

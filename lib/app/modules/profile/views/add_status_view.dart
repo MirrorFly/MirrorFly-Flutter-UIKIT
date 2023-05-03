@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/widgets.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/profile/controllers/status_controller.dart';
 
+import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
 
 class AddStatusView extends StatefulWidget {
@@ -27,9 +28,12 @@ class _AddStatusViewState extends State<AddStatusView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        title: const Text('Add New Status'),
+        title: Text('Add New Status', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
+        iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+        backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
       ),
       body: WillPopScope(
         onWillPop: () {
@@ -53,8 +57,9 @@ class _AddStatusViewState extends State<AddStatusView> {
                   children: [
                     Expanded(
                       child: TextField(
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 20,
+                            color: MirrorflyUikit.getTheme?.textPrimaryColor,
                             fontWeight: FontWeight.normal,
                             overflow: TextOverflow.visible),
                         onChanged: (_) => controller.onChanged(),
@@ -62,6 +67,8 @@ class _AddStatusViewState extends State<AddStatusView> {
                         focusNode: controller.focusNode,
                         maxLength: 139,
                         maxLines: 1,
+                        cursorColor: MirrorflyUikit.getTheme?.primaryColor,
+                        keyboardAppearance: MirrorflyUikit.theme == "dark" ? Brightness.dark : Brightness.light,
                         controller: controller.addStatusController,
                         decoration: const InputDecoration(
                             border: InputBorder.none, counterText: ""),
@@ -80,8 +87,9 @@ class _AddStatusViewState extends State<AddStatusView> {
                                 () =>
                                 Text(
                                   controller.count.toString(),
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontSize: 20,
+                                      color: MirrorflyUikit.getTheme?.textSecondaryColor,
                                       fontWeight: FontWeight.normal),
                                 ),
                           ),
@@ -102,7 +110,7 @@ class _AddStatusViewState extends State<AddStatusView> {
                               controller.showEmoji(!controller.showEmoji.value);
                             });
                           },
-                          icon: controller.showEmoji.value ? const Icon(Icons.keyboard, color: iconColor,) : SvgPicture.asset(smileIcon,package: package,));
+                          icon: controller.showEmoji.value ? Icon(Icons.keyboard, color: MirrorflyUikit.getTheme?.textSecondaryColor, ) : SvgPicture.asset(smileIcon,package: package, color: MirrorflyUikit.getTheme?.textSecondaryColor,));
                     })
                   ],
                 ),
@@ -113,33 +121,28 @@ class _AddStatusViewState extends State<AddStatusView> {
                 child: ElevatedButton(
                   onPressed: () =>  Navigator.pop(context),
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: MaterialStateColor.resolveWith(
-                              (states) => Colors.white),
+                      backgroundColor: MirrorflyUikit.getTheme?.secondaryColor,
                       shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.zero)),
-                  child: const Text(
+                  child: Text(
                     "CANCEL",
-                    style: TextStyle(color: Colors.black, fontSize: 16.0),
+                    style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor, fontSize: 16.0),
                   ),
                 ),
               ),
-              const Divider(
-                color: Colors.grey,
-                thickness: 0.2,
-              ),
+              const AppDivider(),
               Expanded(
                 child: ElevatedButton(
                   onPressed: () {
                     controller.validateAndFinish(context);
                   },
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: MaterialStateColor.resolveWith(
-                              (states) => Colors.white),
+                      backgroundColor:  MirrorflyUikit.getTheme?.secondaryColor,
                       shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.zero)),
-                  child: const Text(
+                  child: Text(
                     "OK",
-                    style: TextStyle(color: Colors.black, fontSize: 16.0),
+                    style: TextStyle(color:  MirrorflyUikit.getTheme?.textPrimaryColor, fontSize: 16.0),
                   ),
                 ),
               ),

@@ -11,7 +11,6 @@ import 'package:mirrorfly_uikit_plugin/app/modules/group/controllers/group_info_
 
 import '../../../common/constants.dart';
 import '../../../routes/app_pages.dart';
-import 'package:mirrorfly_plugin/flychat.dart';
 import '../../../models.dart';
 
 
@@ -222,7 +221,7 @@ class GroupInfoView extends GetView<GroupInfoController> {
                         return memberItem(name: getName(item).checkNull(),image: item.image.checkNull(),isAdmin: item.isGroupAdmin,status: item.status.checkNull(),onTap: (){
                           if (item.jid.checkNull() !=
                               SessionManagement.getUserJID().checkNull()) {
-                            showOptions(item);
+                            showOptions(item, context);
                           }
                         },
                           isGroup: item.isGroupProfile.checkNull(),
@@ -247,7 +246,7 @@ class GroupInfoView extends GetView<GroupInfoController> {
                           color: Colors.red,
                           fontSize: 14,
                           fontWeight: FontWeight.w500)),
-                  onTap: () => controller.reportGroup(),
+                  onTap: () => controller.reportGroup(context),
                 ),
                 Obx(() {
                   return ListItem(
@@ -259,7 +258,7 @@ class GroupInfoView extends GetView<GroupInfoController> {
                             color: Colors.red,
                             fontSize: 14,
                             fontWeight: FontWeight.w500)),
-                    onTap: () => controller.exitOrDeleteGroup(),
+                    onTap: () => controller.exitOrDeleteGroup(context),
                   );
                 }),
               ],
@@ -269,7 +268,7 @@ class GroupInfoView extends GetView<GroupInfoController> {
     );
   }
 
-  showOptions(Profile item) {
+  showOptions(Profile item, BuildContext context) {
     Helper.showButtonAlert(actions: [
         ListTile(title: const Text("Start Chat", style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16),), onTap: () {
           // Get.toNamed(Routes.CHAT, arguments: item);
@@ -301,7 +300,7 @@ class GroupInfoView extends GetView<GroupInfoController> {
                           controller.removeUser(item.jid.checkNull());
                         },
                         child: const Text("YES")),
-                  ]);
+                  ], context: context);
             },
             visualDensity: const VisualDensity(horizontal: 0, vertical: -3))),
         Visibility(
@@ -320,10 +319,10 @@ class GroupInfoView extends GetView<GroupInfoController> {
                       controller.makeAdmin(item.jid.checkNull());
                     },
                     child: const Text("YES")),
-              ]);
+              ], context: context);
             },
             visualDensity: const VisualDensity(horizontal: 0, vertical: -3))),
-      ],
+      ], context: context,
     );
   }
 
@@ -377,7 +376,7 @@ class GroupInfoView extends GetView<GroupInfoController> {
                           ? TextButton(
                           onPressed: () {
                             Get.back();
-                            controller.removeProfileImage();
+                            controller.removeProfileImage(context);
                           },
                           style: TextButton.styleFrom(
                               padding: EdgeInsets.zero,

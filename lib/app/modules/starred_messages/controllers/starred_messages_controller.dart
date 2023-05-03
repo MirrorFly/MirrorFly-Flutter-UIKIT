@@ -237,16 +237,16 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
     }
   }
 
-  checkBusyStatusForForward() async {
+  checkBusyStatusForForward(BuildContext context) async {
     var busyStatus = await Mirrorfly.isBusyStatusEnabled();
     if (!busyStatus.checkNull()) {
       forwardMessage();
     } else {
-      showBusyStatusAlert(forwardMessage);
+      showBusyStatusAlert(forwardMessage, context);
     }
   }
 
-  showBusyStatusAlert(Function? function) {
+  showBusyStatusAlert(Function? function, BuildContext context) {
     Helper.showAlert(
         message: "Disable busy status. Do you want to continue?",
         actions: [
@@ -264,7 +264,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
                 }
               },
               child: const Text("Yes")),
-        ]);
+        ], context: context);
   }
 
   forwardMessage() {
@@ -331,7 +331,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
     };
   }
 
-  void deleteMessages() {
+  void deleteMessages(BuildContext context) {
     //var isRecallAvailable = isMessageCanbeRecalled().keys.first;
     var isCheckBoxShown = isMessageCanbeRecalled().values.first;
     /*var deleteChatListID = List<String>.empty(growable: true);
@@ -433,7 +433,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
               },
               child: const Text("DELETE FOR EVERYONE"))
               : const SizedBox.shrink(),*/
-        ]);
+        ], context: context);
   }
 
   // AudioPlayer player = AudioPlayer();

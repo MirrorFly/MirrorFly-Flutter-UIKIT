@@ -26,11 +26,11 @@ class ImagePreviewController extends GetxController {
     SchedulerBinding.instance.addPostFrameCallback((_) => filePath(Get.arguments['filePath']));
   }
 
-  sendImageMessage() async {
+  sendImageMessage(BuildContext context) async {
     if (File(filePath.value).existsSync()) {
       // if(await AppUtils.isNetConnected()) {
         var response = await Get.find<ChatController>().sendImageMessage(
-            filePath.value, caption.text, "");
+            filePath.value, caption.text, "", context);
         // debugPrint("Preview View ==> $response");
         if (response != null) {
           Get.back();

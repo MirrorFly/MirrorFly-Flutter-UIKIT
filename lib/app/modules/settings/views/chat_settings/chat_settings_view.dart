@@ -116,7 +116,7 @@ class ChatSettingsView extends GetView<ChatSettingsController> {
                           fontWeight: FontWeight.w400)),
                   dividerPadding: const EdgeInsets.symmetric(horizontal: 16),
                   onTap: (){
-                    controller.clearAllConversation();
+                    controller.clearAllConversation(context);
                   })
             ],
           ),

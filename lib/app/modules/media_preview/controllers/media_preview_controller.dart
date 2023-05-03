@@ -73,7 +73,7 @@ class MediaPreviewController extends FullLifeCycleController with FullLifeCycleM
         if (data.type == 'image') {
           debugPrint("sending image");
           var response = await Get.find<ChatController>()
-              .sendImageMessage(data.path, captionMessage[i], "");
+              .sendImageMessage(data.path, captionMessage[i], "", context);
           debugPrint("Preview View ==> $response");
           if (response != null) {
             debugPrint("Image send Success");

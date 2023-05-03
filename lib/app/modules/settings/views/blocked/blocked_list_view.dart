@@ -26,7 +26,7 @@ class BlockedListView extends GetView<BlockedListController> {
             var item = controller.blockedUsers[index];
             return memberItem(name :getMemberName(item).checkNull(),image: item.image.checkNull(),status: item.mobileNumber.checkNull(),onTap: (){
               if (item.jid.checkNull().isNotEmpty) {
-                controller.unBlock(item);
+                controller.unBlock(item, context);
               }
             },blocked: item.isBlockedMe.checkNull() || item.isAdminBlocked.checkNull(),
               unknown: (!item.isItSavedContact.checkNull() || item.isDeletedContact()),);

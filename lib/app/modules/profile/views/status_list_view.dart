@@ -5,6 +5,7 @@ import 'package:mirrorfly_uikit_plugin/app/common/widgets.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/profile/controllers/status_controller.dart';
 
+import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
 import 'add_status_view.dart';
 
@@ -29,9 +30,12 @@ class _StatusListViewState extends State<StatusListView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        title: const Text('Status'),
+        title: Text('Status', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
+        iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+        backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
       ),
       body: WillPopScope(
         onWillPop: () {
@@ -46,22 +50,23 @@ class _StatusListViewState extends State<StatusListView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 'Your current status',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: MirrorflyUikit.getTheme?.textPrimaryColor,),
               ),
               Obx(
                 () => ListTile(
                   contentPadding: EdgeInsets.zero,
                   title: Text(controller.selectedStatus.value,
                       maxLines: null,
-                      style: const TextStyle(
-                          color: textColor,
+                      style: TextStyle(
+                          color: MirrorflyUikit.getTheme?.textSecondaryColor,
                           fontSize: 14,
                           fontWeight: FontWeight.normal)),
                   trailing: SvgPicture.asset(
                     pencilEditIcon,package: package,
                     fit: BoxFit.contain,
+                    color: MirrorflyUikit.getTheme?.textSecondaryColor,
                   ),
                   onTap: () async {
                     // Get.to(const AddStatusView(), arguments: {
@@ -82,9 +87,9 @@ class _StatusListViewState extends State<StatusListView> {
               const SizedBox(
                 height: 10,
               ),
-              const Text(
+              Text(
                 'Select Your new status',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: MirrorflyUikit.getTheme?.textPrimaryColor),
               ),
               Obx(() => controller.statusList.isNotEmpty
                   ? Expanded(
@@ -102,8 +107,8 @@ class _StatusListViewState extends State<StatusListView> {
                                   style: TextStyle(
                                       color: item.status ==
                                               controller.selectedStatus.value
-                                          ? textBlack1color
-                                          : textColor,
+                                          ? MirrorflyUikit.getTheme?.textPrimaryColor
+                                          : MirrorflyUikit.getTheme?.textSecondaryColor,
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500)),
                               trailing:

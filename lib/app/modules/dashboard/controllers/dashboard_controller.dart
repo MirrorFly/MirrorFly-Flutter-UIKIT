@@ -703,11 +703,11 @@ class DashboardController extends FullLifeCycleController
     }
   }
 
-  deleteChats() {
+  deleteChats(BuildContext context) {
     if (selectedChats.length == 1) {
-      _itemDelete(0);
+      _itemDelete(0, context);
     } else {
-      itemsDelete();
+      itemsDelete(context);
     }
   }
 
@@ -800,7 +800,7 @@ class DashboardController extends FullLifeCycleController
     recentChats.removeAt(chatIndex);
   }
 
-  _itemDelete(int index) {
+  _itemDelete(int index, BuildContext context) {
     var chatIndex = recentChats.indexWhere((element) =>
         selectedChats[index] == element.jid); //selectedChatsPosition[index];
     Helper.showAlert(
@@ -821,10 +821,10 @@ class DashboardController extends FullLifeCycleController
                 });
               },
               child: const Text("Yes")),
-        ]);
+        ], context: context);
   }
 
-  itemsDelete() {
+  itemsDelete(BuildContext context) {
     Helper.showAlert(
         message: "Delete ${selectedChatsPosition.length} selected chats?",
         actions: [
@@ -847,7 +847,7 @@ class DashboardController extends FullLifeCycleController
                 });
               },
               child: const Text("Yes")),
-        ]);
+        ], context: context);
   }
 
   updateUnReadChatCount() {
