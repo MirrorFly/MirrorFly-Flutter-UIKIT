@@ -672,8 +672,8 @@ class _AudioMessageViewState extends State<AudioMessageView>
       decoration: BoxDecoration(
         border: Border.all(
           color: widget.chatMessage.isMessageSentByMe
-              ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.color.withAlpha(60)
-              : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.color.withAlpha(60)//chatReplySenderColor,
+              ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.color.withAlpha(50)
+              : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.color.withAlpha(50)//chatReplySenderColor,
         ),
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         color: Colors.transparent,
@@ -687,8 +687,8 @@ class _AudioMessageViewState extends State<AudioMessageView>
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10), topRight: Radius.circular(10)),
               color: widget.chatMessage.isMessageSentByMe
-                  ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor.withAlpha(30)
-                  : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor.withAlpha(30),
+                  ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor.withAlpha(50)
+                  : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor.withAlpha(50),
             ),
             padding: const EdgeInsets.all(15),
             child: Row(
@@ -2123,24 +2123,24 @@ Widget downloadView(int mediaDownloadStatus, int mediaFileSize,
         width: 80,
         decoration: BoxDecoration(
           border: Border.all(
-            color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor,//textColor,
+            color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.color : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.color,//textColor,
           ),
           borderRadius: const BorderRadius.all(Radius.circular(5)),
-          color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor.withOpacity(0.5) : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor ,//Colors.black38,
+          color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.color.withAlpha(50) : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.color.withAlpha(90) ,//Colors.black38,
         ),
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SvgPicture.asset(downloadIcon,package: package,
-              color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textPrimaryColor,//playIconColor,
+              color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor,//playIconColor,
             ),
             const SizedBox(
               width: 5,
             ),
             Text(
               Helper.formatBytes(mediaFileSize, 0),
-              style: TextStyle(color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textPrimaryColor, fontSize: 10),
+              style: TextStyle(color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor, fontSize: 10),
             ),
           ],
         )),

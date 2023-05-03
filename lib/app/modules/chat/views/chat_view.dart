@@ -57,10 +57,10 @@ class _ChatViewState extends State<ChatView> {
             height: Get.height,//controller.screenHeight,
             decoration: BoxDecoration(
               color: MirrorflyUikit.getTheme?.scaffoldColor,
-              image: const DecorationImage(
+              /*image: const DecorationImage(
                 image: AssetImage(chatBg,package: package),
                 fit: BoxFit.cover,
-              ),
+              ),*/
             ),
             child: WillPopScope(
               onWillPop: () {
@@ -93,7 +93,7 @@ class _ChatViewState extends State<ChatView> {
                         alignment: Alignment.bottomCenter,
                         child: Obx(() {
                           return Container(
-                            color: MirrorflyUikit.getTheme?.scaffoldColor,
+                            color: Colors.transparent,
                             child: controller.isBlocked.value
                                 ? userBlocked()
                                 : !controller.isMemberOfGroup

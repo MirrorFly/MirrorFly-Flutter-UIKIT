@@ -73,7 +73,10 @@ class DashboardView extends StatelessWidget {
                               Navigator.pop(context);
                             }),
                 title: controller.selected.value
-                    ? Text((controller.selectedChats.length).toString())
+                    ? Text((controller.selectedChats.length).toString(),style: TextStyle(
+                    color: MirrorflyUikit
+                        .getTheme?.colorOnAppbar ??
+                        Colors.black))
                     : controller.isSearching.value
                         ? TextField(
                             focusNode: controller.searchFocusNode,
@@ -263,7 +266,7 @@ class DashboardView extends StatelessWidget {
               },
               icon: SvgPicture.asset(archive,
                   package: package,
-                  color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                  color: MirrorflyUikit.getTheme?.colorOnAppbar),
               tooltip: 'Archive',
             ),
             overflowWidget: const Text("Archived"),
@@ -431,7 +434,8 @@ class DashboardView extends StatelessWidget {
                         title: Text(
                           "Archived",
                           style: TextStyle(
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16,
                               color: MirrorflyUikit.getTheme?.textPrimaryColor),
                         ),
                         trailing: controller.archivedCount != "0"
@@ -515,7 +519,8 @@ class DashboardView extends StatelessWidget {
                                       title: Text(
                                         "Archived",
                                         style: TextStyle(
-                                            fontWeight: FontWeight.w500,
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 16,
                                             color: MirrorflyUikit
                                                 .getTheme?.textPrimaryColor),
                                       ),

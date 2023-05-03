@@ -11,23 +11,23 @@
     "AppTheme": {
         "theme": "custom",
         "customTheme": {
-            "primaryColor": "0xff2f55c7",
-            "secondaryColor": "0xFFFFFFFF",
-            "appBarColor": "0xFFFFFFFF",
+            "primaryColor": "0xff64DD17",
+            "secondaryColor": "0xffE0E0E0",
+            "appBarColor": "0xff8BE98C",
             "colorOnAppbar": "0xff000000",
-            "scaffoldColor": "0xffF77E7E",
+            "scaffoldColor": "0xFFFFFFFF",
             "colorOnPrimary": "0xFFFFFFFF",
-            "textPrimaryColor": "0xff000000",
-            "textSecondaryColor": "0xff000073",
+            "textPrimaryColor": "0xff063970",
+            "textSecondaryColor": "0xff424242",
             "chatBubblePrimaryColor": {
-                "color": "0xff2f55c7",
-                "textPrimaryColor": "0xFFFFFFFF",
-                "textSecondaryColor": "0xff000073"
+                "color": "0xffA7FFEB",
+                "textPrimaryColor": "0xff000000",
+                "textSecondaryColor": "0xFFFFFFFF"
             },
             "chatBubbleSecondaryColor": {
-                "color": "0xff00001F",
-                "textPrimaryColor": "0xFFFFFFFF",
-                "textSecondaryColor": "0xff000073"
+                "color": "0xff8BE98C",
+                "textPrimaryColor": "0xff000000",
+                "textSecondaryColor": "0xFFFFFFFF"
             }
         }
     }
