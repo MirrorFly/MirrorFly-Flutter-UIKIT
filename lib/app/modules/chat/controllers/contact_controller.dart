@@ -366,15 +366,15 @@ class ContactController extends FullLifeCycleController
           onPressed: () async {
             if (await AppUtils.isNetConnected()) {
               Get.back();
-              Helper.progressLoading();
+              Helper.progressLoading(context: context);
               Mirrorfly.unblockUser(item.jid.checkNull()).then((value) {
-                Helper.hideLoading();
+                Helper.hideLoading(context: context);
                 if (value != null && value) {
                   toToast("${getName(item)} has been Unblocked");
                   userUpdatedHisProfile(item.jid.checkNull());
                 }
               }).catchError((error) {
-                Helper.hideLoading();
+                Helper.hideLoading(context: context);
                 debugPrint(error);
               });
             } else {

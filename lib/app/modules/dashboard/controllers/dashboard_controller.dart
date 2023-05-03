@@ -397,15 +397,15 @@ class DashboardController extends FullLifeCycleController
     ));
   }
 
-  chatInfo() async {
+  chatInfo(BuildContext context) async {
     var chatIndex = recentChats.indexWhere((element) =>
         selectedChats.first == element.jid); //selectedChatsPosition[index];
     var item = recentChats[chatIndex];
-    Helper.progressLoading();
+    Helper.progressLoading(context: context);
     clearAllChatSelection();
     await Mirrorfly.getProfileDetails(item.jid.checkNull(), false).then((value) {
       if (value != null) {
-        Helper.hideLoading();
+        Helper.hideLoading(context: context);
         var profile = profiledata(value.toString());
         if (item.isGroup!) {
           Future.delayed(const Duration(milliseconds: 100),

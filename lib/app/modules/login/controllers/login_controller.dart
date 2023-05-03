@@ -49,8 +49,8 @@ class LoginController extends GetxController {
     Helper.showLoading(message: "Please Wait...", buildContext: context);
   }
 
-  hideLoading() {
-    Helper.hideLoading();
+  hideLoading({required BuildContext context}) {
+    Helper.hideLoading(context: context);
   }
 
   void startTimer() {
@@ -94,12 +94,12 @@ class LoginController extends GetxController {
     }
   }
 
-  setUserJID(String username) {
+  setUserJID(String username, BuildContext context) {
     Mirrorfly.getAllGroups(true);
     Mirrorfly.getJid(username).then((value) {
       if (value != null) {
         SessionManagement.setUserJID(value);
-        Helper.hideLoading();
+        Helper.hideLoading(context: context);
         Get.offAllNamed(Routes.profile, arguments: {
           "mobile": mobileNumber.text.toString(),
           "from": Routes.login
@@ -244,7 +244,7 @@ class LoginController extends GetxController {
     }*/
   }
 
-  verifyTokenWithServer(String token) async {
+  verifyTokenWithServer(String token, BuildContext context) async {
     if(await AppUtils.isNetConnected()) {
       var userName = (countryCode!.replaceAll('+', '') + mobileNumber.text.toString()).replaceAll("+", "");
       //make api call
@@ -252,12 +252,12 @@ class LoginController extends GetxController {
         if (value != null) {
           validateDeviceToken(value);
         } else {
-          hideLoading();
+          hideLoading(context: context);
         }
       }).catchError((error) {
         debugPrint("issue===> $error");
         debugPrint(error.message);
-        hideLoading();
+        hideLoading(context: context);
       });
     }else{
       toToast(Constants.noInternetConnection);
@@ -313,12 +313,12 @@ class LoginController extends GetxController {
           enableArchive();
           Mirrorfly.setRegionCode(regionCode ?? 'IN');///if its not set then error comes in contact sync delete from phonebook.
           SessionManagement.setCountryCode((countryCode ?? "").replaceAll('+', ''));
-          setUserJID(userData.data!.username!);
+          setUserJID(userData.data!.username!, context);
         }
       }).catchError((error) {
         debugPrint("issue===> $error");
         debugPrint(error.message);
-        hideLoading();
+        hideLoading(context: context);
         if(error.code == 403){
           Get.offAllNamed(Routes.adminBlocked);
         }else{
@@ -341,7 +341,7 @@ class LoginController extends GetxController {
 
   showUserAccountDeviceStatus(BuildContext context) {
     //Already Logged Popup
-    hideLoading();
+    hideLoading(context: context);
     verifyVisible(false);
     mirrorFlyLog("showUserAccountDeviceStatus", "Already Login");
     //PlatformRepo.logout();

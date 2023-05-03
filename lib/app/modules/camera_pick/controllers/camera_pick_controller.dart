@@ -179,7 +179,7 @@ class CameraPickController extends GetxController with WidgetsBindingObserver  {
       Helper.showLoading(buildContext: context);
       XFile? file = await cameraController?.takePicture();
       debugPrint("file : ${file?.path}");
-      Helper.hideLoading();
+      Helper.hideLoading(context: context);
       Get.back(result: file);
     }
   }

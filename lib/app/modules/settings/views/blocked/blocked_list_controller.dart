@@ -62,15 +62,15 @@ class BlockedListController extends GetxController {
           onPressed: () async {
             if(await AppUtils.isNetConnected()) {
               Get.back();
-              Helper.progressLoading();
+              Helper.progressLoading(context: context);
               Mirrorfly.unblockUser(item.jid.checkNull()).then((value) {
-                Helper.hideLoading();
+                Helper.hideLoading(context: context);
                 if(value!=null && value) {
                   toToast("${getMemberName(item)} has been Unblocked");
                   getUsersIBlocked(false);
                 }
               }).catchError((error) {
-                Helper.hideLoading();
+                Helper.hideLoading(context: context);
                 debugPrint(error);
               });
             }else{

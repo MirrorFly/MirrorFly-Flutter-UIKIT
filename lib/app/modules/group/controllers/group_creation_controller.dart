@@ -117,7 +117,7 @@ class GroupCreationController extends GetxController {
     mirrorFlyLog("group image", imagePath.value);
     Helper.showLoading(buildContext: context);
     Mirrorfly.createGroup(groupName.text.toString(),users,imagePath.value).then((value){
-      Helper.hideLoading();
+      Helper.hideLoading(context: context);
       if(value!=null) {
         Get.back();
         toToast('Group created Successfully');

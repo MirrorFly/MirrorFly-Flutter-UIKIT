@@ -198,9 +198,9 @@ class GroupInfoController extends GetxController {
       TextButton(
           onPressed: () {
             Get.back();
-            Helper.progressLoading();
+            Helper.progressLoading(context: context);
             Mirrorfly.reportUserOrMessages(profile.jid.checkNull(),Constants.typeGroupChat, "").then((value) {
-              Helper.hideLoading();
+              Helper.hideLoading(context: context);
               if(value!=null){
                 if(value){
                   toToast("Report sent");
@@ -209,7 +209,7 @@ class GroupInfoController extends GetxController {
                 }
               }
             }).catchError((error) {
-              Helper.hideLoading();
+              Helper.hideLoading(context: context);
             });
           },
           child: const Text("REPORT")),
@@ -234,23 +234,23 @@ class GroupInfoController extends GetxController {
       TextButton(
           onPressed: () {
             Get.back();
-            exitFromGroup();
+            exitFromGroup(context);
           },
           child: const Text("LEAVE")),
     ], context: context);
   }
-  exitFromGroup()async{
+  exitFromGroup(BuildContext context)async{
     if(await AppUtils.isNetConnected()) {
-      Helper.progressLoading();
+      Helper.progressLoading(context: context);
       Mirrorfly.leaveFromGroup(SessionManagement.getUserJID() ,profile.jid.checkNull()).then((value) {
-        Helper.hideLoading();
+        Helper.hideLoading(context: context);
         if(value!=null){
           if(value){
             _isMemberOfGroup(!value);
           }
         }
       }).catchError((error) {
-        Helper.hideLoading();
+        Helper.hideLoading(context: context);
       });
     }else{
       toToast(Constants.noInternetConnection);
@@ -267,16 +267,16 @@ class GroupInfoController extends GetxController {
           onPressed: () async {
             if(await AppUtils.isNetConnected()) {
               Get.back();
-              Helper.progressLoading();
+              Helper.progressLoading(context: context);
               Mirrorfly.deleteGroup(profile.jid.checkNull()).then((value) {
-                Helper.hideLoading();
+                Helper.hideLoading(context: context);
                 if(value!=null){
                   if(value){
                     Get.offAllNamed(Routes.dashboard);
                   }
                 }
               }).catchError((error) {
-                Helper.hideLoading();
+                Helper.hideLoading(context: context);
               });
             }else{
               toToast(Constants.noInternetConnection);
@@ -300,7 +300,7 @@ class GroupInfoController extends GetxController {
           var name = "${DateTime.now().millisecondsSinceEpoch}.jpg";
           writeImageTemp(value.bytes, name).then((value) {
             imagePath(value.path);
-            updateGroupProfileImage(value.path);
+            updateGroupProfileImage(value.path, context);
           });
         });
       } else {
@@ -312,7 +312,7 @@ class GroupInfoController extends GetxController {
   }
 
   final ImagePicker _picker = ImagePicker();
-  camera() async {
+  camera(BuildContext context) async {
     if(await AppUtils.isNetConnected()) {
       final XFile? photo = await _picker.pickImage(
           source: ImageSource.camera);
@@ -324,7 +324,7 @@ class GroupInfoController extends GetxController {
           var name = "${DateTime.now().millisecondsSinceEpoch}.jpg";
           writeImageTemp(value.bytes, name).then((value) {
             imagePath(value.path);
-            updateGroupProfileImage(value.path);
+            updateGroupProfileImage(value.path, context);
           });
         });
       } else {
@@ -335,10 +335,10 @@ class GroupInfoController extends GetxController {
     }
   }
 
-  updateGroupProfileImage(String path){
-    showLoader();
+  updateGroupProfileImage(String path, BuildContext context){
+    showLoader(context);
     Mirrorfly.updateGroupProfileImage(profile.jid.checkNull(),path).then((bool? value){
-      hideLoader();
+      hideLoader(context);
       if(value!=null){
         if(value){
           profile_.value.image=path;
@@ -348,10 +348,10 @@ class GroupInfoController extends GetxController {
     });
   }
 
-  updateGroupName(String name){
-    showLoader();
+  updateGroupName(String name, BuildContext context){
+    showLoader(context);
     Mirrorfly.updateGroupName(profile.jid.checkNull(),name).then((bool? value){
-      hideLoader();
+      hideLoader(context);
       if(value!=null){
         if(value){
           profile_.value.name = name;
@@ -372,17 +372,17 @@ class GroupInfoController extends GetxController {
       TextButton(
           onPressed: () {
             Get.back();
-            revokeAccessForProfileImage();
+            revokeAccessForProfileImage(context);
           },
           child: const Text("REMOVE")),
     ], context: context);
   }
 
-  revokeAccessForProfileImage()async{
+  revokeAccessForProfileImage(BuildContext context)async{
     if(await AppUtils.isNetConnected()) {
-      showLoader();
+      showLoader(context);
       Mirrorfly.removeGroupProfileImage(profile.jid.checkNull()).then((bool? value) {
-        hideLoader();
+        hideLoader(context);
         if (value != null) {
           if(value){
             profile_.value.image=Constants.emptyString;
@@ -390,33 +390,34 @@ class GroupInfoController extends GetxController {
           }
         }
       }).catchError((onError) {
-        hideLoader();
+        hideLoader(context);
       });
     }else{
       toToast(Constants.noInternetConnection);
     }
   }
 
-  showLoader(){
-    Helper.progressLoading();
+  showLoader(BuildContext context){
+    Helper.progressLoading(context: context);
   }
-  hideLoader(){
-    Helper.hideLoading();
+  hideLoader(BuildContext context){
+    // Helper.hideLoading();
+    Navigator.pop(context);
   }
 
-  gotoAddParticipants(){
+  gotoAddParticipants(BuildContext context){
     Get.toNamed(Routes.contacts, arguments: {"forward" : false,"group":true,"groupJid":profile.jid })?.then((value){
       if(value!=null){
-        addUsers(value);
+        addUsers(value, context);
       }
     });
   }
 
-  addUsers(dynamic value)async{
+  addUsers(dynamic value, BuildContext context)async{
     if(await AppUtils.isNetConnected()) {
-      showLoader();
+      showLoader(context);
       Mirrorfly.addUsersToGroup(profile.jid.checkNull(),value as List<String>).then((value){
-        hideLoader();
+        hideLoader(context);
         if(value!=null && value){
           //getGroupMembers(false);
         }else{
@@ -432,12 +433,12 @@ class GroupInfoController extends GetxController {
     Get.toNamed(Routes.viewMedia,arguments: {"name":profile.name,"jid":profile.jid,"isgroup":profile.isGroupProfile});
   }
 
-  removeUser(String userJid) async {
+  removeUser(String userJid, BuildContext context) async {
     if(isMemberOfGroup){
       if(await AppUtils.isNetConnected()) {
-        showLoader();
+        showLoader(context);
         Mirrorfly.removeMemberFromGroup(profile.jid.checkNull(), userJid).then((value){
-          hideLoader();
+          hideLoader(context);
           if(value!=null && value){
             //getGroupMembers(false);
           }else{
@@ -450,12 +451,12 @@ class GroupInfoController extends GetxController {
     }
   }
 
-  makeAdmin(String userJid) async {
+  makeAdmin(String userJid, BuildContext context) async {
     if(isMemberOfGroup){
       if(await AppUtils.isNetConnected()) {
-        showLoader();
+        showLoader(context);
         Mirrorfly.makeAdmin(profile.jid.checkNull(), userJid).then((value){
-          hideLoader();
+          hideLoader(context);
           if(value!=null && value){
             //getGroupMembers(false);
           }else{
@@ -469,11 +470,11 @@ class GroupInfoController extends GetxController {
   }
 
   //New Name Change
-  gotoNameEdit(){
+  gotoNameEdit(BuildContext context){
     if(isMemberOfGroup) {
       Get.to(const NameChangeView())?.then((value) {
         if (value != null) {
-          updateGroupName(nameController.text);
+          updateGroupName(nameController.text, context);
         }
       });
     }else{

@@ -732,7 +732,7 @@ class ChatController extends FullLifeCycleController
               profile.jid!, videoPath, caption, replyMessageID)
           .then((value) {
         clearMessage();
-        Platform.isIOS ? Helper.hideLoading() : null;
+        Platform.isIOS ? Helper.hideLoading(context: context) : null;
         ChatMessageModel chatMessageModel = sendMessageModelFromJson(value);
         chatList.insert(0, chatMessageModel);
         scrollToBottom();
@@ -1384,10 +1384,10 @@ class ChatController extends FullLifeCycleController
                       isBlocked(true);
                       profile_.refresh();
                       saveUnsentMessage();
-                      Helper.hideLoading();
+                      Helper.hideLoading(context: context);
                       toToast('${getName(profile)} has been blocked');
                     }).catchError((error) {
-                      Helper.hideLoading();
+                      Helper.hideLoading(context: context);
                       debugPrint(error);
                     });
                   } else {
@@ -1465,7 +1465,7 @@ class ChatController extends FullLifeCycleController
                   profile.isBlocked = false;
                   isBlocked(false);
                   getUnsentMessageOfAJid();
-                  Helper.hideLoading();
+                  Helper.hideLoading(context: context);
                   toToast('${getName(profile)} has been unblocked');
                 }).catchError((error) {
                   // Helper.hideLoading();

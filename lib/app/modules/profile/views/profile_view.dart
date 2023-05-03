@@ -341,22 +341,22 @@ class _ProfileViewState extends State<ProfileView> {
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
-                                      child: const Text("CANCEL")),
+                                      child: Text("CANCEL", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),)),
                                   TextButton(
                                       onPressed: () {
                                         Navigator.pop(context);
                                         controller.removeProfileImage(context);
                                       },
-                                      child: const Text("REMOVE"))
+                                      child: Text("REMOVE", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)))
                                 ], context: context);
                               },
                               style: TextButton.styleFrom(
                                   padding: EdgeInsets.zero,
                                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                   alignment: Alignment.centerLeft),
-                              child: const Text(
+                              child: Text(
                                 "Remove Photo",
-                                style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
+                                style: TextStyle(color:  MirrorflyUikit.getTheme?.textPrimaryColor, fontWeight: FontWeight.bold),
                               ))
                           : const SizedBox(),
                     ],

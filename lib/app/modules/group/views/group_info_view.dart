@@ -87,7 +87,7 @@ class GroupInfoView extends GetView<GroupInfoController> {
                                   height: 16.0,
                                 ),
                                 tooltip: 'edit',
-                                onPressed: () => controller.gotoNameEdit(),
+                                onPressed: () => controller.gotoNameEdit(context),
                               ),
                             ),
                           ],
@@ -209,7 +209,7 @@ class GroupInfoView extends GetView<GroupInfoController> {
                                   color: Colors.black,
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500)),
-                          onTap: () => controller.gotoAddParticipants()),
+                          onTap: () => controller.gotoAddParticipants(context)),
                     )),
                 Obx(() {
                   return ListView.builder(
@@ -297,7 +297,7 @@ class GroupInfoView extends GetView<GroupInfoController> {
                     TextButton(
                         onPressed: () {
                           Get.back();
-                          controller.removeUser(item.jid.checkNull());
+                          controller.removeUser(item.jid.checkNull(), context);
                         },
                         child: const Text("YES")),
                   ], context: context);
@@ -316,7 +316,7 @@ class GroupInfoView extends GetView<GroupInfoController> {
                 TextButton(
                     onPressed: () {
                       Get.back();
-                      controller.makeAdmin(item.jid.checkNull());
+                      controller.makeAdmin(item.jid.checkNull(), context);
                     },
                     child: const Text("YES")),
               ], context: context);
@@ -351,7 +351,7 @@ class GroupInfoView extends GetView<GroupInfoController> {
                       TextButton(
                           onPressed: () async {
                             Get.back();
-                            controller.camera();
+                            controller.camera(context);
                           },
                           style: TextButton.styleFrom(
                               padding: EdgeInsets.zero,

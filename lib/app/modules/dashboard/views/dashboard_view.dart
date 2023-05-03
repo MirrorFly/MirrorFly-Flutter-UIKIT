@@ -151,7 +151,7 @@ class DashboardView extends StatelessWidget {
           CustomAction(
             visibleWidget: IconButton(
               onPressed: () {
-                controller.chatInfo();
+                controller.chatInfo(context);
               },
               icon: SvgPicture.asset(infoIcon,
                   package: package,
@@ -163,7 +163,7 @@ class DashboardView extends StatelessWidget {
                 controller.info.value ? ShowAsAction.always : ShowAsAction.gone,
             keyValue: 'Info',
             onItemClick: () {
-              controller.chatInfo();
+              controller.chatInfo(context);
             },
           ),
           CustomAction(

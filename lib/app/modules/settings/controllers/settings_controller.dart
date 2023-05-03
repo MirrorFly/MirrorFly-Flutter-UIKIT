@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
-import '../../../models.dart';
 import 'package:mirrorfly_uikit_plugin/app/routes/app_pages.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart';
@@ -27,24 +26,24 @@ class SettingsController extends GetxController {
     packageInfo.obs.value = await PackageInfo.fromPlatform();
   }
 
-  logout() {
+  logout(BuildContext context) {
     Get.back();
     if (SessionManagement.getEnablePin()) {
       Get.toNamed(Routes.pin)?.then((value){
         if(value!=null && value){
-          logoutFromSDK();
+          logoutFromSDK(context);
         }
       });
     } else {
-      logoutFromSDK();
+      logoutFromSDK(context);
     }
   }
 
-  logoutFromSDK() async {
+  logoutFromSDK(BuildContext context) async {
     if (await AppUtils.isNetConnected()) {
-      Helper.progressLoading();
+      Helper.progressLoading(context: context);
       Mirrorfly.logoutOfChatSDK().then((value) {
-        Helper.hideLoading();
+        Helper.hideLoading(context: context);
         if (value) {
           var token = SessionManagement.getToken().checkNull();
           SessionManagement.clear().then((value) {
@@ -55,7 +54,7 @@ class SettingsController extends GetxController {
           Get.snackbar("Logout", "Logout Failed");
         }
       }).catchError((er) {
-        Helper.hideLoading();
+        Helper.hideLoading(context: context);
         SessionManagement.clear().then((value) {
           // SessionManagement.setToken(token);
           Get.offAllNamed(Routes.login);

@@ -138,7 +138,7 @@ class ArchivedChatListView extends StatelessWidget {
                               if (controller.selected.value) {
                                 controller.selectOrRemoveChatFromList(index);
                               } else {
-                                controller.toChatPage(item.jid.checkNull());
+                                controller.toChatPage(item.jid.checkNull(), context);
                               }
                             },
                             onLongPress: () {

@@ -55,13 +55,13 @@ class DeleteAccountReasonController extends FullLifeCycleController
         debugPrint('DeleteAccount $value');
         Future.delayed(const Duration(milliseconds: 500), ()
         {
-          Helper.hideLoading();
+          Helper.hideLoading(context: context);
           SessionManagement.clear()
               .then((value) => Get.offAllNamed(Routes.login));
           toToast('Your MirrorFly account has been deleted');
         });
       }).catchError((error) {
-        Helper.hideLoading();
+        Helper.hideLoading(context: context);
         SessionManagement.setLogin(true);
         toToast("Unable to delete the account");
       });

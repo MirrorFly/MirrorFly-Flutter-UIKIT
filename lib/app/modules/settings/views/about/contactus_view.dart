@@ -104,9 +104,9 @@ class ContactusView extends StatelessWidget {
                         shape: const StadiumBorder()),
                     onPressed: () {
                       if(title.text.trim().isNotEmpty&&description.text.trim().isNotEmpty) {
-                        Helper.progressLoading();
+                        Helper.progressLoading(context: context);
                         Mirrorfly.sendContactUsInfo(title.text.trim(),description.text.trim()).then((value){
-                          Helper.hideLoading();
+                          Helper.hideLoading(context: context);
                           if(value!=null){
                             if(value){
                               toToast("Thank you for contacting us!");

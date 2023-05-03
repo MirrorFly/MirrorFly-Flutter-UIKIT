@@ -3,8 +3,9 @@ import 'dart:math';
 
 import 'package:custom_image_crop/custom_image_crop.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
+
+import '../../mirrorfly_uikit_plugin.dart';
 class CropImage extends StatefulWidget {
   const CropImage({Key? key, required this.imageFile}) : super(key: key);
   final File imageFile;
@@ -38,8 +39,8 @@ class _CropImageState extends State<CropImage> {
         children: [
           Expanded(
             child: Container(
-              color: const Color(0X55000000),
-              padding: const EdgeInsets.all(20.0),
+              color: Colors.transparent,
+              // padding: const EdgeInsets.all(20.0),
               child: CustomImageCrop(
                 cropController: controller,
                 shape: CustomCropShape.Square,
@@ -58,9 +59,9 @@ class _CropImageState extends State<CropImage> {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: ()=>Get.back(),
-                    style: ElevatedButton.styleFrom(backgroundColor: MaterialStateColor.resolveWith((states) => Colors.white),shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
-                    child: const Text("CANCEL",style: TextStyle(color: Colors.black,fontSize:16.0),),
+                    onPressed: ()=>Navigator.pop(context),
+                    style: ElevatedButton.styleFrom(backgroundColor: MirrorflyUikit.getTheme?.secondaryColor, shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
+                    child: Text("CANCEL",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor,fontSize:16.0),),
                   ),
                 ),
                 /*SizedBox(width: 1.0,),
@@ -68,22 +69,23 @@ class _CropImageState extends State<CropImage> {
                 SizedBox(width: 1.0,),
                 Material(child: IconButton(icon: const Icon(Icons.zoom_out), onPressed: () => controller.addTransition(CropImageData(scale: 0.75))),),*/
                 const SizedBox(width: 1.0,),
-                Material(child: IconButton(onPressed: ()=>controller.addTransition(CropImageData(angle: -pi / 4)), icon: const Icon(Icons.rotate_left))),
+                Material(color: MirrorflyUikit.getTheme?.secondaryColor,child: IconButton(onPressed: ()=>controller.addTransition(CropImageData(angle: -pi / 4)), icon: Icon(Icons.rotate_left, color: MirrorflyUikit.getTheme?.textPrimaryColor,))),
                 const SizedBox(width: 1.0,),
-                Material(child: IconButton(onPressed: ()=>controller.addTransition(CropImageData(angle: pi / 4)), icon: const Icon(Icons.rotate_right))),
+                Material(color: MirrorflyUikit.getTheme?.secondaryColor,child: IconButton(onPressed: ()=>controller.addTransition(CropImageData(angle: pi / 4)), icon: Icon(Icons.rotate_right, color: MirrorflyUikit.getTheme?.textPrimaryColor,))),
                 const SizedBox(width: 1.0,),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () async {
                       Helper.showLoading(message: "Image Cropping...", buildContext: context);
                       await controller.onCropImage().then((image){
-                        Helper.hideLoading();
-                        Get.back(result: image);
+                        Helper.hideLoading(context: context);
+                        // Get.back(result: image);
+                        Navigator.pop(context, image);
                       });
 
                     },
-                    style: ElevatedButton.styleFrom(backgroundColor: MaterialStateColor.resolveWith((states) => Colors.white),shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
-                    child: const Text("SAVE",style: TextStyle(color: Colors.black,fontSize:16.0),),
+                    style: ElevatedButton.styleFrom(backgroundColor: MirrorflyUikit.getTheme?.secondaryColor, shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
+                    child: Text("SAVE",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor,fontSize:16.0),),
                   ),
                 ),
               ],

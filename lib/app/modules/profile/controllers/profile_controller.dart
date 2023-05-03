@@ -102,7 +102,7 @@ class ProfileController extends GetxController {
         toToast("Enter Profile Status");
       } else {
         loading.value = true;
-        showLoader();
+        showLoader(context);
         if (imagePath.value.isNotEmpty) {
           debugPrint("profile image update");
           updateProfileImage(path: imagePath.value, update: true, context: context);
@@ -120,7 +120,7 @@ class ProfileController extends GetxController {
                 .then((value) {
               mirrorFlyLog("updateMyProfile", value);
               loading.value = false;
-              hideLoader();
+              hideLoader(context);
               if (value != null) {
                 debugPrint(value);
                 var data = profileUpdateFromJson(value);
@@ -154,13 +154,13 @@ class ProfileController extends GetxController {
               }
             }).catchError((error) {
               loading.value = false;
-              hideLoader();
+              hideLoader(context);
               debugPrint("issue===> $error");
               toToast(error.toString());
             });
           } else {
             loading(false);
-            hideLoader();
+            hideLoader(context);
             toToast(Constants.noInternetConnection);
           }
         }
@@ -173,7 +173,7 @@ class ProfileController extends GetxController {
       loading.value = true;
 
       // if(checkFileUploadSize(path, Constants.mImage)) {
-        showLoader();
+        showLoader(context);
         Mirrorfly.updateMyProfileImage(path).then((value) {
           mirrorFlyLog("updateMyProfileImage", value);
           loading.value = false;
@@ -181,14 +181,14 @@ class ProfileController extends GetxController {
           imagePath.value = Constants.emptyString;
           userImgUrl.value = data['data']['image'];
           SessionManagement.setUserImage(data['data']['image'].toString());
-          hideLoader();
+          hideLoader(context);
           if (update) {
             save(context: context);
           }
         }).catchError((onError) {
           debugPrint("Profile Update on error--> ${onError.toString()}");
           loading.value = false;
-          hideLoader();
+          hideLoader(context);
         });
       // }else{
       //   toToast("Image Size exceeds 10MB");
@@ -201,11 +201,11 @@ class ProfileController extends GetxController {
 
   removeProfileImage(BuildContext context) async {
     if(await AppUtils.isNetConnected()) {
-      showLoader();
+      showLoader(context);
       loading.value = true;
       Mirrorfly.removeProfileImage().then((value) {
         loading.value = false;
-        hideLoader();
+        hideLoader(context);
         if (value != null) {
           SessionManagement.setUserImage(Constants.emptyString);
           isImageSelected.value = false;
@@ -220,7 +220,7 @@ class ProfileController extends GetxController {
         }
       }).catchError((onError) {
         loading.value = false;
-        hideLoader();
+        hideLoader(context);
       });
     }else{
       toToast(Constants.noInternetConnection);
@@ -321,9 +321,29 @@ class ProfileController extends GetxController {
       if (result != null) {
         if(checkFileUploadSize(result.files.single.path!, Constants.mImage)) {
           isImageSelected.value = true;
-          Get.to(CropImage(
+          // Get.to(CropImage(
+          //   imageFile: File(result.files.single.path!),
+          // ))?.then((value) {
+          //   value as MemoryImage;
+          //   imageBytes = value.bytes;
+          //   var name = "${DateTime
+          //       .now()
+          //       .millisecondsSinceEpoch}.jpg";
+          //   writeImageTemp(value.bytes, name).then((value) {
+          //     if (from.value == Routes.login) {
+          //       imagePath(value.path);
+          //       changed(true);
+          //       update();
+          //     } else {
+          //       imagePath(value.path);
+          //       changed(true);
+          //       updateProfileImage(path: value.path, update: true, context: context);
+          //     }
+          //   });
+          // });
+          Navigator.push(context, MaterialPageRoute(builder: (con)=> CropImage(
             imageFile: File(result.files.single.path!),
-          ))?.then((value) {
+          ))).then((value) {
             value as MemoryImage;
             imageBytes = value.bytes;
             var name = "${DateTime
@@ -341,6 +361,7 @@ class ProfileController extends GetxController {
               }
             });
           });
+
         }else{
           toToast("Please select Image less than 10MB");
         }
@@ -360,16 +381,36 @@ class ProfileController extends GetxController {
           source: ImageSource.camera);
       if (photo != null) {
         isImageSelected.value = true;
-        Get.to(CropImage(
+        // Get.to(CropImage(
+        //   imageFile: File(photo.path),
+        // ))?.then((value) {
+        //   value as MemoryImage;
+        //   imageBytes = value.bytes;
+        //   var name = "${DateTime.now().millisecondsSinceEpoch}.jpg";
+        //   writeImageTemp(value.bytes, name).then((value) {
+        //     if (from.value == Routes.login) {
+        //       imagePath(value.path);
+        //       changed(true);
+        //     } else {
+        //       imagePath(value.path);
+        //       changed(true);
+        //       updateProfileImage(path: value.path, update: true, context: context);
+        //     }
+        //   });
+        // });
+        Navigator.push(context, MaterialPageRoute(builder: (con)=> CropImage(
           imageFile: File(photo.path),
-        ))?.then((value) {
+        ))).then((value) {
           value as MemoryImage;
           imageBytes = value.bytes;
-          var name = "${DateTime.now().millisecondsSinceEpoch}.jpg";
+          var name = "${DateTime
+              .now()
+              .millisecondsSinceEpoch}.jpg";
           writeImageTemp(value.bytes, name).then((value) {
             if (from.value == Routes.login) {
               imagePath(value.path);
               changed(true);
+              update();
             } else {
               imagePath(value.path);
               changed(true);
@@ -386,13 +427,14 @@ class ProfileController extends GetxController {
     }
   }
 
-  void showLoader() {
-    Helper.progressLoading();
+  void showLoader(BuildContext context) {
+    Helper.progressLoading(context: context);
   }
 
   /// To hide loader
-  void hideLoader() {
-    Helper.hideLoading();
+  void hideLoader(BuildContext context) {
+    // Helper.hideLoading();
+    Navigator.pop(context);
   }
 
   nameChanges(String text) {

@@ -90,7 +90,7 @@ class MediaPreviewController extends FullLifeCycleController with FullLifeCycleM
         i++;
       }
     } finally {
-      Platform.isIOS ? Helper.hideLoading() : null;
+      Platform.isIOS ? Helper.hideLoading(context: context) : null;
       if(previousRoute==Routes.galleryPicker){
         Get.back();
       }

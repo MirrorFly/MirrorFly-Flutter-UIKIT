@@ -72,12 +72,12 @@ class ScannerController extends GetxController {
     }
   }
 
-  logoutWebUser() async {
+  logoutWebUser(BuildContext context) async {
     if(await AppUtils.isNetConnected()) {
-      Helper.progressLoading();
+      Helper.progressLoading(context: context);
       Mirrorfly.webLoginDetailsCleared();
       Mirrorfly.logoutWebUser(loginQr).then((value) {
-        Helper.hideLoading();
+        Helper.hideLoading(context: context);
         if (value != null && value) {
           SessionManagement.setWebChatLogin(false);
           Get.back();
@@ -147,7 +147,7 @@ class ScannerController extends GetxController {
       TextButton(
           onPressed: () {
             Get.back();
-            logoutWebUser();
+            logoutWebUser(context);
           },
           child: const Text("YES")),
     ], context: context);

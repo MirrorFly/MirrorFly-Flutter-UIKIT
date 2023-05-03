@@ -124,12 +124,12 @@ class ArchivedChatListController extends GetxController {
     }
   }
 
-  toChatPage(String jid) async {
+  toChatPage(String jid, BuildContext context) async {
     if (jid.isNotEmpty) {
       // Helper.progressLoading();
       await Mirrorfly.getProfileDetails(jid, false).then((value) {
         if (value != null) {
-          Helper.hideLoading();
+          Helper.hideLoading(context: context);
           var profile = profiledata(value.toString());
           Get.toNamed(Routes.chat, arguments: profile);
         }

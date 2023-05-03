@@ -150,9 +150,9 @@ class BusyStatusController extends FullLifeCycleController with FullLifeCycleMix
                   item.id!, item.status!, item.isCurrentStatus!)
                   .then((value) {
                     busyStatusList.remove(item);
-                Helper.hideLoading();
+                Helper.hideLoading(context: context);
               }).catchError((error) {
-                Helper.hideLoading();
+                Helper.hideLoading(context: context);
                 toToast("Unable to delete the Busy Status");
               });
             } else {

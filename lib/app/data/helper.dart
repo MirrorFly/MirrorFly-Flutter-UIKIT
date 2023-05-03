@@ -24,77 +24,87 @@ import '../model/user_list_model.dart';
 import 'apputils.dart';
 
 class Helper {
-  static void showLoading({String? message, bool dismiss = false, required BuildContext buildContext}) {
+  static void showLoading(
+      {String? message,
+      bool dismiss = false,
+      required BuildContext buildContext}) {
     showDialog(
       barrierDismissible: false,
-      context: buildContext, builder: (BuildContext context) { return Dialog(
-      child: WillPopScope(
-        onWillPop: () async {
-          return Future.value(dismiss);
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const CircularProgressIndicator(),
-              const SizedBox(width: 16),
-              Text(message ?? 'Loading...'),
-            ],
-          ),
-        ),
-      ),
-    ); },
-    );
-  }
-
-  static void progressLoading({bool dismiss = false}) {
-    Get.dialog(
-        AlertDialog(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          content: WillPopScope(
-            onWillPop: () async => Future.value(dismiss),
-            child: const SizedBox(
-              width: 60,
-              height: 60,
-              child: Center(
-                child: CircularProgressIndicator(),
+      context: buildContext,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: WillPopScope(
+            onWillPop: () async {
+              return Future.value(dismiss);
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const CircularProgressIndicator(),
+                  const SizedBox(width: 16),
+                  Text(message ?? 'Loading...'),
+                ],
               ),
             ),
           ),
-        ),
-        barrierDismissible: dismiss,
-        barrierColor: Colors.transparent);
+        );
+      },
+    );
   }
 
-  static void showAlert({String? title,
-    required String message,
-    List<Widget>? actions,
-    Widget? content, required BuildContext context}) {
+  static void progressLoading({bool dismiss = false, required BuildContext context}) {
     showDialog(
-       context: context, builder: (BuildContext context) {
-         return AlertDialog(
-           title: title != null
-               ? Text(
-             title,
-             style: const TextStyle(fontSize: 17),
-           )
-               : const SizedBox.shrink(),
-           contentPadding: title != null
-               ? const EdgeInsets.only(top: 15, right: 25, left: 25, bottom: 0)
-               : const EdgeInsets.only(top: 0, right: 25, left: 25, bottom: 5),
-           content: content ??
-               Text(
-                 message,
-                 style: const TextStyle(
-                     color: textHintColor, fontWeight: FontWeight.normal),
-               ),
-           contentTextStyle:
-           const TextStyle(color: textHintColor, fontWeight: FontWeight.w500),
-           actions: actions,
-         );
-    },
+
+        barrierDismissible: dismiss,
+        barrierColor: Colors.transparent, context: context, builder: (BuildContext context) { return AlertDialog(
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      content: WillPopScope(
+        onWillPop: () async => Future.value(dismiss),
+        child: const SizedBox(
+          width: 60,
+          height: 60,
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      ),
+    ); });
+  }
+
+  static void showAlert(
+      {String? title,
+      required String message,
+      List<Widget>? actions,
+      Widget? content,
+      required BuildContext context}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: MirrorflyUikit.theme == "dark" ? iconColor : Colors.white,
+          title: title != null
+              ? Text(
+                  title,
+                  style: TextStyle(fontSize: 17, color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                )
+              : const SizedBox.shrink(),
+          contentPadding: title != null
+              ? const EdgeInsets.only(top: 15, right: 25, left: 25, bottom: 0)
+              : const EdgeInsets.only(top: 0, right: 25, left: 25, bottom: 5),
+          content: content ??
+              Text(
+                message,
+                style: TextStyle(
+                    color: MirrorflyUikit.getTheme?.textPrimaryColor, fontWeight: FontWeight.normal),
+              ),
+          contentTextStyle: TextStyle(
+              color: MirrorflyUikit.getTheme?.textPrimaryColor, fontWeight: FontWeight.w500),
+          actions: actions,
+        );
+      },
     );
   }
 
@@ -104,27 +114,32 @@ class Helper {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: actions,),
+          children: actions,
+        ),
       ),
     );
   }
 
-  static void showButtonAlert({List<Widget>? actions, required BuildContext context}) {
+  static void showButtonAlert(
+      {List<Widget>? actions, required BuildContext context}) {
     showDialog(
-      context: context, builder: (BuildContext context) {  return AlertDialog(
-      actions: actions,
-    );},
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          actions: actions,
+        );
+      },
     );
   }
 
 //hide loading
-  static void hideLoading() {
+  static void hideLoading({required BuildContext context}) {
     // if (Get.isDialogOpen!) {
     //   Get.back(
     //     canPop: true,
     //   );
     // }
-
+    Navigator.pop(context);
   }
 
   static String formatBytes(int bytes, int decimals) {
@@ -144,10 +159,10 @@ class Helper {
         .toStringAsFixed(2)
         .replaceFirst('.', ':')
         .padLeft(5, '0');*/
-    var seconds = ((duration.inSeconds % 60)).toStringAsFixed(0).padLeft(2,'0');
+    var seconds =
+        ((duration.inSeconds % 60)).toStringAsFixed(0).padLeft(2, '0');
     // debugPrint("return ")
-    return '${(duration.inMinutes).toStringAsFixed(0).padLeft(2,'0')}:$seconds';
-
+    return '${(duration.inMinutes).toStringAsFixed(0).padLeft(2, '0')}:$seconds';
   }
 
   static String getMapImageUri(double latitude, double longitude) {
@@ -169,7 +184,8 @@ class Helper {
     switch (messageType?.toUpperCase()) {
       case Constants.mImage:
         return SvgPicture.asset(
-          mImageIcon,package: package,
+          mImageIcon,
+          package: package,
           fit: BoxFit.contain,
           color: playIconColor,
         );
@@ -203,7 +219,8 @@ class Helper {
         );
       case Constants.mContact:
         return SvgPicture.asset(
-          mContactIcon,package: package,
+          mContactIcon,
+          package: package,
           fit: BoxFit.contain,
           color: playIconColor,
         );
@@ -256,8 +273,8 @@ bool checkFileUploadSize(String path, String mediaType) {
   if (mediaType == Constants.mImage && sizeInMb < 10) {
     return true;
   } else if ((mediaType == Constants.mAudio ||
-      mediaType == Constants.mVideo ||
-      mediaType == Constants.mDocument) &&
+          mediaType == Constants.mVideo ||
+          mediaType == Constants.mDocument) &&
       sizeInMb < 20) {
     return true;
   } else {
@@ -294,8 +311,7 @@ extension FileFormatter on num {
     if (this <= 0) return "0";
     final units = ["bytes", "KB", "MB", "GB", "TB"];
     int digitGroups = (log(this) / log(base)).round();
-    return "${NumberFormat("#,##0.#").format(
-        this / pow(base, digitGroups))} ${units[digitGroups]}";
+    return "${NumberFormat("#,##0.#").format(this / pow(base, digitGroups))} ${units[digitGroups]}";
   }
 }
 
@@ -369,12 +385,14 @@ extension MemberParsing on Member {
   }
 
   bool isUnknownContact() {
-    return !isDeletedContact() && !isItSavedContact() &&
+    return !isDeletedContact() &&
+        !isItSavedContact() &&
         !isGroupProfile.checkNull();
   }
 
   bool isEmailContact() =>
-      !isGroupProfile.checkNull() && isGroupInOfflineMode
+      !isGroupProfile.checkNull() &&
+      isGroupInOfflineMode
           .checkNull(); // for email contact isGroupInOfflineMode will be true
 }
 
@@ -384,7 +402,7 @@ extension MemberProfileParsing on MemberProfileDetails {
   }
 }
 
-Future<Profile> getProfileDetails(String jid,{bool server=false}) async {
+Future<Profile> getProfileDetails(String jid, {bool server = false}) async {
   var value = await Mirrorfly.getProfileDetails(jid.checkNull(), server);
   var profile = await compute(profiledata, value.toString());
   // var str = Profile.fromJson(json.decode(value.toString()));
@@ -414,14 +432,15 @@ extension ProfileParesing on Profile {
   }
 
   bool isUnknownContact() {
-    return !isDeletedContact() && !isItSavedContact() &&
+    return !isDeletedContact() &&
+        !isItSavedContact() &&
         !isGroupProfile.checkNull();
   }
 
   bool isEmailContact() =>
-      !isGroupProfile.checkNull() && isGroupInOfflineMode
+      !isGroupProfile.checkNull() &&
+      isGroupInOfflineMode
           .checkNull(); // for email contact isGroupInOfflineMode will be true
-
 }
 
 extension ChatmessageParsing on ChatMessageModel {
@@ -435,11 +454,10 @@ extension ChatmessageParsing on ChatMessageModel {
         (mediaChatMessage?.mediaUploadStatus == Constants.mediaUploaded);
   }
 
-  bool isMediaMessage() =>
-      (isAudioMessage() ||
-          isVideoMessage() ||
-          isImageMessage() ||
-          isFileMessage());
+  bool isMediaMessage() => (isAudioMessage() ||
+      isVideoMessage() ||
+      isImageMessage() ||
+      isFileMessage());
 
   bool isTextMessage() => messageType == Constants.mText;
 
@@ -451,8 +469,6 @@ extension ChatmessageParsing on ChatMessageModel {
 
   bool isFileMessage() => messageType == Constants.mDocument;
 
-
-
   bool isNotificationMessage() =>
       messageType.toUpperCase() == Constants.mNotification;
 }
@@ -462,8 +478,8 @@ extension RecentChatParsing on RecentChatData {
     return (isGroup.checkNull())
         ? Constants.typeGroupChat
         : (isBroadCast.checkNull())
-        ? Constants.typeBroadcastChat
-        : Constants.typeChat;
+            ? Constants.typeBroadcastChat
+            : Constants.typeChat;
   }
 
   bool isDeletedContact() {
@@ -479,7 +495,8 @@ extension RecentChatParsing on RecentChatData {
   }
 
   bool isEmailContact() =>
-      !isGroup.checkNull() && isGroupInOfflineMode
+      !isGroup.checkNull() &&
+      isGroupInOfflineMode
           .checkNull(); // for email contact isGroupInOfflineMode will be true
 }
 
@@ -487,10 +504,11 @@ String returnFormattedCount(int count) {
   return (count > 99) ? "99+" : count.toString();
 }
 
-InkWell listItem({Widget? leading,
-  required Widget title,
-  Widget? trailing,
-  required Function() onTap}) {
+InkWell listItem(
+    {Widget? leading,
+    required Widget title,
+    Widget? trailing,
+    required Function() onTap}) {
   return InkWell(
     onTap: onTap,
     child: Padding(
@@ -499,7 +517,7 @@ InkWell listItem({Widget? leading,
         children: [
           leading != null
               ? Padding(
-              padding: const EdgeInsets.only(right: 16.0), child: leading)
+                  padding: const EdgeInsets.only(right: 16.0), child: leading)
               : const SizedBox(),
           Expanded(
             child: title,
@@ -518,9 +536,7 @@ String getRecentChatTime(BuildContext context, int? epochTime) {
   //messageDate.time = convertedTime
   var hourTime = manipulateMessageTime(
       context, DateTime.fromMicrosecondsSinceEpoch(convertedTime));
-  var currentYear = DateTime
-      .now()
-      .year;
+  var currentYear = DateTime.now().year;
   var calendar = DateTime.fromMicrosecondsSinceEpoch(convertedTime);
   var time = (currentYear == calendar.year)
       ? DateFormat("dd-MMM").format(calendar)
@@ -528,14 +544,12 @@ String getRecentChatTime(BuildContext context, int? epochTime) {
   return (equalsWithYesterday(calendar, Constants.today))
       ? hourTime
       : (equalsWithYesterday(calendar, Constants.yesterday))
-      ? Constants.yesterdayUpper
-      : time;
+          ? Constants.yesterdayUpper
+          : time;
 }
 
 String manipulateMessageTime(BuildContext context, DateTime messageDate) {
-  var format = MediaQuery
-      .of(context)
-      .alwaysUse24HourFormat ? 24 : 12;
+  var format = MediaQuery.of(context).alwaysUse24HourFormat ? 24 : 12;
   calendar = messageDate;
   var hours = calendar.hour; //calendar[Calendar.HOUR]
   var dateHourFormat = setDateHourFormat(format, hours);
@@ -545,11 +559,11 @@ String manipulateMessageTime(BuildContext context, DateTime messageDate) {
 String setDateHourFormat(int format, int hours) {
   var dateHourFormat = (format == 12)
       ? (hours < 10)
-      ? "hh:mm aa"
-      : "h:mm aa"
+          ? "hh:mm aa"
+          : "h:mm aa"
       : (hours < 10)
-      ? "HH:mm"
-      : "H:mm";
+          ? "HH:mm"
+          : "H:mm";
   return dateHourFormat;
 }
 
@@ -558,11 +572,7 @@ bool equalsWithYesterday(DateTime srcDate, String day) {
     var messageDate = DateFormat('yyyy/MM/dd').format(srcDate);
     var yesterdayDate = DateFormat('yyyy/MM/dd').format(DateTime.now().subtract(
         const Duration(
-            days: 1,
-            hours: 0,
-            minutes: 0,
-            seconds: 0,
-            milliseconds: 0)));
+            days: 1, hours: 0, minutes: 0, seconds: 0, milliseconds: 0)));
     return yesterdayDate == messageDate;
   } else {
     return equalsWithToday(srcDate, day);
@@ -606,9 +616,9 @@ openDocument(String mediaLocalStoragePath) async {
   if (mediaLocalStoragePath.isNotEmpty) {
     final result = await OpenFile.open(mediaLocalStoragePath);
     debugPrint(result.message);
-    if(result.message.contains("file does not exist")){
+    if (result.message.contains("file does not exist")) {
       toToast("The Selected file Doesn't Exist or Unable to Open");
-    }else if(result.message.contains('No APP found to open this file')){
+    } else if (result.message.contains('No APP found to open this file')) {
       toToast('you may not have proper app to view this content');
     }
 
@@ -623,7 +633,6 @@ openDocument(String mediaLocalStoragePath) async {
         ),
       );
     });*/
-
   } else {
     debugPrint("media does not exist");
   }
@@ -719,14 +728,10 @@ String getName(Profile item) {
     /*return item.name.toString().checkNull().isEmpty
         ? item.nickName.toString()
         : item.name.toString();*/
-    return item.name
-        .checkNull()
-        .isEmpty
-        ? (item.nickName
-        .checkNull()
-        .isEmpty
-        ? item.mobileNumber.checkNull()
-        : item.nickName.checkNull())
+    return item.name.checkNull().isEmpty
+        ? (item.nickName.checkNull().isEmpty
+            ? item.mobileNumber.checkNull()
+            : item.nickName.checkNull())
         : item.name.checkNull();
   } else {
     if (item.jid.checkNull() == SessionManagement.getUserJID()) {
@@ -734,11 +739,11 @@ String getName(Profile item) {
     } else if (item.isDeletedContact()) {
       mirrorFlyLog('isDeletedContact', item.isDeletedContact().toString());
       return Constants.deletedUser;
-    } else if (item.isUnknownContact() || item.nickName
-        .checkNull()
-        .isEmpty) {
+    } else if (item.isUnknownContact() || item.nickName.checkNull().isEmpty) {
       mirrorFlyLog('isUnknownContact', item.isUnknownContact().toString());
-      return item.mobileNumber.checkNull().isNotEmpty ? item.mobileNumber.checkNull() : getMobileNumberFromJid(item.jid.checkNull());
+      return item.mobileNumber.checkNull().isNotEmpty
+          ? item.mobileNumber.checkNull()
+          : getMobileNumberFromJid(item.jid.checkNull());
     } else {
       mirrorFlyLog('nickName', item.nickName.toString());
       return item.nickName.checkNull();
@@ -765,9 +770,7 @@ String getRecentName(RecentChatData item) {
     /*return item.name.toString().checkNull().isEmpty
         ? item.nickName.toString()
         : item.name.toString();*/
-    return item.profileName
-        .checkNull()
-        .isEmpty
+    return item.profileName.checkNull().isEmpty
         ? item.nickName.checkNull()
         : item.profileName.checkNull();
   } else {
@@ -776,9 +779,7 @@ String getRecentName(RecentChatData item) {
     } else if (item.isDeletedContact()) {
       mirrorFlyLog('isDeletedContact', item.isDeletedContact().toString());
       return Constants.deletedUser;
-    } else if (item.isUnknownContact() || item.nickName
-        .checkNull()
-        .isEmpty) {
+    } else if (item.isUnknownContact() || item.nickName.checkNull().isEmpty) {
       mirrorFlyLog('isUnknownContact', item.jid.toString());
       return getMobileNumberFromJid(item.jid.checkNull());
     } else {
@@ -793,14 +794,10 @@ String getMemberName(Member item) {
     /*return item.name.toString().checkNull().isEmpty
         ? item.nickName.toString()
         : item.name.toString();*/
-    return item.name
-        .checkNull()
-        .isEmpty
-        ? (item.nickName
-        .checkNull()
-        .isEmpty
-        ? item.mobileNumber.checkNull()
-        : item.nickName.checkNull())
+    return item.name.checkNull().isEmpty
+        ? (item.nickName.checkNull().isEmpty
+            ? item.mobileNumber.checkNull()
+            : item.nickName.checkNull())
         : item.name.checkNull();
   } else {
     if (item.jid.checkNull() == SessionManagement.getUserJID()) {
@@ -808,11 +805,11 @@ String getMemberName(Member item) {
     } else if (item.isDeletedContact()) {
       mirrorFlyLog('isDeletedContact', item.isDeletedContact().toString());
       return Constants.deletedUser;
-    } else if (item.isUnknownContact() || item.nickName
-        .checkNull()
-        .isEmpty) {
+    } else if (item.isUnknownContact() || item.nickName.checkNull().isEmpty) {
       mirrorFlyLog('isUnknownContact', item.isUnknownContact().toString());
-      return item.mobileNumber.checkNull().isNotEmpty ? item.mobileNumber.checkNull() : getMobileNumberFromJid(item.jid.checkNull());
+      return item.mobileNumber.checkNull().isNotEmpty
+          ? item.mobileNumber.checkNull()
+          : getMobileNumberFromJid(item.jid.checkNull());
     } else {
       mirrorFlyLog('nickName', item.nickName.toString());
       return item.nickName.checkNull();
@@ -835,11 +832,12 @@ String getMemberName(Member item) {
 }
 
 bool isValidPhoneNumber(String s) {
-if (s.length > 13 || s.length < 6) return false;
-return hasMatch(s, r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$');
+  if (s.length > 13 || s.length < 6) return false;
+  return hasMatch(s, r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$');
 }
+
 bool hasMatch(String? value, String pattern) {
-return (value == null) ? false : RegExp(pattern).hasMatch(value);
+  return (value == null) ? false : RegExp(pattern).hasMatch(value);
 }
 
 String getMobileNumberFromJid(String jid) {
@@ -847,19 +845,20 @@ String getMobileNumberFromJid(String jid) {
   return str[0];
 }
 
-String convertSecondToLastSeen(String seconds){
-
-  var userLastSeenDate = DateTime.now().subtract(Duration(seconds: double.parse(seconds).toInt()));
+String convertSecondToLastSeen(String seconds) {
+  var userLastSeenDate =
+      DateTime.now().subtract(Duration(seconds: double.parse(seconds).toInt()));
 
   Duration diff = DateTime.now().difference(userLastSeenDate);
 
-  if(int.parse(DateFormat('yyyy').format(userLastSeenDate)) < int.parse(DateFormat('yyyy').format(DateTime.now()))){
+  if (int.parse(DateFormat('yyyy').format(userLastSeenDate)) <
+      int.parse(DateFormat('yyyy').format(DateTime.now()))) {
     return 'last seen on ${DateFormat('dd/mm/yyyy')}';
-  }else if(diff.inDays > 1){
+  } else if (diff.inDays > 1) {
     return 'last seen on ${DateFormat('dd MMM').format(userLastSeenDate)}';
-  }else if(diff.inDays == 1){
+  } else if (diff.inDays == 1) {
     return 'last seen on Yesterday';
-  } else if(diff.inHours >= 1 || diff.inMinutes >= 1 || diff.inSeconds >= 1){
+  } else if (diff.inHours >= 1 || diff.inMinutes >= 1 || diff.inSeconds >= 1) {
     return 'last seen at ${DateFormat('hh:mm a').format(userLastSeenDate)}';
   } else {
     return 'Online';
@@ -880,19 +879,20 @@ String getDisplayImage(RecentChatData recentChat) {
   return imageUrl;
 }
 
-void showQuickProfilePopup({required context, required Function() chatTap,
-  required Function() callTap, required Function() videoTap, required Function() infoTap, required Rx<
-      Profile> profile}) {
+void showQuickProfilePopup(
+    {required context,
+    required Function() chatTap,
+    required Function() callTap,
+    required Function() videoTap,
+    required Function() infoTap,
+    required Rx<Profile> profile}) {
   Get.dialog(
     Obx(() {
       return Dialog(
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(20.0))),
         child: SizedBox(
-          width: MediaQuery
-              .of(context)
-              .size
-              .width * 0.7,
+          width: MediaQuery.of(context).size.width * 0.7,
           height: 300,
           child: Column(
             children: [
@@ -900,11 +900,13 @@ void showQuickProfilePopup({required context, required Function() chatTap,
                 child: InkWell(
                   onTap: () {
                     mirrorFlyLog('image click', 'true');
-                    debugPrint("quick profile click--> ${profile.toJson().toString()}");
-                    if (profile.value.image!.isNotEmpty && !(profile.value
-                        .isBlockedMe.checkNull() || profile.value.isAdminBlocked
-                        .checkNull()) && !(//!profile.value.isItSavedContact.checkNull() || //This is commented because Android side received as true and iOS side false
-                        profile.value.isDeletedContact())) {
+                    debugPrint(
+                        "quick profile click--> ${profile.toJson().toString()}");
+                    if (profile.value.image!.isNotEmpty &&
+                        !(profile.value.isBlockedMe.checkNull() ||
+                            profile.value.isAdminBlocked.checkNull()) &&
+                        !( //!profile.value.isItSavedContact.checkNull() || //This is commented because Android side received as true and iOS side false
+                            profile.value.isDeletedContact())) {
                       Get.back();
                       Get.toNamed(Routes.imageView, arguments: {
                         'imageName': getName(profile.value),
@@ -921,43 +923,39 @@ void showQuickProfilePopup({required context, required Function() chatTap,
                               topRight: Radius.circular(20)),
                           child: ImageNetwork(
                             url: profile.value.image.toString(),
-                            width: MediaQuery
-                                .of(context)
-                                .size
-                                .width * 0.7,
+                            width: MediaQuery.of(context).size.width * 0.7,
                             height: 250,
                             clipOval: false,
                             errorWidget: profile.value.isGroupProfile!
                                 ? Image.asset(
-                              groupImg,package: package,
-                              height: 250,
-                              width: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .width * 0.72,
-                              fit: BoxFit.cover,
-                            )
+                                    groupImg,
+                                    package: package,
+                                    height: 250,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.72,
+                                    fit: BoxFit.cover,
+                                  )
                                 : ProfileTextImage(
-                              text: getName(profile.value),
-                              fontSize: 75,
-                              radius: 0,
-                            ),
+                                    text: getName(profile.value),
+                                    fontSize: 75,
+                                    radius: 0,
+                                  ),
                             isGroup: profile.value.isGroupProfile.checkNull(),
                             blocked: profile.value.isBlockedMe.checkNull() ||
                                 profile.value.isAdminBlocked.checkNull(),
-                            unknown: (!profile.value.isItSavedContact
-                                .checkNull() ||
-                                profile.value.isDeletedContact()),
-                          )
-                      ),
+                            unknown:
+                                (!profile.value.isItSavedContact.checkNull() ||
+                                    profile.value.isDeletedContact()),
+                          )),
                       Padding(
-                        padding:
-                        const EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                             vertical: 10.0, horizontal: 20),
                         child: Text(
                           profile.value.isGroupProfile!
                               ? profile.value.name.checkNull()
-                              : MirrorflyUikit.isTrialLicence ? profile.value.mobileNumber.checkNull() : profile.value.nickName.checkNull(),
+                              : MirrorflyUikit.isTrialLicence
+                                  ? profile.value.mobileNumber.checkNull()
+                                  : profile.value.nickName.checkNull(),
                           style: const TextStyle(color: Colors.white),
                         ),
                       ),
@@ -981,27 +979,31 @@ void showQuickProfilePopup({required context, required Function() chatTap,
                         ),
                       ),
                     ),
-                    !profile.value.isGroupProfile.checkNull() ? Expanded(
-                      child: InkWell(
-                        onTap: callTap,
-                        child: SvgPicture.asset(
-                          quickCall,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ) : const SizedBox.shrink(),
-                    !profile.value.isGroupProfile.checkNull() ? Expanded(
-                      child: InkWell(
-                        onTap: videoTap,
-                        child: SvgPicture.asset(
-                          quickVideo,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ) : const SizedBox.shrink(),
-
+                    !profile.value.isGroupProfile.checkNull()
+                        ? Expanded(
+                            child: InkWell(
+                              onTap: callTap,
+                              child: SvgPicture.asset(
+                                quickCall,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          )
+                        : const SizedBox.shrink(),
+                    !profile.value.isGroupProfile.checkNull()
+                        ? Expanded(
+                            child: InkWell(
+                              onTap: videoTap,
+                              child: SvgPicture.asset(
+                                quickVideo,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          )
+                        : const SizedBox.shrink(),
                     Expanded(
-                      child: InkWell(onTap: infoTap,
+                      child: InkWell(
+                        onTap: infoTap,
                         child: SvgPicture.asset(
                           quickInfo,
                           fit: BoxFit.contain,
@@ -1023,8 +1025,8 @@ String getDocAsset(String filename) {
   if (filename.isEmpty || !filename.contains(".")) {
     return "";
   }
-  debugPrint("helper document--> ${filename.toLowerCase().substring(
-      filename.lastIndexOf(".") + 1)}");
+  debugPrint(
+      "helper document--> ${filename.toLowerCase().substring(filename.lastIndexOf(".") + 1)}");
   switch (filename.toLowerCase().substring(filename.lastIndexOf(".") + 1)) {
     case "csv":
       return csvImage;
@@ -1054,6 +1056,7 @@ String getDocAsset(String filename) {
       return "";
   }
 }
+
 
 // ranges from 0.0 to 1.0
 
