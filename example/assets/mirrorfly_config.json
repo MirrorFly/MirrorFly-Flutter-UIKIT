@@ -9,7 +9,7 @@
         "enableMobileNumberLogin": true
       },
     "AppTheme": {
-        "theme": "light",
+        "theme": "dark",
         "customTheme": {
             "primaryColor": "0xff64DD17",
             "secondaryColor": "0xffE0E0E0",
