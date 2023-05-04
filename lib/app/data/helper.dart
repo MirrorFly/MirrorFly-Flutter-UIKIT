@@ -84,7 +84,7 @@ class Helper {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: MirrorflyUikit.theme == "dark" ? iconColor : Colors.white,
+          backgroundColor: MirrorflyUikit.theme == "dark" ? darkPopupColor : Colors.white,
           title: title != null
               ? Text(
                   title,

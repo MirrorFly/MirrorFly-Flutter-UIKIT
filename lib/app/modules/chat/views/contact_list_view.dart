@@ -60,22 +60,23 @@ class _ContactListViewState extends State<ContactListView> {
 
             cursorColor: MirrorflyUikit.getTheme?.primaryColor,
             focusNode: controller.searchFocus,
-                  style: TextStyle(fontSize: 16, color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                  style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
                   controller: controller.searchQuery,
                   autofocus: true,
                   decoration: InputDecoration(
                       hintText: "Search...", border: InputBorder.none, hintStyle: TextStyle(
                   color: MirrorflyUikit
-                      .getTheme?.colorOnAppbar)),
+                      .getTheme?.colorOnAppbar.withOpacity(0.5))),
                 )
               : controller.isForward.value
-                  ? const Text("Forward to...")
+                  ? Text("Forward to...", style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar))
                   : controller.isCreateGroup.value
-                      ? const Text(
+                      ? Text(
                           "Add Participants",
                           overflow: TextOverflow.fade,
+              style: TextStyle(fontSize: 16, color: MirrorflyUikit.getTheme?.colorOnAppbar)
                         )
-                      : const Text('Contacts'),
+                      : Text('Contacts', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar)),
           actions: [
             Visibility(
               visible: controller.progressSpinner.value,
@@ -119,7 +120,7 @@ class _ContactListViewState extends State<ContactListView> {
                     visibleWidget: IconButton(
                         onPressed: () {}, icon: Icon(Icons.settings, color: MirrorflyUikit.getTheme?.colorOnAppbar,)),
                     overflowWidget: InkWell(
-                      child: const Text("Settings"),
+                      child: Text("Settings", style: TextStyle(fontSize: 16, color: MirrorflyUikit.getTheme?.colorOnAppbar)),
                       onTap: () => Navigator.push(context, MaterialPageRoute(builder: (con)=> const SettingsView())),
                     ),
                     showAsAction: ShowAsAction.never,
@@ -132,7 +133,7 @@ class _ContactListViewState extends State<ContactListView> {
                     visibleWidget: IconButton(
                         onPressed: () {}, icon: const Icon(Icons.refresh)),
                     overflowWidget: InkWell(
-                      child: const Text("Refresh"),
+                      child: Text("Refresh", style: TextStyle(fontSize: 16, color: MirrorflyUikit.getTheme?.colorOnAppbar)),
                       onTap: (){
                         Navigator.pop(context);
                         controller.refreshContacts(true);
@@ -172,9 +173,9 @@ class _ContactListViewState extends State<ContactListView> {
                 children: [
                   Visibility(
                     visible: !controller.isPageLoading.value && controller.usersList.isEmpty,
-                      child: const Center(child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20.0),
-                        child: Text("No Contacts found"),
+                      child: Center(child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20.0),
+                        child: Text("No Contacts found", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                       ),)),
                   controller.isPageLoading.value
                       ? Center(
