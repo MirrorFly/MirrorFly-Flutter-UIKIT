@@ -47,7 +47,7 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
           body: Obx(() {
             return controller.starredChatList.isNotEmpty ?
             SingleChildScrollView(child: favouriteChatListView(controller.starredChatList)) :
-            controller.isListLoading.value ? const Center(child: CircularProgressIndicator(),) : Center(child: Padding(
+            controller.isListLoading.value ? Center(child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),) : Center(child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 30),
               child: Text(controller.isSearch.value ? "No result found" : "No Starred Messages Found", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),),
             ));

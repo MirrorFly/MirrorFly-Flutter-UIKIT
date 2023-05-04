@@ -66,13 +66,7 @@ import '../modules/video_preview/bindings/video_play_binding.dart';
 import '../modules/video_preview/bindings/video_preview_binding.dart';
 import '../modules/video_preview/views/video_player_view.dart';
 import '../modules/video_preview/views/video_preview_view.dart';
-import '../modules/view_all_media/bindings/view_all_media_binding.dart';
-import '../modules/view_all_media/views/view_all_media_view.dart';
-import '../modules/view_all_media_preview/bindings/view_all_media_preview_binding.dart';
-import '../modules/view_all_media_preview/views/view_all_media_preview_view.dart';
 
-// import '../modules/dashboard/bindings/recent_search_binding.dart';
-// import '../modules/dashboard/views/recent_search_view.dart';
 
 part 'app_routes.dart';
 
@@ -114,11 +108,11 @@ class AppPages {
       page: () => const GroupInfoView(),
       binding: GroupInfoBinding(),
     ),*/
-    GetPage(
+    /*GetPage(
       name: _Paths.viewMedia,
       page: () => const ViewAllMediaView(),
       binding: ViewAllMediaBinding(),
-    ),
+    ),*/
     /*GetPage(
       name: _Paths.recentSearch,
       page: () => const RecentSearchView(),
@@ -159,14 +153,18 @@ class AppPages {
       name: _Paths.chatSearch,
       page: () => const ChatSearchView(),
     ),
-    GetPage(
+    GetPage(/*GetPage(
+      name: _Paths.viewAllMediaPreview,
+      page: () => const ViewAllMediaPreviewView(),
+      binding: ViewAllMediaPreviewBinding(),
+    ),*/
       name: _Paths.locationSent,
       page: () => const LocationSentView(),
       binding: LocationBinding(),
     ),
     GetPage(
       name: _Paths.contacts,
-      page: () => ContactListView(),
+      page: () => const ContactListView(),
       binding: ContactListBinding(),
     ),
     GetPage(
@@ -181,7 +179,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.blockedList,
-      page: () => BlockedListView(),
+      page: () => const BlockedListView(),
       binding: BlockedListBinding(),
     ),
     GetPage(
@@ -301,10 +299,10 @@ class AppPages {
       page: () => const ContactSyncPage(),
       binding: ContactSyncBinding(),
     ),
-    GetPage(
+    /*GetPage(
       name: _Paths.viewAllMediaPreview,
       page: () => const ViewAllMediaPreviewView(),
       binding: ViewAllMediaPreviewBinding(),
-    ),
+    ),*/
   ];
 }

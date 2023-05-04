@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:mirrorfly_plugin/flychat.dart';
 import '../../../models.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
@@ -13,12 +12,13 @@ class ViewAllMediaPreviewController extends GetxController {
   late PageController pageViewController;
   var title = "Sent Media".obs;
 
-  @override
+  /*@override
   void onInit() {
-    super.onInit();
-    previewMediaList.addAll(Get.arguments['images']);
-    index(Get.arguments['index']);
-    pageViewController = PageController(initialPage: index.value, keepPage: false);
+    super.onInit();*/
+  void init(List<ChatMessageModel> images, int index){
+    previewMediaList.addAll(images);
+    this.index(index);
+    pageViewController = PageController(initialPage: this.index.value, keepPage: false);
   }
 
   shareMedia() {

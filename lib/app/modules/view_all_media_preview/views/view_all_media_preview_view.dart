@@ -5,27 +5,50 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/model/chat_message_model.dart';
 import 'package:photo_view/photo_view.dart';
 
+import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
 import '../controllers/view_all_media_preview_controller.dart';
 
-class ViewAllMediaPreviewView extends GetView<ViewAllMediaPreviewController> {
-  const ViewAllMediaPreviewView({Key? key}) : super(key: key);
+class ViewAllMediaPreviewView extends StatefulWidget {
+  const ViewAllMediaPreviewView( {Key? key,required this.images, required this.index,}) : super(key: key);
+  final List<ChatMessageModel> images;
+  final int index;
 
+  @override
+  State<ViewAllMediaPreviewView> createState() => _ViewAllMediaPreviewViewState();
+}
+
+class _ViewAllMediaPreviewViewState extends State<ViewAllMediaPreviewView> {
+  var controller = Get.put(ViewAllMediaPreviewController());
+  @override
+  void initState() {
+    controller.init(widget.images, widget.index);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
       appBar: AppBar(
+        backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
+        actionsIconTheme: IconThemeData(
+            color: MirrorflyUikit.getTheme?.colorOnAppbar ??
+                iconColor),
+        iconTheme: IconThemeData(
+            color: MirrorflyUikit.getTheme?.colorOnAppbar ??
+                iconColor),
         title: Obx(() {
-          return Text(controller.title.value);
+          return Text(controller.title.value,style: TextStyle(color: MirrorflyUikit
+              .getTheme?.colorOnAppbar ));
         }),
         centerTitle: false,
         actions: [
           IconButton(onPressed: () {
             controller.shareMedia();
-          }, icon: SvgPicture.asset(shareIcon,package: package,))
+          }, icon: SvgPicture.asset(shareIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar,))
         ],
       ),
       body: SafeArea(
@@ -52,13 +75,12 @@ class ViewAllMediaPreviewView extends GetView<ViewAllMediaPreviewController> {
                     backgroundDecoration: const BoxDecoration(
                         color: Colors.transparent),
                     loadingBuilder: (context, event) =>
-                    const Center(
-                      child: CircularProgressIndicator(),
+                    Center(
+                      child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
                     ),
                   ),
                 );
               }
-
               /// show video
               else {
                 return AspectRatio(
@@ -86,6 +108,4 @@ class ViewAllMediaPreviewView extends GetView<ViewAllMediaPreviewController> {
       ),
     );
   }
-
-
 }

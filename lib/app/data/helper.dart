@@ -42,7 +42,7 @@ class Helper {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const CircularProgressIndicator(),
+                  CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
                   const SizedBox(width: 16),
                   Text(message ?? 'Loading...'),
                 ],
@@ -63,11 +63,11 @@ class Helper {
       backgroundColor: Colors.transparent,
       content: WillPopScope(
         onWillPop: () async => Future.value(dismiss),
-        child: const SizedBox(
+        child: SizedBox(
           width: 60,
           height: 60,
           child: Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
           ),
         ),
       ),
@@ -98,10 +98,10 @@ class Helper {
               Text(
                 message,
                 style: TextStyle(
-                    color: MirrorflyUikit.getTheme?.textPrimaryColor, fontWeight: FontWeight.normal),
+                    color: MirrorflyUikit.getTheme?.textSecondaryColor, fontWeight: FontWeight.normal),
               ),
           contentTextStyle: TextStyle(
-              color: MirrorflyUikit.getTheme?.textPrimaryColor, fontWeight: FontWeight.w500),
+              color: MirrorflyUikit.getTheme?.textSecondaryColor, fontWeight: FontWeight.w500),
           actions: actions,
         );
       },

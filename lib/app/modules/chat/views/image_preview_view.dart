@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/controllers/image_preview_controller.dart';
 import 'package:photo_view/photo_view.dart';
 
+import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
 
 
@@ -88,11 +89,11 @@ class ImagePreviewView extends GetView<ImagePreviewController> {
                       color: Colors.transparent
                     ),
                     loadingBuilder: (context, event) =>
-                        const Center(
-                          child: CircularProgressIndicator(),
+                        Center(
+                          child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
                         ),
                   ),
-                ) : const Center(child: CircularProgressIndicator());
+                ) : Center(child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,));
               }),
               Positioned(
                 bottom: 0,

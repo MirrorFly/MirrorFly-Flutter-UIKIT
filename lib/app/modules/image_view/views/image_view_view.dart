@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/main_controller.dart';
 import 'package:photo_view/photo_view.dart';
 
+import '../../../../mirrorfly_uikit_plugin.dart';
 import '../controllers/image_view_controller.dart';
 
 class ImageViewView extends StatefulWidget {
@@ -51,8 +52,8 @@ class _ImageViewViewState extends State<ImageViewView> {
                   backgroundDecoration: const BoxDecoration(
                     color: Colors.black,
                   ),
-                  loadingBuilder: (context, event) => const Center(
-                    child: CircularProgressIndicator(),
+                  loadingBuilder: (context, event) => Center(
+                    child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
                   ),
                 )
               : controller.imageUrl.value.isNotEmpty
@@ -69,8 +70,8 @@ class _ImageViewViewState extends State<ImageViewView> {
                       backgroundDecoration: const BoxDecoration(
                         color: Colors.black,
                       ),
-                      loadingBuilder: (context, event) => const Center(
-                        child: CircularProgressIndicator(),
+                      loadingBuilder: (context, event) => Center(
+                        child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
                       ),
                     )
                   : const Center(

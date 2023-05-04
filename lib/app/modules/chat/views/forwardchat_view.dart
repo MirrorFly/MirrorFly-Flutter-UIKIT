@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/controllers/forwardchat_controller.dart';
 
+import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
 import '../../../common/widgets.dart';
 import '../../dashboard/widgets.dart';
@@ -142,9 +143,9 @@ class ForwardChatView extends GetView<ForwardChatController> {
                         ),
                         Visibility(
                           visible: controller.searchLoading.value || controller.contactLoading.value,
-                          child: const Center(child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8.0),
-                            child: CircularProgressIndicator(),
+                          child: Center(child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
                           ),),
                         ),
                         /*Visibility(
@@ -164,8 +165,8 @@ class ForwardChatView extends GetView<ForwardChatController> {
                               physics: const NeverScrollableScrollPhysics(),
                               itemBuilder: (context, index) {
                                 if (index >= controller.userList.length) {
-                                  return const Center(
-                                      child: CircularProgressIndicator());
+                                  return Center(
+                                      child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,));
                                 } else {
                                   var item = controller.userList[index];
                                   return Opacity(

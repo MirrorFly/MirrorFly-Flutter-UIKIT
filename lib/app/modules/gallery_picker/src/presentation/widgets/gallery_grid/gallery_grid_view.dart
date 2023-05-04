@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../../../../mirrorfly_uikit_plugin.dart';
 import 'thumbnail_widget.dart';
 import 'package:photo_manager/photo_manager.dart';
 
@@ -130,8 +131,8 @@ class GalleryGridViewState extends State<GalleryGridView> {
                         itemCount: widget.provider.assetCount,
                         addRepaintBoundaries: true,
                       )
-                    : const Center(
-                        child: CircularProgressIndicator(),
+                    : Center(
+                        child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
                       ),
               ),
             ),

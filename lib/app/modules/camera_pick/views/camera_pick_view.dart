@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../../../mirrorfly_uikit_plugin.dart';
 import '../controllers/camera_pick_controller.dart';
 
 class CameraPickView extends GetView<CameraPickController> {
@@ -82,8 +83,8 @@ class CameraPickView extends GetView<CameraPickController> {
                     ),
 
                   ]
-                ) : const Center(
-                  child: CircularProgressIndicator(),
+                ) : Center(
+                  child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
                 );
               }),
 

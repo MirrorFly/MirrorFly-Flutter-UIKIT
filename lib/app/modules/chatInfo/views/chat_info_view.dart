@@ -40,11 +40,7 @@ class _ChatInfoViewState extends State<ChatInfoView> {
       body: NestedScrollView(
         controller: controller.scrollController,
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          controller.silverBarHeight =
-              MediaQuery
-                  .of(context)
-                  .size
-                  .height * 0.45;
+          controller.silverBarHeight =Get.height * 0.45;
           return <Widget>[
             Obx(() {
               return SliverAppBar(
@@ -78,11 +74,7 @@ class _ChatInfoViewState extends State<ChatInfoView> {
                 ),
                 title: Visibility(
                   visible: !controller.isSliverAppBarExpanded,
-                  child: Text(getName(controller.profile),/*controller.profile.name
-                      .checkNull()
-                      .isEmpty
-                      ? controller.profile.nickName.checkNull()
-                      : controller.profile.name.checkNull(),*/
+                  child: Text(getName(controller.profile),
                       style: TextStyle(
                         color: MirrorflyUikit
                             .getTheme?.colorOnAppbar ??
@@ -94,25 +86,11 @@ class _ChatInfoViewState extends State<ChatInfoView> {
                   centerTitle: false,
                   background: ImageNetwork(
                     url: controller.profile.image.checkNull(),
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width,
-                    height: MediaQuery
-                        .of(context)
-                        .size
-                        .height * 0.45,
+                    width: Get.width,
+                    height: Get.height * 0.45,
                     clipOval: false,
                     errorWidget: ProfileTextImage(
-                      text: getName(controller.profile),/*controller.profile.name
-                          .checkNull()
-                          .isEmpty
-                          ? controller.profile.nickName
-                          .checkNull()
-                          .isEmpty
-                          ? controller.profile.mobileNumber.checkNull()
-                          : controller.profile.nickName.checkNull()
-                          : controller.profile.name.checkNull(),*/
+                      text: getName(controller.profile),
                       radius: 0,
                       fontSize: 120,
                     ),
@@ -123,15 +101,6 @@ class _ChatInfoViewState extends State<ChatInfoView> {
                           .checkNull() || controller.profile.isDeletedContact())) {
                         Get.toNamed(Routes.imageView, arguments: {
                           'imageName': getName(controller.profile),
-                          /*'imageName': controller.profile.name
-                                              .checkNull()
-                                              .isEmpty
-                                              ? controller.profile.nickName
-                                              .checkNull()
-                                              .isEmpty
-                                              ? controller.profile.mobileNumber.checkNull()
-                                              : controller.profile.nickName.checkNull()
-                                              : controller.profile.name.checkNull(),*/
                           'imageUrl': controller.profile.image.checkNull()
                         });
                       }
@@ -155,15 +124,12 @@ class _ChatInfoViewState extends State<ChatInfoView> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(getName(controller.profile),/*controller.profile.name
-                              .checkNull()
-                              .isEmpty
-                              ? controller.profile.nickName.checkNull()
-                              : controller.profile.name.checkNull(),*/
+                          Text(getName(controller.profile),
                               style: TextStyle(
                                 color: controller.isSliverAppBarExpanded
                                     ? Colors.white
-                                    : Colors.black,
+                                    : MirrorflyUikit
+                                    .getTheme?.colorOnAppbar ?? Colors.black,
                                 fontSize: 18.0,
                               )),
                           Obx(() {
@@ -197,22 +163,22 @@ class _ChatInfoViewState extends State<ChatInfoView> {
             }),
             Obx(() {
               return listItem(
-                title: const Text("Mute Notification",
+                title: Text("Mute Notification",
                     style: TextStyle(
-                        color: Colors.black,
+                        color: MirrorflyUikit.getTheme?.textPrimaryColor,
                         fontSize: 14,
-                        fontWeight: FontWeight.w500)),
+                        fontWeight: FontWeight.w600)),
                 trailing: FlutterSwitch(
                     width: 40.0,
                     height: 20.0,
                     valueFontSize: 12.0,
                     toggleSize: 12.0,
-                    activeColor: Colors.white,
-                    activeToggleColor: Colors.blue,
+                    activeColor: MirrorflyUikit.getTheme!.primaryColor,//Colors.white,
+                    activeToggleColor: MirrorflyUikit.getTheme?.colorOnPrimary, //Colors.blue,
                     inactiveToggleColor: Colors.grey,
                     inactiveColor: Colors.white,
                     switchBorder: Border.all(
-                        color: controller.mute.value ? Colors.blue : Colors
+                        color: controller.mute.value ? MirrorflyUikit.getTheme!.colorOnPrimary : Colors
                             .grey,
                         width: 1),
                     value: controller.mute.value,
@@ -228,10 +194,10 @@ class _ChatInfoViewState extends State<ChatInfoView> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Padding(
-                  padding: EdgeInsets.all(16.0),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
                   child: Text("Email", style: TextStyle(
-                      color: Colors.black,
+                      color: MirrorflyUikit.getTheme?.textPrimaryColor,
                       fontSize: 14,
                       fontWeight: FontWeight.w500)),
                 ),
@@ -239,13 +205,13 @@ class _ChatInfoViewState extends State<ChatInfoView> {
                   padding: const EdgeInsets.only(left: 15.0, bottom: 16),
                   child: Row(
                     children: [
-                      SvgPicture.asset(emailIcon,package: package,),
+                      SvgPicture.asset(emailIcon,package: package,color: MirrorflyUikit.getTheme?.textSecondaryColor,),
                       const SizedBox(width: 10,),
                       Obx(() {
                         return Text(controller.profile.email.checkNull(),
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 13,
-                                color: textColor,
+                                color: MirrorflyUikit.getTheme?.textSecondaryColor,//textColor,
                                 fontWeight: FontWeight.w500));
                       }),
                     ],
@@ -256,10 +222,10 @@ class _ChatInfoViewState extends State<ChatInfoView> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Padding(
-                  padding: EdgeInsets.all(16.0),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
                   child: Text("Mobile Number", style: TextStyle(
-                      color: Colors.black,
+                      color: MirrorflyUikit.getTheme?.textPrimaryColor,//Colors.black,
                       fontSize: 14,
                       fontWeight: FontWeight.w500)),
                 ),
@@ -267,13 +233,13 @@ class _ChatInfoViewState extends State<ChatInfoView> {
                   padding: const EdgeInsets.only(left: 15.0, bottom: 16),
                   child: Row(
                     children: [
-                      SvgPicture.asset(phoneIcon,package: package,),
+                      SvgPicture.asset(phoneIcon,package: package,color: MirrorflyUikit.getTheme?.textSecondaryColor,),
                       const SizedBox(width: 10,),
                       Obx(() {
                         return Text(controller.profile.mobileNumber.checkNull(),
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 13,
-                                color: textColor,
+                                color: MirrorflyUikit.getTheme?.textSecondaryColor,//textColor,
                                 fontWeight: FontWeight.w500));
                       }),
                     ],
@@ -284,10 +250,10 @@ class _ChatInfoViewState extends State<ChatInfoView> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Padding(
-                  padding: EdgeInsets.all(16.0),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
                   child: Text("Status", style: TextStyle(
-                      color: Colors.black,
+                      color: MirrorflyUikit.getTheme?.textPrimaryColor, //Colors.black,
                       fontSize: 14,
                       fontWeight: FontWeight.w500)),
                 ),
@@ -295,13 +261,13 @@ class _ChatInfoViewState extends State<ChatInfoView> {
                   padding: const EdgeInsets.only(left: 15.0, bottom: 16),
                   child: Row(
                     children: [
-                      SvgPicture.asset(statusIcon,package: package,),
+                      SvgPicture.asset(statusIcon,package: package,color: MirrorflyUikit.getTheme?.textSecondaryColor,),
                       const SizedBox(width: 10,),
                       Obx(() {
                         return Text(controller.profile.status.checkNull(),
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 13,
-                                color: textColor,
+                                color: MirrorflyUikit.getTheme?.textSecondaryColor,//textColor,
                                 fontWeight: FontWeight.w500));
                       }),
                     ],
@@ -310,20 +276,20 @@ class _ChatInfoViewState extends State<ChatInfoView> {
               ],
             ),
             listItem(
-                leading: SvgPicture.asset(imageOutline,package: package,),
-                title: const Text("View All Media",
+                leading: SvgPicture.asset(imageOutline,package: package,color: MirrorflyUikit.getTheme?.textPrimaryColor,),
+                title: Text("View All Media",
                     style: TextStyle(
-                        color: Colors.black,
+                        color: MirrorflyUikit.getTheme?.textPrimaryColor,//Colors.black,
                         fontSize: 14,
                         fontWeight: FontWeight.w500)),
-                trailing: const Icon(Icons.keyboard_arrow_right),
+                trailing: Icon(Icons.keyboard_arrow_right,color: MirrorflyUikit.getTheme?.textPrimaryColor,),
                 onTap: () =>
                 {
-                  controller.gotoViewAllMedia()
+                  controller.gotoViewAllMedia(context)
                 } //controller.gotoViewAllMedia(),
             ),
             listItem(
-                leading: SvgPicture.asset(reportUser,package: package,),
+                leading: SvgPicture.asset(reportUser,package: package,color: Colors.red,),
                 title: const Text("Report",
                     style: TextStyle(
                         color: Colors.red,

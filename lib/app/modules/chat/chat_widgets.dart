@@ -1611,7 +1611,7 @@ class ImageMessageView extends StatelessWidget {
                   return child;
                 });
               }
-              return const Center(child: CircularProgressIndicator());
+              return Center(child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,));
             },
             width: screenWidth * 0.60,
             height: screenHeight * 0.4,

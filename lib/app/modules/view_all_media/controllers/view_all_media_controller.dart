@@ -8,10 +8,10 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/view_all_media_preview/views/view_all_media_preview_view.dart';
 import '../../../models.dart';
 
 import '../../../common/constants.dart';
-import '../../../routes/app_pages.dart';
 import '../../chat/controllers/chat_controller.dart';
 
 
@@ -28,9 +28,9 @@ class ViewAllMediaController extends GetxController {
   set linklist(Map<String, List<MessageItem>> value) => _linklist.value = value;
   Map<String, List<MessageItem>> get linklistdata => _linklist;
 
-  var name = Get.arguments["name"] as String;
-  var jid = Get.arguments["jid"] as String;
-  var isGroup = Get.arguments["isgroup"] as bool;
+  var name = "";
+  var jid = "";
+  var isGroup = false;
 
   var imageCount = 0.obs;
   var audioCount = 0.obs;
@@ -41,9 +41,14 @@ class ViewAllMediaController extends GetxController {
   var newLinkMessages = List<ChatMessageModel>.empty(growable: true).obs;
 
 
-  @override
-  void onInit() {
-    super.onInit();
+  // @override
+  // void onInit() {
+  //   super.onInit();
+  void init(String name,String jid,bool isGroup){
+    this.name=name;
+    this.jid=jid;
+    this.isGroup=isGroup;
+
     getMediaMessages();
     getDocsMessages();
     getLinkMessages();
@@ -100,7 +105,7 @@ class ViewAllMediaController extends GetxController {
         mirrorFlyLog("get doc before json",value);
         var data = chatMessageModelFromJson(value);
         documentCount(data.length);
-        mirrorFlyLog("getDocsMessagess",json.encode(data));
+        // mirrorFlyLog("getDocsMessagess",json.encode(data));
         if (data.isNotEmpty) {
           _docslist(await getMapGroupedMediaList(data, false));
         }
@@ -306,8 +311,9 @@ class ViewAllMediaController extends GetxController {
     openDocument(path);
   }
 
-  openImage(int gridIndex){
-    Get.toNamed(Routes.viewAllMediaPreview, arguments: {"images" : previewMediaList, "index": gridIndex});
+  openImage(BuildContext context,int gridIndex){
+    Navigator.push(context, MaterialPageRoute(builder: (con)=>ViewAllMediaPreviewView(images: previewMediaList,index : gridIndex)));
+    // Get.toNamed(Routes.viewAllMediaPreview, arguments: {"images" : previewMediaList, "index": gridIndex});
   }
 
 }

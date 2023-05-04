@@ -9,6 +9,7 @@ import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:photo_view/photo_view.dart';
 
+import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/widgets.dart';
 import '../controllers/media_preview_controller.dart';
 
@@ -150,8 +151,8 @@ class MediaPreviewView extends GetView<MediaPreviewController> {
                                       backgroundDecoration: const BoxDecoration(
                                           color: Colors.transparent),
                                       loadingBuilder: (context, event) =>
-                                          const Center(
-                                        child: CircularProgressIndicator(),
+                                          Center(
+                                        child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
                                       ),
                                     )
                                         // PhotoView.customChild(

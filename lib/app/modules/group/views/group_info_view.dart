@@ -179,7 +179,8 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                           imageEdit,package: package,
                           color: controller.isSliverAppBarExpanded
                               ? Colors.white
-                              : Colors.black,
+                              : MirrorflyUikit
+                              .getTheme?.colorOnAppbar ?? Colors.black,
                         ),
                         tooltip: 'Image edit',
                         onPressed: () {
@@ -200,23 +201,24 @@ class _GroupInfoViewState extends State<GroupInfoView> {
             child: ListView(
               children: <Widget>[
                 Obx(() {
-                  return ListItem(title: const Text("Mute Notification",
+                  return ListItem(title: Text("Mute Notification",
                       style: TextStyle(
-                          color: Colors.black,
+                          color: MirrorflyUikit
+                              .getTheme?.textPrimaryColor,
                           fontSize: 14,
-                          fontWeight: FontWeight.w500)), trailing: FlutterSwitch(
+                          fontWeight: FontWeight.w600)), trailing: FlutterSwitch(
                     width: 40.0,
                     height: 20.0,
                     valueFontSize: 12.0,
                     toggleSize: 12.0,
-                    activeColor: Colors.white,
-                    activeToggleColor: Colors.blue,
+                    activeColor: MirrorflyUikit.getTheme!.primaryColor,//Colors.white,
+                    activeToggleColor: MirrorflyUikit.getTheme?.colorOnPrimary, //Colors.blue,
                     inactiveToggleColor: Colors.grey,
                     inactiveColor: Colors.white,
                     switchBorder: Border.all(
-                        color: controller.mute ? Colors.blue : Colors.grey,
-                        width: 1
-                    ),
+                        color: controller.mute ? MirrorflyUikit.getTheme!.colorOnPrimary : Colors
+                            .grey,
+                        width: 1),
                     value: controller.mute,
                     onToggle:  (value){
                       if(controller.isMemberOfGroup) {
@@ -259,17 +261,17 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                       });
                 }),
                 ListItem(
-                  leading: SvgPicture.asset(imageOutline,package: package,),
-                  title: const Text("View All Media",
+                  leading: SvgPicture.asset(imageOutline,package: package,color: MirrorflyUikit.getTheme?.textPrimaryColor,),
+                  title: Text("View All Media",
                       style: TextStyle(
-                          color: Colors.black,
+                          color: MirrorflyUikit.getTheme?.textPrimaryColor,
                           fontSize: 14,
                           fontWeight: FontWeight.w500)),
-                  trailing: const Icon(Icons.keyboard_arrow_right),
-                  onTap: ()=>controller.gotoViewAllMedia(),
+                  trailing: Icon(Icons.keyboard_arrow_right,color: MirrorflyUikit.getTheme?.textPrimaryColor,),
+                  onTap: ()=>controller.gotoViewAllMedia(context),
                 ),
                 ListItem(
-                  leading: SvgPicture.asset(reportGroup,package: package,),
+                  leading: SvgPicture.asset(reportGroup,package: package,color: Colors.red,),
                   title: const Text("Report Group",
                       style: TextStyle(
                           color: Colors.red,

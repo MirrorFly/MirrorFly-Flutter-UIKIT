@@ -6,27 +6,49 @@ import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/widgets.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 
+import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
 import '../controllers/view_all_media_controller.dart';
-import 'package:mirrorfly_plugin/flychat.dart';
 import '../../../models.dart';
 
-class ViewAllMediaView extends GetView<ViewAllMediaController> {
-  const ViewAllMediaView({Key? key}) : super(key: key);
+class ViewAllMediaView extends StatefulWidget {
+  const ViewAllMediaView({Key? key, required this.name, required this.jid, required this.isGroup}) : super(key: key);
+  final String name;
+  final String jid;
+  final bool isGroup;
+  @override
+  State<ViewAllMediaView> createState() => _ViewAllMediaViewState();
+}
 
+class _ViewAllMediaViewState extends State<ViewAllMediaView> {
+  var controller = Get.put(ViewAllMediaController());
+  @override
+  void initState() {
+    controller.init(widget.name,widget.jid,widget.isGroup);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+        backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
         appBar: AppBar(
+          backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
+          actionsIconTheme: IconThemeData(
+              color: MirrorflyUikit.getTheme?.colorOnAppbar ??
+                  iconColor),
+          iconTheme: IconThemeData(
+              color: MirrorflyUikit.getTheme?.colorOnAppbar ??
+                  iconColor),
           automaticallyImplyLeading: true,
-          title: Text(controller.name),
+          title: Text(widget.name,style: TextStyle(color: MirrorflyUikit
+              .getTheme?.colorOnAppbar ),),
           centerTitle: false,
           bottom: TabBar(
-              indicatorColor: buttonBgColor,
-              labelColor: buttonBgColor,
-              unselectedLabelColor: appbarTextColor,
+              indicatorColor: MirrorflyUikit.getTheme?.primaryColor,//buttonBgColor,
+              labelColor: MirrorflyUikit.getTheme?.primaryColor,//buttonBgColor,
+              unselectedLabelColor: MirrorflyUikit.getTheme?.colorOnAppbar,//appbarTextColor,
               indicatorWeight: 2,
               indicatorSize: TabBarIndicatorSize.tab,
               indicatorPadding: const EdgeInsets.symmetric(horizontal: 16),
@@ -56,38 +78,36 @@ class ViewAllMediaView extends GetView<ViewAllMediaController> {
                 ),
               ]),
         ),
-        body: TabBarView(children: [mediaView(), docsView(), linksView()]),
+        body: SafeArea(child: TabBarView(children: [mediaView(), docsView(), linksView()])),
       ),
     );
   }
 
   Widget mediaView() {
-    return SafeArea(
-      child: Obx(() {
-        return controller.medialistdata.isNotEmpty
-            ? SingleChildScrollView(
-              child: Column(
-                children: [
-                  ListView.builder(
-                    shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: controller.medialistdata.length,
-                      itemBuilder: (context, index) {
-                        var header = controller.medialistdata.keys.toList()[index];
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [headerItem(header), gridView(header)],
-                        );
-                      }),
-                  const SizedBox(height: 10,),
-                  Text("${controller.imageCount} Photos, ${controller.videoCount} Videos, ${controller.audioCount} Audios"),
-                ],
-              ),
-            )
-            : const Center(child: Text("No Media Found...!!!"));
-      }),
-    );
+    return Obx(() {
+      return controller.medialistdata.isNotEmpty
+          ? SingleChildScrollView(
+            child: Column(
+              children: [
+                ListView.builder(
+                  shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: controller.medialistdata.length,
+                    itemBuilder: (context, index) {
+                      var header = controller.medialistdata.keys.toList()[index];
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [headerItem(header), gridView(header)],
+                      );
+                    }),
+                const SizedBox(height: 10,),
+                Text("${controller.imageCount} Photos, ${controller.videoCount} Videos, ${controller.audioCount} Audios",style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor),),
+              ],
+            ),
+          )
+          : Center(child: Text("No Media Found...!!!",style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)));
+    });
   }
 
   Widget gridView(String header) {
@@ -110,10 +130,10 @@ class ViewAllMediaView extends GetView<ViewAllMediaController> {
       padding: const EdgeInsets.symmetric(horizontal: 13.0, vertical: 8.0),
       child: Text(
         header,
-        style: const TextStyle(
+        style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: Color(0xff323232)),
+            color: MirrorflyUikit.getTheme?.textPrimaryColor),
       ),
     );
   }
@@ -123,7 +143,7 @@ class ViewAllMediaView extends GetView<ViewAllMediaController> {
       child: Container(
           margin: const EdgeInsets.only(right: 3),
           color: item.isAudioMessage()
-              ? const Color(0xff97A5C7)
+              ? darken(MirrorflyUikit.getTheme!.primaryColor,0.3)//const Color(0xff97A5C7)
               : Colors.transparent,
           child: item.isAudioMessage()
               ? audioItem(item)
@@ -137,7 +157,7 @@ class ViewAllMediaView extends GetView<ViewAllMediaController> {
                       : const SizedBox()),
       onTap: () {
         if (item.isImageMessage() || item.isVideoMessage()) {
-          controller.openImage(gridIndex);
+          controller.openImage(context,gridIndex);
         } else if (item.isAudioMessage()) {
           controller.openFile(item.mediaChatMessage!.mediaLocalStoragePath);
         }
@@ -151,7 +171,7 @@ class ViewAllMediaView extends GetView<ViewAllMediaController> {
         controller.imageFromBase64String(
             item.mediaChatMessage!.mediaThumbImage, null, null),
         Center(
-          child: SvgPicture.asset(videoWhite,package: package,),
+          child: SvgPicture.asset(videoWhite,package: package,color: MirrorflyUikit.getTheme?.colorOnPrimary,),
         )
       ],
     );
@@ -160,20 +180,17 @@ class ViewAllMediaView extends GetView<ViewAllMediaController> {
   Widget audioItem(ChatMessageModel item) {
     return Center(
       child: SvgPicture.asset(
-          item.mediaChatMessage!.isAudioRecorded ? audioMic1 : audioWhite,package: package,),
+          item.mediaChatMessage!.isAudioRecorded ? audioMic1 : audioWhite,package: package,color: MirrorflyUikit.getTheme?.colorOnPrimary,),
     );
   }
 
   Widget docsView() {
-    return SafeArea(
-      child: Obx(() {
-        return controller.docslistdata.isNotEmpty
-            ? listView(controller.docslistdata, true)
-            : const Center(child: Text("No Docs Found...!!!"));
-      }),
-    );
+    return Obx(() {
+      return controller.docslistdata.isNotEmpty
+          ? listView(controller.docslistdata, true)
+          : Center(child: Text("No Docs Found...!!!",style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)));
+    });
   }
-
 
   Widget listView(Map<String, List<MessageItem>> list, bool doc) {
     return SingleChildScrollView(
@@ -214,7 +231,7 @@ class ViewAllMediaView extends GetView<ViewAllMediaController> {
                 );
               }),
           const SizedBox(height: 10,),
-          doc ? Text("${controller.documentCount} Documents") : Text("${controller.linkCount} Links")
+          doc ? Text("${controller.documentCount} Documents") : Text("${controller.linkCount} Links",style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor))
         ],
       ),
     );
@@ -243,19 +260,19 @@ class ViewAllMediaView extends GetView<ViewAllMediaController> {
               ),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 8.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         title,
-                        style: const TextStyle(fontSize: 13),
+                        style: TextStyle(fontSize: 13,color: MirrorflyUikit.getTheme?.textPrimaryColor),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                       ),
                       Text(
                         subtitle,
-                        style: const TextStyle(fontSize: 11),
+                        style: TextStyle(fontSize: 11,color: MirrorflyUikit.getTheme?.textSecondaryColor),
                       ),
                     ],
                   ),
@@ -264,12 +281,12 @@ class ViewAllMediaView extends GetView<ViewAllMediaController> {
               Center(
                   child: Padding(
                 padding: const EdgeInsets.only(right: 20.0),
-                child: Text(date, style: const TextStyle(fontSize: 11)),
+                child: Text(date, style: TextStyle(fontSize: 11,color: MirrorflyUikit.getTheme?.textSecondaryColor)),
               )),
             ],
           ),
           const AppDivider(
-            padding: EdgeInsets.only(top: 8, bottom: 8),
+            padding: EdgeInsets.symmetric(horizontal: 16),
           )
         ],
       ),
@@ -285,9 +302,9 @@ class ViewAllMediaView extends GetView<ViewAllMediaController> {
         Container(
           margin:
               const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-          decoration: const BoxDecoration(
-              color: Color(0xffE2E8F7),
-              borderRadius: BorderRadius.all(Radius.circular(8))),
+          decoration: BoxDecoration(
+              color: MirrorflyUikit.getTheme!.primaryColor.withAlpha(60),
+              borderRadius: const BorderRadius.all(Radius.circular(8))),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -296,54 +313,55 @@ class ViewAllMediaView extends GetView<ViewAllMediaController> {
                   launchWeb(item.linkMap!["url"]);
                 },
                 child: Container(
-                  decoration: const BoxDecoration(
-                      color: Color(0xffD0D8EB),
-                      borderRadius: BorderRadius.all(Radius.circular(8))),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      (item.chatMessage.isImageMessage() ||
-                              item.chatMessage.isVideoMessage())
-                          ? ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(8),
-                                  bottomLeft: Radius.circular(8)),
-                              child: controller.imageFromBase64String(
-                                  item.chatMessage.mediaChatMessage!
-                                      .mediaThumbImage,
-                                  70,
-                                  70),
-                            )
-                          : Container(
-                              height: 70,
-                              width: 70,
-                              decoration: const BoxDecoration(
-                                  color: Color(0xff97A5C7),
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(8),
-                                      bottomLeft: Radius.circular(8))),
-                              child: Center(
-                                child: SvgPicture.asset(linkImage,package: package,),
+                  decoration: BoxDecoration(
+                      color: MirrorflyUikit.getTheme!.primaryColor.withAlpha(50),
+                      borderRadius: const BorderRadius.all(Radius.circular(8))),
+                  child: IntrinsicHeight(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        (item.chatMessage.isImageMessage() ||
+                                item.chatMessage.isVideoMessage())
+                            ? ClipRRect(
+                                borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(8),
+                                    bottomLeft: Radius.circular(8)),
+                                child: controller.imageFromBase64String(
+                                    item.chatMessage.mediaChatMessage!
+                                        .mediaThumbImage,
+                                    70,
+                                    70),
+                              )
+                            : Container(
+                                constraints: const BoxConstraints(minHeight: 70,minWidth: 70),
+                                decoration: BoxDecoration(
+                                    color: MirrorflyUikit.getTheme!.primaryColor,//Color(0xff97A5C7),
+                                    borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(8),
+                                        bottomLeft: Radius.circular(8))),
+                                child: Center(
+                                  child: SvgPicture.asset(linkImage,package: package,color: MirrorflyUikit.getTheme?.colorOnPrimary,),
+                                ),
                               ),
-                            ),
-                      Expanded(
-                          child: Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              item.linkMap!["url"],
-                              style: const TextStyle(fontSize: 14),
-                            ),
-                            Text(
-                              item.linkMap!["host"],
-                              style: const TextStyle(fontSize: 10),
-                            ),
-                          ],
-                        ),
-                      ))
-                    ],
+                        Expanded(
+                            child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item.linkMap!["url"],
+                                style: TextStyle(fontSize: 14,color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                              ),
+                              Text(
+                                item.linkMap!["host"],
+                                style: TextStyle(fontSize: 10,color: MirrorflyUikit.getTheme?.textSecondaryColor),
+                              ),
+                            ],
+                          ),
+                        ))
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -355,6 +373,7 @@ class ViewAllMediaView extends GetView<ViewAllMediaController> {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 10.0, vertical: 2.0),
                   child: Row(
+                    mainAxisSize: MainAxisSize.max,
                     children: [
                       Expanded(
                         child: Text(
@@ -366,14 +385,14 @@ class ViewAllMediaView extends GetView<ViewAllMediaController> {
                                       .mediaCaptionText
                                   : Constants.emptyString,
                           style: const TextStyle(
-                              fontSize: 13, color: Color(0xff7889B3)),
-                          overflow: TextOverflow.ellipsis,
+                              fontSize: 13, color: Colors.blue),//Color(0xff7889B3)),
+                          // overflow: TextOverflow.clip,
                           maxLines: 1,
                         ),
                       ),
-                      const Icon(
+                      Icon(
                         Icons.keyboard_arrow_right,
-                        color: Color(0xff7185b5),
+                        color: MirrorflyUikit.getTheme?.primaryColor//Color(0xff7185b5),
                       )
                     ],
                   ),
@@ -382,18 +401,18 @@ class ViewAllMediaView extends GetView<ViewAllMediaController> {
             ],
           ),
         ),
-        const AppDivider()
+        const AppDivider(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+        )
       ],
     );
   }
 
   Widget linksView() {
-    return SafeArea(
-      child: Obx(() {
-        return controller.linklistdata.isNotEmpty
-            ? listView(controller.linklistdata, false)
-            : const Center(child: Text("No Links Found...!!!"));
-      }),
-    );
+    return Obx(() {
+      return controller.linklistdata.isNotEmpty
+          ? listView(controller.linklistdata, false)
+          : Center(child: Text("No Links Found...!!!",style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)));
+    });
   }
 }

@@ -172,10 +172,10 @@ class _ContactListViewState extends State<ContactListView> {
                         child: Text("No Contacts found"),
                       ),)),
                   controller.isPageLoading.value
-                      ? const Center(
+                      ? Center(
                           child: Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: CircularProgressIndicator(),
+                          padding: const EdgeInsets.all(16.0),
+                          child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
                         ))
                       : ListView.builder(
                           itemCount: controller.scrollable.value
@@ -186,8 +186,8 @@ class _ContactListViewState extends State<ContactListView> {
                           itemBuilder: (BuildContext context, int index) {
                             if (index >= controller.usersList.length &&
                                 controller.usersList.isNotEmpty) {
-                              return const Center(
-                                  child: CircularProgressIndicator());
+                              return Center(
+                                  child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,));
                             } else if (controller.usersList.isNotEmpty) {
                               var item = controller.usersList[index];
                               return Opacity(

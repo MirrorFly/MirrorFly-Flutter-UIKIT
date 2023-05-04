@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
+import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 
 import '../../../common/constants.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import '../../../models.dart';
-import '../../../routes/app_pages.dart';
+import '../../view_all_media/views/view_all_media_view.dart';
 
 class ChatInfoController extends GetxController {
   var profile_ = Profile().obs;
@@ -124,7 +125,8 @@ class ChatInfoController extends GetxController {
           actions: [
             TextButton(
                 onPressed: () {
-                  Get.back();
+                  // Get.back();
+                  Navigator.pop(context);
                   // Helper.showLoading(message: "Reporting User");
                   Mirrorfly
                       .reportUserOrMessages(profile.jid!, "chat")
@@ -141,19 +143,21 @@ class ChatInfoController extends GetxController {
                     debugPrint(onError.toString());
                   });
                 },
-                child: const Text("REPORT")),
+                child: const Text("REPORT",style: TextStyle(color: Colors.red),)),
             TextButton(
                 onPressed: () {
-                  Get.back();
+                  // Get.back();
+                  Navigator.pop(context);
                 },
-                child: const Text("CANCEL")),
+                child: Text("CANCEL",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
           ], context: context);
     });
   }
 
-  gotoViewAllMedia(){
-    debugPrint("to Media Page==>${profile.name} jid==>${profile.jid} isgroup==>${profile.isGroupProfile ?? false}");
-    Get.toNamed(Routes.viewMedia,arguments: {"name":profile.name,"jid":profile.jid,"isgroup":profile.isGroupProfile ?? false});
+  gotoViewAllMedia(BuildContext context){
+    // debugPrint("to Media Page==>${profile.name} jid==>${profile.jid} isgroup==>${profile.isGroupProfile ?? false}");
+    Navigator.push(context, MaterialPageRoute(builder: (con)=>ViewAllMediaView(name:profile.name.checkNull(),jid:profile.jid.checkNull(),isGroup:profile.isGroupProfile.checkNull())));
+    // Get.toNamed(Routes.viewMedia,arguments: {"name":profile.name,"jid":profile.jid,"isgroup":profile.isGroupProfile ?? false});
   }
 
   void onContactSyncComplete(bool result) {

@@ -84,8 +84,8 @@ class _ChatViewState extends State<ChatView> {
                     children: [
                       Expanded(child: Obx(() {
                         return controller.chatLoading.value
-                            ? const Center(
-                                child: CircularProgressIndicator(),
+                            ? Center(
+                                child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
                               )
                             : chatListView(controller.chatList);
                       })),

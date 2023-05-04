@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/model/local_contact_model.dart';
 
+import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
 import '../../../common/widgets.dart';
 import '../controllers/local_contact_controller.dart';
@@ -72,7 +73,7 @@ class LocalContactView extends GetView<LocalContactController> {
           },
           child: SafeArea(
             child: Obx(() => controller.contactList.isEmpty
-                ? const Center(child: CircularProgressIndicator())
+                ? Center(child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,))
                 : contactListView()),
           ),
 

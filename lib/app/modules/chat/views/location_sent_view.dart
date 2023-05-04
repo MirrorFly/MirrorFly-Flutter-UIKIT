@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 
+import '../../../../mirrorfly_uikit_plugin.dart';
 import '../controllers/location_controller.dart';
 
 class LocationSentView extends GetView<LocationController>{
@@ -59,7 +60,7 @@ class LocationSentView extends GetView<LocationController>{
                               ),
                               Text(controller.address2.value,style: const TextStyle(color: textColor,fontSize: 14,fontWeight: FontWeight.normal),),
                             ],
-                          ) : const Center(child: CircularProgressIndicator()),
+                          ) : Center(child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,)),
                         ),
                       ),
                     ),

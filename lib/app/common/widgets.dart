@@ -147,7 +147,7 @@ class ImageNetwork extends GetView<MainController> {
             return SizedBox(
               height: height,
               width: width,
-              child: const Center(child: CircularProgressIndicator()),
+              child: const Center(child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,)),
             );
           },*/
         placeholder: (context, string) {
@@ -390,7 +390,7 @@ Widget memberItem(
             ),
           ),
           const AppDivider(
-              padding: EdgeInsets.only(right: 16, left: 16, top: 4))
+              padding: EdgeInsets.only(right: 16, left: 75, top: 4))
         ],
       ),
     ),

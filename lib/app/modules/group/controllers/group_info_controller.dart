@@ -8,6 +8,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/dashboard/views/dashboard_view.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/view_all_media/views/view_all_media_view.dart';
 import '../../../models.dart';
 
 import '../../../common/crop_image.dart';
@@ -198,12 +200,14 @@ class GroupInfoController extends GetxController {
     Helper.showAlert(title: "Report this group?",message: "The last 5 messages from this group will be forwarded to admin. No one in this group will be notified.",actions: [
       TextButton(
           onPressed: () {
-            Get.back();
+            // Get.back();
+            Navigator.pop(context);
           },
           child: const Text("CANCEL")),
       TextButton(
           onPressed: () {
-            Get.back();
+            // Get.back();
+            Navigator.pop(context);
             Helper.progressLoading(context: context);
             Mirrorfly.reportUserOrMessages(profile.jid.checkNull(),Constants.typeGroupChat, "").then((value) {
               Helper.hideLoading(context: context);
@@ -218,7 +222,7 @@ class GroupInfoController extends GetxController {
               Helper.hideLoading(context: context);
             });
           },
-          child: const Text("REPORT")),
+          child: const Text("REPORT",style: TextStyle(color: Colors.red),)),
     ], context: context);
   }
   exitOrDeleteGroup(BuildContext context){
@@ -234,12 +238,14 @@ class GroupInfoController extends GetxController {
     Helper.showAlert(message: "Are you sure you want to leave from group?.",actions: [
       TextButton(
           onPressed: () {
-            Get.back();
+            // Get.back();
+            Navigator.pop(context);
           },
           child: const Text("CANCEL")),
       TextButton(
           onPressed: () {
-            Get.back();
+            // Get.back();
+            Navigator.pop(context);
             exitFromGroup(context);
           },
           child: const Text("LEAVE")),
@@ -247,7 +253,7 @@ class GroupInfoController extends GetxController {
   }
   exitFromGroup(BuildContext context)async{
     if(await AppUtils.isNetConnected()) {
-      Helper.progressLoading(context: context);
+      if(context.mounted) Helper.progressLoading(context: context);
       Mirrorfly.leaveFromGroup(SessionManagement.getUserJID() ,profile.jid.checkNull()).then((value) {
         Helper.hideLoading(context: context);
         if(value!=null){
@@ -266,19 +272,22 @@ class GroupInfoController extends GetxController {
     Helper.showAlert(message: "Are you sure you want to delete this group?.",actions: [
       TextButton(
           onPressed: () {
-            Get.back();
+            // Get.back();
+            Navigator.pop(context);
           },
           child: const Text("CANCEL")),
       TextButton(
           onPressed: () async {
             if(await AppUtils.isNetConnected()) {
-              Get.back();
-              Helper.progressLoading(context: context);
+              // Get.back();
+              if(context.mounted) Navigator.pop(context);
+              if(context.mounted) Helper.progressLoading(context: context);
               Mirrorfly.deleteGroup(profile.jid.checkNull()).then((value) {
                 Helper.hideLoading(context: context);
                 if(value!=null){
                   if(value){
-                    Get.offAllNamed(Routes.dashboard);
+                    // Get.offAllNamed(Routes.dashboard);
+                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (con)=>DashboardView()), (route) => false);
                   }
                 }
               }).catchError((error) {
@@ -435,8 +444,9 @@ class GroupInfoController extends GetxController {
     }
   }
 
-  gotoViewAllMedia(){
-    Get.toNamed(Routes.viewMedia,arguments: {"name":profile.name,"jid":profile.jid,"isgroup":profile.isGroupProfile});
+  gotoViewAllMedia(BuildContext context){
+    Navigator.push(context, MaterialPageRoute(builder: (con)=>ViewAllMediaView(name:profile.name.checkNull(),jid:profile.jid.checkNull(),isGroup:profile.isGroupProfile.checkNull())));
+    // Get.toNamed(Routes.viewMedia,arguments: {"name":profile.name,"jid":profile.jid,"isgroup":profile.isGroupProfile});
   }
 
   removeUser(String userJid, BuildContext context) async {
