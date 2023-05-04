@@ -22,11 +22,11 @@ class ForwardChatController extends GetxController {
 
   List<RecentChatData> get recentChats => _recentChats.value.take(3).toList();
 
-  final _groupList = <Profile>[].obs;
+  final _groupList = List<Profile>.empty(growable: true).obs;//<Profile>[].obs;
 
   set groupList(List<Profile> value) => _groupList.value = value;
 
-  List<Profile> get groupList => _groupList.value.take(6).toList();
+  List<Profile> get groupList => _groupList.take(6).toList();
 
   var userlistScrollController = ScrollController();
   var scrollable = MirrorflyUikit.isTrialLicence.obs;
@@ -54,16 +54,14 @@ class ForwardChatController extends GetxController {
 
   var forwardMessageIds = <String>[];
 
-  @override
-  void onInit() {
-    super.onInit();
-    var messageIds = Get.arguments["messageIds"] as List<String>;
-    forwardMessageIds.addAll(messageIds);
+  init(List<String> messageIds){
+    debugPrint("messageIds $messageIds");
+    forwardMessageIds = messageIds;
     userlistScrollController.addListener(_scrollListener);
     getRecentChatList();
     getAllGroups();
     getUsers();
-
+    //
     _recentChats.bindStream(_recentChats.stream);
     ever(_recentChats, (callback) {
       removeGroupItem();
@@ -77,6 +75,7 @@ class ForwardChatController extends GetxController {
       removeUserItem();
     });
   }
+
 
   removeGroupItem() {
     if (recentChats.isNotEmpty && groupList.isNotEmpty) {
@@ -130,6 +129,7 @@ class ForwardChatController extends GetxController {
 
   void getAllGroups() {
     Mirrorfly.getAllGroups().then((value) {
+      debugPrint("getall groups $value");
       if (value != null) {
         var list = profileFromJson(value);
         if (_maingroupList.isEmpty) {
@@ -254,7 +254,7 @@ class ForwardChatController extends GetxController {
     }
   }
 
-  bool isChecked(String jid) => selectedJids.value.contains(jid);
+  bool isChecked(String jid) => selectedJids.contains(jid);
 
   void onItemSelect(String jid, String name,bool isBlocked, BuildContext context){
     if(isBlocked.checkNull()){
@@ -268,13 +268,15 @@ class ForwardChatController extends GetxController {
     Helper.showAlert(message: "Unblock $name?", actions: [
       TextButton(
           onPressed: () {
-            Get.back();
+            // Get.back();
+            Navigator.pop(context);
           },
           child: const Text("NO")),
       TextButton(
           onPressed: () async {
             if(await AppUtils.isNetConnected()) {
-              Get.back();
+              // Get.back();
+              Navigator.pop(context);
               // Helper.progressLoading();
               Mirrorfly.unblockUser(jid.checkNull()).then((value) {
                 // Helper.hideLoading();
@@ -296,13 +298,13 @@ class ForwardChatController extends GetxController {
   }
 
   void onItemClicked(String jid, String name) {
-    if (selectedJids.value.contains(jid)) {
-      selectedJids.value.removeAt(selectedJids.indexOf(jid));
-      selectedNames.value.removeAt(selectedNames.indexOf(name));
+    if (selectedJids.contains(jid)) {
+      selectedJids.removeAt(selectedJids.indexOf(jid));
+      selectedNames.removeAt(selectedNames.indexOf(name));
     } else {
-      if (selectedJids.value.length < 5) {
-        selectedJids.value.add(jid);
-        selectedNames.value.add(name);
+      if (selectedJids.length < 5) {
+        selectedJids.add(jid);
+        selectedNames.add(name);
       } else {
         toToast("You can only forward with upto 5 users or groups");
       }
@@ -347,20 +349,21 @@ class ForwardChatController extends GetxController {
     _userList(_mainuserList);
   }
 
-  forwardMessages() async {
+  forwardMessages(BuildContext context) async {
     if (await AppUtils.isNetConnected()) {
       var busyStatus = await Mirrorfly.isBusyStatusEnabled();
       if (!busyStatus.checkNull()) {
-        if (forwardMessageIds.isNotEmpty && selectedJids.value.isNotEmpty) {
+        if (forwardMessageIds.isNotEmpty && selectedJids.isNotEmpty) {
           Mirrorfly.forwardMessagesToMultipleUsers(
-                  forwardMessageIds, selectedJids.value)
+                  forwardMessageIds, selectedJids)
               .then((values) {
             // debugPrint("to chat profile ==> ${selectedUsersList[0].toJson().toString()}");
-            Mirrorfly.getProfileDetails(selectedJids.value.last, false)
+            Mirrorfly.getProfileDetails(selectedJids.last, false)
                 .then((value) {
               if (value != null) {
                 var str = profiledata(value.toString());
-                Get.back(result: str);
+                // Get.back(result: str);
+                Navigator.pop(context, str.jid);
               }
             });
           });

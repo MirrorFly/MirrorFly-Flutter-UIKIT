@@ -9,8 +9,27 @@ import '../../../common/constants.dart';
 import '../../../common/widgets.dart';
 import '../../dashboard/widgets.dart';
 
-class ForwardChatView extends GetView<ForwardChatController> {
-  const ForwardChatView({Key? key}) : super(key: key);
+class ForwardChatView extends StatefulWidget {
+   const ForwardChatView({Key? key, required this.forwardMessageIds}) : super(key: key);
+  final List<String> forwardMessageIds;
+  @override
+  State<ForwardChatView> createState() => _ForwardChatViewState();
+}
+
+class _ForwardChatViewState extends State<ForwardChatView> {
+  final controller = Get.put(ForwardChatController());
+
+  @override
+  void dispose() {
+    super.dispose();
+    Get.delete<ForwardChatController>();
+  }
+
+  @override
+  void initState() {
+    controller.init(widget.forwardMessageIds);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +39,7 @@ class ForwardChatView extends GetView<ForwardChatController> {
           leading: IconButton(
             icon: const Icon(Icons.close),
             onPressed: () {
-              !controller.isSearchVisible ? controller.backFromSearch() : Get.back();
+              !controller.isSearchVisible ? controller.backFromSearch() : Navigator.pop(context);
             },
           ),
           title: !controller.isSearchVisible
@@ -206,7 +225,7 @@ class ForwardChatView extends GetView<ForwardChatController> {
                       visible: controller.selectedNames.isNotEmpty,
                       child: InkWell(
                         onTap: () {
-                          controller.forwardMessages();
+                          controller.forwardMessages(context);
                         },
                         child: const Padding(
                           padding: EdgeInsets.all(8.0),

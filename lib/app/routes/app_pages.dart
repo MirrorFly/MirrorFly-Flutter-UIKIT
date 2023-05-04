@@ -9,13 +9,11 @@ import '../modules/camera_pick/bindings/camera_pick_binding.dart';
 import '../modules/camera_pick/views/camera_pick_view.dart';
 import '../modules/chat/bindings/chat_binding.dart';
 import '../modules/chat/bindings/contact_binding.dart';
-import '../modules/chat/bindings/forwardchat_binding.dart';
 import '../modules/chat/bindings/image_preview_binding.dart';
 import '../modules/chat/bindings/location_binding.dart';
 import '../modules/chat/views/chat_search_view.dart';
 import '../modules/chat/views/chat_view.dart';
 import '../modules/chat/views/contact_list_view.dart';
-import '../modules/chat/views/forwardchat_view.dart';
 import '../modules/chat/views/image_preview_view.dart';
 import '../modules/chat/views/location_sent_view.dart';
 import '../modules/contact_sync/bindings/contact_sync_binding.dart';
@@ -144,11 +142,11 @@ class AppPages {
       // arguments: Profile(),
       binding: ChatBinding(),
     ),
-    GetPage(
-      name: _Paths.forwardChat,
-      page: () => const ForwardChatView(),
-      binding: ForwardChatBinding(),
-    ),
+    // GetPage(
+    //   name: _Paths.forwardChat,
+    //   page: () => const ForwardChatView(),
+    //   binding: ForwardChatBinding(),
+    // ),
     GetPage(
       name: _Paths.chatSearch,
       page: () => const ChatSearchView(),

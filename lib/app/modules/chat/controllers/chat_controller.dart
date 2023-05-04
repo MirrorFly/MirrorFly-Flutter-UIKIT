@@ -122,14 +122,18 @@ class ChatController extends FullLifeCycleController
       if (nJid != null) {
         userJid = jid;
       }
-    } else if (isFromStarred) {
-      if (jid != null) {
-        userJid = jid;
-      }
-      if (messageId!= null) {
+      if(isFromStarred && messageId!= null){
         starredChatMessageId = messageId;
       }
     }
+    // else if (isFromStarred) {
+    //   if (jid != null) {
+    //     userJid = jid;
+    //   }
+    //   if (messageId!= null) {
+    //     starredChatMessageId = messageId;
+    //   }
+    // }
     /*if (userJid.isEmpty) {
       var profileDetail = Get.arguments as Profile;
       profile_(profileDetail);
@@ -563,8 +567,7 @@ class ChatController extends FullLifeCycleController
         // debugPrint("parsing the value");
         try {
           // mirrorFlyLog("chat parsed history before", value);
-          List<ChatMessageModel> chatMessageModel =
-              chatMessageModelFromJson(value);
+          List<ChatMessageModel> chatMessageModel = chatMessageModelFromJson(value);
           // mirrorFlyLog("chat parsed history", chatMessageModelToJson(chatMessageModel));
           chatList(chatMessageModel.reversed.toList());
           Future.delayed(const Duration(milliseconds: 200), () {
@@ -576,6 +579,8 @@ class ChatController extends FullLifeCycleController
               if (!chat.isNegative) {
                 navigateToMessage(chatList[chat]);
                 starredChatMessageId = null;
+              }else{
+                toToast('Message not found');
               }
             }
             getUnsentReplyMessage();

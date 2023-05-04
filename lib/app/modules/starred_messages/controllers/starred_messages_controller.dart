@@ -12,7 +12,8 @@ import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../common/constants.dart';
-import '../../../routes/app_pages.dart';
+import '../../chat/views/chat_view.dart';
+import '../../chat/views/forwardchat_view.dart';
 
 class StarredMessagesController extends FullLifeCycleController with FullLifeCycleMixin {
   var starredChatList = List<ChatMessageModel>.empty(growable: true).obs;
@@ -243,7 +244,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
   checkBusyStatusForForward(BuildContext context) async {
     var busyStatus = await Mirrorfly.isBusyStatusEnabled();
     if (!busyStatus.checkNull()) {
-      forwardMessage();
+      forwardMessage(context);
     } else {
       showBusyStatusAlert(forwardMessage, context);
     }
@@ -255,12 +256,14 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
         actions: [
           TextButton(
               onPressed: () {
-                Get.back();
+                // Get.back();
+                Navigator.pop(context);
               },
               child: const Text("No")),
           TextButton(
               onPressed: () async {
-                Get.back();
+                // Get.back();
+                Navigator.pop(context);
                 await Mirrorfly.enableDisableBusyStatus(false);
                 if (function != null) {
                   function();
@@ -270,7 +273,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
         ], context: context);
   }
 
-  forwardMessage() {
+  forwardMessage(BuildContext context) {
     var messageIds = List<String>.empty(growable: true);
     for (var chatItem in selectedChatList) {
       messageIds.add(chatItem.messageId);
@@ -280,18 +283,27 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
     if (messageIds.length == selectedChatList.length) {
       isSelected(false);
       selectedChatList.clear();
-      Get.toNamed(Routes.forwardChat, arguments: {
-        "forward": true,
-        "group": false,
-        "groupJid": "",
-        "messageIds": messageIds
-      })?.then((value) {
+      // Get.toNamed(Routes.forwardChat, arguments: {
+      //   "forward": true,
+      //   "group": false,
+      //   "groupJid": "",
+      //   "messageIds": messageIds
+      // })?.then((value) {
+      //   if (value != null) {
+      //     debugPrint(
+      //         "result of forward ==> ${(value as Profile).toJson().toString()}");
+      //
+      //     Get.toNamed(Routes.chat, arguments: value);
+      //   }
+      // });
+
+      Navigator.push(context, MaterialPageRoute(builder: (con) => ForwardChatView(forwardMessageIds: messageIds))).then((value) {
         if (value != null) {
-          debugPrint(
-              "result of forward ==> ${(value as Profile).toJson().toString()}");
-          Get.toNamed(Routes.chat, arguments: value);
+          debugPrint("result of forward ==> ${(value as Profile).toJson().toString()}");
+          Navigator.push(context, MaterialPageRoute(builder: (con) => ChatView(jid: value.jid!)));
         }
-      });
+
+        });
     }
   }
 
@@ -643,8 +655,9 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
     return Profile.fromJson(json.decode(value.toString()));
   }
 
-  navigateMessage(ChatMessageModel starredChat) {
-    Get.toNamed(Routes.chat,parameters: {'isFromStarred':'true',"userJid":starredChat.chatUserJid,"messageId":starredChat.messageId});
+  navigateMessage(ChatMessageModel starredChat, BuildContext context) {
+    Navigator.push(context, MaterialPageRoute(builder: (con) => ChatView(jid: starredChat.chatUserJid, isFromStarred: true, messageId: starredChat.messageId,)));
+    // Get.toNamed(Routes.chat,parameters: {'isFromStarred':'true',"userJid":starredChat.chatUserJid,"messageId":starredChat.messageId});
   }
 
   void share() {

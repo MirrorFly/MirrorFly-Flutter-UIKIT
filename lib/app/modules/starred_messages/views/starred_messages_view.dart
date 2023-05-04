@@ -22,6 +22,12 @@ class StarredMessagesView extends StatefulWidget {
 
 class _StarredMessagesViewState extends State<StarredMessagesView> {
   final controller = Get.put(StarredMessagesController());
+
+  @override
+  void dispose() {
+    super.dispose();
+    Get.delete<StarredMessagesController>();
+  }
   @override
   Widget build(BuildContext context) {
     controller.height = MediaQuery.of(context).size.height;
@@ -81,7 +87,7 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
                     ? controller.selectedChatList.contains(starredChatList[index])
                     ? controller.clearChatSelection(starredChatList[index])
                     : controller.addChatSelection(starredChatList[index])
-                    : controller.navigateMessage(starredChatList[index]);
+                    : controller.navigateMessage(starredChatList[index], context);
               },
               child: Obx(() {
                 return Column(

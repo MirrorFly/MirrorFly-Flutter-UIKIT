@@ -27,6 +27,11 @@ class _ProfileViewState extends State<ProfileView> {
   var controller = Get.put(ProfileController());
 
   @override
+  void dispose() {
+    super.dispose();
+    Get.delete<ProfileController>();
+  }
+  @override
   Widget build(BuildContext context) {
     return FocusDetector(
       onFocusGained: () {
