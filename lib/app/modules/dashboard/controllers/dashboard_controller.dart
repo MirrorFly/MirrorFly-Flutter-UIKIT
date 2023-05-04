@@ -21,6 +21,7 @@ import '../../../data/apputils.dart';
 import '../../../data/permissions.dart';
 import '../../../routes/app_pages.dart';
 import '../../chat/views/contact_list_view.dart';
+import '../../group/views/group_creation_view.dart';
 
 class DashboardController extends FullLifeCycleController
     with FullLifeCycleMixin, GetTickerProviderStateMixin {
@@ -384,9 +385,10 @@ class DashboardController extends FullLifeCycleController
     });*/
   }
 
-  gotoCreateGroup() {
+  gotoCreateGroup(BuildContext context) {
     Future.delayed(const Duration(milliseconds: 100),
-        () => Get.toNamed(Routes.createGroup));
+        () =>
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const GroupCreationView())));
   }
 
   gotoSettings(BuildContext context) {

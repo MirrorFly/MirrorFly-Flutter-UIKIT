@@ -347,7 +347,7 @@ class DashboardView extends StatelessWidget {
                     : ShowAsAction.never,
             keyValue: 'New Group',
             onItemClick: () {
-              controller.gotoCreateGroup();
+              controller.gotoCreateGroup(context);
             },
           ),
           CustomAction(

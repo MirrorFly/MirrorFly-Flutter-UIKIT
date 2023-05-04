@@ -6,25 +6,40 @@ import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/group/controllers/group_creation_controller.dart';
 
+import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
 import '../../../common/widgets.dart';
 import '../../../routes/app_pages.dart';
 
-class GroupCreationView extends GetView<GroupCreationController> {
+class GroupCreationView extends StatefulWidget {
   const GroupCreationView({Key? key}) : super(key: key);
 
   @override
+  State<GroupCreationView> createState() => _GroupCreationViewState();
+}
+
+class _GroupCreationViewState extends State<GroupCreationView> {
+  final controller = Get.put(GroupCreationController());
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
       appBar: AppBar(
-        title: const Text(
-          'New Group',
-        ),
+        backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
+        automaticallyImplyLeading: true,
+        actionsIconTheme: IconThemeData(
+            color: MirrorflyUikit.getTheme?.colorOnAppbar ??
+                iconColor),
+        iconTheme: IconThemeData(
+            color: MirrorflyUikit.getTheme?.colorOnAppbar ??
+                iconColor),
+        title: Text(
+          'New Group',style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar)),
         actions: [
           TextButton(
               onPressed: () => controller.goToAddParticipantsPage(context),
-              child: const Text(
-                "NEXT", style: TextStyle(color: Colors.black),)),
+              child: Text(
+                "NEXT", style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),)),
         ],
       ),
       body: WillPopScope(
@@ -32,7 +47,8 @@ class GroupCreationView extends GetView<GroupCreationController> {
           if (controller.showEmoji.value) {
             controller.showEmoji(false);
           } else {
-            Get.back();
+            // Get.back();
+            Navigator.pop(context);
           }
           return Future.value(false);
         },
@@ -97,7 +113,7 @@ class GroupCreationView extends GetView<GroupCreationController> {
                                     controller.userImgUrl.value.checkNull()
                                   });
                                 } else {
-                                  controller.choosePhoto();
+                                  controller.choosePhoto(context);
                                 }
                               },
                             ),
@@ -112,7 +128,7 @@ class GroupCreationView extends GetView<GroupCreationController> {
                               onTap: controller.loading.value
                                   ? null
                                   : () {
-                                controller.choosePhoto();
+                                controller.choosePhoto(context);
                               },
                               child: Image.asset(
                                 cameraProfileChange,package: package,
@@ -136,18 +152,19 @@ class GroupCreationView extends GetView<GroupCreationController> {
                       padding: const EdgeInsets.only(left: 40.0, right: 20),
                       child: TextField(
                         focusNode: controller.focusNode,
+                        keyboardAppearance: MirrorflyUikit.theme == "dark" ? Brightness.dark : Brightness.light,
                         style:
-                        const TextStyle(fontSize: 14,
+                        TextStyle(fontSize: 14,
                             fontWeight: FontWeight.normal,
-                            overflow: TextOverflow.visible),
+                            overflow: TextOverflow.visible, color: MirrorflyUikit.getTheme?.textPrimaryColor),
                         onChanged: (_) => controller.onGroupNameChanged(),
                         maxLength: 25,
                         maxLines: 1,
                         controller: controller.groupName,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                             border: InputBorder.none,
                             counterText: "",
-                            hintText: "Type group name here..."),
+                            hintText: "Type group name here...", hintStyle: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)),
                       ),
                     ),
                   ),
@@ -159,8 +176,8 @@ class GroupCreationView extends GetView<GroupCreationController> {
                               () =>
                               Text(
                                 controller.count.toString(),
-                                style: const TextStyle(fontSize: 14,
-                                    fontWeight: FontWeight.normal),
+                                style: TextStyle(fontSize: 14,
+                                    fontWeight: FontWeight.normal, color: MirrorflyUikit.getTheme?.textSecondaryColor),
                               ),
                         ),
                       )),
@@ -169,15 +186,16 @@ class GroupCreationView extends GetView<GroupCreationController> {
                         onPressed: () {
                           controller.showHideEmoji(context);
                         },
-                        icon: controller.showEmoji.value ? const Icon(
-                          Icons.keyboard, color: iconColor,) : SvgPicture.asset(
-                          smileIcon,package: package, width: 18, height: 18,));
+                        icon: controller.showEmoji.value ? Icon(
+                          Icons.keyboard, color: MirrorflyUikit.getTheme?.secondaryColor,) : SvgPicture.asset(
+                          smileIcon,package: package, width: 18, height: 18,color: MirrorflyUikit.getTheme?.secondaryColor,));
                   })
                 ],
               ),
               const AppDivider(),
-              const Text("Provide a Group Name and Icon",
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),),
+              const SizedBox(height: 20,),
+              Text("Provide a Group Name and Icon",
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15, color: MirrorflyUikit.getTheme?.textPrimaryColor),),
               Expanded(
                 child: Obx(() {
                   if (controller.showEmoji.value) {

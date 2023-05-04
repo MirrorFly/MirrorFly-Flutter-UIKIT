@@ -108,15 +108,18 @@ class Helper {
     );
   }
 
-  static void showVerticalButtonAlert(List<Widget> actions) {
-    Get.dialog(
-      Dialog(
+  static void showVerticalButtonAlert(BuildContext context, List<Widget> actions) {
+    showDialog(
+      context: context, builder: (BuildContext context) {
+      return Dialog(
+        backgroundColor: MirrorflyUikit.theme == "dark" ? darkPopupColor : Colors.white,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: actions,
         ),
-      ),
+      );
+    },
     );
   }
 

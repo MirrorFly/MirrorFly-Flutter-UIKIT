@@ -268,12 +268,19 @@ class _ContactListViewState extends State<ContactListView> {
                                       ),
                                       Visibility(
                                         visible: controller.isCheckBoxVisible,
-                                        child: Checkbox(
-                                          value: controller.selectedUsersJIDList
-                                              .contains(item.jid),
-                                          onChanged: (value) {
-                                            controller.onListItemPressed(item, context);
-                                          },
+                                        child: Theme(
+                                          data: Theme.of(context).copyWith(
+                                            unselectedWidgetColor: Colors.grey,
+                                          ),
+                                          child: Checkbox(
+                                            activeColor: MirrorflyUikit.getTheme!.primaryColor,//Colors.white,
+                                            checkColor: MirrorflyUikit.getTheme?.colorOnPrimary,
+                                            value: controller.selectedUsersJIDList
+                                                .contains(item.jid),
+                                            onChanged: (value) {
+                                              controller.onListItemPressed(item, context);
+                                            },
+                                          ),
                                         ),
                                       ),
                                     ],

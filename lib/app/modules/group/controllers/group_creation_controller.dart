@@ -7,10 +7,11 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
-import 'package:mirrorfly_uikit_plugin/app/routes/app_pages.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
+import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 
 import '../../../common/crop_image.dart';
+import '../../chat/views/contact_list_view.dart';
 
 class GroupCreationController extends GetxController {
   var imagePath = "".obs;
@@ -45,11 +46,17 @@ class GroupCreationController extends GetxController {
   goToAddParticipantsPage(BuildContext context){
     if(groupName.text.trim().isNotEmpty) {
       //Get.toNamed(Routes.ADD_PARTICIPANTS);
-      Get.toNamed(Routes.contacts, arguments: {"forward" : false,"group":true,"groupJid":"" })?.then((value){
+      // Get.toNamed(Routes.contacts, arguments: {"forward" : false,"group":true,"groupJid":"" })?.then((value){
+      //   if(value!=null){
+      //     createGroup(value as List<String>, context);
+      //   }
+      // });
+      Navigator.push(context, MaterialPageRoute(builder: (con) => const ContactListView(forward : false, group : true, groupjid:""))).then((value){
         if(value!=null){
           createGroup(value as List<String>, context);
         }
       });
+
     }else{
       toToast("Please provide group name");
     }
@@ -73,16 +80,33 @@ class GroupCreationController extends GetxController {
         .pickFiles(allowMultiple: false, type: FileType.image);
     if (result != null) {
       // isImageSelected.value = true;
-      Get.to(CropImage(
-        imageFile: File(result.files.single.path!),
-      ))?.then((value) {
-        value as MemoryImage;
-        // imageBytes = value.bytes;
-        var name ="${DateTime.now().millisecondsSinceEpoch}.jpg";
-        writeImageTemp(value.bytes, name).then((value) {
-          imagePath(value.path);
+      // Get.to(CropImage(
+      //   imageFile: File(result.files.single.path!),
+      // ))?.then((value) {
+      //   value as MemoryImage;
+      //   // imageBytes = value.bytes;
+      //   var name ="${DateTime.now().millisecondsSinceEpoch}.jpg";
+      //   writeImageTemp(value.bytes, name).then((value) {
+      //     imagePath(value.path);
+      //   });
+      // });
+
+      if(context.mounted) {
+        Navigator.push(context, MaterialPageRoute(builder: (con) =>
+            CropImage(
+              imageFile: File(result.files.single.path!),
+            ))).then((value) {
+          value as MemoryImage;
+          // imageBytes = value.bytes;
+          var name = "${DateTime
+              .now()
+              .millisecondsSinceEpoch}.jpg";
+          writeImageTemp(value.bytes, name).then((value) {
+            imagePath(value.path);
+          });
         });
-      });
+      }
+
     } else {
       // User canceled the picker
       // isImageSelected.value = false;
@@ -90,21 +114,36 @@ class GroupCreationController extends GetxController {
   }
 
   final ImagePicker _picker = ImagePicker();
-  camera() async {
+  camera(BuildContext context) async {
     final XFile? photo = await _picker.pickImage(
         source: ImageSource.camera);
     if (photo != null) {
       // isImageSelected.value = true;
-      Get.to(CropImage(
-        imageFile: File(photo.path),
-      ))?.then((value) {
-        value as MemoryImage;
-        // imageBytes = value.bytes;
-        var name ="${DateTime.now().millisecondsSinceEpoch}.jpg";
-        writeImageTemp(value.bytes, name).then((value) {
-          imagePath(value.path);
+      // Get.to(CropImage(
+      //   imageFile: File(photo.path),
+      // ))?.then((value) {
+      //   value as MemoryImage;
+      //   // imageBytes = value.bytes;
+      //   var name ="${DateTime.now().millisecondsSinceEpoch}.jpg";
+      //   writeImageTemp(value.bytes, name).then((value) {
+      //     imagePath(value.path);
+      //   });
+      // });
+
+      if(context.mounted) {
+        Navigator.push(context, MaterialPageRoute(builder: (con) =>
+            CropImage(
+              imageFile: File(photo.path),
+            ))).then((value) {
+          value as MemoryImage;
+          // imageBytes = value.bytes;
+          var name ="${DateTime.now().millisecondsSinceEpoch}.jpg";
+          writeImageTemp(value.bytes, name).then((value) {
+            imagePath(value.path);
+          });
         });
-      });
+      }
+
     } else {
       // User canceled the Camera
       // isImageSelected.value = false;
@@ -119,26 +158,27 @@ class GroupCreationController extends GetxController {
     Mirrorfly.createGroup(groupName.text.toString(),users,imagePath.value).then((value){
       Helper.hideLoading(context: context);
       if(value!=null) {
-        Get.back();
+        // Get.back();
+        Navigator.pop(context);
         toToast('Group created Successfully');
       }
     });
   }
 
-  void choosePhoto() {
-    Helper.showVerticalButtonAlert([
-      TextButton(
-          onPressed: () {
-            Get.back();
-            imagePick(Get.context!);
+  void choosePhoto(BuildContext context) {
+    Helper.showVerticalButtonAlert(context, [
+      ListTile(
+          onTap: () {
+            Navigator.pop(context);
+            imagePick(context);
           },
-          child: const Text("Choose from Gallery",style: TextStyle(color: Colors.black),)),
-      TextButton(
-          onPressed: () async{
-            Get.back();
-            camera();
+          title: Text("Choose from Gallery",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),)),
+      ListTile(
+          onTap: () async{
+            Navigator.pop(context);
+            camera(context);
           },
-          child: const Text("Take Photo",style: TextStyle(color: Colors.black))),
+          title: Text("Take Photo",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor))),
     ]);
   }
 }
