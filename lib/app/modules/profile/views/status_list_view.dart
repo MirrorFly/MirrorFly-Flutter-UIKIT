@@ -88,7 +88,7 @@ class _StatusListViewState extends State<StatusListView> {
                 height: 10,
               ),
               Text(
-                'Select Your new status',
+                'Select your new status',
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: MirrorflyUikit.getTheme?.textPrimaryColor),
               ),
               Obx(() => controller.statusList.isNotEmpty

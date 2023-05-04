@@ -71,9 +71,12 @@ ListItem notificationItem({required String title,
         ],
       ),
       dividerPadding: const EdgeInsets.symmetric(horizontal: 16),
-      trailing: SvgPicture.asset(
-        on ? tickRoundBlue : tickRound,package: package,
-      ),
+      trailing:
+      // SvgPicture.asset(
+      //   on ? tickRoundBlue : tickRound,package: package,
+      // ),
+       on ? Icon(Icons.check_circle_rounded, color: MirrorflyUikit.getTheme?.primaryColor, size: 20,) :
+  const Icon(Icons.check_circle_rounded, color: Colors.grey, size: 20,),
       onTap: onTap);
 }
 

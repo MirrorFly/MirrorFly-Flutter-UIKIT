@@ -19,7 +19,7 @@ class ChatSettingsView extends StatelessWidget {
       backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
       appBar: AppBar(
         title: Text(
-          'Chat',
+          'Chats',
           style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
         ),
         automaticallyImplyLeading: true,

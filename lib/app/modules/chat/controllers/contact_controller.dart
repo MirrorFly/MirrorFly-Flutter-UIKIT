@@ -12,7 +12,9 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../../common/de_bouncer.dart';
 import '../../../data/apputils.dart';
 import '../../../data/permissions.dart';
-import '../../../routes/app_pages.dart';
+import '../../chatInfo/views/chat_info_view.dart';
+import '../../group/views/group_info_view.dart';
+import '../views/chat_view.dart';
 
 class ContactController extends FullLifeCycleController
     with FullLifeCycleMixin {
@@ -328,14 +330,15 @@ class ContactController extends FullLifeCycleController
     usersList.refresh();
   }
 
-  forwardMessages() async {
+  forwardMessages(BuildContext context) async {
     if (await AppUtils.isNetConnected()) {
       Mirrorfly.forwardMessagesToMultipleUsers(
               forwardMessageIds, selectedUsersJIDList)
           .then((value) {
         debugPrint(
             "to chat profile ==> ${selectedUsersList[0].toJson().toString()}");
-        Get.back(result: selectedUsersList[0]);
+        // Get.back(result: selectedUsersList[0]);
+        Navigator.pop(context, selectedUsersList[0]);
       });
     } else {
       toToast(Constants.noInternetConnection);
@@ -351,7 +354,9 @@ class ContactController extends FullLifeCycleController
       }
     } else {
       mirrorFlyLog("Contact Profile", item.toJson().toString());
-      Get.toNamed(Routes.chat, arguments: item);
+      // Get.toNamed(Routes.chat, arguments: item);
+      Navigator.push(context, MaterialPageRoute(builder: (con) => ChatView(jid: item.jid!)));
+
     }
   }
 
@@ -359,13 +364,15 @@ class ContactController extends FullLifeCycleController
     Helper.showAlert(message: "Unblock ${getName(item)}?", actions: [
       TextButton(
           onPressed: () {
-            Get.back();
+            // Get.back();
+            Navigator.pop(context);
           },
-          child: const Text("NO")),
+          child: Text("NO", style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
       TextButton(
           onPressed: () async {
             if (await AppUtils.isNetConnected()) {
-              Get.back();
+              // Get.back();
+              Navigator.pop(context);
               Helper.progressLoading(context: context);
               Mirrorfly.unblockUser(item.jid.checkNull()).then((value) {
                 Helper.hideLoading(context: context);
@@ -381,11 +388,11 @@ class ContactController extends FullLifeCycleController
               toToast(Constants.noInternetConnection);
             }
           },
-          child: const Text("YES")),
+          child: Text("YES", style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
     ], context: context);
   }
 
-  backToCreateGroup() async {
+  backToCreateGroup(BuildContext context) async {
     if (await AppUtils.isNetConnected()) {
       /*if (selectedUsersJIDList.length >= Constants.minGroupMembers) {
         Get.back(result: selectedUsersJIDList);
@@ -394,13 +401,15 @@ class ContactController extends FullLifeCycleController
       }*/
       if (groupJid.value.isEmpty) {
         if (selectedUsersJIDList.length >= Constants.minGroupMembers) {
-          Get.back(result: selectedUsersJIDList);
+          // Get.back(result: selectedUsersJIDList);
+          Navigator.pop(context, selectedUsersJIDList);
         } else {
           toToast("Add at least two contacts");
         }
       } else {
         if (selectedUsersJIDList.isNotEmpty) {
-          Get.back(result: selectedUsersJIDList);
+          // Get.back(result: selectedUsersJIDList);
+          Navigator.pop(context, selectedUsersJIDList);
         } else {
           toToast("Add at least two contacts");
         }
@@ -513,20 +522,24 @@ class ContactController extends FullLifeCycleController
   }
 
   showProfilePopup(Rx<Profile> profile, BuildContext context){
-    showQuickProfilePopup(context: Get.context,
+    showQuickProfilePopup(context: context,
         // chatItem: chatItem,
         chatTap: () {
-          Get.back();
+          // Get.back();
+          Navigator.pop(context);
           onListItemPressed(profile.value, context);
         },
         callTap: () {},
         videoTap: () {},
         infoTap: () {
-          Get.back();
+          // Get.back();
+          Navigator.pop(context);
           if (profile.value.isGroupProfile ?? false) {
-            Get.toNamed(Routes.groupInfo, arguments: profile.value);
+            // Get.toNamed(Routes.groupInfo, arguments: profile.value);
+            Navigator.push(context, MaterialPageRoute(builder: (con) => GroupInfoView(jid: profile.value.jid.checkNull())));
           } else {
-            Get.toNamed(Routes.chatInfo, arguments: profile.value);
+            // Get.toNamed(Routes.chatInfo, arguments: profile.value);
+            Navigator.push(context, MaterialPageRoute(builder: (con)=> ChatInfoView(jid: profile.value.jid.checkNull())));
           }
         },profile: profile);
   }

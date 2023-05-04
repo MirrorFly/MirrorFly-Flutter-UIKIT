@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 import '../models.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:path_provider/path_provider.dart';
@@ -256,8 +257,8 @@ toToast(String text) {
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 1,
-      textColor: Colors.black,
-      backgroundColor: Colors.white,
+      textColor: MirrorflyUikit.getTheme?.colorOnPrimary,
+      backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
       fontSize: 16.0);
   // Get.showSnackbar(
   //   GetSnackBar(
@@ -633,7 +634,7 @@ class Constants {
 
   static const String editBusyStatus = "Edit Busy Status Message";
   static const String yourBusyStatus = "Your Busy Status";
-  static const String newBusyStatus = "Select your new Status";
+  static const String newBusyStatus = "Select your new status";
   static const String busyStatusDescription =
       "Your busy status will be set as auto-response to the messages received from individuals.";
 

@@ -7,8 +7,8 @@ import 'package:mirrorfly_uikit_plugin/app/modules/chat/controllers/contact_cont
 
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/widgets.dart';
-import '../../../routes/app_pages.dart';
 import '../../../widgets/custom_action_bar_icons.dart';
+import '../../settings/views/settings_view.dart';
 
 class ContactListView extends StatefulWidget {
    const ContactListView({Key? key,this.forward = false,this.messageIds,this.group= false,this.groupjid = ''}) : super(key: key);
@@ -34,6 +34,7 @@ class _ContactListViewState extends State<ContactListView> {
   Widget build(BuildContext context) {
     return Obx(
       () => Scaffold(
+        backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
         appBar: AppBar(
           backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
           leading: IconButton(
@@ -42,10 +43,10 @@ class _ContactListViewState extends State<ContactListView> {
                 : const Icon(Icons.arrow_back),
             onPressed: () {
               controller.isForward.value
-                  ? Get.back()
+                  ? Navigator.pop(context)
                   : controller.search
                       ? controller.backFromSearch()
-                      : Get.back();
+                      : Navigator.pop(context);
             },
           ),
           iconTheme: IconThemeData(
@@ -56,12 +57,16 @@ class _ContactListViewState extends State<ContactListView> {
                   onChanged: (text) {
                     controller.searchListener(text);
                   },
+
+            cursorColor: MirrorflyUikit.getTheme?.primaryColor,
             focusNode: controller.searchFocus,
-                  style: const TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 16, color: MirrorflyUikit.getTheme?.textPrimaryColor),
                   controller: controller.searchQuery,
                   autofocus: true,
-                  decoration: const InputDecoration(
-                      hintText: "Search...", border: InputBorder.none),
+                  decoration: InputDecoration(
+                      hintText: "Search...", border: InputBorder.none, hintStyle: TextStyle(
+                  color: MirrorflyUikit
+                      .getTheme?.colorOnAppbar)),
                 )
               : controller.isForward.value
                   ? const Text("Forward to...")
@@ -74,11 +79,11 @@ class _ContactListViewState extends State<ContactListView> {
           actions: [
             Visibility(
               visible: controller.progressSpinner.value,
-              child:  const Center(
+              child: Center(
                 child: SizedBox(
                   height: 20.0,
                   width: 20.0,
-                  child: CircularProgressIndicator( color: iconColor,strokeWidth: 2,),
+                  child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.colorOnAppbar,strokeWidth: 2,),
                 ),
               ),
             ),
@@ -86,21 +91,21 @@ class _ContactListViewState extends State<ContactListView> {
               visible: controller.isSearchVisible,
               child: IconButton(
                   onPressed: () => controller.onSearchPressed(),
-                  icon: SvgPicture.asset(searchIcon,package: package,)),
+                  icon: SvgPicture.asset(searchIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar)),
             ),
             Visibility(
               visible: controller.isClearVisible,
               child: IconButton(
                   onPressed: () => controller.backFromSearch(),
-                  icon: const Icon(Icons.clear)),
+                  icon: Icon(Icons.clear, color: MirrorflyUikit.getTheme?.colorOnAppbar,)),
             ),
             Visibility(
               visible: controller.isCreateVisible,
               child: TextButton(
-                  onPressed: () => controller.backToCreateGroup(),
+                  onPressed: () => controller.backToCreateGroup(context),
                   child: Text(
                     controller.groupJid.value.isNotEmpty ? "NEXT" : "CREATE",
-                    style: const TextStyle(color: Colors.black),
+                    style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
                   )),
             ),
             Visibility(
@@ -112,15 +117,15 @@ class _ContactListViewState extends State<ContactListView> {
                 actions: [
                   CustomAction(
                     visibleWidget: IconButton(
-                        onPressed: () {}, icon: const Icon(Icons.settings)),
+                        onPressed: () {}, icon: Icon(Icons.settings, color: MirrorflyUikit.getTheme?.colorOnAppbar,)),
                     overflowWidget: InkWell(
                       child: const Text("Settings"),
-                      onTap: () => Get.toNamed(Routes.settings),
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (con)=> const SettingsView())),
                     ),
                     showAsAction: ShowAsAction.never,
                     keyValue: 'Settings',
                     onItemClick: () {
-                      Get.toNamed(Routes.settings);
+                      Navigator.push(context, MaterialPageRoute(builder: (con)=> const SettingsView()));
                     },
                   ),
                   CustomAction(
@@ -129,7 +134,7 @@ class _ContactListViewState extends State<ContactListView> {
                     overflowWidget: InkWell(
                       child: const Text("Refresh"),
                       onTap: (){
-                        Get.back();
+                        Navigator.pop(context);
                         controller.refreshContacts(true);
                       },
                     ),
@@ -151,10 +156,10 @@ class _ContactListViewState extends State<ContactListView> {
                 tooltip: "Forward",
                 onPressed: () {
                   FocusManager.instance.primaryFocus!.unfocus();
-                  controller.forwardMessages();
-                },
-                backgroundColor: buttonBgColor,
-                child: const Icon(Icons.check))
+                  controller.forwardMessages(context);
+                }, backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
+                child: Icon(Icons.check, color: MirrorflyUikit.getTheme?.colorOnPrimary ??
+                  Colors.white,))
             : const SizedBox.shrink(),
         body: Obx(() {
           return RefreshIndicator(
@@ -175,7 +180,7 @@ class _ContactListViewState extends State<ContactListView> {
                       ? Center(
                           child: Padding(
                           padding: const EdgeInsets.all(16.0),
-                          child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
+                          child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor),
                         ))
                       : ListView.builder(
                           itemCount: controller.scrollable.value
@@ -187,7 +192,7 @@ class _ContactListViewState extends State<ContactListView> {
                             if (index >= controller.usersList.length &&
                                 controller.usersList.isNotEmpty) {
                               return Center(
-                                  child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,));
+                                  child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor));
                             } else if (controller.usersList.isNotEmpty) {
                               var item = controller.usersList[index];
                               return Opacity(
@@ -243,9 +248,7 @@ class _ContactListViewState extends State<ContactListView> {
                                           children: [
                                             Text(
                                               getName(item),
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleMedium,
+                                              style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                             ),
@@ -257,9 +260,7 @@ class _ContactListViewState extends State<ContactListView> {
                                             // )
                                             Text(
                                               item.status.toString(),
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleSmall,
+                                              style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)
                                             )
                                           ],
                                         ),

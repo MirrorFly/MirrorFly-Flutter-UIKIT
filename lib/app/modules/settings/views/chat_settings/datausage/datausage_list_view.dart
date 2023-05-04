@@ -26,7 +26,7 @@ class _DataUsageListViewState extends State<DataUsageListView> {
     return Scaffold(
         backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
         appBar: AppBar(
-          title: Text('Data Usage Setting', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar)),
+          title: Text('Data Usage Settings', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar)),
           automaticallyImplyLeading: true,
           iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
           backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
