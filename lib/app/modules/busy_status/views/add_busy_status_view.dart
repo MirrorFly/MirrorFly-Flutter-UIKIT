@@ -2,26 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
+import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
 import '../../../common/widgets.dart';
 import '../controllers/busy_status_controller.dart';
 
-class AddBusyStatusView extends GetView<BusyStatusController> {
-  const AddBusyStatusView({Key? key}) : super(key: key);
+class AddBusyStatusView extends StatefulWidget {
+  const AddBusyStatusView({Key? key, required String status}) : super(key: key);
 
+  @override
+  State<AddBusyStatusView> createState() => _AddBusyStatusViewState();
+}
+
+class _AddBusyStatusViewState extends State<AddBusyStatusView> {
+  final controller = Get.find<BusyStatusController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        title: const Text('Add Busy Status'),
+        title: Text('Add Busy Status', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
+        iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+        backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
       ),
       body: WillPopScope(
         onWillPop: () {
           if (controller.showEmoji.value) {
             controller.showEmoji(false);
           } else {
-            Get.back();
+            // Get.back();
+            Navigator.pop(context);
           }
           return Future.value(false);
         },
@@ -38,8 +49,9 @@ class AddBusyStatusView extends GetView<BusyStatusController> {
                     children: [
                       Expanded(
                         child: TextField(
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 20,
+                              color: MirrorflyUikit.getTheme?.textPrimaryColor,
                               fontWeight: FontWeight.normal,
                               overflow: TextOverflow.visible),
                           onChanged: (value) {
@@ -50,12 +62,12 @@ class AddBusyStatusView extends GetView<BusyStatusController> {
                           autofocus: true,
                           focusNode: controller.focusNode,
                           controller: controller.addStatusController,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                               enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
+                                borderSide: BorderSide(color: MirrorflyUikit.getTheme!.textSecondaryColor),
                               ),
                               focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: buttonBgColor),
+                                borderSide: BorderSide(color: MirrorflyUikit.getTheme!.primaryColor),
                               ),
                               counterText: ""),
                           onTap: () {
@@ -73,8 +85,9 @@ class AddBusyStatusView extends GetView<BusyStatusController> {
                                   () =>
                                   Text(
                                     controller.count.toString(),
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                         fontSize: 20,
+                                        color: MirrorflyUikit.getTheme?.textSecondaryColor,
                                         fontWeight: FontWeight.normal),
                                   ),
                             ),
@@ -84,9 +97,9 @@ class AddBusyStatusView extends GetView<BusyStatusController> {
                             onPressed: () {
                               controller.showHideEmoji(context);
                             },
-                            icon: controller.showEmoji.value ? const Icon(
-                              Icons.keyboard, color: iconColor,) : SvgPicture
-                                .asset(smileIcon));
+                            icon: controller.showEmoji.value ? Icon(
+                              Icons.keyboard, color: MirrorflyUikit.getTheme?.textPrimaryColor,) : SvgPicture
+                                .asset(smileIcon, package: package, color: MirrorflyUikit.getTheme?.textPrimaryColor,));
                       })
                     ],
                   ),
@@ -99,16 +112,17 @@ class AddBusyStatusView extends GetView<BusyStatusController> {
                       if (controller.showEmoji.value) {
                         controller.showEmoji(false);
                       }
-                      Get.back();
+                      // Get.back();
+                      Navigator.pop(context);
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: MaterialStateColor.resolveWith(
-                                (states) => Colors.white),
+                                (states) => MirrorflyUikit.getTheme!.secondaryColor),
                         shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.zero)),
-                    child: const Text(
+                    child: Text(
                       "CANCEL",
-                      style: TextStyle(color: Colors.black, fontSize: 16.0),
+                      style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor, fontSize: 16.0),
                     ),
                   ),
                 ),
@@ -122,16 +136,16 @@ class AddBusyStatusView extends GetView<BusyStatusController> {
                       if (controller.showEmoji.value) {
                         controller.showEmoji(false);
                       }
-                      controller.validateAndFinish();
+                      controller.validateAndFinish(context);
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: MaterialStateColor.resolveWith(
-                                (states) => Colors.white),
+                                (states) => MirrorflyUikit.getTheme!.secondaryColor),
                         shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.zero)),
-                    child: const Text(
+                    child: Text(
                       "OK",
-                      style: TextStyle(color: Colors.black, fontSize: 16.0),
+                      style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor, fontSize: 16.0),
                     ),
                   ),
                 ),

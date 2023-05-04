@@ -5,6 +5,7 @@ import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
+import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../data/apputils.dart';
@@ -104,15 +105,17 @@ class ChatSettingsController extends GetxController {
     Helper.showAlert(message: 'Are you sure want to clear your conversation history?',actions: [
       TextButton(
           onPressed: () {
-            Get.back();
+            // Get.back();
+            Navigator.pop(context);
           },
-          child: const Text("NO")),
+          child: Text("NO", style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
       TextButton(
           onPressed: () {
-            Get.back();
+            // Get.back();
+            Navigator.pop(context);
             clearAllConv();
           },
-          child: const Text("YES")),
+          child: Text("YES", style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
     ], context: context);
   }
 

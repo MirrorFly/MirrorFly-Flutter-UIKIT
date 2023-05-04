@@ -287,6 +287,7 @@ class ListItem extends StatelessWidget {
                 Expanded(
                   child: title,
                 ),
+                const SizedBox(width: 2,),
                 trailing ?? const SizedBox()
               ],
             ),

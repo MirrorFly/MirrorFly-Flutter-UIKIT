@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
+import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../models.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -26,17 +27,16 @@ class BusyStatusController extends FullLifeCycleController with FullLifeCycleMix
     count(139 - addStatusController.text.characters.length);
   }
 
-  @override
-  void onInit() {
-    super.onInit();
-    if(Get.arguments!=null) {
-      selectedStatus.value = Get.arguments['status'];
+  void init(String? status) {
+    if(status != null) {
+      selectedStatus.value = status;
       addStatusController.text = selectedStatus.value;
     }
     onChanged();
     getMyBusyStatus();
     getMyBusyStatusList();
   }
+
 
   void getMyBusyStatus() {
     Mirrorfly.getMyBusyStatus().then((value) {
@@ -86,7 +86,8 @@ class BusyStatusController extends FullLifeCycleController with FullLifeCycleMix
                   fontWeight: FontWeight.normal)),
 
           onTap: () {
-            Get.back();
+            // Get.back();
+            Navigator.pop(context);
             busyDeleteConfirmation(item, context);
           },
         ),
@@ -111,11 +112,12 @@ class BusyStatusController extends FullLifeCycleController with FullLifeCycleMix
     });
   }
 
-  validateAndFinish() async {
+  validateAndFinish(BuildContext context) async {
     if (addStatusController.text.trim().isNotEmpty) {
       //FLUTTER-567
       // if (await AppUtils.isNetConnected()) {
-        Get.back(result: addStatusController.text.trim().toString());
+      //   Get.back(result: addStatusController.text.trim().toString());
+        Navigator.pop(context, addStatusController.text.trim().toString());
       // } else {
       //   toToast(Constants.noInternetConnection);
       //   Get.back();
@@ -138,13 +140,15 @@ class BusyStatusController extends FullLifeCycleController with FullLifeCycleMix
     Helper.showAlert(message: "Do you want to delete the status?", actions: [
       TextButton(
           onPressed: () {
-            Get.back();
+            // Get.back();
+            Navigator.pop(context);
           },
-          child: const Text("No")),
+          child: Text("No", style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
       TextButton(
           onPressed: () async {
             if (await AppUtils.isNetConnected()) {
-              Get.back();
+              // Get.back();
+              Navigator.pop(context);
               Helper.showLoading(message: "Deleting Busy Status", buildContext: context);
               Mirrorfly.deleteBusyStatus(
                   item.id!, item.status!, item.isCurrentStatus!)
@@ -159,7 +163,7 @@ class BusyStatusController extends FullLifeCycleController with FullLifeCycleMix
               toToast(Constants.noInternetConnection);
             }
           },
-          child: const Text("Yes")),
+          child: Text("Yes", style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
     ], context: context);
   }
 
@@ -198,4 +202,6 @@ class BusyStatusController extends FullLifeCycleController with FullLifeCycleMix
       showEmoji(!showEmoji.value);
     });
   }
+
+
 }

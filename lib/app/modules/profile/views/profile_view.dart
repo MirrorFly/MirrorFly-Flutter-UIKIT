@@ -276,7 +276,7 @@ class _ProfileViewState extends State<ProfileView> {
                                 : controller.changed.value
                                     ? 'Update & Continue'
                                     : 'Save',
-                            style: TextStyle(fontWeight: FontWeight.w600, color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                            style: TextStyle(fontWeight: FontWeight.w600, color: MirrorflyUikit.getTheme?.colorOnPrimary),
                           ),
                         ),
                       ),

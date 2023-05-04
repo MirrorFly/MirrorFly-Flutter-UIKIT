@@ -3,17 +3,33 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 
+import '../../../../../../mirrorfly_uikit_plugin.dart';
 import 'datausage_controller.dart';
 
-class DataUsageListView extends GetView<DataUsageController> {
+class DataUsageListView extends StatefulWidget {
   const DataUsageListView({Key? key}) : super(key: key);
+
+  @override
+  State<DataUsageListView> createState() => _DataUsageListViewState();
+}
+
+class _DataUsageListViewState extends State<DataUsageListView> {
+  final controller = Get.put(DataUsageController());
+  @override
+  void initState() {
+    Get.delete<DataUsageController>();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
         appBar: AppBar(
-          title: const Text('Data Usage Setting'),
+          title: Text('Data Usage Setting', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar)),
           automaticallyImplyLeading: true,
+          iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+          backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
         ),
         body: SafeArea(
           child: SingleChildScrollView(
@@ -21,20 +37,20 @@ class DataUsageListView extends GetView<DataUsageController> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const ListTile(
+                  ListTile(
                     title: Text(
                       Constants.mediaAutoDownload,
                       style: TextStyle(
-                          color: appbarTextColor,
+                          color: MirrorflyUikit.getTheme?.textPrimaryColor,
                           fontSize: 14.0,
                           fontWeight: FontWeight.w600),
                     ),
                   ),
                   ListTile(
-                    title: const Text(
+                    title: Text(
                       Constants.whenUsingMobileData,
                       style: TextStyle(
-                          color: textColor,
+                          color: MirrorflyUikit.getTheme?.textPrimaryColor,
                           fontSize: 12.0,
                           fontWeight: FontWeight.w600),
                     ),
@@ -56,10 +72,10 @@ class DataUsageListView extends GetView<DataUsageController> {
                     )//buildMediaTypeList(controller.mobile),
                   ),
                   ListTile(
-                    title: const Text(
+                    title: Text(
                       Constants.whenUsingWifiData,
                       style: TextStyle(
-                          color: textColor,
+                          color: MirrorflyUikit.getTheme?.textPrimaryColor,
                           fontSize: 12.0,
                           fontWeight: FontWeight.w600),
                     ),
@@ -98,16 +114,19 @@ class DataUsageListView extends GetView<DataUsageController> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(item,
-                          style: const TextStyle(
-                              color: textColor,
+                          style: TextStyle(
+                              color: MirrorflyUikit.getTheme?.textPrimaryColor,
                               fontSize: 12,
                               fontWeight: FontWeight.w500)),
                     )),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: SvgPicture.asset(
-                    on ? tickRoundBlue : tickRound,package: package,
-                  ),
+                  // child: SvgPicture.asset(
+                  //   on ? tickRoundBlue : tickRound,package: package,
+                  //   // color: on ? MirrorflyUikit.getTheme!.primaryColor : Colors.grey,
+                  // ),
+                  child: on ? Icon(Icons.check_circle_rounded, color: MirrorflyUikit.getTheme?.primaryColor, size: 20,) :
+                  const Icon(Icons.check_circle_rounded, color: Colors.grey, size: 20,),
                 ),
               ],
             ),

@@ -14,8 +14,8 @@ Widget lockItem(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title,
-              style: const TextStyle(
-                  color: Colors.black,
+              style: TextStyle(
+                  color: MirrorflyUikit.getTheme?.textPrimaryColor,
                   fontSize: 14,
                   fontWeight: FontWeight.w400)),
           const SizedBox(
@@ -23,7 +23,7 @@ Widget lockItem(
           ),
           Text(
             subtitle,
-            style: const TextStyle(fontSize: 13, color: textColor),
+            style: TextStyle(fontSize: 13, color: MirrorflyUikit.getTheme?.textSecondaryColor),
           ),
         ],
       ),
@@ -32,12 +32,13 @@ Widget lockItem(
         height: 20.0,
         valueFontSize: 12.0,
         toggleSize: 12.0,
-        activeColor: Colors.white,
-        activeToggleColor: Colors.blue,
+        activeColor: MirrorflyUikit.getTheme!.primaryColor,//Colors.white,
+        activeToggleColor: MirrorflyUikit.getTheme?.colorOnPrimary, //Colors.blue,
         inactiveToggleColor: Colors.grey,
         inactiveColor: Colors.white,
         switchBorder: Border.all(
-            color: on ? Colors.blue : Colors.grey,
+            color: on ? MirrorflyUikit.getTheme!.colorOnPrimary : Colors
+                .grey,
             width: 1),
         value: on,
         onToggle: (value) => onToggle(value),
@@ -55,16 +56,17 @@ ListItem notificationItem({required String title,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title,
-              style: const TextStyle(
-                  color: Colors.black,
+              style: TextStyle(
+                  color: MirrorflyUikit.getTheme?.textPrimaryColor,
                   fontSize: 14,
                   fontWeight: FontWeight.w400)),
           const SizedBox(
             height: 4,
           ),
+
           Text(
             subtitle,
-            style: const TextStyle(fontSize: 13, color: textColor),
+            style: TextStyle(fontSize: 13, color: MirrorflyUikit.getTheme?.textSecondaryColor),
           ),
         ],
       ),
