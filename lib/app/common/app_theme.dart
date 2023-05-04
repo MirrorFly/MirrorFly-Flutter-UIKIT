@@ -14,7 +14,7 @@ class MirrorFlyTheme {
       textPrimaryColor: Colors.black,
       textSecondaryColor: Colors.black45,
       chatBubblePrimaryColor: ChatBubbleColor(color: const Color(0xffe2e8f7), textPrimaryColor: Colors.black, textSecondaryColor: durationTextColor),
-      chatBubbleSecondaryColor: ChatBubbleColor(color: const Color(0xcbd7d6d6), textPrimaryColor: const Color(0xff313131), textSecondaryColor: const Color(0xff959595)));
+      chatBubbleSecondaryColor: ChatBubbleColor(color: const Color(0xffffffff), textPrimaryColor: const Color(0xff313131), textSecondaryColor: const Color(0xff959595)));
 
   static MirrorFlyAppTheme get mirrorFlyDarkTheme => MirrorFlyAppTheme(
       primaryColor: buttonBgColor,

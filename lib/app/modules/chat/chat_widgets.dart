@@ -1942,10 +1942,10 @@ Widget getImageOverlay(ChatMessageModel chatMessage,
     if (chatMessage.messageType.toUpperCase() == 'VIDEO') {
       return FloatingActionButton.small(
         onPressed: onVideo,
-        backgroundColor: Colors.white,
+        backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
         child:  Icon(
           Icons.play_arrow_rounded,
-          color: MirrorflyUikit.getTheme?.primaryColor,
+          color: MirrorflyUikit.getTheme?.colorOnPrimary,
         ),
       );
     } else if (chatMessage.messageType.toUpperCase() == 'AUDIO') {
@@ -1998,7 +1998,7 @@ Widget getImageOverlay(ChatMessageModel chatMessage,
             child: uploadView(
                 chatMessage.mediaChatMessage!.mediaDownloadStatus,
                 chatMessage.mediaChatMessage!.mediaFileSize,
-                chatMessage.messageType.toUpperCase()));
+                chatMessage.messageType.toUpperCase(),chatMessage.isMessageSentByMe));
 
       case Constants.mediaDownloading:
       case Constants.mediaUploading:
@@ -2016,36 +2016,39 @@ Widget getImageOverlay(ChatMessageModel chatMessage,
   }
 }
 
-uploadView(int mediaDownloadStatus, int mediaFileSize, String messageType) {
+uploadView(int mediaDownloadStatus, int mediaFileSize, String messageType,bool isSentByMe) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 8.0),
     child: messageType == 'AUDIO' || messageType == 'DOCUMENT'
         ? Container(
         decoration: BoxDecoration(
-            border: Border.all(color: borderColor),
+            border: Border.all(color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor),
             borderRadius: BorderRadius.circular(3)),
         padding: const EdgeInsets.all(5),
         child: SvgPicture.asset(
-          uploadIcon,
-          color: playIconColor,
+          uploadIcon,package: package,
+          color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor,//playIconColor,
         ))
         : Container(
         width: 80,
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(5)),
-          color: Colors.black45,
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor,//textColor,
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(5)),
+          color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.color.withOpacity(0.2) : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.color.withOpacity(0.2),//Colors.black45,
         ),
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset(uploadIcon),
+            SvgPicture.asset(uploadIcon,package: package,color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textPrimaryColor,),
             const SizedBox(
               width: 5,
             ),
-            const Text(
+            Text(
               "RETRY",
-              style: TextStyle(color: Colors.white, fontSize: 10),
+              style: TextStyle(color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textPrimaryColor, fontSize: 10),
             ),
           ],
         )),
@@ -2110,24 +2113,24 @@ Widget downloadView(int mediaDownloadStatus, int mediaFileSize,
         width: 80,
         decoration: BoxDecoration(
           border: Border.all(
-            color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.color : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.color,//textColor,
+            color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor,//textColor,
           ),
           borderRadius: const BorderRadius.all(Radius.circular(5)),
-          color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.color.withAlpha(50) : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.color.withAlpha(90) ,//Colors.black38,
+          color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.color.withOpacity(0.2) : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.color.withOpacity(0.2) ,//Colors.black38,
         ),
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SvgPicture.asset(downloadIcon,package: package,
-              color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor,//playIconColor,
+              color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textPrimaryColor,//playIconColor,
             ),
             const SizedBox(
               width: 5,
             ),
             Text(
               Helper.formatBytes(mediaFileSize, 0),
-              style: TextStyle(color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor, fontSize: 10),
+              style: TextStyle(color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textPrimaryColor, fontSize: 10),
             ),
           ],
         )),
@@ -2135,13 +2138,13 @@ Widget downloadView(int mediaDownloadStatus, int mediaFileSize,
 }
 
 downloadingOrUploadingView(String messageType, int progress,bool isSentByMe) {
-  // debugPrint('downloadingOrUploadingView progress $progress');
+  debugPrint('downloadingOrUploadingView progress $progress');
   if (messageType == "AUDIO" || messageType == "DOCUMENT") {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Container(
-          width: 30,
-          height: 30,
+          width: 24,
+          height: 24,
           decoration: BoxDecoration(
             border: Border.all(
               color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textPrimaryColor,//borderColor,
@@ -2155,16 +2158,17 @@ downloadingOrUploadingView(String messageType, int progress,bool isSentByMe) {
               children: [
                 SvgPicture.asset(
                   downloading,
+                  package: package,
                   fit: BoxFit.contain,
-                  color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor,//playIconColor,
+                  color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textPrimaryColor,//playIconColor,
                 ),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: SizedBox(
-                    height: 2,
+                    height: 1,
                     child: LinearProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor,
+                        isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textPrimaryColor,
                       ),
                       value: progress == 0 || progress == 100
                           ? null
@@ -2180,9 +2184,12 @@ downloadingOrUploadingView(String messageType, int progress,bool isSentByMe) {
     return Container(
         height: 30,
         width: 70,
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(4)),
-          color: Colors.black45,
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor,//textColor,
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(4)),
+          color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.color.withOpacity(0.2) : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.color.withOpacity(0.2),//Colors.black45,
         ),
         child: Stack(
             alignment: Alignment.center,
@@ -2190,8 +2197,9 @@ downloadingOrUploadingView(String messageType, int progress,bool isSentByMe) {
             children: [
               SvgPicture.asset(
                 downloading,
+                package: package,
                 fit: BoxFit.contain,
-                color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor,
+                color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textPrimaryColor,
               ),
               Align(
                 alignment: Alignment.bottomCenter,

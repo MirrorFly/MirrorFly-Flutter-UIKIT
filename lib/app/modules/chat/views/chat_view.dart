@@ -237,17 +237,19 @@ class _ChatViewState extends State<ChatView> {
                             controller.unreadCount.value != 0
                                 ? CircleAvatar(
                                     radius: 8,
+                                    backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
                                     child: Text(
                                       returnFormattedCount(
                                           controller.unreadCount.value),
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                           fontSize: 9,
-                                          color: Colors.white,
+                                          color: MirrorflyUikit.getTheme?.colorOnPrimary,
                                           fontFamily: 'sf_ui'),
                                     ),
                                   )
                                 : const SizedBox.shrink(),
                             IconButton(
+                              // icon: Icon(Icons.arrow_drop_down_circle_rounded,color: MirrorflyUikit.getTheme?.primaryColor,),
                               icon: Image.asset(
                                 redirectLastMessage,package: package,
                                 width: 32,
@@ -684,9 +686,9 @@ class _ChatViewState extends State<ChatView> {
                                                 : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.color),
                                         border: chatList[index]
                                                 .isMessageSentByMe
-                                            ? Border.all(color: MirrorflyUikit.getTheme!.chatBubblePrimaryColor.color)//chatSentBgColor)
+                                            ? Border.all(color: MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor.withOpacity(0.2))//chatSentBgColor)
                                             : Border.all(
-                                                color:  MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.color)),
+                                                color:  MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor.withOpacity(0.2))),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,

@@ -171,8 +171,10 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
         controller.imageFromBase64String(
             item.mediaChatMessage!.mediaThumbImage, null, null),
         Center(
-          child: SvgPicture.asset(videoWhite,package: package,color: MirrorflyUikit.getTheme?.colorOnPrimary,),
-        )
+          child: CircleAvatar(
+            radius: 8,
+              backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
+              child: Icon(Icons.play_arrow,color: MirrorflyUikit.getTheme?.colorOnPrimary,size: 12,)))
       ],
     );
   }
