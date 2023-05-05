@@ -287,6 +287,7 @@ class AppPermission {
       required String content}) {
     showDialog(context: context, builder: (BuildContext context) { return AlertDialog(
       contentPadding: EdgeInsets.zero,
+      backgroundColor: MirrorflyUikit.theme == "dark" ? darkPopupColor : Colors.white,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -299,7 +300,7 @@ class AppPermission {
             padding: const EdgeInsets.all(16.0),
             child: Text(
               content,
-              style: const TextStyle(fontSize: 14, color: textColor),
+              style: TextStyle(fontSize: 14, color: MirrorflyUikit.getTheme?.textPrimaryColor),
             ),
           )
         ],
@@ -311,9 +312,9 @@ class AppPermission {
               // Get.back(result: "no");
               notNowBtn();
             },
-            child: const Text(
+            child: Text(
               "NOT NOW",
-              style: TextStyle(color: buttonBgColor),
+              style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),
             )),
         TextButton(
             onPressed: () {
@@ -321,9 +322,9 @@ class AppPermission {
               // Get.back(result: "yes");
               continueBtn();
             },
-            child: const Text(
+            child: Text(
               "CONTINUE",
-              style: TextStyle(color: buttonBgColor),
+              style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),
             ))
       ],
     ); },);
@@ -334,19 +335,22 @@ class AppPermission {
       required String content}) async {
     return await showDialog(context: context, builder: (BuildContext context) { return AlertDialog(
       contentPadding: EdgeInsets.zero,
+      backgroundColor: MirrorflyUikit.theme == "dark" ? darkPopupColor : Colors.white,
+      // shadowColor: MirrorflyUikit.getTheme?.textSecondaryColor,
+      // elevation: 4,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             padding: const EdgeInsets.symmetric(vertical: 35.0),
-            color: buttonBgColor,
-            child: Center(child: SvgPicture.asset(icon,package: package,)),
+            color: MirrorflyUikit.getTheme?.primaryColor,
+            child: Center(child: SvgPicture.asset(icon,package: package,color: MirrorflyUikit.getTheme?.colorOnPrimary,)),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
               content,
-              style: const TextStyle(fontSize: 14, color: textColor),
+              style: TextStyle(fontSize: 14, color: MirrorflyUikit.getTheme?.textPrimaryColor),
             ),
           )
         ],
@@ -358,9 +362,9 @@ class AppPermission {
               // Get.back(result: false);
               // notNowBtn();
             },
-            child: const Text(
+            child: Text(
               "NOT NOW",
-              style: TextStyle(color: buttonBgColor),
+              style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),
             )),
         TextButton(
             onPressed: () {
@@ -368,9 +372,9 @@ class AppPermission {
               // Get.back(result: true);
               // continueBtn();
             },
-            child: const Text(
+            child:  Text(
               "CONTINUE",
-              style: TextStyle(color: buttonBgColor),
+              style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),
             ))
       ],
     ); },);

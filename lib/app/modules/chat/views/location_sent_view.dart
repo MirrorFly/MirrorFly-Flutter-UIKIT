@@ -2,13 +2,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../controllers/location_controller.dart';
 
-class LocationSentView extends GetView<LocationController>{
+class LocationSentView extends StatefulWidget{
   const LocationSentView({Key? key}) : super(key: key);
+
+  @override
+  State<LocationSentView> createState() => _LocationSentViewState();
+}
+
+class _LocationSentViewState extends State<LocationSentView> {
+  var controller = Get.put(LocationController());
+  @override
+  void dispose() {
+    Get.delete<LocationController>();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -16,8 +27,11 @@ class LocationSentView extends GetView<LocationController>{
         return Future.value(true);
       },
       child: Scaffold(
+        backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
           appBar: AppBar(
-          title: const Text('User Location'),
+            iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+            backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
+          title: Text('User Location',style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
       automaticallyImplyLeading: true,
           ),
         body:SafeArea(
@@ -53,12 +67,12 @@ class LocationSentView extends GetView<LocationController>{
                           ()=>controller.address1.value.isNotEmpty ? Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('Send this Location',style: TextStyle(color: buttonBgColor,fontSize: 14,fontWeight: FontWeight.normal),),
+                              Text('Send this Location',style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor,fontSize: 14,fontWeight: FontWeight.normal),),
                               Padding(
                                 padding: const EdgeInsets.only(top: 8.0),
-                                child: Text(controller.address1.value,style: const TextStyle(color: textHintColor,fontSize: 16,fontWeight: FontWeight.w700),),
+                                child: Text(controller.address1.value,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor,fontSize: 16,fontWeight: FontWeight.w700),),
                               ),
-                              Text(controller.address2.value,style: const TextStyle(color: textColor,fontSize: 14,fontWeight: FontWeight.normal),),
+                              Text(controller.address2.value,style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor,fontSize: 14,fontWeight: FontWeight.normal),),
                             ],
                           ) : Center(child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,)),
                         ),
@@ -69,11 +83,12 @@ class LocationSentView extends GetView<LocationController>{
                       child: FloatingActionButton.small(onPressed: (){
                         if(controller.location.value.latitude!=0){
                           //sent Location Message
-                          Get.back(result: controller.location.value);
+                          Navigator.pop(context,controller.location.value);
+                          // Get.back(result: controller.location.value);
                         }
                       },
-                        backgroundColor: buttonBgColor,
-                      child: const Icon(Icons.arrow_forward_rounded,color: Colors.white,size: 18,),),
+                        backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
+                      child: Icon(Icons.arrow_forward_rounded,color: MirrorflyUikit.getTheme?.colorOnPrimary,size: 18,),),
                     )
                   ],
                 )

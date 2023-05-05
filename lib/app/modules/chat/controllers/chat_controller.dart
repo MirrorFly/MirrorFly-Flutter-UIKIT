@@ -16,6 +16,7 @@ import 'package:mirrorfly_uikit_plugin/app/common/de_bouncer.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/permissions.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/camera_pick/views/camera_pick_view.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/location_sent_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chatInfo/views/chat_info_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/group/views/group_info_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/media_preview/views/media_preview_view.dart';
@@ -2351,13 +2352,24 @@ class ChatController extends FullLifeCycleController
     if (await AppUtils.isNetConnected()) {
       if (await AppPermission.checkPermission(context,Permission.location,
           locationPinPermission, Constants.locationPermission)) {
-        Get.toNamed(Routes.locationSent)?.then((value) {
+        if(context.mounted) {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (con) => LocationSentView()))
+              .then((value) {
+            if (value != null) {
+              value as LatLng;
+              sendLocationMessage(
+                  profile, value.latitude, value.longitude, context);
+            }
+          });
+        }
+        /*Get.toNamed(Routes.locationSent)?.then((value) {
           if (value != null) {
             value as LatLng;
             sendLocationMessage(
                 profile, value.latitude, value.longitude, context);
           }
-        });
+        });*/
       } else {
         // AppPermission.permissionDeniedDialog(content: "Permission is permanently denied. Please enable location permission from settings");
       }
