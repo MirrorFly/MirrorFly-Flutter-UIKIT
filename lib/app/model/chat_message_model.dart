@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 
 List<ChatMessageModel> chatMessageModelFromJson(String str) =>
     List<ChatMessageModel>.from(
@@ -52,9 +53,9 @@ class ChatMessageModel {
   bool? isItCarbonMessage;
   bool? isItSavedContact;
   bool isMessageDeleted;
-  bool isMessageRecalled;
+  RxBool isMessageRecalled;
   bool isMessageSentByMe;
-  bool isMessageStarred;
+  RxBool isMessageStarred;
   bool isThisAReplyMessage;
   String messageChatType;
   Map<String, dynamic> messageCustomField;
@@ -92,9 +93,9 @@ class ChatMessageModel {
             ? json["isItSavedContact"] ?? false
             : json["isSavedContact"] ?? false,
         isMessageDeleted: json["isMessageDeleted"],
-        isMessageRecalled: json["isMessageRecalled"],
+        isMessageRecalled: json["isMessageRecalled"].toString().toBool().obs,
         isMessageSentByMe: json["isMessageSentByMe"],
-        isMessageStarred: json["isMessageStarred"],
+        isMessageStarred: json["isMessageStarred"].toString().toBool().obs,
         isThisAReplyMessage: Platform.isAndroid
             ? json["isThisAReplyMessage"]
             : json["isReplyMessage"],

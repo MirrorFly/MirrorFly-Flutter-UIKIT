@@ -93,7 +93,8 @@ class _DashboardViewState extends State<DashboardView> {
                             cursorColor: MirrorflyUikit.getTheme?.colorOnAppbar,
                             decoration: InputDecoration(
                                 hintText: "Search...",
-                                hintStyle: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+                                hintStyle: TextStyle(color: MirrorflyUikit
+                                    .getTheme?.colorOnAppbar.withOpacity(0.5)),
                                 border: InputBorder.none),
                           )
                         : widget.title != null
@@ -322,14 +323,14 @@ class _DashboardViewState extends State<DashboardView> {
               controller.gotoSettings(context);
             },
           ),
-          CustomAction(
+          /*CustomAction(
             visibleWidget: const Icon(Icons.web),
             overflowWidget: Text("Web", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction:
                 controller.selected.value || controller.isSearching.value ? ShowAsAction.gone : ShowAsAction.never,
             keyValue: 'Web',
             onItemClick: () => controller.webLogin(),
-          )
+          )*/
         ]);
   }
 
@@ -671,9 +672,9 @@ class _DashboardViewState extends State<DashboardView> {
                                               item.messageStatus.value.checkNull(),
                                               item.isMessageSentByMe.checkNull(),
                                               item.messageType.checkNull(),
-                                              item.isMessageRecalled),
+                                              item.isMessageRecalled.value),
                                         ),
-                                        item.isMessageRecalled
+                                        item.isMessageRecalled.value
                                             ? const SizedBox.shrink()
                                             : forMessageTypeIcon(item.messageType, item.mediaChatMessage),
                                         SizedBox(

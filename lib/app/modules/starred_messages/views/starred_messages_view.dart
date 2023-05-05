@@ -198,15 +198,15 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
       backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
       title: TextField(
         onChanged: (text) => controller.startSearch(text),
-        style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),
+        style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
         controller: controller.searchedText,
         focusNode: controller.searchFocus,
-        cursorColor: MirrorflyUikit.getTheme?.primaryColor,
+        cursorColor: MirrorflyUikit.getTheme?.colorOnAppbar,
         autofocus: true,
         decoration: InputDecoration(
             hintText: "Search...", border: InputBorder.none, hintStyle: TextStyle(
             color: MirrorflyUikit
-            .getTheme?.colorOnAppbar),),
+                .getTheme?.colorOnAppbar.withOpacity(0.5)),),
       ),
       actions: [
         Visibility(

@@ -102,9 +102,10 @@ class CameraPickController extends GetxController with WidgetsBindingObserver  {
   Duration myDuration = const Duration(seconds: 40000);
   int maxVideoDuration = 40000;
   var seconds = 40000.obs;
-  void startTimer() {
+
+  void startTimer(BuildContext context) {
     countdownTimer =
-        Timer.periodic(const Duration(seconds: 1), (_) => setCountDown());
+        Timer.periodic(const Duration(seconds: 1), (_) => setCountDown(context));
   }
   var minutesStr = '00'.obs;
   var secondsStr = '00'.obs;
@@ -112,22 +113,23 @@ class CameraPickController extends GetxController with WidgetsBindingObserver  {
   var timeStr = "".obs;
   var progress = 0.obs;
   get timeString => timeStr("${minutesStr.value}:${secondsStr.value}");
-  void setCountDown() {
+
+  void setCountDown(BuildContext context) {
     counter++;
     minutesStr(((counter / 60) % 60).floor().toString().padLeft(2, '0'));
     secondsStr((counter % 60).floor().toString().padLeft(2, '0'));
     progress(counter);
     debugPrint(counter.toString());
     if(counter==maxVideoDuration){
-      stopVideoRecording();
+      stopVideoRecording(context);
     }
   }
 
-  Future<void> startVideoRecording() async {
+  Future<void> startVideoRecording(BuildContext context) async {
     //final CameraController? cameraController = controller;
 
     if (cameraController == null || !cameraController!.value.isInitialized) {
-      showInSnackBar('Error: select a camera first.');
+      showInSnackBar(context,'Error: select a camera first.');
       return;
     }
 
@@ -138,28 +140,28 @@ class CameraPickController extends GetxController with WidgetsBindingObserver  {
 
     try {
       await cameraController!.startVideoRecording();
-      startTimer();
+      if(context.mounted) startTimer(context);
       isRecording(true);
     } on CameraException catch (e) {
-      _showCameraException(e);
+      _showCameraException(context,e);
       return;
     }
   }
-  void _showCameraException(CameraException e) {
+  void _showCameraException(BuildContext context,CameraException e) {
     _logError(e.code, e.description);
-    showInSnackBar('Error: ${e.code}\n${e.description}');
+    showInSnackBar(context,'Error: ${e.code}\n${e.description}');
   }
   void _logError(String code, String? message) {
     // ignore: avoid_print
     print('Error: $code${message == null ? '' : '\nError Message: $message'}');
   }
 
-  void showInSnackBar(String message) {
-    ScaffoldMessenger.of(Get.context!)
+  void showInSnackBar(BuildContext context,String message) {
+    ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)));
   }
 
-  Future<XFile?> stopVideoRecording() async {
+  Future<XFile?> stopVideoRecording(BuildContext context) async {
     //final CameraController? cameraController = controller;
     countdownTimer?.cancel();
     if (cameraController == null || !cameraController!.value.isRecordingVideo) {
@@ -169,7 +171,7 @@ class CameraPickController extends GetxController with WidgetsBindingObserver  {
     try {
       return cameraController!.stopVideoRecording();
     } on CameraException catch (e) {
-      _showCameraException(e);
+      _showCameraException(context,e);
       return null;
     }
   }
@@ -188,7 +190,7 @@ class CameraPickController extends GetxController with WidgetsBindingObserver  {
   stopRecord(BuildContext context)async{
     if(cameraInitialized.value) {
       //Helper.showLoading();
-      XFile? file = await stopVideoRecording();
+      XFile? file = await stopVideoRecording(context);
       debugPrint("file : ${file?.path}");
       //Helper.hideLoading();
       // Get.back(result: file);

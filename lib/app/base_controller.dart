@@ -183,7 +183,7 @@ abstract class BaseController {
     if(SessionManagement.getCurrentChatJID() == chatMessageModel.chatUserJid.checkNull()){
       debugPrint("Message Status updated user chat screen is in online");
     }else{
-      if(chatMessageModel.isMessageRecalled){
+      if(chatMessageModel.isMessageRecalled.value){
         showLocalNotification(chatMessageModel);
       }
     }
@@ -555,7 +555,7 @@ abstract class BaseController {
       NotificationDetails(android: androidNotificationDetails, iOS: iosNotificationDetails);
       await flutterLocalNotificationsPlugin.show(
           int.parse(messageId), chatMessageModel.senderUserName,
-          chatMessageModel.isMessageRecalled ? "This message was deleted" : chatMessageModel.messageTextContent, notificationDetails,
+          chatMessageModel.isMessageRecalled.value ? "This message was deleted" : chatMessageModel.messageTextContent, notificationDetails,
           payload: chatMessageModel.chatUserJid);
     }else{
       debugPrint("self sent message don't need notification");

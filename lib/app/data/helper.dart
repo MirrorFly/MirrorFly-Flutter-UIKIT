@@ -330,6 +330,10 @@ extension StringParsing on String? {
     return this ?? "";
   }
 
+  bool toBool(){
+    return this != null ? this!.toLowerCase() == "true" : false;
+  }
+
   int checkIndexes(String searchedKey) {
     var i = -1;
     if (i == -1 || i < searchedKey.length) {
@@ -890,8 +894,8 @@ void showQuickProfilePopup(
     required Function() videoTap,
     required Function() infoTap,
     required Rx<Profile> profile}) {
-  Get.dialog(
-    Obx(() {
+  showDialog(context: context, builder: (BuildContext context) {
+    return Obx(() {
       return Dialog(
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(20.0))),
@@ -932,24 +936,24 @@ void showQuickProfilePopup(
                             clipOval: false,
                             errorWidget: profile.value.isGroupProfile!
                                 ? Image.asset(
-                                    groupImg,
-                                    package: package,
-                                    height: 250,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.72,
-                                    fit: BoxFit.cover,
-                                  )
+                              groupImg,
+                              package: package,
+                              height: 250,
+                              width: MediaQuery.of(context).size.width *
+                                  0.72,
+                              fit: BoxFit.cover,
+                            )
                                 : ProfileTextImage(
-                                    text: getName(profile.value),
-                                    fontSize: 75,
-                                    radius: 0,
-                                  ),
+                              text: getName(profile.value),
+                              fontSize: 75,
+                              radius: 0,
+                            ),
                             isGroup: profile.value.isGroupProfile.checkNull(),
                             blocked: profile.value.isBlockedMe.checkNull() ||
                                 profile.value.isAdminBlocked.checkNull(),
                             unknown:
-                                (!profile.value.isItSavedContact.checkNull() ||
-                                    profile.value.isDeletedContact()),
+                            (!profile.value.isItSavedContact.checkNull() ||
+                                profile.value.isDeletedContact()),
                           )),
                       Padding(
                         padding: const EdgeInsets.symmetric(
@@ -958,8 +962,8 @@ void showQuickProfilePopup(
                           profile.value.isGroupProfile!
                               ? profile.value.name.checkNull()
                               : MirrorflyUikit.isTrialLicence
-                                  ? profile.value.mobileNumber.checkNull()
-                                  : profile.value.nickName.checkNull(),
+                              ? profile.value.mobileNumber.checkNull()
+                              : profile.value.nickName.checkNull(),
                           style: const TextStyle(color: Colors.white),
                         ),
                       ),
@@ -985,25 +989,25 @@ void showQuickProfilePopup(
                     ),
                     !profile.value.isGroupProfile.checkNull()
                         ? Expanded(
-                            child: InkWell(
-                              onTap: callTap,
-                              child: SvgPicture.asset(
-                                quickCall,
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                          )
+                      child: InkWell(
+                        onTap: callTap,
+                        child: SvgPicture.asset(
+                          quickCall,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    )
                         : const SizedBox.shrink(),
                     !profile.value.isGroupProfile.checkNull()
                         ? Expanded(
-                            child: InkWell(
-                              onTap: videoTap,
-                              child: SvgPicture.asset(
-                                quickVideo,
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                          )
+                      child: InkWell(
+                        onTap: videoTap,
+                        child: SvgPicture.asset(
+                          quickVideo,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    )
                         : const SizedBox.shrink(),
                     Expanded(
                       child: InkWell(
@@ -1021,7 +1025,8 @@ void showQuickProfilePopup(
           ),
         ),
       );
-    }),
+    });
+  },
   );
 }
 

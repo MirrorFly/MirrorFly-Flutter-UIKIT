@@ -86,15 +86,20 @@ class PreviewContactView extends GetView<PreviewContactController> {
                                       visible:
                                           contactItem.contactNo.length > 1 &&
                                               controller.from != "chat",
-                                      child: Checkbox(
-                                        activeColor: Colors.green,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(4)),
-                                        value: phoneItem.isSelected,
-                                        onChanged: (bool? value) {
-                                          controller.changeStatus(phoneItem);
-                                        },
+                                      child: Theme(
+                                        data: Theme.of(context).copyWith(
+                                          unselectedWidgetColor: Colors.grey,
+                                        ),
+                                        child: Checkbox(
+                                          activeColor: Colors.green,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(4)),
+                                          value: phoneItem.isSelected,
+                                          onChanged: (bool? value) {
+                                            controller.changeStatus(phoneItem);
+                                          },
+                                        ),
                                       ),
                                     ),
                                   );

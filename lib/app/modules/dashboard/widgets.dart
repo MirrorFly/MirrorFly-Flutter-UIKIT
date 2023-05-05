@@ -149,9 +149,16 @@ class RecentChatItem extends StatelessWidget {
           buildRecentChatTime(context),
           Visibility(
             visible: isCheckBoxVisible,
-            child: Checkbox(
-              value: isChecked,
-              onChanged: onchange,
+            child: Theme(
+              data: ThemeData(
+                unselectedWidgetColor: Colors.grey,
+              ),
+              child: Checkbox(
+                activeColor: MirrorflyUikit.getTheme!.primaryColor,//Colors.white,
+                checkColor: MirrorflyUikit.getTheme?.colorOnPrimary,
+                value: isChecked,
+                onChanged: onchange,
+              ),
             ),
           ),
           Row(
@@ -269,7 +276,7 @@ class RecentChatItem extends StatelessWidget {
 
   Visibility buildArchivedTextVisibility() {
     return Visibility(
-        visible: item.isChatArchived! && archiveVisible,
+        visible: item.isChatArchived! && archiveVisible && !isForwardMessage,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 2.0),
           decoration: BoxDecoration(
@@ -289,7 +296,7 @@ class RecentChatItem extends StatelessWidget {
 
   Visibility buildMuteIconVisibility() {
     return Visibility(
-        visible: !archiveEnabled && item.isMuted!,
+        visible: !archiveEnabled && item.isMuted! && !isForwardMessage,
         child: SvgPicture.asset(
           mute,package: package,
           color: MirrorflyUikit.getTheme?.textPrimaryColor,
@@ -300,7 +307,7 @@ class RecentChatItem extends StatelessWidget {
 
   Visibility buildArchivedIconVisibility() {
     return Visibility(
-        visible: !item.isChatArchived! && item.isChatPinned!,
+        visible: !item.isChatArchived! && item.isChatPinned! && !isForwardMessage,
         child: SvgPicture.asset(
           pin,package: package,
           color: MirrorflyUikit.getTheme?.textPrimaryColor,
@@ -336,11 +343,11 @@ class RecentChatItem extends StatelessWidget {
             var chat = data.data!;
             return Row(
               children: [
-                chat.isMessageRecalled
+                chat.isMessageRecalled.value
                     ? const SizedBox.shrink() : forMessageTypeIcon(
                     chat.messageType, chat.mediaChatMessage),
                 SizedBox(
-                  width: chat.isMessageRecalled
+                  width: chat.isMessageRecalled.value
                       ? 0.0
                       : forMessageTypeString(chat.messageType,
                                   content:
@@ -363,7 +370,7 @@ class RecentChatItem extends StatelessWidget {
                 Expanded(
                   child: spanTxt.isEmpty
                       ? Text(
-                    chat.isMessageRecalled
+                    chat.isMessageRecalled.value
                               ? setRecalledMessageText(
                         chat.isMessageSentByMe)
                               : forMessageTypeString(chat.messageType,
@@ -376,7 +383,7 @@ class RecentChatItem extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         )
                       : spannableText(
-                      chat.isMessageRecalled
+                      chat.isMessageRecalled.value
                               ? setRecalledMessageText(
                           chat.isMessageSentByMe)
                               : forMessageTypeString(

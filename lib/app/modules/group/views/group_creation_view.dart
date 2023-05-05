@@ -169,6 +169,7 @@ class _GroupCreationViewState extends State<GroupCreationView> {
                         onChanged: (_) => controller.onGroupNameChanged(),
                         maxLength: 25,
                         maxLines: 1,
+                        cursorColor: MirrorflyUikit.getTheme?.primaryColor,
                         controller: controller.groupName,
                         decoration: InputDecoration(
                             border: InputBorder.none,

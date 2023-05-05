@@ -3,16 +3,13 @@ import 'package:mirrorfly_plugin/flychat.dart';
 import '../../models.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/dashboard/controllers/dashboard_controller.dart';
 
 import '../../data/apputils.dart';
 import '../../data/helper.dart';
 import '../../routes/app_pages.dart';
 
 class ArchivedChatListController extends GetxController {
-  DashboardController dashboardController = Get.find<DashboardController>();
-  RxList<RecentChatData> archivedChats =
-      Get.find<DashboardController>().archivedChats;
+  RxList<RecentChatData> archivedChats = <RecentChatData>[].obs;//Get.find<DashboardController>().archivedChats;
 
   //RxList<RecentChatData> archivedChats = <RecentChatData>[].obs;
 

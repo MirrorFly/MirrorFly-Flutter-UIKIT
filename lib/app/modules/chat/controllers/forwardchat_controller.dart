@@ -276,7 +276,7 @@ class ForwardChatController extends GetxController {
           onPressed: () async {
             if(await AppUtils.isNetConnected()) {
               // Get.back();
-              Navigator.pop(context);
+              if(context.mounted) Navigator.pop(context);
               // Helper.progressLoading();
               Mirrorfly.unblockUser(jid.checkNull()).then((value) {
                 // Helper.hideLoading();

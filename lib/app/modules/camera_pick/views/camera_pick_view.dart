@@ -114,7 +114,7 @@ class CameraPickView extends StatelessWidget {
                       Obx(() {
                         return GestureDetector(
                           onLongPress: () async {
-                            controller.startVideoRecording();
+                            controller.startVideoRecording(context);
                           },
                           onLongPressUp: () async {
                             // to preview

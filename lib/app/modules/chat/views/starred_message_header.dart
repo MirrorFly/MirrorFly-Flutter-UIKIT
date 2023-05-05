@@ -167,7 +167,7 @@ class StarredMessageHeader extends StatelessWidget {
 
   getChatTime(int messageSentTime) {
     return Text(
-      controller.getChatTime(Get.context, messageSentTime),
+      controller.getChatTime(messageSentTime),
       style: TextStyle(fontSize: 12, color: MirrorflyUikit.getTheme?.textSecondaryColor),
     );
   }

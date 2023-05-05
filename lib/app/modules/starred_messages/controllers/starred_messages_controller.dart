@@ -130,7 +130,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
     }
   }
 
-  String getChatTime(context, int? epochTime) {
+  String getChatTime(int? epochTime) {
     if (epochTime == null) return "";
     if (epochTime == 0) return "";
     var convertedTime = epochTime; // / 1000;
@@ -310,7 +310,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
   favouriteMessage() {
     for (var item in selectedChatList) {
       Mirrorfly.updateFavouriteStatus(
-          item.messageId, item.chatUserJid, !item.isMessageStarred, item.messageChatType);
+          item.messageId, item.chatUserJid, !item.isMessageStarred.value, item.messageChatType);
       starredChatList
           .removeWhere((element) => item.messageId == element.messageId);
       if(isSearch.value){
@@ -335,10 +335,10 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
     return {
       selectedChatList.any((element) =>
               element.isMessageSentByMe &&
-              !element.isMessageRecalled &&
+              !element.isMessageRecalled.value &&
               (element.messageSentTime > recallTimeDifference)):
           selectedChatList.any((element) =>
-              !element.isMessageRecalled &&
+              !element.isMessageRecalled.value &&
               (element.isMediaMessage() &&
                   element.mediaChatMessage!.mediaLocalStoragePath
                       .checkNull()
@@ -377,13 +377,20 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
                         child: Row(
                           children: [
                             Obx(() {
-                              return Checkbox(
-                                  value: isMediaDelete.value,
-                                  onChanged: (value) {
-                                    isMediaDelete(!isMediaDelete.value);
-                                    mirrorFlyLog(
-                                        "isMediaDelete", value.toString());
-                                  });
+                              return Theme(
+                                data: ThemeData(
+                                  unselectedWidgetColor: Colors.grey,
+                                ),
+                                child: Checkbox(
+                                    value: isMediaDelete.value,
+                                    activeColor: MirrorflyUikit.getTheme!.primaryColor,//Colors.white,
+                                    checkColor: MirrorflyUikit.getTheme?.colorOnPrimary,
+                                    onChanged: (value) {
+                                      isMediaDelete(!isMediaDelete.value);
+                                      mirrorFlyLog(
+                                          "isMediaDelete", value.toString());
+                                    }),
+                              );
                             }),
                             Expanded(
                               child: Text("Delete media from my phone", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),

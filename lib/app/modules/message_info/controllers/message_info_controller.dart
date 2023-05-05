@@ -17,20 +17,26 @@ import '../../../data/permissions.dart';
 class MessageInfoController extends GetxController {
   var chatController = Get.find<ChatController>();
 
-  var messageID = Get.arguments["messageID"];
-  var jid = Get.arguments["jid"];
-  var isGroupProfile = Get.arguments["isGroupProfile"];
-  var chatMessage = [Get.arguments["chatMessage"] as ChatMessageModel].obs;
+  // var messageID = Get.arguments["messageID"];
+  var jid = "";//Get.arguments["jid"];
+  var isGroupProfile = false.obs;//Get.arguments["isGroupProfile"];
+  var chatMessage = <ChatMessageModel>[].obs;//[Get.arguments["chatMessage"] as ChatMessageModel].obs;
   var readTime = ''.obs;
   var deliveredTime = ''.obs;
 
-
   var calendar = DateTime.now();
 
-  @override
+  /*@override
   void onInit() {
     super.onInit();
     getStatusOfMessage(chatMessage.first.messageId);
+  }*/
+
+  init(ChatMessageModel chatMessage, bool isGroupProfile, String jid) {
+    this.isGroupProfile(isGroupProfile);
+    this.jid = jid;
+    this.chatMessage([chatMessage]);
+    getStatusOfMessage(this.chatMessage.first.messageId);
   }
 
   String getChatTime(BuildContext context, int? epochTime) {
@@ -59,11 +65,11 @@ class MessageInfoController extends GetxController {
   String setDateHourFormat(int format, int hours) {
     var dateHourFormat = (format == 12)
         ? (hours < 10)
-        ? "hh:mm aa"
-        : "h:mm aa"
+            ? "hh:mm aa"
+            : "h:mm aa"
         : (hours < 10)
-        ? "HH:mm"
-        : "H:mm";
+            ? "HH:mm"
+            : "H:mm";
     return dateHourFormat;
   }
 
@@ -97,8 +103,10 @@ class MessageInfoController extends GetxController {
   var currentPos = 0.obs;
   var isPlaying = false.obs;
   var audioPlayed = false.obs;
+
   // AudioPlayer player = AudioPlayer();
   ChatMessageModel? playingChat;
+
   playAudio(ChatMessageModel chatMessage) async {
     /*setPlayingChat(chatMessage);
     if (!playingChat!.mediaChatMessage!.isPlaying) {
@@ -140,7 +148,7 @@ class MessageInfoController extends GetxController {
     }*/
   }
 
-  void onSeekbarChange(double value,ChatMessageModel chatMessage) {
+  void onSeekbarChange(double value, ChatMessageModel chatMessage) {
     /*debugPrint('onSeekbarChange $value');
     if (playingChat != null) {
       player.seek(Duration(milliseconds: value.toInt()));
@@ -153,20 +161,24 @@ class MessageInfoController extends GetxController {
   var messageDeliveredList = <DeliveredParticipantList>[].obs;
   var messageReadList = <DeliveredParticipantList>[].obs;
   var statusCount = 0.obs;
-  String chatDate(BuildContext cxt,DeliveredParticipantList item) => getChatTime(cxt, int.parse(item.time.checkNull()));
+
+  String chatDate(BuildContext cxt, DeliveredParticipantList item) =>
+      getChatTime(cxt, int.parse(item.time.checkNull()));
+
   getMessageStatus(String messageId) async {
     // statusCount(await Mirrorfly.getGroupMessageStatusCount(messageId));
-    var delivered = await Mirrorfly.getGroupMessageDeliveredToList(messageId, jid);
+    var delivered =
+        await Mirrorfly.getGroupMessageDeliveredToList(messageId, jid);
     mirrorFlyLog("deliveredResp", delivered);
     // var deliveredResp = json.decode(delivered);
     // mirrorFlyLog("deliveredResp.deliveredParticipantList", "${deliveredResp["deliveredParticipantList"]}");
     // messageDeliveredList(messageDeliveredStatusFromJson(deliveredResp["deliveredParticipantList"].toString()));
     // deliveredStatusCount(deliveredResp["deliveredCount"]);
     // deliveredTotalCount(deliveredResp["totalParticipatCount"]);
-    var item = MessageDeliveredStatus.fromJson(json.decode(delivered), "delivered");
+    var item =
+        MessageDeliveredStatus.fromJson(json.decode(delivered), "delivered");
     statusCount(item.totalParticipatCount!);
     messageDeliveredList(item.participantList);
-
 
     var read = await Mirrorfly.getGroupMessageReadByList(messageId, jid);
     // mirrorFlyLog("readResp", read);
@@ -180,40 +192,42 @@ class MessageInfoController extends GetxController {
   }
 
   var visibleDeliveredList = false.obs;
-  onDeliveredClick(){
-    if(visibleDeliveredList.value){
+
+  onDeliveredClick() {
+    if (visibleDeliveredList.value) {
       visibleDeliveredList(false);
-    }else{
+    } else {
       visibleDeliveredList(true);
     }
   }
 
   var visibleReadList = false.obs;
-  onReadClick(){
-    if(visibleReadList.value){
+
+  onReadClick() {
+    if (visibleReadList.value) {
       visibleReadList(false);
-    }else{
+    } else {
       visibleReadList(true);
     }
   }
 
-  void onMessageStatusUpdated(ChatMessageModel chatMessageModel){
+  void onMessageStatusUpdated(ChatMessageModel chatMessageModel) {
     // mirrorFlyLog("MESSAGE STATUS UPDATED on Info", chatMessageModel.messageId);
-    if(chatMessageModel.messageId == chatMessage[0].messageId){
-      chatMessage[0]=chatMessageModel;
+    if (chatMessageModel.messageId == chatMessage[0].messageId) {
+      chatMessage[0] = chatMessageModel;
       chatMessage.refresh();
       getStatusOfMessage(chatMessageModel.messageId);
     }
   }
-  
-  getStatusOfMessage(String messageId){
-    if(!isGroupProfile) {
+
+  getStatusOfMessage(String messageId) {
+    if (!isGroupProfile.value) {
       Mirrorfly.getMessageStatusOfASingleChatMessage(messageId).then((value) {
         var response = json.decode(value);
         readTime(response["seenTime"]);
         deliveredTime(response["deliveredTime"]);
       });
-    }else{
+    } else {
       getMessageStatus(messageId);
     }
   }

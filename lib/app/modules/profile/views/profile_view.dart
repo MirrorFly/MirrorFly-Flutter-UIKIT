@@ -166,6 +166,7 @@ class _ProfileViewState extends State<ProfileView> {
                             onChanged: (value) => controller.nameChanges(value),
                             textAlign: controller.profileName.text.isNotEmpty ? TextAlign.center : TextAlign.start,
                             maxLength: 30,
+                            cursorColor: MirrorflyUikit.getTheme?.primaryColor,
                             controller: controller.profileName,
                             decoration: const InputDecoration(
                               border: InputBorder.none,
@@ -190,6 +191,7 @@ class _ProfileViewState extends State<ProfileView> {
                       onChanged: (value) => controller.onEmailChange(value),
                       controller: controller.profileEmail,
                       enabled: controller.emailEditAccess,
+                      cursorColor: MirrorflyUikit.getTheme?.primaryColor,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Enter Email Id',
@@ -208,6 +210,7 @@ class _ProfileViewState extends State<ProfileView> {
                     TextField(
                       controller: controller.profileMobile,
                       enabled: false,
+                      cursorColor: MirrorflyUikit.getTheme?.primaryColor,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Enter Mobile Number',

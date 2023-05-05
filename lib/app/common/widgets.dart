@@ -382,9 +382,16 @@ Widget memberItem(
                     : const SizedBox(),
                 Visibility(
                   visible: isCheckBoxVisible,
-                  child: Checkbox(
-                    value: isChecked,
-                    onChanged: onchange,
+                  child: Theme(
+                    data: ThemeData(
+                      unselectedWidgetColor: Colors.grey,
+                    ),
+                    child: Checkbox(
+                      activeColor: MirrorflyUikit.getTheme!.primaryColor,//Colors.white,
+                      checkColor: MirrorflyUikit.getTheme?.colorOnPrimary,
+                      value: isChecked,
+                      onChanged: onchange,
+                    ),
                   ),
                 ),
               ],

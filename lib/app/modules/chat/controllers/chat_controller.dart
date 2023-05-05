@@ -16,10 +16,13 @@ import 'package:mirrorfly_uikit_plugin/app/common/de_bouncer.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/permissions.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/camera_pick/views/camera_pick_view.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_view.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/image_preview_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/location_sent_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chatInfo/views/chat_info_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/group/views/group_info_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/media_preview/views/media_preview_view.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/message_info/views/message_info_view.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -687,22 +690,23 @@ class ChatController extends FullLifeCycleController
           result.files.first.extension == 'png') {
         debugPrint("Picked Image File");
         imagePath.value = (result.files.single.path!);
-        Get.toNamed(Routes.imagePreview, arguments: {
+        Navigator.push(context, MaterialPageRoute(builder: (con)=>ImagePreviewView()));
+        /*Get.toNamed(Routes.imagePreview, arguments: {
           "filePath": imagePath.value,
           "userName": getName(profile),
           "profile": profile
-        });
+        });*/
       } else if (result.files.first.extension == 'mp4' ||
           result.files.first.extension == 'MP4' ||
           result.files.first.extension == 'mov' ||
           result.files.first.extension == 'mkv') {
         debugPrint("Picked Video File");
         imagePath.value = (result.files.single.path!);
-        Get.toNamed(Routes.videoPreview, arguments: {
+        /*Get.toNamed(Routes.videoPreview, arguments: {
           "filePath": imagePath.value,
           "userName": getName(profile),
           "profile": profile
-        });
+        });*/
       }
     } else {
       // User canceled the picker
@@ -1045,7 +1049,7 @@ class ChatController extends FullLifeCycleController
   }
 
   void handleReplyChatMessage(ChatMessageModel chatListItem) {
-    if (!chatListItem.isMessageRecalled && !chatListItem.isMessageDeleted) {
+    if (!chatListItem.isMessageRecalled.value && !chatListItem.isMessageDeleted) {
       debugPrint(chatListItem.messageType);
       if (isReplying.value) {
         isReplying(false);
@@ -1202,10 +1206,10 @@ class ChatController extends FullLifeCycleController
     return {
       selectedChatList.any((element) =>
               element.isMessageSentByMe &&
-              !element.isMessageRecalled &&
+              !element.isMessageRecalled.value &&
               (element.messageSentTime > recallTimeDifference)):
           selectedChatList.any((element) =>
-              !element.isMessageRecalled &&
+              !element.isMessageRecalled.value &&
               (element.isMediaMessage() &&
                   element.mediaChatMessage!.mediaLocalStoragePath
                       .checkNull()
@@ -1253,13 +1257,20 @@ class ChatController extends FullLifeCycleController
                         child: Row(
                           children: [
                             Obx(() {
-                              return Checkbox(
-                                  value: isMediaDelete.value,
-                                  onChanged: (value) {
-                                    isMediaDelete(!isMediaDelete.value);
-                                    mirrorFlyLog(
-                                        "isMediaDelete", value.toString());
-                                  });
+                              return Theme(
+                                data: ThemeData(
+                                  unselectedWidgetColor: Colors.grey,
+                                ),
+                                child: Checkbox(
+                                    value: isMediaDelete.value,
+                                    activeColor: MirrorflyUikit.getTheme!.primaryColor,//Colors.white,
+                                    checkColor: MirrorflyUikit.getTheme?.colorOnPrimary,
+                                    onChanged: (value) {
+                                      isMediaDelete(!isMediaDelete.value);
+                                      mirrorFlyLog(
+                                          "isMediaDelete", value.toString());
+                                    }),
+                              );
                             }),
                             const Expanded(
                               child: Text("Delete media from my phone"),
@@ -1315,9 +1326,9 @@ class ChatController extends FullLifeCycleController
                       if (value != null && value) {
                         // removeChatList(selectedChatList);//
                         for (var chatList in selectedChatList) {
-                          chatList.isMessageRecalled = true;
+                          chatList.isMessageRecalled(true);
                           chatList.isSelected(false);
-                          this.chatList.refresh();
+                          // this.chatList.refresh();
                         }
                       }
                       isSelected(false);
@@ -1339,12 +1350,19 @@ class ChatController extends FullLifeCycleController
   messageInfo() {
     Future.delayed(const Duration(milliseconds: 100), () {
       debugPrint("sending mid ===> ${selectedChatList[0].messageId}");
-      Get.toNamed(Routes.messageInfo, arguments: {
+      var selected = selectedChatList[0];
+      Navigator.push(context, MaterialPageRoute(builder: (cont)=>MessageInfoView(
+          // messageID: selectedChatList[0].messageId,
+          chatMessage: selected,
+          isGroupProfile: profile.isGroupProfile.checkNull(),
+          jid: profile.jid.checkNull()
+      )));
+      /*Get.toNamed(Routes.messageInfo, arguments: {
         "messageID": selectedChatList[0].messageId,
         "chatMessage": selectedChatList[0],
         "isGroupProfile": profile.isGroupProfile,
         "jid": profile.jid
-      });
+      });*/
       clearChatSelection(selectedChatList[0]);
     });
   }
@@ -1365,15 +1383,15 @@ class ChatController extends FullLifeCycleController
     });*/
     for (var item in selectedChatList) {
       Mirrorfly.updateFavouriteStatus(item.messageId, item.chatUserJid,
-          !item.isMessageStarred, item.messageChatType);
+          !item.isMessageStarred.value, item.messageChatType);
       var msg =
           chatList.firstWhere((element) => item.messageId == element.messageId);
-      msg.isMessageStarred = !item.isMessageStarred;
+      msg.isMessageStarred(!item.isMessageStarred.value);
       msg.isSelected(false);
     }
     isSelected(false);
     selectedChatList.clear();
-    chatList.refresh();
+    // chatList.refresh();
   }
 
   Widget getLocationImage(
@@ -1443,7 +1461,7 @@ class ChatController extends FullLifeCycleController
     if (chatList.isNotEmpty) {
       Future.delayed(const Duration(milliseconds: 100), () {
         var starred =
-            chatList.indexWhere((element) => element.isMessageStarred);
+            chatList.indexWhere((element) => element.isMessageStarred.value);
         Helper.showAlert(
             message: "Are you sure you want to clear the chat?",
             actions: [
@@ -1769,8 +1787,8 @@ class ChatController extends FullLifeCycleController
                       ForwardChatView(forwardMessageIds: messageIds)))
           .then((value) {
         if (value != null) {
-          debugPrint(
-              "result of forward ==> ${(value as Profile).toJson().toString()}");
+          (value as Profile);
+         /* debugPrint("result of forward ==> ${(value as Profile).toJson().toString()}");
           profile_.value = value;
           isBlocked(profile.isBlocked);
           setChatStatus();
@@ -1779,7 +1797,9 @@ class ChatController extends FullLifeCycleController
           Mirrorfly.setOnGoingChatUser(profile.jid!);
           SessionManagement.setCurrentChatJID(profile.jid.checkNull());
           getChatHistory();
-          sendReadReceipt();
+          sendReadReceipt();*/
+          Navigator.pop(context);
+          Navigator.push(context, MaterialPageRoute(builder: (con)=>ChatView(jid: value.jid.checkNull())));
         }
       });
       /*Get.toNamed(Routes.forwardChat, arguments: {
@@ -2433,7 +2453,7 @@ class ChatController extends FullLifeCycleController
   }
 
   bool forwardMessageVisibility(ChatMessageModel chat) {
-    if (!chat.isMessageRecalled && !chat.isMessageDeleted) {
+    if (!chat.isMessageRecalled.value && !chat.isMessageDeleted) {
       if (chat.isMediaMessage()) {
         if (chat.mediaChatMessage!.mediaDownloadStatus ==
                 Constants.mediaDownloaded ||
@@ -2453,7 +2473,21 @@ class ChatController extends FullLifeCycleController
   forwardSingleMessage(String messageId) {
     var messageIds = <String>[];
     messageIds.add(messageId);
-    Get.toNamed(Routes.forwardChat, arguments: {
+    Navigator.push(context, MaterialPageRoute(builder: (con)=>ForwardChatView(forwardMessageIds: messageIds))).then((value){
+      if (value != null) {
+        debugPrint(
+            "result of forward ==> ${(value as Profile).toJson().toString()}");
+        profile_.value = value;
+        isBlocked(profile.isBlocked);
+        checkAdminBlocked();
+        memberOfGroup();
+        Mirrorfly.setOnGoingChatUser(profile.jid!);
+        SessionManagement.setCurrentChatJID(profile.jid.checkNull());
+        getChatHistory();
+        sendReadReceipt();
+      }
+    });
+    /*Get.toNamed(Routes.forwardChat, arguments: {
       "forward": true,
       "group": false,
       "groupJid": "",
@@ -2471,7 +2505,7 @@ class ChatController extends FullLifeCycleController
         getChatHistory();
         sendReadReceipt();
       }
-    });
+    });*/
   }
 
   var containsRecalled = false.obs;
@@ -2511,7 +2545,7 @@ class ChatController extends FullLifeCycleController
 
     for (var message in selectedChatList) {
       //Recalled Validation
-      if (message.isMessageRecalled) {
+      if (message.isMessageRecalled.value) {
         containsRecalled(true);
         break;
       }
@@ -2543,14 +2577,14 @@ class ChatController extends FullLifeCycleController
       canBeSharedSet = true;
     }
     //Starred Validation
-    if (!canBeStarredSet && message.isMessageStarred ||
+    if (!canBeStarredSet && message.isMessageStarred.value ||
         (message.isMediaMessage() &&
             !checkFile(message.mediaChatMessage!.mediaLocalStoragePath))) {
       canBeStarred(false);
       canBeStarredSet = true;
     }
     //UnStarred Validation
-    if (!canBeUnStarredSet && !message.isMessageStarred) {
+    if (!canBeUnStarredSet && !message.isMessageStarred.value) {
       canBeUnStarred(false);
       canBeUnStarredSet = true;
     }
@@ -2602,7 +2636,7 @@ class ChatController extends FullLifeCycleController
       //Info Validation
       if (!message.isMessageSentByMe ||
           message.messageStatus.value == "N" ||
-          message.isMessageRecalled ||
+          message.isMessageRecalled.value ||
           (message.isMediaMessage() &&
               !checkFile(message.mediaChatMessage!.mediaLocalStoragePath))) {
         canShowInfo(false);

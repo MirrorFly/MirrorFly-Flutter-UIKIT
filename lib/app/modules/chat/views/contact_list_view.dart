@@ -25,8 +25,7 @@ class _ContactListViewState extends State<ContactListView> {
   ContactController controller = Get.put(ContactController());
   @override
   void initState() {
-    controller.init(forward: widget.forward,messageIds: widget.messageIds,group: widget.group,groupjid: widget.groupjid);
-    debugPrint('view init');
+    controller.init(context,forward: widget.forward,messageIds: widget.messageIds,group: widget.group,groupjid: widget.groupjid);
     super.initState();
   }
 
@@ -63,8 +62,7 @@ class _ContactListViewState extends State<ContactListView> {
                   onChanged: (text) {
                     controller.searchListener(text);
                   },
-
-            cursorColor: MirrorflyUikit.getTheme?.primaryColor,
+            cursorColor: MirrorflyUikit.getTheme?.colorOnAppbar,
             focusNode: controller.searchFocus,
                   style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
                   controller: controller.searchQuery,
@@ -199,7 +197,7 @@ class _ContactListViewState extends State<ContactListView> {
                             if (index >= controller.usersList.length &&
                                 controller.usersList.isNotEmpty) {
                               return Center(
-                                  child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor));
+                                  child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,));
                             } else if (controller.usersList.isNotEmpty) {
                               var item = controller.usersList[index];
                               return Opacity(
@@ -275,7 +273,7 @@ class _ContactListViewState extends State<ContactListView> {
                                       Visibility(
                                         visible: controller.isCheckBoxVisible,
                                         child: Theme(
-                                          data: Theme.of(context).copyWith(
+                                          data: ThemeData(
                                             unselectedWidgetColor: Colors.grey,
                                           ),
                                           child: Checkbox(

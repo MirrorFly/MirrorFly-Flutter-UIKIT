@@ -34,14 +34,15 @@ class ContactController extends FullLifeCycleController
   var isForward = false.obs;
   var isCreateGroup = false.obs;
   var groupJid = "".obs;
-
+  BuildContext? context;
   @override
   void onInit(){
     super.onInit();
     debugPrint('controller init');
   }
 
-  Future<void> init({bool forward = false,List<String>? messageIds ,bool group = false,String groupjid = ''}) async {
+  Future<void> init(BuildContext context,{bool forward = false,List<String>? messageIds ,bool group = false,String groupjid = ''}) async {
+    this.context=context;
     isForward(forward);
     if (isForward.value) {
       isCreateGroup(false);
@@ -441,7 +442,7 @@ class ContactController extends FullLifeCycleController
       mirrorFlyLog('Contact Sync', "[Contact Sync] refreshContacts()");
       if (await AppUtils.isNetConnected()) {
         if (!await Mirrorfly.contactSyncStateValue()) {
-          var contactPermissionHandle = await AppPermission.checkPermission(Get.context!,
+          var contactPermissionHandle = await AppPermission.checkPermission(context!,
               Permission.contacts, contactPermission,
               Constants.contactSyncPermission);
           if (contactPermissionHandle) {

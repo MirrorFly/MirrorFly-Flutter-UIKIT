@@ -21,7 +21,9 @@ import '../../../data/apputils.dart';
 import '../../../data/permissions.dart';
 import '../../../routes/app_pages.dart';
 import '../../chat/views/contact_list_view.dart';
+import '../../chatInfo/views/chat_info_view.dart';
 import '../../group/views/group_creation_view.dart';
+import '../../group/views/group_info_view.dart';
 
 class DashboardController extends FullLifeCycleController
     with FullLifeCycleMixin, GetTickerProviderStateMixin {
@@ -76,9 +78,14 @@ class DashboardController extends FullLifeCycleController
     userlistScrollController.addListener(_scrollListener);
   }
 
-  infoPage(Profile profile) {
+  infoPage(BuildContext context,Profile profile) {
     if (profile.isGroupProfile ?? false) {
-      Get.toNamed(Routes.groupInfo, arguments: profile)?.then((value) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (con) =>
+                  GroupInfoView(jid: profile.jid.checkNull())));
+      /*Get.toNamed(Routes.groupInfo, arguments: profile)?.then((value) {
         if (value != null) {
           // profile_(value as Profile);
           // isBlocked(profile.isBlocked);
@@ -88,9 +95,13 @@ class DashboardController extends FullLifeCycleController
           // getChatHistory();
           // sendReadReceipt();
         }
-      });
+      });*/
     } else {
-      Get.toNamed(Routes.chatInfo, arguments: profile)?.then((value) {});
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (con) => ChatInfoView(jid: profile.jid.checkNull())));
+      // Get.toNamed(Routes.chatInfo, arguments: profile)?.then((value) {});
     }
   }
 
@@ -366,13 +377,13 @@ class DashboardController extends FullLifeCycleController
   }
 
   webLogin() {
-    if (SessionManagement.getWebLogin()) {
+    /*if (SessionManagement.getWebLogin()) {
       Future.delayed(const Duration(milliseconds: 100),
           () => Get.toNamed(Routes.webLoginResult));
     } else {
       Future.delayed(
           const Duration(milliseconds: 100), () => Get.toNamed(Routes.scanner));
-    }
+    }*/
   }
 
   var isSearching = false.obs;
@@ -411,10 +422,17 @@ class DashboardController extends FullLifeCycleController
         var profile = profiledata(value.toString());
         if (item.isGroup!) {
           Future.delayed(const Duration(milliseconds: 100),
-              () => Get.toNamed(Routes.groupInfo, arguments: profile));
+              () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (con) =>
+                          GroupInfoView(jid: profile.jid.checkNull()))));//Get.toNamed(Routes.groupInfo, arguments: profile));
         } else {
           Future.delayed(const Duration(milliseconds: 100),
-              () => Get.toNamed(Routes.chatInfo, arguments: profile));
+              () =>  Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (con) => ChatInfoView(jid: profile.jid.checkNull()))));//Get.toNamed(Routes.chatInfo, arguments: profile));
         }
       }
     });
@@ -810,12 +828,14 @@ class DashboardController extends FullLifeCycleController
         actions: [
           TextButton(
               onPressed: () {
-                Get.back();
+                Navigator.pop(context);
+                // Get.back();
               },
               child: const Text("No")),
           TextButton(
               onPressed: () async {
-                Get.back();
+                Navigator.pop(context);
+                // Get.back();
                 Mirrorfly.deleteRecentChat(selectedChats[index]).then((value) {
                   clearAllChatSelection();
                   recentChats.removeAt(chatIndex);
@@ -832,12 +852,14 @@ class DashboardController extends FullLifeCycleController
         actions: [
           TextButton(
               onPressed: () {
-                Get.back();
+                Navigator.pop(context);
+                // Get.back();
               },
               child: const Text("No")),
           TextButton(
               onPressed: () async {
-                Get.back();
+                Navigator.pop(context);
+                // Get.back();
                 Mirrorfly.deleteRecentChats(selectedChats).then((value) {
                   for (var chatItem in selectedChats) {
                     var chatIndex = recentChats
@@ -1223,7 +1245,8 @@ class DashboardController extends FullLifeCycleController
           context: context,
           // chatItem: chatItem,
           chatTap: () {
-            Get.back();
+            Navigator.pop(context);
+            // Get.back();
             if (selected.value) {
               selectOrRemoveChatfromList(index);
             } else {
@@ -1233,8 +1256,9 @@ class DashboardController extends FullLifeCycleController
           callTap: () {},
           videoTap: () {},
           infoTap: () {
-            Get.back();
-            infoPage(value);
+            Navigator.pop(context);
+            // Get.back();
+            infoPage(context,value);
           },
           profile: profile_);
     });
@@ -1245,13 +1269,14 @@ class DashboardController extends FullLifeCycleController
       // Get.toNamed(Routes.contacts, arguments: {"forward": false, "group": false, "groupJid": ""});
       Navigator.push(context, MaterialPageRoute(builder: (con)=>const ContactListView(forward: false,group: false,)));
     } else {
-      var contactPermissionHandle = await AppPermission.checkPermission(Get.context!,
+      var contactPermissionHandle = await AppPermission.checkPermission(context,
           Permission.contacts,
           contactPermission,
           Constants.contactSyncPermission);
       if (contactPermissionHandle) {
-        Get.toNamed(Routes.contacts,
-            arguments: {"forward": false, "group": false, "groupJid": ""});
+        if(context.mounted)Navigator.push(context, MaterialPageRoute(builder: (con)=>const ContactListView(forward: false,group: false,)));
+        /*Get.toNamed(Routes.contacts,
+            arguments: {"forward": false, "group": false, "groupJid": ""});*/
       }
     }
   }

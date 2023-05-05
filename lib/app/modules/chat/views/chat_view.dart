@@ -248,17 +248,21 @@ class _ChatViewState extends State<ChatView> {
                                     ),
                                   )
                                 : const SizedBox.shrink(),
-                            IconButton(
-                              // icon: Icon(Icons.arrow_drop_down_circle_rounded,color: MirrorflyUikit.getTheme?.primaryColor,),
-                              icon: Image.asset(
-                                redirectLastMessage,package: package,
-                                width: 32,
-                                height: 32,
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10.0),
+                              child: FloatingActionButton.small(
+                                backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
+                                child: Icon(Icons.keyboard_double_arrow_down_rounded,color: MirrorflyUikit.getTheme?.colorOnPrimary,),
+                                /*icon: Image.asset(
+                                  redirectLastMessage,package: package,
+                                  width: 32,
+                                  height: 32,
+                                ),*/
+                                onPressed: () {
+                                  //scroll to end
+                                  controller.scrollToEnd();
+                                },
                               ),
-                              onPressed: () {
-                                //scroll to end
-                                controller.scrollToEnd();
-                              },
                             ),
                           ],
                         ),
@@ -586,7 +590,7 @@ class _ChatViewState extends State<ChatView> {
                   ? SwipeTo(
                       key: ValueKey(chatList[index].messageId),
                       onRightSwipe: () {
-                        if (!chatList[index].isMessageRecalled &&
+                        if (!chatList[index].isMessageRecalled.value &&
                             !chatList[index].isMessageDeleted &&
                             chatList[index]
                                     .messageStatus.value
@@ -667,7 +671,7 @@ class _ChatViewState extends State<ChatView> {
                                   Container(
                                     constraints: BoxConstraints(
                                         maxWidth:
-                                            Get.width * 0.60),
+                                            Get.width * 0.70),
                                     decoration: BoxDecoration(
                                         borderRadius: chatList[index]
                                                 .isMessageSentByMe
