@@ -6,8 +6,9 @@ import 'package:get/get.dart';
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../controllers/camera_pick_controller.dart';
 
-class CameraPickView extends GetView<CameraPickController> {
-  const CameraPickView({Key? key}) : super(key: key);
+class CameraPickView extends StatelessWidget {
+  CameraPickView({Key? key}) : super(key: key);
+  final controller= Get.put(CameraPickController());
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +21,7 @@ class CameraPickView extends GetView<CameraPickController> {
                 return controller.cameraInitialized.value ? Stack(
                   children: [
                     SizedBox(
-                      width: MediaQuery
-                          .of(context)
-                          .size
-                          .width,
+                      width: Get.width,
                       child: Listener(
                         onPointerDown: (_) => controller.pointers++,
                         onPointerUp: (_) => controller.pointers--,
@@ -120,7 +118,7 @@ class CameraPickView extends GetView<CameraPickController> {
                           },
                           onLongPressUp: () async {
                             // to preview
-                            controller.stopRecord();
+                            controller.stopRecord(context);
                           },
                           onTap: () {
                             if (!controller.isRecording.value) {

@@ -77,7 +77,7 @@ class ChatSettingsView extends StatelessWidget {
                   title: Constants.autoDownload,
                   subtitle: Constants.autoDownloadLable,
                   on: controller.autoDownloadEnabled,
-                  onTap: controller.enableDisableAutoDownload),
+                  onTap: ()=>controller.enableDisableAutoDownload(context)),
               Visibility(
                   visible: controller.autoDownloadEnabled,
                   child: chatListItem(

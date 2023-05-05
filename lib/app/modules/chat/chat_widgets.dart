@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/image_view/views/image_view_view.dart';
 import '../../../mirrorfly_uikit_plugin.dart';
 import '../../models.dart';
 import 'package:get/get.dart';
@@ -701,7 +702,7 @@ class _AudioMessageViewState extends State<AudioMessageView>
                   musicIcon,package: package,
                   fit: BoxFit.contain,
                 ),
-                getImageOverlay(widget.chatMessage, onAudio: () {
+                getImageOverlay(context,widget.chatMessage, onAudio: () {
                   widget.onPlayAudio();
                   playAudio(widget.chatMessage);
                 }), //widget.onPlayAudio),
@@ -1291,7 +1292,7 @@ class DocumentMessageView extends StatelessWidget {
                         style: const TextStyle(fontSize: 12,color: Colors.black,fontWeight: FontWeight.w400),
                   )*/
                   ),
-                  getImageOverlay(chatMessage),
+                  getImageOverlay(context,chatMessage),
                 ],
               ),
             ),
@@ -1427,6 +1428,7 @@ class VideoMessageView extends StatelessWidget {
                   children: [
                     SvgPicture.asset(
                       mVideoIcon,
+                      package: package,
                       fit: BoxFit.contain,
                       color: Colors.white,
                     ),
@@ -1441,7 +1443,7 @@ class VideoMessageView extends StatelessWidget {
                   ],
                 ),
               ),
-              getImageOverlay(chatMessage,
+              getImageOverlay(context,chatMessage,
                   onVideo: isSelected ? null : onVideoClick),
               mediaMessage.mediaCaptionText
                   .checkNull()
@@ -1528,7 +1530,7 @@ class ImageMessageView extends StatelessWidget {
                     mediaMessage.mediaFileName,
                     isSelected),
               ),
-              getImageOverlay(chatMessage),
+              getImageOverlay(context,chatMessage),
               mediaMessage.mediaCaptionText
                   .checkNull()
                   .isEmpty
@@ -1598,10 +1600,11 @@ class ImageMessageView extends StatelessWidget {
           onTap: isSelected
               ? null
               : () {
-            Get.toNamed(Routes.imageView, arguments: {
+            Navigator.push(context, MaterialPageRoute(builder: (con)=>ImageViewView(imageName: mediaFileName,imagePath: mediaLocalStoragePath,)));
+            /*Get.toNamed(Routes.imageView, arguments: {
               'imageName': mediaFileName,
               'imagePath': mediaLocalStoragePath
-            });
+            });*/
           },
           child: Image(
             image: FileImage(File(mediaLocalStoragePath)),
@@ -1930,7 +1933,7 @@ getMessageIndicator(String? messageStatus, bool isSender, String messageType,
   }
 }
 
-Widget getImageOverlay(ChatMessageModel chatMessage,
+Widget getImageOverlay(BuildContext context,ChatMessageModel chatMessage,
     {Function()? onAudio, Function()? onVideo}) {
   // debugPrint(
   //     "getImageOverlay checkFile ${checkFile(chatMessage.mediaChatMessage!.mediaLocalStoragePath)}");
@@ -1987,7 +1990,7 @@ Widget getImageOverlay(ChatMessageModel chatMessage,
               chatMessage.mediaChatMessage!.mediaFileSize,
               chatMessage.messageType.toUpperCase(),chatMessage.isMessageSentByMe),
           onTap: () {
-            downloadMedia(chatMessage.messageId);
+            downloadMedia(context,chatMessage.messageId);
           },
         );
       case Constants.mediaNotUploaded:
@@ -2067,11 +2070,11 @@ void uploadMedia(String messageId) async {
   }
 }
 
-void downloadMedia(String messageId) async {
+void downloadMedia(BuildContext context,String messageId) async {
   debugPrint("media download click");
   debugPrint("media download click--> $messageId");
   if (await AppUtils.isNetConnected()) {
-    if (await askStoragePermission()) {
+    if (await askStoragePermission(context)) {
       debugPrint("media permission granted");
       Mirrorfly.downloadMedia(messageId);
     } else {
@@ -2082,8 +2085,8 @@ void downloadMedia(String messageId) async {
   }
 }
 
-Future<bool> askStoragePermission() async {
-  final permission = await AppPermission.getStoragePermission();
+Future<bool> askStoragePermission(BuildContext context) async {
+  final permission = await AppPermission.getStoragePermission(context);
   switch (permission) {
     case PermissionStatus.granted:
       return true;

@@ -1243,7 +1243,7 @@ class DashboardController extends FullLifeCycleController
       // Get.toNamed(Routes.contacts, arguments: {"forward": false, "group": false, "groupJid": ""});
       Navigator.push(context, MaterialPageRoute(builder: (con)=>const ContactListView(forward: false,group: false,)));
     } else {
-      var contactPermissionHandle = await AppPermission.checkPermission(
+      var contactPermissionHandle = await AppPermission.checkPermission(Get.context!,
           Permission.contacts,
           contactPermission,
           Constants.contactSyncPermission);
@@ -1277,6 +1277,20 @@ class DashboardController extends FullLifeCycleController
   void userDeletedHisProfile(String jid) {
     userUpdatedHisProfile(jid);
   }
+
+  Future<bool> askStoragePermission(BuildContext context) async {
+    final permission = await AppPermission.getStoragePermission(context);
+    switch (permission) {
+      case PermissionStatus.granted:
+        return true;
+      case PermissionStatus.permanentlyDenied:
+        return false;
+      default:
+        debugPrint("Permission default");
+        return false;
+    }
+  }
+
 
   Future<String> getJidFromPhoneNumber(
       String mobileNumber, String countryCode) async {

@@ -179,18 +179,20 @@ class CameraPickController extends GetxController with WidgetsBindingObserver  {
       Helper.showLoading(buildContext: context);
       XFile? file = await cameraController?.takePicture();
       debugPrint("file : ${file?.path}");
-      Helper.hideLoading(context: context);
-      Get.back(result: file);
+      if(context.mounted)Helper.hideLoading(context: context);
+      // Get.back(result: file);
+      if(context.mounted)Navigator.pop(context,file);
     }
   }
 
-  stopRecord()async{
+  stopRecord(BuildContext context)async{
     if(cameraInitialized.value) {
       //Helper.showLoading();
       XFile? file = await stopVideoRecording();
       debugPrint("file : ${file?.path}");
       //Helper.hideLoading();
-      Get.back(result: file);
+      // Get.back(result: file);
+      if(context.mounted)Navigator.pop(context,file);
       isRecording(false);
     }
   }

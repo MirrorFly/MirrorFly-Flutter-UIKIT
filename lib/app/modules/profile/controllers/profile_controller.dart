@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -66,11 +65,11 @@ class ProfileController extends GetxController {
       getProfile();
     }
     //profileStatus.value="I'm Mirror fly user";
-    await askStoragePermission();
+    // await askStoragePermission(context);
   }
 
-  Future<bool> askStoragePermission() async {
-    final permission = await AppPermission.getStoragePermission();
+  Future<bool> askStoragePermission(BuildContext context) async {
+    final permission = await AppPermission.getStoragePermission(context);
     switch (permission) {
       case PermissionStatus.granted:
         return true;
@@ -83,7 +82,7 @@ class ProfileController extends GetxController {
   }
 
   Future<void> save({bool frmImage = false, required BuildContext context}) async {
-    if (await askStoragePermission()) {
+    // if (await askStoragePermission(context)) {
       if (profileName.text
           .trim()
           .isEmpty) {
@@ -102,10 +101,10 @@ class ProfileController extends GetxController {
         toToast("Enter Profile Status");
       } else {
         loading.value = true;
-        showLoader(context);
+        if(context.mounted)showLoader(context);
         if (imagePath.value.isNotEmpty) {
           debugPrint("profile image update");
-          updateProfileImage(path: imagePath.value, update: true, context: context);
+          if(context.mounted)updateProfileImage(path: imagePath.value, update: true, context: context);
         } else {
           if (await AppUtils.isNetConnected()) {
             debugPrint("profile update");
@@ -143,7 +142,7 @@ class ProfileController extends GetxController {
                           Navigator.push(context, MaterialPageRoute(builder: (con)=> DashboardView()));
 
                         }else{
-                          Get.offNamed(Routes.contactSync);
+                          // Get.offNamed(Routes.contactSync);
                         }
                       });
                     }
@@ -160,12 +159,12 @@ class ProfileController extends GetxController {
             });
           } else {
             loading(false);
-            hideLoader(context);
+            if(context.mounted)hideLoader(context);
             toToast(Constants.noInternetConnection);
           }
         }
       }
-    }
+    // }
   }
 
   updateProfileImage({required String path, bool update = false, required BuildContext context}) async {
@@ -173,7 +172,7 @@ class ProfileController extends GetxController {
       loading.value = true;
 
       // if(checkFileUploadSize(path, Constants.mImage)) {
-        showLoader(context);
+      if(context.mounted)showLoader(context);
         Mirrorfly.updateMyProfileImage(path).then((value) {
           mirrorFlyLog("updateMyProfileImage", value);
           loading.value = false;
@@ -201,7 +200,7 @@ class ProfileController extends GetxController {
 
   removeProfileImage(BuildContext context) async {
     if(await AppUtils.isNetConnected()) {
-      showLoader(context);
+      if(context.mounted)showLoader(context);
       loading.value = true;
       Mirrorfly.removeProfileImage().then((value) {
         loading.value = false;
@@ -341,27 +340,30 @@ class ProfileController extends GetxController {
           //     }
           //   });
           // });
-          Navigator.push(context, MaterialPageRoute(builder: (con)=> CropImage(
-            imageFile: File(result.files.single.path!),
-          ))).then((value) {
-            value as MemoryImage;
-            imageBytes = value.bytes;
-            var name = "${DateTime
-                .now()
-                .millisecondsSinceEpoch}.jpg";
-            writeImageTemp(value.bytes, name).then((value) {
-              if (from.value == Routes.login) {
-                imagePath(value.path);
-                changed(true);
-                update();
-              } else {
-                imagePath(value.path);
-                changed(true);
-                updateProfileImage(path: value.path, update: true, context: context);
-              }
+          if(context.mounted) {
+            Navigator.push(context, MaterialPageRoute(builder: (con) =>
+                CropImage(
+                  imageFile: File(result.files.single.path!),
+                ))).then((value) {
+              value as MemoryImage;
+              imageBytes = value.bytes;
+              var name = "${DateTime
+                  .now()
+                  .millisecondsSinceEpoch}.jpg";
+              writeImageTemp(value.bytes, name).then((value) {
+                if (from.value == Routes.login) {
+                  imagePath(value.path);
+                  changed(true);
+                  update();
+                } else {
+                  imagePath(value.path);
+                  changed(true);
+                  updateProfileImage(
+                      path: value.path, update: true, context: context);
+                }
+              });
             });
-          });
-
+          }
         }else{
           toToast("Please select Image less than 10MB");
         }
@@ -398,26 +400,30 @@ class ProfileController extends GetxController {
         //     }
         //   });
         // });
-        Navigator.push(context, MaterialPageRoute(builder: (con)=> CropImage(
-          imageFile: File(photo.path),
-        ))).then((value) {
-          value as MemoryImage;
-          imageBytes = value.bytes;
-          var name = "${DateTime
-              .now()
-              .millisecondsSinceEpoch}.jpg";
-          writeImageTemp(value.bytes, name).then((value) {
-            if (from.value == Routes.login) {
-              imagePath(value.path);
-              changed(true);
-              update();
-            } else {
-              imagePath(value.path);
-              changed(true);
-              updateProfileImage(path: value.path, update: true, context: context);
-            }
+        if(context.mounted) {
+          Navigator.push(context, MaterialPageRoute(builder: (con) =>
+              CropImage(
+                imageFile: File(photo.path),
+              ))).then((value) {
+            value as MemoryImage;
+            imageBytes = value.bytes;
+            var name = "${DateTime
+                .now()
+                .millisecondsSinceEpoch}.jpg";
+            writeImageTemp(value.bytes, name).then((value) {
+              if (from.value == Routes.login) {
+                imagePath(value.path);
+                changed(true);
+                update();
+              } else {
+                imagePath(value.path);
+                changed(true);
+                updateProfileImage(
+                    path: value.path, update: true, context: context);
+              }
+            });
           });
-        });
+        }
       } else {
         // User canceled the Camera
         isImageSelected.value = false;

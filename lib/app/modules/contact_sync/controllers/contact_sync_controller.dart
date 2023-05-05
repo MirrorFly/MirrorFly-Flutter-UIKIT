@@ -1,7 +1,6 @@
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
-import '../../../models.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/routes/app_pages.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -52,7 +51,7 @@ class ContactSyncController extends GetxController
   Rx<String> textContactSync = ''.obs;
   openContactPermission() async {
     if(!await Mirrorfly.contactSyncStateValue()) {
-      var contactPermissionHandle = await AppPermission.checkPermission(
+      var contactPermissionHandle = await AppPermission.checkPermission(Get.context!,
           Permission.contacts, contactPermission,
           Constants.contactPermission);
       if (contactPermissionHandle) {

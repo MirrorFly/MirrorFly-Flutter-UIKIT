@@ -7,19 +7,48 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
+import 'package:mirrorfly_uikit_plugin/app/model/user_list_model.dart';
 import 'package:photo_view/photo_view.dart';
 
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/widgets.dart';
 import '../controllers/media_preview_controller.dart';
 
-class MediaPreviewView extends GetView<MediaPreviewController> {
-  const MediaPreviewView({Key? key}) : super(key: key);
+class MediaPreviewView extends StatefulWidget {
+  const MediaPreviewView(
+      {Key? key, required this.filePath, required this.userName, required this.profile, required this.caption, required this.showAdd,})
+      : super(key: key);
+  final List filePath;
+  final String userName;
+  final Profile profile;
+  final String caption;
+  final bool showAdd;
+
+  @override
+  State<MediaPreviewView> createState() => _MediaPreviewViewState();
+}
+
+class _MediaPreviewViewState extends State<MediaPreviewView> {
+  var controller = Get.put(MediaPreviewController());
+
+  @override
+  void initState() {
+    controller.init(
+        widget.filePath, widget.userName, widget.profile, widget.caption,
+        widget.showAdd);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    Get.delete<MediaPreviewController>();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
         appBar: AppBar(
           backgroundColor: Colors.black,
           automaticallyImplyLeading: false,
@@ -41,34 +70,40 @@ class MediaPreviewView extends GetView<MediaPreviewController> {
                 const SizedBox(
                   width: 10,
                 ),
-                ImageNetwork(
-                  url: controller.profile.image.checkNull(),
-                  width: 35,
-                  height: 35,
-                  clipOval: true,
-                  errorWidget: controller.profile.isGroupProfile ?? false
-                      ? ClipOval(
-                          child: Image.asset(
-                            groupImg,package: package,
-                            height: 35,
-                            width: 35,
-                            fit: BoxFit.cover,
-                          ),
-                        )
-                      : ProfileTextImage(
-                          text: controller.profile.name.checkNull().isEmpty
+                Obx(() {
+                  return ImageNetwork(
+                    url: (controller.profile.value.image).checkNull(),
+                    width: 35,
+                    height: 35,
+                    clipOval: true,
+                    errorWidget: controller.profile.value.isGroupProfile ??
+                        false
+                        ? ClipOval(
+                      child: Image.asset(
+                        groupImg, package: package,
+                        height: 35,
+                        width: 35,
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                        : ProfileTextImage(
+                      text: getName(controller.profile.value) /*controller.profile?.name.checkNull().isEmpty
                               ? controller.profile.nickName.checkNull().isEmpty
                                   ? controller.profile.mobileNumber.checkNull()
                                   : controller.profile.nickName.checkNull()
-                              : controller.profile.name.checkNull(),
-                          radius: 18,
-                        ),
-                  isGroup: controller.profile.isGroupProfile.checkNull(),
-                  blocked: controller.profile.isBlockedMe.checkNull() ||
-                      controller.profile.isAdminBlocked.checkNull(),
-                  unknown: (!controller.profile.isItSavedContact.checkNull() ||
-                      controller.profile.isDeletedContact()),
-                ),
+                              : controller.profile.name.checkNull()*/,
+                      radius: 18,
+                    ),
+                    isGroup: (controller.profile.value.isGroupProfile)
+                        .checkNull(),
+                    blocked: (controller.profile.value.isBlockedMe)
+                        .checkNull() ||
+                        controller.profile.value.isAdminBlocked.checkNull(),
+                    unknown: (!controller.profile.value.isItSavedContact
+                        .checkNull() ||
+                        controller.profile.value.isDeletedContact()),
+                  );
+                }),
               ],
             ),
           ),
@@ -76,125 +111,133 @@ class MediaPreviewView extends GetView<MediaPreviewController> {
             Obx(() {
               return controller.filePath.length > 1
                   ? IconButton(
-                      onPressed: () {
-                        controller.deleteMedia();
-                      },
-                      icon: SvgPicture.asset(deleteBinWhite,package: package,))
+                  onPressed: () {
+                    controller.deleteMedia();
+                  },
+                  icon: SvgPicture.asset(deleteBinWhite, package: package,))
                   : const SizedBox.shrink();
             })
           ],
         ),
         body: WillPopScope(
           onWillPop: () {
-            Get.back(result: "back");
+            Navigator.pop(context,"back");
+            // Get.back(result: "back");
             return Future.value(false);
           },
           child: SafeArea(
             child: Container(
-              height: MediaQuery.of(context).size.height,
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height,
               color: Colors.black,
               child: Column(
                 children: [
                   Expanded(
                     child: Obx(() {
                       return controller.filePath.isEmpty
-
-                          /// no images selected
+                      /// no images selected
                           ? Container(
-                              height: double.infinity,
-                              width: double.infinity,
-                              alignment: Alignment.center,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Transform.scale(
-                                    scale: 8,
-                                    child: const Icon(
-                                      Icons.image_outlined,
-                                      color: Colors.white,
-                                      size: 10,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 50),
-                                  const Text(
-                                    'No Media selected',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white70),
-                                  )
-                                ],
+                        height: double.infinity,
+                        width: double.infinity,
+                        alignment: Alignment.center,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Transform.scale(
+                              scale: 8,
+                              child: const Icon(
+                                Icons.image_outlined,
+                                color: Colors.white,
+                                size: 10,
                               ),
+                            ),
+                            const SizedBox(height: 50),
+                            const Text(
+                              'No Media selected',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white70),
                             )
+                          ],
+                        ),
+                      )
 
-                          /// selected media
+                      /// selected media
                           : PageView(
-                              controller: controller.pageViewController,
-                              onPageChanged: onMediaPreviewPageChanged,
-                              children: [
-                                ...controller.filePath.map((data) {
-                                  /// show image
-                                  if (data.type == 'image') {
-                                    return Center(
-                                        child: PhotoView(
-                                      imageProvider: FileImage(File(data.path)),
-                                      // Contained = the smallest possible size to fit one dimension of the screen
-                                      minScale:
-                                          PhotoViewComputedScale.contained * 1,
-                                      // Covered = the smallest possible size to fit the whole screen
-                                      maxScale:
-                                          PhotoViewComputedScale.covered * 2,
-                                      enableRotation: true,
-                                      basePosition: Alignment.center,
-                                      // Set the background color to the "classic white"
-                                      backgroundDecoration: const BoxDecoration(
-                                          color: Colors.transparent),
-                                      loadingBuilder: (context, event) =>
-                                          Center(
-                                        child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
-                                      ),
-                                    )
-                                        // PhotoView.customChild(
-                                        //   enablePanAlways: true,
-                                        //   maxScale: 2.0,
-                                        //   minScale: 1.0,
-                                        //   child: Image.file(File(data.path)),
-                                        // ),
-                                        );
-                                  }
+                        controller: controller.pageViewController,
+                        onPageChanged: onMediaPreviewPageChanged,
+                        children: [
+                          ...controller.filePath.map((data) {
+                            /// show image
+                            if (data.type == 'image') {
+                              return Center(
+                                  child: PhotoView(
+                                    imageProvider: FileImage(File(data.path)),
+                                    // Contained = the smallest possible size to fit one dimension of the screen
+                                    minScale:
+                                    PhotoViewComputedScale.contained * 1,
+                                    // Covered = the smallest possible size to fit the whole screen
+                                    maxScale:
+                                    PhotoViewComputedScale.covered * 2,
+                                    enableRotation: true,
+                                    basePosition: Alignment.center,
+                                    // Set the background color to the "classic white"
+                                    backgroundDecoration: const BoxDecoration(
+                                        color: Colors.transparent),
+                                    loadingBuilder: (context, event) =>
+                                        Center(
+                                          child: CircularProgressIndicator(
+                                            color: MirrorflyUikit.getTheme
+                                                ?.primaryColor,),
+                                        ),
+                                  )
+                                // PhotoView.customChild(
+                                //   enablePanAlways: true,
+                                //   maxScale: 2.0,
+                                //   minScale: 1.0,
+                                //   child: Image.file(File(data.path)),
+                                // ),
+                              );
+                            }
 
-                                  /// show video
-                                  else {
-                                    return AspectRatio(
-                                      aspectRatio: 16.0 / 9.0,
-                                      child: BetterVideoPlayer(
-                                        configuration:
-                                            const BetterVideoPlayerConfiguration(
-                                          looping: false,
-                                          autoPlay: false,
-                                          allowedScreenSleep: false,
-                                          autoPlayWhenResume: false,
-                                        ),
-                                        controller:
-                                            BetterVideoPlayerController(),
-                                        dataSource: BetterVideoPlayerDataSource(
-                                          BetterVideoPlayerDataSourceType.file,
-                                          data.path,
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                })
-                              ],
-                            );
+                            /// show video
+                            else {
+                              return AspectRatio(
+                                aspectRatio: 16.0 / 9.0,
+                                child: BetterVideoPlayer(
+                                  configuration:
+                                  const BetterVideoPlayerConfiguration(
+                                    looping: false,
+                                    autoPlay: false,
+                                    allowedScreenSleep: false,
+                                    autoPlayWhenResume: false,
+                                  ),
+                                  controller:
+                                  BetterVideoPlayerController(),
+                                  dataSource: BetterVideoPlayerDataSource(
+                                    BetterVideoPlayerDataSourceType.file,
+                                    data.path,
+                                  ),
+                                ),
+                              );
+                            }
+                          })
+                        ],
+                      );
                     }),
                   ),
                   Container(
                     color: Colors.black38,
-                    width: MediaQuery.of(context).size.width,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
                     padding:
-                        const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                    const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                     child: Column(
                       children: [
                         IntrinsicHeight(
@@ -205,31 +248,34 @@ class MediaPreviewView extends GetView<MediaPreviewController> {
                                 children: [
                                   Obx(() {
                                     return controller.isFocused.value ||
-                                            controller.showEmoji.value || !controller.showAdd
+                                        controller.showEmoji.value ||
+                                        !controller.showAdd
                                         ? InkWell(
-                                            onTap: () {
-                                              if (!controller.showEmoji.value) {
-                                                controller.captionFocusNode
-                                                    .unfocus();
-                                              }
-                                              Future.delayed(
-                                                  const Duration(
-                                                      milliseconds: 100), () {
-                                                controller.showEmoji(!controller
-                                                    .showEmoji.value);
-                                              });
-                                            },
-                                            child: SvgPicture.asset(
-                                                smileIcon,package: package,))
-                                        : controller.filePath.length < 10 && controller.showAdd
-                                            ? InkWell(
-                                                onTap: () {
-                                                  Get.back();
-                                                },
-                                                child: SvgPicture.asset(
-                                                    previewAddImg,package: package,),
-                                              )
-                                            : const SizedBox.shrink();
+                                        onTap: () {
+                                          if (!controller.showEmoji.value) {
+                                            controller.captionFocusNode
+                                                .unfocus();
+                                          }
+                                          Future.delayed(
+                                              const Duration(
+                                                  milliseconds: 100), () {
+                                            controller.showEmoji(!controller
+                                                .showEmoji.value);
+                                          });
+                                        },
+                                        child: SvgPicture.asset(
+                                          smileIcon, package: package,color: previewTextColor,))
+                                        : controller.filePath.length < 10 &&
+                                        controller.showAdd
+                                        ? InkWell(
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                        // Get.back();
+                                      },
+                                      child: SvgPicture.asset(
+                                        previewAddImg, package: package,),
+                                    )
+                                        : const SizedBox.shrink();
                                   }),
                                   const SizedBox(
                                     width: 5,
@@ -269,13 +315,12 @@ class MediaPreviewView extends GetView<MediaPreviewController> {
                                       ),
                                     ),
                                   ),
-                                  InkWell(
-                                      onTap: () {
-                                        controller.sendMedia(context);
-                                        // controller.sendMessage(controller.profile);
-                                      },
-                                      child: SvgPicture.asset(
-                                          imgSendIcon,package: package,)),
+                                  FloatingActionButton(
+                                    backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
+                                    onPressed: () { controller.sendMedia(context); },
+                                    child: Center(child: Icon(Icons.send,color: MirrorflyUikit.getTheme?.colorOnPrimary,))/*SvgPicture.asset(
+                                      imgSendIcon, package: package,color: MirrorflyUikit.getTheme?.primaryColor,),*/
+                                  ),
                                 ],
                               ),
                               // SvgPicture.asset(
@@ -308,62 +353,62 @@ class MediaPreviewView extends GetView<MediaPreviewController> {
                         Obx(() {
                           return controller.filePath.length > 1
                               ? SizedBox(
-                                  height: 45,
-                                  child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: controller.filePath.length,
-                                      itemBuilder: (context, index) {
-                                        return Stack(
-                                          children: [
-                                            Obx(() {
-                                              return InkWell(
-                                                onTap: () {
-                                                  controller
-                                                      .currentPageIndex(index);
-                                                  controller.pageViewController
-                                                      .animateToPage(index,
-                                                          duration:
-                                                              const Duration(
-                                                                  milliseconds:
-                                                                      1),
-                                                          curve: Curves.easeIn);
-                                                },
-                                                child: Container(
-                                                  width: 45,
-                                                  height: 45,
-                                                  decoration: controller
-                                                              .currentPageIndex
-                                                              .value ==
-                                                          index
-                                                      ? BoxDecoration(
-                                                          border: Border.all(
-                                                          color: Colors.blue,
-                                                          width: 1,
-                                                        ))
-                                                      : null,
-                                                  margin: const EdgeInsets
-                                                      .symmetric(horizontal: 1),
-                                                  child: Image.memory(controller
-                                                      .filePath[index]
-                                                      .thumbnail),
-                                                ),
-                                              );
-                                            }),
-                                            controller.filePath[index].type ==
-                                                    "image"
-                                                ? const SizedBox.shrink()
-                                                : Positioned(
-                                                    bottom: 4,
-                                                    left: 4,
-                                                    child: SvgPicture.asset(
-                                                      videoCamera,package: package,
-                                                      width: 5,
-                                                      height: 5,
-                                                    )),
-                                          ],
+                            height: 45,
+                            child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: controller.filePath.length,
+                                itemBuilder: (context, index) {
+                                  return Stack(
+                                    children: [
+                                      Obx(() {
+                                        return InkWell(
+                                          onTap: () {
+                                            controller
+                                                .currentPageIndex(index);
+                                            controller.pageViewController
+                                                .animateToPage(index,
+                                                duration:
+                                                const Duration(
+                                                    milliseconds:
+                                                    1),
+                                                curve: Curves.easeIn);
+                                          },
+                                          child: Container(
+                                            width: 45,
+                                            height: 45,
+                                            decoration: controller
+                                                .currentPageIndex
+                                                .value ==
+                                                index
+                                                ? BoxDecoration(
+                                                border: Border.all(
+                                                  color: Colors.blue,
+                                                  width: 1,
+                                                ))
+                                                : null,
+                                            margin: const EdgeInsets
+                                                .symmetric(horizontal: 1),
+                                            child: Image.memory(controller
+                                                .filePath[index]
+                                                .thumbnail),
+                                          ),
                                         );
                                       }),
-                                )
+                                      controller.filePath[index].type ==
+                                          "image"
+                                          ? const SizedBox.shrink()
+                                          : Positioned(
+                                          bottom: 4,
+                                          left: 4,
+                                          child: SvgPicture.asset(
+                                            videoCamera, package: package,
+                                            width: 5,
+                                            height: 5,
+                                          )),
+                                    ],
+                                  );
+                                }),
+                          )
                               : const SizedBox.shrink();
                         }),
                         emojiLayout(),

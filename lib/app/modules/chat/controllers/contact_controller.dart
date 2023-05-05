@@ -441,7 +441,7 @@ class ContactController extends FullLifeCycleController
       mirrorFlyLog('Contact Sync', "[Contact Sync] refreshContacts()");
       if (await AppUtils.isNetConnected()) {
         if (!await Mirrorfly.contactSyncStateValue()) {
-          var contactPermissionHandle = await AppPermission.checkPermission(
+          var contactPermissionHandle = await AppPermission.checkPermission(Get.context!,
               Permission.contacts, contactPermission,
               Constants.contactSyncPermission);
           if (contactPermissionHandle) {

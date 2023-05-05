@@ -35,7 +35,7 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   void initState() {
-    controller.init(jid: widget.jid,isFromStarred: widget.isFromStarred,messageId: widget.messageId);
+    controller.init(context,jid: widget.jid,isFromStarred: widget.isFromStarred,messageId: widget.messageId);
     super.initState();
   }
 

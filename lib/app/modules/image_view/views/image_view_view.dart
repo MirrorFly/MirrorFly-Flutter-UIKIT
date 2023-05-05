@@ -34,50 +34,56 @@ class _ImageViewViewState extends State<ImageViewView> {
   Widget build(BuildContext context) {
     var main = Get.find<MainController>();
     return Scaffold(
+      backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
       appBar: AppBar(
-        title: Text(controller.imageName.value),
+        iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+        backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
+        title: Text(controller.imageName.value,style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),overflow: TextOverflow.clip,),
         centerTitle: false,
       ),
       body: SafeArea(
-        child: Obx(() {
-          return controller.imagePath.value.isNotEmpty
-              ? PhotoView(
-                  imageProvider: FileImage(File(controller.imagePath.value)),
-                  // Contained = the smallest possible size to fit one dimension of the screen
-                  minScale: PhotoViewComputedScale.contained * 0.8,
-                  // Covered = the smallest possible size to fit the whole screen
-                  maxScale: PhotoViewComputedScale.covered * 2,
-                  enableRotation: false,
-                  // Set the background color to the "classic white"
-                  backgroundDecoration: const BoxDecoration(
-                    color: Colors.black,
-                  ),
-                  loadingBuilder: (context, event) => Center(
-                    child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
-                  ),
-                )
-              : controller.imageUrl.value.isNotEmpty
-                  ? PhotoView(
-                      imageProvider: CachedNetworkImageProvider(
-                          controller.imageUrl.value,
-                          headers: {"Authorization": main.authToken.value}),
-                      // Contained = the smallest possible size to fit one dimension of the screen
-                      minScale: PhotoViewComputedScale.contained * 0.8,
-                      // Covered = the smallest possible size to fit the whole screen
-                      maxScale: PhotoViewComputedScale.covered * 2,
-                      enableRotation: false,
-                      // Set the background color to the "classic white"
-                      backgroundDecoration: const BoxDecoration(
-                        color: Colors.black,
-                      ),
-                      loadingBuilder: (context, event) => Center(
-                        child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
-                      ),
-                    )
-                  : const Center(
-                      child: Text('Unable to Load Image'),
-                    );
-        }),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Obx(() {
+            return controller.imagePath.value.isNotEmpty
+                ? PhotoView(
+                    imageProvider: FileImage(File(controller.imagePath.value)),
+                    // Contained = the smallest possible size to fit one dimension of the screen
+                    minScale: PhotoViewComputedScale.contained * 0.8,
+                    // Covered = the smallest possible size to fit the whole screen
+                    maxScale: PhotoViewComputedScale.covered * 2,
+                    enableRotation: false,
+                    // Set the background color to the "classic white"
+                    backgroundDecoration: BoxDecoration(
+                      color: MirrorflyUikit.getTheme?.scaffoldColor,
+                    ),
+                    loadingBuilder: (context, event) => Center(
+                      child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
+                    ),
+                  )
+                : controller.imageUrl.value.isNotEmpty
+                    ? PhotoView(
+                        imageProvider: CachedNetworkImageProvider(
+                            controller.imageUrl.value,
+                            headers: {"Authorization": main.authToken.value}),
+                        // Contained = the smallest possible size to fit one dimension of the screen
+                        minScale: PhotoViewComputedScale.contained * 0.8,
+                        // Covered = the smallest possible size to fit the whole screen
+                        maxScale: PhotoViewComputedScale.covered * 2,
+                        enableRotation: false,
+                        // Set the background color to the "classic white"
+                        backgroundDecoration: BoxDecoration(
+                          color: MirrorflyUikit.getTheme?.scaffoldColor,
+                        ),
+                        loadingBuilder: (context, event) => Center(
+                          child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
+                        ),
+                      )
+                    : const Center(
+                        child: Text('Unable to Load Image'),
+                      );
+          }),
+        ),
       ),
     );
   }

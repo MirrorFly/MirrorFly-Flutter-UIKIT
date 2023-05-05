@@ -35,8 +35,6 @@ import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/country_list_view.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/login/views/otp_view.dart';
-import '../modules/media_preview/bindings/media_preview_binding.dart';
-import '../modules/media_preview/views/media_preview_view.dart';
 import '../modules/message_info/bindings/message_info_binding.dart';
 import '../modules/message_info/views/message_info_view.dart';
 import '../modules/preview_contact/bindings/preview_contact_binding.dart';
@@ -252,7 +250,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.cameraPick,
-      page: () => const CameraPickView(),
+      page: () => CameraPickView(),
       binding: CameraPickBinding(),
     ),
     GetPage(
@@ -272,11 +270,11 @@ class AppPages {
       page: () => const GalleryPickerView(),
       binding: GalleryPickerBinding(),
     ),
-    GetPage(
+    /*GetPage(
       name: _Paths.mediaPreview,
       page: () => const MediaPreviewView(),
       binding: MediaPreviewBinding(),
-    ),
+    ),*/
     GetPage(
       name: _Paths.languages,
       page: () => const LanguageListView(),

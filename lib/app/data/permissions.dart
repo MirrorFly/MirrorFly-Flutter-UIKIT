@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
+import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'helper.dart';
@@ -19,27 +19,29 @@ class AppPermission {
 
 
 
-  static Future<PermissionStatus> getContactPermission() async {
+  static Future<PermissionStatus> getContactPermission(BuildContext context) async {
     final permission = await Permission.contacts.status;
     if (permission != PermissionStatus.granted &&
         permission != PermissionStatus.permanentlyDenied) {
       const newPermission = Permission.contacts;
-      mirrorFlyPermissionDialog(
-          notNowBtn: () {
-            return false;
-          },
-          continueBtn: () async {
-            newPermission.request();
-          },
-          icon: contactPermission,
-          content: Constants.contactPermission);
+      if(context.mounted) {
+        mirrorFlyPermissionDialog(context,
+            notNowBtn: () {
+              return false;
+            },
+            continueBtn: () async {
+              newPermission.request();
+            },
+            icon: contactPermission,
+            content: Constants.contactPermission);
+      }
       return newPermission.status;
     } else {
       return permission;
     }
   }
 
-  static Future<PermissionStatus> getStoragePermission() async {
+  static Future<PermissionStatus> getStoragePermission(BuildContext context) async {
     var sdkVersion=0;
     if (Platform.isAndroid) {
       var sdk =  await DeviceInfoPlugin().androidInfo;
@@ -52,25 +54,27 @@ class AppPermission {
       if (permission != PermissionStatus.granted &&
           permission != PermissionStatus.permanentlyDenied) {
         const newPermission = Permission.storage;
-        mirrorFlyPermissionDialog(
-            notNowBtn: () {
-              return false;
-            },
-            continueBtn: () async {
-              newPermission.request();
-            },
-            icon: filePermission,
-            content: Constants.filePermission);
+        if(context.mounted) {
+          mirrorFlyPermissionDialog(context,
+              notNowBtn: () {
+                return false;
+              },
+              continueBtn: () async {
+                newPermission.request();
+              },
+              icon: filePermission,
+              content: Constants.filePermission);
+        }
         return newPermission.status;
       } else {
         return permission;
       }
     } else {
-      return getAndroid13Permission();
+      return getAndroid13Permission(context);
     }
   }
 
-  static Future<PermissionStatus> getAndroid13Permission() async {
+  static Future<PermissionStatus> getAndroid13Permission(BuildContext context) async {
     final photos = await Permission.photos.status;
     final videos = await Permission.videos.status;
     // final audio = await Permission.audio.status;
@@ -83,15 +87,17 @@ class AppPermission {
         photos != PermissionStatus.permanentlyDenied) ||
         (videos != PermissionStatus.granted &&
             videos != PermissionStatus.permanentlyDenied)) {
-      mirrorFlyPermissionDialog(
-          notNowBtn: () {
-            return false;
-          },
-          continueBtn: () async {
-            newPermission.request();
-          },
-          icon: filePermission,
-          content: Constants.filePermission);
+      if(context.mounted) {
+        mirrorFlyPermissionDialog(context,
+            notNowBtn: () {
+              return false;
+            },
+            continueBtn: () async {
+              newPermission.request();
+            },
+            icon: filePermission,
+            content: Constants.filePermission);
+      }
       var photo = await newPermission[0].status.isGranted;
       var video = await newPermission[1].isGranted;
       // var audio = await newPermission[2].isGranted;
@@ -116,68 +122,74 @@ class AppPermission {
     }
   }
 
-  static Future<PermissionStatus> getCameraPermission() async {
+  static Future<PermissionStatus> getCameraPermission(BuildContext context) async {
     final permission = await Permission.camera.status;
     if (permission != PermissionStatus.granted &&
         permission != PermissionStatus.permanentlyDenied) {
       const newPermission = Permission.camera;
-      mirrorFlyPermissionDialog(
-          notNowBtn: () {
-            return false;
-          },
-          continueBtn: () async {
-            newPermission.request();
-          },
-          icon: cameraPermission,
-          content: Constants.cameraPermission);
+      if(context.mounted) {
+        mirrorFlyPermissionDialog(context,
+            notNowBtn: () {
+              return false;
+            },
+            continueBtn: () async {
+              newPermission.request();
+            },
+            icon: cameraPermission,
+            content: Constants.cameraPermission);
+      }
       return newPermission.status;
     } else {
       return permission;
     }
   }
 
-  static Future<PermissionStatus> getAudioPermission() async {
+  static Future<PermissionStatus> getAudioPermission(BuildContext context) async {
     final permission = await Permission.microphone.status;
     if (permission != PermissionStatus.granted &&
         permission != PermissionStatus.permanentlyDenied) {
       const newPermission = Permission.microphone;
-      mirrorFlyPermissionDialog(
-          notNowBtn: () {
-            return false;
-          },
-          continueBtn: () async {
-            newPermission.request();
-          },
-          icon: audioPermission,
-          content: Constants.audioPermission);
+      if(context.mounted) {
+        mirrorFlyPermissionDialog(context,
+            notNowBtn: () {
+              return false;
+            },
+            continueBtn: () async {
+              newPermission.request();
+            },
+            icon: audioPermission,
+            content: Constants.audioPermission);
+      }
       return newPermission.status;
     } else {
       return permission;
     }
   }
 
-  static Future<bool> askFileCameraAudioPermission() async {
+  static Future<bool> askFileCameraAudioPermission(BuildContext context) async {
     var filePermission = Permission.storage;
     var camerapermission = Permission.camera;
     var audioPermission = Permission.microphone;
     if (await filePermission.isGranted == false ||
         await camerapermission.isGranted == false ||
         await audioPermission.isGranted == false) {
-      mirrorFlyPermissionDialog(
-          notNowBtn: () {
-            return false;
-          },
-          continueBtn: () async {
-            if (await requestPermission(filePermission) &&
-                await requestPermission(camerapermission) &&
-                await requestPermission(audioPermission)) {
-              return true;
-            } else {
+      if(context.mounted) {
+        mirrorFlyPermissionDialog(context,
+            notNowBtn: () {
               return false;
-            }
-          },
-          icon: cameraPermission,
-          content: Constants.cameraPermission);
+            },
+            continueBtn: () async {
+              if (await requestPermission(filePermission) &&
+                  await requestPermission(camerapermission) &&
+                  await requestPermission(audioPermission)) {
+                return true;
+              } else {
+                return false;
+              }
+            },
+            icon: cameraPermission,
+            content: Constants.cameraPermission);
+      }
     } else {
       return true;
     }
@@ -196,7 +208,7 @@ class AppPermission {
     return status1.isGranted;
   }
 
-  static Future<bool> checkPermission(Permission permission, String permissionIcon, String permissionContent) async {
+  static Future<bool> checkPermission(BuildContext context,Permission permission, String permissionIcon, String permissionContent) async {
     var status = await permission.status;
     if (status == PermissionStatus.granted) {
       debugPrint("permission granted opening");
@@ -227,7 +239,7 @@ class AppPermission {
           permissionAlertMessage = "MirrorFly need the ${permissionName.toUpperCase()} Permission. But they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"${permissionName.toUpperCase()}\"";
       }
 
-      var deniedPopupValue = await customPermissionDialog(icon: permissionIcon,
+      var deniedPopupValue = await customPermissionDialog(context,icon: permissionIcon,
           content: permissionAlertMessage);
       if(deniedPopupValue){
         openAppSettings();
@@ -237,7 +249,7 @@ class AppPermission {
       }
     }else{
       mirrorFlyLog('denied', 'permission');
-      var popupValue = await customPermissionDialog(icon: permissionIcon,
+      var popupValue = await customPermissionDialog(context,icon: permissionIcon,
           content: permissionContent);
       if(popupValue){
         return AppPermission.requestPermission(permission);/*.then((value) {
@@ -261,26 +273,27 @@ class AppPermission {
         actions: [
           TextButton(
               onPressed: () {
-                Get.back();
+                // Get.back();
+                Navigator.pop(context);
                 openAppSettings();
               },
               child: const Text("OK")),
         ], context: context);
   }
-  static mirrorFlyPermissionDialog(
+  static mirrorFlyPermissionDialog(BuildContext context,
       {required Function() notNowBtn,
       required Function() continueBtn,
       required String icon,
       required String content}) {
-    Get.dialog(AlertDialog(
+    showDialog(context: context, builder: (BuildContext context) { return AlertDialog(
       contentPadding: EdgeInsets.zero,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             padding: const EdgeInsets.symmetric(vertical: 35.0),
-            color: buttonBgColor,
-            child: Center(child: SvgPicture.asset(icon,package: package,)),
+            color: MirrorflyUikit.getTheme?.primaryColor,// buttonBgColor,
+            child: Center(child: SvgPicture.asset(icon,package: package,color: MirrorflyUikit.getTheme?.colorOnPrimary,)),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -294,7 +307,8 @@ class AppPermission {
       actions: [
         TextButton(
             onPressed: () {
-              Get.back(result: "no");
+              Navigator.pop(context,"no");
+              // Get.back(result: "no");
               notNowBtn();
             },
             child: const Text(
@@ -303,7 +317,8 @@ class AppPermission {
             )),
         TextButton(
             onPressed: () {
-              Get.back(result: "yes");
+              Navigator.pop(context,"yes");
+              // Get.back(result: "yes");
               continueBtn();
             },
             child: const Text(
@@ -311,13 +326,13 @@ class AppPermission {
               style: TextStyle(color: buttonBgColor),
             ))
       ],
-    ));
+    ); },);
   }
 
-  static Future<bool> customPermissionDialog(
+  static Future<bool> customPermissionDialog(BuildContext context,
       {required String icon,
       required String content}) async {
-    return await Get.dialog(AlertDialog(
+    return await showDialog(context: context, builder: (BuildContext context) { return AlertDialog(
       contentPadding: EdgeInsets.zero,
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -339,7 +354,8 @@ class AppPermission {
       actions: [
         TextButton(
             onPressed: () {
-              Get.back(result: false);
+              Navigator.pop(context,false);
+              // Get.back(result: false);
               // notNowBtn();
             },
             child: const Text(
@@ -348,7 +364,8 @@ class AppPermission {
             )),
         TextButton(
             onPressed: () {
-              Get.back(result: true);
+              Navigator.pop(context,true);
+              // Get.back(result: true);
               // continueBtn();
             },
             child: const Text(
@@ -356,6 +373,6 @@ class AppPermission {
               style: TextStyle(color: buttonBgColor),
             ))
       ],
-    ));
+    ); },);
   }
 }

@@ -72,8 +72,8 @@ class MessageInfoController extends GetxController {
         File(mediaLocalStoragePath).existsSync();
   }
 
-  Future<bool> askStoragePermission() async {
-    final permission = await AppPermission.getStoragePermission();
+  Future<bool> askStoragePermission(BuildContext context) async {
+    final permission = await AppPermission.getStoragePermission(context);
     switch (permission) {
       case PermissionStatus.granted:
         return true;
@@ -85,11 +85,6 @@ class MessageInfoController extends GetxController {
     }
   }
 
-  downloadMedia(String messageId) async {
-    if (await askStoragePermission()) {
-      Mirrorfly.downloadMedia(messageId);
-    }
-  }
   /*@override
   void onClose(){
     super.onClose();

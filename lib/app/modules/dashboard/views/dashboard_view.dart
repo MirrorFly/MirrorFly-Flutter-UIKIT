@@ -26,6 +26,7 @@ class DashboardView extends StatelessWidget {
     return FocusDetector(
       onFocusGained: () {
         debugPrint('onFocusGained');
+        controller.askStoragePermission(context);
         controller.checkArchiveSetting();
         controller.getRecentChatList();
       },

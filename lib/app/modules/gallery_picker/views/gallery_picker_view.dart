@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-import '../../../routes/app_pages.dart';
+import '../../media_preview/views/media_preview_view.dart';
 import '../controllers/gallery_picker_controller.dart';
 import '../src/presentation/pages/gallery_media_picker.dart';
 
@@ -69,7 +69,19 @@ class GalleryPickerView extends GetView<GalleryPickerController> {
                                 // }).toString();
                                 if (controller.pickedFile.isNotEmpty) {
                                   // await Share.shareFiles(mediaPath);
-                                  Get.toNamed(Routes.mediaPreview, arguments: {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (con) => MediaPreviewView(
+                                            filePath: controller.pickedFile,
+                                            userName: controller.userName,
+                                            profile: controller.profile,
+                                            caption: controller.textMessage,
+                                            showAdd: false,
+                                          ))).then((value) {
+                                    value != null ? Navigator.pop(context) : null;
+                                  });
+                                  /*Get.toNamed(Routes.mediaPreview, arguments: {
                                     "filePath": controller.pickedFile,
                                     "userName": controller.userName,
                                     'profile': controller.profile,
@@ -77,9 +89,10 @@ class GalleryPickerView extends GetView<GalleryPickerController> {
                                   })?.then((value) {
                                     value != null ? Get.back() : null;
 
-                                  });
+                                  });*/
                                 } else {
-                                  Get.back();
+                                  // Get.back();
+                                  Navigator.pop(context);
                                 }
                                 mediaPath.clear();
                               },
