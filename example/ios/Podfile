@@ -43,6 +43,17 @@ post_install do |installer|
       config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'No'
       config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
       config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+      config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= [
+              '$(inherited)',
+        ## dart: PermissionGroup.contacts
+        'PERMISSION_CONTACTS=1',
+        'PERMISSION_LOCATION=1',
+        'PERMISSION_PHOTOS=1',
+        #'PERMISSION_MICROPHONE=1',
+        'PERMISSION_CAMERA=1',
+      ## dart: PermissionGroup.mediaLibrary
+        'PERMISSION_MEDIA_LIBRARY=1',
+      ]
       end
   end
 end

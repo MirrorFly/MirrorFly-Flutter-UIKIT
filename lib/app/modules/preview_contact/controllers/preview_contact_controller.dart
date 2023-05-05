@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../common/constants.dart';
+import '../../../data/helper.dart';
 import '../../../model/local_contact_model.dart';
 import '../../chat/controllers/chat_controller.dart';
 
@@ -13,10 +14,10 @@ class PreviewContactController extends GetxController {
   var previewContactName = "";
   var from = "";
 
-  @override
-  void onInit() {
-    super.onInit();
-    from = Get.arguments['from'];
+
+  void init(List<LocalContact> contactList, List<LocalContact> shareContactList, String from) {
+    this.from = from;
+    argContactList = contactList;
   }
   @override
   void onReady() {
@@ -35,7 +36,7 @@ class PreviewContactController extends GetxController {
           contactNo: newContactList, userName: previewContactName);
       contactList.add(localContactPhone);
     } else {
-      argContactList = Get.arguments['contactList'];
+      // argContactList = Get.arguments['contactList'];
       for (var contact in argContactList) {
         var newContactList = <ContactDetail>[];
         for (var phone in contact.contact.phones!) {
@@ -62,24 +63,10 @@ class PreviewContactController extends GetxController {
   }
 
   shareContact(BuildContext context) async {
-    // if(await AppUtils.isNetConnected()) {
-    //   if(contactList.isNotEmpty) {
-    //     var response = await Get.find<ChatController>().sendContactMessage(
-    //         contactList, contactName);
-    //     debugPrint("ContactResponse ==> $response");
-    //     if (response != null) {
-    //       Get.back();
-    //       Get.back();
-    //     }
-    //   }else{
-    //     toToast("Contact Number is Empty");
-    //   }
-    // }else{
-    //   toToast(Constants.noInternetConnection);
-    // }
 
+    Helper.showLoading(
+        message: "Sharing Contact", buildContext: context);
     var contactServerSharing = <ShareContactDetails>[];
-    // if (await AppUtils.isNetConnected()) {
       for (var item in contactList) {
         var contactSharing = <String>[];
         for (var contactItem in item.contactNo) {
@@ -111,15 +98,16 @@ class PreviewContactController extends GetxController {
         debugPrint("ContactResponse ==> $response");
       }
 
-      Get.back();
-      Get.back();
-    // } else {
-    //   toToast(Constants.noInternetConnection);
-    // }
+    if(context.mounted) {
+      Helper.hideLoading(context: context);
+      Navigator.pop(context);
+      Navigator.pop(context);
+    }
   }
 
   void changeStatus(ContactDetail phoneItem) {
     phoneItem.isSelected = !phoneItem.isSelected;
     contactList.refresh();
   }
+
 }

@@ -1,20 +1,48 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/model/local_contact_model.dart';
 
+import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/widgets.dart';
 import '../controllers/preview_contact_controller.dart';
 
-class PreviewContactView extends GetView<PreviewContactController> {
-  const PreviewContactView({Key? key}) : super(key: key);
+class PreviewContactView extends StatefulWidget {
+  const PreviewContactView({Key? key, required this.contactList, required this.shareContactList, required this.from}) : super(key: key);
+
+  final List<LocalContact> contactList;
+  final List<LocalContact> shareContactList;
+  final String from;
+
+  @override
+  State<PreviewContactView> createState() => _PreviewContactViewState();
+}
+
+class _PreviewContactViewState extends State<PreviewContactView> {
+  final controller = Get.put(PreviewContactController());
+
+  @override
+  void initState() {
+    controller.init(widget.contactList, widget.shareContactList, widget.from);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    Get.delete<PreviewContactController>();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
         appBar: AppBar(
+          iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+          backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
           title: controller.from == "contact_pick"
-              ? const Text('Send Contacts')
-              : const Text('Contact Details'),
+              ? Text('Send Contacts', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),)
+              : Text('Contact Details', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
         ),
         body: SafeArea(
           child: Stack(
@@ -45,18 +73,15 @@ class PreviewContactView extends GetView<PreviewContactController> {
                                   Flexible(
                                     child: Text(
                                       contactItem.userName,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold, color: MirrorflyUikit.getTheme?.textPrimaryColor),
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            const Divider(
-                              color: Colors.grey,
-                              thickness: 0.1,
-                            ),
+                            const AppDivider(padding: EdgeInsets.symmetric(vertical: 10),),
                             ListView.builder(
                                 itemCount: contactItem.contactNo.length,
                                 physics: const ClampingScrollPhysics(),
@@ -71,15 +96,15 @@ class PreviewContactView extends GetView<PreviewContactController> {
                                     },
                                     title: Text(
                                       phoneItem.mobNo,
-                                      style: const TextStyle(fontSize: 13),
+                                      style: TextStyle(fontSize: 13, color: MirrorflyUikit.getTheme?.textPrimaryColor),
                                     ),
                                     subtitle: Text(
                                       phoneItem.mobNoType,
-                                      style: const TextStyle(fontSize: 12),
+                                      style: TextStyle(fontSize: 12, color: MirrorflyUikit.getTheme?.textSecondaryColor),
                                     ),
-                                    leading: const Icon(
+                                    leading: Icon(
                                       Icons.phone,
-                                      color: Colors.blue,
+                                      color: MirrorflyUikit.getTheme?.primaryColor,
                                       size: 20,
                                     ),
                                     trailing: Visibility(
@@ -87,11 +112,12 @@ class PreviewContactView extends GetView<PreviewContactController> {
                                           contactItem.contactNo.length > 1 &&
                                               controller.from != "chat",
                                       child: Theme(
-                                        data: Theme.of(context).copyWith(
+                                        data: ThemeData(
                                           unselectedWidgetColor: Colors.grey,
                                         ),
                                         child: Checkbox(
-                                          activeColor: Colors.green,
+                                          activeColor: MirrorflyUikit.getTheme!.primaryColor,//Colors.white,
+                                          checkColor: MirrorflyUikit.getTheme?.colorOnPrimary,
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(4)),
@@ -104,10 +130,7 @@ class PreviewContactView extends GetView<PreviewContactController> {
                                     ),
                                   );
                                 }),
-                            const Divider(
-                              color: Colors.grey,
-                              thickness: 0.8,
-                            ),
+                            const AppDivider(padding: EdgeInsets.symmetric(vertical: 5),),
                           ],
                         );
                       }),
@@ -121,12 +144,12 @@ class PreviewContactView extends GetView<PreviewContactController> {
                         onTap: () {
                           controller.shareContact(context);
                         },
-                        child: const CircleAvatar(
-                            backgroundColor: Colors.blueAccent,
+                        child: CircleAvatar(
+                            backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
                             radius: 25,
                             child: Icon(
                               Icons.send,
-                              color: Colors.white,
+                              color: MirrorflyUikit.getTheme?.colorOnPrimary,
                             )),
                       ))
                   : const SizedBox.shrink()

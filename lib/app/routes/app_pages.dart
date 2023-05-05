@@ -33,8 +33,8 @@ import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/country_list_view.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/login/views/otp_view.dart';
-import '../modules/preview_contact/bindings/preview_contact_binding.dart';
-import '../modules/preview_contact/views/preview_contact_view.dart';
+import '../modules/message_info/bindings/message_info_binding.dart';
+import '../modules/message_info/views/message_info_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
 import '../modules/scanner/scanner_binding.dart';
@@ -214,16 +214,16 @@ class AppPages {
       page: () => const LocalContactView(),
       binding: LocalContactBinding(),
     ),
+    // GetPage(
+    //   name: _Paths.previewContact,
+    //   page: () => const PreviewContactView(),
+    //   binding: PreviewContactBinding(),
+    // ),
     GetPage(
-      name: _Paths.previewContact,
-      page: () => const PreviewContactView(),
-      binding: PreviewContactBinding(),
-    ),
-    /*GetPage(
       name: _Paths.messageInfo,
       page: () => const MessageInfoView(),
       binding: MessageInfoBinding(),
-    ),*/
+    ),
     /*GetPage(
       name: _Paths.chatInfo,
       page: () => const ChatInfoView(),

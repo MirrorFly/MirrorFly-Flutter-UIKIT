@@ -41,6 +41,7 @@ import '../../../models.dart';
 
 import '../../gallery_picker/src/data/models/picked_asset_model.dart';
 import '../../gallery_picker/views/gallery_picker_view.dart';
+import '../../local_contact/views/local_contact_view.dart';
 import '../chat_widgets.dart';
 import '../views/forwardchat_view.dart';
 
@@ -2344,7 +2345,12 @@ class ChatController extends FullLifeCycleController
     // if (await askContactsPermission()) {
     if (await AppPermission.checkPermission(
         context,Permission.contacts, contactPermission, Constants.contactPermission)) {
-      Get.toNamed(Routes.localContact);
+      // Get.toNamed(Routes.localContact);
+      if(context.mounted) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(builder: (con) => const LocalContactView()));
+      }
     } else {
       // AppPermission.permissionDeniedDialog(content: "Permission is permanently denied. Please enable Contact permission from settings");
     }
