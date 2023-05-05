@@ -234,10 +234,10 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                 Obx(() =>
                     Visibility(
                       visible: controller.isAdmin,
-                      child: ListItem(leading: SvgPicture.asset(addUser,package: package,),
-                          title: const Text("Add Participants",
+                      child: ListItem(leading: SvgPicture.asset(addUser,package: package, color: MirrorflyUikit.getTheme?.textSecondaryColor,),
+                          title: Text("Add Participants",
                               style: TextStyle(
-                                  color: Colors.black,
+                                  color: MirrorflyUikit.getTheme?.textPrimaryColor,
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500)),
                           onTap: () => controller.gotoAddParticipants(context)),

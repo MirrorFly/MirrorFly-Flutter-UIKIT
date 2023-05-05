@@ -110,7 +110,7 @@ class DashboardController extends FullLifeCycleController
     }
   }
 
-  var recentChatLoding = true.obs;
+  var recentChatLoading = true.obs;
 
   getRecentChatList() {
     mirrorFlyLog("", "recent chats");
@@ -121,10 +121,10 @@ class DashboardController extends FullLifeCycleController
       //recentChats.clear();
       recentChats(data.data!);
       recentChats.refresh();
-      recentChatLoding(false);
+      recentChatLoading(false);
     }).catchError((error) {
       debugPrint("recent chat issue===> $error");
-      recentChatLoding(false);
+      recentChatLoading(false);
     });
   }
 

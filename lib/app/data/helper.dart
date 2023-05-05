@@ -33,6 +33,7 @@ class Helper {
       context: buildContext,
       builder: (BuildContext context) {
         return Dialog(
+          backgroundColor: MirrorflyUikit.theme == "dark" ? darkPopupColor : Colors.white,
           child: WillPopScope(
             onWillPop: () async {
               return Future.value(dismiss);
@@ -44,7 +45,7 @@ class Helper {
                 children: [
                   CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
                   const SizedBox(width: 16),
-                  Text(message ?? 'Loading...'),
+                  Text(message ?? 'Loading...', style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),),
                 ],
               ),
             ),

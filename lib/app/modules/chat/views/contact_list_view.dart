@@ -31,6 +31,12 @@ class _ContactListViewState extends State<ContactListView> {
   }
 
   @override
+  void dispose() {
+    Get.delete<ContactController>();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Obx(
       () => Scaffold(

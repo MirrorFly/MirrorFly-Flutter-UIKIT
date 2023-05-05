@@ -21,6 +21,15 @@ class GroupCreationView extends StatefulWidget {
 class _GroupCreationViewState extends State<GroupCreationView> {
   final controller = Get.put(GroupCreationController());
   @override
+  void initState() {
+    super.initState();
+  }
+  @override
+  void dispose() {
+    Get.delete<GroupCreationController>();
+    super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
