@@ -14,15 +14,17 @@ import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/widgets.dart';
 import '../controllers/media_preview_controller.dart';
 
+
 class MediaPreviewView extends StatefulWidget {
   const MediaPreviewView(
-      {Key? key, required this.filePath, required this.userName, required this.profile, required this.caption, required this.showAdd,})
+      {Key? key, required this.filePath, required this.userName, required this.profile, required this.caption, required this.showAdd, this.isFromGalleryPicker = false})
       : super(key: key);
   final List filePath;
   final String userName;
   final Profile profile;
   final String caption;
   final bool showAdd;
+  final bool isFromGalleryPicker;
 
   @override
   State<MediaPreviewView> createState() => _MediaPreviewViewState();
@@ -35,7 +37,7 @@ class _MediaPreviewViewState extends State<MediaPreviewView> {
   void initState() {
     controller.init(
         widget.filePath, widget.userName, widget.profile, widget.caption,
-        widget.showAdd);
+        widget.showAdd, widget.isFromGalleryPicker);
     super.initState();
   }
 
@@ -55,7 +57,8 @@ class _MediaPreviewViewState extends State<MediaPreviewView> {
           leadingWidth: 80,
           leading: InkWell(
             onTap: () {
-              Get.back();
+              // Get.back();
+              Navigator.pop(context);
             },
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -382,7 +385,7 @@ class _MediaPreviewViewState extends State<MediaPreviewView> {
                                                 index
                                                 ? BoxDecoration(
                                                 border: Border.all(
-                                                  color: Colors.blue,
+                                                  color: MirrorflyUikit.getTheme!.primaryColor,
                                                   width: 1,
                                                 ))
                                                 : null,

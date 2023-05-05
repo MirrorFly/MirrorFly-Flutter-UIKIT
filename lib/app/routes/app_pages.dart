@@ -24,8 +24,6 @@ import '../modules/delete_account/bindings/delete_account_binding.dart';
 import '../modules/delete_account/views/delete_account_view.dart';
 import '../modules/delete_account_reason/bindings/delete_account_reason_binding.dart';
 import '../modules/delete_account_reason/views/delete_account_reason_view.dart';
-import '../modules/gallery_picker/bindings/gallery_picker_binding.dart';
-import '../modules/gallery_picker/views/gallery_picker_view.dart';
 import '../modules/group/bindings/group_creation_binding.dart';
 import '../modules/group/views/group_creation_view.dart';
 import '../modules/local_contact/bindings/local_contact_binding.dart';
@@ -263,11 +261,11 @@ class AppPages {
         name: _Paths.chatSettings,
         page: () => ChatSettingsView(),
         binding: ChatSettingsBinding()),
-    GetPage(
-      name: _Paths.galleryPicker,
-      page: () => const GalleryPickerView(),
-      binding: GalleryPickerBinding(),
-    ),
+    // GetPage(
+    //   name: _Paths.galleryPicker,
+    //   page: () => const GalleryPickerView(),
+    //   binding: GalleryPickerBinding(),
+    // ),
     /*GetPage(
       name: _Paths.mediaPreview,
       page: () => const MediaPreviewView(),

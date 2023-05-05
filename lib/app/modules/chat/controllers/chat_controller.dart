@@ -40,6 +40,7 @@ import 'package:mirrorfly_plugin/flychat.dart';
 import '../../../models.dart';
 
 import '../../gallery_picker/src/data/models/picked_asset_model.dart';
+import '../../gallery_picker/views/gallery_picker_view.dart';
 import '../chat_widgets.dart';
 import '../views/forwardchat_view.dart';
 
@@ -2317,15 +2318,22 @@ class ChatController extends FullLifeCycleController
 
   onGalleryClick() async {
     // if (await askStoragePermission()) {
-    if (await AppPermission.checkPermission(
-        context,Permission.storage, filePermission, Constants.filePermission)) {
+
+    if (await AppPermission.checkPermission(context, Permission.storage, filePermission, Constants.filePermission)) {
       try {
         // imagePicker();
-        Get.toNamed(Routes.galleryPicker, arguments: {
-          "userName": getName(profile),
-          'profile': profile,
-          'caption': messageController.text
-        });
+        // Get.toNamed(Routes.galleryPicker, arguments: {
+        //   "userName": getName(profile),
+        //   'profile': profile,
+        //   'caption': messageController.text
+        // });
+        if(context.mounted) {
+          Navigator.push(context, MaterialPageRoute(builder: (con) =>
+              GalleryPickerView(
+                  senderJid: profile.jid.checkNull(),
+                  caption: messageController.text)));
+        }
+
       } catch (e) {
         debugPrint(e.toString());
       }

@@ -8,7 +8,6 @@ import 'package:get/get.dart';
 
 import '../../../common/constants.dart';
 import '../../../data/helper.dart';
-import '../../../routes/app_pages.dart';
 import '../../chat/controllers/chat_controller.dart';
 
 class MediaPreviewController extends FullLifeCycleController
@@ -26,6 +25,7 @@ class MediaPreviewController extends FullLifeCycleController
   var currentPageIndex = 0.obs;
   var isFocused = false.obs;
   var showEmoji = false.obs;
+  late bool isFromGalleryPicker;
 
   FocusNode captionFocusNode = FocusNode();
   PageController pageViewController =
@@ -38,12 +38,13 @@ class MediaPreviewController extends FullLifeCycleController
   }*/
 
   void init(List filePath, String userName, Profile profile,
-      String textMessage, bool showAdd) {
+      String textMessage, bool showAdd, bool isFromGalleryPicker) {
     this.userName= userName;
     this.profile(profile);
     this.filePath(filePath);
     this.textMessage= textMessage;
     this.showAdd= showAdd;
+    this.isFromGalleryPicker = isFromGalleryPicker;
     SchedulerBinding.instance.addPostFrameCallback((_) {
       // filePath(Get.arguments['filePath']);
       var index = 0;
@@ -70,7 +71,7 @@ class MediaPreviewController extends FullLifeCycleController
 
   sendMedia(BuildContext context) async {
     debugPrint("send media");
-    var previousRoute = Get.previousRoute;
+    // var previousRoute = Get.previousRoute;
     // if (await AppUtils.isNetConnected()) {
     try {
       int i = 0;
@@ -102,7 +103,7 @@ class MediaPreviewController extends FullLifeCycleController
       }
     } finally {
       Platform.isIOS ? Helper.hideLoading(context: context) : null;
-      if (previousRoute == Routes.galleryPicker) {
+      if (isFromGalleryPicker) {
         // Get.back();
         Navigator.pop(context);
       }
