@@ -517,7 +517,7 @@ bool isCountryCode(String text) {
   return false;
 }
 
-Widget textMessageSpannableText(String message,bool isSentByMe, {int? maxLines}) {
+Widget textMessageSpannableText(String message,bool isSentByMe, {int? maxLines, bool isClickable = true}) {
   //final GlobalKey textKey = GlobalKey();
   TextStyle underlineStyle = const TextStyle(
       decoration: TextDecoration.underline,
@@ -526,14 +526,14 @@ Widget textMessageSpannableText(String message,bool isSentByMe, {int? maxLines})
   TextStyle normalStyle = TextStyle(fontSize: 14, color: isSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textPrimaryColor);
   var prevValue = "";
   return Text.rich(
-    customTextSpan(message, prevValue, normalStyle, underlineStyle),
+    customTextSpan(message, prevValue, normalStyle, underlineStyle, isClickable),
     maxLines: maxLines,
     overflow: maxLines==null ? null : TextOverflow.ellipsis,
   );
 }
 
 TextSpan customTextSpan(String message, String prevValue,
-    TextStyle? normalStyle, TextStyle underlineStyle) {
+    TextStyle? normalStyle, TextStyle underlineStyle, bool isClickable) {
   return TextSpan(
     children: message.split(" ").map((e) {
       if (isCountryCode(e)) {
@@ -545,10 +545,10 @@ TextSpan customTextSpan(String message, String prevValue,
       return TextSpan(
           text: "$e ",
           style: spannableTextType(e) == "text" ? normalStyle : underlineStyle,
-          recognizer: TapGestureRecognizer()
-            ..onTap = () {
+          recognizer:TapGestureRecognizer()
+            ..onTap = isClickable ? () {
               onTapForSpantext(e);
-            });
+            } : null) ;
     }).toList(),
   );
 }

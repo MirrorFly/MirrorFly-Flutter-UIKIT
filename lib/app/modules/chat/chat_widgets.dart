@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/image_view/views/image_view_view.dart';
 import '../../../mirrorfly_uikit_plugin.dart';
 import '../../models.dart';
@@ -23,6 +22,7 @@ import '../../data/permissions.dart';
 import '../../data/session_management.dart';
 import '../../routes/app_pages.dart';
 import '../dashboard/widgets.dart';
+import '../preview_contact/views/preview_contact_view.dart';
 
 class ReplyingMessageHeader extends StatelessWidget {
   const ReplyingMessageHeader({Key? key,
@@ -88,7 +88,7 @@ class ReplyingMessageHeader extends StatelessWidget {
                   GestureDetector(
                     onTap: onCancel,
                     child: const Padding(
-                      padding: EdgeInsets.only(right: 16.0,top: 10.0,left: 16.0),
+                      padding: EdgeInsets.all(10.0),
                       child: CircleAvatar(
                           backgroundColor: Colors.white,
                           radius: 10,
@@ -128,7 +128,7 @@ getReplyMessage(String messageType,
       return Row(
         children: [
           Helper.forMessageTypeIcon(Constants.mText),
-          Expanded(child: Text(messageTextContent!,style: TextStyle(color: color),maxLines: 1,overflow: TextOverflow.clip,)),
+          Text(messageTextContent!,style: TextStyle(color: color),),
         ],
       );
     case Constants.mImage:
@@ -525,7 +525,7 @@ class LocationMessageView extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                chatMessage.isMessageStarred.value
+                chatMessage.isMessageStarred
                     ? SvgPicture.asset(starSmallIcon,package: package,)
                     : const SizedBox.shrink(),
                 const SizedBox(
@@ -534,7 +534,7 @@ class LocationMessageView extends StatelessWidget {
                 Obx(() {
                   return getMessageIndicator(chatMessage.messageStatus.value,
                       chatMessage.isMessageSentByMe, chatMessage.messageType,
-                      chatMessage.isMessageRecalled.value);
+                      chatMessage.isMessageRecalled);
                 }),
                 const SizedBox(
                   width: 4,
@@ -667,7 +667,7 @@ class _AudioMessageViewState extends State<AudioMessageView>
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         color: Colors.transparent,
       ),
-      width: Get.width * 0.70,
+      // width: screenWidth * 0.60,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -778,7 +778,7 @@ class _AudioMessageViewState extends State<AudioMessageView>
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                widget.chatMessage.isMessageStarred.value
+                widget.chatMessage.isMessageStarred
                     ? SvgPicture.asset(starSmallIcon,package: package,color: widget.chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor)
                     : const SizedBox.shrink(),
                 const SizedBox(
@@ -789,7 +789,7 @@ class _AudioMessageViewState extends State<AudioMessageView>
                       widget.chatMessage.messageStatus.value,
                       widget.chatMessage.isMessageSentByMe,
                       widget.chatMessage.messageType,
-                      widget.chatMessage.isMessageRecalled.value);
+                      widget.chatMessage.isMessageRecalled);
                 }),
                 const SizedBox(
                   width: 4,
@@ -1022,75 +1022,84 @@ class ContactMessageView extends StatelessWidget {
             ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor.withAlpha(30)
             : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor.withAlpha(30),
       ),
-      width: screenWidth * 0.70,
+      width: screenWidth * 0.60,
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
-            child: Row(
+          InkWell(
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (con) => PreviewContactView(contactName : chatMessage.contactChatMessage!.contactName, from: "chat", previewContactList: chatMessage.contactChatMessage?.contactPhoneNumbers,)));
+            },
+            child: Column(
               children: [
-                Image.asset(
-                  profileImage,package: package,
-                  width: 35,
-                  height: 35,
-                ),
-                const SizedBox(
-                  width: 12,
-                ),
-                Expanded(
-                    child: search.isEmpty
-                        ? textMessageSpannableText(
-                        chatMessage.contactChatMessage!.contactName
-                            .checkNull(),chatMessage.isMessageSentByMe,
-                        maxLines: 2)
-                        : chatSpannedText(
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        profileImage,package: package,
+                        width: 35,
+                        height: 35,
+                      ),
+                      const SizedBox(
+                        width: 12,
+                      ),
+                      Expanded(
+                          child: search.isEmpty
+                              ? textMessageSpannableText(
+                              chatMessage.contactChatMessage!.contactName
+                                  .checkNull(),chatMessage.isMessageSentByMe,
+                              maxLines: 2, isClickable: false)
+                              : chatSpannedText(
+                              chatMessage.contactChatMessage!.contactName,
+                              search,
+                              TextStyle(fontSize: 14, color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textPrimaryColor),
+                              chatMessage.isMessageSentByMe,
+                              maxLines:
+                              2) /*,Text(
                         chatMessage.contactChatMessage!.contactName,
-                        search,
-                        TextStyle(fontSize: 14, color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textPrimaryColor),
-                        chatMessage.isMessageSentByMe,
-                        maxLines:
-                        2) /*,Text(
-                  chatMessage.contactChatMessage!.contactName,
-                  maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                )*/
+                        maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                      )*/
+                      ),
+                    ],
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      chatMessage.isMessageStarred
+                          ? SvgPicture.asset(starSmallIcon)
+                          : const SizedBox.shrink(),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Obx(() {
+                        return getMessageIndicator(chatMessage.messageStatus.value,
+                            chatMessage.isMessageSentByMe, chatMessage.messageType,
+                            chatMessage.isMessageRecalled);
+                      }),
+                      const SizedBox(
+                        width: 4,
+                      ),
+                      Text(
+                        getChatTime(context, chatMessage.messageSentTime.toInt()),
+                        style: TextStyle(
+                            fontSize: 11,
+                            color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
                 ),
               ],
             ),
-          ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                chatMessage.isMessageStarred.value
-                    ? SvgPicture.asset(starSmallIcon)
-                    : const SizedBox.shrink(),
-                const SizedBox(
-                  width: 5,
-                ),
-                Obx(() {
-                  return getMessageIndicator(chatMessage.messageStatus.value,
-                      chatMessage.isMessageSentByMe, chatMessage.messageType,
-                      chatMessage.isMessageRecalled.value);
-                }),
-                const SizedBox(
-                  width: 4,
-                ),
-                Text(
-                  getChatTime(context, chatMessage.messageSentTime.toInt()),
-                  style: TextStyle(
-                      fontSize: 11,
-                      color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 5,
           ),
           const AppDivider(),
           getJidOfContact(chatMessage.contactChatMessage),
@@ -1130,7 +1139,7 @@ class ContactMessageView extends StatelessWidget {
           return InkWell(
             onTap: () {
               (userJid != null && userJid.isNotEmpty)
-                  ? sendToChatPage(context,userJid)
+                  ? sendToChatPage(userJid)
                   : showInvitePopup(contactChatMessage, context);
             },
             child: Row(
@@ -1150,30 +1159,20 @@ class ContactMessageView extends StatelessWidget {
         });
   }
 
-  sendToChatPage(BuildContext context,String userJid) {
+  sendToChatPage(String userJid) {
     // Get.back();
-    /*mirrorFlyLog('Get.currentRoute', Get.currentRoute);
+    mirrorFlyLog('Get.currentRoute', Get.currentRoute);
     if (Get.currentRoute == Routes.chat) {
-      Navigator.pop(context);
-      // Get.back();
+      Get.back();
       Future.delayed(const Duration(milliseconds: 500), () {
         Get.toNamed(Routes.chat,
             parameters: {'isFromStarred': 'true', "userJid": userJid});
       });
     } else {
-      // Get.back();
-      Navigator.pop(context);
-      sendToChatPage(context,userJid);
-      *//*Get.toNamed(Routes.chat,
-          parameters: {'isFromStarred': 'true', "userJid": userJid});*//*
-    }*/
-    try {
-      Navigator.push(context, MaterialPageRoute(
-          builder: (con) => ChatView(jid: userJid)));
-    }catch(e){
-      Navigator.pop(context);
-      Navigator.push(context, MaterialPageRoute(
-          builder: (con) => ChatView(jid: userJid)));
+      Get.back();
+      sendToChatPage(userJid);
+      /*Get.toNamed(Routes.chat,
+          parameters: {'isFromStarred': 'true', "userJid": userJid});*/
     }
   }
 
@@ -1191,8 +1190,7 @@ class ContactMessageView extends StatelessWidget {
         onTap: () {
           Clipboard.setData(
               const ClipboardData(text: Constants.applicationLink));
-          // Get.back();
-          Navigator.pop(context);
+          Get.back();
           toToast("Link Copied");
         },
       ),
@@ -1257,7 +1255,7 @@ class DocumentMessageView extends StatelessWidget {
           borderRadius: const BorderRadius.all(Radius.circular(10)),
           color: Colors.transparent,
         ),
-        width: screenWidth * 0.80,
+        width: screenWidth * 0.60,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1328,7 +1326,7 @@ class DocumentMessageView extends StatelessWidget {
                         fontWeight: FontWeight.w400),
                   ),
                   const Spacer(),
-                  chatMessage.isMessageStarred.value
+                  chatMessage.isMessageStarred
                       ? SvgPicture.asset(starSmallIcon,package: package,color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor)
                       : const SizedBox.shrink(),
                   const SizedBox(
@@ -1337,7 +1335,7 @@ class DocumentMessageView extends StatelessWidget {
                   Obx(() {
                     return getMessageIndicator(chatMessage.messageStatus.value,
                         chatMessage.isMessageSentByMe, chatMessage.messageType,
-                        chatMessage.isMessageRecalled.value);
+                        chatMessage.isMessageRecalled);
                   }),
                   const SizedBox(
                     width: 4,
@@ -1466,7 +1464,7 @@ class VideoMessageView extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    chatMessage.isMessageStarred.value
+                    chatMessage.isMessageStarred
                         ? SvgPicture.asset(starSmallIcon,package: package,color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor,)
                         : const SizedBox.shrink(),
                     const SizedBox(
@@ -1477,7 +1475,7 @@ class VideoMessageView extends StatelessWidget {
                           chatMessage.messageStatus.value,
                           chatMessage.isMessageSentByMe,
                           chatMessage.messageType,
-                          chatMessage.isMessageRecalled.value);
+                          chatMessage.isMessageRecalled);
                     }),
                     const SizedBox(
                       width: 4,
@@ -1555,7 +1553,7 @@ class ImageMessageView extends StatelessWidget {
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        chatMessage.isMessageStarred.value
+                        chatMessage.isMessageStarred
                             ? SvgPicture.asset(starSmallIcon,package: package,color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor,)
                             : const SizedBox.shrink(),
                         const SizedBox(
@@ -1566,7 +1564,7 @@ class ImageMessageView extends StatelessWidget {
                               chatMessage.messageStatus.value,
                               chatMessage.isMessageSentByMe,
                               chatMessage.messageType,
-                              chatMessage.isMessageRecalled.value);
+                              chatMessage.isMessageRecalled);
                         }),
                         const SizedBox(
                           width: 4,
@@ -1663,7 +1661,7 @@ Widget setCaptionMessage(MediaChatMessage mediaMessage,
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            chatMessage.isMessageStarred.value
+            chatMessage.isMessageStarred
                 ? SvgPicture.asset(starSmallIcon,package: package,color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor,)
                 : const SizedBox.shrink(),
             const SizedBox(
@@ -1672,7 +1670,7 @@ Widget setCaptionMessage(MediaChatMessage mediaMessage,
             Obx(() {
               return getMessageIndicator(chatMessage.messageStatus.value,
                   chatMessage.isMessageSentByMe, chatMessage.messageType,
-                  chatMessage.isMessageRecalled.value);
+                  chatMessage.isMessageRecalled);
             }),
             const SizedBox(
               width: 5,
@@ -1735,7 +1733,7 @@ class MessageContent extends StatelessWidget {
     var chatMessage = chatList[index];
     //mirrorFlyLog("message==>", json.encode(chatMessage));
     // debugPrint("Message Type===> ${chatMessage.messageType}");
-    if (chatList[index].isMessageRecalled.value) {
+    if (chatList[index].isMessageRecalled) {
       return RecalledMessageView(
         chatMessage: chatMessage,
       );
@@ -1841,7 +1839,7 @@ class TextMessageView extends StatelessWidget {
           ),
           Row(
             children: [
-              chatMessage.isMessageStarred.value
+              chatMessage.isMessageStarred
                   ? SvgPicture.asset(starSmallIcon,package: package,)
                   : const SizedBox.shrink(),
               const SizedBox(
@@ -1850,7 +1848,7 @@ class TextMessageView extends StatelessWidget {
               Obx(() {
                 return getMessageIndicator(chatMessage.messageStatus.value,
                     chatMessage.isMessageSentByMe, chatMessage.messageType,
-                    chatMessage.isMessageRecalled.value);
+                    chatMessage.isMessageRecalled);
               }),
               const SizedBox(
                 width: 5,
@@ -1887,7 +1885,6 @@ class RecalledMessageView extends StatelessWidget {
         children: [
           Flexible(
             child: Row(
-              mainAxisSize: MainAxisSize.max,
               children: [
                 Image.asset(
                   disabledIcon,package: package,
@@ -1895,13 +1892,11 @@ class RecalledMessageView extends StatelessWidget {
                   height: 15,
                 ),
                 const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    chatMessage.isMessageSentByMe
-                        ? "You deleted this message"
-                        : "This message was deleted",
-                    maxLines: 1,
-                  ),
+                Text(
+                  chatMessage.isMessageSentByMe
+                      ? "You deleted this message"
+                      : "This message was deleted",
+                  maxLines: 2,
                 ),
               ],
             ),
@@ -1909,16 +1904,17 @@ class RecalledMessageView extends StatelessWidget {
           const SizedBox(
             width: 10,
           ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Text(
-              getChatTime(context, chatMessage.messageSentTime.toInt()),
-              style: TextStyle(
-                  fontSize: 12,
-                  color: chatMessage.isMessageSentByMe
-                      ? durationTextColor
-                      : textHintColor),
-            ),
+          Row(
+            children: [
+              Text(
+                getChatTime(context, chatMessage.messageSentTime.toInt()),
+                style: TextStyle(
+                    fontSize: 12,
+                    color: chatMessage.isMessageSentByMe
+                        ? durationTextColor
+                        : textHintColor),
+              ),
+            ],
           ),
         ],
       ),

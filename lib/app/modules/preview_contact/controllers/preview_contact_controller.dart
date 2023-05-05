@@ -15,16 +15,23 @@ class PreviewContactController extends GetxController {
   var from = "";
 
 
-  void init(List<LocalContact> contactList, List<LocalContact> shareContactList, String from) {
+  void init(List<LocalContact>? contactList, List<String>? previewContactList, String from, String? contactName) {
     this.from = from;
-    argContactList = contactList;
+    if(from == "chat" && previewContactList != null && contactName != null) {
+      this.previewContactList = previewContactList;
+      previewContactName = contactName;
+    }else if(contactList != null){
+      argContactList = contactList;
+    }else{
+      debugPrint("Contact list is Empty");
+    }
   }
   @override
   void onReady() {
     super.onReady();
     if (from == "chat") {
-      previewContactList = Get.arguments['previewContactList'];
-      previewContactName = Get.arguments['contactName'];
+      // previewContactList = Get.arguments['previewContactList'];
+      // previewContactName = Get.arguments['contactName'];
 
       var newContactList = <ContactDetail>[];
       for (var phone in previewContactList) {

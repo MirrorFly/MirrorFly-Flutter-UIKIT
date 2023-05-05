@@ -8,11 +8,12 @@ import '../../../common/widgets.dart';
 import '../controllers/preview_contact_controller.dart';
 
 class PreviewContactView extends StatefulWidget {
-  const PreviewContactView({Key? key, required this.contactList, required this.shareContactList, required this.from}) : super(key: key);
+  const PreviewContactView({Key? key, this.contactList, this.previewContactList, required this.from, this.contactName}) : super(key: key);
 
-  final List<LocalContact> contactList;
-  final List<LocalContact> shareContactList;
+  final List<LocalContact>? contactList;
+  final List<String>? previewContactList;
   final String from;
+  final String? contactName;
 
   @override
   State<PreviewContactView> createState() => _PreviewContactViewState();
@@ -23,7 +24,7 @@ class _PreviewContactViewState extends State<PreviewContactView> {
 
   @override
   void initState() {
-    controller.init(widget.contactList, widget.shareContactList, widget.from);
+    controller.init(widget.contactList, widget.previewContactList, widget.from, widget.contactName);
     super.initState();
   }
 

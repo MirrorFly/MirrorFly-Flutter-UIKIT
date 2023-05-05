@@ -62,9 +62,7 @@ class LocalContactController extends GetxController {
     // }
 
     // Get.toNamed(Routes.previewContact, arguments: {"contactList" : contactsSelected,"shareContactList" : contactsSelected, "from": "contact_pick"});
-
-    Navigator.push(context, MaterialPageRoute(builder: (con) => PreviewContactView(contactList : contactsSelected, shareContactList : contactsSelected, from: "contact_pick")));
-
+    Navigator.push(context, MaterialPageRoute(builder: (con) => PreviewContactView(contactList : contactsSelected, from: "contact_pick")));
   }
 
   name(Contact item) {
