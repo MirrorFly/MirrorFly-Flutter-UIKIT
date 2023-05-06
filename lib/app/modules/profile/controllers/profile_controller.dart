@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_libphonenumber/flutter_libphonenumber.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
@@ -17,7 +18,6 @@ import '../../../models.dart';
 
 import '../../../data/apputils.dart';
 import '../../../data/permissions.dart';
-import '../../dashboard/views/dashboard_view.dart';
 
 class ProfileController extends GetxController {
   TextEditingController profileName = TextEditingController();
@@ -36,8 +36,10 @@ class ProfileController extends GetxController {
   var from = Routes.settings.obs;
 
   var name = "".obs;
+  var nameOnImage = "".obs;
 
   bool get emailEditAccess => true;//Get.previousRoute!=Routes.settings;
+  RxBool get mobileEditAccess => false.obs;//Get.previousRoute!=Routes.settings;
 
   var userNameFocus= FocusNode();
   var emailFocus= FocusNode();
@@ -81,25 +83,39 @@ class ProfileController extends GetxController {
     }
   }
 
+  Future<bool> validation() async {
+    if (profileName.text
+        .trim()
+        .isEmpty) {
+      toToast("Please enter your username");
+      return false;
+    } else if (profileName.text
+        .trim()
+        .length < 3) {
+      toToast("Username is too short");
+      return false;
+    } else if (profileEmail.text
+        .trim()
+        .isEmpty) {
+      toToast("Email should not be empty");
+      return false;
+    } else if (!emailPatternMatch.hasMatch(profileEmail.text.toString())) {
+      toToast("Please enter a valid Mail");
+      return false;
+    } else if(!(await validMobileNumber(profileMobile.text))){
+      toToast("Please enter a valid mobile number with country code");
+      return false;
+    } else if (profileStatus.value.isEmpty) {
+      toToast("Enter Profile Status");
+      return false;
+    }else{
+      return true;
+    }
+  }
+
   Future<void> save({bool frmImage = false, required BuildContext context}) async {
     // if (await askStoragePermission(context)) {
-      if (profileName.text
-          .trim()
-          .isEmpty) {
-        toToast("Please enter your username");
-      } else if (profileName.text
-          .trim()
-          .length < 3) {
-        toToast("Username is too short");
-      } else if (profileEmail.text
-          .trim()
-          .isEmpty) {
-        toToast("Email should not be empty");
-      } else if (!emailPatternMatch.hasMatch(profileEmail.text.toString())) {
-        toToast("Please enter a valid Mail");
-      } else if (profileStatus.value.isEmpty) {
-        toToast("Enter Profile Status");
-      } else {
+      if (await validation()){
         loading.value = true;
         if(context.mounted)showLoader(context);
         if (imagePath.value.isNotEmpty) {
@@ -108,11 +124,13 @@ class ProfileController extends GetxController {
         } else {
           if (await AppUtils.isNetConnected()) {
             debugPrint("profile update");
+            var unformatted = profileMobile.text.toString().replaceAll('+', '').replaceAll(' ', '').trim();
+            // debugPrint('unformatted : $unformatted');
             Mirrorfly
                 .updateMyProfile(
                 profileName.text.toString(),
                 profileEmail.text.toString(),
-                profileMobile.text.toString(),
+                unformatted,
                 profileStatus.value.toString(),
                 userImgUrl.value.isEmpty ? null : userImgUrl.value
             )
@@ -130,22 +148,11 @@ class ProfileController extends GetxController {
                     var userProfileData = ProData(
                         email: profileEmail.text.toString(),
                         image: userImgUrl.value,
-                        mobileNumber: profileMobile.text,
+                        mobileNumber: unformatted,
                         nickName: profileName.text,
                         name: profileName.text,
                         status: profileStatus.value);
                     SessionManagement.setCurrentUser(userProfileData);
-                    if (from.value == Routes.login) {
-                      Mirrorfly.isTrailLicence().then((trail){
-                        if(trail.checkNull()) {
-                          // Get.offNamed(Routes.dashboard);
-                          Navigator.push(context, MaterialPageRoute(builder: (con)=> DashboardView()));
-
-                        }else{
-                          // Get.offNamed(Routes.contactSync);
-                        }
-                      });
-                    }
                   }
                 }
               } else {
@@ -244,14 +251,17 @@ class ProfileController extends GetxController {
               if (data.data!.mobileNumber.checkNull().isNotEmpty) {
               //if (from.value != Routes.login) {
                 profileMobile.text = data.data!.mobileNumber ?? "";
+                validMobileNumber(profileMobile.text);
+              }else {
+                mobileEditAccess(true);
               }
-
               profileEmail.text = data.data!.email ?? "";
               profileStatus.value = data.data!.status.checkNull().isNotEmpty ? data.data!.status.checkNull() : "I am in Mirror Fly";
               userImgUrl.value = data.data!.image ?? "";//SessionManagement.getUserImage() ?? "";
               SessionManagement.setUserImage(Constants.emptyString);
               changed((from.value == Routes.login));
               name(data.data!.name.toString());
+              nameOnImage(data.data!.name.toString());
               var userProfileData = ProData(
                   email: profileEmail.text.toString(),
                   image: userImgUrl.value,
@@ -320,26 +330,6 @@ class ProfileController extends GetxController {
       if (result != null) {
         if(checkFileUploadSize(result.files.single.path!, Constants.mImage)) {
           isImageSelected.value = true;
-          // Get.to(CropImage(
-          //   imageFile: File(result.files.single.path!),
-          // ))?.then((value) {
-          //   value as MemoryImage;
-          //   imageBytes = value.bytes;
-          //   var name = "${DateTime
-          //       .now()
-          //       .millisecondsSinceEpoch}.jpg";
-          //   writeImageTemp(value.bytes, name).then((value) {
-          //     if (from.value == Routes.login) {
-          //       imagePath(value.path);
-          //       changed(true);
-          //       update();
-          //     } else {
-          //       imagePath(value.path);
-          //       changed(true);
-          //       updateProfileImage(path: value.path, update: true, context: context);
-          //     }
-          //   });
-          // });
           if(context.mounted) {
             Navigator.push(context, MaterialPageRoute(builder: (con) =>
                 CropImage(
@@ -383,23 +373,6 @@ class ProfileController extends GetxController {
           source: ImageSource.camera);
       if (photo != null) {
         isImageSelected.value = true;
-        // Get.to(CropImage(
-        //   imageFile: File(photo.path),
-        // ))?.then((value) {
-        //   value as MemoryImage;
-        //   imageBytes = value.bytes;
-        //   var name = "${DateTime.now().millisecondsSinceEpoch}.jpg";
-        //   writeImageTemp(value.bytes, name).then((value) {
-        //     if (from.value == Routes.login) {
-        //       imagePath(value.path);
-        //       changed(true);
-        //     } else {
-        //       imagePath(value.path);
-        //       changed(true);
-        //       updateProfileImage(path: value.path, update: true, context: context);
-        //     }
-        //   });
-        // });
         if(context.mounted) {
           Navigator.push(context, MaterialPageRoute(builder: (con) =>
               CropImage(
@@ -452,6 +425,27 @@ class ProfileController extends GetxController {
   onEmailChange(String text) {
     changed(true);
     update();
+  }
+
+  onMobileChange(String text){
+    changed(true);
+    validMobileNumber(text);
+    update();
+  }
+
+  validMobileNumber(String text)async{
+    FlutterLibphonenumber().init();
+    var formatNumberSync = FlutterLibphonenumber().formatNumberSync("+$text");
+    var parse = await FlutterLibphonenumber().parse(formatNumberSync);
+    debugPrint("parse-----> $parse");
+    //{country_code: 91, e164: +91xxxxxxxxxx, national: 0xxxxx xxxxx, type: mobile, international: +91 xxxxx xxxxx, national_number: xxxxxxxxxx, region_code: IN}
+    if(parse.isNotEmpty){
+      var formatted = parse['international'];
+      profileMobile.text=(formatted.toString().replaceAll("+", ''));
+      return true;
+    }else{
+      return false;
+    }
   }
 
   static void insertStatus() {

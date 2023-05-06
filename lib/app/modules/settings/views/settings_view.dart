@@ -22,7 +22,10 @@ class _SettingsViewState extends State<SettingsView> {
     return Scaffold(
       backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
       appBar: AppBar(
-        title: Text('Settings', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
+        title: Text(
+          'Settings',
+          style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+        ),
         iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
         automaticallyImplyLeading: true,
         backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
@@ -32,20 +35,35 @@ class _SettingsViewState extends State<SettingsView> {
           child: Column(
             children: [
               // Get.toNamed(Routes.profile,arguments: {"from":Routes.settings})
-              settingListItem("Profile", profileIcon, rightArrowIcon, () => Navigator.push(context, MaterialPageRoute(builder: (con)=> const ProfileView()))),
+              settingListItem(
+                  "Profile",
+                  profileIcon,
+                  rightArrowIcon,
+                  () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (con) => const ProfileView()))),
               settingListItem("Chats", chatIcon, rightArrowIcon, () {
                 // Get.toNamed(Routes.chatSettings);
-                Navigator.push(context, MaterialPageRoute(builder: (con)=> ChatSettingsView()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (con) => ChatSettingsView()));
               }),
-              settingListItem(
-                  "Starred Messages", staredMsgIcon, rightArrowIcon, () {
-                    // Get.toNamed(Routes.starredMessages);
-                    Navigator.push(context, MaterialPageRoute(builder: (con)=> const StarredMessagesView()));
+              settingListItem("Starred Messages", staredMsgIcon, rightArrowIcon,
+                  () {
+                // Get.toNamed(Routes.starredMessages);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (con) => const StarredMessagesView()));
               }),
               // settingListItem(
               //     "Notifications", notificationIcon, rightArrowIcon, ()=>Get.toNamed(Routes.notification)),
               settingListItem(
-                  "Blocked Contacts", blockedIcon, rightArrowIcon, ()=>Navigator.push(context, MaterialPageRoute(builder: (con)=> BlockedListView()))),
+                  "Blocked Contacts",
+                  blockedIcon,
+                  rightArrowIcon,
+                  () => Navigator.push(context,
+                      MaterialPageRoute(builder: (con) => BlockedListView()))),
               // settingListItem("App Lock", lockIcon, rightArrowIcon, ()=>Get.toNamed(Routes.appLock)),
               // settingListItem("About and Help", aboutIcon, rightArrowIcon, () =>Get.to(const AboutAndHelpView())),
               // settingListItem(
@@ -70,35 +88,35 @@ class _SettingsViewState extends State<SettingsView> {
                           child: const Text("YES"))
                     ]);
               }),*/
-          // Padding(
-          //       padding: const EdgeInsets.all(20.0),
-          //       child: Column(
-          //           mainAxisAlignment: MainAxisAlignment.center,
-          //           children: [
-          //             RichText(
-          //               text: const TextSpan(
-          //                   text: "Released On: ",
-          //                   style: TextStyle(color: textColor),
-          //                   children: [
-          //                     TextSpan(
-          //                         text: "March 2023",
-          //                         style: TextStyle(color: textHintColor))
-          //                   ]),
-          //             ),
-          //             RichText(
-          //                 text: TextSpan(
-          //                     text: "Version ",
-          //                     style: const TextStyle(color: textColor),
-          //                     children: [
-          //                       TextSpan(
-          //                           text: controller.packageInfo != null
-          //                               ? controller.packageInfo!.version
-          //                               : "",
-          //                           style: const TextStyle(color: textHintColor))
-          //                     ]),
-          //               ),
-          //           ]),
-          //     )
+              // Padding(
+              //       padding: const EdgeInsets.all(20.0),
+              //       child: Column(
+              //           mainAxisAlignment: MainAxisAlignment.center,
+              //           children: [
+              //             RichText(
+              //               text: const TextSpan(
+              //                   text: "Released On: ",
+              //                   style: TextStyle(color: textColor),
+              //                   children: [
+              //                     TextSpan(
+              //                         text: "March 2023",
+              //                         style: TextStyle(color: textHintColor))
+              //                   ]),
+              //             ),
+              //             RichText(
+              //                 text: TextSpan(
+              //                     text: "Version ",
+              //                     style: const TextStyle(color: textColor),
+              //                     children: [
+              //                       TextSpan(
+              //                           text: controller.packageInfo != null
+              //                               ? controller.packageInfo!.version
+              //                               : "",
+              //                           style: const TextStyle(color: textHintColor))
+              //                     ]),
+              //               ),
+              //           ]),
+              //     )
             ],
           ),
         ),
