@@ -10,27 +10,35 @@ import '../../../models.dart';
 import '../chat_widgets.dart';
 import '../controllers/chat_controller.dart';
 
-class ChatSearchView extends GetView<ChatController> {
-  const ChatSearchView({super.key});
+class ChatSearchView extends StatelessWidget {
+  ChatSearchView({super.key});
+
+  final controller = Get.find<ChatController>();
 
   @override
   Widget build(BuildContext context) {
-    // controller.screenHeight = MediaQuery.of(context).size.height;
-    // controller.screenWidth = MediaQuery.of(context).size.width;
     return WillPopScope(
       onWillPop: () {
         controller.searchInit();
         return Future.value(true);
       },
       child: Scaffold(
+        backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
         appBar: AppBar(
+          backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
+          actionsIconTheme: IconThemeData(
+              color: MirrorflyUikit.getTheme?.colorOnAppbar ?? iconColor),
+          iconTheme: IconThemeData(
+              color: MirrorflyUikit.getTheme?.colorOnAppbar ?? iconColor),
           automaticallyImplyLeading: true,
           title: TextField(
             onChanged: (text) => controller.setSearch(text),
             controller: controller.searchedText,
             autofocus: true,
-            decoration: const InputDecoration(
-                hintText: "Search...", border: InputBorder.none),
+            cursorColor: MirrorflyUikit.getTheme?.colorOnAppbar,
+            style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+            decoration: InputDecoration(
+                hintText: "Search...", border: InputBorder.none,hintStyle: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar.withOpacity(0.5))),
             onSubmitted: (str) {
               if (controller.filteredPosition.isNotEmpty) {
                 controller.scrollUp();
@@ -39,7 +47,7 @@ class ChatSearchView extends GetView<ChatController> {
               }
             },
           ),
-          iconTheme: const IconThemeData(color: iconColor),
+          // iconTheme: const IconThemeData(color: iconColor),
           actions: [
             IconButton(
                 onPressed: () {
@@ -99,27 +107,13 @@ class ChatSearchView extends GetView<ChatController> {
                                   controller.forwardSingleMessage(
                                       chatList[index].messageId);
                                 },
-                                icon: SvgPicture.asset(forwardMedia,package: package,)),
+                                icon: SvgPicture.asset(
+                                  forwardMedia,
+                                  package: package,
+                                )),
                           ),
-                          Container(
-                            constraints: BoxConstraints(
-                                maxWidth: Get.width * 0.60),
-                            decoration: BoxDecoration(
-                                borderRadius: chatList[index].isMessageSentByMe
-                                    ? const BorderRadius.only(
-                                        topLeft: Radius.circular(10),
-                                        topRight: Radius.circular(10),
-                                        bottomLeft: Radius.circular(10))
-                                    : const BorderRadius.only(
-                                        topLeft: Radius.circular(10),
-                                        topRight: Radius.circular(10),
-                                        bottomRight: Radius.circular(10)),
-                                color: (chatList[index].isMessageSentByMe
-                                    ? chatSentBgColor
-                                    : Colors.white),
-                                border: chatList[index].isMessageSentByMe
-                                    ? Border.all(color: chatSentBgColor)
-                                    : Border.all(color: chatBorderColor)),
+                          ChatContainer(
+                            chatMessage: chatList[index],
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -139,9 +133,7 @@ class ChatSearchView extends GetView<ChatController> {
                                   onPlayAudio: () {
                                     controller.playAudio(chatList[index]);
                                   },
-                                  onSeekbarChange:(value){
-
-                                  },
+                                  onSeekbarChange: (value) {},
                                 ),
                               ],
                             ),
@@ -155,7 +147,10 @@ class ChatSearchView extends GetView<ChatController> {
                                   controller.forwardSingleMessage(
                                       chatList[index].messageId);
                                 },
-                                icon: SvgPicture.asset(forwardMedia,package: package,)),
+                                icon: SvgPicture.asset(
+                                  forwardMedia,
+                                  package: package,
+                                )),
                           ),
                         ],
                       ),

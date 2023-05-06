@@ -11,6 +11,10 @@ import 'app/modules/chat/controllers/chat_controller.dart';
 import 'app/modules/chat/views/chat_view.dart';
 import 'mirrorfly_uikit_plugin.dart';
 
+class NavigationService {
+  static GlobalKey<NavigatorState> navigatorKey =
+  GlobalKey<NavigatorState>();
+}
 class ChatPage {
 
   static GetPage chatPage(){

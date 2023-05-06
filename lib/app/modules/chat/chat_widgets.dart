@@ -1712,6 +1712,41 @@ class NotificationMessageView extends StatelessWidget {
   }
 }
 
+class ChatContainer extends StatelessWidget {
+  const ChatContainer({Key? key, required this.chatMessage, required this.child}) : super(key: key);
+  final ChatMessageModel chatMessage;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      constraints:
+      BoxConstraints(maxWidth: Get.width * 0.70),
+      decoration: BoxDecoration(
+          borderRadius: chatMessage.isMessageSentByMe
+              ? const BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+              bottomLeft: Radius.circular(10))
+              : const BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+              bottomRight: Radius.circular(10)),
+          color:
+          (chatMessage.isMessageSentByMe
+              ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.color//chatSentBgColor
+              : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.color),
+          border: chatMessage
+              .isMessageSentByMe
+              ? Border.all(color: MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor.withOpacity(0.2))//chatSentBgColor)
+              : Border.all(
+              color:  MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor.withOpacity(0.2))),
+      child: child,
+    );
+  }
+}
+
+
 class MessageContent extends StatelessWidget {
   const MessageContent({Key? key,
     required this.chatList,

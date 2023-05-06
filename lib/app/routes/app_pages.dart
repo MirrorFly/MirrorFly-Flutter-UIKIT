@@ -54,10 +54,6 @@ import '../modules/settings/views/notification/notification_settings_view.dart';
 import '../modules/settings/views/settings_view.dart';
 import '../modules/starred_messages/bindings/starred_messages_binding.dart';
 import '../modules/starred_messages/views/starred_messages_view.dart';
-import '../modules/video_preview/bindings/video_play_binding.dart';
-import '../modules/video_preview/bindings/video_preview_binding.dart';
-import '../modules/video_preview/views/video_player_view.dart';
-import '../modules/video_preview/views/video_preview_view.dart';
 
 
 part 'app_routes.dart';
@@ -143,7 +139,7 @@ class AppPages {
     // ),
     GetPage(
       name: _Paths.chatSearch,
-      page: () => const ChatSearchView(),
+      page: () => ChatSearchView(),
     ),
     GetPage(/*GetPage(
       name: _Paths.viewAllMediaPreview,
@@ -194,18 +190,8 @@ class AppPages {
       page: () => const SetPinView(),
       binding: AppLockBinding(),
     ),*/
-    GetPage(
-      name: _Paths.videoPreview,
-      page: () => const VideoPreviewView(),
-      binding: VideoPreviewBinding(),
-    ),
-    GetPage(
-      name: _Paths.videoPlay,
-      page: () => const VideoPlayerView(),
-      binding: VideoPlayBinding(),
-    ),
     // GetPage(
-    //   name: _Paths.imageView,
+    //   name: _sePaths.imageView,
     //   page: () => const ImageViewView(),
     //   binding: ImageViewBinding(),
     // ),
@@ -226,7 +212,16 @@ class AppPages {
     ),
     /*GetPage(
       name: _Paths.chatInfo,
-      page: () => const ChatInfoView(),
+      page:   GetPage(
+      name: _Paths.videoPreview,
+      page: () => const VideoPreviewView(),
+      binding: VideoPreviewBinding(),
+    ),
+    GetPage(
+      name: _Paths.videoPlay,
+      page: () => const VideoPlayerView(),
+      binding: VideoPlayBinding(),
+    ),() => const ChatInfoView(),
       binding: ChatInfoBinding(),
     ),*/
     GetPage(

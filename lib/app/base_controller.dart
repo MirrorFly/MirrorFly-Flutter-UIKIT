@@ -14,7 +14,6 @@ import 'package:mirrorfly_uikit_plugin/app/modules/chat/controllers/contact_cont
 import 'package:mirrorfly_uikit_plugin/app/modules/contact_sync/controllers/contact_sync_controller.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/group/controllers/group_info_controller.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/settings/views/blocked/blocked_list_controller.dart';
-import 'package:mirrorfly_uikit_plugin/app/routes/app_pages.dart';
 
 import 'common/main_controller.dart';
 import 'model/chat_message_model.dart';
@@ -563,32 +562,13 @@ abstract class BaseController {
   }
 
   void onLogout(isLogout) {
-    mirrorFlyLog('Get.currentRoute', Get.currentRoute);
+    /*mirrorFlyLog('Get.currentRoute', Get.currentRoute);
     if(isLogout && Get.currentRoute != Routes.login && SessionManagement.getLogin()){
       var token = SessionManagement.getToken().checkNull();
       SessionManagement.clear().then((value) {
         SessionManagement.setToken(token);
         Get.offAllNamed(Routes.login);
       });
-      // Helper.progressLoading();
-      // Mirrorfly.logoutOfChatSDK().then((value) {
-      //   Helper.hideLoading();
-      //   if(value) {
-      //     var token = SessionManagement.getToken().checkNull();
-      //     SessionManagement.clear().then((value){
-      //       SessionManagement.setToken(token);
-      //       Get.offAllNamed(Routes.login);
-      //     });
-      //   }else{
-      //     Get.snackbar("Logout", "Logout Failed");
-      //   }
-      // }).catchError((er){
-      //   Helper.hideLoading();
-      //   SessionManagement.clear().then((value){
-      //     // SessionManagement.setToken(token);
-      //     Get.offAllNamed(Routes.login);
-      //   });
-      // });
-    }
+    }*/
   }
 }

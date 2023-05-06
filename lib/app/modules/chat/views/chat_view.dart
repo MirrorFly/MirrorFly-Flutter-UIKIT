@@ -57,10 +57,10 @@ class _ChatViewState extends State<ChatView> {
             height: Get.height,//controller.screenHeight,
             decoration: BoxDecoration(
               color: MirrorflyUikit.getTheme?.scaffoldColor,
-              /*image: const DecorationImage(
+              image: const DecorationImage(
                 image: AssetImage(chatBg,package: package),
                 fit: BoxFit.cover,
-              ),*/
+              ),
             ),
             child: WillPopScope(
               onWillPop: () {
@@ -668,31 +668,8 @@ class _ChatViewState extends State<ChatView> {
                                         },
                                         icon: SvgPicture.asset(forwardMedia,package: package,color: MirrorflyUikit.getTheme?.textPrimaryColor,)),
                                   ),
-                                  Container(
-                                    constraints: BoxConstraints(
-                                        maxWidth:
-                                            Get.width * 0.70),
-                                    decoration: BoxDecoration(
-                                        borderRadius: chatList[index]
-                                                .isMessageSentByMe
-                                            ? const BorderRadius.only(
-                                                topLeft: Radius.circular(10),
-                                                topRight: Radius.circular(10),
-                                                bottomLeft: Radius.circular(10))
-                                            : const BorderRadius.only(
-                                                topLeft: Radius.circular(10),
-                                                topRight: Radius.circular(10),
-                                                bottomRight:
-                                                    Radius.circular(10)),
-                                        color:
-                                            (chatList[index].isMessageSentByMe
-                                                ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.color//chatSentBgColor
-                                                : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.color),
-                                        border: chatList[index]
-                                                .isMessageSentByMe
-                                            ? Border.all(color: MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor.withOpacity(0.2))//chatSentBgColor)
-                                            : Border.all(
-                                                color:  MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor.withOpacity(0.2))),
+                                  ChatContainer(
+                                    chatMessage: chatList[index],
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,

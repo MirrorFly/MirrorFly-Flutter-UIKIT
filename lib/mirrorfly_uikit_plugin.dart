@@ -108,6 +108,7 @@ class MirrorflyUikit {
     }
   }
 
+
   static _setUserJID(String username) {
     Mirrorfly.getAllGroups(true);
     Mirrorfly.getJid(username).then((value) {

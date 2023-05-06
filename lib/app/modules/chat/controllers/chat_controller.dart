@@ -16,6 +16,7 @@ import 'package:mirrorfly_uikit_plugin/app/common/de_bouncer.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/permissions.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/camera_pick/views/camera_pick_view.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_search_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/image_preview_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/location_sent_view.dart';
@@ -34,7 +35,6 @@ import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
 import '../../../data/apputils.dart';
 import '../../../data/helper.dart';
-import '../../../routes/app_pages.dart';
 
 import 'package:mirrorfly_plugin/flychat.dart';
 import '../../../models.dart';
@@ -1999,7 +1999,8 @@ class ChatController extends FullLifeCycleController
 
   gotoSearch() {
     Future.delayed(const Duration(milliseconds: 100), () {
-      Get.toNamed(Routes.chatSearch, arguments: chatList);
+      Navigator.push(context, MaterialPageRoute(builder: (con)=>ChatSearchView()));
+      // Get.toNamed(Routes.chatSearch, arguments: chatList);
       /*if (searchScrollController.isAttached) {
         searchScrollController.jumpTo(index: chatList.value.length - 1);
       }*/

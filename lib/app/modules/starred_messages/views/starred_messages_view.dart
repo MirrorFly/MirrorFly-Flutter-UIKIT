@@ -112,25 +112,8 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
                             alignment: (starredChatList[index].isMessageSentByMe
                                 ? Alignment.bottomRight
                                 : Alignment.bottomLeft),
-                            child: Container(
-                              constraints:
-                              BoxConstraints(maxWidth: controller.width * 0.75),
-                              decoration: BoxDecoration(
-                                  borderRadius: starredChatList[index].isMessageSentByMe
-                                      ? const BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      topRight: Radius.circular(10),
-                                      bottomLeft: Radius.circular(10))
-                                      : const BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      topRight: Radius.circular(10),
-                                      bottomRight: Radius.circular(10)),
-                                  color: (starredChatList[index].isMessageSentByMe
-                                      ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.color
-                                      : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.color),
-                                  border: starredChatList[index].isMessageSentByMe
-                                      ? Border.all(color: MirrorflyUikit.getTheme!.chatBubblePrimaryColor.color)
-                                      : Border.all(color: MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.color)),
+                            child: ChatContainer(
+                              chatMessage: starredChatList[index],
                               child: Column(
                                 crossAxisAlignment:
                                 CrossAxisAlignment.start,
