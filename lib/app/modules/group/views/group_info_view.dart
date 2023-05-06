@@ -12,8 +12,8 @@ import 'package:mirrorfly_uikit_plugin/app/modules/group/controllers/group_info_
 
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
-import '../../../routes/app_pages.dart';
 import '../../../models.dart';
+import '../../image_view/views/image_view_view.dart';
 
 
 class GroupInfoView extends StatefulWidget {
@@ -152,15 +152,17 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                         ),
                         onTap: (){
                           if(controller.imagePath.value.isNotEmpty){
-                            Get.toNamed(Routes.imageView, arguments: {
+                            Navigator.push(context, MaterialPageRoute(builder: (con)=>ImageViewView(imageName: controller.profile.nickName.checkNull(),imagePath: controller.profile.image.checkNull(),)));
+                            /*Get.toNamed(Routes.imageView, arguments: {
                               'imageName': controller.profile.nickName,
                               'imagePath': controller.profile.image.checkNull()
-                            });
+                            });*/
                           }else if(controller.profile.image.checkNull().isNotEmpty){
-                            Get.toNamed(Routes.imageView, arguments: {
+                            Navigator.push(context, MaterialPageRoute(builder: (con)=>ImageViewView(imageName: controller.profile.nickName.checkNull(),imageUrl: controller.profile.image.checkNull(),)));
+                            /*Get.toNamed(Routes.imageView, arguments: {
                               'imageName': controller.profile.nickName,
                               'imageUrl': controller.profile.image.checkNull()
-                            });
+                            });*/
                           }
                         },
                         isGroup: controller.profile.isGroupProfile.checkNull(),

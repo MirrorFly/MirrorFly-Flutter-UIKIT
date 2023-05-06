@@ -19,7 +19,6 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../../common/de_bouncer.dart';
 import '../../../data/apputils.dart';
 import '../../../data/permissions.dart';
-import '../../../routes/app_pages.dart';
 import '../../chat/views/contact_list_view.dart';
 import '../../chatInfo/views/chat_info_view.dart';
 import '../../group/views/group_creation_view.dart';
@@ -178,7 +177,7 @@ class DashboardController extends FullLifeCycleController
 
   logout() {
     SessionManagement.clear();
-    Get.offAllNamed(Routes.login);
+    // Get.offAllNamed(Routes.login);
   }
 
   String getRecentChatTime(BuildContext context, int? epochTime) {

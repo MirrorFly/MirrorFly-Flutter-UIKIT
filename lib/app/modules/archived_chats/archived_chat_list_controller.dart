@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_view.dart';
 import '../../models.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 
 import '../../data/apputils.dart';
 import '../../data/helper.dart';
-import '../../routes/app_pages.dart';
 
 class ArchivedChatListController extends GetxController {
   RxList<RecentChatData> archivedChats = <RecentChatData>[].obs;//Get.find<DashboardController>().archivedChats;
@@ -123,14 +123,15 @@ class ArchivedChatListController extends GetxController {
 
   toChatPage(String jid, BuildContext context) async {
     if (jid.isNotEmpty) {
+      Navigator.push(context, MaterialPageRoute(builder: (con)=>ChatView(jid: jid)));
       // Helper.progressLoading();
-      await Mirrorfly.getProfileDetails(jid, false).then((value) {
+      /*await Mirrorfly.getProfileDetails(jid, false).then((value) {
         if (value != null) {
           Helper.hideLoading(context: context);
           var profile = profiledata(value.toString());
-          Get.toNamed(Routes.chat, arguments: profile);
+           Get.toNamed(Routes.chat, arguments: profile);
         }
-      });
+      });*/
       // SessionManagement.setChatJid(jid);
       // Get.toNamed(Routes.chat);
     }

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
-import 'package:mirrorfly_uikit_plugin/app/routes/app_pages.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart';
 import 'package:yaml/yaml.dart';
@@ -29,11 +28,11 @@ class SettingsController extends GetxController {
   logout(BuildContext context) {
     Get.back();
     if (SessionManagement.getEnablePin()) {
-      Get.toNamed(Routes.pin)?.then((value){
-        if(value!=null && value){
-          logoutFromSDK(context);
-        }
-      });
+      // Get.toNamed(Routes.pin)?.then((value){
+      //   if(value!=null && value){
+      //     logoutFromSDK(context);
+      //   }
+      // });
     } else {
       logoutFromSDK(context);
     }
@@ -48,7 +47,7 @@ class SettingsController extends GetxController {
           var token = SessionManagement.getToken().checkNull();
           SessionManagement.clear().then((value) {
             SessionManagement.setToken(token);
-            Get.offAllNamed(Routes.login);
+            // Get.offAllNamed(Routes.login);
           });
         } else {
           Get.snackbar("Logout", "Logout Failed");
@@ -57,7 +56,7 @@ class SettingsController extends GetxController {
         Helper.hideLoading(context: context);
         SessionManagement.clear().then((value) {
           // SessionManagement.setToken(token);
-          Get.offAllNamed(Routes.login);
+          // Get.offAllNamed(Routes.login);
         });
       });
     } else {

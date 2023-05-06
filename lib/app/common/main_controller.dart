@@ -17,14 +17,10 @@ import 'package:mirrorfly_uikit_plugin/app/data/pushnotification.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/controllers/chat_controller.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_view.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/contact_sync/controllers/contact_sync_controller.dart';
-import 'package:mirrorfly_uikit_plugin/app/routes/app_pages.dart';
 
 import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../../chat_page.dart';
 import '../../mirrorfly_uikit_plugin.dart';
 import '../modules/chatInfo/controllers/chat_info_controller.dart';
 import 'notification_service.dart';
@@ -138,7 +134,7 @@ class MainController extends FullLifeCycleController
       // await Navigator.of(context).push(MaterialPageRoute<void>(
       //   builder: (BuildContext context) => SecondPage(payload),
       // ));
-      debugPrint("key--> ${NavigationService.navigatorKey.currentWidget}");
+      // debugPrint("key--> ${NavigationService.navigatorKey.currentWidget}");
       debugPrint("opening chat page--> $payload");
       if (payload != null && payload.isNotEmpty) {
         if (Get.isRegistered<ChatController>()) {
@@ -150,11 +146,11 @@ class MainController extends FullLifeCycleController
               Get.back(result: profile);
             }
           });*/
-          Navigator.push(NavigationService.navigatorKey.currentContext!,
-              MaterialPageRoute(builder: (con) => ChatView(jid: payload)));
+          // Navigator.push(NavigationService.navigatorKey.currentContext!,
+          //     MaterialPageRoute(builder: (con) => ChatView(jid: payload)));
         } else {
-          Navigator.push(NavigationService.navigatorKey.currentContext!,
-              MaterialPageRoute(builder: (con) => ChatView(jid: payload)));
+          // Navigator.push(NavigationService.navigatorKey.currentContext!,
+          //     MaterialPageRoute(builder: (con) => ChatView(jid: payload)));
           /*Get.toNamed(Routes.chat,
               parameters: {'isFromStarred': 'true', "userJid": payload});*/
         }
@@ -208,7 +204,7 @@ class MainController extends FullLifeCycleController
       if (status) {
         //show Admin Blocked Activity
         SessionManagement.setAdminBlocked(status);
-        Get.toNamed(Routes.adminBlocked);
+        // Get.toNamed(Routes.adminBlocked);
       }
     }
   }
@@ -233,9 +229,9 @@ class MainController extends FullLifeCycleController
             if (Get.isRegistered<ChatInfoController>()) {
               Get.find<ChatInfoController>().networkConnected();
             }
-            if (Get.isRegistered<ContactSyncController>()) {
+            /*if (Get.isRegistered<ContactSyncController>()) {
               Get.find<ContactSyncController>().networkConnected();
-            }
+            }*/
             break;
           case InternetConnectionStatus.disconnected:
             mirrorFlyLog("network", 'You are disconnected from the internet.');
@@ -246,9 +242,9 @@ class MainController extends FullLifeCycleController
             if (Get.isRegistered<ChatInfoController>()) {
               Get.find<ChatInfoController>().networkDisconnected();
             }
-            if (Get.isRegistered<ContactSyncController>()) {
+            /*if (Get.isRegistered<ContactSyncController>()) {
               Get.find<ContactSyncController>().networkDisconnected();
-            }
+            }*/
             break;
         }
       },
@@ -354,12 +350,10 @@ class MainController extends FullLifeCycleController
   }
 
   void presentPinPage() {
-    if ((SessionManagement.getEnablePin() ||
+    /*if ((SessionManagement.getEnablePin() ||
             SessionManagement.getEnableBio()) &&
         Get.currentRoute != Routes.pin) {
-      Get.toNamed(
-        Routes.pin,
-      );
-    }
+       Get.toNamed(Routes.pin,);
+    }*/
   }
 }

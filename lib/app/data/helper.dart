@@ -10,7 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
-import 'package:mirrorfly_uikit_plugin/app/routes/app_pages.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/image_view/views/image_view_view.dart';
 import 'package:open_file_plus/open_file_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -915,11 +915,13 @@ void showQuickProfilePopup(
                             profile.value.isAdminBlocked.checkNull()) &&
                         !( //!profile.value.isItSavedContact.checkNull() || //This is commented because Android side received as true and iOS side false
                             profile.value.isDeletedContact())) {
-                      Get.back();
+                      Navigator.pop(context);
+                      Navigator.push(context, MaterialPageRoute(builder: (con)=>ImageViewView(imageName: getName(profile.value),imageUrl: profile.value.image,)));
+                      /*Get.back();
                       Get.toNamed(Routes.imageView, arguments: {
                         'imageName': getName(profile.value),
                         'imageUrl': profile.value.image.checkNull()
-                      });
+                      });*/
                     }
                   },
                   child: Stack(

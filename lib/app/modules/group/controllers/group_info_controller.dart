@@ -15,7 +15,7 @@ import '../../../models.dart';
 import '../../../common/crop_image.dart';
 import '../../../data/apputils.dart';
 import '../../../data/session_management.dart';
-import '../../../routes/app_pages.dart';
+import '../../chat/views/contact_list_view.dart';
 import '../views/name_change_view.dart';
 
 class GroupInfoController extends GetxController {
@@ -421,11 +421,16 @@ class GroupInfoController extends GetxController {
   }
 
   gotoAddParticipants(BuildContext context){
-    Get.toNamed(Routes.contacts, arguments: {"forward" : false,"group":true,"groupJid":profile.jid })?.then((value){
+    Navigator.push(context, MaterialPageRoute(builder: (con) => const ContactListView(forward : false, group : true, groupjid:""))).then((value){
       if(value!=null){
         addUsers(value, context);
       }
     });
+    /*Get.toNamed(Routes.contacts, arguments: {"forward" : false,"group":true,"groupJid":profile.jid })?.then((value){
+      if(value!=null){
+        addUsers(value, context);
+      }
+    });*/
   }
 
   addUsers(dynamic value, BuildContext context)async{

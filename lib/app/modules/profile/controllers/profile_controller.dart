@@ -9,7 +9,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
-import 'package:mirrorfly_uikit_plugin/app/routes/app_pages.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../common/crop_image.dart';
@@ -33,7 +32,7 @@ class ProfileController extends GetxController {
   var changed = false.obs;
 
   dynamic imageBytes;
-  var from = Routes.settings.obs;
+  var from = "".obs;//Routes.settings.obs;
 
   var name = "".obs;
   var nameOnImage = "".obs;
@@ -48,24 +47,24 @@ class ProfileController extends GetxController {
     super.onInit();
     userImgUrl.value = SessionManagement.getUserImage() ?? "";
     mirrorFlyLog("auth : ", SessionManagement.getAuthToken().toString());
-    if (Get.arguments != null) {
+    /*if (Get.arguments != null) {
       // from(Get.arguments["from"]);
       if (from.value == Routes.login) {
         profileMobile.text = Get.arguments['mobile'] ?? "";
       }
     } else {
       profileMobile.text = "";
-    }
-    if (from.value == Routes.login) {
+    }*/
+    /*if (from.value == Routes.login) {
       if(await AppUtils.isNetConnected()) {
         getProfile();
       }else{
         toToast(Constants.noInternetConnection);
       }
       checkAndEnableNotificationSound();
-    }else{
+    }else{*/
       getProfile();
-    }
+    // }
     //profileStatus.value="I'm Mirror fly user";
     // await askStoragePermission(context);
   }
@@ -217,11 +216,11 @@ class ProfileController extends GetxController {
           isImageSelected.value = false;
           isUserProfileRemoved.value = true;
           userImgUrl(Constants.emptyString);
-          if (from.value == Routes.login) {
+          /*if (from.value == Routes.login) {
             changed(true);
-          } else {
+          } else {*/
             save(frmImage: true, context: context);
-          }
+          // }
           update();
         }
       }).catchError((onError) {
@@ -259,7 +258,8 @@ class ProfileController extends GetxController {
               profileStatus.value = data.data!.status.checkNull().isNotEmpty ? data.data!.status.checkNull() : "I am in Mirror Fly";
               userImgUrl.value = data.data!.image ?? "";//SessionManagement.getUserImage() ?? "";
               SessionManagement.setUserImage(Constants.emptyString);
-              changed((from.value == Routes.login));
+              // changed((from.value == Routes.login));
+              changed(false);
               name(data.data!.name.toString());
               nameOnImage(data.data!.name.toString());
               var userProfileData = ProData(
@@ -341,16 +341,16 @@ class ProfileController extends GetxController {
                   .now()
                   .millisecondsSinceEpoch}.jpg";
               writeImageTemp(value.bytes, name).then((value) {
-                if (from.value == Routes.login) {
+               /* if (from.value == Routes.login) {
                   imagePath(value.path);
                   changed(true);
                   update();
-                } else {
+                } else {*/
                   imagePath(value.path);
                   changed(true);
                   updateProfileImage(
                       path: value.path, update: true, context: context);
-                }
+                // }
               });
             });
           }
@@ -384,16 +384,16 @@ class ProfileController extends GetxController {
                 .now()
                 .millisecondsSinceEpoch}.jpg";
             writeImageTemp(value.bytes, name).then((value) {
-              if (from.value == Routes.login) {
+              /*if (from.value == Routes.login) {
                 imagePath(value.path);
                 changed(true);
                 update();
-              } else {
+              } else {*/
                 imagePath(value.path);
                 changed(true);
                 updateProfileImage(
                     path: value.path, update: true, context: context);
-              }
+              // }
             });
           });
         }

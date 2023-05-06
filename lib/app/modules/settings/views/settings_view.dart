@@ -64,59 +64,6 @@ class _SettingsViewState extends State<SettingsView> {
                   rightArrowIcon,
                   () => Navigator.push(context,
                       MaterialPageRoute(builder: (con) => BlockedListView()))),
-              // settingListItem("App Lock", lockIcon, rightArrowIcon, ()=>Get.toNamed(Routes.appLock)),
-              // settingListItem("About and Help", aboutIcon, rightArrowIcon, () =>Get.to(const AboutAndHelpView())),
-              // settingListItem(
-              //     "Connection Label", connectionIcon, toggleOffIcon, () {}),
-              // settingListItem("Delete My Account", delete, rightArrowIcon, () {
-              //   Get.toNamed(Routes.deleteAccount);
-              // }),
-              /*settingListItem("Logout", logoutIcon, rightArrowIcon, () {
-                Helper.showAlert(
-                    message:
-                    "Are you sure want to logout from the app?",
-                    actions: [
-                      TextButton(
-                          onPressed: () {
-                            Get.back();
-                          },
-                          child: const Text("NO")),
-                      TextButton(
-                          onPressed: () {
-                            controller.logout();
-                          },
-                          child: const Text("YES"))
-                    ]);
-              }),*/
-              // Padding(
-              //       padding: const EdgeInsets.all(20.0),
-              //       child: Column(
-              //           mainAxisAlignment: MainAxisAlignment.center,
-              //           children: [
-              //             RichText(
-              //               text: const TextSpan(
-              //                   text: "Released On: ",
-              //                   style: TextStyle(color: textColor),
-              //                   children: [
-              //                     TextSpan(
-              //                         text: "March 2023",
-              //                         style: TextStyle(color: textHintColor))
-              //                   ]),
-              //             ),
-              //             RichText(
-              //                 text: TextSpan(
-              //                     text: "Version ",
-              //                     style: const TextStyle(color: textColor),
-              //                     children: [
-              //                       TextSpan(
-              //                           text: controller.packageInfo != null
-              //                               ? controller.packageInfo!.version
-              //                               : "",
-              //                           style: const TextStyle(color: textHintColor))
-              //                     ]),
-              //               ),
-              //           ]),
-              //     )
             ],
           ),
         ),

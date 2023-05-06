@@ -11,7 +11,6 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../../../data/apputils.dart';
 import '../../../../data/helper.dart';
 import '../../../../data/permissions.dart';
-import '../../../../routes/app_pages.dart';
 
 class ChatSettingsController extends GetxController {
 
@@ -93,12 +92,12 @@ class ChatSettingsController extends GetxController {
   }
 
   void chooseLanguage(){
-    Get.toNamed(Routes.languages,arguments: translationLanguage)?.then((value){
+    /*Get.toNamed(Routes.languages,arguments: translationLanguage)?.then((value){
       if(value!=null){
         var language = value as String;
         _translationLanguage(language);
       }
-    });
+    });*/
   }
 
   void clearAllConversation(BuildContext context){

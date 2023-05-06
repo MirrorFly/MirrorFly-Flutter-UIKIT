@@ -10,7 +10,6 @@ import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/image_view/views/image_view_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/profile/views/status_list_view.dart';
-import 'package:mirrorfly_uikit_plugin/app/routes/app_pages.dart';
 
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/widgets.dart';
@@ -61,9 +60,9 @@ class _ProfileViewState extends State<ProfileView> {
             iconTheme: IconThemeData(
                 color: MirrorflyUikit.getTheme?.colorOnAppbar),
             backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-            automaticallyImplyLeading: controller.from.value == Routes.login
+            automaticallyImplyLeading: /*controller.from.value == Routes.login
                 ? false
-                : true,
+                : */true,
           ),
           body: SafeArea(
             child: SingleChildScrollView(
@@ -332,9 +331,9 @@ class _ProfileViewState extends State<ProfileView> {
                               }
                                   : null,
                               child: Text(
-                                controller.from.value == Routes.login
+                                /*controller.from.value == Routes.login
                                     ? 'Save'
-                                    : controller.changed.value
+                                    : */controller.changed.value
                                     ? 'Update & Continue'
                                     : 'Save',
                                 style: TextStyle(fontWeight: FontWeight.w600,

@@ -5,11 +5,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/group/controllers/group_creation_controller.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/image_view/views/image_view_view.dart';
 
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
 import '../../../common/widgets.dart';
-import '../../../routes/app_pages.dart';
 
 class GroupCreationView extends StatefulWidget {
   const GroupCreationView({Key? key}) : super(key: key);
@@ -108,19 +108,21 @@ class _GroupCreationViewState extends State<GroupCreationView> {
                                 if (controller.imagePath.value
                                     .checkNull()
                                     .isNotEmpty) {
-                                  Get.toNamed(Routes.imageView, arguments: {
+                                  Navigator.push(context, MaterialPageRoute(builder: (con)=>ImageViewView(imageName: controller.groupName.text,imagePath: controller.imagePath.value.checkNull(),)));
+                                  /*Get.toNamed(Routes.imageView, arguments: {
                                     'imageName': controller.groupName.text,
                                     'imagePath':
                                     controller.imagePath.value.checkNull()
-                                  });
+                                  });*/
                                 } else if (controller.userImgUrl.value
                                     .checkNull()
                                     .isNotEmpty) {
-                                  Get.toNamed(Routes.imageView, arguments: {
+                                  Navigator.push(context, MaterialPageRoute(builder: (con)=>ImageViewView(imageName: controller.groupName.text,imageUrl: controller.userImgUrl.value.checkNull(),)));
+                                  /*Get.toNamed(Routes.imageView, arguments: {
                                     'imageName': controller.groupName.text,
                                     'imageUrl':
                                     controller.userImgUrl.value.checkNull()
-                                  });
+                                  });*/
                                 } else {
                                   controller.choosePhoto(context);
                                 }

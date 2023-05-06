@@ -11,7 +11,6 @@ import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/controllers/chat_controller.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/controllers/contact_controller.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/contact_sync/controllers/contact_sync_controller.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/group/controllers/group_info_controller.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/settings/views/blocked/blocked_list_controller.dart';
 
@@ -333,9 +332,9 @@ abstract class BaseController {
       SessionManagement.setInitialContactSync(true);
       SessionManagement.setSyncDone(true);
     }
-    if (Get.isRegistered<ContactSyncController>()) {
+    /*if (Get.isRegistered<ContactSyncController>()) {
       Get.find<ContactSyncController>().onContactSyncComplete(result);
-    }
+    }*/
     if (Get.isRegistered<ContactController>()) {
       Get.find<ContactController>().onContactSyncComplete(result);
     }
