@@ -255,7 +255,7 @@ class _DashboardViewState extends State<DashboardView> {
           ),
           CustomAction(
             visibleWidget: const Icon(Icons.mark_chat_read),
-            overflowWidget: const Text("Mark as read"),
+            overflowWidget: Text("Mark as read",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction: controller.read.value ? ShowAsAction.never : ShowAsAction.gone,
             keyValue: 'Mark as Read',
             onItemClick: () {
@@ -264,7 +264,7 @@ class _DashboardViewState extends State<DashboardView> {
           ),
           CustomAction(
             visibleWidget: const Icon(Icons.mark_chat_unread),
-            overflowWidget: const Text("Mark as unread"),
+            overflowWidget: Text("Mark as unread",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction: controller.unread.value ? ShowAsAction.never : ShowAsAction.gone,
             keyValue: 'Mark as unread',
             onItemClick: () {
