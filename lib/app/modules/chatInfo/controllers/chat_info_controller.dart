@@ -9,8 +9,8 @@ import '../../../models.dart';
 import '../../view_all_media/views/view_all_media_view.dart';
 
 class ChatInfoController extends GetxController {
-  var profile_ = Profile().obs;
-  Profile get profile => profile_.value;
+  var profile_ = ProfileData().obs;
+  ProfileData get profile => profile_.value;
   var mute = false.obs;
   var nameController = TextEditingController();
 
@@ -31,7 +31,7 @@ class ChatInfoController extends GetxController {
   }*/
 
   init(String jid){
-    getProfileDetails(jid,server: false).then((value) {
+    getUserProfile(jid,server: false).then((value) {
       profile_(value);
       mute(profile.isMuted!);
       scrollController.addListener(_scrollListener);
@@ -54,7 +54,7 @@ class ChatInfoController extends GetxController {
 
   void userUpdatedHisProfile(jid) {
     if (jid.isNotEmpty && jid == profile.jid) {
-      getProfileDetails(jid).then((value) {
+      getUserProfile(jid).then((value) {
         profile_(value);
         mute(profile.isMuted!);
         nameController.text = profile.nickName.checkNull();

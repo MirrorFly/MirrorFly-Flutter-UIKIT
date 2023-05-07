@@ -74,7 +74,7 @@ class _ChatInfoViewState extends State<ChatInfoView> {
                 ),
                 title: Visibility(
                   visible: !controller.isSliverAppBarExpanded,
-                  child: Text(getName(controller.profile),
+                  child: Text(controller.profile.getName(),
                       style: TextStyle(
                         color: MirrorflyUikit.getTheme?.colorOnAppbar ??
                             Colors.black,
@@ -89,7 +89,7 @@ class _ChatInfoViewState extends State<ChatInfoView> {
                     height: Get.height * 0.45,
                     clipOval: false,
                     errorWidget: ProfileTextImage(
-                      text: getName(controller.profile),
+                      text: controller.profile.getName(),
                       radius: 0,
                       fontSize: 120,
                     ),
@@ -103,7 +103,7 @@ class _ChatInfoViewState extends State<ChatInfoView> {
                             context,
                             MaterialPageRoute(
                                 builder: (con) => ImageViewView(
-                                      imageName: getName(controller.profile),
+                                      imageName: controller.profile.getName(),
                                   imageUrl:
                                           controller.profile.image.checkNull(),
                                     )));
@@ -135,7 +135,7 @@ class _ChatInfoViewState extends State<ChatInfoView> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(getName(controller.profile),
+                          Text(controller.profile.getName(),
                               style: TextStyle(
                                 color: controller.isSliverAppBarExpanded
                                     ? Colors.white

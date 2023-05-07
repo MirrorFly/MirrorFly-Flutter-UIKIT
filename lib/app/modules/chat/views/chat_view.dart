@@ -26,12 +26,13 @@ class ChatView extends StatefulWidget {
   final String jid;
   final bool isFromStarred;
   final String? messageId;
+
   @override
   State<ChatView> createState() => _ChatViewState();
 }
 
 class _ChatViewState extends State<ChatView> {
-  var controller = Get.put(ChatController());
+  final controller = Get.put(ChatController());
 
   @override
   void initState() {
@@ -482,7 +483,7 @@ class _ChatViewState extends State<ChatView> {
               ),
               Flexible(
                 child: Text(
-                  getName(controller.profile),
+                  controller.profile.getName(),
                   //controller.profile.name.checkNull(),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -1075,7 +1076,7 @@ class _ChatViewState extends State<ChatView> {
                         ),
                       )
                     : ProfileTextImage(
-                        text: getName(controller.profile),
+                        text: controller.profile.getName(),
                         /*controller.profile.name.checkNull().isEmpty
                             ? controller.profile.nickName.checkNull().isEmpty
                                 ? controller.profile.mobileNumber.checkNull()
@@ -1100,7 +1101,7 @@ class _ChatViewState extends State<ChatView> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  getName(controller.profile),
+                  controller.profile.getName(),
                   /*controller.profile.name.checkNull().isEmpty
                       ? controller.profile.nickName.checkNull()
                       : controller.profile.name.checkNull(),*/

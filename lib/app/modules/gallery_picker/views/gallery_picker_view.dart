@@ -46,7 +46,7 @@ class _GalleryPickerViewState extends State<GalleryPickerView> {
         title: Row(
           children: [
             Obx(() {
-              return Text('Send to ${getName(controller.profile.value)}', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),);
+              return Text('Send to ${controller.profile.value.getName()}', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),);
             }),
           ],
         ),
@@ -112,7 +112,7 @@ class _GalleryPickerViewState extends State<GalleryPickerView> {
                                             builder: (con) =>
                                                 MediaPreviewView(
                                                   filePath: controller.pickedFile,
-                                                  userName: getName(controller.profile.value),
+                                                  userName: controller.profile.value.getName(),
                                                   profile: controller.profile.value,
                                                   caption: controller.textMessage.value,
                                                   showAdd: false,

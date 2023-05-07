@@ -354,7 +354,7 @@ class ContactController extends FullLifeCycleController
         contactSelected(item);
       }
     } else {
-      mirrorFlyLog("Contact Profile", item.toJson().toString());
+      // mirrorFlyLog("Contact Profile", item.toJson().toString());
       // Get.toNamed(Routes.chat, arguments: item);
       Navigator.push(context, MaterialPageRoute(builder: (con) => ChatView(jid: item.jid!)));
 

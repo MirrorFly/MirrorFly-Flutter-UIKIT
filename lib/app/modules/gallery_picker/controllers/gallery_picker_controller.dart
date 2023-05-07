@@ -8,7 +8,7 @@ class GalleryPickerController extends GetxController {
 
   var pickedFile = <PickedAssetModel>[].obs;
   var textMessage = ''.obs;
-  var profile = Profile().obs;
+  var profile = ProfileData().obs;
   var maxPickImages = 10;
 
   @override
@@ -21,7 +21,7 @@ class GalleryPickerController extends GetxController {
 
   void init(String senderJid, String caption) {
     textMessage(caption);
-    getProfileDetails(senderJid, server: false).then((value) {
+    getUserProfile(senderJid, server: false).then((value) {
       profile(value);
     });
 

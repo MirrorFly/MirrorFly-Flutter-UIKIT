@@ -7,11 +7,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
-import 'package:mirrorfly_uikit_plugin/app/model/user_list_model.dart';
 import 'package:photo_view/photo_view.dart';
 
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/widgets.dart';
+import '../../../model/profile_model.dart';
 import '../controllers/media_preview_controller.dart';
 
 
@@ -21,7 +21,7 @@ class MediaPreviewView extends StatefulWidget {
       : super(key: key);
   final List filePath;
   final String userName;
-  final Profile profile;
+  final ProfileData profile;
   final String caption;
   final bool showAdd;
   final bool isFromGalleryPicker;
@@ -90,7 +90,7 @@ class _MediaPreviewViewState extends State<MediaPreviewView> {
                       ),
                     )
                         : ProfileTextImage(
-                      text: getName(controller.profile.value) /*controller.profile?.name.checkNull().isEmpty
+                      text: controller.profile.value.getName() /*controller.profile?.name.checkNull().isEmpty
                               ? controller.profile.nickName.checkNull().isEmpty
                                   ? controller.profile.mobileNumber.checkNull()
                                   : controller.profile.nickName.checkNull()

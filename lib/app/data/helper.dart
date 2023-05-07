@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
@@ -19,6 +18,7 @@ import '../common/widgets.dart';
 import '../model/chat_message_model.dart';
 import '../model/group_members_model.dart';
 import '../model/message_delivered_model.dart';
+import '../model/profile_model.dart';
 import '../model/recent_chat.dart';
 import '../model/user_list_model.dart';
 import 'apputils.dart';
@@ -376,15 +376,17 @@ extension MemberParsing on Member {
     return contactType == "deleted_contact";
   }
 
-  String getUsername() {
-    var value = Mirrorfly.getProfileDetails(jid.checkNull(), false);
-    var str = Profile.fromJson(json.decode(value.toString()));
+  Future<String> getUsername() async {
+    var value = await Mirrorfly.getProfileDetails(jid.checkNull(), false);
+    var str = await compute(profiledata, value.toString());
+    // var str = Profile.fromJson(json.decode(value.toString()));
     return getName(str); //str.name.checkNull();
   }
 
   Future<Profile> getProfileDetails() async {
     var value = await Mirrorfly.getProfileDetails(jid.checkNull(), false);
-    var str = Profile.fromJson(json.decode(value.toString()));
+    var str = await compute(profiledata, value.toString());
+    // var str = Profile.fromJson(json.decode(value.toString()));
     return str;
   }
 
@@ -410,11 +412,64 @@ extension MemberProfileParsing on MemberProfileDetails {
   }
 }
 
+extension ProfileDataParsing on ProfileData {
+  bool isDeletedContact(){
+    return false;
+  }
+  String getChatType() {
+    return (isGroupProfile ?? false)
+        ? Constants.typeGroupChat
+        : Constants.typeChat;
+  }
+  String getName(){
+    if (MirrorflyUikit.isTrialLicence) {
+      /*return item.name.toString().checkNull().isEmpty
+        ? item.nickName.toString()
+        : item.name.toString();*/
+      return name.checkNull().isEmpty
+          ? (nickName.checkNull().isEmpty
+          ? mobileNumber.checkNull()
+          : nickName.checkNull())
+          : name.checkNull();
+    } else {
+      if (jid.checkNull() == SessionManagement.getUserJID()) {
+        return Constants.you;
+      } else {
+        mirrorFlyLog('nickName', nickName.toString());
+        return nickName.checkNull();
+      }
+      /*var status = true;
+    if(status) {
+      return item.nickName
+          .checkNull()
+          .isEmpty
+          ? (item.name
+          .checkNull()
+          .isEmpty
+          ? item.mobileNumber.checkNull()
+          : item.name.checkNull())
+          : item.nickName.checkNull();
+    }else{
+      return item.mobileNumber.checkNull();
+    }*/
+    }
+  }
+}
+
 Future<Profile> getProfileDetails(String jid, {bool server = false}) async {
   var value = await Mirrorfly.getProfileDetails(jid.checkNull(), server);
   var profile = await compute(profiledata, value.toString());
+  debugPrint("profile ${profile.name}");
   // var str = Profile.fromJson(json.decode(value.toString()));
   return profile;
+}
+
+Future<ProfileData> getUserProfile(String jid, {bool server = false}) async {
+  var value = await Mirrorfly.getUserProfile(jid.checkNull(), server);
+  var profile = await compute(profileDataFromJson, value.toString());
+  debugPrint("profile ${profile.data}");
+  // var str = Profile.fromJson(json.decode(value.toString()));
+  return profile.data ?? ProfileData();
 }
 
 Future<ChatMessageModel> getMessageOfId(String mid) async {

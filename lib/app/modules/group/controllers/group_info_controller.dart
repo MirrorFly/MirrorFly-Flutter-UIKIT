@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
@@ -33,9 +32,9 @@ class GroupInfoController extends GetxController {
   set isMemberOfGroup(value) => _isMemberOfGroup.value=value;
   bool get isMemberOfGroup => _isMemberOfGroup.value;
 
-  var profile_ = Profile().obs;
+  var profile_ = ProfileData().obs;
   //set profile(value) => _profile.value = value;
-  Profile get profile => profile_.value;
+  ProfileData get profile => profile_.value;
 
   final _isSliverAppBarExpanded = true.obs;
   set isSliverAppBarExpanded(value) => _isSliverAppBarExpanded.value = value;
@@ -48,7 +47,7 @@ class GroupInfoController extends GetxController {
   //
   // }
   init(String jid){
-    getProfileDetails(jid,server: false).then((value) {
+    getUserProfile(jid,server: false).then((value) {
       profile_(value);
       _mute(profile.isMuted!);
       scrollController.addListener(_scrollListener);
@@ -68,10 +67,10 @@ class GroupInfoController extends GetxController {
     if (groupJid.checkNull().isNotEmpty) {
       if (profile.jid.checkNull() == groupJid.toString()) {
         mirrorFlyLog("group info", groupJid.toString());
-        Mirrorfly.getProfileDetails(profile.jid.checkNull(), false).then((value) {
+        getUserProfile(profile.jid.checkNull(), server: false).then((value) {
           if (value != null) {
-            var member = Profile.fromJson(json.decode(value.toString()));
-            profile_(member);
+            // var member = Profile.fromJson(json.decode(value.toString()));
+            profile_(value);
             _mute(profile.isMuted!);
             nameController.text=profile.nickName.checkNull();
           }
@@ -308,16 +307,24 @@ class GroupInfoController extends GetxController {
       FilePickerResult? result = await FilePicker.platform
           .pickFiles(allowMultiple: false, type: FileType.image);
       if (result != null) {
-        Get.to(CropImage(
-          imageFile: File(result.files.single.path!),
-        ))?.then((value) {
-          value as MemoryImage;
-          var name = "${DateTime.now().millisecondsSinceEpoch}.jpg";
-          writeImageTemp(value.bytes, name).then((value) {
-            imagePath(value.path);
-            updateGroupProfileImage(value.path, context);
+        // Get.to(CropImage(
+        //   imageFile: File(result.files.single.path!),
+        // ))?.then((value) {
+        if(context.mounted) {
+          Navigator.push(context, MaterialPageRoute(builder: (con) =>
+              CropImage(
+                imageFile: File(result.files.single.path!),
+              ))).then((value) {
+            value as MemoryImage;
+            var name = "${DateTime
+                .now()
+                .millisecondsSinceEpoch}.jpg";
+            writeImageTemp(value.bytes, name).then((value) {
+              imagePath(value.path);
+              updateGroupProfileImage(value.path, context);
+            });
           });
-        });
+        }
       } else {
         // User canceled the picker
       }
@@ -332,16 +339,24 @@ class GroupInfoController extends GetxController {
       final XFile? photo = await _picker.pickImage(
           source: ImageSource.camera);
       if (photo != null) {
-        Get.to(CropImage(
+        /*Get.to(CropImage(
           imageFile: File(photo.path),
-        ))?.then((value) {
-          value as MemoryImage;
-          var name = "${DateTime.now().millisecondsSinceEpoch}.jpg";
-          writeImageTemp(value.bytes, name).then((value) {
-            imagePath(value.path);
-            updateGroupProfileImage(value.path, context);
+        ))?.then((value) {*/
+        if(context.mounted) {
+          Navigator.push(context, MaterialPageRoute(builder: (con) =>
+              CropImage(
+                imageFile: File(photo.path),
+              ))).then((value) {
+            value as MemoryImage;
+            var name = "${DateTime
+                .now()
+                .millisecondsSinceEpoch}.jpg";
+            writeImageTemp(value.bytes, name).then((value) {
+              imagePath(value.path);
+              updateGroupProfileImage(value.path, context);
+            });
           });
-        });
+        }
       } else {
         // User canceled the Camera
       }
@@ -381,12 +396,14 @@ class GroupInfoController extends GetxController {
     Helper.showAlert(message: "Are you sure you want to remove the group photo?",actions: [
       TextButton(
           onPressed: () {
-            Get.back();
+            // Get.back();
+            Navigator.pop(context);
           },
           child: const Text("CANCEL")),
       TextButton(
           onPressed: () {
-            Get.back();
+            // Get.back();
+            Navigator.pop(context);
             revokeAccessForProfileImage(context);
           },
           child: const Text("REMOVE")),
@@ -395,7 +412,7 @@ class GroupInfoController extends GetxController {
 
   revokeAccessForProfileImage(BuildContext context)async{
     if(await AppUtils.isNetConnected()) {
-      showLoader(context);
+      if(context.mounted) showLoader(context);
       Mirrorfly.removeGroupProfileImage(profile.jid.checkNull()).then((bool? value) {
         hideLoader(context);
         if (value != null) {
