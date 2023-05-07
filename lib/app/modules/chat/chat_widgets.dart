@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/image_view/views/image_view_view.dart';
-import 'package:open_file_plus/open_file_plus.dart';
 import '../../../mirrorfly_uikit_plugin.dart';
 import '../../models.dart';
 import 'package:get/get.dart';
@@ -23,6 +22,7 @@ import '../../data/permissions.dart';
 import '../../data/session_management.dart';
 import '../dashboard/widgets.dart';
 import '../preview_contact/views/preview_contact_view.dart';
+import '../video_preview/video_player_view.dart';
 
 class ReplyingMessageHeader extends StatelessWidget {
   const ReplyingMessageHeader({Key? key,
@@ -1391,8 +1391,8 @@ class VideoMessageView extends StatelessWidget {
                   chatMessage.mediaChatMessage!.mediaDownloadStatus ==
                       Constants.mediaUploaded ||
                   chatMessage.isMessageSentByMe)) {
-            // Navigator.push(context, MaterialPageRoute(builder: (con)=>VideoPlayerView()));
-            OpenFile.open(chatMessage.mediaChatMessage!.mediaLocalStoragePath);
+            Navigator.push(context, MaterialPageRoute(builder: (con)=>VideoPlayerView(videoPath: chatMessage.mediaChatMessage!.mediaLocalStoragePath,)));
+            // OpenFile.open(chatMessage.mediaChatMessage!.mediaLocalStoragePath);
            /* Get.toNamed(Routes.videoPlay, arguments: {
               "filePath": chatMessage.mediaChatMessage!.mediaLocalStoragePath,
             });*/
