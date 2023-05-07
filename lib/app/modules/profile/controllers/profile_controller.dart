@@ -38,7 +38,7 @@ class ProfileController extends GetxController {
   var nameOnImage = "".obs;
 
   bool get emailEditAccess => true;//Get.previousRoute!=Routes.settings;
-  RxBool get mobileEditAccess => false.obs;//Get.previousRoute!=Routes.settings;
+  RxBool mobileEditAccess = false.obs;//Get.previousRoute!=Routes.settings;
 
   var userNameFocus= FocusNode();
   var emailFocus= FocusNode();
@@ -249,8 +249,10 @@ class ProfileController extends GetxController {
               profileName.text = data.data!.name ?? "";
               if (data.data!.mobileNumber.checkNull().isNotEmpty) {
               //if (from.value != Routes.login) {
-                profileMobile.text = data.data!.mobileNumber ?? "";
-                validMobileNumber(profileMobile.text);
+                validMobileNumber(data.data!.mobileNumber.checkNull()).then((valid) {
+                  if(valid) profileMobile.text = data.data!.mobileNumber.checkNull();
+                  mobileEditAccess(!valid);
+                });
               }else {
                 mobileEditAccess(true);
               }
@@ -433,17 +435,22 @@ class ProfileController extends GetxController {
     update();
   }
 
-  validMobileNumber(String text)async{
+  Future<bool> validMobileNumber(String text)async{
     FlutterLibphonenumber().init();
     var formatNumberSync = FlutterLibphonenumber().formatNumberSync("+$text");
-    var parse = await FlutterLibphonenumber().parse(formatNumberSync);
-    debugPrint("parse-----> $parse");
-    //{country_code: 91, e164: +91xxxxxxxxxx, national: 0xxxxx xxxxx, type: mobile, international: +91 xxxxx xxxxx, national_number: xxxxxxxxxx, region_code: IN}
-    if(parse.isNotEmpty){
-      var formatted = parse['international'];
-      profileMobile.text=(formatted.toString().replaceAll("+", ''));
-      return true;
-    }else{
+    try {
+      var parse = await FlutterLibphonenumber().parse(formatNumberSync);
+      debugPrint("parse-----> $parse");
+      //{country_code: 91, e164: +91xxxxxxxxxx, national: 0xxxxx xxxxx, type: mobile, international: +91 xxxxx xxxxx, national_number: xxxxxxxxxx, region_code: IN}
+      if (parse.isNotEmpty) {
+        var formatted = parse['international'];
+        profileMobile.text = (formatted.toString().replaceAll("+", ''));
+        return true;
+      } else {
+        return false;
+      }
+    }catch(e){
+      debugPrint('validMobileNumber ${e}');
       return false;
     }
   }

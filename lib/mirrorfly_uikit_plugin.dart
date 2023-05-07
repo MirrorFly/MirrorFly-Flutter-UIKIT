@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
+import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/model/app_config.dart';
 import 'package:mirrorfly_uikit_plugin/app/model/reply_hash_map.dart';
 
@@ -83,7 +84,7 @@ class MirrorflyUikit {
   ///* [token] provide the FCM token this is an optional
   static Future<Map> register(String userIdentifier, {String token = ""}) async {
     if(!isSDKInitialized){
-      return {'status': false, 'message': 'SDK Not Initialized'};
+      return setResponse(false,'SDK Not Initialized');
     }
     if (await AppUtils.isNetConnected()) {
       var value = await Mirrorfly.registerUser(userIdentifier, token: token);
@@ -96,18 +97,38 @@ class MirrorflyUikit {
           // Mirrorfly.setRegionCode(regionCode ?? 'IN');///if its not set then error comes in contact sync delete from phonebook.
           // SessionManagement.setCountryCode((countryCode ?? "").replaceAll('+', ''));
           _setUserJID(userData.data!.username!);
-          return {'status': true, 'message': 'Register Success'};
+          return setResponse(true,'Register Success');
         } else {
-          return {'status': false, 'message': '${userData.message}'};
+          return setResponse(false,userData.message.toString());
         }
       } catch (e) {
-        return {'status': false, 'message': '$e'};
+        return setResponse(false,'$e');
       }
     } else {
-      return Future.value({'status': false, 'message': 'Check your internet connection and try again'});
+      return Future.value(setResponse(false, 'Check your internet connection and try again'));
     }
   }
 
+  static Future<Map<String,dynamic>> logoutFromUIKIT() async {
+    try {
+      var value  = await Mirrorfly.logoutOfChatSDK();//.then((value) {
+        if (value) {
+          var token = SessionManagement.getToken().checkNull();
+          SessionManagement.clear().then((value) {
+            SessionManagement.setToken(token);
+          });
+          return setResponse(true,'Logout successfully');
+        } else {
+          return setResponse(false,'Logout Failed');
+        }
+      //});
+    }catch(e){
+      return setResponse(false,'Logout Failed');
+    }
+  }
+   static Map<String,dynamic> setResponse(bool status,String message){
+     return {'status': status, 'message': message};
+   }
 
   static _setUserJID(String username) {
     Mirrorfly.getAllGroups(true);

@@ -195,8 +195,10 @@ class _ProfileViewState extends State<ProfileView> {
                             maxLength: 30,
                             cursorColor: MirrorflyUikit.getTheme?.primaryColor,
                             controller: controller.profileName,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               border: InputBorder.none,
+                              hintStyle: TextStyle(color: MirrorflyUikit
+                                  .getTheme?.textSecondaryColor.withOpacity(0.7)),
                               hintText: 'Username',
                               counterText: '',
                             ),
@@ -226,6 +228,8 @@ class _ProfileViewState extends State<ProfileView> {
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Enter Email Id',
+                        hintStyle: TextStyle(color: MirrorflyUikit
+                            .getTheme?.textSecondaryColor.withOpacity(0.7)),
                         icon: SvgPicture.asset(emailIcon, package: package,
                           color: MirrorflyUikit.getTheme?.textSecondaryColor,),
                       ),
@@ -252,6 +256,8 @@ class _ProfileViewState extends State<ProfileView> {
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Enter Mobile Number',
+                          hintStyle: TextStyle(color: MirrorflyUikit
+                              .getTheme?.textSecondaryColor.withOpacity(0.7)),
                           icon: SvgPicture.asset(phoneIcon, package: package,
                               color: MirrorflyUikit.getTheme
                                   ?.textSecondaryColor),

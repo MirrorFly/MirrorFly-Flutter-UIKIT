@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/dashboard/views/dashboard_view.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
@@ -25,32 +26,110 @@ class MyApp extends StatelessWidget {
 
 }
 
-class Dashboard extends StatelessWidget {
+class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
 
+  @override
+  State<Dashboard> createState() => _DashboardState();
+}
+
+class _DashboardState extends State<Dashboard> {
+  var uniqueId = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextButton(child: const Text('register'),onPressed: () async {
-              try {
-                var response = await MirrorflyUikit.register('918973725802');
-                debugPrint("register user $response");
-              }catch(e){
-
-              }
-            },),
-            TextButton(child: const Text('chat page'),onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (con)=> DashboardView(title: "Chat",)));
-            },),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Enter Unique Id :'),
+              const SizedBox(height: 10,),
+              TextField(
+                onChanged: (String text){
+                  setState(() {
+                    uniqueId=text;
+                  });
+                },
+                keyboardType: TextInputType.text,
+                style: const TextStyle(fontSize: 18),
+                decoration: const InputDecoration(border: OutlineInputBorder()),
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]"))
+                ],
+              ),
+              Center(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    buildTextButton(onPressed: (){
+                      logoutFromSDK();
+                    },text: 'Logout'),
+                    const SizedBox(width: 10,),
+                    buildTextButton(onPressed: () async {
+                      if(uniqueId.isNotEmpty) {
+                        try {
+                          var response = await MirrorflyUikit.register(uniqueId);
+                          debugPrint("register user $response");
+                          showSnack(response['message']);
+                        } catch (e) {
+                          showSnack(e.toString());
+                        }
+                      }else{
+                        showSnack('Unique id must not be empty');
+                      }
+                    },text: 'Register'),
+                  ],
+                ),
+              ),
+              Center(
+                child: buildTextButton(onPressed: () async {
+                  Navigator.push(context, MaterialPageRoute(builder: (con)=> DashboardView(title: "Chat",)));
+                },text:'chat page',),
+              ),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  TextButton buildTextButton({Function()? onPressed,required String text}) {
+    return TextButton(onPressed: onPressed,style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+                padding: MaterialStateProperty.all<EdgeInsets>(const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+              ),child: Text(text,style: const TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),),);
+  }
+  
+  showSnack(String text){
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+        SnackBar(
+          content: Text(text),
+          action: SnackBarAction(
+              label: 'Ok', onPressed: scaffold.hideCurrentSnackBar),
+        ));
+  }
+  logoutFromSDK() async {
+    // if (await AppUtils.isNetConnected()) {
+    //   Helper.progressLoading(context: context);
+      MirrorflyUikit.logoutFromUIKIT().then((value) {
+        debugPrint("logout user $value");
+      }).catchError((er) {
+      
+      });
   }
 }
 

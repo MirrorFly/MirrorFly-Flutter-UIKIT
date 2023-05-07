@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/image_view/views/image_view_view.dart';
+import 'package:open_file_plus/open_file_plus.dart';
 import '../../../mirrorfly_uikit_plugin.dart';
 import '../../models.dart';
 import 'package:get/get.dart';
@@ -20,7 +21,6 @@ import '../../data/apputils.dart';
 import '../../data/helper.dart';
 import '../../data/permissions.dart';
 import '../../data/session_management.dart';
-import '../../routes/app_pages.dart';
 import '../dashboard/widgets.dart';
 import '../preview_contact/views/preview_contact_view.dart';
 
@@ -1378,7 +1378,7 @@ class VideoMessageView extends StatelessWidget {
   final String search;
   final bool isSelected;
 
-  onVideoClick() {
+  onVideoClick(BuildContext context) {
     switch (chatMessage.isMessageSentByMe
         ? chatMessage.mediaChatMessage?.mediaUploadStatus
         : chatMessage.mediaChatMessage?.mediaDownloadStatus) {
@@ -1391,9 +1391,11 @@ class VideoMessageView extends StatelessWidget {
                   chatMessage.mediaChatMessage!.mediaDownloadStatus ==
                       Constants.mediaUploaded ||
                   chatMessage.isMessageSentByMe)) {
-            Get.toNamed(Routes.videoPlay, arguments: {
+            // Navigator.push(context, MaterialPageRoute(builder: (con)=>VideoPlayerView()));
+            OpenFile.open(chatMessage.mediaChatMessage!.mediaLocalStoragePath);
+           /* Get.toNamed(Routes.videoPlay, arguments: {
               "filePath": chatMessage.mediaChatMessage!.mediaLocalStoragePath,
-            });
+            });*/
           } else {
             debugPrint("file is video but condition failed");
           }
@@ -1423,7 +1425,7 @@ class VideoMessageView extends StatelessWidget {
                 onTap: isSelected
                     ? null
                     : () {
-                  onVideoClick();
+                  onVideoClick(context);
                 },
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(15),
@@ -1454,7 +1456,7 @@ class VideoMessageView extends StatelessWidget {
                 ),
               ),
               getImageOverlay(context,chatMessage,
-                  onVideo: isSelected ? null : onVideoClick),
+                  onVideo: isSelected ? null : onVideoClick(context)),
               mediaMessage.mediaCaptionText
                   .checkNull()
                   .isEmpty
