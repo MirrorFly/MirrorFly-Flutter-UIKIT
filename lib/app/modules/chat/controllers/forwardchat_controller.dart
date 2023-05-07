@@ -358,12 +358,12 @@ class ForwardChatController extends GetxController {
                   forwardMessageIds, selectedJids)
               .then((values) {
             // debugPrint("to chat profile ==> ${selectedUsersList[0].toJson().toString()}");
-            Mirrorfly.getProfileDetails(selectedJids.last, false)
+            getUserProfile(selectedJids.last, server: false)
                 .then((value) {
               if (value != null) {
-                var str = profiledata(value.toString());
+                // var str = profiledata(value.toString());
                 // Get.back(result: str);
-                Navigator.pop(context, str.jid);
+                Navigator.pop(context, value);
               }
             });
           });

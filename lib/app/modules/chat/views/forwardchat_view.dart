@@ -23,8 +23,8 @@ class _ForwardChatViewState extends State<ForwardChatView> {
 
   @override
   void dispose() {
-    super.dispose();
     Get.delete<ForwardChatController>();
+    super.dispose();
   }
 
   @override

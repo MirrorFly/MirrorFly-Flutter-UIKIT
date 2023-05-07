@@ -17,7 +17,6 @@ import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/permissions.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/camera_pick/views/camera_pick_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_search_view.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/image_preview_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/location_sent_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chatInfo/views/chat_info_view.dart';
@@ -1793,8 +1792,8 @@ class ChatController extends FullLifeCycleController
                       ForwardChatView(forwardMessageIds: messageIds)))
           .then((value) {
         if (value != null) {
-          (value as Profile);
-         /* debugPrint("result of forward ==> ${(value as Profile).toJson().toString()}");
+          (value as ProfileData);
+          debugPrint("result of forward ==> ${value.toJson().toString()}");
           profile_.value = value;
           isBlocked(profile.isBlocked);
           setChatStatus();
@@ -1803,9 +1802,9 @@ class ChatController extends FullLifeCycleController
           Mirrorfly.setOnGoingChatUser(profile.jid!);
           SessionManagement.setCurrentChatJID(profile.jid.checkNull());
           getChatHistory();
-          sendReadReceipt();*/
-          Navigator.pop(context);
-          Navigator.push(context, MaterialPageRoute(builder: (con)=>ChatView(jid: value.jid.checkNull())));
+          sendReadReceipt();
+          // Navigator.pop(context);
+          // Navigator.push(context, MaterialPageRoute(builder: (con)=>ChatView(jid: value.jid.checkNull())));
         }
       });
       /*Get.toNamed(Routes.forwardChat, arguments: {
@@ -2496,16 +2495,19 @@ class ChatController extends FullLifeCycleController
     messageIds.add(messageId);
     Navigator.push(context, MaterialPageRoute(builder: (con)=>ForwardChatView(forwardMessageIds: messageIds))).then((value){
       if (value != null) {
-        debugPrint(
-            "result of forward ==> ${(value as ProfileData).toJson().toString()}");
-        profile_.value = value;
-        isBlocked(profile.isBlocked);
-        checkAdminBlocked();
-        memberOfGroup();
-        Mirrorfly.setOnGoingChatUser(profile.jid!);
-        SessionManagement.setCurrentChatJID(profile.jid.checkNull());
-        getChatHistory();
-        sendReadReceipt();
+        (value as ProfileData);
+        // getUserProfile(value.toString()).then((value) {
+          debugPrint(
+              "result of forward ==> ${value.toJson().toString()}");
+          profile_.value = value;
+          isBlocked(profile.isBlocked);
+          checkAdminBlocked();
+          memberOfGroup();
+          Mirrorfly.setOnGoingChatUser(profile.jid!);
+          SessionManagement.setCurrentChatJID(profile.jid.checkNull());
+          getChatHistory();
+          sendReadReceipt();
+        // });
       }
     });
     /*Get.toNamed(Routes.forwardChat, arguments: {
