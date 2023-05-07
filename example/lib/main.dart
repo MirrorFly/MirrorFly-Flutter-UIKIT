@@ -127,6 +127,7 @@ class _DashboardState extends State<Dashboard> {
     //   Helper.progressLoading(context: context);
       MirrorflyUikit.logoutFromUIKIT().then((value) {
         debugPrint("logout user $value");
+        showSnack(value['message']);
       }).catchError((er) {
       
       });
