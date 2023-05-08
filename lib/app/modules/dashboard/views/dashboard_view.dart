@@ -40,6 +40,7 @@ class _DashboardViewState extends State<DashboardView> {
         debugPrint('onFocusGained');
         controller.checkArchiveSetting();
         controller.getRecentChatList();
+        controller.getArchivedChatsList();
       },
       child: WillPopScope(
         onWillPop: () {

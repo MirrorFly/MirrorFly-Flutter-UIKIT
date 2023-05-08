@@ -144,7 +144,7 @@ class ChatInfoController extends GetxController {
                     debugPrint(onError.toString());
                   });
                 },
-                child: const Text("REPORT",style: TextStyle(color: Colors.red),)),
+                child: Text("REPORT",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
             TextButton(
                 onPressed: () {
                   // Get.back();

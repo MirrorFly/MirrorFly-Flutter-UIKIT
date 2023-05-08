@@ -11,7 +11,7 @@
     "AppTheme": {
         "theme": "custom",
         "customTheme": {
-            "primaryColor": "0xff64DD17",
+            "primaryColor": "0xff33e078",
             "secondaryColor": "0xffE0E0E0",
             "appBarColor": "0xff8BE98C",
             "colorOnAppbar": "0xff000000",

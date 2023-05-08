@@ -1561,13 +1561,13 @@ class ChatController extends FullLifeCycleController
                   if (await AppUtils.isNetConnected()) {
                     // Get.back();
                     if (context.mounted) Navigator.pop(context);
-                    // Helper.showLoading(message: "Unblocking User");
+                    // if (context.mounted) Helper.showLoading(message: "Unblocking User",buildContext: context);
                     Mirrorfly.unblockUser(profile.jid!).then((value) {
                       debugPrint(value.toString());
                       profile.isBlocked = false;
                       isBlocked(false);
                       getUnsentMessageOfAJid();
-                      Helper.hideLoading(context: context);
+                      // Helper.hideLoading(context: context);
                       toToast('${profile.getName()} has been unblocked');
                     }).catchError((error) {
                       // Helper.hideLoading();

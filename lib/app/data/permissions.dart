@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'helper.dart';
@@ -21,6 +22,7 @@ class AppPermission {
 
   static Future<PermissionStatus> getContactPermission(BuildContext context) async {
     final permission = await Permission.contacts.status;
+    var info = await PackageInfo.fromPlatform();
     if (permission != PermissionStatus.granted &&
         permission != PermissionStatus.permanentlyDenied) {
       const newPermission = Permission.contacts;
@@ -33,7 +35,7 @@ class AppPermission {
               newPermission.request();
             },
             icon: contactPermission,
-            content: Constants.contactPermission);
+            content: Constants.contactPermission,appName: info.appName);
       }
       return newPermission.status;
     } else {
@@ -42,6 +44,7 @@ class AppPermission {
   }
 
   static Future<PermissionStatus> getStoragePermission(BuildContext context) async {
+    var info = await PackageInfo.fromPlatform();
     var sdkVersion=0;
     if (Platform.isAndroid) {
       var sdk =  await DeviceInfoPlugin().androidInfo;
@@ -63,7 +66,7 @@ class AppPermission {
                 newPermission.request();
               },
               icon: filePermission,
-              content: Constants.filePermission);
+              content: Constants.filePermission,appName: info.appName);
         }
         return newPermission.status;
       } else {
@@ -75,6 +78,7 @@ class AppPermission {
   }
 
   static Future<PermissionStatus> getAndroid13Permission(BuildContext context) async {
+    var info = await PackageInfo.fromPlatform();
     final photos = await Permission.photos.status;
     final videos = await Permission.videos.status;
     // final audio = await Permission.audio.status;
@@ -96,7 +100,7 @@ class AppPermission {
               newPermission.request();
             },
             icon: filePermission,
-            content: Constants.filePermission);
+            content: Constants.filePermission,appName: info.appName);
       }
       var photo = await newPermission[0].status.isGranted;
       var video = await newPermission[1].isGranted;
@@ -123,6 +127,7 @@ class AppPermission {
   }
 
   static Future<PermissionStatus> getCameraPermission(BuildContext context) async {
+    var info = await PackageInfo.fromPlatform();
     final permission = await Permission.camera.status;
     if (permission != PermissionStatus.granted &&
         permission != PermissionStatus.permanentlyDenied) {
@@ -136,7 +141,7 @@ class AppPermission {
               newPermission.request();
             },
             icon: cameraPermission,
-            content: Constants.cameraPermission);
+            content: Constants.cameraPermission,appName: info.appName);
       }
       return newPermission.status;
     } else {
@@ -145,6 +150,7 @@ class AppPermission {
   }
 
   static Future<PermissionStatus> getAudioPermission(BuildContext context) async {
+    var info = await PackageInfo.fromPlatform();
     final permission = await Permission.microphone.status;
     if (permission != PermissionStatus.granted &&
         permission != PermissionStatus.permanentlyDenied) {
@@ -158,7 +164,7 @@ class AppPermission {
               newPermission.request();
             },
             icon: audioPermission,
-            content: Constants.audioPermission);
+            content: Constants.audioPermission,appName: info.appName);
       }
       return newPermission.status;
     } else {
@@ -167,6 +173,7 @@ class AppPermission {
   }
 
   static Future<bool> askFileCameraAudioPermission(BuildContext context) async {
+    var info = await PackageInfo.fromPlatform();
     var filePermission = Permission.storage;
     var camerapermission = Permission.camera;
     var audioPermission = Permission.microphone;
@@ -188,7 +195,7 @@ class AppPermission {
               }
             },
             icon: cameraPermission,
-            content: Constants.cameraPermission);
+            content: Constants.cameraPermission,appName: info.appName);
       }
     } else {
       return true;
@@ -209,6 +216,7 @@ class AppPermission {
   }
 
   static Future<bool> checkPermission(BuildContext context,Permission permission, String permissionIcon, String permissionContent) async {
+    var info = await PackageInfo.fromPlatform();
     var status = await permission.status;
     if (status == PermissionStatus.granted) {
       debugPrint("permission granted opening");
@@ -236,11 +244,11 @@ class AppPermission {
           permissionAlertMessage = Constants.locationPermissionDenied;
           break;
         default:
-          permissionAlertMessage = "MirrorFly need the ${permissionName.toUpperCase()} Permission. But they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"${permissionName.toUpperCase()}\"";
+          permissionAlertMessage = "${info.appName} need the ${permissionName.toUpperCase()} Permission. But they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"${permissionName.toUpperCase()}\"";
       }
 
       var deniedPopupValue = await customPermissionDialog(context,icon: permissionIcon,
-          content: permissionAlertMessage);
+          content: permissionAlertMessage,appName: info.appName);
       if(deniedPopupValue){
         openAppSettings();
         return false;
@@ -250,7 +258,7 @@ class AppPermission {
     }else{
       mirrorFlyLog('denied', 'permission');
       var popupValue = await customPermissionDialog(context,icon: permissionIcon,
-          content: permissionContent);
+          content: permissionContent,appName: info.appName);
       if(popupValue){
         return AppPermission.requestPermission(permission);/*.then((value) {
           if(value){
@@ -284,7 +292,7 @@ class AppPermission {
       {required Function() notNowBtn,
       required Function() continueBtn,
       required String icon,
-      required String content}) {
+      required String content,required String appName}) {
     showDialog(context: context, builder: (BuildContext context) { return AlertDialog(
       contentPadding: EdgeInsets.zero,
       backgroundColor: MirrorflyUikit.theme == "dark" ? darkPopupColor : Colors.white,
@@ -299,7 +307,7 @@ class AppPermission {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
-              content,
+              content.replaceAll('Mirrorfly', appName),
               style: TextStyle(fontSize: 14, color: MirrorflyUikit.getTheme?.textPrimaryColor),
             ),
           )
@@ -332,7 +340,7 @@ class AppPermission {
 
   static Future<bool> customPermissionDialog(BuildContext context,
       {required String icon,
-      required String content}) async {
+      required String content,required String appName}) async {
     return await showDialog(context: context, builder: (BuildContext context) { return AlertDialog(
       contentPadding: EdgeInsets.zero,
       backgroundColor: MirrorflyUikit.theme == "dark" ? darkPopupColor : Colors.white,
@@ -349,7 +357,7 @@ class AppPermission {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
-              content,
+              content.replaceAll('Mirrorfly', appName),
               style: TextStyle(fontSize: 14, color: MirrorflyUikit.getTheme?.textPrimaryColor),
             ),
           )

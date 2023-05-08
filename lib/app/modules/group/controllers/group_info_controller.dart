@@ -9,6 +9,7 @@ import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/dashboard/views/dashboard_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/view_all_media/views/view_all_media_view.dart';
+import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../models.dart';
 
 import '../../../common/crop_image.dart';
@@ -202,7 +203,7 @@ class GroupInfoController extends GetxController {
             // Get.back();
             Navigator.pop(context);
           },
-          child: const Text("CANCEL")),
+          child: Text("CANCEL",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
       TextButton(
           onPressed: () {
             // Get.back();
@@ -221,7 +222,7 @@ class GroupInfoController extends GetxController {
               Helper.hideLoading(context: context);
             });
           },
-          child: const Text("REPORT",style: TextStyle(color: Colors.red),)),
+          child: Text("REPORT",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
     ], context: context);
   }
   exitOrDeleteGroup(BuildContext context){

@@ -491,14 +491,14 @@ class _ChatViewState extends State<ChatView> {
                   style: TextStyle(fontSize: 15,color: MirrorflyUikit.getTheme?.textPrimaryColor),
                 ),
               ),
-              const SizedBox(
-                width: 10,
-              ),
               InkWell(
-                child: const Text(
-                  'UNBLOCK',
-                  style: TextStyle(
-                      decoration: TextDecoration.underline, color: Colors.blue),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'UNBLOCK',
+                    style: TextStyle(
+                        decoration: TextDecoration.underline, color: MirrorflyUikit.getTheme?.primaryColor)//),
+                  ),
                 ),
                 onTap: () => controller.unBlockUser(context),
               ),

@@ -1152,8 +1152,8 @@ class ContactMessageView extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: (userJid != null && userJid.isNotEmpty)
-                              ? const Text("Message")
-                              : const Text("Invite"),
+                              ? Text("Message",style: TextStyle(color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textPrimaryColor),)
+                              : Text("Invite",style: TextStyle(color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textPrimaryColor),)
                         ))),
               ],
             ),
