@@ -82,9 +82,9 @@ class ChatController extends FullLifeCycleController
   FocusNode focusNode = FocusNode();
 
   var calendar = DateTime.now();
-  var profile_ = ProfileData().obs;
+  var profile_ = Profile().obs;
 
-  ProfileData get profile => profile_.value;
+  Profile get profile => profile_.value;
   var base64img = ''.obs;
   var imagePath = ''.obs;
   var filePath = ''.obs;
@@ -120,6 +120,7 @@ class ChatController extends FullLifeCycleController
   init(
     BuildContext context, {
     String? jid,
+    bool isUser = false,
     bool isFromStarred = false,
     String? messageId,
   }) async {
@@ -151,17 +152,47 @@ class ChatController extends FullLifeCycleController
       // initListeners();
     } else {*/
     debugPrint('userJid $userJid');
-    getUserProfile(userJid, server:await AppUtils.isNetConnected()).then((value) {
-      // debugPrint('Mirrorfly.getProfileDetails $value');
-      // var str = profileDataFromJson(value).data;
-      SessionManagement.setChatJid("");
-      profile_(value);
-      checkAdminBlocked();
-      ready();
-      // initListeners();
-    }).catchError((o){
-      debugPrint('error $o');
-    });
+    if(!isUser) {
+      getProfileDetails(userJid, server:false).then((
+          value) {
+        // debugPrint('Mirrorfly.getProfileDetails $value');
+        // var str = profileDataFromJson(value).data;
+        SessionManagement.setChatJid("");
+        profile_(value);
+        checkAdminBlocked();
+        ready();
+        // initListeners();
+      }).catchError((o) {
+        debugPrint('error $o');
+      });
+    }else{
+      getUserProfile(userJid, server: await AppUtils.isNetConnected()).then((value){
+        if(value!=null){
+          var p = Profile();
+          p.email = value.email;
+          p.image = value.image;
+          p.isAdminBlocked = value.isAdminBlocked;
+          p.isBlocked = value.isBlocked;
+          p.isBlockedMe = value.isBlockedMe;
+          p.isGroupAdmin = false;
+          p.isGroupInOfflineMode = false;
+          p.isGroupProfile = false;
+          p.isItSavedContact = value.isItSavedContact;
+          p.isMuted = value.isMuted;
+          p.isSelected = value.isSelected;
+          p.jid = value.jid;
+          p.mobileNumber = value.mobileNumber;
+          p.name = value.name;
+          p.nickName = value.nickName;
+          p.status = value.status;
+          profile_(p);
+          SessionManagement.setChatJid("");
+          checkAdminBlocked();
+          ready();
+        }
+      }
+      );
+    }
     // }
 
     setAudioPath();
@@ -402,7 +433,7 @@ class ChatController extends FullLifeCycleController
 
   MessageObject? messageObject;
 
-  sendMessage(ProfileData profile, BuildContext context) async {
+  sendMessage(Profile profile, BuildContext context) async {
     removeUnreadSeparator();
     var busyStatus = !profile.isGroupProfile.checkNull()
         ? await Mirrorfly.isBusyStatusEnabled()
@@ -503,7 +534,7 @@ class ChatController extends FullLifeCycleController
     }
   }
 
-  sendLocationMessage(ProfileData profile, double latitude, double longitude,
+  sendLocationMessage(Profile profile, double latitude, double longitude,
       BuildContext context) async {
     var busyStatus = !profile.isGroupProfile.checkNull()
         ? await Mirrorfly.isBusyStatusEnabled()
@@ -1048,7 +1079,7 @@ class ChatController extends FullLifeCycleController
             ? chatList.removeWhere((p0) => p0.isMessageStarred == false)
             : chatList.clear();
         cancelReplyMessage();
-        // chatList.refresh();
+        chatList.refresh();
       }
     });
   }
@@ -1792,7 +1823,7 @@ class ChatController extends FullLifeCycleController
                       ForwardChatView(forwardMessageIds: messageIds)))
           .then((value) {
         if (value != null) {
-          (value as ProfileData);
+          (value as Profile);
           debugPrint("result of forward ==> ${value.toJson().toString()}");
           profile_.value = value;
           isBlocked(profile.isBlocked);
@@ -1960,7 +1991,7 @@ class ChatController extends FullLifeCycleController
               builder: (con) =>
                   GroupInfoView(jid: profile.jid.checkNull()))).then((value) {
         if (value != null) {
-          profile_(value as ProfileData);
+          /*profile_(value as Profile);
           isBlocked(profile.isBlocked);
           checkAdminBlocked();
           memberOfGroup();
@@ -1969,7 +2000,7 @@ class ChatController extends FullLifeCycleController
           getChatHistory();
           sendReadReceipt();
           setChatStatus();
-          debugPrint("value--> ${profile.isGroupProfile}");
+          debugPrint("value--> ${profile.isGroupProfile}");*/
         }
       });
       /*Get.toNamed(Routes.groupInfo, arguments: profile)?.then((value) {
@@ -2093,7 +2124,7 @@ class ChatController extends FullLifeCycleController
 
   void onGroupProfileUpdated(groupJid) {
     if (profile.jid.checkNull() == groupJid.toString()) {
-      getUserProfile(profile.jid.checkNull()).then((value) {
+      getProfileDetails(profile.jid.checkNull()).then((value) {
         if (value != null) {
           // var member = profileDataFromJson(value).data ?? ProfileData();
           // var member = Profile.fromJson(json.decode(value.toString()));
@@ -2495,7 +2526,7 @@ class ChatController extends FullLifeCycleController
     messageIds.add(messageId);
     Navigator.push(context, MaterialPageRoute(builder: (con)=>ForwardChatView(forwardMessageIds: messageIds))).then((value){
       if (value != null) {
-        (value as ProfileData);
+        (value as Profile);
         // getUserProfile(value.toString()).then((value) {
           debugPrint(
               "result of forward ==> ${value.toJson().toString()}");
@@ -2766,7 +2797,7 @@ class ChatController extends FullLifeCycleController
   Future<void> updateProfile(String jid) async {
     if (jid.isNotEmpty && jid == profile.jid) {
       if (!profile.isGroupProfile.checkNull()) {
-        getUserProfile(jid).then((value) {
+        getProfileDetails(jid).then((value) {
           debugPrint("update Profile contact sync $value");
           SessionManagement.setChatJid("");
           profile_(value);

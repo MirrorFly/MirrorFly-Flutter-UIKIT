@@ -6,10 +6,10 @@
         "iOSContainerId": "group.com.mirrorfly.qa",
         "storageFolderName": "",
         "isTrialLicenceKey" : true,
-        "enableMobileNumberLogin": true
+        "enableMobileNumberLogin": false
       },
     "AppTheme": {
-        "theme": "dark",
+        "theme": "custom",
         "customTheme": {
             "primaryColor": "0xff64DD17",
             "secondaryColor": "0xffE0E0E0",

@@ -32,9 +32,9 @@ class GroupInfoController extends GetxController {
   set isMemberOfGroup(value) => _isMemberOfGroup.value=value;
   bool get isMemberOfGroup => _isMemberOfGroup.value;
 
-  var profile_ = ProfileData().obs;
+  var profile_ = Profile().obs;
   //set profile(value) => _profile.value = value;
-  ProfileData get profile => profile_.value;
+  Profile get profile => profile_.value;
 
   final _isSliverAppBarExpanded = true.obs;
   set isSliverAppBarExpanded(value) => _isSliverAppBarExpanded.value = value;
@@ -47,7 +47,7 @@ class GroupInfoController extends GetxController {
   //
   // }
   init(String jid){
-    getUserProfile(jid,server: false).then((value) {
+    getProfileDetails(jid,server: false).then((value) {
       profile_(value);
       _mute(profile.isMuted!);
       scrollController.addListener(_scrollListener);
@@ -67,7 +67,7 @@ class GroupInfoController extends GetxController {
     if (groupJid.checkNull().isNotEmpty) {
       if (profile.jid.checkNull() == groupJid.toString()) {
         mirrorFlyLog("group info", groupJid.toString());
-        getUserProfile(profile.jid.checkNull(), server: false).then((value) {
+        getProfileDetails(profile.jid.checkNull(), server: false).then((value) {
           if (value != null) {
             // var member = Profile.fromJson(json.decode(value.toString()));
             profile_(value);

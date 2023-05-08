@@ -377,6 +377,7 @@ class _GroupInfoViewState extends State<GroupInfoView> {
           return SafeArea(
             child: SizedBox(
               child: Card(
+                color: MirrorflyUikit.getTheme?.scaffoldColor,
                 shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(30),
@@ -389,7 +390,8 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const SizedBox(height: 10,),
-                      const Text("Options"),
+                      Text("Options", style: TextStyle(
+                          color: MirrorflyUikit.getTheme?.textPrimaryColor),),
                       const SizedBox(height: 10,),
                       TextButton(
                           onPressed: () async {
@@ -401,8 +403,8 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                               padding: EdgeInsets.zero,
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               alignment: Alignment.centerLeft),
-                          child: const Text("Take Photo",
-                              style: TextStyle(color: textColor, fontWeight: FontWeight.bold))),
+                          child: Text("Take Photo",
+                              style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor, fontWeight: FontWeight.bold))),
                       TextButton(
                           onPressed: () {
                             Navigator.pop(context);
@@ -413,8 +415,8 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                               padding: EdgeInsets.zero,
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               alignment: Alignment.centerLeft),
-                          child: const Text("Choose from Gallery",
-                              style: TextStyle(color: textColor, fontWeight: FontWeight.bold))),
+                          child: Text("Choose from Gallery",
+                              style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor, fontWeight: FontWeight.bold))),
                       controller.profile.image
                           .checkNull()
                           .isNotEmpty
@@ -428,9 +430,11 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                               padding: EdgeInsets.zero,
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               alignment: Alignment.centerLeft),
-                          child: const Text(
+                          child: Text(
                             "Remove Photo",
-                            style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
+                            style: TextStyle(color: MirrorflyUikit.getTheme
+                                ?.textPrimaryColor, fontWeight: FontWeight
+                                .bold),
                           ))
                           : const SizedBox(),
                     ],

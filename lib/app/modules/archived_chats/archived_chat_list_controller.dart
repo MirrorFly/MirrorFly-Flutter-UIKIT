@@ -121,9 +121,9 @@ class ArchivedChatListController extends GetxController {
     }
   }
 
-  toChatPage(String jid, BuildContext context) async {
+  toChatPage(String jid,bool isGroup, BuildContext context) async {
     if (jid.isNotEmpty) {
-      Navigator.push(context, MaterialPageRoute(builder: (con)=>ChatView(jid: jid)));
+      Navigator.push(context, MaterialPageRoute(builder: (con)=>ChatView(jid: jid,)));
       // Helper.progressLoading();
       /*await Mirrorfly.getProfileDetails(jid, false).then((value) {
         if (value != null) {

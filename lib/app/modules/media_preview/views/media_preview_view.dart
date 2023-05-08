@@ -11,7 +11,7 @@ import 'package:photo_view/photo_view.dart';
 
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/widgets.dart';
-import '../../../model/profile_model.dart';
+import '../../../model/user_list_model.dart';
 import '../controllers/media_preview_controller.dart';
 
 
@@ -21,7 +21,7 @@ class MediaPreviewView extends StatefulWidget {
       : super(key: key);
   final List filePath;
   final String userName;
-  final ProfileData profile;
+  final Profile profile;
   final String caption;
   final bool showAdd;
   final bool isFromGalleryPicker;

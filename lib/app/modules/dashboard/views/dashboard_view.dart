@@ -14,7 +14,7 @@ import '../../chat/chat_widgets.dart';
 import '../../dashboard/controllers/dashboard_controller.dart';
 
 class DashboardView extends StatefulWidget {
-  DashboardView({Key? key, this.title}) : super(key: key);
+  const DashboardView({Key? key, this.title}) : super(key: key);
   final String? title;
 
   @override

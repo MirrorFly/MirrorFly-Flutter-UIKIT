@@ -87,7 +87,7 @@ class _DashboardState extends State<Dashboard> {
               ),
               Center(
                 child: buildTextButton(onPressed: () async {
-                  Navigator.push(context, MaterialPageRoute(builder: (con)=> DashboardView(title: "Chat",)));
+                  Navigator.push(context, MaterialPageRoute(builder: (con)=> DashboardView(title: "Chats",)));
                 },text:'chat page',),
               ),
             ],

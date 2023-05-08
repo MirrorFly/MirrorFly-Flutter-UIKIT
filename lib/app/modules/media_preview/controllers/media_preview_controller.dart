@@ -13,7 +13,7 @@ import '../../chat/controllers/chat_controller.dart';
 class MediaPreviewController extends FullLifeCycleController
     with FullLifeCycleMixin {
   var userName = "";//Get.arguments['userName'];
-  Rx<ProfileData> profile = ProfileData().obs;//Get.arguments['profile'] as Profile;
+  Rx<Profile> profile = Profile().obs;//Get.arguments['profile'] as Profile;
 
   TextEditingController caption = TextEditingController();
 
@@ -37,7 +37,7 @@ class MediaPreviewController extends FullLifeCycleController
 
   }*/
 
-  void init(List filePath, String userName, ProfileData profile,
+  void init(List filePath, String userName, Profile profile,
       String textMessage, bool showAdd, bool isFromGalleryPicker) {
     this.userName= userName;
     this.profile(profile);

@@ -22,8 +22,9 @@ import '../controllers/chat_controller.dart';
 import '../../../models.dart';
 
 class ChatView extends StatefulWidget {
-  const ChatView({Key? key, required this.jid, this.messageId, this.isFromStarred = false}) : super(key: key);
+  const ChatView({Key? key, required this.jid, this.isUser=false, this.messageId, this.isFromStarred = false,}) : super(key: key);
   final String jid;
+  final bool isUser;
   final bool isFromStarred;
   final String? messageId;
 
@@ -36,7 +37,7 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   void initState() {
-    controller.init(context,jid: widget.jid,isFromStarred: widget.isFromStarred,messageId: widget.messageId);
+    controller.init(context,jid: widget.jid,isUser: widget.isUser,isFromStarred: widget.isFromStarred,messageId: widget.messageId);
     super.initState();
   }
 

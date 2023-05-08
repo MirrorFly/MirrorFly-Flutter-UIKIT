@@ -358,7 +358,7 @@ class ForwardChatController extends GetxController {
                   forwardMessageIds, selectedJids)
               .then((values) {
             // debugPrint("to chat profile ==> ${selectedUsersList[0].toJson().toString()}");
-            getUserProfile(selectedJids.last, server: false)
+            getProfileDetails(selectedJids.last, server: false)
                 .then((value) {
               if (value != null) {
                 // var str = profiledata(value.toString());

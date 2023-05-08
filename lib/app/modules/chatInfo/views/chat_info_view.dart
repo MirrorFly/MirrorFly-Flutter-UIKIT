@@ -141,7 +141,7 @@ class _ChatInfoViewState extends State<ChatInfoView> {
                                     ? Colors.white
                                     : MirrorflyUikit.getTheme?.colorOnAppbar ??
                                         Colors.black,
-                                fontSize: 18.0,
+                                fontSize: 12.0,
                               )),
                           Obx(() {
                             return Text(controller.userPresenceStatus.value,

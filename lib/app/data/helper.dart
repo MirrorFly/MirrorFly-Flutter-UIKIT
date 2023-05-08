@@ -472,6 +472,13 @@ Future<ProfileData> getUserProfile(String jid, {bool server = false}) async {
   return profile.data ?? ProfileData();
 }
 
+Future<Profile> getGroupProfile(String jid, {bool server = false}) async {
+  var value2 = await Mirrorfly.getGroupProfile(jid.checkNull(), server);
+  var group = await compute(profiledata, value2.toString());
+  debugPrint('group : ${group.name}');
+  return group;
+}
+
 Future<ChatMessageModel> getMessageOfId(String mid) async {
   var value = await Mirrorfly.getMessageOfId(mid.checkNull());
   // debugPrint("message--> $value");
@@ -504,6 +511,48 @@ extension ProfileParesing on Profile {
       !isGroupProfile.checkNull() &&
       isGroupInOfflineMode
           .checkNull(); // for email contact isGroupInOfflineMode will be true
+
+  String getName() {
+    if (MirrorflyUikit.isTrialLicence) {
+      /*return item.name.toString().checkNull().isEmpty
+        ? item.nickName.toString()
+        : item.name.toString();*/
+      return name.checkNull().isEmpty
+          ? (nickName.checkNull().isEmpty
+          ? mobileNumber.checkNull()
+          : nickName.checkNull())
+          : name.checkNull();
+    } else {
+      if (jid.checkNull() == SessionManagement.getUserJID()) {
+        return Constants.you;
+      } else if (isDeletedContact()) {
+        mirrorFlyLog('isDeletedContact', isDeletedContact().toString());
+        return Constants.deletedUser;
+      } else if (isUnknownContact() || nickName.checkNull().isEmpty) {
+        mirrorFlyLog('isUnknownContact', isUnknownContact().toString());
+        return mobileNumber.checkNull().isNotEmpty
+            ? mobileNumber.checkNull()
+            : getMobileNumberFromJid(jid.checkNull());
+      } else {
+        mirrorFlyLog('nickName', nickName.toString());
+        return nickName.checkNull();
+      }
+      /*var status = true;
+    if(status) {
+      return item.nickName
+          .checkNull()
+          .isEmpty
+          ? (item.name
+          .checkNull()
+          .isEmpty
+          ? item.mobileNumber.checkNull()
+          : item.name.checkNull())
+          : item.nickName.checkNull();
+    }else{
+      return item.mobileNumber.checkNull();
+    }*/
+    }
+  }
 }
 
 extension ChatmessageParsing on ChatMessageModel {

@@ -5,6 +5,7 @@ import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 
 import '../../../common/constants.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
+import '../../../data/apputils.dart';
 import '../../../models.dart';
 import '../../view_all_media/views/view_all_media_view.dart';
 
@@ -30,8 +31,8 @@ class ChatInfoController extends GetxController {
     profile_((Get.arguments as Profile));
   }*/
 
-  init(String jid){
-    getUserProfile(jid,server: false).then((value) {
+  init(String jid) async {
+    getUserProfile(jid,server: await AppUtils.isNetConnected()).then((value) {
       profile_(value);
       mute(profile.isMuted!);
       scrollController.addListener(_scrollListener);
