@@ -1789,7 +1789,11 @@ class ChatController extends FullLifeCycleController
   exportChat() async {
     if (chatList.isNotEmpty) {
       if (await askStoragePermission()) {
-        Mirrorfly.exportChatConversationToEmail(profile.jid.checkNull());
+        Mirrorfly.exportChatConversationToEmail(profile.jid.checkNull()).then((value) {
+          mirrorFlyLog('export ',value);
+        });
+      }else{
+        debugPrint('permission not given');
       }
     } else {
       toToast("There is no conversation.");

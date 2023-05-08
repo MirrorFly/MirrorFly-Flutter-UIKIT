@@ -1564,7 +1564,7 @@ class ImageMessageView extends StatelessWidget {
                 right: 10,
                 child: Stack(
                   children: [
-                    SvgPicture.asset(mediaBg),
+                    SvgPicture.asset(mediaBg,package: package,),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
