@@ -109,7 +109,7 @@ class _ProfileViewState extends State<ProfileView> {
                                             .isNotEmpty
                                             ? ProfileTextImage(
                                           fontSize: 40,
-                                          bgColor: buttonBgColor,
+                                          bgColor: MirrorflyUikit.getTheme?.primaryColor,//buttonBgColor,
                                           text: controller.nameOnImage.value,
                                           radius: 75,
                                         )

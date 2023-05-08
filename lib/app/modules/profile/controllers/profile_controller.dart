@@ -250,7 +250,7 @@ class ProfileController extends GetxController {
               if (data.data!.mobileNumber.checkNull().isNotEmpty) {
               //if (from.value != Routes.login) {
                 validMobileNumber(data.data!.mobileNumber.checkNull()).then((valid) {
-                  if(valid) profileMobile.text = data.data!.mobileNumber.checkNull();
+                  // if(valid) profileMobile.text = data.data!.mobileNumber.checkNull();
                   mobileEditAccess(!valid);
                 });
               }else {
@@ -267,7 +267,7 @@ class ProfileController extends GetxController {
               var userProfileData = ProData(
                   email: profileEmail.text.toString(),
                   image: userImgUrl.value,
-                  mobileNumber: profileMobile.text,
+                  mobileNumber: data.data!.mobileNumber.checkNull(),
                   nickName: profileName.text,
                   name: profileName.text,
                   status: profileStatus.value);
@@ -443,8 +443,8 @@ class ProfileController extends GetxController {
       debugPrint("parse-----> $parse");
       //{country_code: 91, e164: +91xxxxxxxxxx, national: 0xxxxx xxxxx, type: mobile, international: +91 xxxxx xxxxx, national_number: xxxxxxxxxx, region_code: IN}
       if (parse.isNotEmpty) {
-        var formatted = parse['international'];
-        profileMobile.text = (formatted.toString().replaceAll("+", ''));
+        var formatted = parse['international'].replaceAll("+", '');
+        profileMobile.text = (formatted.toString());
         return true;
       } else {
         return false;
