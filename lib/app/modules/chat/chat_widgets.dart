@@ -2311,15 +2311,15 @@ class AttachmentsSheetView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: bottomSheetColor,
+      color: MirrorflyUikit.getTheme!.primaryColor,//bottomSheetColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 iconCreation(documentImg, "Document", onDocument),
                 iconCreation(cameraImg, "Camera", onCamera),
@@ -2330,7 +2330,7 @@ class AttachmentsSheetView extends StatelessWidget {
               height: 35,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 iconCreation(audioImg, "Audio", onAudio),
                 iconCreation(contactImg, "Contact", onContact),
@@ -2355,7 +2355,7 @@ Widget iconCreation(String iconPath, String text, VoidCallback onTap) {
         ),
         Text(
           text,
-          style: const TextStyle(fontSize: 12, color: Colors.white),
+          style: TextStyle(fontSize: 12, color: MirrorflyUikit.getTheme?.colorOnPrimary,fontWeight: FontWeight.bold),
         )
       ],
     ),
