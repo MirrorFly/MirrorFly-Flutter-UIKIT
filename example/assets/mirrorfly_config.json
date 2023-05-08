@@ -3,11 +3,11 @@
         "projectId": "mirrorfly-uikit",
         "serverAddress": "https://api-uikit-qa.contus.us/api/v1/",
         "licenseKey": "ckIjaccWBoMNvxdbql8LJ2dmKqT5bp",
-        "iOSContainerId": "group.com.mirrorfly.qa",
+        "iOSContainerId": "group.com.mirrorfly.flutter",
         "storageFolderName": "",
         "isTrialLicenceKey" : true,
         "enableMobileNumberLogin": false
-      },
+    },
     "AppTheme": {
         "theme": "custom",
         "customTheme": {

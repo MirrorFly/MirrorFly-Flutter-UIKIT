@@ -112,7 +112,7 @@ class _DashboardState extends State<Dashboard> {
                 color: Colors.white,
               ),),);
   }
-  
+
   showSnack(String text){
     final scaffold = ScaffoldMessenger.of(context);
     scaffold.showSnackBar(
@@ -129,7 +129,7 @@ class _DashboardState extends State<Dashboard> {
         debugPrint("logout user $value");
         showSnack(value['message']);
       }).catchError((er) {
-      
+
       });
   }
 }
