@@ -1017,6 +1017,7 @@ class ContactMessageView extends StatelessWidget {
         .of(context)
         .size
         .width;
+    debugPrint("Is Starred --> ${chatMessage.isMessageStarred.value}");
     return Container(
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -1072,7 +1073,7 @@ class ContactMessageView extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                 chatMessage.isMessageStarred.value
-                          ? SvgPicture.asset(starSmallIcon)
+                          ? SvgPicture.asset(starSmallIcon, package: package,)
                           : const SizedBox.shrink(),
                       const SizedBox(
                         width: 5,

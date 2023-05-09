@@ -1362,12 +1362,19 @@ class ChatController extends FullLifeCycleController
                     Mirrorfly.deleteMessagesForEveryone(profile.jid!, chatType,
                             deleteChatListID, isMediaDelete.value)
                         .then((value) {
-                      debugPrint(value.toString());
+                      debugPrint("delete for everyone ==>${value.toString()}");
                       //Helper.hideLoading();
                       if (value != null && value) {
                         // removeChatList(selectedChatList);//
                         for (var chatList in selectedChatList) {
                           chatList.isMessageRecalled(true);
+                          chatList.isSelected(false);
+                          // this.chatList.refresh();
+                        }
+                      }
+                      if(!value) {
+                        toToast("Unable to delete the selected Messages");
+                        for (var chatList in selectedChatList) {
                           chatList.isSelected(false);
                           // this.chatList.refresh();
                         }
