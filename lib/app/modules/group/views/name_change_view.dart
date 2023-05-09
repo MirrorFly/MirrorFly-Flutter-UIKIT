@@ -7,9 +7,15 @@ import 'package:mirrorfly_uikit_plugin/app/modules/group/controllers/group_info_
 
 import '../../../common/constants.dart';
 
-class NameChangeView extends GetView<GroupInfoController> {
+class NameChangeView extends StatefulWidget {
   const NameChangeView({Key? key}) : super(key: key);
 
+  @override
+  State<NameChangeView> createState() => _NameChangeViewState();
+}
+
+class _NameChangeViewState extends State<NameChangeView> {
+  final controller = Get.find<GroupInfoController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +28,8 @@ class NameChangeView extends GetView<GroupInfoController> {
           if (controller.showEmoji.value) {
             controller.showEmoji(false);
           } else {
-            Get.back();
+            // Get.back();
+            Navigator.pop(context);
           }
           return Future.value(false);
         },
@@ -86,7 +93,7 @@ class NameChangeView extends GetView<GroupInfoController> {
                 child: Row(children: [
                   Expanded(
                     child: TextButton(
-                      onPressed: () => Get.back(),
+                      onPressed: () => Navigator.pop(context),
                       child: const Text(
                         "CANCEL",
                         style: TextStyle(color: Colors.black, fontSize: 16.0),
@@ -101,7 +108,9 @@ class NameChangeView extends GetView<GroupInfoController> {
                     child: TextButton(
                       onPressed: () {
                         if(controller.nameController.text.trim().isNotEmpty) {
-                          Get.back(result: controller.nameController.text
+                          // Get.back(result: controller.nameController.text
+                          //     .trim().toString());
+                          Navigator.pop(context, controller.nameController.text
                               .trim().toString());
                         }else{
                           toToast("Name cannot be empty");

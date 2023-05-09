@@ -511,7 +511,12 @@ class GroupInfoController extends GetxController {
   //New Name Change
   gotoNameEdit(BuildContext context){
     if(isMemberOfGroup) {
-      Get.to(const NameChangeView())?.then((value) {
+      // Get.to(const NameChangeView())?.then((value) {
+      //   if (value != null) {
+      //     updateGroupName(nameController.text, context);
+      //   }
+      // });
+      Navigator.push(context, MaterialPageRoute(builder: (con) => NameChangeView())).then((value) {
         if (value != null) {
           updateGroupName(nameController.text, context);
         }
