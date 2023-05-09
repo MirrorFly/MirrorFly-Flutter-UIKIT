@@ -70,7 +70,7 @@ class _NameChangeViewState extends State<NameChangeView> {
                                 child: Obx(
                                   ()=> Text(
                             controller.count.toString(),
-                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.normal),
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal,color: MirrorflyUikit.getTheme?.textSecondaryColor,),
                           ),
                                 ),
                               )),
