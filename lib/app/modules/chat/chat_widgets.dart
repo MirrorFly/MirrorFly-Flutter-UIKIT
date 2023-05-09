@@ -1268,7 +1268,7 @@ class DocumentMessageView extends StatelessWidget {
           borderRadius: const BorderRadius.all(Radius.circular(10)),
           color: Colors.transparent,
         ),
-        width: screenWidth * 0.80,
+        width: screenWidth * 0.70,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

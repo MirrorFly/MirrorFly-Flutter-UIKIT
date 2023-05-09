@@ -763,7 +763,11 @@ class ChatController extends FullLifeCycleController
             result.files.single.path!, Constants.mDocument)) {
           debugPrint(result.files.first.extension);
           filePath.value = (result.files.single.path!);
-          if(context.mounted)sendDocumentMessage(filePath.value, "", context);
+          // if(context.mounted){
+            sendDocumentMessage(filePath.value, "", context);
+          // }else{
+          //   debugPrint("context is not mounted");
+          // }
         } else {
           toToast("File Size should not exceed 20 MB");
         }
