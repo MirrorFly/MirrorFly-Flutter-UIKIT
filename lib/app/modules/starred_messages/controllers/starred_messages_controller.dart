@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -55,7 +56,13 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
         if(value.toString().isNotEmpty) {
           List<ChatMessageModel> chatMessageModel = chatMessageModelFromJson(
               value);
-          starredChatList(chatMessageModel.toList());
+          if(Platform.isAndroid){
+            starredChatList(chatMessageModel.toList());
+          }else{
+            var list = chatMessageModel.toList().reversed.toList();
+            starredChatList(list);
+          }
+
         }
         isListLoading(false);
       });
