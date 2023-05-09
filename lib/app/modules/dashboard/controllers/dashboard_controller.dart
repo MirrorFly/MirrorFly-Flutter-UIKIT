@@ -830,7 +830,7 @@ class DashboardController extends FullLifeCycleController
                 Navigator.pop(context);
                 // Get.back();
               },
-              child: const Text("No")),
+              child: Text("No",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
           TextButton(
               onPressed: () async {
                 Navigator.pop(context);
@@ -841,7 +841,7 @@ class DashboardController extends FullLifeCycleController
                   updateUnReadChatCount();
                 });
               },
-              child: const Text("Yes")),
+              child: Text("Yes",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
         ], context: context);
   }
 
@@ -854,7 +854,7 @@ class DashboardController extends FullLifeCycleController
                 Navigator.pop(context);
                 // Get.back();
               },
-              child: const Text("No")),
+              child: Text("No",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
           TextButton(
               onPressed: () async {
                 Navigator.pop(context);
@@ -869,7 +869,7 @@ class DashboardController extends FullLifeCycleController
                   clearAllChatSelection();
                 });
               },
-              child: const Text("Yes")),
+              child: Text("Yes",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
         ], context: context);
   }
 

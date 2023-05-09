@@ -33,6 +33,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
 import '../../../data/apputils.dart';
+import '../../../data/chat_data_model.dart';
 import '../../../data/helper.dart';
 
 import 'package:mirrorfly_plugin/flychat.dart';
@@ -103,12 +104,12 @@ class ChatController extends FullLifeCycleController
 
   // late StreamSubscription<bool> keyboardSubscription;
 
-  final _isMemberOfGroup = false.obs;
+  final RxBool _isMemberOfGroup = false.obs;
 
   set isMemberOfGroup(value) => _isMemberOfGroup.value = value;
 
   bool get isMemberOfGroup =>
-      profile.isGroupProfile ?? false ? _isMemberOfGroup.value : true;
+      profile.isGroupProfile ?? false ?  _isMemberOfGroup.value : true;
 
   var profileDetail = Profile();
 
@@ -159,8 +160,8 @@ class ChatController extends FullLifeCycleController
         // var str = profileDataFromJson(value).data;
         SessionManagement.setChatJid("");
         profile_(value);
-        checkAdminBlocked();
         ready();
+        checkAdminBlocked();
         // initListeners();
       }).catchError((o) {
         debugPrint('error $o');
@@ -187,8 +188,8 @@ class ChatController extends FullLifeCycleController
           p.status = value.status;
           profile_(p);
           SessionManagement.setChatJid("");
-          checkAdminBlocked();
           ready();
+          checkAdminBlocked();
         }
       }
       );
@@ -1791,6 +1792,12 @@ class ChatController extends FullLifeCycleController
       if (await askStoragePermission()) {
         Mirrorfly.exportChatConversationToEmail(profile.jid.checkNull()).then((value) {
           mirrorFlyLog('export ',value);
+          var result = chatDataModelFromJson(value.toString());
+          var files = <XFile>[];
+          result.mediaAttachmentsUri?.forEach((element)=>element.file!=null ? files.add(XFile(element.file!)) : null);
+          if(files.isNotEmpty){
+            Share.shareXFiles(files);
+          }
         });
       }else{
         debugPrint('permission not given');
