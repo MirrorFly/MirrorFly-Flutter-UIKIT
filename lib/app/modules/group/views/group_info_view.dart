@@ -372,8 +372,10 @@ class _GroupInfoViewState extends State<GroupInfoView> {
             child: SizedBox(
               child: Card(
                 color: MirrorflyUikit.getTheme?.scaffoldColor,
-                shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
+                shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                        color: MirrorflyUikit.getTheme!.textSecondaryColor),
+                    borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(30),
                         topRight: Radius.circular(30))),
                 child: Padding(
