@@ -40,12 +40,15 @@ class GroupInfoController extends GetxController {
   set isSliverAppBarExpanded(value) => _isSliverAppBarExpanded.value = value;
   bool get isSliverAppBarExpanded => _isSliverAppBarExpanded.value;
   final muteable = false.obs;
-  // @override
-  // void onInit(){
-  //   super.onInit();
-  //   // profile_((Get.arguments as Profile));
-  //
-  // }
+  @override
+  void onInit(){
+    super.onInit();
+    focusNode.addListener(() {
+      if (focusNode.hasFocus) {
+        showEmoji(false);
+      }
+    });
+  }
   init(String jid){
     getProfileDetails(jid,server: false).then((value) {
       profile_(value);
@@ -549,5 +552,17 @@ class GroupInfoController extends GetxController {
 
   void userBlockedMe(String jid) {
     userUpdatedHisProfile(jid);
+  }
+
+  void showHideEmoji(BuildContext context) {
+    if (!showEmoji.value) {
+      focusNode.unfocus();
+    }else{
+      focusNode.requestFocus();
+      return;
+    }
+    Future.delayed(const Duration(milliseconds: 100), () {
+      showEmoji(!showEmoji.value);
+    });
   }
 }

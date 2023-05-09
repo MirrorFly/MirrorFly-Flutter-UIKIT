@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_libphonenumber/flutter_libphonenumber.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/settings/views/settings_view.dart';
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../models.dart';
@@ -150,17 +151,18 @@ class DashboardController extends FullLifeCycleController
     });
   }
 
-  toChatPage(String jid) async {
+  toChatPage(BuildContext context,String jid) async {
     if (jid.isNotEmpty) {
+      Navigator.push(context, MaterialPageRoute(builder: (con)=>ChatView(jid: jid)));
       // Helper.progressLoading();
-      await Mirrorfly.getProfileDetails(jid, false).then((value) {
+      /*await Mirrorfly.getProfileDetails(jid, false).then((value) {
         if (value != null) {
           Helper.hideLoading();
           // debugPrint("Dashboard Profile===>$value");
           var profile = profiledata(value.toString());
           Get.toNamed(Routes.chat, arguments: profile);
         }
-      });
+      });*/
       // SessionManagement.setChatJid(jid);
       // Get.toNamed(Routes.chat);
     }
@@ -195,8 +197,8 @@ class DashboardController extends FullLifeCycleController
     return (equalsWithYesterday(calendar, Constants.today))
         ? hourTime
         : (equalsWithYesterday(calendar, Constants.yesterday))
-            ? Constants.yesterdayUpper
-            : time;
+        ? Constants.yesterdayUpper
+        : time;
   }
 
   String manipulateMessageTime(BuildContext context, DateTime messageDate) {
@@ -210,11 +212,11 @@ class DashboardController extends FullLifeCycleController
   String setDateHourFormat(int format, int hours) {
     var dateHourFormat = (format == 12)
         ? (hours < 10)
-            ? "hh:mm aa"
-            : "h:mm aa"
+        ? "hh:mm aa"
+        : "h:mm aa"
         : (hours < 10)
-            ? "HH:mm"
-            : "H:mm";
+        ? "HH:mm"
+        : "H:mm";
     return dateHourFormat;
   }
 
@@ -274,7 +276,7 @@ class DashboardController extends FullLifeCycleController
             recentChats.insert(0, recent);
           } else {
             var lastPinnedChat =
-                recentChats.lastIndexWhere((element) => element.isChatPinned!);
+            recentChats.lastIndexWhere((element) => element.isChatPinned!);
             var nxtIndex = lastPinnedChat.isNegative ? 0 : (lastPinnedChat + 1);
             if (recentChats[index].isChatPinned!) {
               recentChats.removeAt(index);
@@ -310,7 +312,7 @@ class DashboardController extends FullLifeCycleController
           archivedChats.insert(0, recent);
         } else {
           var lastPinnedChat =
-              archivedChats.lastIndexWhere((element) => element.isChatPinned!);
+          archivedChats.lastIndexWhere((element) => element.isChatPinned!);
           var nxtIndex = lastPinnedChat.isNegative ? 0 : (lastPinnedChat + 1);
           if (archivedChats[index].isChatPinned!) {
             archivedChats.removeAt(index);
@@ -340,7 +342,7 @@ class DashboardController extends FullLifeCycleController
     Mirrorfly.isArchivedSettingsEnabled().then((value) {
       if (value.checkNull()) {
         var archiveIndex =
-            archivedChats.indexWhere((element) => recent.jid == element.jid);
+        archivedChats.indexWhere((element) => recent.jid == element.jid);
         if (!archiveIndex.isNegative) {
           archivedChats.removeAt(archiveIndex);
           archivedChats.insert(0, recent);
@@ -351,7 +353,7 @@ class DashboardController extends FullLifeCycleController
         }
       } else {
         var archiveIndex =
-            archivedChats.indexWhere((element) => recent.jid == element.jid);
+        archivedChats.indexWhere((element) => recent.jid == element.jid);
         if (!archiveIndex.isNegative) {
           archivedChats.removeAt(archiveIndex);
           /*var lastPinnedChat = recentChats.lastIndexWhere((element) =>
@@ -397,8 +399,8 @@ class DashboardController extends FullLifeCycleController
 
   gotoCreateGroup(BuildContext context) {
     Future.delayed(const Duration(milliseconds: 100),
-        () =>
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const GroupCreationView())));
+            () =>
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const GroupCreationView())));
   }
 
   gotoSettings(BuildContext context) {
@@ -411,7 +413,7 @@ class DashboardController extends FullLifeCycleController
 
   chatInfo(BuildContext context) async {
     var chatIndex = recentChats.indexWhere((element) =>
-        selectedChats.first == element.jid); //selectedChatsPosition[index];
+    selectedChats.first == element.jid); //selectedChatsPosition[index];
     var item = recentChats[chatIndex];
     Helper.progressLoading(context: context);
     clearAllChatSelection();
@@ -421,14 +423,14 @@ class DashboardController extends FullLifeCycleController
         var profile = profiledata(value.toString());
         if (item.isGroup!) {
           Future.delayed(const Duration(milliseconds: 100),
-              () => Navigator.push(
+                  () => Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (con) =>
                           GroupInfoView(jid: profile.jid.checkNull()))));//Get.toNamed(Routes.groupInfo, arguments: profile));
         } else {
           Future.delayed(const Duration(milliseconds: 100),
-              () =>  Navigator.push(
+                  () =>  Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (con) => ChatInfoView(jid: profile.jid.checkNull()))));//Get.toNamed(Routes.chatInfo, arguments: profile));
@@ -600,7 +602,7 @@ class DashboardController extends FullLifeCycleController
         selected(false);
         for (var index = 0; index < selectedChats.length; index++) {
           var selectedChat = recentChats.indexWhere((p0) =>
-              p0.jid == selectedChats[index] && p0.isChatPinned.checkNull());
+          p0.jid == selectedChats[index] && p0.isChatPinned.checkNull());
           if (selectedChat.isNegative) {
             mirrorFlyLog(
                 "pinChat", "$selectedChat selected chat is have to pinned");
@@ -733,7 +735,7 @@ class DashboardController extends FullLifeCycleController
   _itemPin(int index) {
     Mirrorfly.updateRecentChatPinStatus(selectedChats[index], true);
     var chatIndex = recentChats.indexWhere((element) =>
-        selectedChats[index] == element.jid); //selectedChatsPosition[index];
+    selectedChats[index] == element.jid); //selectedChatsPosition[index];
     //recentChats[chatIndex].isChatPinned=(true);
     var change = recentChats[chatIndex];
     change.isChatPinned = true;
@@ -744,10 +746,10 @@ class DashboardController extends FullLifeCycleController
   _itemUnPin(int index) {
     Mirrorfly.updateRecentChatPinStatus(selectedChats[index], false);
     var chatIndex = recentChats.indexWhere((element) =>
-        selectedChats[index] == element.jid); //selectedChatsPosition[index];
+    selectedChats[index] == element.jid); //selectedChatsPosition[index];
     //recentChats[chatIndex].isChatPinned=(false);
     var lastPinnedChat =
-        recentChats.lastIndexWhere((element) => element.isChatPinned!);
+    recentChats.lastIndexWhere((element) => element.isChatPinned!);
     mirrorFlyLog("lastPinnedChat", lastPinnedChat.toString());
     var nxtIndex = lastPinnedChat.isNegative ? chatIndex : (lastPinnedChat);
     var change = recentChats[chatIndex];
@@ -759,13 +761,13 @@ class DashboardController extends FullLifeCycleController
   _itemMute(int index) {
     Mirrorfly.updateChatMuteStatus(selectedChats[index], true);
     var chatIndex = recentChats.indexWhere((element) =>
-        selectedChats[index] == element.jid); //selectedChatsPosition[index];
+    selectedChats[index] == element.jid); //selectedChatsPosition[index];
     recentChats[chatIndex].isMuted = (true);
   }
 
   _itemUnMute(int index) {
     var chatIndex = recentChats.indexWhere((element) =>
-        selectedChats[index] == element.jid); //selectedChatsPosition[index];
+    selectedChats[index] == element.jid); //selectedChatsPosition[index];
     recentChats[chatIndex].isMuted = (false);
     Mirrorfly.updateChatMuteStatus(selectedChats[index], false);
   }
@@ -808,7 +810,7 @@ class DashboardController extends FullLifeCycleController
   _itemArchive(int index) {
     Mirrorfly.updateArchiveUnArchiveChat(selectedChats[index], true);
     var chatIndex = recentChats.indexWhere((element) =>
-        selectedChats[index] == element.jid); //selectedChatsPosition[index];
+    selectedChats[index] == element.jid); //selectedChatsPosition[index];
     recentChats[chatIndex].isChatArchived = (true);
     //getArchivedChatsList();
     if (archivedChats.isEmpty) {
@@ -821,7 +823,7 @@ class DashboardController extends FullLifeCycleController
 
   _itemDelete(int index, BuildContext context) {
     var chatIndex = recentChats.indexWhere((element) =>
-        selectedChats[index] == element.jid); //selectedChatsPosition[index];
+    selectedChats[index] == element.jid); //selectedChatsPosition[index];
     Helper.showAlert(
         message: "Delete chat with \"${recentChats[chatIndex].profileName}\"?",
         actions: [
@@ -890,7 +892,7 @@ class DashboardController extends FullLifeCycleController
 
   void onMessageStatusUpdated(ChatMessageModel chatMessageModel) {
     final index = recentChats.indexWhere(
-        (message) => message.lastMessageId == chatMessageModel.messageId);
+            (message) => message.lastMessageId == chatMessageModel.messageId);
     debugPrint("Message Status Update index of search $index");
     if (!index.isNegative) {
       // updateRecentChat(chatMessageModel.chatUserJid);
@@ -916,7 +918,7 @@ class DashboardController extends FullLifeCycleController
 
   String typingUser(String jid) {
     var index =
-        typingAndGoneStatus.indexWhere((it) => it.singleOrgroupJid == jid);
+    typingAndGoneStatus.indexWhere((it) => it.singleOrgroupJid == jid);
     if (index.isNegative) {
       return "";
     } else {
@@ -929,7 +931,7 @@ class DashboardController extends FullLifeCycleController
   void setTypingStatus(
       String singleOrgroupJid, String userId, String typingStatus) {
     var index = typingAndGoneStatus.indexWhere(
-        (it) => it.singleOrgroupJid == singleOrgroupJid && it.userId == userId);
+            (it) => it.singleOrgroupJid == singleOrgroupJid && it.userId == userId);
     if (typingStatus.toLowerCase() == Constants.composing) {
       if (index.isNegative) {
         typingAndGoneStatus.insert(0, Triple(singleOrgroupJid, userId, true));
@@ -956,7 +958,7 @@ class DashboardController extends FullLifeCycleController
   Future<void> updateRecentChatAdapter(String jid) async {
     if (jid.isNotEmpty) {
       var index = recentChats.indexWhere((element) =>
-          element.jid == jid); // { it.jid ?: Constants.EMPTY_STRING == jid }
+      element.jid == jid); // { it.jid ?: Constants.EMPTY_STRING == jid }
       debugPrint("updateRecentChatAdapter $index");
       var recent = await getRecentChatOfJid(jid);
       debugPrint("updateRecentChatAdapter getRecentChatOfJid ${recent?.toJson().toString()}");
@@ -1049,8 +1051,8 @@ class DashboardController extends FullLifeCycleController
             } else {
               _userList(list.data!
                   .where((element) =>
-                      (element.nickName.checkNull().toLowerCase().contains(search.text.trim().toString().toLowerCase())) &&
-                      !filteredRecentChatList.indexWhere((recentChatItem) => recentChatItem.jid != element.jid.checkNull()).isNegative).toList());
+              (element.nickName.checkNull().toLowerCase().contains(search.text.trim().toString().toLowerCase())) &&
+                  !filteredRecentChatList.indexWhere((recentChatItem) => recentChatItem.jid != element.jid.checkNull()).isNegative).toList());
               // scrollable(false);
             }
           } else {
@@ -1075,12 +1077,12 @@ class DashboardController extends FullLifeCycleController
       var recentChatList = <RecentChatData>[];
       var js = json.decode(value);
       var recentChatListWithArchived =
-          List<RecentChatData>.from(js.map((x) => RecentChatData.fromJson(x)));
+      List<RecentChatData>.from(js.map((x) => RecentChatData.fromJson(x)));
       for (var recentChat in recentChatListWithArchived) {
         if (recentChat.profileName != null &&
             recentChat.profileName!
-                    .toLowerCase()
-                    .contains(search.text.trim().toString().toLowerCase()) ==
+                .toLowerCase()
+                .contains(search.text.trim().toString().toLowerCase()) ==
                 true) {
           recentChatList.add(recentChat);
         }
@@ -1101,11 +1103,11 @@ class DashboardController extends FullLifeCycleController
       // var i = 0.obs;
       for (var message in result) {
         var searchMessageItem = RecentSearch(
-                jid: message.chatUserJid,
-                mid: message.messageId,
-                searchType: Constants.typeSearchMessage,
-                chatType: message.messageChatType.toString(),
-                isSearch: true)
+            jid: message.chatUserJid,
+            mid: message.messageId,
+            searchType: Constants.typeSearchMessage,
+            chatType: message.messageChatType.toString(),
+            isSearch: true)
             .obs;
         mRecentSearchList.insert(0, searchMessageItem);
         // i++;
@@ -1120,7 +1122,7 @@ class DashboardController extends FullLifeCycleController
   Future<Map<Profile?, ChatMessageModel?>?> getProfileAndMessage(
       String jid, String mid) async {
     var value =
-        await getProfileDetails(jid); //Mirrorfly.getProfileLocal(jid, false);
+    await getProfileDetails(jid); //Mirrorfly.getProfileLocal(jid, false);
     var value2 = await Mirrorfly.getMessageOfId(mid);
     if (value != null && value2 != null) {
       var data = value; //profileDataFromJson(value);
@@ -1183,7 +1185,7 @@ class DashboardController extends FullLifeCycleController
   Future<void> updateRecentChatAdapterSearch(String jid) async {
     if (jid.isNotEmpty) {
       var filterIndex = filteredRecentChatList.indexWhere((element) =>
-          element.jid == jid); // { it.jid ?: Constants.EMPTY_STRING == jid }
+      element.jid == jid); // { it.jid ?: Constants.EMPTY_STRING == jid }
       /*var frmIndex = frmRecentChatList.indexWhere((element) =>
       element.jid ==
           jid);*/ // { it.jid ?: Constants.EMPTY_STRING == jid }
@@ -1249,7 +1251,7 @@ class DashboardController extends FullLifeCycleController
             if (selected.value) {
               selectOrRemoveChatfromList(index);
             } else {
-              toChatPage(chatItem.jid.checkNull());
+              toChatPage(context,chatItem.jid.checkNull());
             }
           },
           callTap: () {},
@@ -1322,10 +1324,10 @@ class DashboardController extends FullLifeCycleController
       String mobileNumber, String countryCode) async {
     FlutterLibphonenumber().init();
     var formatNumberSync =
-        FlutterLibphonenumber().formatNumberSync(mobileNumber);
+    FlutterLibphonenumber().formatNumberSync(mobileNumber);
     var parse = await FlutterLibphonenumber().parse(formatNumberSync);
     var format =
-        await FlutterLibphonenumber().format(mobileNumber, countryCode);
+    await FlutterLibphonenumber().format(mobileNumber, countryCode);
     /*bool? isValid =
       await PhoneNumberUtil.isValidPhoneNumber(phoneNumber: mobileNumber, isoCode: countryCode);
   String? normalizedNumber = await PhoneNumberUtil.normalizePhoneNumber(
