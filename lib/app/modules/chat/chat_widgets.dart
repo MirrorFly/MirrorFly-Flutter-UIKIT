@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/image_view/views/image_view_view.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import '../../../mirrorfly_uikit_plugin.dart';
 import '../../models.dart';
 import 'package:get/get.dart';
@@ -422,13 +424,18 @@ Widget getLocationImage(LocationChatMessage? locationChatMessage, double width,
           throw 'Could not open the map.';
         }
       },
-      child: Image.network(
+    child: CachedNetworkImage(imageUrl: Helper.getMapImageUri(
+        locationChatMessage!.latitude, locationChatMessage.longitude),errorWidget: (c,l,er){
+      return  Center(child: Text(MirrorflyUikit.googleMapKey.isEmpty ? "Google map key is required show location" : "Invalid Google map key"),);
+
+    },width: width,height: height,fit: BoxFit.fill,)
+      /*child: Image.network(
         Helper.getMapImageUri(
             locationChatMessage!.latitude, locationChatMessage.longitude),
         fit: BoxFit.fill,
         width: width,
         height: height,
-      ));
+      )*/);
 }
 
 class SenderHeader extends StatelessWidget {
@@ -1221,7 +1228,8 @@ class ContactMessageView extends StatelessWidget {
   }
 
   void sendSMS(String contactPhoneNumber) async {
-    Uri sms = Uri.parse('sms:$contactPhoneNumber?body=${Constants.smsContent}');
+    var info = await PackageInfo.fromPlatform();
+    Uri sms = Uri.parse('sms:$contactPhoneNumber?body=${Constants.smsContent.replaceAll('MirrorFly', info.appName)}');
     if (await launchUrl(sms)) {
       //app opened
     } else {

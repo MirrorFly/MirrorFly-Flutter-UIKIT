@@ -136,6 +136,7 @@ class ProjectInfo {
   String projectId;
   String serverAddress;
   String licenseKey;
+  String googleMapKey;
   String iOSContainerId;
   String storageFolderName;
   bool isTrialLicenceKey;
@@ -145,6 +146,7 @@ class ProjectInfo {
     required this.projectId,
     required this.serverAddress,
     required this.licenseKey,
+    required this.googleMapKey,
     required this.iOSContainerId,
     required this.storageFolderName,
     required this.isTrialLicenceKey,
@@ -155,6 +157,7 @@ class ProjectInfo {
     projectId: json["projectId"],
     serverAddress: json["serverAddress"],
     licenseKey: json["licenseKey"],
+    googleMapKey: json["googleMapKey"],
     iOSContainerId: json["iOSContainerId"],
     storageFolderName: json["storageFolderName"],
     isTrialLicenceKey: json["isTrialLicenceKey"],
@@ -165,6 +168,7 @@ class ProjectInfo {
     "projectId": projectId,
     "serverAddress": serverAddress,
     "licenseKey": licenseKey,
+    "googleMapKey": googleMapKey,
     "iOSContainerId": iOSContainerId,
     "storageFolderName": storageFolderName,
     "isTrialLicenceKey": isTrialLicenceKey,

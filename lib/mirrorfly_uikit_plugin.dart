@@ -19,6 +19,7 @@ import 'mirrorfly_uikit_plugin_platform_interface.dart';
 class MirrorflyUikit {
   static MirrorFlyAppTheme? getTheme = MirrorFlyTheme.mirrorFlyLightTheme;
   static bool isTrialLicence = true;
+  static String googleMapKey = '';
   static bool isSDKInitialized = false;
   static String theme = "light";
 
@@ -46,6 +47,7 @@ class MirrorflyUikit {
           isTrialLicenceKey: config.projectInfo.isTrialLicenceKey,
           enableDebugLog: false);
 
+      googleMapKey = config.projectInfo.googleMapKey;
       theme = config.appTheme.theme;
       getTheme = config.appTheme.theme == "light"
           ? MirrorFlyTheme.mirrorFlyLightTheme

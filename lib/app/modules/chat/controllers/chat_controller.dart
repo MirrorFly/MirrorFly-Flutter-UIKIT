@@ -28,7 +28,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:record/record.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
@@ -1440,27 +1439,6 @@ class ChatController extends FullLifeCycleController
     isSelected(false);
     selectedChatList.clear();
     // chatList.refresh();
-  }
-
-  Widget getLocationImage(
-      LocationChatMessage? locationChatMessage, double width, double height) {
-    return InkWell(
-        onTap: () async {
-          String googleUrl =
-              'https://www.google.com/maps/search/?api=1&query=${locationChatMessage.latitude}, ${locationChatMessage.longitude}';
-          if (await canLaunchUrl(Uri.parse(googleUrl))) {
-            await launchUrl(Uri.parse(googleUrl));
-          } else {
-            throw 'Could not open the map.';
-          }
-        },
-        child: Image.network(
-          Helper.getMapImageUri(
-              locationChatMessage!.latitude, locationChatMessage.longitude),
-          fit: BoxFit.fill,
-          width: width,
-          height: height,
-        ));
   }
 
   blockUser(BuildContext context) {
