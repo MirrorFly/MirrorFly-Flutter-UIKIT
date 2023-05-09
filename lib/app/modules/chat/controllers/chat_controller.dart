@@ -483,7 +483,7 @@ class ChatController extends FullLifeCycleController
                 // Get.back();
                 Navigator.pop(context);
               },
-              child: const Text("No")),
+              child: Text("No",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
           TextButton(
               onPressed: () async {
                 // Get.back();
@@ -493,7 +493,7 @@ class ChatController extends FullLifeCycleController
                   function();
                 }
               },
-              child: const Text("Yes")),
+              child: Text("Yes",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
         ],
         context: context);
   }
@@ -1218,13 +1218,13 @@ class ChatController extends FullLifeCycleController
                     toToast(Constants.noInternetConnection);
                   }
                 },
-                child: const Text("REPORT")),
+                child: Text("REPORT",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
             TextButton(
                 onPressed: () {
                   // Get.back();
                   Navigator.pop(context);
                 },
-                child: const Text("CANCEL")),
+                child: Text("CANCEL",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
           ],
           context: context);
     });
@@ -1284,7 +1284,7 @@ class ChatController extends FullLifeCycleController
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-                "Are you sure you want to delete selected Message${selectedChatList.length > 1 ? "s" : ""}"),
+                "Are you sure you want to delete selected Message${selectedChatList.length > 1 ? "s" : ""}",style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor),),
             isCheckBoxShown
                 ? Column(
                     mainAxisSize: MainAxisSize.min,
@@ -1313,8 +1313,8 @@ class ChatController extends FullLifeCycleController
                                     }),
                               );
                             }),
-                            const Expanded(
-                              child: Text("Delete media from my phone"),
+                            Expanded(
+                              child: Text("Delete media from my phone",style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor),),
                             ),
                           ],
                         ),
@@ -1331,7 +1331,7 @@ class ChatController extends FullLifeCycleController
                 // Get.back();
                 Navigator.pop(context);
               },
-              child: const Text("CANCEL")),
+              child: Text("CANCEL",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
           TextButton(
               onPressed: () {
                 // Get.back();
@@ -1352,7 +1352,7 @@ class ChatController extends FullLifeCycleController
                 isSelected(false);
                 selectedChatList.clear();
               },
-              child: const Text("DELETE FOR ME")),
+              child: Text("DELETE FOR ME",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
           isRecallAvailable
               ? TextButton(
                   onPressed: () {
@@ -1383,7 +1383,7 @@ class ChatController extends FullLifeCycleController
                       selectedChatList.clear();
                     });
                   },
-                  child: const Text("DELETE FOR EVERYONE"))
+                  child: Text("DELETE FOR EVERYONE",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),))
               : const SizedBox.shrink(),
         ],
         context: context);
@@ -1473,7 +1473,7 @@ class ChatController extends FullLifeCycleController
                   // Get.back();
                   Navigator.pop(context);
                 },
-                child: const Text("CANCEL")),
+                child: Text("CANCEL",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
             TextButton(
                 onPressed: () async {
                   if (await AppUtils.isNetConnected()) {
@@ -1499,7 +1499,7 @@ class ChatController extends FullLifeCycleController
                     toToast(Constants.noInternetConnection);
                   }
                 },
-                child: const Text("BLOCK")),
+                child: Text("BLOCK",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
           ],
           context: context);
     });
@@ -1521,14 +1521,14 @@ class ChatController extends FullLifeCycleController
                       Navigator.pop(context);
                       clearChatHistory(false);
                     },
-                    child: const Text("CLEAR ALL")),
+                    child: Text("CLEAR ALL",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
               ),
               TextButton(
                   onPressed: () {
                     // Get.back();
                     Navigator.pop(context);
                   },
-                  child: const Text("CANCEL")),
+                  child: Text("CANCEL",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
               Visibility(
                 visible: starred.isNegative,
                 child: TextButton(
@@ -1537,7 +1537,7 @@ class ChatController extends FullLifeCycleController
                       Navigator.pop(context);
                       clearChatHistory(false);
                     },
-                    child: const Text("CLEAR")),
+                    child: Text("CLEAR",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
               ),
               Visibility(
                 visible: !starred.isNegative,
@@ -1547,7 +1547,7 @@ class ChatController extends FullLifeCycleController
                       clearChatHistory(true);
                       Navigator.pop(context);
                     },
-                    child: const Text("CLEAR EXCEPT STARRED")),
+                    child: Text("CLEAR EXCEPT STARRED",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
               ),
             ],
             context: context);
@@ -1567,7 +1567,7 @@ class ChatController extends FullLifeCycleController
                   // Get.back();
                   Navigator.pop(context);
                 },
-                child: const Text("CANCEL")),
+                child: Text("CANCEL",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
             TextButton(
                 onPressed: () async {
                   if (await AppUtils.isNetConnected()) {

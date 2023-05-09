@@ -271,7 +271,7 @@ class ForwardChatController extends GetxController {
             // Get.back();
             Navigator.pop(context);
           },
-          child: const Text("NO")),
+          child: Text("NO",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
       TextButton(
           onPressed: () async {
             if(await AppUtils.isNetConnected()) {
@@ -293,7 +293,7 @@ class ForwardChatController extends GetxController {
             }
 
           },
-          child: const Text("YES")),
+          child: Text("YES",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
     ], context: context);
   }
 

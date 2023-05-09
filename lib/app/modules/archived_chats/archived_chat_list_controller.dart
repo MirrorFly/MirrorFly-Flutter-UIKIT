@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_view.dart';
+import '../../../mirrorfly_uikit_plugin.dart';
 import '../../models.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
@@ -350,19 +351,21 @@ class ArchivedChatListController extends GetxController {
         actions: [
           TextButton(
               onPressed: () {
-                Get.back();
+                // Get.back();
+                Navigator.pop(context);
               },
-              child: const Text("NO")),
+              child: Text("NO",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
           TextButton(
               onPressed: () {
-                Get.back();
+                // Get.back();
+                Navigator.pop(context);
                 if (selectedChats.length == 1) {
                   _itemDelete(0);
                 } else {
                   itemsDelete();
                 }
               },
-              child: const Text("YES")),
+              child: Text("YES",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
         ],
         message: '', context: context);
   }

@@ -11,11 +11,11 @@ import '../../../widgets/custom_action_bar_icons.dart';
 import '../../settings/views/settings_view.dart';
 
 class ContactListView extends StatefulWidget {
-   const ContactListView({Key? key,this.forward = false,this.messageIds,this.group= false,this.groupjid = ''}) : super(key: key);
+   const ContactListView({Key? key,this.forward = false,this.messageIds,this.group= false,this.groupJid = ''}) : super(key: key);
    final bool forward;
    final List<String>? messageIds;
    final bool group;
-   final String groupjid;
+   final String groupJid;
 
    @override
   State<ContactListView> createState() => _ContactListViewState();
@@ -25,7 +25,7 @@ class _ContactListViewState extends State<ContactListView> {
   ContactController controller = Get.put(ContactController());
   @override
   void initState() {
-    controller.init(context,forward: widget.forward,messageIds: widget.messageIds,group: widget.group,groupjid: widget.groupjid);
+    controller.init(context,forward: widget.forward,messageIds: widget.messageIds,group: widget.group,groupjid: widget.groupJid);
     super.initState();
   }
 

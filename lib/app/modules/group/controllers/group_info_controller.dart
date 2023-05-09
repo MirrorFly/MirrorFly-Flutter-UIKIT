@@ -7,7 +7,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/dashboard/views/dashboard_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/view_all_media/views/view_all_media_view.dart';
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../models.dart';
@@ -241,14 +240,14 @@ class GroupInfoController extends GetxController {
             // Get.back();
             Navigator.pop(context);
           },
-          child: const Text("CANCEL")),
+          child: Text("CANCEL",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
       TextButton(
           onPressed: () {
             // Get.back();
             Navigator.pop(context);
             exitFromGroup(context);
           },
-          child: const Text("LEAVE")),
+          child: Text("LEAVE",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
     ], context: context);
   }
   exitFromGroup(BuildContext context)async{
@@ -275,7 +274,7 @@ class GroupInfoController extends GetxController {
             // Get.back();
             Navigator.pop(context);
           },
-          child: const Text("CANCEL")),
+          child: Text("CANCEL",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
       TextButton(
           onPressed: () async {
             if(await AppUtils.isNetConnected()) {
@@ -287,7 +286,9 @@ class GroupInfoController extends GetxController {
                 if(value!=null){
                   if(value){
                     // Get.offAllNamed(Routes.dashboard);
-                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (con)=>DashboardView()), (route) => false);
+                    // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (con)=>DashboardView()), (route) => false);
+                    Navigator.pop(context);
+                    Navigator.pop(context);
                   }
                 }
               }).catchError((error) {
@@ -298,7 +299,7 @@ class GroupInfoController extends GetxController {
             }
 
           },
-          child: const Text("DELETE")),
+          child: Text("DELETE",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
     ], context: context);
   }
 
@@ -400,14 +401,14 @@ class GroupInfoController extends GetxController {
             // Get.back();
             Navigator.pop(context);
           },
-          child: const Text("CANCEL")),
+          child: Text("CANCEL",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
       TextButton(
           onPressed: () {
             // Get.back();
             Navigator.pop(context);
             revokeAccessForProfileImage(context);
           },
-          child: const Text("REMOVE")),
+          child: Text("REMOVE",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
     ], context: context);
   }
 
@@ -439,7 +440,7 @@ class GroupInfoController extends GetxController {
   }
 
   gotoAddParticipants(BuildContext context){
-    Navigator.push(context, MaterialPageRoute(builder: (con) => const ContactListView(forward : false, group : true, groupjid:""))).then((value){
+    Navigator.push(context, MaterialPageRoute(builder: (con) => ContactListView(forward : false, group : true, groupJid: profile.jid.checkNull().toString()))).then((value){
       if(value!=null){
         addUsers(value, context);
       }

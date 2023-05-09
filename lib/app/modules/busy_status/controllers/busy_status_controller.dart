@@ -148,8 +148,8 @@ class BusyStatusController extends FullLifeCycleController with FullLifeCycleMix
           onPressed: () async {
             if (await AppUtils.isNetConnected()) {
               // Get.back();
-              Navigator.pop(context);
-              Helper.showLoading(message: "Deleting Busy Status", buildContext: context);
+              if(context.mounted)Navigator.pop(context);
+              if(context.mounted)Helper.showLoading(message: "Deleting Busy Status", buildContext: context);
               Mirrorfly.deleteBusyStatus(
                   item.id!, item.status!, item.isCurrentStatus!)
                   .then((value) {

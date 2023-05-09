@@ -266,7 +266,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
                 // Get.back();
                 Navigator.pop(context);
               },
-              child: const Text("No")),
+              child: Text("No",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
           TextButton(
               onPressed: () async {
                 // Get.back();
@@ -276,7 +276,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
                   function();
                 }
               },
-              child: const Text("Yes")),
+              child: Text("Yes",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
         ], context: context);
   }
 
@@ -370,7 +370,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-                "Are you sure you want to delete selected Message${selectedChatList.length > 1 ? "s" : ""}?", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),),
+                "Are you sure you want to delete selected Message${selectedChatList.length > 1 ? "s" : ""}?", style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor),),
             isCheckBoxShown
                 ? Column(
                     mainAxisSize: MainAxisSize.min,
@@ -400,7 +400,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
                               );
                             }),
                             Expanded(
-                              child: Text("Delete media from my phone", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                              child: Text("Delete media from my phone", style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)),
                             ),
                           ],
                         ),

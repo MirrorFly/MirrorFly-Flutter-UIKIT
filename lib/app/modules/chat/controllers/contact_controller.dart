@@ -403,14 +403,14 @@ class ContactController extends FullLifeCycleController
       if (groupJid.value.isEmpty) {
         if (selectedUsersJIDList.length >= Constants.minGroupMembers) {
           // Get.back(result: selectedUsersJIDList);
-          Navigator.pop(context, selectedUsersJIDList);
+          if(context.mounted) Navigator.pop(context, selectedUsersJIDList);
         } else {
           toToast("Add at least two contacts");
         }
       } else {
         if (selectedUsersJIDList.isNotEmpty) {
           // Get.back(result: selectedUsersJIDList);
-          Navigator.pop(context, selectedUsersJIDList);
+          if(context.mounted) Navigator.pop(context, selectedUsersJIDList);
         } else {
           toToast("Add at least two contacts");
         }
