@@ -2528,7 +2528,7 @@ class ChatController extends FullLifeCycleController
           return true;
         }
       } else {
-        if (chat.messageType == Constants.mLocation) {
+        if (chat.messageType == Constants.mLocation || chat.messageType == Constants.mContact) {
           return true;
         }
       }
