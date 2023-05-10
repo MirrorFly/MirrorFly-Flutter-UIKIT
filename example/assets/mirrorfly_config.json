@@ -1,0 +1,35 @@
+{
+    "projectInfo": {
+        "projectId": "mirrorfly-uikit",
+        "serverAddress": "https://api-uikit-qa.contus.us/api/v1/",
+        "licenseKey": "ckIjaccWBoMNvxdbql8LJ2dmKqT5bp",
+        "googleMapKey": "AIzaSyBaKkrQnLT4nacpKblIE5d4QK6GpaX5luQ",
+        "iOSContainerId": "group.com.mirrorfly.flutter",
+        "storageFolderName": "",
+        "isTrialLicenceKey" : true,
+        "enableMobileNumberLogin": false
+    },
+    "AppTheme": {
+        "theme": "custom",
+        "customTheme": {
+            "primaryColor": "0xff33e078",
+            "secondaryColor": "0xffE0E0E0",
+            "appBarColor": "0xff8BE98C",
+            "colorOnAppbar": "0xff000000",
+            "scaffoldColor": "0xFFFFFFFF",
+            "colorOnPrimary": "0xFFFFFFFF",
+            "textPrimaryColor": "0xff063970",
+            "textSecondaryColor": "0xff424242",
+            "chatBubblePrimaryColor": {
+                "color": "0xffE8F5E9",
+                "textPrimaryColor": "0xff000000",
+                "textSecondaryColor": "0xff43A047"
+            },
+            "chatBubbleSecondaryColor": {
+                "color": "0xff8BE98C",
+                "textPrimaryColor": "0xff000000",
+                "textSecondaryColor": "0xFFFFFFFF"
+            }
+        }
+    }
+}
