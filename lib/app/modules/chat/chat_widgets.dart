@@ -2151,11 +2151,16 @@ void downloadMedia(BuildContext context,String messageId) async {
   debugPrint("media download click");
   debugPrint("media download click--> $messageId");
   if (await AppUtils.isNetConnected()) {
-    if (await askStoragePermission(context)) {
-      debugPrint("media permission granted");
-      Mirrorfly.downloadMedia(messageId);
-    } else {
-      debugPrint("storage permission not granted");
+    if(context.mounted) {
+      askStoragePermission(context).then((value) {
+        if (value) {
+          // if (await askStoragePermission(context)) {
+          debugPrint("media permission granted");
+          Mirrorfly.downloadMedia(messageId);
+        } else {
+          debugPrint("storage permission not granted");
+        }
+      });
     }
   } else {
     toToast(Constants.noInternetConnection);

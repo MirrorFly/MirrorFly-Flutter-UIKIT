@@ -373,8 +373,8 @@ class ContactController extends FullLifeCycleController
           onPressed: () async {
             if (await AppUtils.isNetConnected()) {
               // Get.back();
-              Navigator.pop(context);
-              Helper.progressLoading(context: context);
+              if(context.mounted)Navigator.pop(context);
+              if(context.mounted)Helper.progressLoading(context: context);
               Mirrorfly.unblockUser(item.jid.checkNull()).then((value) {
                 Helper.hideLoading(context: context);
                 if (value != null && value) {

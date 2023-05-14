@@ -63,7 +63,7 @@ class _SettingsViewState extends State<SettingsView> {
                   blockedIcon,
                   rightArrowIcon,
                   () => Navigator.push(context,
-                      MaterialPageRoute(builder: (con) => BlockedListView()))),
+                      MaterialPageRoute(builder: (con) => const BlockedListView()))),
             ],
           ),
         ),

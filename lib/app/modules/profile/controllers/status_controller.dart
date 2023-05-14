@@ -60,7 +60,7 @@ class StatusListController extends FullLifeCycleController with FullLifeCycleMix
   updateStatus(BuildContext context, [String? statusText, String? statusId]) async {
     debugPrint("updating item details--> $statusId");
     if(await AppUtils.isNetConnected()) {
-      Helper.showLoading(buildContext: context);
+      if(context.mounted)Helper.showLoading(buildContext: context);
       Mirrorfly.setMyProfileStatus(statusText!, statusId!).then((value){
         selectedStatus.value= statusText;
         addStatusController.text= statusText;
@@ -80,7 +80,7 @@ class StatusListController extends FullLifeCycleController with FullLifeCycleMix
 
   insertStatus(BuildContext context) async{
     if(await AppUtils.isNetConnected()){
-      Helper.showLoading(buildContext: context);
+      if(context.mounted)Helper.showLoading(buildContext: context);
         Mirrorfly.insertNewProfileStatus(addStatusController.text.trim().toString())
             .then((value) {
           selectedStatus.value = addStatusController.text.trim().toString();
@@ -179,7 +179,7 @@ class StatusListController extends FullLifeCycleController with FullLifeCycleMix
             if (await AppUtils.isNetConnected()) {
               // Get.back();
               if(context.mounted) Navigator.pop(context);
-              Helper.showLoading(message: "Deleting Status", buildContext: context);
+              if(context.mounted)Helper.showLoading(message: "Deleting Status", buildContext: context);
               Mirrorfly.deleteProfileStatus(item.id!, item.status!, item.isCurrentStatus!)
                   .then((value) {
                 statusList.remove(item);

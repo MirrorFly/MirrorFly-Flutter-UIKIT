@@ -251,9 +251,9 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
   checkBusyStatusForForward(BuildContext context) async {
     var busyStatus = await Mirrorfly.isBusyStatusEnabled();
     if (!busyStatus.checkNull()) {
-      forwardMessage(context);
+      if(context.mounted)forwardMessage(context);
     } else {
-      showBusyStatusAlert(forwardMessage, context);
+      if(context.mounted)showBusyStatusAlert(forwardMessage, context);
     }
   }
 

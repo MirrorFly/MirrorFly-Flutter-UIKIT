@@ -20,7 +20,7 @@ class ForwardChatController extends GetxController {
 
   set recentChats(List<RecentChatData> value) => _recentChats.value = value;
 
-  List<RecentChatData> get recentChats => _recentChats.value.take(3).toList();
+  List<RecentChatData> get recentChats => _recentChats.take(3).toList();
 
   final _groupList = List<Profile>.empty(growable: true).obs;//<Profile>[].obs;
 
@@ -35,7 +35,7 @@ class ForwardChatController extends GetxController {
 
   set userList(List<Profile> value) => _userList.value = value;
 
-  List<Profile> get userList => _userList.value;
+  List<Profile> get userList => _userList;
 
   final _search = false.obs;
 
@@ -170,7 +170,7 @@ class ForwardChatController extends GetxController {
             if (_mainuserList.isEmpty) {
               _mainuserList.addAll(list.data!);
             }
-            _userList.value.addAll(list.data!);
+            _userList.addAll(list.data!);
             _userList.refresh();
           }
         }
@@ -360,11 +360,11 @@ class ForwardChatController extends GetxController {
             // debugPrint("to chat profile ==> ${selectedUsersList[0].toJson().toString()}");
             getProfileDetails(selectedJids.last, server: false)
                 .then((value) {
-              if (value != null) {
+              // if (value != null) {
                 // var str = profiledata(value.toString());
                 // Get.back(result: str);
                 Navigator.pop(context, value);
-              }
+              // }
             });
           });
         }

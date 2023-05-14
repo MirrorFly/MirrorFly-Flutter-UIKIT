@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/dashboard/views/dashboard_view.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/profile/views/profile_view.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/settings/views/settings_view.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 
 void main() {
@@ -87,9 +89,20 @@ class _DashboardState extends State<Dashboard> {
               ),
               Center(
                 child: buildTextButton(onPressed: () async {
-                  Navigator.push(context, MaterialPageRoute(builder: (con)=> DashboardView(title: "Chats",)));
+                  Navigator.push(context, MaterialPageRoute(builder: (con)=> const DashboardView(title: "Chats",)));
                 },text:'chat page',),
               ),
+              Center(
+                child: buildTextButton(onPressed: () async {
+                  Navigator.push(context, MaterialPageRoute(builder: (con)=> const ProfileView()));
+                },text:'Profile page',),
+              ),
+              Center(
+                child: buildTextButton(onPressed: () async {
+                  Navigator.push(context, MaterialPageRoute(builder: (con)=> const SettingsView()));
+                },text:'Settings page',),
+              ),
+              const Expanded(child: DashboardView(title: "Chats",))
             ],
           ),
         ),

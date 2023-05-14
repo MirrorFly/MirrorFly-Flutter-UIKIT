@@ -167,7 +167,7 @@ class ChatController extends FullLifeCycleController
       });
     }else{
       getUserProfile(userJid, server: await AppUtils.isNetConnected()).then((value){
-        if(value!=null){
+        // if(value!=null){
           var p = Profile();
           p.email = value.email;
           p.image = value.image;
@@ -189,7 +189,7 @@ class ChatController extends FullLifeCycleController
           SessionManagement.setChatJid("");
           ready();
           checkAdminBlocked();
-        }
+        // }
       }
       );
     }
@@ -726,7 +726,7 @@ class ChatController extends FullLifeCycleController
           result.files.first.extension == 'png') {
         debugPrint("Picked Image File");
         imagePath.value = (result.files.single.path!);
-        Navigator.push(context, MaterialPageRoute(builder: (con)=>ImagePreviewView()));
+        if(context.mounted)Navigator.push(context, MaterialPageRoute(builder: (con)=>const ImagePreviewView()));
         /*Get.toNamed(Routes.imagePreview, arguments: {
           "filePath": imagePath.value,
           "userName": getName(profile),
@@ -763,7 +763,7 @@ class ChatController extends FullLifeCycleController
           debugPrint(result.files.first.extension);
           filePath.value = (result.files.single.path!);
           // if(context.mounted){
-            sendDocumentMessage(filePath.value, "", context);
+            if(context.mounted)sendDocumentMessage(filePath.value, "", context);
           // }else{
           //   debugPrint("context is not mounted");
           // }
@@ -792,10 +792,12 @@ class ChatController extends FullLifeCycleController
         replyMessageID = replyChatMessage.messageId;
       }
       isReplying(false);
-      Platform.isIOS
-          ? Helper.showLoading(
-              message: "Compressing Video", buildContext: context)
-          : null;
+      if(context.mounted) {
+        Platform.isIOS
+            ? Helper.showLoading(
+            message: "Compressing Video", buildContext: context)
+            : null;
+      }
       return Mirrorfly.sendVideoMessage(
               profile.jid!, videoPath, caption, replyMessageID)
           .then((value) {
@@ -1080,7 +1082,7 @@ class ChatController extends FullLifeCycleController
         // var chatListrev = chatList.reversed;
 
         isStarredExcluded
-            ? chatList.removeWhere((p0) => p0.isMessageStarred == false)
+            ? chatList.removeWhere((p0) => p0.isMessageStarred.value == false)
             : chatList.clear();
         cancelReplyMessage();
         chatList.refresh();
@@ -2125,13 +2127,13 @@ class ChatController extends FullLifeCycleController
   void onGroupProfileUpdated(groupJid) {
     if (profile.jid.checkNull() == groupJid.toString()) {
       getProfileDetails(profile.jid.checkNull()).then((value) {
-        if (value != null) {
+        // if (value != null) {
           // var member = profileDataFromJson(value).data ?? ProfileData();
           // var member = Profile.fromJson(json.decode(value.toString()));
           profile_.value = value;
           profile_.refresh();
           checkAdminBlocked();
-        }
+        // }
       });
     }
   }
@@ -2347,17 +2349,41 @@ class ChatController extends FullLifeCycleController
 
   onAudioClick(BuildContext context) async {
     // Get.back();
-    // if (await askMicrophonePermission()) {
-    if (await AppPermission.checkPermission(
+    AppPermission.checkPermission(context, Permission.storage, filePermission, Constants.filePermission).then((value){
+      if(value) {
+        pickAudio(context);
+      }
+    });
+    /*if (await AppPermission.checkPermission(
         context,Permission.storage, filePermission, Constants.filePermission)) {
       if (context.mounted) pickAudio(context);
-    }
+    }*/
   }
 
   onGalleryClick() async {
     // if (await askStoragePermission()) {
+    AppPermission.checkPermission(context, Permission.storage, filePermission, Constants.filePermission).then((value) {
+      if(value){
+        try {
+          // imagePicker();
+          // Get.toNamed(Routes.galleryPicker, arguments: {
+          //   "userName": getName(profile),
+          //   'profile': profile,
+          //   'caption': messageController.text
+          // });
+          if(context.mounted) {
+            Navigator.push(context, MaterialPageRoute(builder: (con) =>
+                GalleryPickerView(
+                    senderJid: profile.jid.checkNull(),
+                    caption: messageController.text)));
+          }
 
-    if (await AppPermission.checkPermission(context, Permission.storage, filePermission, Constants.filePermission)) {
+        } catch (e) {
+          debugPrint(e.toString());
+        }
+      }
+    });
+    /*if (await AppPermission.checkPermission(context, Permission.storage, filePermission, Constants.filePermission)) {
       try {
         // imagePicker();
         // Get.toNamed(Routes.galleryPicker, arguments: {
@@ -2375,12 +2401,21 @@ class ChatController extends FullLifeCycleController
       } catch (e) {
         debugPrint(e.toString());
       }
-    }
+    }*/
   }
 
   onContactClick() async {
-    // if (await askContactsPermission()) {
-    if (await AppPermission.checkPermission(
+    AppPermission.checkPermission(
+        context,Permission.contacts, contactPermission, Constants.contactPermission).then((value){
+          if(value){
+            if(context.mounted) {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (con) => const LocalContactView()));
+            }
+          }
+    });
+    /*if (await AppPermission.checkPermission(
         context,Permission.contacts, contactPermission, Constants.contactPermission)) {
       // Get.toNamed(Routes.localContact);
       if(context.mounted) {
@@ -2390,7 +2425,7 @@ class ChatController extends FullLifeCycleController
       }
     } else {
       // AppPermission.permissionDeniedDialog(content: "Permission is permanently denied. Please enable Contact permission from settings");
-    }
+    }*/
   }
 
   // Future<bool> askLocationPermission() async {
@@ -2421,7 +2456,26 @@ class ChatController extends FullLifeCycleController
 
   onLocationClick(BuildContext context) async {
     if (await AppUtils.isNetConnected()) {
-      if (await AppPermission.checkPermission(context,Permission.location,
+      if(context.mounted) {
+        AppPermission.checkPermission(context, Permission.location,
+            locationPinPermission, Constants.locationPermission).then((value) {
+          if (value) {
+            if (context.mounted) {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (con) => const LocationSentView()))
+                  .then((value) {
+                if (value != null) {
+                  value as LatLng;
+                  sendLocationMessage(
+                      profile, value.latitude, value.longitude, context);
+                }
+              });
+            }
+          }
+        });
+      }
+      /*if (await AppPermission.checkPermission(context,Permission.location,
           locationPinPermission, Constants.locationPermission)) {
         if(context.mounted) {
           Navigator.push(
@@ -2434,16 +2488,16 @@ class ChatController extends FullLifeCycleController
             }
           });
         }
-        /*Get.toNamed(Routes.locationSent)?.then((value) {
-          if (value != null) {
-            value as LatLng;
-            sendLocationMessage(
-                profile, value.latitude, value.longitude, context);
-          }
-        });*/
+        // Get.toNamed(Routes.locationSent)?.then((value) {
+        //   if (value != null) {
+        //     value as LatLng;
+        //     sendLocationMessage(
+        //         profile, value.latitude, value.longitude, context);
+        //   }
+        // });
       } else {
         // AppPermission.permissionDeniedDialog(content: "Permission is permanently denied. Please enable location permission from settings");
-      }
+      }*/
     } else {
       toToast(Constants.noInternetConnection);
     }

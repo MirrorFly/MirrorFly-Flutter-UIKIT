@@ -592,6 +592,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.6.5"
+  google_fonts:
+    dependency: "direct main"
+    description:
+      name: google_fonts
+      sha256: "6b6f10f0ce3c42f6552d1c70d2c28d764cf22bb487f50f66cca31dcd5194f4d6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.4"
   google_maps_flutter:
     dependency: transitive
     description:
@@ -803,10 +811,11 @@ packages:
   mirrorfly_plugin:
     dependency: transitive
     description:
-      path: "../../p078-mirrorfly-flutter-plugin"
-      relative: true
-    source: path
-    version: "0.0.4"
+      name: mirrorfly_plugin
+      sha256: "1bb096786a4aee8389046a78f53a66607503d7daaf759f1b08bcdd22e4bedd6d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.5"
   mirrorfly_uikit_plugin:
     dependency: "direct main"
     description:
@@ -1154,10 +1163,10 @@ packages:
     dependency: transitive
     description:
       name: shared_preferences
-      sha256: "858aaa72d8f61637d64e776aca82e1c67e6d9ee07979123c5d17115031c1b13b"
+      sha256: "16d3fb6b3692ad244a695c0183fca18cf81fd4b821664394a781de42386bf022"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "2.1.1"
   shared_preferences_android:
     dependency: transitive
     description:

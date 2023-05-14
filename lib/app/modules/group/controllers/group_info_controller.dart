@@ -71,12 +71,12 @@ class GroupInfoController extends GetxController {
       if (profile.jid.checkNull() == groupJid.toString()) {
         mirrorFlyLog("group info", groupJid.toString());
         getProfileDetails(profile.jid.checkNull(), server: false).then((value) {
-          if (value != null) {
+          // if (value != null) {
             // var member = Profile.fromJson(json.decode(value.toString()));
             profile_(value);
             _mute(profile.isMuted!);
             nameController.text=profile.nickName.checkNull();
-          }
+          // }
         });
       }
     }
@@ -457,7 +457,7 @@ class GroupInfoController extends GetxController {
 
   addUsers(dynamic value, BuildContext context)async{
     if(await AppUtils.isNetConnected()) {
-      showLoader(context);
+      if(context.mounted)showLoader(context);
       Mirrorfly.addUsersToGroup(profile.jid.checkNull(),value as List<String>).then((value){
         hideLoader(context);
         if(value!=null && value){
@@ -479,7 +479,7 @@ class GroupInfoController extends GetxController {
   removeUser(String userJid, BuildContext context) async {
     if(isMemberOfGroup){
       if(await AppUtils.isNetConnected()) {
-        showLoader(context);
+        if(context.mounted)showLoader(context);
         Mirrorfly.removeMemberFromGroup(profile.jid.checkNull(), userJid).then((value){
           hideLoader(context);
           if(value!=null && value){
@@ -497,7 +497,7 @@ class GroupInfoController extends GetxController {
   makeAdmin(String userJid, BuildContext context) async {
     if(isMemberOfGroup){
       if(await AppUtils.isNetConnected()) {
-        showLoader(context);
+        if(context.mounted)showLoader(context);
         Mirrorfly.makeAdmin(profile.jid.checkNull(), userJid).then((value){
           hideLoader(context);
           if(value!=null && value){
@@ -520,7 +520,7 @@ class GroupInfoController extends GetxController {
       //     updateGroupName(nameController.text, context);
       //   }
       // });
-      Navigator.push(context, MaterialPageRoute(builder: (con) => NameChangeView())).then((value) {
+      Navigator.push(context, MaterialPageRoute(builder: (con) => const NameChangeView())).then((value) {
         if (value != null) {
           updateGroupName(nameController.text, context);
         }

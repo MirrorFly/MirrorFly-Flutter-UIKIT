@@ -988,7 +988,7 @@ class DashboardController extends FullLifeCycleController
 
   set userList(List<Profile> value) => _userList.value = value;
 
-  List<Profile> get userList => _userList.value;
+  List<Profile> get userList => _userList;
 
   onChange(String inputValue) {
     if (search.text.trim().isNotEmpty) {
@@ -1045,7 +1045,7 @@ class DashboardController extends FullLifeCycleController
               scrollable(list.data!.length == 20);
 
               list.data!.removeWhere((element){
-                debugPrint("filter chat list--> ${!filteredRecentChatList.value.indexWhere((recentChatItem) => recentChatItem.jid == element.jid.checkNull()).isNegative}");
+                debugPrint("filter chat list--> ${!filteredRecentChatList.indexWhere((recentChatItem) => recentChatItem.jid == element.jid.checkNull()).isNegative}");
                 return !filteredRecentChatList.indexWhere((recentChatItem) => recentChatItem.jid == element.jid.checkNull()).isNegative; });
               _userList(list.data);
             } else {
@@ -1124,7 +1124,7 @@ class DashboardController extends FullLifeCycleController
     var value =
     await getProfileDetails(jid); //Mirrorfly.getProfileLocal(jid, false);
     var value2 = await Mirrorfly.getMessageOfId(mid);
-    if (value != null && value2 != null) {
+    if (value2 != null) {
       var data = value; //profileDataFromJson(value);
       var data2 = sendMessageModelFromJson(value2);
       var map = <Profile?, ChatMessageModel?>{}; //{0,searchMessageItem};
@@ -1166,7 +1166,7 @@ class DashboardController extends FullLifeCycleController
               _mainuserList.addAll(list.data!);
             }
             scrollable(list.data!.length == 20);
-            _userList.value.addAll(list.data!);
+            _userList.addAll(list.data!);
             _userList.refresh();
           } else {
             scrollable(false);

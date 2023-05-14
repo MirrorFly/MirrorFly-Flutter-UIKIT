@@ -78,7 +78,7 @@ class _StatusListViewState extends State<StatusListView> {
                     // });
                     final result = await Navigator.push(context, MaterialPageRoute(builder: (con)=> AddStatusView(status: controller.selectedStatus.value)));
                     if (result != null) {
-                      controller.insertStatus(context);
+                      if(context.mounted)controller.insertStatus(context);
                     }
                   },
                 ),
