@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/dashboard/views/dashboard_view.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/profile/views/profile_view.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/settings/views/settings_view.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 
 void main() {
@@ -74,7 +71,7 @@ class _DashboardState extends State<Dashboard> {
                     buildTextButton(onPressed: () async {
                       if(uniqueId.isNotEmpty) {
                         try {
-                          var response = await MirrorflyUikit.register(uniqueId);
+                          var response = await MirrorflyUikit.registerUser(uniqueId);
                           debugPrint("register user $response");
                           showSnack(response['message']);
                         } catch (e) {

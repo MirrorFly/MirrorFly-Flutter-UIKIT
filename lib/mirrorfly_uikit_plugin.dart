@@ -53,23 +53,23 @@ class MirrorflyUikit {
           ? MirrorFlyTheme.mirrorFlyLightTheme
           : config.appTheme.theme == "dark"
               ? MirrorFlyTheme.mirrorFlyDarkTheme
-              : MirrorFlyTheme.customTheme(
-                  primaryColor: config.appTheme.customTheme.primaryColor,
-                  secondaryColor: config.appTheme.customTheme.secondaryColor,
-                  scaffoldColor: config.appTheme.customTheme.scaffoldColor,
-                  colorOnPrimary: config.appTheme.customTheme.colorOnPrimary,
-                  textPrimaryColor: config.appTheme.customTheme.textPrimaryColor,
-                  textSecondaryColor: config.appTheme.customTheme.textSecondaryColor,
-                  chatBubblePrimaryColor: config.appTheme.customTheme.chatBubblePrimaryColor,
-                  chatBubbleSecondaryColor: config.appTheme.customTheme.chatBubbleSecondaryColor,
-                  appBarColor: config.appTheme.customTheme.appBarColor,
-                  colorOnAppbar: config.appTheme.customTheme.colorOnAppbar);
+              : config.appTheme.customTheme !=null ?MirrorFlyTheme.customTheme(
+                  primaryColor: config.appTheme.customTheme!.primaryColor,
+                  secondaryColor: config.appTheme.customTheme!.secondaryColor,
+                  scaffoldColor: config.appTheme.customTheme!.scaffoldColor,
+                  colorOnPrimary: config.appTheme.customTheme!.colorOnPrimary,
+                  textPrimaryColor: config.appTheme.customTheme!.textPrimaryColor,
+                  textSecondaryColor: config.appTheme.customTheme!.textSecondaryColor,
+                  chatBubblePrimaryColor: config.appTheme.customTheme!.chatBubblePrimaryColor,
+                  chatBubbleSecondaryColor: config.appTheme.customTheme!.chatBubbleSecondaryColor,
+                  appBarColor: config.appTheme.customTheme!.appBarColor,
+                  colorOnAppbar: config.appTheme.customTheme!.colorOnAppbar) : MirrorFlyTheme.mirrorFlyLightTheme;
       isTrialLicence = config.projectInfo.isTrialLicenceKey;
       ReplyHashMap.init();
       isSDKInitialized = true;
     } catch (e) {
       isSDKInitialized = false;
-      throw ("Mirrorfly config file not found in assets");
+      throw ("Mirrorfly config file not found in assets $e");
     }
 
     //commenting bcz used as a local variable
@@ -84,7 +84,8 @@ class MirrorflyUikit {
   ///
   ///* [userIdentifier] provide the Unique Id to Register the User
   ///* [token] provide the FCM token this is an optional
-  static Future<Map> register(String userIdentifier, {String token = ""}) async {
+  ///sample response {'status': true, 'message': 'Register Success};
+  static Future<Map> registerUser(String userIdentifier, {String token = ""}) async {
     if(!isSDKInitialized){
       return setResponse(false,'SDK Not Initialized');
     }
@@ -111,6 +112,10 @@ class MirrorflyUikit {
     }
   }
 
+  ///Used as a register class for [MirrorflyUikit]
+  ///Use this Method to logout from our UIkit
+  ///this will clear all the chat data.
+  ///sample response {'status': true, 'message': 'Logout successfully};
   static Future<Map<String,dynamic>> logoutFromUIKIT() async {
     try {
       var value  = await Mirrorfly.logoutOfChatSDK();//.then((value) {
