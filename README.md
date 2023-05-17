@@ -84,10 +84,10 @@ create `mirrorfly_config.json` json file with configuration details then add the
         "serverAddress": "YOUR_BASE_URL",
         "licenseKey": "Your_Mirrorfly_Licence_Key",
         "googleMapKey": "Your_Google_Map_Key_for_location_messages",
-        "iOSContainerId": "Your_iOS_app_Container_id",
+        "iOSContainerId": "Your_iOS_app_Container_id"
     },
     "AppTheme": {
-        "theme": "light",// Or dark
+        "theme": "light" // Or dark
     }
 }
 ```
