@@ -4,7 +4,6 @@ import 'package:focus_detector/focus_detector.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/archived_chats/archived_chat_list_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/dashboard/widgets.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 
