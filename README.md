@@ -7,7 +7,7 @@
 
 1. [Introduction](#Introduction)
 1. [Requirements](#requirements)
-1. [Authentication](#Authentication)
+1. [Integration](#Integration)
 1. [Getting help](#getting-help)
 
 ## Introduction
@@ -42,7 +42,7 @@ Installing the Mirrorfly UIKit Plugin is a simple process. Follow the steps ment
 
 ```yaml
 dependencies:
-  mirrorfly_uikit_plugin: ^0.0.1
+  mirrorfly_uikit_plugin: ^0.0.2
 ```
 
 - Run `flutter pub get` command in your project directory.
@@ -55,7 +55,7 @@ You can use all classes and methods just with the one import statement as shown 
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit';
 ```
 
-### Authentication
+### Integration
 
 In order to use the features of Mirrorfly UIKit Plugin for Flutter, you should initiate the `MirrorflyUikit` instance through user authentication with Mirrorfly server. This instance communicates and interacts with the server based on an authenticated user account, allowing the client app to use the Mirrorfly Plugin's features.
 
