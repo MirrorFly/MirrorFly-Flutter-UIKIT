@@ -1644,9 +1644,9 @@ class ImageMessageView extends StatelessWidget {
             image: FileImage(File(mediaLocalStoragePath)),
             loadingBuilder: (context, child, loadingProgress) {
               if (loadingProgress == null) {
-                return FutureBuilder(builder: (context, d) {
+                // return FutureBuilder(builder: (context, d) {
                   return child;
-                });
+                // });
               }
               return Center(child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,));
             },

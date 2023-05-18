@@ -329,7 +329,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
 
   copyTextMessages() {
     Clipboard.setData(
-        ClipboardData(text: selectedChatList[0].messageTextContent));
+        ClipboardData(text: selectedChatList[0].messageTextContent.toString()));
     clearChatSelection(selectedChatList[0]);
     toToast("1 Text Copied Successfully to the clipboard");
   }
