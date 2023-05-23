@@ -38,11 +38,57 @@ Follow the below steps to get your license key:
 
 Installing the Mirrorfly UIKit Plugin is a simple process. Follow the steps mentioned below.
 
-- Add following dependency in `pubspec.yaml`.
+
+### Android
+
+- Add the following to your root `build.gradle` file in your Android folder.
+
+```gradle
+   allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        jcenter()
+        maven {
+            url "https://repo.mirrorfly.com/snapshot/"
+        }
+    }
+  }
+```
+
+### iOS
+ - Check and Add the following code at end of your `ios/Podfile`
+
+```dart
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+    target.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.1'
+      config.build_settings['ENABLE_BITCODE'] = 'NO'
+      config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'No'
+      config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
+      config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"      
+     end
+  end
+end
+```
+ - Now, enable all the below mentioned capabilities into your project from `Xcode`.
+
+```dart
+Goto Project -> Target -> Signing & Capabilities -> Click `+ Capability` at the top left corner -> Search for `App groups` and add the `capability`
+```
+
+> **Note**: The App Group Must be same as `iOSContainerId` in json config file. [See Integration Step 2](#Integration).
+
+![My Image](AppGroups-c9933d95df192665e1389f19ece4fd94.png)
+
+### Flutter
+ - Add following dependency in `pubspec.yaml`.
 
 ```yaml
 dependencies:
-  mirrorfly_uikit_plugin: ^0.0.2
+  mirrorfly_uikit_plugin: ^0.0.3
 ```
 
 - Run `flutter pub get` command in your project directory.
@@ -118,6 +164,6 @@ Navigator.push(context, MaterialPageRoute(builder: (con)=> const DashboardView(t
 
 ## Getting Help
 
-Check out the Official Mirrorfly UIkit [Flutter docs](https://www.mirrorfly.com/docs/UIKit/flutter/quick-start/)
+Check out the Official Mirrorfly UIKit [Flutter UIKit docs](https://www.mirrorfly.com/docs/UIKit/flutter/quick-start/)
 
 <br />

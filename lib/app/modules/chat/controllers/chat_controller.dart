@@ -793,16 +793,18 @@ class ChatController extends FullLifeCycleController
       }
       isReplying(false);
       if(context.mounted) {
-        Platform.isIOS
-            ? Helper.showLoading(
-            message: "Compressing Video", buildContext: context)
-            : null;
+        if(Platform.isIOS) {
+          Helper.showLoading(
+              message: "Compressing Video", buildContext: context);
+        }
       }
       return Mirrorfly.sendVideoMessage(
               profile.jid!, videoPath, caption, replyMessageID)
           .then((value) {
         clearMessage();
-        Platform.isIOS ? Helper.hideLoading(context: context) : null;
+        if(Platform.isIOS) {
+          Helper.hideLoading(context: context);
+        }
         ChatMessageModel chatMessageModel = sendMessageModelFromJson(value);
         chatList.insert(0, chatMessageModel);
         scrollToBottom();
