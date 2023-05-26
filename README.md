@@ -76,19 +76,19 @@ end
  - Now, enable all the below mentioned capabilities into your project from `Xcode`.
 
 ```dart
-Goto Project -> Target -> Signing & Capabilities -> Click `+ Capability` at the top left corner -> Search for `App groups` and add the `capability`
+Goto Project -> Target -> Signing & Capabilities -> Click `+ Capability` at the top left corner -> Search for `App groups` and add the `App group capability`
 ```
 
 > **Note**: The App Group Must be same as `iOSContainerId` in json config file. [See Integration Step 2](#Integration).
 
-![My Image](AppGroups-c9933d95df192665e1389f19ece4fd94.png)
+![ScreenShot](AppGroups-c9933d95df192665e1389f19ece4fd94.png)
 
 ### Flutter
  - Add following dependency in `pubspec.yaml`.
 
 ```yaml
 dependencies:
-  mirrorfly_uikit_plugin: ^0.0.3
+  mirrorfly_uikit_plugin: ^0.0.4
 ```
 
 - Run `flutter pub get` command in your project directory.
