@@ -114,7 +114,10 @@ To initialize the plugin, place the below code in your `main.dart` file inside `
 ```dart
  void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  MirrorflyUikit.initUIKIT();
+  MirrorflyUikit.instance.initUIKIT(  baseUrl: 'https://api-uikit-qa.contus.us/api/v1/',
+      licenseKey: 'Your_Mirrorfly_Licence_Key',
+      googleMapKey: 'Your_Google_Map_Key_for_location_messages',
+      iOSContainerID: 'group.com.mirrorfly.flutter');
   runApp(const MyApp());
 }
 ```

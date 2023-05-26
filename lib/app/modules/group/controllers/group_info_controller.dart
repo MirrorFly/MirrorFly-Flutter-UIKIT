@@ -443,7 +443,7 @@ class GroupInfoController extends GetxController {
   }
 
   gotoAddParticipants(BuildContext context){
-    Navigator.push(context, MaterialPageRoute(builder: (con) => ContactListView(forward : false, group : true, groupJid: profile.jid.checkNull().toString()))).then((value){
+    Navigator.push(context, MaterialPageRoute(builder: (con) => ContactListView(group : true, groupJid: profile.jid.checkNull().toString()))).then((value){
       if(value!=null){
         addUsers(value, context);
       }

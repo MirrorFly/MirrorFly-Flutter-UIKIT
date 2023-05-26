@@ -11,8 +11,8 @@ import '../../../widgets/custom_action_bar_icons.dart';
 import '../../settings/views/settings_view.dart';
 
 class ContactListView extends StatefulWidget {
-   const ContactListView({Key? key,this.forward = false,this.messageIds,this.group= false,this.groupJid = ''}) : super(key: key);
-   final bool forward;
+   const ContactListView({Key? key,this.setAsForwardPage = false,this.messageIds,this.group= false,this.groupJid = ''}) : super(key: key);
+   final bool setAsForwardPage;
    final List<String>? messageIds;
    final bool group;
    final String groupJid;
@@ -25,7 +25,7 @@ class _ContactListViewState extends State<ContactListView> {
   ContactController controller = Get.put(ContactController());
   @override
   void initState() {
-    controller.init(context,forward: widget.forward,messageIds: widget.messageIds,group: widget.group,groupjid: widget.groupJid);
+    controller.init(context,forward: widget.setAsForwardPage,messageIds: widget.messageIds,group: widget.group,groupjid: widget.groupJid);
     super.initState();
   }
 
@@ -143,7 +143,7 @@ class _ContactListViewState extends State<ContactListView> {
                         controller.refreshContacts(true);
                       },
                     ),
-                    showAsAction: (!MirrorflyUikit.isTrialLicence && !controller.progressSpinner.value) ? ShowAsAction.never : ShowAsAction.gone,
+                    showAsAction: (!MirrorflyUikit.instance.isTrialLicenceKey && !controller.progressSpinner.value) ? ShowAsAction.never : ShowAsAction.gone,
                     keyValue: 'Refresh',
                     onItemClick: () {
                       // Get.back();

@@ -426,7 +426,7 @@ Widget getLocationImage(LocationChatMessage? locationChatMessage, double width,
       },
     child: CachedNetworkImage(imageUrl: Helper.getMapImageUri(
         locationChatMessage!.latitude, locationChatMessage.longitude),errorWidget: (c,l,er){
-      return  Center(child: Text(MirrorflyUikit.googleMapKey.isEmpty ? "Google map key is required show location" : "Invalid Google map key"),);
+      return  Center(child: Text(MirrorflyUikit.instance.googleMapKey.isEmpty ? "Google map key is required show location" : "Invalid Google map key"),);
 
     },width: width,height: height,fit: BoxFit.fill,)
       /*child: Image.network(

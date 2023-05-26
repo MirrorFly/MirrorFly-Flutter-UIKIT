@@ -151,7 +151,7 @@ class ImageNetwork extends GetView<MainController> {
             );
           },*/
         placeholder: (context, string) {
-          if(!(blocked || (unknown && !MirrorflyUikit.isTrialLicence))){
+          if(!(blocked || (unknown && !MirrorflyUikit.instance.isTrialLicenceKey))){
             if(errorWidget !=null){
               return errorWidget!;
             }
@@ -183,7 +183,7 @@ class ImageNetwork extends GetView<MainController> {
           // debugPrint("image blocked--> $blocked");
           // debugPrint("image unknown--> $unknown");
 
-          if(!(blocked || (unknown && !MirrorflyUikit.isTrialLicence))){
+          if(!(blocked || (unknown && !MirrorflyUikit.instance.isTrialLicenceKey))){
             if(errorWidget !=null){
               return errorWidget!;
             }
@@ -207,7 +207,7 @@ class ImageNetwork extends GetView<MainController> {
         imageBuilder: (context, provider) {
           return clipOval
               ? ClipOval(
-                  child: !(blocked || (unknown && !MirrorflyUikit.isTrialLicence)) ? Image(
+                  child: !(blocked || (unknown && !MirrorflyUikit.instance.isTrialLicenceKey)) ? Image(
                   image: provider,
                   fit: BoxFit.fill,
                 ) : Image.asset(
@@ -218,7 +218,7 @@ class ImageNetwork extends GetView<MainController> {
                   ),)
               : InkWell(
                   onTap: onTap,
-                  child: !(blocked || (unknown && !MirrorflyUikit.isTrialLicence)) ? Image(
+                  child: !(blocked || (unknown && !MirrorflyUikit.instance.isTrialLicenceKey)) ? Image(
                     image: provider,
                     fit: BoxFit.fill,
                   ) : Image.asset(

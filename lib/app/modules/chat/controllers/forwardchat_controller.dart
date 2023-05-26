@@ -29,7 +29,7 @@ class ForwardChatController extends GetxController {
   List<Profile> get groupList => _groupList.take(6).toList();
 
   var userlistScrollController = ScrollController();
-  var scrollable = MirrorflyUikit.isTrialLicence.obs;
+  var scrollable = MirrorflyUikit.instance.isTrialLicenceKey.obs;
   var isPageLoading = false.obs;
   final _userList = <Profile>[].obs;
 
@@ -158,7 +158,7 @@ class ForwardChatController extends GetxController {
     if (await AppUtils.isNetConnected()) {
       if(!bottom)contactLoading(true);
       searching = true;
-      var future = (MirrorflyUikit.isTrialLicence)
+      var future = (MirrorflyUikit.instance.isTrialLicenceKey)
           ? Mirrorfly.getUserList(pageNum, searchQuery.text.trim().toString())
           : Mirrorfly.getRegisteredUsers(false);
       future
@@ -223,7 +223,7 @@ class ForwardChatController extends GetxController {
       _userList.clear();
       searching = true;
       searchLoading(true);
-      var future = (MirrorflyUikit.isTrialLicence)
+      var future = (MirrorflyUikit.instance.isTrialLicenceKey)
           ? Mirrorfly.getUserList(pageNum, searchQuery.text.trim().toString())
           : Mirrorfly.getRegisteredUsers(false);
       future
@@ -232,8 +232,8 @@ class ForwardChatController extends GetxController {
         if (value != null) {
           var list = userListFromJson(value);
           if (list.data != null) {
-            scrollable((list.data!.length == 20 && MirrorflyUikit.isTrialLicence));
-            if(MirrorflyUikit.isTrialLicence) {
+            scrollable((list.data!.length == 20 && MirrorflyUikit.instance.isTrialLicenceKey));
+            if(MirrorflyUikit.instance.isTrialLicenceKey) {
               _userList(list.data);
             }else{
               _userList(list.data!.where((element) => element.nickName.checkNull().toLowerCase().contains(searchQuery.text.trim().toString().toLowerCase())).toList());
@@ -343,7 +343,7 @@ class ForwardChatController extends GetxController {
     pageNum = 1;
     searchQuery.clear();
     _isSearchVisible(true);
-    scrollable((_mainuserList.length == 20 && MirrorflyUikit.isTrialLicence));
+    scrollable((_mainuserList.length == 20 && MirrorflyUikit.instance.isTrialLicenceKey));
     _recentChats(_mainrecentChats);
     _groupList(_maingroupList);
     _userList(_mainuserList);

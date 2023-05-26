@@ -50,7 +50,7 @@ class GroupCreationController extends GetxController {
       //     createGroup(value as List<String>, context);
       //   }
       // });
-      Navigator.push(context, MaterialPageRoute(builder: (con) => const ContactListView(forward : false, group : true, groupJid:""))).then((value){
+      Navigator.push(context, MaterialPageRoute(builder: (con) => const ContactListView(group : true, groupJid:""))).then((value){
         if(value!=null){
           createGroup(value as List<String>, context);
         }
