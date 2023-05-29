@@ -12,8 +12,8 @@ import '../../../common/constants.dart';
 import '../../../common/widgets.dart';
 
 class GroupCreationView extends StatefulWidget {
-  const GroupCreationView({Key? key}) : super(key: key);
-
+  const GroupCreationView({Key? key,this.enableAppBar=true}) : super(key: key);
+  final bool enableAppBar;
   @override
   State<GroupCreationView> createState() => _GroupCreationViewState();
 }
@@ -33,7 +33,7 @@ class _GroupCreationViewState extends State<GroupCreationView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-      appBar: AppBar(
+      appBar: widget.enableAppBar ? AppBar(
         backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
         automaticallyImplyLeading: true,
         actionsIconTheme: IconThemeData(
@@ -50,7 +50,7 @@ class _GroupCreationViewState extends State<GroupCreationView> {
               child: Text(
                 "NEXT", style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),)),
         ],
-      ),
+      ):null,
       body: WillPopScope(
         onWillPop: () {
           if (controller.showEmoji.value) {

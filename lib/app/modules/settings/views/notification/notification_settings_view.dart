@@ -9,15 +9,15 @@ import '../../../../common/widgets.dart';
 import 'notification_not_working_view.dart';
 
 class NotificationSettingsView extends GetView<NotificationAlertController> {
-  const NotificationSettingsView({Key? key}) : super(key: key);
-
+  const NotificationSettingsView({Key? key,this.enableAppBar=true}) : super(key: key);
+  final bool enableAppBar;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: enableAppBar ? AppBar(
         title: const Text('Notifications'),
         automaticallyImplyLeading: true,
-      ),
+      ) : null,
       body: Column(
         children: [
           notificationSettingsItem(

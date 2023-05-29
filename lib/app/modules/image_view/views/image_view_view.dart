@@ -11,11 +11,18 @@ import '../../../../mirrorfly_uikit_plugin.dart';
 import '../controllers/image_view_controller.dart';
 
 class ImageViewView extends StatefulWidget {
-  const ImageViewView({Key? key, required this.imageName, this.imagePath, this.imageUrl}) : super(key: key);
+  const ImageViewView(
+      {Key? key,
+      required this.imageName,
+      this.imagePath,
+      this.imageUrl,
+      this.enableAppBar = true})
+      : super(key: key);
 
   final String imageName;
   final String? imagePath;
   final String? imageUrl;
+  final bool enableAppBar;
 
   @override
   State<ImageViewView> createState() => _ImageViewViewState();
@@ -26,7 +33,10 @@ class _ImageViewViewState extends State<ImageViewView> {
 
   @override
   void initState() {
-    controller.init(imageName: widget.imageName, imagePath: widget.imagePath, imageUrl: widget.imageUrl);
+    controller.init(
+        imageName: widget.imageName,
+        imagePath: widget.imagePath,
+        imageUrl: widget.imageUrl);
     super.initState();
   }
 
@@ -35,12 +45,19 @@ class _ImageViewViewState extends State<ImageViewView> {
     var main = Get.find<MainController>();
     return Scaffold(
       backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
-        backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-        title: Text(controller.imageName.value,style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),overflow: TextOverflow.clip,),
-        centerTitle: false,
-      ),
+      appBar: widget.enableAppBar
+          ? AppBar(
+              iconTheme:
+                  IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+              backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
+              title: Text(
+                controller.imageName.value,
+                style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+                overflow: TextOverflow.clip,
+              ),
+              centerTitle: false,
+            )
+          : null,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -58,7 +75,9 @@ class _ImageViewViewState extends State<ImageViewView> {
                       color: MirrorflyUikit.getTheme?.scaffoldColor,
                     ),
                     loadingBuilder: (context, event) => Center(
-                      child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
+                      child: CircularProgressIndicator(
+                        color: MirrorflyUikit.getTheme?.primaryColor,
+                      ),
                     ),
                   )
                 : controller.imageUrl.value.isNotEmpty
@@ -76,7 +95,9 @@ class _ImageViewViewState extends State<ImageViewView> {
                           color: MirrorflyUikit.getTheme?.scaffoldColor,
                         ),
                         loadingBuilder: (context, event) => Center(
-                          child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
+                          child: CircularProgressIndicator(
+                            color: MirrorflyUikit.getTheme?.primaryColor,
+                          ),
                         ),
                       )
                     : const Center(

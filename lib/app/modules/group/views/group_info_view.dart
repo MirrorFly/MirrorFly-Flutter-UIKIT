@@ -17,8 +17,9 @@ import '../../image_view/views/image_view_view.dart';
 
 
 class GroupInfoView extends StatefulWidget {
-  const GroupInfoView({Key? key, required this.jid}) : super(key: key);
+  const GroupInfoView({Key? key, required this.jid,this.enableAppBar=true}) : super(key: key);
   final String jid;
+  final bool enableAppBar;
   @override
   State<GroupInfoView> createState() => _GroupInfoViewState();
 }
@@ -39,7 +40,7 @@ class _GroupInfoViewState extends State<GroupInfoView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-        body: NestedScrollView(
+        body: widget.enableAppBar ? NestedScrollView(
           controller: controller.scrollController,
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
@@ -290,6 +291,103 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                 }),
               ],
             ),
+          ),
+        ) : SafeArea(
+          child: ListView(
+            children: <Widget>[
+              Obx(() {
+                return ListItem(title: Text("Mute Notification",
+                    style: TextStyle(
+                        color: MirrorflyUikit
+                            .getTheme?.textPrimaryColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600)), trailing: FlutterSwitch(
+                  width: 40.0,
+                  height: 20.0,
+                  valueFontSize: 12.0,
+                  toggleSize: 12.0,
+                  activeColor: MirrorflyUikit.getTheme!.primaryColor,//Colors.white,
+                  activeToggleColor: MirrorflyUikit.getTheme?.colorOnPrimary, //Colors.blue,
+                  inactiveToggleColor: Colors.grey,
+                  inactiveColor: Colors.white,
+                  switchBorder: Border.all(
+                      color: controller.mute ? MirrorflyUikit.getTheme!.colorOnPrimary : Colors
+                          .grey,
+                      width: 1),
+                  value: controller.mute,
+                  onToggle:  (value){
+                    if(controller.isMemberOfGroup) {
+                      controller.onToggleChange(value);
+                    }
+                  },
+                ), onTap: (){
+                  if(controller.isMemberOfGroup) {
+                    controller.onToggleChange(!controller.mute);
+                  }
+                });
+              }),
+              Obx(() =>
+                  Visibility(
+                    visible: controller.isAdmin,
+                    child: ListItem(leading: SvgPicture.asset(addUser,package: package, color: MirrorflyUikit.getTheme?.textSecondaryColor,),
+                        title: Text("Add Participants",
+                            style: TextStyle(
+                                color: MirrorflyUikit.getTheme?.textPrimaryColor,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500)),
+                        onTap: () => controller.gotoAddParticipants(context)),
+                  )),
+              Obx(() {
+                return ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: controller.groupMembers.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      var item = controller.groupMembers[index];
+                      return memberItem(name: getName(item).checkNull(),image: item.image.checkNull(),isAdmin: item.isGroupAdmin,status: item.status.checkNull(),onTap: (){
+                        if (item.jid.checkNull() !=
+                            SessionManagement.getUserJID().checkNull()) {
+                          showOptions(item, context);
+                        }
+                      },
+                        isGroup: item.isGroupProfile.checkNull(),
+                        blocked: item.isBlockedMe.checkNull() || item.isAdminBlocked.checkNull(),
+                        unknown: (!item.isItSavedContact.checkNull() || item.isDeletedContact()),);
+                    });
+              }),
+              ListItem(
+                leading: SvgPicture.asset(imageOutline,package: package,color: MirrorflyUikit.getTheme?.textPrimaryColor,),
+                title: Text("View All Media",
+                    style: TextStyle(
+                        color: MirrorflyUikit.getTheme?.textPrimaryColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500)),
+                trailing: Icon(Icons.keyboard_arrow_right,color: MirrorflyUikit.getTheme?.textPrimaryColor,),
+                onTap: ()=>controller.gotoViewAllMedia(context),
+              ),
+              ListItem(
+                leading: SvgPicture.asset(reportGroup,package: package,color: Colors.red,),
+                title: const Text("Report Group",
+                    style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500)),
+                onTap: () => controller.reportGroup(context),
+              ),
+              Obx(() {
+                return ListItem(
+                  leading: SvgPicture.asset(leaveGroup,package: package, width: 18,),
+                  title: Text(!controller.isMemberOfGroup
+                      ? "Delete Group"
+                      : "Leave Group",
+                      style: const TextStyle(
+                          color: Colors.red,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500)),
+                  onTap: () => controller.exitOrDeleteGroup(context),
+                );
+              }),
+            ],
           ),
         ),
     );

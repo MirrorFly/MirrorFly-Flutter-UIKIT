@@ -9,8 +9,8 @@ import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
 
 class NameChangeView extends StatefulWidget {
-  const NameChangeView({Key? key}) : super(key: key);
-
+  const NameChangeView({Key? key,this.enableAppBar=true}) : super(key: key);
+  final bool enableAppBar;
   @override
   State<NameChangeView> createState() => _NameChangeViewState();
 }
@@ -21,12 +21,12 @@ class _NameChangeViewState extends State<NameChangeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-      appBar: AppBar(
+      appBar: widget.enableAppBar ? AppBar(
         automaticallyImplyLeading: true,
         title: Text('Enter New Name', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
         iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
         backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-      ),
+      ) : null,
       body: WillPopScope(
         onWillPop: () {
           if (controller.showEmoji.value) {
