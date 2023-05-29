@@ -1827,7 +1827,7 @@ class ChatController extends FullLifeCycleController
                       ForwardChatView(forwardMessageIds: messageIds)))
           .then((value) {
         if (value != null) {
-          (value as Profile);
+          // (value as Profile);
           debugPrint("result of forward ==> ${value.toJson().toString()}");
           profile_.value = value;
           isBlocked(profile.isBlocked);
@@ -2582,7 +2582,7 @@ class ChatController extends FullLifeCycleController
     messageIds.add(messageId);
     Navigator.push(context, MaterialPageRoute(builder: (con)=>ForwardChatView(forwardMessageIds: messageIds))).then((value){
       if (value != null) {
-        (value as Profile);
+        // (value as Profile);
         // getUserProfile(value.toString()).then((value) {
           debugPrint(
               "result of forward ==> ${value.toJson().toString()}");
