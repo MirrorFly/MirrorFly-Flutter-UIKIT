@@ -13,8 +13,8 @@ import '../../chat/chat_widgets.dart';
 import '../../dashboard/controllers/dashboard_controller.dart';
 
 class DashboardView extends StatefulWidget {
-  const DashboardView({Key? key, this.title,this.enableAppBar=true}) : super(key: key);
-  final String? title;
+  const DashboardView({Key? key, this.title="Chats",this.enableAppBar=true}) : super(key: key);
+  final String title;
   final bool enableAppBar;
 
   @override
@@ -98,12 +98,10 @@ class _DashboardViewState extends State<DashboardView> {
                                     .getTheme?.colorOnAppbar.withOpacity(0.5)),
                                 border: InputBorder.none),
                           )
-                        : widget.title != null
-                            ? Text(
-                                widget.title!,
+                        : Text(
+                                widget.title,
                                 style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar ?? Colors.black),
-                              )
-                            : null,
+                              ),
                 actions: [
                   buildRecentChatActionBarIcons(context),
                 ],

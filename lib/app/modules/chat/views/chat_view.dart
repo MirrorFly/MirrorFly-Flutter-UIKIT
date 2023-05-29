@@ -617,14 +617,14 @@ class _ChatViewState extends State<ChatView> {
                         onTap: () {
                           debugPrint("On Tap");
                           if (controller.isSelected.value) {
-                            controller.isSelected.value
-                                ? controller.selectedChatList
-                                        .contains(chatList[index])
-                                    ? controller
-                                        .clearChatSelection(chatList[index])
-                                    : controller
-                                        .addChatSelection(chatList[index])
-                                : null;
+                            if(controller.isSelected.value) {
+                              controller.selectedChatList
+                                  .contains(chatList[index])
+                                  ? controller
+                                  .clearChatSelection(chatList[index])
+                                  : controller
+                                  .addChatSelection(chatList[index]);
+                            }
                             controller.getMessageActions();
                           } else {
                             var replyChat =

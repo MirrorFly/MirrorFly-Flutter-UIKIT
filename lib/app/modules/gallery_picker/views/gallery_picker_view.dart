@@ -116,7 +116,9 @@ class _GalleryPickerViewState extends State<GalleryPickerView> {
                                             showAdd: false,
                                             isFromGalleryPicker: true,
                                           ))).then((value) {
-                                value != null ? Navigator.pop(context) : null;
+                                if(value != null) {
+                                  Navigator.pop(context);
+                                }
                               });
                               /*Get.toNamed(Routes.mediaPreview, arguments: {
                                     "filePath": controller.pickedFile,
