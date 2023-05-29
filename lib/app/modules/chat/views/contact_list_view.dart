@@ -11,11 +11,11 @@ import '../../../widgets/custom_action_bar_icons.dart';
 import '../../settings/views/settings_view.dart';
 
 class ContactListView extends StatefulWidget {
-   const ContactListView({Key? key,this.setAsForwardPage = false,this.messageIds,this.group= false,this.groupJid = ''}) : super(key: key);
-   final bool setAsForwardPage;
+   const ContactListView({Key? key,this.messageIds,this.group= false,this.groupJid = '', this.enableAppBar=true}) : super(key: key);
    final List<String>? messageIds;
    final bool group;
    final String groupJid;
+   final bool enableAppBar;
 
    @override
   State<ContactListView> createState() => _ContactListViewState();
@@ -25,7 +25,7 @@ class _ContactListViewState extends State<ContactListView> {
   ContactController controller = Get.put(ContactController());
   @override
   void initState() {
-    controller.init(context,forward: widget.setAsForwardPage,messageIds: widget.messageIds,group: widget.group,groupjid: widget.groupJid);
+    controller.init(context,messageIds: widget.messageIds,group: widget.group,groupjid: widget.groupJid);
     super.initState();
   }
 
@@ -40,7 +40,7 @@ class _ContactListViewState extends State<ContactListView> {
     return Obx(
       () => Scaffold(
         backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-        appBar: AppBar(
+        appBar: widget.enableAppBar ? AppBar(
           backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
           leading: IconButton(
             icon: controller.isForward.value
@@ -154,7 +154,7 @@ class _ContactListViewState extends State<ContactListView> {
               ),
             ),
           ],
-        ),
+        ) : null,
         floatingActionButton: controller.isForward.value &&
                 controller.selectedUsersList.isNotEmpty
             ? FloatingActionButton(

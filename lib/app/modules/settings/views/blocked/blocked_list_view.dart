@@ -7,7 +7,8 @@ import '../../../../../mirrorfly_uikit_plugin.dart';
 import '../../../../common/widgets.dart';
 
 class BlockedListView extends StatefulWidget {
-  const BlockedListView({Key? key}) : super(key: key);
+  const BlockedListView({Key? key,this.enableAppBar=true}) : super(key: key);
+  final bool enableAppBar;
 
   @override
   State<BlockedListView> createState() => _BlockedListViewState();
@@ -20,12 +21,12 @@ class _BlockedListViewState extends State<BlockedListView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-      appBar: AppBar(
+      appBar: widget.enableAppBar ? AppBar(
         title: Text('Blocked Contact List', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
         automaticallyImplyLeading: true,
         iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
         backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-      ),
+      ) : null,
       body: Obx(() {
         return Center(
           child: controller.blockedUsers.isEmpty ? Text(

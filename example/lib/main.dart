@@ -102,6 +102,7 @@ class _DashboardState extends State<Dashboard> {
                         MaterialPageRoute(
                             builder: (con) => const DashboardView(
                                   title: "Chats",
+                              enableAppBar: false,
                                 )));
                   },
                   text: 'chat page',

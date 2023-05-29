@@ -16,13 +16,14 @@ class MessageInfoView extends StatefulWidget {
       {Key? key,
       required this.chatMessage,
       required this.isGroupProfile,
-      required this.jid})
+      required this.jid,this.enableAppBar=true})
       : super(key: key);
 
   // final String messageID;
   final ChatMessageModel chatMessage;
   final bool isGroupProfile;
   final String jid;
+  final bool enableAppBar;
 
   @override
   State<MessageInfoView> createState() => _MessageInfoViewState();
@@ -47,7 +48,7 @@ class _MessageInfoViewState extends State<MessageInfoView> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-        appBar: AppBar(
+        appBar: widget.enableAppBar ? AppBar(
           iconTheme:
               IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
           backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
@@ -55,7 +56,7 @@ class _MessageInfoViewState extends State<MessageInfoView> {
             'Message Info',
             style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
           ),
-        ),
+        ) : null,
         body: SafeArea(
           child: SingleChildScrollView(
             child: Padding(

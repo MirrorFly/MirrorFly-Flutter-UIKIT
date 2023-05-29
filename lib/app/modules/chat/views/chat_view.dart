@@ -22,11 +22,12 @@ import '../controllers/chat_controller.dart';
 import '../../../models.dart';
 
 class ChatView extends StatefulWidget {
-  const ChatView({Key? key, required this.jid, this.isUser=false, this.messageId, this.isFromStarred = false,}) : super(key: key);
+  const ChatView({Key? key, required this.jid, this.isUser=false, this.messageId, this.isFromStarred = false, this.enableAppBar=true,}) : super(key: key);
   final String jid;
   final bool isUser;
   final bool isFromStarred;
   final String? messageId;
+  final bool enableAppBar;
 
   @override
   State<ChatView> createState() => _ChatViewState();
@@ -52,17 +53,17 @@ class _ChatViewState extends State<ChatView> {
     // controller.screenHeight = MediaQuery.of(context).size.height;
     // controller.screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-        appBar: getAppBar(context),
+        appBar: widget.enableAppBar ? getAppBar(context) : null,
         body: SafeArea(
           child: Container(
             width: Get.width,//controller.screenWidth,
             height: Get.height,//controller.screenHeight,
             decoration: BoxDecoration(
               color: MirrorflyUikit.getTheme?.scaffoldColor,
-              image: const DecorationImage(
+              /*image: const DecorationImage(
                 image: AssetImage(chatBg,package: package),
                 fit: BoxFit.cover,
-              ),
+              ),*/
             ),
             child: WillPopScope(
               onWillPop: () {
@@ -605,14 +606,14 @@ class _ChatViewState extends State<ChatView> {
                       animationDuration: const Duration(milliseconds: 300),
                       offsetDx: 0.2,
                       child: GestureDetector(
-                        onLongPress: () {
+                        onLongPress: widget.enableAppBar ? () {
                           debugPrint("LongPressed");
                           FocusManager.instance.primaryFocus?.unfocus();
                           if (!controller.isSelected.value) {
                             controller.isSelected(true);
                             controller.addChatSelection(chatList[index]);
                           }
-                        },
+                        } : null,
                         onTap: () {
                           debugPrint("On Tap");
                           if (controller.isSelected.value) {

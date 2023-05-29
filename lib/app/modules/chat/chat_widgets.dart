@@ -1724,7 +1724,7 @@ class NotificationMessageView extends StatelessWidget {
         margin: const EdgeInsets.all(4),
         padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 20),
         decoration: BoxDecoration(
-            color: MirrorflyUikit.getTheme?.secondaryColor,
+            color: Colors.transparent.withOpacity(0.5),
             borderRadius: const BorderRadius.all(Radius.circular(15))),
         child: Text(chatMessage ?? "",
             style: TextStyle(

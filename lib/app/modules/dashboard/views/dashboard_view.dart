@@ -13,8 +13,9 @@ import '../../chat/chat_widgets.dart';
 import '../../dashboard/controllers/dashboard_controller.dart';
 
 class DashboardView extends StatefulWidget {
-  const DashboardView({Key? key, this.title}) : super(key: key);
+  const DashboardView({Key? key, this.title,this.enableAppBar=true}) : super(key: key);
   final String? title;
+  final bool enableAppBar;
 
   @override
   State<DashboardView> createState() => _DashboardViewState();
@@ -55,7 +56,7 @@ class _DashboardViewState extends State<DashboardView> {
         child: Obx(() {
           return Scaffold(
               backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-              appBar: AppBar(
+              appBar: widget.enableAppBar ? AppBar(
                 backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
                 automaticallyImplyLeading: true,
                 actionsIconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar ?? iconColor),
@@ -106,7 +107,7 @@ class _DashboardViewState extends State<DashboardView> {
                 actions: [
                   buildRecentChatActionBarIcons(context),
                 ],
-              ),
+              ) : null,
               floatingActionButton: controller.isSearching.value
                   ? null
                   : FloatingActionButton(
@@ -427,10 +428,10 @@ class _DashboardViewState extends State<DashboardView> {
                                         controller.toChatPage(context, item.jid.checkNull());
                                       }
                                     },
-                                    onLongPress: () {
+                                    onLongPress: widget.enableAppBar ? () {
                                       controller.selected(true);
                                       controller.selectOrRemoveChatfromList(index);
-                                    },
+                                    } : null,
                                     onAvatarClick: () {
                                       controller.getProfileDetail(context, item, index);
                                     },
