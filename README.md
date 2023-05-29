@@ -114,10 +114,10 @@ To initialize the plugin, place the below code in your `main.dart` file inside `
 ```dart
  void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  MirrorflyUikit.instance.initUIKIT(  baseUrl: 'https://api-uikit-qa.contus.us/api/v1/',
+  MirrorflyUikit.instance.initUIKIT(  baseUrl: 'YOUR_BASE_URL',
       licenseKey: 'Your_Mirrorfly_Licence_Key',
       googleMapKey: 'Your_Google_Map_Key_for_location_messages',
-      iOSContainerID: 'group.com.mirrorfly.flutter');
+      iOSContainerID: 'Your_iOS_app_Container_id');
   runApp(const MyApp());
 }
 ```
@@ -126,20 +126,7 @@ To initialize the plugin, place the below code in your `main.dart` file inside `
 
 create `mirrorfly_config.json` json file with configuration details then add the json file into under your `assets` folder(`assets/mirrorfly_config.json`).
 
-```dart
-{
-    "projectInfo": {
-        "projectId": "Your_Project_Name",
-        "serverAddress": "YOUR_BASE_URL",
-        "licenseKey": "Your_Mirrorfly_Licence_Key",
-        "googleMapKey": "Your_Google_Map_Key_for_location_messages",
-        "iOSContainerId": "Your_iOS_app_Container_id"
-    },
-    "AppTheme": {
-        "theme": "light" // Or dark
-    }
-}
-```
+> **Info** Download config json file from [Flutter UIKit docs](https://www.mirrorfly.com/docs/UIKit/flutter/quick-start/)
 
 ### Step 3: Registration
 
