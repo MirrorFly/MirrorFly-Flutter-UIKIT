@@ -58,7 +58,26 @@ class MirrorflyUikit {
     rootBundle.loadString('assets/mirrorfly_config.json').then((configFile) {
       var config = AppConfig.fromJson(json.decode(configFile));
       theme = config.appTheme.theme!;
-      getTheme = config.appTheme.theme == "light"
+      getTheme = MirrorFlyTheme.customTheme(
+          primaryColor: config.appTheme.customTheme!.primaryColor,
+          secondaryColor:
+          config.appTheme.customTheme!.secondaryColor,
+          scaffoldColor:
+          config.appTheme.customTheme!.scaffoldColor,
+          colorOnPrimary:
+          config.appTheme.customTheme!.colorOnPrimary,
+          textPrimaryColor:
+          config.appTheme.customTheme!.textPrimaryColor,
+          textSecondaryColor:
+          config.appTheme.customTheme!.textSecondaryColor,
+          chatBubblePrimaryColor:
+          config.appTheme.customTheme!.chatBubblePrimaryColor,
+          chatBubbleSecondaryColor: config
+              .appTheme.customTheme!.chatBubbleSecondaryColor,
+          appBarColor: config.appTheme.customTheme!.appBarColor,
+          colorOnAppbar:
+          config.appTheme.customTheme!.colorOnAppbar);
+      /*getTheme = config.appTheme.theme == "light"
           ? MirrorFlyTheme.mirrorFlyLightTheme
           : config.appTheme.theme == "dark"
               ? MirrorFlyTheme.mirrorFlyDarkTheme
@@ -82,7 +101,7 @@ class MirrorflyUikit {
                       appBarColor: config.appTheme.customTheme!.appBarColor,
                       colorOnAppbar:
                           config.appTheme.customTheme!.colorOnAppbar)
-                  : MirrorFlyTheme.mirrorFlyLightTheme;
+                  : MirrorFlyTheme.mirrorFlyLightTheme;*/
     }).catchError((e) {
       throw ("Mirrorfly config file not found in assets $e");
     });
