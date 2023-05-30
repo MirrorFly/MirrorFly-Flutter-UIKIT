@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import '../../../mirrorfly_uikit_plugin.dart';
 
 class VideoPlayerView extends StatefulWidget {
-  const VideoPlayerView({Key? key, required this.videoPath}) : super(key: key);
+  const VideoPlayerView({Key? key, required this.videoPath,this.enableAppBar=true}) : super(key: key);
   final String videoPath;
+  final bool enableAppBar;
   @override
   State<VideoPlayerView> createState() => _VideoPlayerViewState();
 }
@@ -17,11 +18,11 @@ class _VideoPlayerViewState extends State<VideoPlayerView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-        appBar: AppBar(
+        appBar: widget.enableAppBar ? AppBar(
           iconTheme: IconThemeData(
               color: MirrorflyUikit.getTheme?.colorOnAppbar),
           backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-        ),
+        ) : null,
         body: SafeArea(
           child: Column(
             children: [

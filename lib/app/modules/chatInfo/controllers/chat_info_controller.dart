@@ -7,7 +7,6 @@ import '../../../common/constants.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import '../../../data/apputils.dart';
 import '../../../models.dart';
-import '../../view_all_media/views/view_all_media_view.dart';
 
 class ChatInfoController extends GetxController {
   var profile_ = ProfileData().obs;

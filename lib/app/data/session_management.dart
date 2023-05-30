@@ -1,4 +1,3 @@
-import 'package:mirrorfly_plugin/flychat.dart';
 import '../models.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';

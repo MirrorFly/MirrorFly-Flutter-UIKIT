@@ -11,8 +11,8 @@ import '../dashboard/widgets.dart';
 import 'archived_chat_list_controller.dart';
 
 class ArchivedChatListView extends StatelessWidget {
-  ArchivedChatListView({Key? key}) : super(key: key);
-
+  ArchivedChatListView({Key? key, this.enableAppBar=true}) : super(key: key);
+  final bool enableAppBar;
   final controller = Get.put(ArchivedChatListController());
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class ArchivedChatListView extends StatelessWidget {
         child: Obx(() {
           return Scaffold(
             backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-            appBar: AppBar(
+            appBar: enableAppBar ? AppBar(
               backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
               iconTheme: IconThemeData(
                   color: MirrorflyUikit.getTheme?.colorOnAppbar ??
@@ -117,7 +117,7 @@ class ArchivedChatListView extends StatelessWidget {
                       ]),
                 )
               ],
-            ),
+            ) : null,
             body: SafeArea(
               child: Obx(() =>
                   controller.archivedChats.isNotEmpty ? ListView.builder(

@@ -62,11 +62,14 @@ class ChatSettingsController extends GetxController {
   }
 
   Future<void> enableDisableAutoDownload(BuildContext context) async {
-    if (await askStoragePermission(context)) {
-      var enable = !_autoDownloadEnabled.value;//SessionManagement.isAutoDownloadEnable();
+    askStoragePermission(context).then((value) {
+      if(value){
+      // if (await askStoragePermission(context)) {
+        var enable = !_autoDownloadEnabled.value;//SessionManagement.isAutoDownloadEnable();
         Mirrorfly.setMediaAutoDownload(enable);
         _autoDownloadEnabled(enable);
-    }
+      }
+    });
   }
   Future<bool> askStoragePermission(BuildContext context) async {
     final permission = await AppPermission.getStoragePermission(context);

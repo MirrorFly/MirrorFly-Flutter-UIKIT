@@ -12,10 +12,11 @@ import '../controllers/view_all_media_controller.dart';
 import '../../../models.dart';
 
 class ViewAllMediaView extends StatefulWidget {
-  const ViewAllMediaView({Key? key, required this.name, required this.jid, required this.isGroup}) : super(key: key);
+  const ViewAllMediaView({Key? key, required this.name, required this.jid, required this.isGroup,this.enableAppBar=true}) : super(key: key);
   final String name;
   final String jid;
   final bool isGroup;
+  final bool enableAppBar;
   @override
   State<ViewAllMediaView> createState() => _ViewAllMediaViewState();
 }
@@ -33,7 +34,7 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
       length: 3,
       child: Scaffold(
         backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-        appBar: AppBar(
+        appBar: widget.enableAppBar ? AppBar(
           backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
           actionsIconTheme: IconThemeData(
               color: MirrorflyUikit.getTheme?.colorOnAppbar ??
@@ -77,7 +78,7 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
                               fontWeight: FontWeight.w600, fontSize: 16))),
                 ),
               ]),
-        ),
+        ) : null,
         body: SafeArea(child: TabBarView(children: [mediaView(), docsView(), linksView()])),
       ),
     );

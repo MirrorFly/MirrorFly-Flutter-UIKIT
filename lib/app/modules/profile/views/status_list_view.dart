@@ -10,8 +10,8 @@ import '../../../common/constants.dart';
 import 'add_status_view.dart';
 
 class StatusListView extends StatefulWidget {
-  const StatusListView({Key? key, required this.status}) : super(key: key);
-
+  const StatusListView({Key? key, required this.status,this.enableAppBar=true}) : super(key: key);
+  final bool enableAppBar;
   final String status;
 
   @override
@@ -31,12 +31,12 @@ class _StatusListViewState extends State<StatusListView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-      appBar: AppBar(
+      appBar: widget.enableAppBar ? AppBar(
         automaticallyImplyLeading: true,
         title: Text('Status', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
         iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
         backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-      ),
+      ):null,
       body: WillPopScope(
         onWillPop: () {
           // Get.back(result: controller.selectedStatus.value);
@@ -78,7 +78,7 @@ class _StatusListViewState extends State<StatusListView> {
                     // });
                     final result = await Navigator.push(context, MaterialPageRoute(builder: (con)=> AddStatusView(status: controller.selectedStatus.value)));
                     if (result != null) {
-                      controller.insertStatus(context);
+                      if(context.mounted)controller.insertStatus(context);
                     }
                   },
                 ),

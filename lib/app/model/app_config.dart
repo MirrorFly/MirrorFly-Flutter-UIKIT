@@ -11,42 +11,42 @@ AppConfig appConfigFromJson(String str) => AppConfig.fromJson(json.decode(str));
 String appConfigToJson(AppConfig data) => json.encode(data.toJson());
 
 class AppConfig {
-  ProjectInfo projectInfo;
+  // ProjectInfo projectInfo;
   AppTheme appTheme;
 
   AppConfig({
-    required this.projectInfo,
+    // required this.projectInfo,
     required this.appTheme,
   });
 
   factory AppConfig.fromJson(Map<String, dynamic> json) => AppConfig(
-    projectInfo: ProjectInfo.fromJson(json["projectInfo"]),
+    // projectInfo: ProjectInfo.fromJson(json["projectInfo"]),
     appTheme: AppTheme.fromJson(json["AppTheme"]),
   );
 
   Map<String, dynamic> toJson() => {
-    "projectInfo": projectInfo.toJson(),
+    // "projectInfo": projectInfo.toJson(),
     "AppTheme": appTheme.toJson(),
   };
 }
 
 class AppTheme {
-  String theme;
-  MirrorFlyAppTheme customTheme;
+  String? theme;
+  MirrorFlyAppTheme? customTheme;
 
   AppTheme({
-    required this.theme,
-    required this.customTheme,
+    this.theme,
+    this.customTheme,
   });
 
   factory AppTheme.fromJson(Map<String, dynamic> json) => AppTheme(
-    theme: json["theme"],
-    customTheme: MirrorFlyAppTheme.fromJson(json["customTheme"]),
+    theme: json["theme"] ?? "light" ,
+    customTheme: json["customTheme"] == null ? null : MirrorFlyAppTheme.fromJson(json["customTheme"]),
   );
 
   Map<String, dynamic> toJson() => {
     "theme": theme,
-    "customTheme": customTheme.toJson(),
+    "customTheme": customTheme?.toJson(),
   };
 }
 
@@ -148,9 +148,9 @@ class ProjectInfo {
     required this.licenseKey,
     required this.googleMapKey,
     required this.iOSContainerId,
-    required this.storageFolderName,
-    required this.isTrialLicenceKey,
-    required this.enableMobileNumberLogin,
+    this.storageFolderName="",
+    this.isTrialLicenceKey=true,
+    this.enableMobileNumberLogin=true,
   });
 
   factory ProjectInfo.fromJson(Map<String, dynamic> json) => ProjectInfo(
@@ -159,9 +159,9 @@ class ProjectInfo {
     licenseKey: json["licenseKey"],
     googleMapKey: json["googleMapKey"],
     iOSContainerId: json["iOSContainerId"],
-    storageFolderName: json["storageFolderName"],
-    isTrialLicenceKey: json["isTrialLicenceKey"],
-    enableMobileNumberLogin: json["enableMobileNumberLogin"],
+    storageFolderName: json["storageFolderName"] ?? "",
+    isTrialLicenceKey: json["isTrialLicenceKey"] ?? true,
+    enableMobileNumberLogin: json["enableMobileNumberLogin"] ?? true,
   );
 
   Map<String, dynamic> toJson() => {

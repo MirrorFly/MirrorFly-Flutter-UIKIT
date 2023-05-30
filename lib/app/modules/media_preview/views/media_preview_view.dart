@@ -17,7 +17,7 @@ import '../controllers/media_preview_controller.dart';
 
 class MediaPreviewView extends StatefulWidget {
   const MediaPreviewView(
-      {Key? key, required this.filePath, required this.userName, required this.profile, required this.caption, required this.showAdd, this.isFromGalleryPicker = false})
+      {Key? key, required this.filePath, required this.userName, required this.profile, required this.caption, required this.showAdd, this.isFromGalleryPicker = false,this.enableAppBar=true})
       : super(key: key);
   final List filePath;
   final String userName;
@@ -25,6 +25,7 @@ class MediaPreviewView extends StatefulWidget {
   final String caption;
   final bool showAdd;
   final bool isFromGalleryPicker;
+  final bool enableAppBar;
 
   @override
   State<MediaPreviewView> createState() => _MediaPreviewViewState();
@@ -51,7 +52,7 @@ class _MediaPreviewViewState extends State<MediaPreviewView> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-        appBar: AppBar(
+        appBar: widget.enableAppBar ? AppBar(
           backgroundColor: Colors.black,
           automaticallyImplyLeading: false,
           leadingWidth: 80,
@@ -121,7 +122,7 @@ class _MediaPreviewViewState extends State<MediaPreviewView> {
                   : const SizedBox.shrink();
             })
           ],
-        ),
+        ) : null,
         body: WillPopScope(
           onWillPop: () {
             Navigator.pop(context,"back");
