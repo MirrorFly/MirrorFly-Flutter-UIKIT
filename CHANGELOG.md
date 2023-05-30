@@ -1,6 +1,7 @@
 ## 0.0.5
 
 * Appbar enable or disable option for individual pages
+* some lint fixes
 ## 0.0.4
 
 * UIKit init config changes

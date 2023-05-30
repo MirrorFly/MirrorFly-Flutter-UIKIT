@@ -12,15 +12,24 @@
 
 ## Introduction
 
-Make an easy and efficient way with CONTUS TECH Mirrorfly UIKit Plugin for Flutter - simply integrate the real-time chat features and functionalities into a client's app.
+Mirrorfly Flutter UIKit Plugin is a set of prebuilt UI Widgets that allows you to easily integrate an in-app chat with all the essential messaging features. Our development kit includes light and dark themes, text fonts, colors and more. You can customize these components to create an interactive messaging unique interface.
 
 ## Requirements
 
-The minimum requirements for Mirrorfly UIKit Plugin for Flutter are:
+The minimum requirements for Flutter are:
 
 - Visual Studio Code or Android Studio
 - Dart 2.19.1 or above
 - Flutter 2.0.0 or higher
+
+The requirements for Android are:
+- Android Lollipop 5.0 (API Level 21) or above
+- Java 7 or higher
+- Gradle 4.1.0 or higher
+
+The minimum requirements for Chat SDK for iOS
+
+- iOS 12.1 or later
 
 ### Step 1: Let's integrate Plugin for Flutter
 
@@ -38,8 +47,7 @@ Follow the below steps to get your license key:
 
 Installing the Mirrorfly UIKit Plugin is a simple process. Follow the steps mentioned below.
 
-
-### Android
+### Create Android dependency
 
 - Add the following to your root `build.gradle` file in your Android folder.
 
@@ -56,7 +64,7 @@ Installing the Mirrorfly UIKit Plugin is a simple process. Follow the steps ment
   }
 ```
 
-### iOS
+### Create iOS dependency
  - Check and Add the following code at end of your `ios/Podfile`
 
 ```dart
