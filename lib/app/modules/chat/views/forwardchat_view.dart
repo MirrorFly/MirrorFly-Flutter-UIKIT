@@ -10,10 +10,10 @@ import '../../../common/widgets.dart';
 import '../../dashboard/widgets.dart';
 
 class ForwardChatView extends StatefulWidget {
-  const ForwardChatView({Key? key, required this.forwardMessageIds})
+  const ForwardChatView({Key? key, required this.forwardMessageIds, this.enableAppBar=true})
       : super(key: key);
   final List<String> forwardMessageIds;
-
+  final bool enableAppBar;
   @override
   State<ForwardChatView> createState() => _ForwardChatViewState();
 }
@@ -38,7 +38,7 @@ class _ForwardChatViewState extends State<ForwardChatView> {
     return Obx(() {
       return Scaffold(
         backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-        appBar: AppBar(
+        appBar: widget.enableAppBar ? AppBar(
           iconTheme:
               IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
           backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
@@ -81,7 +81,7 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                   )),
             )
           ],
-        ),
+        ) : null,
         body: SafeArea(
           child: Column(
             children: [

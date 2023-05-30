@@ -10,14 +10,15 @@ import '../settings_widgets.dart';
 import 'datausage/datausage_list_view.dart';
 
 class ChatSettingsView extends StatelessWidget {
-  ChatSettingsView({Key? key}) : super(key: key);
+  ChatSettingsView({Key? key,this.enableAppBar=true}) : super(key: key);
+  final bool enableAppBar;
   final controller = Get.put(ChatSettingsController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-      appBar: AppBar(
+      appBar: enableAppBar ? AppBar(
         title: Text(
           'Chats',
           style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
@@ -25,7 +26,7 @@ class ChatSettingsView extends StatelessWidget {
         automaticallyImplyLeading: true,
         iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
         backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-      ),
+      ) : null,
       body: Obx(() {
         return SafeArea(
           child: Column(

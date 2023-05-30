@@ -7,8 +7,8 @@ import '../../../../mirrorfly_uikit_plugin.dart';
 import '../controllers/location_controller.dart';
 
 class LocationSentView extends StatefulWidget{
-  const LocationSentView({Key? key}) : super(key: key);
-
+  const LocationSentView({Key? key,this.enableAppBar=true}) : super(key: key);
+  final bool enableAppBar;
   @override
   State<LocationSentView> createState() => _LocationSentViewState();
 }
@@ -28,12 +28,12 @@ class _LocationSentViewState extends State<LocationSentView> {
       },
       child: Scaffold(
         backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-          appBar: AppBar(
+          appBar: widget.enableAppBar ? AppBar(
             iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
             backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
           title: Text('User Location',style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
       automaticallyImplyLeading: true,
-          ),
+          ) : null,
         body:SafeArea(
           child: Obx(
             ()=> Column(

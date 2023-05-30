@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../common/constants.dart';
 class NotificationNotWorkingView extends StatefulWidget {
-  const NotificationNotWorkingView({Key? key}) : super(key: key);
-
+  const NotificationNotWorkingView({Key? key,this.enableAppBar=true}) : super(key: key);
+  final bool enableAppBar;
   @override
   State<NotificationNotWorkingView> createState() => _NotificationNotWorkingViewState();
 }
@@ -13,10 +13,10 @@ class _NotificationNotWorkingViewState extends State<NotificationNotWorkingView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+        appBar: widget.enableAppBar ? AppBar(
           title: const Text('Notification Not Working?'),
           automaticallyImplyLeading: true,
-        ),
+        ) : null,
         body: SafeArea(
           child: Expanded(
             child: Stack(

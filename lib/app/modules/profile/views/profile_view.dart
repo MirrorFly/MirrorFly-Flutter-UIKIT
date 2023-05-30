@@ -16,8 +16,8 @@ import '../../../common/widgets.dart';
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends StatefulWidget {
-  const ProfileView({Key? key}) : super(key: key);
-
+  const ProfileView({Key? key, this.enableAppBar=true}) : super(key: key);
+  final bool enableAppBar;
   @override
   State<ProfileView> createState() => _ProfileViewState();
 }
@@ -51,7 +51,7 @@ class _ProfileViewState extends State<ProfileView> {
       },
       child: Scaffold(
           backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-          appBar: AppBar(
+          appBar: widget.enableAppBar ? AppBar(
             title: Text(
                 'Profile',
                 style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar)
@@ -63,7 +63,7 @@ class _ProfileViewState extends State<ProfileView> {
             automaticallyImplyLeading: /*controller.from.value == Routes.login
                 ? false
                 : */true,
-          ),
+          ) : null,
           body: SafeArea(
             child: SingleChildScrollView(
               child: Padding(

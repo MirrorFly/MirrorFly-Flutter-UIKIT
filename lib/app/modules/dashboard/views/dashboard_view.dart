@@ -4,7 +4,6 @@ import 'package:focus_detector/focus_detector.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/archived_chats/archived_chat_list_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/dashboard/widgets.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 
@@ -14,8 +13,9 @@ import '../../chat/chat_widgets.dart';
 import '../../dashboard/controllers/dashboard_controller.dart';
 
 class DashboardView extends StatefulWidget {
-  const DashboardView({Key? key, this.title}) : super(key: key);
-  final String? title;
+  const DashboardView({Key? key, this.title="Chats",this.enableAppBar=true}) : super(key: key);
+  final String title;
+  final bool enableAppBar;
 
   @override
   State<DashboardView> createState() => _DashboardViewState();
@@ -56,7 +56,7 @@ class _DashboardViewState extends State<DashboardView> {
         child: Obx(() {
           return Scaffold(
               backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-              appBar: AppBar(
+              appBar: widget.enableAppBar ? AppBar(
                 backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
                 automaticallyImplyLeading: true,
                 actionsIconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar ?? iconColor),
@@ -98,16 +98,14 @@ class _DashboardViewState extends State<DashboardView> {
                                     .getTheme?.colorOnAppbar.withOpacity(0.5)),
                                 border: InputBorder.none),
                           )
-                        : widget.title != null
-                            ? Text(
-                                widget.title!,
+                        : Text(
+                                widget.title,
                                 style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar ?? Colors.black),
-                              )
-                            : null,
+                              ),
                 actions: [
                   buildRecentChatActionBarIcons(context),
                 ],
-              ),
+              ) : null,
               floatingActionButton: controller.isSearching.value
                   ? null
                   : FloatingActionButton(
@@ -428,10 +426,10 @@ class _DashboardViewState extends State<DashboardView> {
                                         controller.toChatPage(context, item.jid.checkNull());
                                       }
                                     },
-                                    onLongPress: () {
+                                    onLongPress: widget.enableAppBar ? () {
                                       controller.selected(true);
                                       controller.selectOrRemoveChatfromList(index);
-                                    },
+                                    } : null,
                                     onAvatarClick: () {
                                       controller.getProfileDetail(context, item, index);
                                     },

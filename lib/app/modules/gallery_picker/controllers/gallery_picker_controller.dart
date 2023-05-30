@@ -11,12 +11,6 @@ class GalleryPickerController extends GetxController {
   var profile = Profile().obs;
   var maxPickImages = 10;
 
-  @override
-  void onInit() {
-    super.onInit();
-    // pickedFile.clear();
-    // debugPrint("gallery picker controller --> $textMessage");
-  }
 
 
   void init(String senderJid, String caption) {
