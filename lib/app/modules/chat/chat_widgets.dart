@@ -426,7 +426,7 @@ Widget getLocationImage(LocationChatMessage? locationChatMessage, double width,
       },
     child: CachedNetworkImage(imageUrl: Helper.getMapImageUri(
         locationChatMessage!.latitude, locationChatMessage.longitude),errorWidget: (c,l,er){
-      return  Center(child: Text(MirrorflyUikit.googleMapKey.isEmpty ? "Google map key is required show location" : "Invalid Google map key"),);
+      return  Center(child: Text(MirrorflyUikit.instance.googleMapKey.isEmpty ? "Google map key is required show location" : "Invalid Google map key"),);
 
     },width: width,height: height,fit: BoxFit.fill,)
       /*child: Image.network(
@@ -1644,9 +1644,9 @@ class ImageMessageView extends StatelessWidget {
             image: FileImage(File(mediaLocalStoragePath)),
             loadingBuilder: (context, child, loadingProgress) {
               if (loadingProgress == null) {
-                return FutureBuilder(builder: (context, d) {
+                // return FutureBuilder(builder: (context, d) {
                   return child;
-                });
+                // });
               }
               return Center(child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,));
             },
@@ -1724,7 +1724,7 @@ class NotificationMessageView extends StatelessWidget {
         margin: const EdgeInsets.all(4),
         padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 20),
         decoration: BoxDecoration(
-            color: MirrorflyUikit.getTheme?.secondaryColor,
+            color: MirrorflyUikit.getTheme?.secondaryColor.withOpacity(0.5),
             borderRadius: const BorderRadius.all(Radius.circular(15))),
         child: Text(chatMessage ?? "",
             style: TextStyle(
@@ -2151,11 +2151,16 @@ void downloadMedia(BuildContext context,String messageId) async {
   debugPrint("media download click");
   debugPrint("media download click--> $messageId");
   if (await AppUtils.isNetConnected()) {
-    if (await askStoragePermission(context)) {
-      debugPrint("media permission granted");
-      Mirrorfly.downloadMedia(messageId);
-    } else {
-      debugPrint("storage permission not granted");
+    if(context.mounted) {
+      askStoragePermission(context).then((value) {
+        if (value) {
+          // if (await askStoragePermission(context)) {
+          debugPrint("media permission granted");
+          Mirrorfly.downloadMedia(messageId);
+        } else {
+          debugPrint("storage permission not granted");
+        }
+      });
     }
   } else {
     toToast(Constants.noInternetConnection);

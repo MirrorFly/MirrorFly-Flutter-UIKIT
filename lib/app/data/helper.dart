@@ -170,7 +170,7 @@ class Helper {
   }
 
   static String getMapImageUri(double latitude, double longitude) {
-    var key = MirrorflyUikit.googleMapKey;//Constants.googleMapKey;
+    var key = MirrorflyUikit.instance.googleMapKey;//Constants.googleMapKey;
     return ("https://maps.googleapis.com/maps/api/staticmap?center=$latitude,$longitude&zoom=13&size=300x200&markers=color:red|$latitude,$longitude&key=$key");
   }
 
@@ -422,7 +422,7 @@ extension ProfileDataParsing on ProfileData {
         : Constants.typeChat;
   }
   String getName(){
-    if (MirrorflyUikit.isTrialLicence) {
+    if (MirrorflyUikit.instance.isTrialLicenceKey) {
       /*return item.name.toString().checkNull().isEmpty
         ? item.nickName.toString()
         : item.name.toString();*/
@@ -513,7 +513,7 @@ extension ProfileParesing on Profile {
           .checkNull(); // for email contact isGroupInOfflineMode will be true
 
   String getName() {
-    if (MirrorflyUikit.isTrialLicence) {
+    if (MirrorflyUikit.instance.isTrialLicenceKey) {
       /*return item.name.toString().checkNull().isEmpty
         ? item.nickName.toString()
         : item.name.toString();*/
@@ -836,7 +836,7 @@ Future<RecentChatData?> getRecentChatOfJid(String jid) async {
 }
 
 String getName(Profile item) {
-  if (MirrorflyUikit.isTrialLicence) {
+  if (MirrorflyUikit.instance.isTrialLicenceKey) {
     /*return item.name.toString().checkNull().isEmpty
         ? item.nickName.toString()
         : item.name.toString();*/
@@ -878,7 +878,7 @@ String getName(Profile item) {
 }
 
 String getRecentName(RecentChatData item) {
-  if (MirrorflyUikit.isTrialLicence) {
+  if (MirrorflyUikit.instance.isTrialLicenceKey) {
     /*return item.name.toString().checkNull().isEmpty
         ? item.nickName.toString()
         : item.name.toString();*/
@@ -902,7 +902,7 @@ String getRecentName(RecentChatData item) {
 }
 
 String getMemberName(Member item) {
-  if (MirrorflyUikit.isTrialLicence) {
+  if (MirrorflyUikit.instance.isTrialLicenceKey) {
     /*return item.name.toString().checkNull().isEmpty
         ? item.nickName.toString()
         : item.name.toString();*/
@@ -1067,7 +1067,7 @@ void showQuickProfilePopup(
                         child: Text(
                           profile.value.isGroupProfile!
                               ? profile.value.name.checkNull()
-                              : MirrorflyUikit.isTrialLicence
+                              : MirrorflyUikit.instance.isTrialLicenceKey
                               ? profile.value.mobileNumber.checkNull()
                               : profile.value.nickName.checkNull(),
                           style: const TextStyle(color: Colors.white),

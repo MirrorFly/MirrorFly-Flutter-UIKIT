@@ -281,7 +281,7 @@ class MainController extends FullLifeCycleController
   void onResumed() {
     mirrorFlyLog('mainController', 'onResumed');
     checkShouldShowPin();
-    if (!MirrorflyUikit.isTrialLicence) {
+    if (!MirrorflyUikit.instance.isTrialLicenceKey) {
       syncContacts();
     }
   }
@@ -311,7 +311,7 @@ class MainController extends FullLifeCycleController
   void networkDisconnected() {}
 
   void networkConnected() {
-    if (!MirrorflyUikit.isTrialLicence) {
+    if (!MirrorflyUikit.instance.isTrialLicenceKey) {
       syncContacts();
     }
   }

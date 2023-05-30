@@ -7,8 +7,8 @@ import '../../../../../../mirrorfly_uikit_plugin.dart';
 import 'datausage_controller.dart';
 
 class DataUsageListView extends StatefulWidget {
-  const DataUsageListView({Key? key}) : super(key: key);
-
+  const DataUsageListView({Key? key,this.enableAppBar=true}) : super(key: key);
+  final bool enableAppBar;
   @override
   State<DataUsageListView> createState() => _DataUsageListViewState();
 }
@@ -25,12 +25,12 @@ class _DataUsageListViewState extends State<DataUsageListView> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-        appBar: AppBar(
+        appBar:widget.enableAppBar ?  AppBar(
           title: Text('Data Usage Settings', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar)),
           automaticallyImplyLeading: true,
           iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
           backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-        ),
+        ):null,
         body: SafeArea(
           child: SingleChildScrollView(
             child: Obx(() {

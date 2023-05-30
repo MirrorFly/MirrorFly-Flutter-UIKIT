@@ -8,8 +8,8 @@ import '../../../common/widgets.dart';
 import '../controllers/busy_status_controller.dart';
 
 class AddBusyStatusView extends StatefulWidget {
-  const AddBusyStatusView({Key? key, required String status}) : super(key: key);
-
+  const AddBusyStatusView({Key? key, required String status,this.enableAppBar=true}) : super(key: key);
+  final bool enableAppBar;
   @override
   State<AddBusyStatusView> createState() => _AddBusyStatusViewState();
 }
@@ -20,12 +20,12 @@ class _AddBusyStatusViewState extends State<AddBusyStatusView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-      appBar: AppBar(
+      appBar: widget.enableAppBar ? AppBar(
         automaticallyImplyLeading: true,
         title: Text('Add Busy Status', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
         iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
         backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-      ),
+      ):null,
       body: WillPopScope(
         onWillPop: () {
           if (controller.showEmoji.value) {

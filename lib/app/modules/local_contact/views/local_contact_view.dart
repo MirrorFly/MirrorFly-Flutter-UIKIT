@@ -10,8 +10,8 @@ import '../../../common/widgets.dart';
 import '../controllers/local_contact_controller.dart';
 
 class LocalContactView extends StatefulWidget {
-  const LocalContactView({Key? key}) : super(key: key);
-
+  const LocalContactView({Key? key,this.enableAppBar=true}) : super(key: key);
+  final bool enableAppBar;
   @override
   State<LocalContactView> createState() => _LocalContactViewState();
 }
@@ -29,7 +29,7 @@ class _LocalContactViewState extends State<LocalContactView> {
     return Obx(() {
       return Scaffold(
         backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-        appBar: AppBar(
+        appBar: widget.enableAppBar ? AppBar(
           centerTitle: false,
           titleSpacing: 0.0,
           iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
@@ -81,7 +81,7 @@ class _LocalContactViewState extends State<LocalContactView> {
                     },
                   ),
           ],
-        ),
+        ) : null,
         body: WillPopScope(
           onWillPop: () {
             if (controller.search.value) {

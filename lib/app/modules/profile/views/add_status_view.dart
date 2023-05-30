@@ -8,8 +8,8 @@ import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
 
 class AddStatusView extends StatefulWidget {
-  const AddStatusView({Key? key, required this.status}) : super(key: key);
-
+  const AddStatusView({Key? key, required this.status,this.enableAppBar=true}) : super(key: key);
+  final bool enableAppBar;
   final String status;
   @override
   State<AddStatusView> createState() => _AddStatusViewState();
@@ -29,12 +29,12 @@ class _AddStatusViewState extends State<AddStatusView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-      appBar: AppBar(
+      appBar: widget.enableAppBar ? AppBar(
         automaticallyImplyLeading: true,
         title: Text('Add New Status', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
         iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
         backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-      ),
+      ) : null,
       body: WillPopScope(
         onWillPop: () {
           if (controller.showEmoji.value) {

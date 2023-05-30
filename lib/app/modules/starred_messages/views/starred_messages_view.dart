@@ -14,7 +14,8 @@ import '../controllers/starred_messages_controller.dart';
 import '../../../models.dart';
 
 class StarredMessagesView extends StatefulWidget {
-  const StarredMessagesView({Key? key}) : super(key: key);
+  const StarredMessagesView({Key? key,this.enableAppBar=true}) : super(key: key);
+  final bool enableAppBar;
 
   @override
   State<StarredMessagesView> createState() => _StarredMessagesViewState();
@@ -49,7 +50,7 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
         },
         child: Scaffold(
             backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-          appBar: getAppBar(context),
+          appBar: widget.enableAppBar ? getAppBar(context) : null,
           body: Obx(() {
             return controller.starredChatList.isNotEmpty ?
             SingleChildScrollView(child: favouriteChatListView(controller.starredChatList)) :
@@ -75,12 +76,12 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
         itemBuilder: (context, index) {
           // int reversedIndex = chatList.length - 1 - index;
             return GestureDetector(
-              onLongPress: () {
+              onLongPress: widget.enableAppBar ? () {
                 if (!controller.isSelected.value) {
                   controller.isSelected(true);
                   controller.addChatSelection(starredChatList[index]);
                 }
-              },
+              } : null,
               onTap: () {
                 debugPrint("On Tap");
                 controller.isSelected.value
