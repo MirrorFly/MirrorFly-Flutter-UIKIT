@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/dashboard/views/dashboard_view.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  MirrorflyUikit.initUIKIT();
+  MirrorflyUikit.instance.initUIKIT(
+      baseUrl: 'https://api-uikit-qa.contus.us/api/v1/',
+      licenseKey: 'ckIjaccWBoMNvxdbql8LJ2dmKqT5bp',
+      googleMapKey: 'AIzaSyBaKkrQnLT4nacpKblIE5d4QK6GpaX5luQ',
+      iOSContainerID: 'group.com.mirrorfly.flutter');
   runApp(const MyApp());
 }
 
@@ -16,14 +19,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      themeMode: ThemeMode.dark,
-      theme: ThemeData(
-          textTheme: GoogleFonts.latoTextTheme()
-      ),
-      home: const Dashboard()
-    );
+        themeMode: ThemeMode.dark,
+        theme: ThemeData(textTheme: GoogleFonts.latoTextTheme()),
+        home: const Dashboard());
   }
-
 }
 
 class Dashboard extends StatefulWidget {
@@ -35,6 +34,7 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   var uniqueId = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,11 +47,13 @@ class _DashboardState extends State<Dashboard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Enter Unique Id :'),
-              const SizedBox(height: 10,),
+              const SizedBox(
+                height: 10,
+              ),
               TextField(
-                onChanged: (String text){
+                onChanged: (String text) {
                   setState(() {
-                    uniqueId=text;
+                    uniqueId = text;
                   });
                 },
                 keyboardType: TextInputType.text,
@@ -65,31 +67,58 @@ class _DashboardState extends State<Dashboard> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    buildTextButton(onPressed: (){
-                      logoutFromSDK();
-                    },text: 'Logout'),
-                    const SizedBox(width: 10,),
-                    buildTextButton(onPressed: () async {
-                      if(uniqueId.isNotEmpty) {
-                        try {
-                          var response = await MirrorflyUikit.register(uniqueId);
-                          debugPrint("register user $response");
-                          showSnack(response['message']);
-                        } catch (e) {
-                          showSnack(e.toString());
-                        }
-                      }else{
-                        showSnack('Unique id must not be empty');
-                      }
-                    },text: 'Register'),
+                    buildTextButton(
+                        onPressed: () {
+                          logoutFromSDK();
+                        },
+                        text: 'Logout'),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    buildTextButton(
+                        onPressed: () async {
+                          if (uniqueId.isNotEmpty) {
+                            try {
+                              var response =
+                                  await MirrorflyUikit.registerUser(uniqueId);
+                              debugPrint("register user $response");
+                              showSnack(response['message']);
+                            } catch (e) {
+                              showSnack(e.toString());
+                            }
+                          } else {
+                            showSnack('Unique id must not be empty');
+                          }
+                        },
+                        text: 'Register'),
                   ],
                 ),
               ),
               Center(
-                child: buildTextButton(onPressed: () async {
-                  Navigator.push(context, MaterialPageRoute(builder: (con)=> DashboardView(title: "Chats",)));
-                },text:'chat page',),
+                child: buildTextButton(
+                  onPressed: () async {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (con) => const DashboardView(
+                                  title: "Chats",
+                              enableAppBar: false,
+                                )));
+                  },
+                  text: 'chat page',
+                ),
               ),
+              /*Center(
+                child: buildTextButton(onPressed: () async {
+                  Navigator.push(context, MaterialPageRoute(builder: (con)=> const ProfileView()));
+                },text:'Profile page',),
+              ),
+              Center(
+                child: buildTextButton(onPressed: () async {
+                  Navigator.push(context, MaterialPageRoute(builder: (con)=> const SettingsView()));
+                },text:'Settings page',),
+              ),
+              const Expanded(child: DashboardView(title: "Chats",))*/
             ],
           ),
         ),
@@ -97,41 +126,46 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  TextButton buildTextButton({Function()? onPressed,required String text}) {
-    return TextButton(onPressed: onPressed,style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
-                padding: MaterialStateProperty.all<EdgeInsets>(const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0)),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
-              ),child: Text(text,style: const TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),),);
+  TextButton buildTextButton({Function()? onPressed, required String text}) {
+    return TextButton(
+      onPressed: onPressed,
+      style: ButtonStyle(
+        backgroundColor:
+            MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+        padding: MaterialStateProperty.all<EdgeInsets>(
+            const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0)),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 16.0,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      ),
+    );
   }
 
-  showSnack(String text){
+  showSnack(String text) {
     final scaffold = ScaffoldMessenger.of(context);
-    scaffold.showSnackBar(
-        SnackBar(
-          content: Text(text),
-          action: SnackBarAction(
-              label: 'Ok', onPressed: scaffold.hideCurrentSnackBar),
-        ));
+    scaffold.showSnackBar(SnackBar(
+      content: Text(text),
+      action:
+          SnackBarAction(label: 'Ok', onPressed: scaffold.hideCurrentSnackBar),
+    ));
   }
+
   logoutFromSDK() async {
     // if (await AppUtils.isNetConnected()) {
     //   Helper.progressLoading(context: context);
-      MirrorflyUikit.logoutFromUIKIT().then((value) {
-        debugPrint("logout user $value");
-        showSnack(value['message']);
-      }).catchError((er) {
-
-      });
+    MirrorflyUikit.logoutFromUIKIT().then((value) {
+      debugPrint("logout user $value");
+      showSnack(value['message']);
+    }).catchError((er) {});
   }
 }
-
-

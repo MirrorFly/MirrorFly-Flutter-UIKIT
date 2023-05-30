@@ -11,8 +11,9 @@ import '../controllers/busy_status_controller.dart';
 import 'add_busy_status_view.dart';
 
 class BusyStatusView extends StatefulWidget {
-  const BusyStatusView({Key? key, this.status}) : super(key: key);
+  const BusyStatusView({Key? key, this.status,this.enableAppBar=true}) : super(key: key);
   final String? status;
+  final bool enableAppBar;
   @override
   State<BusyStatusView> createState() => _BusyStatusViewState();
 }
@@ -35,11 +36,11 @@ class _BusyStatusViewState extends State<BusyStatusView> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-        appBar: AppBar(
+        appBar: widget.enableAppBar ? AppBar(
           title: Text(Constants.editBusyStatus, style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
           iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
           backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-        ),
+        ) : null,
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(20.0),

@@ -28,7 +28,7 @@ class MirrorFlyTheme {
       chatBubblePrimaryColor: ChatBubbleColor(color: const Color(0xff2f55c7), textPrimaryColor: Colors.white, textSecondaryColor: const Color(0xffB6CAFF)),
       chatBubbleSecondaryColor: ChatBubbleColor(color: const Color(0xff26262a), textPrimaryColor: const Color(0xfffafafa), textSecondaryColor: const Color(0xff959595)));
 
-  static late var mirrorflyTheme;
+  // static late var mirrorflyTheme;
 
   static customTheme(
       {required Color primaryColor,
@@ -41,7 +41,7 @@ class MirrorFlyTheme {
       required Color textSecondaryColor,
       required ChatBubbleColor chatBubblePrimaryColor,
       required ChatBubbleColor chatBubbleSecondaryColor}) {
-    return mirrorflyTheme = MirrorFlyAppTheme(
+    return MirrorFlyAppTheme(
         primaryColor: primaryColor,
         secondaryColor: secondaryColor,
         appBarColor: appBarColor,
@@ -71,7 +71,7 @@ class MirrorFlyTheme {
   }
 }
 
-class CustomSafeArea extends StatelessWidget {
+/*class CustomSafeArea extends StatelessWidget {
   final Widget child;
   final Color? color;
 
@@ -87,4 +87,4 @@ class CustomSafeArea extends StatelessWidget {
       ),
     );
   }
-}
+}*/

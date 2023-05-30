@@ -40,7 +40,7 @@ class SettingsController extends GetxController {
 
   logoutFromSDK(BuildContext context) async {
     if (await AppUtils.isNetConnected()) {
-      Helper.progressLoading(context: context);
+      if(context.mounted)Helper.progressLoading(context: context);
       Mirrorfly.logoutOfChatSDK().then((value) {
         Helper.hideLoading(context: context);
         if (value) {

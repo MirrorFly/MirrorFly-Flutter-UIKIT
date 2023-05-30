@@ -982,13 +982,13 @@ class DashboardController extends FullLifeCycleController
   RxBool clearVisible = false.obs;
   final _mainuserList = <Profile>[];
   var userlistScrollController = ScrollController();
-  var scrollable = MirrorflyUikit.isTrialLicence.obs;
+  var scrollable = MirrorflyUikit.instance.isTrialLicenceKey.obs;
   var isPageLoading = false.obs;
   final _userList = <Profile>[].obs;
 
   set userList(List<Profile> value) => _userList.value = value;
 
-  List<Profile> get userList => _userList.value;
+  List<Profile> get userList => _userList;
 
   onChange(String inputValue) {
     if (search.text.trim().isNotEmpty) {
@@ -1033,7 +1033,7 @@ class DashboardController extends FullLifeCycleController
   Future<void> filterUserList() async {
     if (await AppUtils.isNetConnected()) {
       searching = true;
-      var future = (MirrorflyUikit.isTrialLicence)
+      var future = (MirrorflyUikit.instance.isTrialLicenceKey)
           ? Mirrorfly.getUserList(pageNum, search.text.trim().toString())
           : Mirrorfly.getRegisteredUsers(true);
       future.then((value) {
@@ -1041,11 +1041,11 @@ class DashboardController extends FullLifeCycleController
         if (value != null) {
           var list = userListFromJson(value);
           if (list.data != null) {
-            if (MirrorflyUikit.isTrialLicence) {
+            if (MirrorflyUikit.instance.isTrialLicenceKey) {
               scrollable(list.data!.length == 20);
 
               list.data!.removeWhere((element){
-                debugPrint("filter chat list--> ${!filteredRecentChatList.value.indexWhere((recentChatItem) => recentChatItem.jid == element.jid.checkNull()).isNegative}");
+                debugPrint("filter chat list--> ${!filteredRecentChatList.indexWhere((recentChatItem) => recentChatItem.jid == element.jid.checkNull()).isNegative}");
                 return !filteredRecentChatList.indexWhere((recentChatItem) => recentChatItem.jid == element.jid.checkNull()).isNegative; });
               _userList(list.data);
             } else {
@@ -1124,7 +1124,7 @@ class DashboardController extends FullLifeCycleController
     var value =
     await getProfileDetails(jid); //Mirrorfly.getProfileLocal(jid, false);
     var value2 = await Mirrorfly.getMessageOfId(mid);
-    if (value != null && value2 != null) {
+    if (value2 != null) {
       var data = value; //profileDataFromJson(value);
       var data2 = sendMessageModelFromJson(value2);
       var map = <Profile?, ChatMessageModel?>{}; //{0,searchMessageItem};
@@ -1166,7 +1166,7 @@ class DashboardController extends FullLifeCycleController
               _mainuserList.addAll(list.data!);
             }
             scrollable(list.data!.length == 20);
-            _userList.value.addAll(list.data!);
+            _userList.addAll(list.data!);
             _userList.refresh();
           } else {
             scrollable(false);
@@ -1266,16 +1266,16 @@ class DashboardController extends FullLifeCycleController
   }
 
   Future<void> gotoContacts(BuildContext context) async {
-    if (MirrorflyUikit.isTrialLicence) {
+    if (MirrorflyUikit.instance.isTrialLicenceKey) {
       // Get.toNamed(Routes.contacts, arguments: {"forward": false, "group": false, "groupJid": ""});
-      Navigator.push(context, MaterialPageRoute(builder: (con)=>const ContactListView(forward: false,group: false,)));
+      Navigator.push(context, MaterialPageRoute(builder: (con)=>const ContactListView()));
     } else {
       var contactPermissionHandle = await AppPermission.checkPermission(context,
           Permission.contacts,
           contactPermission,
           Constants.contactSyncPermission);
       if (contactPermissionHandle) {
-        if(context.mounted)Navigator.push(context, MaterialPageRoute(builder: (con)=>const ContactListView(forward: false,group: false,)));
+        if(context.mounted)Navigator.push(context, MaterialPageRoute(builder: (con)=>const ContactListView()));
         /*Get.toNamed(Routes.contacts,
             arguments: {"forward": false, "group": false, "groupJid": ""});*/
       }

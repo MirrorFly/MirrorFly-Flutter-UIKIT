@@ -18,75 +18,107 @@ import 'mirrorfly_uikit_plugin_platform_interface.dart';
 
 class MirrorflyUikit {
   static MirrorFlyAppTheme? getTheme = MirrorFlyTheme.mirrorFlyLightTheme;
-  static bool isTrialLicence = true;
-  static String googleMapKey = '';
+  bool isTrialLicenceKey = true;
+  String googleMapKey = '';
   static bool isSDKInitialized = false;
   static String theme = "light";
+
+  static var instance = MirrorflyUikit();
 
   static Future<String?> getPlatformVersion() {
     return MirrorflyUikitPluginPlatform.instance.getPlatformVersion();
   }
 
   ///Used as a initUIKIT class for [MirrorflyUikit]
-  /// * [baseUrl] provides the base url for making api calls
-  /// * [licenseKey] provides the License Key
-  /// * [iOSContainerID] provides the App Group of the iOS Project
+  /// * [baseUrl] provide the base url for making api calls
+  /// * [licenseKey] provide the License Key
+  /// * [googleMapKey] provide the googleMap Key for location messages
+  /// * [iOSContainerID] provide the App Group of the iOS Project
   /// * [isTrialLicenceKey] to provide trial/live register and contact sync
-  /// * [storageFolderName] provides the Local Storage Folder Name
-  /// * [enableDebugLog] provides the Debug Log.
-  static initUIKIT() async {
-    try {
-      String configFile = await rootBundle.loadString('assets/mirrorfly_config.json');
+  /// * [storageFolderName] provide the Local Storage Folder Name
+  initUIKIT(
+      {required baseUrl,
+      required String licenseKey,
+      String? googleMapKey,
+      required String iOSContainerID,
+      String? storageFolderName,
+      bool isTrialLicenceKey = true}) async {
+    Mirrorfly.init(
+        baseUrl: baseUrl,
+        licenseKey: licenseKey,
+        iOSContainerID: iOSContainerID,
+        storageFolderName: storageFolderName,
+        enableMobileNumberLogin: true,
+        isTrialLicenceKey: isTrialLicenceKey,
+        enableDebugLog: true);
+    isSDKInitialized = true;
+    this.isTrialLicenceKey = isTrialLicenceKey;
+    this.googleMapKey = googleMapKey ?? '';
+    ReplyHashMap.init();
+    rootBundle.loadString('assets/mirrorfly_config.json').then((configFile) {
       var config = AppConfig.fromJson(json.decode(configFile));
-      Mirrorfly.init(
-          baseUrl: config.projectInfo.serverAddress,
-          licenseKey: config.projectInfo.licenseKey,
-          iOSContainerID: config.projectInfo.iOSContainerId,
-          storageFolderName: config.projectInfo.storageFolderName.isEmpty ? null : config.projectInfo.storageFolderName,
-          enableMobileNumberLogin: config.projectInfo.enableMobileNumberLogin,
-          isTrialLicenceKey: config.projectInfo.isTrialLicenceKey,
-          enableDebugLog: false);
-
-      googleMapKey = config.projectInfo.googleMapKey;
-      theme = config.appTheme.theme;
-      getTheme = config.appTheme.theme == "light"
+      theme = config.appTheme.theme!;
+      getTheme = MirrorFlyTheme.customTheme(
+          primaryColor: config.appTheme.customTheme!.primaryColor,
+          secondaryColor:
+          config.appTheme.customTheme!.secondaryColor,
+          scaffoldColor:
+          config.appTheme.customTheme!.scaffoldColor,
+          colorOnPrimary:
+          config.appTheme.customTheme!.colorOnPrimary,
+          textPrimaryColor:
+          config.appTheme.customTheme!.textPrimaryColor,
+          textSecondaryColor:
+          config.appTheme.customTheme!.textSecondaryColor,
+          chatBubblePrimaryColor:
+          config.appTheme.customTheme!.chatBubblePrimaryColor,
+          chatBubbleSecondaryColor: config
+              .appTheme.customTheme!.chatBubbleSecondaryColor,
+          appBarColor: config.appTheme.customTheme!.appBarColor,
+          colorOnAppbar:
+          config.appTheme.customTheme!.colorOnAppbar);
+      /*getTheme = config.appTheme.theme == "light"
           ? MirrorFlyTheme.mirrorFlyLightTheme
           : config.appTheme.theme == "dark"
               ? MirrorFlyTheme.mirrorFlyDarkTheme
-              : MirrorFlyTheme.customTheme(
-                  primaryColor: config.appTheme.customTheme.primaryColor,
-                  secondaryColor: config.appTheme.customTheme.secondaryColor,
-                  scaffoldColor: config.appTheme.customTheme.scaffoldColor,
-                  colorOnPrimary: config.appTheme.customTheme.colorOnPrimary,
-                  textPrimaryColor: config.appTheme.customTheme.textPrimaryColor,
-                  textSecondaryColor: config.appTheme.customTheme.textSecondaryColor,
-                  chatBubblePrimaryColor: config.appTheme.customTheme.chatBubblePrimaryColor,
-                  chatBubbleSecondaryColor: config.appTheme.customTheme.chatBubbleSecondaryColor,
-                  appBarColor: config.appTheme.customTheme.appBarColor,
-                  colorOnAppbar: config.appTheme.customTheme.colorOnAppbar);
-      isTrialLicence = config.projectInfo.isTrialLicenceKey;
-      ReplyHashMap.init();
-      isSDKInitialized = true;
-    } catch (e) {
-      isSDKInitialized = false;
-      throw ("Mirrorfly config file not found in assets");
-    }
-
-    //commenting bcz used as a local variable
+              : config.appTheme.customTheme != null
+                  ? MirrorFlyTheme.customTheme(
+                      primaryColor: config.appTheme.customTheme!.primaryColor,
+                      secondaryColor:
+                          config.appTheme.customTheme!.secondaryColor,
+                      scaffoldColor:
+                          config.appTheme.customTheme!.scaffoldColor,
+                      colorOnPrimary:
+                          config.appTheme.customTheme!.colorOnPrimary,
+                      textPrimaryColor:
+                          config.appTheme.customTheme!.textPrimaryColor,
+                      textSecondaryColor:
+                          config.appTheme.customTheme!.textSecondaryColor,
+                      chatBubblePrimaryColor:
+                          config.appTheme.customTheme!.chatBubblePrimaryColor,
+                      chatBubbleSecondaryColor: config
+                          .appTheme.customTheme!.chatBubbleSecondaryColor,
+                      appBarColor: config.appTheme.customTheme!.appBarColor,
+                      colorOnAppbar:
+                          config.appTheme.customTheme!.colorOnAppbar)
+                  : MirrorFlyTheme.mirrorFlyLightTheme;*/
+    }).catchError((e) {
+      throw ("Mirrorfly config file not found in assets $e");
+    });
     SessionManagement.onInit().then((value) {
-    //   SessionManagement.setIsTrailLicence(isTrialLicenceKey);
       Get.put<MainController>(MainController());
     });
-
   }
 
   ///Used as a register class for [MirrorflyUikit]
   ///
   ///* [userIdentifier] provide the Unique Id to Register the User
   ///* [token] provide the FCM token this is an optional
-  static Future<Map> register(String userIdentifier, {String token = ""}) async {
-    if(!isSDKInitialized){
-      return setResponse(false,'SDK Not Initialized');
+  ///sample response {'status': true, 'message': 'Register Success};
+  static Future<Map> registerUser(String userIdentifier,
+      {String token = ""}) async {
+    if (!isSDKInitialized) {
+      return setResponse(false, 'SDK Not Initialized');
     }
     if (await AppUtils.isNetConnected()) {
       var value = await Mirrorfly.registerUser(userIdentifier, token: token);
@@ -99,38 +131,44 @@ class MirrorflyUikit {
           // Mirrorfly.setRegionCode(regionCode ?? 'IN');///if its not set then error comes in contact sync delete from phonebook.
           // SessionManagement.setCountryCode((countryCode ?? "").replaceAll('+', ''));
           _setUserJID(userData.data!.username!);
-          return setResponse(true,'Register Success');
+          return setResponse(true, 'Register Success');
         } else {
-          return setResponse(false,userData.message.toString());
+          return setResponse(false, userData.message.toString());
         }
       } catch (e) {
-        return setResponse(false,'$e');
+        return setResponse(false, '$e');
       }
     } else {
-      return Future.value(setResponse(false, 'Check your internet connection and try again'));
+      return Future.value(
+          setResponse(false, 'Check your internet connection and try again'));
     }
   }
 
-  static Future<Map<String,dynamic>> logoutFromUIKIT() async {
+  ///Used as a register class for [MirrorflyUikit]
+  ///Use this Method to logout from our UIkit
+  ///this will clear all the chat data.
+  ///sample response {'status': true, 'message': 'Logout successfully};
+  static Future<Map<String, dynamic>> logoutFromUIKIT() async {
     try {
-      var value  = await Mirrorfly.logoutOfChatSDK();//.then((value) {
-        if (value) {
-          var token = SessionManagement.getToken().checkNull();
-          SessionManagement.clear().then((value) {
-            SessionManagement.setToken(token);
-          });
-          return setResponse(true,'Logout successfully');
-        } else {
-          return setResponse(false,'Logout Failed');
-        }
+      var value = await Mirrorfly.logoutOfChatSDK(); //.then((value) {
+      if (value) {
+        var token = SessionManagement.getToken().checkNull();
+        SessionManagement.clear().then((value) {
+          SessionManagement.setToken(token);
+        });
+        return setResponse(true, 'Logout successfully');
+      } else {
+        return setResponse(false, 'Logout Failed');
+      }
       //});
-    }catch(e){
-      return setResponse(false,'Logout Failed');
+    } catch (e) {
+      return setResponse(false, 'Logout Failed');
     }
   }
-   static Map<String,dynamic> setResponse(bool status,String message){
-     return {'status': status, 'message': message};
-   }
+
+  static Map<String, dynamic> setResponse(bool status, String message) {
+    return {'status': status, 'message': message};
+  }
 
   static _setUserJID(String username) {
     Mirrorfly.getAllGroups(true);
@@ -143,6 +181,8 @@ class MirrorflyUikit {
 
   static ChatView chatPage() {
     Get.put<ChatController>(ChatController());
-    return const ChatView(jid: "",);
+    return const ChatView(
+      jid: "",
+    );
   }
 }

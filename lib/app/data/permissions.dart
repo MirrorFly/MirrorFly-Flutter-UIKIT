@@ -52,8 +52,8 @@ class AppPermission {
     } else {
       sdkVersion = 0;
     }
+    final permission = await Permission.storage.status;
     if (sdkVersion < 33) {
-      final permission = await Permission.storage.status;
       if (permission != PermissionStatus.granted &&
           permission != PermissionStatus.permanentlyDenied) {
         const newPermission = Permission.storage;
@@ -73,7 +73,11 @@ class AppPermission {
         return permission;
       }
     } else {
-      return getAndroid13Permission(context);
+      if(context.mounted) {
+        return getAndroid13Permission(context);
+      } else {
+        return permission;
+      }
     }
   }
 
@@ -246,30 +250,45 @@ class AppPermission {
         default:
           permissionAlertMessage = "${info.appName} need the ${permissionName.toUpperCase()} Permission. But they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"${permissionName.toUpperCase()}\"";
       }
-
-      var deniedPopupValue = await customPermissionDialog(context,icon: permissionIcon,
+      if(context.mounted) {
+        var deniedPopupValue = await customPermissionDialog(context, icon: permissionIcon, content: permissionAlertMessage, appName: info.appName);
+        if(deniedPopupValue){
+          openAppSettings();
+          return false;
+        }else{
+          return false;
+        }
+      }else {
+        return false;
+      }
+      /*var deniedPopupValue = await customPermissionDialog(context,icon: permissionIcon,
           content: permissionAlertMessage,appName: info.appName);
       if(deniedPopupValue){
         openAppSettings();
         return false;
       }else{
         return false;
-      }
+      }*/
     }else{
-      mirrorFlyLog('denied', 'permission');
-      var popupValue = await customPermissionDialog(context,icon: permissionIcon,
-          content: permissionContent,appName: info.appName);
-      if(popupValue){
-        return AppPermission.requestPermission(permission);/*.then((value) {
-          if(value){
-            return true;
-          }else{
-            return false;
-          }
-        });*/
+      // mirrorFlyLog('denied', 'permission');
+      if(context.mounted) {
+        var popupValue = await customPermissionDialog(context,icon: permissionIcon,
+            content: permissionContent,appName: info.appName);
+        if(popupValue){
+          return AppPermission.requestPermission(permission);
+        }else{
+          return false;
+        }
       }else{
         return false;
       }
+      /*var popupValue = await customPermissionDialog(context,icon: permissionIcon,
+          content: permissionContent,appName: info.appName);
+      if(popupValue){
+        return AppPermission.requestPermission(permission);
+      }else{
+        return false;
+      }*/
     }
   }
 

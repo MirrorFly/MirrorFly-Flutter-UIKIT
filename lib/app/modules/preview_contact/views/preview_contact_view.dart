@@ -8,12 +8,13 @@ import '../../../common/widgets.dart';
 import '../controllers/preview_contact_controller.dart';
 
 class PreviewContactView extends StatefulWidget {
-  const PreviewContactView({Key? key, this.contactList, this.previewContactList, required this.from, this.contactName}) : super(key: key);
+  const PreviewContactView({Key? key, this.contactList, this.previewContactList, required this.from, this.contactName,this.enableAppBar=true}) : super(key: key);
 
   final List<LocalContact>? contactList;
   final List<String>? previewContactList;
   final String from;
   final String? contactName;
+  final bool enableAppBar;
 
   @override
   State<PreviewContactView> createState() => _PreviewContactViewState();
@@ -38,13 +39,13 @@ class _PreviewContactViewState extends State<PreviewContactView> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-        appBar: AppBar(
+        appBar: widget.enableAppBar ? AppBar(
           iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
           backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
           title: controller.from == "contact_pick"
               ? Text('Send Contacts', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),)
               : Text('Contact Details', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
-        ),
+        ):null,
         body: SafeArea(
           child: Stack(
             children: [

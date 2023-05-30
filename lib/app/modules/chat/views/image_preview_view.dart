@@ -11,13 +11,13 @@ import '../../../common/constants.dart';
 
 
 class ImagePreviewView extends GetView<ImagePreviewController> {
-  const ImagePreviewView({super.key});
-
+  const ImagePreviewView({super.key,this.enableAppBar=true});
+  final bool enableAppBar;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
+      appBar: enableAppBar ? AppBar(
         backgroundColor: Colors.black,
         iconTheme: const IconThemeData(
             color: Colors.white
@@ -54,7 +54,7 @@ class ImagePreviewView extends GetView<ImagePreviewController> {
               ),
               onPressed: () {}),
         ],*/
-      ),
+      ) : null,
       body: SafeArea(
         child: SizedBox(
           width: MediaQuery

@@ -1,3 +1,17 @@
+## 0.0.5
+
+* Appbar enable or disable option for individual pages
+* some lint fixes
+## 0.0.4
+
+* UIKit init config changes
+## 0.0.3
+
+* static analysis and Dart 3 & Flutter 3.10 compatibility issues fixed
+* Readme file changes
+## 0.0.2
+
+* static analysis and Dart 3 & Flutter 3.10 compatibility issues fixed
 ## 0.0.1
 
-* TODO: Describe initial release.
+* initial flutter uikit release.
