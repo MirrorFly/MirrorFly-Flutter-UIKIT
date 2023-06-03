@@ -422,13 +422,13 @@ class ProfileController extends GetxController {
 
   Future<bool> validMobileNumber(String text)async{
     FlutterLibphonenumber().init();
-    var formatNumberSync = FlutterLibphonenumber().formatNumberSync("+$text");
+    var formatNumberSync = FlutterLibphonenumber().formatNumberSync(text);
     try {
       var parse = await FlutterLibphonenumber().parse(formatNumberSync);
       debugPrint("parse-----> $parse");
       //{country_code: 91, e164: +91xxxxxxxxxx, national: 0xxxxx xxxxx, type: mobile, international: +91 xxxxx xxxxx, national_number: xxxxxxxxxx, region_code: IN}
       if (parse.isNotEmpty) {
-        var formatted = parse['international'].replaceAll("+", '');
+        var formatted = parse['international'];//.replaceAll("+", '');
         profileMobile.text = (formatted.toString());
         return true;
       } else {
