@@ -60,9 +60,12 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
             var list = chatMessageModel.toList().reversed.toList();
             starredChatList(list);
           }
-
         }
         isListLoading(false);
+        if(isSearch.value){
+          lastInputValue="";
+          startSearch(searchedText.text.toString());
+        }
       });
     }
   }
@@ -663,7 +666,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
             .contains(filterKey.toLowerCase());
   }
   Future<Profile> getProfile(String jid) async {
-    var value = await Mirrorfly.getProfileDetails(jid, true);
+    var value = await Mirrorfly.getProfileDetails(jid);
     return Profile.fromJson(json.decode(value.toString()));
   }
 
