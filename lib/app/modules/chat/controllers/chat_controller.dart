@@ -770,7 +770,7 @@ class ChatController extends FullLifeCycleController
           //   debugPrint("context is not mounted");
           // }
         } else {
-          toToast("File Size should not exceed 20 MB");
+          toToast("File Size should not exceed ${Constants.maxDocFileSize} MB");
         }
       } else {
         // User canceled the picker
@@ -993,7 +993,7 @@ class ChatController extends FullLifeCycleController
               duration.inMilliseconds.toString(), context);
         });
       } else {
-        toToast("File Size should not exceed 20 MB");
+        toToast("File Size should not exceed ${Constants.maxAudioFileSize} MB");
       }
     } else {
       // User canceled the picker
