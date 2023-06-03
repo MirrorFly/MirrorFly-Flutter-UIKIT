@@ -411,14 +411,14 @@ class DashboardController extends FullLifeCycleController
     ));
   }
 
-  chatInfo(BuildContext context) async {
+  chatInfo(BuildContext context) {
     var chatIndex = recentChats.indexWhere((element) =>
     selectedChats.first == element.jid); //selectedChatsPosition[index];
     var item = recentChats[chatIndex];
     Helper.progressLoading(context: context);
     clearAllChatSelection();
-    await Mirrorfly.getProfileDetails(item.jid.checkNull()).then((value) {
-      if (value != null) {
+    getProfileDetails(item.jid.checkNull()).then((value) {
+      if (value.jid != null) {
         Helper.hideLoading(context: context);
         var profile = profiledata(value.toString());
         if (item.isGroup!) {
@@ -1124,7 +1124,7 @@ class DashboardController extends FullLifeCycleController
     var value =
     await getProfileDetails(jid); //Mirrorfly.getProfileLocal(jid, false);
     var value2 = await Mirrorfly.getMessageOfId(mid);
-    if (value2 != null) {
+    if (value.jid !=null && value2 != null) {
       var data = value; //profileDataFromJson(value);
       var data2 = sendMessageModelFromJson(value2);
       var map = <Profile?, ChatMessageModel?>{}; //{0,searchMessageItem};
@@ -1208,9 +1208,11 @@ class DashboardController extends FullLifeCycleController
       debugPrint("userListIndex $userListIndex");
       getProfileDetails(jid).then((value) {
         debugPrint("get profile detail dashboard $value");
-        profile_(value);
-        if (!userListIndex.isNegative) {
-          _userList[userListIndex] = value;
+        if(value.jid !=null) {
+          profile_(value);
+          if (!userListIndex.isNegative) {
+            _userList[userListIndex] = value;
+          }
         }
       });
     }
@@ -1240,28 +1242,30 @@ class DashboardController extends FullLifeCycleController
 
   void getProfileDetail(context, RecentChatData chatItem, int index) {
     getProfileDetails(chatItem.jid.checkNull()).then((value) {
-      profile_(value);
-      debugPrint("dashboard controller profile update received");
-      showQuickProfilePopup(
-          context: context,
-          // chatItem: chatItem,
-          chatTap: () {
-            Navigator.pop(context);
-            // Get.back();
-            if (selected.value) {
-              selectOrRemoveChatfromList(index);
-            } else {
-              toChatPage(context,chatItem.jid.checkNull());
-            }
-          },
-          callTap: () {},
-          videoTap: () {},
-          infoTap: () {
-            Navigator.pop(context);
-            // Get.back();
-            infoPage(context,value);
-          },
-          profile: profile_);
+      if(value.jid!=null) {
+        profile_(value);
+        debugPrint("dashboard controller profile update received");
+        showQuickProfilePopup(
+            context: context,
+            // chatItem: chatItem,
+            chatTap: () {
+              Navigator.pop(context);
+              // Get.back();
+              if (selected.value) {
+                selectOrRemoveChatfromList(index);
+              } else {
+                toChatPage(context, chatItem.jid.checkNull());
+              }
+            },
+            callTap: () {},
+            videoTap: () {},
+            infoTap: () {
+              Navigator.pop(context);
+              // Get.back();
+              infoPage(context, value);
+            },
+            profile: profile_);
+      }
     });
   }
 

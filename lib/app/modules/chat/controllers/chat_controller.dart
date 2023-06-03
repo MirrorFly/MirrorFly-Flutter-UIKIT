@@ -153,7 +153,7 @@ class ChatController extends FullLifeCycleController
       // initListeners();
     } else {*/
     debugPrint('userJid $userJid');
-    if(!isUser) {
+    /*if(!isUser) {
       getProfileDetails(userJid).then((
           value) {
         // debugPrint('Mirrorfly.getProfileDetails $value');
@@ -193,7 +193,19 @@ class ChatController extends FullLifeCycleController
         // }
       }
       );
-    }
+    }*/
+    getProfileDetails(userJid).then((
+        value) {
+      if(value.jid !=null) {
+        SessionManagement.setChatJid("");
+        profile_(value);
+        ready();
+        checkAdminBlocked();
+      }
+      // initListeners();
+    }).catchError((o) {
+      debugPrint('error $o');
+    });
     // }
 
     setAudioPath();
@@ -2103,13 +2115,13 @@ class ChatController extends FullLifeCycleController
   void onGroupProfileUpdated(groupJid) {
     if (profile.jid.checkNull() == groupJid.toString()) {
       getProfileDetails(profile.jid.checkNull()).then((value) {
-        // if (value != null) {
+        if (value.jid != null) {
           // var member = profileDataFromJson(value).data ?? ProfileData();
           // var member = Profile.fromJson(json.decode(value.toString()));
           profile_.value = value;
           profile_.refresh();
           checkAdminBlocked();
-        // }
+        }
       });
     }
   }
