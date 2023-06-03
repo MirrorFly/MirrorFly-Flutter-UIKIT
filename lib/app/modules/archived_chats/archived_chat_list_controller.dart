@@ -8,6 +8,8 @@ import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 
 import '../../data/apputils.dart';
 import '../../data/helper.dart';
+import '../chatInfo/views/chat_info_view.dart';
+import '../group/views/group_info_view.dart';
 
 class ArchivedChatListController extends GetxController {
   RxList<RecentChatData> archivedChats = <RecentChatData>[].obs;//Get.find<DashboardController>().archivedChats;
@@ -407,5 +409,49 @@ class ArchivedChatListController extends GetxController {
 
   void userDeletedHisProfile(String jid) {
     userUpdatedHisProfile(jid);
+    updateProfile(jid);
+  }
+  var profile_ = Profile().obs;
+  void getProfileDetail(context, RecentChatData chatItem, int index) {
+    getProfileDetails(chatItem.jid.checkNull()).then((value) {
+      profile_(value);
+      debugPrint("dashboard controller profile update received");
+      showQuickProfilePopup(
+          context: context,
+          // chatItem: chatItem,
+          chatTap: () {
+            Navigator.pop(context);
+            toChatPage(chatItem.jid.checkNull(),chatItem.isGroup.checkNull(),context);
+          },
+          callTap: () {},
+          videoTap: () {},
+          infoTap: () {
+            Navigator.pop(context);
+            infoPage(context,value);
+          },
+          profile: profile_);
+    });
+  }
+  void updateProfile(String jid){
+    if(profile_.value.jid != null && profile_.value.jid.toString()==jid.toString()) {
+      getProfileDetails(jid).then((value) {
+        debugPrint("get profile detail archived $value");
+        profile_(value);
+      });
+    }
+  }
+  infoPage(BuildContext context,Profile profile) {
+    if (profile.isGroupProfile ?? false) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (con) =>
+                  GroupInfoView(jid: profile.jid.checkNull())));
+    } else {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (con) => ChatInfoView(jid: profile.jid.checkNull())));
+    }
   }
 }
