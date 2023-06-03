@@ -417,7 +417,7 @@ class DashboardController extends FullLifeCycleController
     var item = recentChats[chatIndex];
     Helper.progressLoading(context: context);
     clearAllChatSelection();
-    await Mirrorfly.getProfileDetails(item.jid.checkNull(), false).then((value) {
+    await Mirrorfly.getProfileDetails(item.jid.checkNull()).then((value) {
       if (value != null) {
         Helper.hideLoading(context: context);
         var profile = profiledata(value.toString());
@@ -834,7 +834,7 @@ class DashboardController extends FullLifeCycleController
               },
               child: Text("No",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
           TextButton(
-              onPressed: () async {
+              onPressed: () {
                 Navigator.pop(context);
                 // Get.back();
                 Mirrorfly.deleteRecentChat(selectedChats[index]).then((value) {
@@ -1304,19 +1304,6 @@ class DashboardController extends FullLifeCycleController
 
   void userDeletedHisProfile(String jid) {
     userUpdatedHisProfile(jid);
-  }
-
-  Future<bool> askStoragePermission(BuildContext context) async {
-    final permission = await AppPermission.getStoragePermission(context);
-    switch (permission) {
-      case PermissionStatus.granted:
-        return true;
-      case PermissionStatus.permanentlyDenied:
-        return false;
-      default:
-        debugPrint("Permission default");
-        return false;
-    }
   }
 
 

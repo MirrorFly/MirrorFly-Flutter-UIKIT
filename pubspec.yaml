@@ -44,7 +44,7 @@ dependencies:
   scrollable_positioned_list: ^0.3.5 #scrollable position
   marquee: ^2.2.0 # marquee text
   path: ^1.8.2
-  camera: ^0.10.0+4
+  camera: ^0.10.5+2
   better_video_player: ^1.2.8
   internet_connection_checker: ^1.0.0+1 # connectivity check
   provider: ^6.0.3

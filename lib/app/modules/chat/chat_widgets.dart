@@ -15,7 +15,6 @@ import '../../models.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/widgets.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common/constants.dart';
@@ -2152,7 +2151,7 @@ void downloadMedia(BuildContext context,String messageId) async {
   debugPrint("media download click--> $messageId");
   if (await AppUtils.isNetConnected()) {
     if(context.mounted) {
-      askStoragePermission(context).then((value) {
+      AppPermission.getStoragePermission(context).then((value) {
         if (value) {
           // if (await askStoragePermission(context)) {
           debugPrint("media permission granted");
@@ -2167,18 +2166,6 @@ void downloadMedia(BuildContext context,String messageId) async {
   }
 }
 
-Future<bool> askStoragePermission(BuildContext context) async {
-  final permission = await AppPermission.getStoragePermission(context);
-  switch (permission) {
-    case PermissionStatus.granted:
-      return true;
-    case PermissionStatus.permanentlyDenied:
-      return false;
-    default:
-      debugPrint("Permission default");
-      return false;
-  }
-}
 
 Widget downloadView(int mediaDownloadStatus, int mediaFileSize,
     String messageType,bool isSentByMe) {

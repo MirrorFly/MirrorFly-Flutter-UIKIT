@@ -751,7 +751,8 @@ class ChatController extends FullLifeCycleController
   }
 
   documentPickUpload(BuildContext context) async {
-    if (await askStoragePermission()) {
+    var permission = await AppPermission.getStoragePermission(context);
+    if (permission) {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         allowMultiple: false,
         type: FileType.custom,
@@ -900,44 +901,6 @@ class ChatController extends FullLifeCycleController
     }*/
   }
 
-  Future<bool> askContactsPermission() async {
-    final permission = await AppPermission.getContactPermission(context);
-    switch (permission) {
-      case PermissionStatus.granted:
-        return true;
-      case PermissionStatus.permanentlyDenied:
-        return false;
-      default:
-        debugPrint("Contact Permission default");
-        return false;
-    }
-  }
-
-  Future<bool> askStoragePermission() async {
-    final permission = await AppPermission.getStoragePermission(context);
-    switch (permission) {
-      case PermissionStatus.granted:
-        return true;
-      case PermissionStatus.permanentlyDenied:
-        return false;
-      default:
-        debugPrint("Permission default");
-        return false;
-    }
-  }
-
-  Future<bool> askManageStoragePermission() async {
-    final permission = await AppPermission.getManageStoragePermission();
-    switch (permission) {
-      case PermissionStatus.granted:
-        return true;
-      case PermissionStatus.permanentlyDenied:
-        return false;
-      default:
-        debugPrint("Permission default");
-        return false;
-    }
-  }
 
   sendContactMessage(List<String> contactList, String contactName,
       BuildContext context) async {
@@ -1287,7 +1250,7 @@ class ChatController extends FullLifeCycleController
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-                "Are you sure you want to delete selected Message${selectedChatList.length > 1 ? "s" : ""}",style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor),),
+                "Are you sure you want to delete selected Message${selectedChatList.length > 1 ? "s" : ""}?",style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor),),
             isCheckBoxShown
                 ? Column(
                     mainAxisSize: MainAxisSize.min,
@@ -1782,7 +1745,8 @@ class ChatController extends FullLifeCycleController
 
   exportChat() async {
     if (chatList.isNotEmpty) {
-      if (await askStoragePermission()) {
+      var permission = await AppPermission.getStoragePermission(context);
+      if (permission) {
         Mirrorfly.exportChatConversationToEmail(profile.jid.checkNull())
             .then((value) async {
           debugPrint("exportChatConversationToEmail $value");
@@ -1911,24 +1875,29 @@ class ChatController extends FullLifeCycleController
         ? await Mirrorfly.isBusyStatusEnabled()
         : false;
     if (!busyStatus.checkNull()) {
-      if (await askStoragePermission()) {
-        if (await Record().hasPermission()) {
-          record = Record();
-          timerInit("00:00");
-          isAudioRecording(Constants.audioRecording);
-          startTimer();
-          await record.start(
-            path:
-                "$audioSavePath/audio_${DateTime.now().millisecondsSinceEpoch}.m4a",
-            encoder: AudioEncoder.AAC,
-            bitRate: 128000,
-            samplingRate: 44100,
-          );
-          Future.delayed(const Duration(seconds: 300), () {
-            if (isAudioRecording.value == Constants.audioRecording) {
-              stopRecording();
-            }
-          });
+      if(context.mounted) {
+        var permission = await AppPermission.getStoragePermission(context);
+        if (permission) {
+          if (await Record().hasPermission()) {
+            record = Record();
+            timerInit("00:00");
+            isAudioRecording(Constants.audioRecording);
+            startTimer();
+            await record.start(
+              path:
+              "$audioSavePath/audio_${DateTime
+                  .now()
+                  .millisecondsSinceEpoch}.m4a",
+              encoder: AudioEncoder.AAC,
+              bitRate: 128000,
+              samplingRate: 44100,
+            );
+            Future.delayed(const Duration(seconds: 300), () {
+              if (isAudioRecording.value == Constants.audioRecording) {
+                stopRecording();
+              }
+            });
+          }
         }
       }
     } else {
@@ -2353,9 +2322,9 @@ class ChatController extends FullLifeCycleController
   //   }
   // }
 
-  onAudioClick(BuildContext context) async {
+  onAudioClick(BuildContext context) {
     // Get.back();
-    AppPermission.checkPermission(context, Permission.storage, filePermission, Constants.filePermission).then((value){
+    AppPermission.getStoragePermission(context).then((value){
       if(value) {
         pickAudio(context);
       }
@@ -2368,7 +2337,7 @@ class ChatController extends FullLifeCycleController
 
   onGalleryClick() async {
     // if (await askStoragePermission()) {
-    AppPermission.checkPermission(context, Permission.storage, filePermission, Constants.filePermission).then((value) {
+    AppPermission.getStoragePermission(context).then((value) {
       if(value){
         try {
           // imagePicker();
