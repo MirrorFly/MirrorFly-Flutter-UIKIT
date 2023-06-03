@@ -258,7 +258,7 @@ class RecentChatItem extends StatelessWidget {
     return Positioned(
         right: 0,
         child: CircleAvatar(
-          radius: 8,
+          radius: 9,
           backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
           child: Center(
             child: Text(
@@ -266,7 +266,7 @@ class RecentChatItem extends StatelessWidget {
                   ? returnFormattedCount(item.unreadMessageCount!)
                   : "",
               style: TextStyle(
-                  fontSize: 9, color: MirrorflyUikit.getTheme?.colorOnPrimary, fontFamily: 'sf_ui'),
+                  fontSize: 8, color: MirrorflyUikit.getTheme?.colorOnPrimary, fontFamily: 'sf_ui'),
             ),
           ),
         ));
