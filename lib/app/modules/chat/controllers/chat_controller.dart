@@ -12,6 +12,7 @@ import 'package:flutter_libphonenumber/flutter_libphonenumber.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:mirrorfly_plugin/model/export_model.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/de_bouncer.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/permissions.dart';
@@ -32,7 +33,6 @@ import 'package:share_plus/share_plus.dart';
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
 import '../../../data/apputils.dart';
-import '../../../data/chat_data_model.dart';
 import '../../../data/helper.dart';
 
 import 'package:mirrorfly_plugin/flychat.dart';
@@ -153,7 +153,7 @@ class ChatController extends FullLifeCycleController
     } else {*/
     debugPrint('userJid $userJid');
     if(!isUser) {
-      getProfileDetails(userJid, server:false).then((
+      getProfileDetails(userJid).then((
           value) {
         // debugPrint('Mirrorfly.getProfileDetails $value');
         // var str = profileDataFromJson(value).data;
@@ -1783,17 +1783,21 @@ class ChatController extends FullLifeCycleController
   exportChat() async {
     if (chatList.isNotEmpty) {
       if (await askStoragePermission()) {
-        Mirrorfly.exportChatConversationToEmail(profile.jid.checkNull()).then((value) {
-          mirrorFlyLog('export ',value);
-          var result = chatDataModelFromJson(value.toString());
-          var files = <XFile>[];
-          result.mediaAttachmentsUri?.forEach((element)=>element.file!=null ? files.add(XFile(element.file!)) : null);
-          if(files.isNotEmpty){
-            Share.shareXFiles(files);
+        Mirrorfly.exportChatConversationToEmail(profile.jid.checkNull())
+            .then((value) async {
+          debugPrint("exportChatConversationToEmail $value");
+          var data = exportModelFromJson(value);
+          if (data.mediaAttachmentsUrl != null) {
+            if (data.mediaAttachmentsUrl!.isNotEmpty) {
+              var xfiles = <XFile>[];
+              data.mediaAttachmentsUrl
+                  ?.forEach((element) => xfiles.add(XFile(element)));
+              await Share.shareXFiles(xfiles);
+            }
           }
         });
-      }else{
-        debugPrint('permission not given');
+      } else {
+        toToast("permission denid");
       }
     } else {
       toToast("There is no conversation.");
