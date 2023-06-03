@@ -412,7 +412,7 @@ class ContactController extends FullLifeCycleController
           // Get.back(result: selectedUsersJIDList);
           if(context.mounted) Navigator.pop(context, selectedUsersJIDList);
         } else {
-          toToast("Add at least two contacts");
+          toToast("Select any contacts");
         }
       }
     } else {
