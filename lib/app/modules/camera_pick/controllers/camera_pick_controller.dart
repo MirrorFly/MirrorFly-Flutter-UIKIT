@@ -99,10 +99,8 @@ class CameraPickController extends GetxController with WidgetsBindingObserver  {
   }
 
   Timer? countdownTimer;
-  Duration myDuration = const Duration(seconds: 40000);
-  int maxVideoDuration = 40000;
-  var seconds = 40000.obs;
-
+  Duration myDuration = const Duration(seconds: 300);
+  int maxVideoDuration = 300;
   void startTimer(BuildContext context) {
     countdownTimer =
         Timer.periodic(const Duration(seconds: 1), (_) => setCountDown(context));
@@ -121,7 +119,8 @@ class CameraPickController extends GetxController with WidgetsBindingObserver  {
     progress(counter);
     debugPrint(counter.toString());
     if(counter==maxVideoDuration){
-      stopVideoRecording(context);
+      // stopVideoRecording();
+      stopRecord(context);
     }
   }
 
@@ -139,7 +138,7 @@ class CameraPickController extends GetxController with WidgetsBindingObserver  {
     }
 
     try {
-      await cameraController!.startVideoRecording();
+      await cameraController?.startVideoRecording();
       if(context.mounted) startTimer(context);
       isRecording(true);
     } on CameraException catch (e) {
@@ -169,7 +168,7 @@ class CameraPickController extends GetxController with WidgetsBindingObserver  {
     }
 
     try {
-      return cameraController!.stopVideoRecording();
+      return cameraController?.stopVideoRecording();
     } on CameraException catch (e) {
       _showCameraException(context,e);
       return null;
