@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/gallery_picker/src/data/models/picked_asset_model.dart';
 import 'package:photo_view/photo_view.dart';
 
 import '../../../../mirrorfly_uikit_plugin.dart';
@@ -19,7 +20,7 @@ class MediaPreviewView extends StatefulWidget {
   const MediaPreviewView(
       {Key? key, required this.filePath, required this.userName, required this.profile, required this.caption, required this.showAdd, this.isFromGalleryPicker = false,this.enableAppBar=true})
       : super(key: key);
-  final List filePath;
+  final List<PickedAssetModel> filePath;
   final String userName;
   final Profile profile;
   final String caption;
@@ -180,7 +181,7 @@ class _MediaPreviewViewState extends State<MediaPreviewView> {
                             if (data.type == 'image') {
                               return Center(
                                   child: PhotoView(
-                                    imageProvider: FileImage(File(data.path)),
+                                    imageProvider: FileImage(File(data.path!)),
                                     // Contained = the smallest possible size to fit one dimension of the screen
                                     minScale:
                                     PhotoViewComputedScale.contained * 1,
@@ -224,7 +225,7 @@ class _MediaPreviewViewState extends State<MediaPreviewView> {
                                   BetterVideoPlayerController(),
                                   dataSource: BetterVideoPlayerDataSource(
                                     BetterVideoPlayerDataSourceType.file,
-                                    data.path,
+                                    data.path!,
                                   ),
                                 ),
                               );
@@ -394,7 +395,7 @@ class _MediaPreviewViewState extends State<MediaPreviewView> {
                                                 .symmetric(horizontal: 1),
                                             child: Image.memory(controller
                                                 .filePath[index]
-                                                .thumbnail),
+                                                .thumbnail!),
                                           ),
                                         );
                                       }),
