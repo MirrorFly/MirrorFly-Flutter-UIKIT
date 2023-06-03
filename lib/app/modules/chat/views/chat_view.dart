@@ -436,7 +436,7 @@ class _ChatViewState extends State<ChatView> {
                   controller: controller.messageController,
                   focusNode: controller.focusNode,
                   cursorColor: MirrorflyUikit.getTheme!.primaryColor,
-                  style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                  style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor,fontWeight: FontWeight.w400),
                   decoration: InputDecoration(
                       hintText: "Start Typing...", border: InputBorder.none,hintStyle: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)),
                 ),
