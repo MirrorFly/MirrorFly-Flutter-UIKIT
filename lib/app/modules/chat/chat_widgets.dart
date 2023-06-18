@@ -616,14 +616,33 @@ class _AudioMessageViewState extends State<AudioMessageView>
         .currentPos
         .toDouble()
         .obs;
-    player.onPlayerCompletion.listen((event) {
+    player.onPlayerStateChanged.listen(
+          (it) {
+        switch (it) {
+          case PlayerState.playing:
+            isPlaying(true);
+            break;
+          case PlayerState.stopped:
+            isPlaying(false);
+            break;
+          case PlayerState.paused:
+            isPlaying(false);
+            break;
+          case PlayerState.completed:
+            break;
+          default:
+            break;
+        }
+      },
+    );
+    player.onPlayerComplete.listen((event) {
       isPlaying(false);
       currentPos(0);
       widget.chatMessage.mediaChatMessage!.currentPos = 0;
       player.stop();
     });
 
-    player.onAudioPositionChanged.listen((Duration p) {
+    player.onDurationChanged.listen((Duration p) {
       mirrorFlyLog('p.inMilliseconds', p.inMilliseconds.toString());
       widget.chatMessage.mediaChatMessage!.currentPos = p.inMilliseconds;
       currentPos(p.inMilliseconds.toDouble());
@@ -879,24 +898,27 @@ class _AudioMessageViewState extends State<AudioMessageView>
                     return InkWell(
                       onTap: () async {
                         if (!isPlaying.value) {
-                          int result = await player.play(
+                          await player.play(UrlSource(chatMessage.mediaChatMessage!.mediaLocalStoragePath),position: Duration(
+                              milliseconds:
+                              chatMessage.mediaChatMessage!.currentPos));
+                          /*int result = await player.play(
                               chatMessage.mediaChatMessage!.mediaLocalStoragePath,
                               position: Duration(
                                   milliseconds:
                                   chatMessage.mediaChatMessage!.currentPos),
-                              isLocal: true);
-                          if (result == 1) {
+                              isLocal: true);*/
+                          // if (result == 1) {
                             isPlaying(true);
-                          } else {
-                            mirrorFlyLog("", "Error while playing audio.");
-                          }
+                          // } else {
+                          //   mirrorFlyLog("", "Error while playing audio.");
+                          // }
                         } else {
-                          int result = await player.pause();
-                          if (result == 1) {
+                          await player.pause();
+                          // if (result == 1) {
                             isPlaying(false);
-                          } else {
-                            mirrorFlyLog("", "Error on pause audio.");
-                          }
+                          // } else {
+                          //   mirrorFlyLog("", "Error on pause audio.");
+                          // }
                         }
                       },
                       child: Padding(
@@ -2463,14 +2485,14 @@ class AudioMessagePlayerController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    player.onPlayerCompletion.listen((event) {
+    player.onPlayerComplete.listen((event) {
       playingChat!.mediaChatMessage!.isPlaying = false;
       playingChat!.mediaChatMessage!.currentPos = 0;
       player.stop();
       //chatList.refresh();
     });
 
-    player.onAudioPositionChanged.listen((Duration p) {
+    player.onDurationChanged.listen((Duration p) {
       playingChat?.mediaChatMessage!.currentPos = (p.inMilliseconds);
       //chatList.refresh();
     });
@@ -2489,30 +2511,29 @@ class AudioMessagePlayerController extends GetxController {
       playingChat = chatMessage;
     }
     if (!playingChat!.mediaChatMessage!.isPlaying) {
-      int result = await player.play(
-          playingChat!.mediaChatMessage!.mediaLocalStoragePath,
+      await player.play(
+          UrlSource(playingChat!.mediaChatMessage!.mediaLocalStoragePath),
           position:
-          Duration(milliseconds: playingChat!.mediaChatMessage!.currentPos),
-          isLocal: true);
-      if (result == 1) {
+          Duration(milliseconds: playingChat!.mediaChatMessage!.currentPos));
+      // if (result == 1) {
         playingChat!.mediaChatMessage!.isPlaying = true;
-      } else {
-        mirrorFlyLog("", "Error while playing audio.");
-      }
+      // } else {
+      //   mirrorFlyLog("", "Error while playing audio.");
+      // }
     } else if (!playingChat!.mediaChatMessage!.isPlaying) {
-      int result = await player.resume();
-      if (result == 1) {
+      await player.resume();
+      // if (result == 1) {
         playingChat!.mediaChatMessage!.isPlaying = true;
-      } else {
-        mirrorFlyLog("", "Error on resume audio.");
-      }
+      // } else {
+      //   mirrorFlyLog("", "Error on resume audio.");
+      // }
     } else {
-      int result = await player.pause();
-      if (result == 1) {
+      await player.pause();
+      // if (result == 1) {
         playingChat!.mediaChatMessage!.isPlaying = false;
-      } else {
-        mirrorFlyLog("", "Error on pause audio.");
-      }
+      // } else {
+      //   mirrorFlyLog("", "Error on pause audio.");
+      // }
     }
   }
 }
