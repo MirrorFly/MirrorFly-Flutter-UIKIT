@@ -6,10 +6,10 @@ import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   MirrorflyUikit.instance.initUIKIT(
-      baseUrl: 'https://api-uikit-qa.contus.us/api/v1/',
+      baseUrl: 'YOUR_BASE_URL',
       licenseKey: 'Your_Mirrorfly_licence_key',
       googleMapKey: 'Your_Google_Map_Key_for_location_messages',
-      iOSContainerID: 'group.com.mirrorfly.flutter');
+      iOSContainerID: 'Your_iOS_app_Container_id');
   runApp(const MyApp());
 }
 
