@@ -557,7 +557,7 @@ class _ChatViewState extends State<ChatView> {
               skinToneDialogBgColor: MirrorflyUikit.getTheme!.textPrimaryColor,
               skinToneIndicatorColor: MirrorflyUikit.getTheme!.textPrimaryColor,
               enableSkinTones: true,
-              showRecentsTab: true,
+              // showRecentsTab: true,
               recentsLimit: 28,
               tabIndicatorAnimDuration: kTabScrollDuration,
               categoryIcons: const CategoryIcons(),

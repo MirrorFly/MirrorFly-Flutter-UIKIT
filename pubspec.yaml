@@ -1,17 +1,17 @@
 name: mirrorfly_uikit_plugin
 description: A Mirrorfly Flutter UIKit plugin to Experience an outstanding real time messaging solution. The powerful communication that adds an extra mileage to build your chat app.
-version: 0.0.5
+version: 0.0.6
 homepage: "https://www.mirrorfly.com/docs/UIKit/flutter/quick-start/"
 
 environment:
-  sdk: '>=2.19.2 <3.0.0'
+  sdk: '>=2.19.2 <4.0.0'
   flutter: ">=2.5.0"
 
 dependencies:
   flutter:
     sdk: flutter
   get: ^4.6.5
-  mirrorfly_plugin: 0.0.7
+  mirrorfly_plugin: ^0.0.7
   plugin_platform_interface: ^2.0.2
   flutter_svg: ^1.1.5
   cached_network_image: ^3.2.2
@@ -22,7 +22,7 @@ dependencies:
   image_picker: ^0.8.6
   flutter_profile_picture: ^2.0.0
   permission_handler: ^10.2.0
-  emoji_picker_flutter: 1.4.0
+  emoji_picker_flutter: ^1.6.1
   image_cropping: ^0.0.13 #crop image
   path_provider: ^2.0.11 #path provider
   video_player: ^2.4.7
@@ -31,7 +31,7 @@ dependencies:
   custom_image_crop: ^0.0.4 #crop image
   photo_view: ^0.14.0
   fluttercontactpicker: ^4.7.0
-  audioplayers: 4.1.0
+  audioplayers: ^4.1.0
   contacts_service: ^0.6.3
   google_maps_flutter: ^2.2.1 #google map
   geolocator: ^9.0.2 #geolocator
