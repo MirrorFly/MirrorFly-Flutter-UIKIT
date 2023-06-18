@@ -599,6 +599,7 @@ class _AudioMessageViewState extends State<AudioMessageView>
   }
 
   AudioPlayer player = AudioPlayer();
+
   RxDouble currentPos = 0.0.obs;
 
   /*double
@@ -616,6 +617,7 @@ class _AudioMessageViewState extends State<AudioMessageView>
         .currentPos
         .toDouble()
         .obs;
+
     player.onPlayerStateChanged.listen(
           (it) {
         switch (it) {
@@ -642,12 +644,18 @@ class _AudioMessageViewState extends State<AudioMessageView>
       player.stop();
     });
 
-    player.onDurationChanged.listen((Duration p) {
+    // player.onDurationChanged.listen((Duration p) {
+    //   mirrorFlyLog('p.inMilliseconds', p.inMilliseconds.toString());
+    //   widget.chatMessage.mediaChatMessage!.currentPos = p.inMilliseconds;
+    //   currentPos(p.inMilliseconds.toDouble());
+    //   currentPos.refresh();
+    // });
+    player.onPositionChanged.listen((Duration  p) {
       mirrorFlyLog('p.inMilliseconds', p.inMilliseconds.toString());
       widget.chatMessage.mediaChatMessage!.currentPos = p.inMilliseconds;
       currentPos(p.inMilliseconds.toDouble());
       currentPos.refresh();
-    });
+  });
   }
 
   @override
@@ -731,7 +739,7 @@ class _AudioMessageViewState extends State<AudioMessageView>
                   fit: BoxFit.contain,
                 ),
                 getImageOverlay(context,widget.chatMessage, onAudio: () {
-                  widget.onPlayAudio();
+                  // widget.onPlayAudio();
                   playAudio(widget.chatMessage);
                 }), //widget.onPlayAudio),
                 Expanded(
@@ -898,7 +906,11 @@ class _AudioMessageViewState extends State<AudioMessageView>
                     return InkWell(
                       onTap: () async {
                         if (!isPlaying.value) {
-                          await player.play(UrlSource(chatMessage.mediaChatMessage!.mediaLocalStoragePath),position: Duration(
+                          debugPrint(chatMessage.mediaChatMessage!.mediaLocalStoragePath);
+                          debugPrint(chatMessage.mediaChatMessage?.mediaFileType);
+                          debugPrint(chatMessage.mediaChatMessage?.currentPos.toString());
+                          debugPrint(chatMessage.toJson().toString());
+                         await player.play(DeviceFileSource(chatMessage.mediaChatMessage!.mediaLocalStoragePath),position: Duration(
                               milliseconds:
                               chatMessage.mediaChatMessage!.currentPos));
                           /*int result = await player.play(
