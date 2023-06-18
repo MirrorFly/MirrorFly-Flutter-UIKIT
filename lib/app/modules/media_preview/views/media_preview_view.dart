@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:better_video_player/better_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -13,6 +12,7 @@ import 'package:photo_view/photo_view.dart';
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/widgets.dart';
 import '../../../model/user_list_model.dart';
+import '../../../widgets/video_player_widget.dart';
 import '../controllers/media_preview_controller.dart';
 
 
@@ -211,7 +211,7 @@ class _MediaPreviewViewState extends State<MediaPreviewView> {
 
                             /// show video
                             else {
-                              return AspectRatio(
+                              /*return AspectRatio(
                                 aspectRatio: 16.0 / 9.0,
                                 child: BetterVideoPlayer(
                                   configuration:
@@ -228,6 +228,9 @@ class _MediaPreviewViewState extends State<MediaPreviewView> {
                                     data.path!,
                                   ),
                                 ),
+                              );*/
+                              return VideoPlayerWidget(
+                                videoPath: data.path ?? "", videoTitle: data.title ?? "Video",
                               );
                             }
                           })

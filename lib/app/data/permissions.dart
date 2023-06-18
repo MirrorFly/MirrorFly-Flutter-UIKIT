@@ -95,16 +95,17 @@ class AppPermission {
     var info = await PackageInfo.fromPlatform();
     final photos = await Permission.photos.status;
     final videos = await Permission.videos.status;
+    final mediaLibrary = await Permission.mediaLibrary.status;
     // final audio = await Permission.audio.status;
     const newPermission = [
       Permission.photos,
       Permission.videos,
       // Permission.audio
     ];
-    if ((photos != PermissionStatus.granted &&
-        photos != PermissionStatus.permanentlyDenied) ||
-        (videos != PermissionStatus.granted &&
-            videos != PermissionStatus.permanentlyDenied)) {
+    if ((photos != PermissionStatus.granted && photos != PermissionStatus.permanentlyDenied) ||
+        (videos != PermissionStatus.granted && videos != PermissionStatus.permanentlyDenied) ||
+        (mediaLibrary != PermissionStatus.granted && mediaLibrary != PermissionStatus.permanentlyDenied)
+    ) {
       if(context.mounted) {
         mirrorFlyLog("showing mirrorfly popup", "");
         var deniedPopupValue = await mirrorFlyPermissionDialog(context,
@@ -120,8 +121,9 @@ class AppPermission {
           var newp = await newPermission.request();
           PermissionStatus? photo = newp[Permission.photos];
           PermissionStatus? video = newp[Permission.videos];
+          PermissionStatus? mediaLibrary = newp[Permission.mediaLibrary];
           // var audio = await newPermission[2].isGranted;
-          return (photo!.isGranted && video!.isGranted);
+          return (photo!.isGranted && video!.isGranted && mediaLibrary!.isGranted);
           // ? PermissionStatus.granted
           // : PermissionStatus.denied;
         }else{
@@ -131,7 +133,7 @@ class AppPermission {
       return false;
     } else {
       mirrorFlyLog("showing mirrorfly popup", "${photos.isGranted} ${videos.isGranted}");
-      return (photos.isGranted && videos.isGranted);
+      return (photos.isGranted && videos.isGranted && mediaLibrary.isGranted);
     }
   }
 
