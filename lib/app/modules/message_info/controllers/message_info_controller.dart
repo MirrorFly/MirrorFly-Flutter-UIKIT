@@ -8,11 +8,9 @@ import 'package:intl/intl.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import '../../../models.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/controllers/chat_controller.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import '../../../common/constants.dart';
 import '../../../data/helper.dart';
-import '../../../data/permissions.dart';
 
 class MessageInfoController extends GetxController {
   var chatController = Get.find<ChatController>();
@@ -76,19 +74,6 @@ class MessageInfoController extends GetxController {
   checkFile(String mediaLocalStoragePath) {
     return mediaLocalStoragePath.isNotEmpty &&
         File(mediaLocalStoragePath).existsSync();
-  }
-
-  Future<bool> askStoragePermission(BuildContext context) async {
-    final permission = await AppPermission.getStoragePermission(context);
-    switch (permission) {
-      case PermissionStatus.granted:
-        return true;
-      case PermissionStatus.permanentlyDenied:
-        return false;
-      default:
-        debugPrint("Permission default");
-        return false;
-    }
   }
 
   /*@override

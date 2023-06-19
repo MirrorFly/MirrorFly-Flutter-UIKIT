@@ -126,7 +126,7 @@ abstract class BaseController {
     Mirrorfly.usersWhoBlockedMeListFetched.listen(usersWhoBlockedMeListFetched);
     Mirrorfly.onConnected.listen(onConnected);
     Mirrorfly.onDisconnected.listen(onDisconnected);
-    Mirrorfly.onConnectionNotAuthorized.listen(onConnectionNotAuthorized);
+    // Mirrorfly.onConnectionNotAuthorized.listen(onConnectionNotAuthorized);
     Mirrorfly.connectionFailed.listen(connectionFailed);
     Mirrorfly.connectionSuccess.listen(connectionSuccess);
     Mirrorfly.onWebChatPasswordChanged.listen(onWebChatPasswordChanged);
@@ -188,6 +188,9 @@ abstract class BaseController {
 
     if (Get.isRegistered<ChatController>()) {
       Get.find<ChatController>().onMessageStatusUpdated(chatMessageModel);
+    }
+    if (Get.isRegistered<ArchivedChatListController>()) {
+      Get.find<ArchivedChatListController>().onMessageStatusUpdated(chatMessageModel);
     }
     if (Get.isRegistered<DashboardController>()) {
       Get.find<DashboardController>().onMessageStatusUpdated(chatMessageModel);

@@ -34,6 +34,7 @@ class ChatSearchView extends StatelessWidget {
           title: TextField(
             onChanged: (text) => controller.setSearch(text),
             controller: controller.searchedText,
+            focusNode: controller.searchfocusNode,
             autofocus: true,
             cursorColor: MirrorflyUikit.getTheme?.colorOnAppbar,
             style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),

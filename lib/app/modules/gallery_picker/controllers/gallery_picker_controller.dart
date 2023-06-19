@@ -15,7 +15,7 @@ class GalleryPickerController extends GetxController {
 
   void init(String senderJid, String caption) {
     textMessage(caption);
-    getProfileDetails(senderJid, server: false).then((value) {
+    getProfileDetails(senderJid).then((value) {
       profile(value);
     });
 

@@ -1,17 +1,18 @@
 import 'dart:io';
 
-import 'package:better_video_player/better_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/gallery_picker/src/data/models/picked_asset_model.dart';
 import 'package:photo_view/photo_view.dart';
 
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/widgets.dart';
 import '../../../model/user_list_model.dart';
+import '../../../widgets/video_player_widget.dart';
 import '../controllers/media_preview_controller.dart';
 
 
@@ -19,7 +20,7 @@ class MediaPreviewView extends StatefulWidget {
   const MediaPreviewView(
       {Key? key, required this.filePath, required this.userName, required this.profile, required this.caption, required this.showAdd, this.isFromGalleryPicker = false,this.enableAppBar=true})
       : super(key: key);
-  final List filePath;
+  final List<PickedAssetModel> filePath;
   final String userName;
   final Profile profile;
   final String caption;
@@ -180,7 +181,7 @@ class _MediaPreviewViewState extends State<MediaPreviewView> {
                             if (data.type == 'image') {
                               return Center(
                                   child: PhotoView(
-                                    imageProvider: FileImage(File(data.path)),
+                                    imageProvider: FileImage(File(data.path!)),
                                     // Contained = the smallest possible size to fit one dimension of the screen
                                     minScale:
                                     PhotoViewComputedScale.contained * 1,
@@ -210,7 +211,7 @@ class _MediaPreviewViewState extends State<MediaPreviewView> {
 
                             /// show video
                             else {
-                              return AspectRatio(
+                              /*return AspectRatio(
                                 aspectRatio: 16.0 / 9.0,
                                 child: BetterVideoPlayer(
                                   configuration:
@@ -224,9 +225,12 @@ class _MediaPreviewViewState extends State<MediaPreviewView> {
                                   BetterVideoPlayerController(),
                                   dataSource: BetterVideoPlayerDataSource(
                                     BetterVideoPlayerDataSourceType.file,
-                                    data.path,
+                                    data.path!,
                                   ),
                                 ),
+                              );*/
+                              return VideoPlayerWidget(
+                                videoPath: data.path ?? "", videoTitle: data.title ?? "Video",
                               );
                             }
                           })
@@ -394,7 +398,7 @@ class _MediaPreviewViewState extends State<MediaPreviewView> {
                                                 .symmetric(horizontal: 1),
                                             child: Image.memory(controller
                                                 .filePath[index]
-                                                .thumbnail),
+                                                .thumbnail!),
                                           ),
                                         );
                                       }),

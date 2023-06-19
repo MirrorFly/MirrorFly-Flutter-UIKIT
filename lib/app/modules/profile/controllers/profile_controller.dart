@@ -9,14 +9,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import '../../../common/crop_image.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import '../../../models.dart';
 
 import '../../../data/apputils.dart';
-import '../../../data/permissions.dart';
 
 class ProfileController extends GetxController {
   TextEditingController profileName = TextEditingController();
@@ -67,19 +65,6 @@ class ProfileController extends GetxController {
     // }
     //profileStatus.value="I'm Mirror fly user";
     // await askStoragePermission(context);
-  }
-
-  Future<bool> askStoragePermission(BuildContext context) async {
-    final permission = await AppPermission.getStoragePermission(context);
-    switch (permission) {
-      case PermissionStatus.granted:
-        return true;
-      case PermissionStatus.permanentlyDenied:
-        return false;
-      default:
-        debugPrint("Permission default");
-        return false;
-    }
   }
 
   Future<bool> validation() async {
@@ -351,7 +336,7 @@ class ProfileController extends GetxController {
                   imagePath(value.path);
                   changed(true);
                   updateProfileImage(
-                      path: value.path, update: true, context: context);
+                      path: value.path, update: false, context: context);
                 // }
               });
             });
@@ -394,7 +379,7 @@ class ProfileController extends GetxController {
                 imagePath(value.path);
                 changed(true);
                 updateProfileImage(
-                    path: value.path, update: true, context: context);
+                    path: value.path, update: false, context: context);
               // }
             });
           });
@@ -436,14 +421,15 @@ class ProfileController extends GetxController {
   }
 
   Future<bool> validMobileNumber(String text)async{
+    var m = text.contains("+") ? text : "+$text";
     FlutterLibphonenumber().init();
-    var formatNumberSync = FlutterLibphonenumber().formatNumberSync("+$text");
+    var formatNumberSync = FlutterLibphonenumber().formatNumberSync(m);
     try {
       var parse = await FlutterLibphonenumber().parse(formatNumberSync);
       debugPrint("parse-----> $parse");
       //{country_code: 91, e164: +91xxxxxxxxxx, national: 0xxxxx xxxxx, type: mobile, international: +91 xxxxx xxxxx, national_number: xxxxxxxxxx, region_code: IN}
       if (parse.isNotEmpty) {
-        var formatted = parse['international'].replaceAll("+", '');
+        var formatted = parse['international'];//.replaceAll("+", '');
         profileMobile.text = (formatted.toString());
         return true;
       } else {
