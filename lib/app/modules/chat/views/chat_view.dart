@@ -436,7 +436,7 @@ class _ChatViewState extends State<ChatView> {
                   controller: controller.messageController,
                   focusNode: controller.focusNode,
                   cursorColor: MirrorflyUikit.getTheme!.primaryColor,
-                  style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                  style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor,fontWeight: FontWeight.w400),
                   decoration: InputDecoration(
                       hintText: "Start Typing...", border: InputBorder.none,hintStyle: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)),
                 ),
@@ -557,7 +557,7 @@ class _ChatViewState extends State<ChatView> {
               skinToneDialogBgColor: MirrorflyUikit.getTheme!.textPrimaryColor,
               skinToneIndicatorColor: MirrorflyUikit.getTheme!.textPrimaryColor,
               enableSkinTones: true,
-              showRecentsTab: true,
+              // showRecentsTab: true,
               recentsLimit: 28,
               tabIndicatorAnimDuration: kTabScrollDuration,
               categoryIcons: const CategoryIcons(),

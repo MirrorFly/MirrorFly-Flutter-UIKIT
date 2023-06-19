@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import '../../../common/constants.dart';
 import '../../../data/helper.dart';
 import '../../chat/controllers/chat_controller.dart';
+import '../../gallery_picker/src/data/models/picked_asset_model.dart';
 
 class MediaPreviewController extends FullLifeCycleController
     with FullLifeCycleMixin {
@@ -17,7 +18,7 @@ class MediaPreviewController extends FullLifeCycleController
 
   TextEditingController caption = TextEditingController();
 
-  var filePath = [].obs;
+  var filePath = <PickedAssetModel>[].obs;
 
   var captionMessage = <String>[].obs;
   var textMessage = "";//Get.arguments['caption'];
@@ -37,7 +38,7 @@ class MediaPreviewController extends FullLifeCycleController
 
   }*/
 
-  void init(List filePath, String userName, Profile profile,
+  void init(List<PickedAssetModel> filePath, String userName, Profile profile,
       String textMessage, bool showAdd, bool isFromGalleryPicker) {
     this.userName= userName;
     this.profile(profile);
@@ -93,7 +94,7 @@ class MediaPreviewController extends FullLifeCycleController
         } else if (data.type == 'video') {
           debugPrint("sending video");
           var response = await Get.find<ChatController>()
-              .sendVideoMessage(data.path, captionMessage[i], "", context);
+              .sendVideoMessage(data.path!, captionMessage[i], "", context);
           debugPrint("Preview View ==> $response");
           if (response != null) {
             debugPrint("Video send Success");

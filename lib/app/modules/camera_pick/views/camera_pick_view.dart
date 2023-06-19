@@ -12,33 +12,31 @@ class CameraPickView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Column(
           children: [
             Expanded(
               child: Obx(() {
                 return controller.cameraInitialized.value ? Stack(
                   children: [
-                    SizedBox(
-                      width: Get.width,
-                      child: Listener(
-                        onPointerDown: (_) => controller.pointers++,
-                        onPointerUp: (_) => controller.pointers--,
-                        child: CameraPreview(
-                          controller.cameraController!, child: LayoutBuilder(
-                            builder: (BuildContext context,
-                                BoxConstraints constraints) {
-                              return GestureDetector(
-                                behavior: HitTestBehavior.opaque,
-                                onScaleStart: controller.handleScaleStart,
-                                onScaleUpdate: controller.handleScaleUpdate,
-                                onTapDown: (TapDownDetails details) =>
-                                    controller.onViewFinderTap(
-                                        details, constraints),
-                              );
-                            }),),
-                      ),
+                    Listener(
+                      onPointerDown: (_) => controller.pointers++,
+                      onPointerUp: (_) => controller.pointers--,
+                      child: CameraPreview(
+                        controller.cameraController!, child: LayoutBuilder(
+                          builder: (BuildContext context,
+                              BoxConstraints constraints) {
+                            return GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onScaleStart: controller.handleScaleStart,
+                              onScaleUpdate: controller.handleScaleUpdate,
+                              onTapDown: (TapDownDetails details) =>
+                                  controller.onViewFinderTap(
+                                      details, constraints),
+                            );
+                          }),),
                     ),
                     /*Stack(
                       alignment: Alignment.center,
@@ -70,7 +68,7 @@ class CameraPickView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              SizedBox(height:12,width: 12,child: CircularProgressIndicator(backgroundColor: Colors.red,value: controller.progress/1000,valueColor: const AlwaysStoppedAnimation<Color>(Colors.white))),
+                              SizedBox(height:12,width: 12,child: CircularProgressIndicator(backgroundColor: Colors.red,value: controller.progress/controller.maxVideoDuration,valueColor: const AlwaysStoppedAnimation<Color>(Colors.white))),
                               Padding(
                                 padding: const EdgeInsets.all(5.0),
                                 child: Text(controller.timeString,style: const TextStyle(color: Colors.white),),
@@ -90,10 +88,6 @@ class CameraPickView extends StatelessWidget {
             Container(
               color: Colors.black,
               padding: const EdgeInsets.only(top: 5, bottom: 5),
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width,
               child: Column(
                 children: [
                   Row(
