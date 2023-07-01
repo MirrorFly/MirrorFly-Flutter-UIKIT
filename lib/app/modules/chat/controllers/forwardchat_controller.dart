@@ -358,13 +358,13 @@ class ForwardChatController extends GetxController {
                   forwardMessageIds, selectedJids)
               .then((values) {
             // debugPrint("to chat profile ==> ${selectedUsersList[0].toJson().toString()}");
-            getProfileDetails(selectedJids.last, server: false)
+            getProfileDetails(selectedJids.last)
                 .then((value) {
-              // if (value != null) {
+              if (value.jid != null) {
                 // var str = profiledata(value.toString());
                 // Get.back(result: str);
                 Navigator.pop(context, value);
-              // }
+              }
             });
           });
         }

@@ -1,7 +1,7 @@
-import 'package:better_video_player/better_video_player.dart';
 import 'package:flutter/material.dart';
 
 import '../../../mirrorfly_uikit_plugin.dart';
+import '../../widgets/video_player_widget.dart';
 
 class VideoPlayerView extends StatefulWidget {
   const VideoPlayerView({Key? key, required this.videoPath,this.enableAppBar=true}) : super(key: key);
@@ -15,6 +15,11 @@ class _VideoPlayerViewState extends State<VideoPlayerView> {
   // final controller = Get.put(VideoPlayController());
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
@@ -26,7 +31,7 @@ class _VideoPlayerViewState extends State<VideoPlayerView> {
         body: SafeArea(
           child: Column(
             children: [
-              AspectRatio(
+              /*AspectRatio(
                 aspectRatio: 0.6,
                 child: BetterVideoPlayer(
                     configuration:
@@ -43,6 +48,13 @@ class _VideoPlayerViewState extends State<VideoPlayerView> {
                       widget.videoPath//controller.videoPath.value,
                     ),
                   ),
+              ),*/
+              AspectRatio(
+                aspectRatio: 0.6,
+                child: VideoPlayerWidget(
+                  videoPath: widget.videoPath,
+                  videoTitle: "Video",
+                ),
               ),
             ],
           ),

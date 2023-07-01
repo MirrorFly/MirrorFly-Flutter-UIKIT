@@ -129,6 +129,9 @@ class ArchivedChatListView extends StatelessWidget {
                         return Obx(() {
                           return RecentChatItem(
                             item: item,
+                            onAvatarClick: (){
+                              controller.getProfileDetail(context, item, index);
+                            },
                             isSelected: controller.isSelected(index),
                             typingUserid: controller.typingUser(
                                 item.jid.checkNull()),

@@ -363,7 +363,7 @@ class _DashboardViewState extends State<DashboardView> {
   Widget chatView(BuildContext context) {
     return controller.clearVisible.value
         ? recentSearchView(context)
-        : (!controller.recentChatLoading.value && controller.recentChats.isEmpty)
+        : (!controller.recentChatLoading.value && controller.recentChats.isEmpty && controller.archivedChats.isEmpty)
             ? emptyChat(context)
             : controller.recentChatLoading.value
                 ? Center(
