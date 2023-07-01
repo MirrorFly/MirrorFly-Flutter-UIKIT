@@ -6,10 +6,10 @@ import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   MirrorflyUikit.instance.initUIKIT(
-      baseUrl: 'https://api-uikit-qa.contus.us/api/v1/',
-      licenseKey: 'ckIjaccWBoMNvxdbql8LJ2dmKqT5bp',
-      googleMapKey: 'AIzaSyBaKkrQnLT4nacpKblIE5d4QK6GpaX5luQ',
-      iOSContainerID: 'group.com.mirrorfly.flutter');
+      baseUrl: 'YOUR_BASE_URL',
+      licenseKey: 'Your_Mirrorfly_licence_key',
+      googleMapKey: 'Your_Google_Map_Key_for_location_messages',
+      iOSContainerID: 'Your_iOS_app_Container_id');
   runApp(const MyApp());
 }
 
@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         themeMode: ThemeMode.dark,
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(textTheme: GoogleFonts.latoTextTheme()),
         home: const Dashboard());
   }
@@ -102,23 +103,12 @@ class _DashboardState extends State<Dashboard> {
                         MaterialPageRoute(
                             builder: (con) => const DashboardView(
                                   title: "Chats",
-                              enableAppBar: false,
+                              enableAppBar: true,
                                 )));
                   },
                   text: 'chat page',
                 ),
               ),
-              /*Center(
-                child: buildTextButton(onPressed: () async {
-                  Navigator.push(context, MaterialPageRoute(builder: (con)=> const ProfileView()));
-                },text:'Profile page',),
-              ),
-              Center(
-                child: buildTextButton(onPressed: () async {
-                  Navigator.push(context, MaterialPageRoute(builder: (con)=> const SettingsView()));
-                },text:'Settings page',),
-              ),
-              const Expanded(child: DashboardView(title: "Chats",))*/
             ],
           ),
         ),
@@ -161,8 +151,6 @@ class _DashboardState extends State<Dashboard> {
   }
 
   logoutFromSDK() async {
-    // if (await AppUtils.isNetConnected()) {
-    //   Helper.progressLoading(context: context);
     MirrorflyUikit.logoutFromUIKIT().then((value) {
       debugPrint("logout user $value");
       showSnack(value['message']);

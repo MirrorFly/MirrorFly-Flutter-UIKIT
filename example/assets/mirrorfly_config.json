@@ -1,16 +1,6 @@
 {
-    "projectInfo": {
-        "projectId": "mirrorfly-uikit",
-        "serverAddress": "https://api-uikit-qa.contus.us/api/v1/",
-        "licenseKey": "ckIjaccWBoMNvxdbql8LJ2dmKqT5bp",
-        "googleMapKey": "AIzaSyBaKkrQnLT4nacpKblIE5d4QK6GpaX5luQ",
-        "iOSContainerId": "group.com.mirrorfly.flutter",
-        "storageFolderName": "",
-        "isTrialLicenceKey" : true,
-        "enableMobileNumberLogin": false
-    },
     "AppTheme": {
-        "theme": "custom",
+        "theme": "dark",
         "customTheme": {
             "primaryColor": "0xff33e078",
             "secondaryColor": "0xffE0E0E0",

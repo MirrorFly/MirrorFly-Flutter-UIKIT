@@ -8,6 +8,8 @@ import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 
 import '../../data/apputils.dart';
 import '../../data/helper.dart';
+import '../chatInfo/views/chat_info_view.dart';
+import '../group/views/group_info_view.dart';
 
 class ArchivedChatListController extends GetxController {
   RxList<RecentChatData> archivedChats = <RecentChatData>[].obs;//Get.find<DashboardController>().archivedChats;
@@ -63,11 +65,12 @@ class ArchivedChatListController extends GetxController {
   }
 
   menuValidationForItem() {
-    delete(false);
+    // delete(false);
     if (selectedChats.length == 1) {
       var item = archivedChats
           .firstWhere((element) => selectedChats.first == element.jid);
-      delete(Constants.typeGroupChat != item.getChatType());
+      // delete(Constants.typeGroupChat != item.getChatType());
+      menuValidationForDeleteIcon();
       if ((Constants.typeBroadcastChat != item.getChatType()&& !archiveEnabled.value)) {
         unMute(item.isMuted!);
         mute(!item.isMuted!);
@@ -199,16 +202,9 @@ class ArchivedChatListController extends GetxController {
     updateArchiveRecentChat(chatMessage.chatUserJid);
   }
 
-  void onMessageStatusUpdated(event) {
+  void onMessageStatusUpdated(ChatMessageModel chatMessageModel) {
     // mirrorFlyLog("MESSAGE STATUS UPDATED", event);
-    ChatMessageModel chatMessageModel = sendMessageModelFromJson(event);
-    final index = archivedChats.indexWhere(
-        (message) => message.lastMessageId == chatMessageModel.messageId);
-    debugPrint("Message Status Update index of search $index");
-    if (!index.isNegative) {
-      archivedChats[index].lastMessageStatus = chatMessageModel.messageStatus.value;
-      archivedChats.refresh();
-    }
+    updateArchiveRecentChat(chatMessageModel.chatUserJid);
   }
 
   Future<RecentChatData?> getRecentChatOfJid(String jid) async {
@@ -407,5 +403,49 @@ class ArchivedChatListController extends GetxController {
 
   void userDeletedHisProfile(String jid) {
     userUpdatedHisProfile(jid);
+    updateProfile(jid);
+  }
+  var profile_ = Profile().obs;
+  void getProfileDetail(context, RecentChatData chatItem, int index) {
+    getProfileDetails(chatItem.jid.checkNull()).then((value) {
+      profile_(value);
+      debugPrint("dashboard controller profile update received");
+      showQuickProfilePopup(
+          context: context,
+          // chatItem: chatItem,
+          chatTap: () {
+            Navigator.pop(context);
+            toChatPage(chatItem.jid.checkNull(),chatItem.isGroup.checkNull(),context);
+          },
+          callTap: () {},
+          videoTap: () {},
+          infoTap: () {
+            Navigator.pop(context);
+            infoPage(context,value);
+          },
+          profile: profile_);
+    });
+  }
+  void updateProfile(String jid){
+    if(profile_.value.jid != null && profile_.value.jid.toString()==jid.toString()) {
+      getProfileDetails(jid).then((value) {
+        debugPrint("get profile detail archived $value");
+        profile_(value);
+      });
+    }
+  }
+  infoPage(BuildContext context,Profile profile) {
+    if (profile.isGroupProfile ?? false) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (con) =>
+                  GroupInfoView(jid: profile.jid.checkNull())));
+    } else {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (con) => ChatInfoView(jid: profile.jid.checkNull())));
+    }
   }
 }

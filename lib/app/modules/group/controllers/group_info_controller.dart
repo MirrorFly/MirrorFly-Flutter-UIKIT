@@ -50,16 +50,18 @@ class GroupInfoController extends GetxController {
     });
   }
   init(String jid){
-    getProfileDetails(jid,server: false).then((value) {
-      profile_(value);
-      _mute(profile.isMuted!);
-      scrollController.addListener(_scrollListener);
-      getGroupMembers(false);
-      getGroupMembers(null);
-      groupAdmin();
-      memberOfGroup();
-      muteAble();
-      nameController.text=profile.nickName.checkNull();
+    getProfileDetails(jid).then((value) {
+      if(value.jid !=null) {
+        profile_(value);
+        _mute(profile.isMuted!);
+        scrollController.addListener(_scrollListener);
+        getGroupMembers(false);
+        getGroupMembers(null);
+        groupAdmin();
+        memberOfGroup();
+        muteAble();
+        nameController.text = profile.nickName.checkNull();
+      }
     });
   }
   muteAble() async {
@@ -70,13 +72,13 @@ class GroupInfoController extends GetxController {
     if (groupJid.checkNull().isNotEmpty) {
       if (profile.jid.checkNull() == groupJid.toString()) {
         mirrorFlyLog("group info", groupJid.toString());
-        getProfileDetails(profile.jid.checkNull(), server: false).then((value) {
-          // if (value != null) {
+        getProfileDetails(profile.jid.checkNull()).then((value) {
+          if (value.jid != null) {
             // var member = Profile.fromJson(json.decode(value.toString()));
             profile_(value);
             _mute(profile.isMuted!);
             nameController.text=profile.nickName.checkNull();
-          // }
+          }
         });
       }
     }
@@ -103,8 +105,13 @@ class GroupInfoController extends GetxController {
         var index = groupMembers.indexWhere((element) => element.jid == userJid);
         if(!index.isNegative) {
           debugPrint('user left ${groupMembers[index].name}');
+          var isAdmin = groupMembers[index].isGroupAdmin;
           groupMembers.removeAt(index);
-          groupMembers.refresh();
+          if(isAdmin.checkNull()){
+            getGroupMembers(false);
+          }else {
+            groupMembers.refresh();
+          }
         }
       }
     }

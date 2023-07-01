@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart' as emoji;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -436,7 +436,7 @@ class _ChatViewState extends State<ChatView> {
                   controller: controller.messageController,
                   focusNode: controller.focusNode,
                   cursorColor: MirrorflyUikit.getTheme!.primaryColor,
-                  style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                  style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor,fontWeight: FontWeight.w400),
                   decoration: InputDecoration(
                       hintText: "Start Typing...", border: InputBorder.none,hintStyle: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)),
                 ),
@@ -533,7 +533,7 @@ class _ChatViewState extends State<ChatView> {
       if (controller.showEmoji.value) {
         return SizedBox(
           height: 250,
-          child: EmojiPicker(
+          child: emoji.EmojiPicker(
             onBackspacePressed: () {
               controller.isTyping();
               // Do something when the user taps the backspace button (optional)
@@ -542,13 +542,13 @@ class _ChatViewState extends State<ChatView> {
               controller.isTyping();
             },
             textEditingController: controller.messageController,
-            config: Config(
+            config: emoji.Config(
               columns: 7,
               emojiSizeMax: 32 * (Platform.isIOS ? 1.30 : 1.0),
               verticalSpacing: 0,
               horizontalSpacing: 0,
               gridPadding: EdgeInsets.zero,
-              initCategory: Category.RECENT,
+              initCategory: emoji.Category.RECENT,
               bgColor: MirrorflyUikit.getTheme!.scaffoldColor,
               indicatorColor: MirrorflyUikit.getTheme!.primaryColor,
               iconColor: MirrorflyUikit.getTheme!.textPrimaryColor,
@@ -557,11 +557,11 @@ class _ChatViewState extends State<ChatView> {
               skinToneDialogBgColor: MirrorflyUikit.getTheme!.textPrimaryColor,
               skinToneIndicatorColor: MirrorflyUikit.getTheme!.textPrimaryColor,
               enableSkinTones: true,
-              showRecentsTab: true,
+              // showRecentsTab: true,
               recentsLimit: 28,
               tabIndicatorAnimDuration: kTabScrollDuration,
-              categoryIcons: const CategoryIcons(),
-              buttonMode: ButtonMode.CUPERTINO,
+              categoryIcons: const emoji.CategoryIcons(),
+              buttonMode: emoji.ButtonMode.CUPERTINO,
             ),
           ),
         );

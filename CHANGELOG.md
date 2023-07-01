@@ -1,3 +1,6 @@
+## 0.0.6
+* Latest MirrorFly SDK Support
+
 ## 0.0.5
 
 * Appbar enable or disable option for individual pages
