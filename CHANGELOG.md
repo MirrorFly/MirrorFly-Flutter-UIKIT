@@ -1,3 +1,9 @@
+## 0.0.8
+* MirrorFly Plugin iTunes Publish Issue Fixed
+
+## 0.0.7
+* MirrorFly Plugin CocoaPods Support Added
+
 ## 0.0.6
 * Latest MirrorFly SDK Support
 
@@ -8,10 +14,12 @@
 ## 0.0.4
 
 * UIKit init config changes
+
 ## 0.0.3
 
 * static analysis and Dart 3 & Flutter 3.10 compatibility issues fixed
 * Readme file changes
+
 ## 0.0.2
 
 * static analysis and Dart 3 & Flutter 3.10 compatibility issues fixed

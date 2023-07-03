@@ -89,14 +89,14 @@ Goto Project -> Target -> Signing & Capabilities -> Click `+ Capability` at the 
 
 > **Note**: The App Group Must be same as `iOSContainerId` in json config file. [See Integration Step 2](#Integration).
 
-![ScreenShot](AppGroups-c9933d95df192665e1389f19ece4fd94.png)
+![ScreenShot](https://www.mirrorfly.com/docs/assets/images/AppGroups-c9933d95df192665e1389f19ece4fd94.png)
 
 ### Flutter
  - Add following dependency in `pubspec.yaml`.
 
 ```yaml
 dependencies:
-  mirrorfly_uikit_plugin: ^0.0.6
+  mirrorfly_uikit_plugin: ^0.0.8
 ```
 
 - Run `flutter pub get` command in your project directory.

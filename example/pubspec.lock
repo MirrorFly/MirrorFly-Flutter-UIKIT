@@ -844,17 +844,17 @@ packages:
     dependency: transitive
     description:
       name: mirrorfly_plugin
-      sha256: "8b35d17d525a06499277b35c2a6cf15f978361874d052be5856194f01355b41c"
+      sha256: "0ec32953ac8a0c2ee32d97d4d2276363a28069f3525b8abfbb80172be1edada3"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.8"
+    version: "0.0.9"
   mirrorfly_uikit_plugin:
     dependency: "direct main"
     description:
       path: ".."
       relative: true
     source: path
-    version: "0.0.6"
+    version: "0.0.7"
   nested:
     dependency: transitive
     description:
