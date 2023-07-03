@@ -1,3 +1,6 @@
+## 0.0.8
+* MirrorFly Plugin iTunes Publish Issue Fixed
+
 ## 0.0.7
 * MirrorFly Plugin CocoaPods Support Added
 

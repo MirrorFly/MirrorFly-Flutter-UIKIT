@@ -91,20 +91,20 @@ PODS:
   - KissXML/Core (5.3.1)
   - libidn (1.35)
   - libPhoneNumber-iOS (0.9.15)
-  - mirrorfly_plugin (0.0.3):
+  - mirrorfly_plugin (0.0.9):
     - Alamofire
     - Flutter
     - GoogleWebRTC
     - libPhoneNumber-iOS
-    - MirrorFlySDK (= 5.9.8)
+    - MirrorFlySDK (= 5.9.9)
     - RealmSwift (= 10.20.1)
-    - Socket.IO-Client-Swift
+    - Socket.IO-Client-Swift (= 15.2.0)
     - SocketRocket
     - XMPPFramework/Swift
   - mirrorfly_uikit_plugin (0.0.1):
     - Flutter
     - Socket.IO-Client-Swift (= 15.2.0)
-  - MirrorFlySDK (5.9.8):
+  - MirrorFlySDK (5.9.9):
     - Alamofire (= 5.5.0)
     - CocoaLumberjack (= 3.6.2)
     - GoogleWebRTC
@@ -315,9 +315,9 @@ SPEC CHECKSUMS:
   KissXML: 5c8e0f2e8b9f071d3e1ae123dec3eb5da615c10c
   libidn: e4576a956b797c584c77aaedfc6e3dd639b61bdc
   libPhoneNumber-iOS: 0a32a9525cf8744fe02c5206eb30d571e38f7d75
-  mirrorfly_plugin: b4b37c5bdc5125fba91be5752fc3af213eba2f50
+  mirrorfly_plugin: eef5e5c31c45a3f32d333cd8cac31269bfbebfcb
   mirrorfly_uikit_plugin: b56ba3185f23d055735c80598b7f4bd604a541a4
-  MirrorFlySDK: 969fb6691d77b33643fe210989d6ecb4ada5957d
+  MirrorFlySDK: 9f333f0021db878b22edfd5deadafa230d2ce39d
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   open_file_plus: 05737718530c14cf02868e3b7754d7fe4df76d8b
   package_info_plus: fd030dabf36271f146f1f3beacd48f564b0f17f7
