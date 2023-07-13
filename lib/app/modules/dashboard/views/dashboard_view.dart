@@ -12,10 +12,25 @@ import '../../../widgets/custom_action_bar_icons.dart';
 import '../../chat/chat_widgets.dart';
 import '../../dashboard/controllers/dashboard_controller.dart';
 
+///* @property [title] indicates the appbar title
+///* @property [enableAppBar] enable the appbar and its functions
+///* @property [showBackIcon] show or hide the back icon on appbar
+///* @property [showSearchMenu] show or hide the back icon on appbar
+///* @property [showCreateGroup] show or hide the create group option
+///* @property [showSettings] show or hide the settings option
+///* @property [showNewChat] show or hide the New Chat option
 class DashboardView extends StatefulWidget {
-  const DashboardView({Key? key, this.title="Chats",this.enableAppBar=true}) : super(key: key);
+  const DashboardView({Key? key, this.title="Chats",this.enableAppBar=true,
+    this.showBackIcon=true, this.showSearchMenu = true,
+    this.showCreateGroup = true, this.showSettings = true,
+    this.showNewChat = true}) : super(key: key);
   final String title;
   final bool enableAppBar;
+  final bool showBackIcon;
+  final bool showSearchMenu;
+  final bool showCreateGroup;
+  final bool showSettings;
+  final bool showNewChat;
 
   @override
   State<DashboardView> createState() => _DashboardViewState();
@@ -75,12 +90,12 @@ class _DashboardViewState extends State<DashboardView> {
                               controller.getBackFromSearch();
                             },
                           )
-                        : IconButton(
+                        : widget.showBackIcon ? IconButton(
                             icon: const Icon(Icons.arrow_back),
                             onPressed: () {
                               // Get.back();
                               Navigator.pop(context);
-                            }),
+                            }) : null,
                 title: controller.selected.value
                     ? Text((controller.selectedChats.length).toString(),
                         style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar ?? Colors.black))
@@ -106,7 +121,7 @@ class _DashboardViewState extends State<DashboardView> {
                   buildRecentChatActionBarIcons(context),
                 ],
               ) : null,
-              floatingActionButton: controller.isSearching.value
+              floatingActionButton: widget.showNewChat ? controller.isSearching.value
                   ? null
                   : FloatingActionButton(
                       tooltip: "New Chat",
@@ -126,7 +141,7 @@ class _DashboardViewState extends State<DashboardView> {
                         fit: BoxFit.contain,
                         color: MirrorflyUikit.getTheme?.colorOnPrimary ?? Colors.white,
                       ),
-                    ),
+                    ) : null,
               body: SafeArea(
                 child: Obx(() {
                   return chatView(context);
@@ -287,7 +302,7 @@ class _DashboardViewState extends State<DashboardView> {
             ),
             overflowWidget: Text("Search", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction:
-                controller.selected.value || controller.isSearching.value ? ShowAsAction.gone : ShowAsAction.always,
+                controller.selected.value || controller.isSearching.value ? ShowAsAction.gone : widget.showSearchMenu ? ShowAsAction.always : ShowAsAction.gone,
             keyValue: 'Search',
             onItemClick: () {
               controller.gotoSearch();
@@ -306,7 +321,7 @@ class _DashboardViewState extends State<DashboardView> {
             visibleWidget: const Icon(Icons.group_add),
             overflowWidget: Text("New Group     ", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction:
-                controller.selected.value || controller.isSearching.value ? ShowAsAction.gone : ShowAsAction.never,
+                controller.selected.value || controller.isSearching.value ? ShowAsAction.gone : widget.showCreateGroup ? ShowAsAction.never : ShowAsAction.gone,
             keyValue: 'New Group',
             onItemClick: () {
               controller.gotoCreateGroup(context);
@@ -316,7 +331,7 @@ class _DashboardViewState extends State<DashboardView> {
             visibleWidget: const Icon(Icons.settings),
             overflowWidget: Text("Settings", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction:
-                controller.selected.value || controller.isSearching.value ? ShowAsAction.gone : ShowAsAction.never,
+                controller.selected.value || controller.isSearching.value ? ShowAsAction.gone : widget.showSettings ? ShowAsAction.never : ShowAsAction.gone,
             keyValue: 'Settings',
             onItemClick: () {
               controller.gotoSettings(context);

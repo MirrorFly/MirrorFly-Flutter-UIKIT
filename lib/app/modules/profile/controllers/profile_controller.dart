@@ -20,7 +20,7 @@ class ProfileController extends GetxController {
   TextEditingController profileName = TextEditingController();
   TextEditingController profileEmail = TextEditingController();
   TextEditingController profileMobile = TextEditingController();
-  var profileStatus = "I am in Mirror Fly".obs;
+  var profileStatus = "".obs;//I am in Mirror Fly
   var isImageSelected = false.obs;
   var isUserProfileRemoved = false.obs;
   var imagePath = "".obs;
@@ -89,10 +89,10 @@ class ProfileController extends GetxController {
     } else if(!(await validMobileNumber(profileMobile.text))){
       toToast("Please enter a valid mobile number with country code");
       return false;
-    } else if (profileStatus.value.isEmpty) {
+    } /*else if (profileStatus.value.isEmpty) {
       toToast("Enter Profile Status");
       return false;
-    }else{
+    }*/else{
       return true;
     }
   }
@@ -421,7 +421,12 @@ class ProfileController extends GetxController {
   }
 
   Future<bool> validMobileNumber(String text)async{
-    var m = text.contains("+") ? text : "+$text";
+    var coded = text;
+    if(!text.startsWith(SessionManagement.getCountryCode().toString())){
+      mirrorFlyLog("SessionManagement.getCountryCode()", SessionManagement.getCountryCode().toString());
+      coded = SessionManagement.getCountryCode().checkNull()+text;
+    }
+    var m = coded.contains("+") ? coded : "+$coded";
     FlutterLibphonenumber().init();
     var formatNumberSync = FlutterLibphonenumber().formatNumberSync(m);
     try {
