@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
@@ -103,7 +104,7 @@ class MirrorflyUikit {
                           config.appTheme.customTheme!.colorOnAppbar)
                   : MirrorFlyTheme.mirrorFlyLightTheme;*/
     }).catchError((e) {
-      throw ("Mirrorfly config file not found in assets $e");
+      debugPrint("Mirrorfly config file not found in assets $e");
     });
     SessionManagement.onInit().then((value) {
       Get.put<MainController>(MainController());
@@ -130,7 +131,7 @@ class MirrorflyUikit {
           Mirrorfly.enableDisableArchivedSettings(true);
           // Mirrorfly.setRegionCode(regionCode ?? 'IN');///if its not set then error comes in contact sync delete from phonebook.
           // SessionManagement.setCountryCode((countryCode ?? "").replaceAll('+', ''));
-          _setUserJID(userData.data!.username!);
+          await _setUserJID(userData.data!.username!);
           return setResponse(true, 'Register Success');
         } else {
           return setResponse(false, userData.message.toString());
@@ -170,9 +171,9 @@ class MirrorflyUikit {
     return {'status': status, 'message': message};
   }
 
-  static _setUserJID(String username) {
+  static _setUserJID(String username) async {
     Mirrorfly.getAllGroups(true);
-    Mirrorfly.getJid(username).then((value) {
+    await Mirrorfly.getJid(username).then((value) {
       if (value != null) {
         SessionManagement.setUserJID(value);
       }
