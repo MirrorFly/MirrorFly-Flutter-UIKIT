@@ -107,15 +107,16 @@ class ChatMessageModel {
         messageSentTime: json["messageSentTime"].toInt(),
         messageStatus: Platform.isAndroid
             ? (json["messageStatus"]["status"]).toString().obs
-            : json["messageStatus"] == "acknowledge"
+            : json["messageStatus"] == 2
                 ? "A".obs
-                : json["messageStatus"] == "delivered"
+                : json["messageStatus"] == 3
                     ? "D".obs
-                    : json["messageStatus"] == "seen"
+                    : json["messageStatus"] == 4
                         ? "S".obs
-                        : json["messageStatus"] == "received"
+                        : json["messageStatus"] == 5
                             ? "R".obs
-                            : "N".obs, //"N" for "sent" in iOS
+                            : "N".obs,
+        //"N" for "sent" in iOS
         messageTextContent: json["messageTextContent"].toString(),
         messageType: json["messageType"].toString().toUpperCase() == "FILE"
             ? "DOCUMENT"
@@ -300,7 +301,8 @@ class MediaChatMessage {
                 : json["mediaFileType"].toString().toUpperCase(),
         mediaFileWidth: json["mediaFileWidth"] ?? 0,
         mediaLocalStoragePath: json["mediaLocalStoragePath"],
-        mediaProgressStatus: int.parse(json["mediaProgressStatus"].toString()).obs,
+        mediaProgressStatus:
+            int.parse(json["mediaProgressStatus"].toString()).obs,
         mediaThumbImage: json["mediaThumbImage"]
             .toString()
             .replaceAll("\\\\n", "\\n")
