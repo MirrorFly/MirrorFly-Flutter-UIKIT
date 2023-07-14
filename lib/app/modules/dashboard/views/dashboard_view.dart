@@ -73,6 +73,7 @@ class _DashboardViewState extends State<DashboardView> {
               backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
               appBar: widget.enableAppBar ? AppBar(
                 backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
+                centerTitle: false,
                 automaticallyImplyLeading: true,
                 actionsIconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar ?? iconColor),
                 iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar ?? iconColor),
