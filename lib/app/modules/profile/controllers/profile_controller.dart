@@ -422,7 +422,7 @@ class ProfileController extends GetxController {
 
   Future<bool> validMobileNumber(String text)async{
     var coded = text;
-    if(!text.startsWith(SessionManagement.getCountryCode().toString())){
+    if(!text.startsWith(SessionManagement.getCountryCode().checkNull().replaceAll("+", "").toString())){
       mirrorFlyLog("SessionManagement.getCountryCode()", SessionManagement.getCountryCode().toString());
       coded = SessionManagement.getCountryCode().checkNull()+text;
     }
