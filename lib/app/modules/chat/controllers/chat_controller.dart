@@ -992,36 +992,43 @@ class ChatController extends FullLifeCycleController
   }
 
   pickAudio(BuildContext context) async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: [
-        'wav',
-        'aiff',
-        'alac',
-        'flac',
-        'mp3',
-        'aac',
-        'wma',
-        'ogg'
-      ],
-    );
-    if (result != null && File(result.files.single.path!).existsSync()) {
-      debugPrint(result.files.first.extension);
-      if (checkFileUploadSize(result.files.single.path!, Constants.mAudio)) {
-        AudioPlayer player = AudioPlayer();
-        player.setSourceUrl(result.files.single.path!);
-        player.onDurationChanged.listen((Duration duration) {
-          mirrorFlyLog("", 'max duration: ${duration.inMilliseconds}');
-          filePath.value = (result.files.single.path!);
-          sendAudioMessage(filePath.value, false,
-              duration.inMilliseconds.toString(), context);
+    AppPermission.getStoragePermission(context).then((permission) {
+      if (permission) {
+        FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          allowedExtensions: [
+            'wav',
+            'aiff',
+            'alac',
+            'flac',
+            'mp3',
+            'aac',
+            'wma',
+            'ogg'
+          ],
+        ).then((result) {
+          if (result != null && File(result.files.single.path!).existsSync()) {
+            debugPrint(result.files.first.extension);
+            if (checkFileUploadSize(
+                result.files.single.path!, Constants.mAudio)) {
+              AudioPlayer player = AudioPlayer();
+              player.setSourceUrl(result.files.single.path!);
+              player.onDurationChanged.listen((Duration duration) {
+                mirrorFlyLog("", 'max duration: ${duration.inMilliseconds}');
+                filePath.value = (result.files.single.path!);
+                sendAudioMessage(filePath.value, false,
+                    duration.inMilliseconds.toString(), context);
+              });
+            } else {
+              toToast("File Size should not exceed ${Constants
+                  .maxAudioFileSize} MB");
+            }
+          } else {
+            // User canceled the picker
+          }
         });
-      } else {
-        toToast("File Size should not exceed ${Constants.maxAudioFileSize} MB");
       }
-    } else {
-      // User canceled the picker
-    }
+    });
   }
 
   sendAudioMessage(String filePath, bool isRecorded, String duration,
