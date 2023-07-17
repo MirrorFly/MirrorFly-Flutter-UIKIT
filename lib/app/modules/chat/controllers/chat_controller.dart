@@ -1012,7 +1012,8 @@ class ChatController extends FullLifeCycleController
             if (checkFileUploadSize(
                 result.files.single.path!, Constants.mAudio)) {
               AudioPlayer player = AudioPlayer();
-              player.setSourceUrl(result.files.single.path!);
+              debugPrint("result.files.single.path!${result.files.single.path}");
+              player.setSourceDeviceFile(result.files.single.path ?? "");
               player.onDurationChanged.listen((Duration duration) {
                 mirrorFlyLog("", 'max duration: ${duration.inMilliseconds}');
                 filePath.value = (result.files.single.path!);
