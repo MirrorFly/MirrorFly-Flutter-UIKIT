@@ -29,6 +29,11 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
     super.initState();
   }
   @override
+  void dispose() {
+    Get.delete<ViewAllMediaController>();
+    super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
