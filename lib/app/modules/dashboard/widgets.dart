@@ -123,7 +123,7 @@ class RecentChatItem extends StatelessWidget {
           Row(
             children: [
               item.isLastMessageSentByMe.checkNull() && !isForwardMessage && !item.isLastMessageRecalledByUser.checkNull()
-                  ? buildMessageIndicator()
+                  ? (item.lastMessageType ==  Constants.msgTypeText && item.lastMessageContent.checkNull().isNotEmpty || item.lastMessageType != Constants.msgTypeText) ? buildMessageIndicator() : const SizedBox()
                   : const SizedBox(),
               isForwardMessage
                   ? item.isGroup!
@@ -347,9 +347,10 @@ class RecentChatItem extends StatelessWidget {
             return Row(
               children: [
                 (item.isGroup.checkNull() &&
-                        !chat.isMessageSentByMe.checkNull() &&
-                        (chat.messageType != Constants.mNotification ||
-                            chat.messageTextContent == " added you"))
+                    !chat.isMessageSentByMe.checkNull() &&
+                    (chat.messageType != Constants.mNotification ||
+                        chat.messageTextContent == " added you") || (item.isGroup.checkNull() && (forMessageTypeString(chat.messageType,
+                    content: chat.messageTextContent.checkNull()).checkNull().isNotEmpty)))
                     ? Text(
                         "${chat.senderUserName.checkNull()}:",
                         style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor),
