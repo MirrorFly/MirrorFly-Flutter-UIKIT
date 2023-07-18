@@ -400,8 +400,9 @@ class ChatController extends FullLifeCycleController
       }*/
     } else {
       //show busy status popup
-      if (context.mounted)
+      if (context.mounted) {
         showBusyStatusAlert(showBottomSheetAttachment(context), context);
+      }
     }
   }
 
