@@ -531,8 +531,21 @@ abstract class BaseController {
 
     if(!chatMessageModel.isMessageSentByMe && !isUserMuted.checkNull() && archiveSettings) {
       final String? notificationUri = SessionManagement.getNotificationUri();
-      final UriAndroidNotificationSound uriSound = UriAndroidNotificationSound(
-          notificationUri!);
+      UriAndroidNotificationSound? uriSound;
+      if(notificationUri==null) {
+        await Mirrorfly.getDefaultNotificationUri().then((value) {
+          debugPrint("getDefaultNotificationUri--> $value");
+          if (value != null) {
+            SessionManagement.setNotificationUri(value);
+            Mirrorfly.setNotificationSound(true);
+            Mirrorfly.setDefaultNotificationSound();
+            SessionManagement.setNotificationSound(true);
+            uriSound = UriAndroidNotificationSound(value);
+          }
+        });
+      }else{
+        uriSound = UriAndroidNotificationSound(notificationUri);
+      }
       debugPrint("notificationUri--> $notificationUri");
 
       var messageId = chatMessageModel.messageSentTime.toString().substring(chatMessageModel.messageSentTime.toString().length - 5);
