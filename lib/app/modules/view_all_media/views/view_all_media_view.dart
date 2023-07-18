@@ -319,7 +319,7 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
             children: [
               InkWell(
                 onTap: (){
-                  launchWeb(item.linkMap!["url"]);
+                  launchInBrowser(item.linkMap!["url"]);
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -376,7 +376,7 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
               ),
               InkWell(
                 onTap: (){
-                  controller.navigateMessage(item.chatMessage);
+                  controller.navigateMessage(item.chatMessage,context);
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(

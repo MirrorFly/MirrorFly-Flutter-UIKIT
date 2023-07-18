@@ -8,9 +8,6 @@ import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 import '../models.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:url_launcher/url_launcher.dart';
-
-import '../data/apputils.dart';
 
 //Colors
 const Color appBarColor = Color(0xffF2F2F2);
@@ -670,36 +667,6 @@ class Constants {
   static const pinAlert = pinExpiry-5;//in Days
   static const forgetPinOTPText ='Generate OTP to your registered mobile number';
   static const invalidPinOTPText ='Invalid PIN, Generate OTP to your registered mobile number';
-}
-
-Future<void> launchWeb(String url) async {
-  if (await AppUtils.isNetConnected()) {
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(
-        Uri.parse(url),
-        mode: LaunchMode.externalApplication,
-      );
-    } else {
-      throw "Could not launch $url";
-    }
-  } else {
-    toToast(Constants.noInternetConnection);
-  }
-}
-
-Future<void> launchInWebViewOrVC(String url, String title) async {
-  if (await AppUtils.isNetConnected()) {
-    if (!await launchUrl(
-      Uri.parse(url),
-      mode: LaunchMode.inAppWebView,
-      webViewConfiguration: WebViewConfiguration(
-          headers: <String, String>{'my_header_key': title}),
-    )) {
-      throw Exception('Could not launch $url');
-    }
-  } else {
-    toToast(Constants.noInternetConnection);
-  }
 }
 
 Widget forMessageTypeIcon(String messageType,[MediaChatMessage? mediaChatMessage]) {
