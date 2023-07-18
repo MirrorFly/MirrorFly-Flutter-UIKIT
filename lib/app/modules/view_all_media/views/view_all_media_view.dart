@@ -165,7 +165,8 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
         if (item.isImageMessage() || item.isVideoMessage()) {
           controller.openImage(context,gridIndex);
         } else if (item.isAudioMessage()) {
-          controller.openFile(item.mediaChatMessage!.mediaLocalStoragePath);
+          // controller.openFile(item.mediaChatMessage!.mediaLocalStoragePath);
+          controller.openImage(context,gridIndex);
         }
       },
     );
