@@ -355,7 +355,7 @@ class ChatController extends FullLifeCycleController
   saveUnsentMessage() {
     if (profile.jid.checkNull().isNotEmpty) {
       Mirrorfly.saveUnsentMessage(
-          profile.jid.checkNull(), messageController.text.toString());
+          profile.jid.checkNull(), messageController.text.trim().toString());
     }
     if (isReplying.value) {
       ReplyHashMap.saveReplyId(
@@ -461,7 +461,7 @@ class ChatController extends FullLifeCycleController
       isReplying(false);
       if (messageController.text.trim().isNotEmpty) {
         Mirrorfly.sendTextMessage(
-                messageController.text, profile.jid.toString(), replyMessageId)
+                messageController.text.trim(), profile.jid.toString(), replyMessageId)
             .then((value) {
           mirrorFlyLog("text message", value);
           messageController.text = "";
@@ -482,7 +482,7 @@ class ChatController extends FullLifeCycleController
           toJid: profile.jid.toString(),
           replyMessageId: (isReplying.value) ? replyChatMessage.messageId : "",
           messageType: Constants.mText,
-          textMessage: messageController.text);
+          textMessage: messageController.text.trim());
       if (context.mounted) showBusyStatusAlert(disableBusyChatAndSend, context);
     }
   }
@@ -2346,7 +2346,7 @@ class ChatController extends FullLifeCycleController
                           filePath: [file],
                           userName: profile.name.checkNull(),
                           profile: profile,
-                          caption: messageController.text,
+                          caption: messageController.text.trim(),
                           showAdd: false,
                         )));
             /*Get.toNamed(Routes.mediaPreview, arguments: {
@@ -2443,7 +2443,7 @@ class ChatController extends FullLifeCycleController
                 MaterialPageRoute(
                     builder: (con) => GalleryPickerView(
                         senderJid: profile.jid.checkNull(),
-                        caption: messageController.text)));
+                        caption: messageController.text.trim())));
           }
         } catch (e) {
           debugPrint(e.toString());
