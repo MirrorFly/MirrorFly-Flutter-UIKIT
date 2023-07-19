@@ -8,7 +8,7 @@ void main() {
   MirrorflyUikit.instance.initUIKIT(
       baseUrl: 'https://api-uikit-qa.contus.us/api/v1/',
       licenseKey: 'ckIjaccWBoMNvxdbql8LJ2dmKqT5bp',
-      googleMapKey: '',
+      googleMapKey: 'AIzaSyBaKkrQnLT4nacpKblIE5d4QK6GpaX5luQ',
       iOSContainerID: 'group.com.mirrorfly.flutter');
   runApp(const MyApp());
 }

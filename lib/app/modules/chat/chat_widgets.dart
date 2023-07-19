@@ -60,7 +60,7 @@ class ReplyingMessageHeader extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 15.0, left: 15.0),
                       child: getReplyTitle(chatMessage.isMessageSentByMe,
-                          chatMessage.senderUserName),
+                          chatMessage.senderUserName.checkNull().isNotEmpty ? chatMessage.senderUserName : chatMessage.senderNickName),
                     ),
                     const SizedBox(height: 8),
                     Padding(
@@ -360,7 +360,7 @@ class ReplyMessageHeader extends StatelessWidget {
               children: [
                 getReplyTitle(
                     chatMessage.replyParentChatMessage!.isMessageSentByMe,
-                    chatMessage.replyParentChatMessage!.senderUserName),
+                    chatMessage.replyParentChatMessage!.senderUserName.checkNull().isNotEmpty ? chatMessage.replyParentChatMessage!.senderUserName : chatMessage.replyParentChatMessage!.senderNickName),
                 const SizedBox(height: 5),
                 getReplyMessage(
                     chatMessage.replyParentChatMessage!.messageType,
@@ -497,12 +497,12 @@ class SenderHeader extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0),
         child: Text(
-          chatList[index].senderUserName.checkNull(),
+          chatList[index].senderUserName.checkNull().isNotEmpty ? chatList[index].senderUserName : chatList[index].senderNickName,
           style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w400,
               color: Color(Helper.getColourCode(
-                  chatList[index].senderUserName.checkNull()))),
+                  chatList[index].senderUserName.checkNull().isNotEmpty ? chatList[index].senderUserName : chatList[index].senderNickName))),
         ),
       ),
     );
