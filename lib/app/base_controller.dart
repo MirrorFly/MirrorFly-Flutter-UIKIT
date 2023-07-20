@@ -363,6 +363,9 @@ abstract class BaseController {
 
   void unblockedThisUser(String jid) {
     mirrorFlyLog("unblockedThisUser", jid.toString());
+    if (Get.isRegistered<DashboardController>()) {
+      Get.find<DashboardController>().unblockedThisUser(jid);
+    }
     if (Get.isRegistered<ChatController>()) {
       Get.find<ChatController>().unblockedThisUser(jid);
     }
@@ -379,6 +382,9 @@ abstract class BaseController {
 
   void userBlockedMe(String jid) {
     mirrorFlyLog('userBlockedMe', jid.toString());
+    if (Get.isRegistered<DashboardController>()) {
+      Get.find<DashboardController>().userBlockedMe(jid);
+    }
     if (Get.isRegistered<ChatController>()) {
       Get.find<ChatController>().userBlockedMe(jid);
     }

@@ -1356,4 +1356,12 @@ class DashboardController extends FullLifeCycleController
   }*/
     return '';
   }
+
+  void userBlockedMe(String jid) {
+    userUpdatedHisProfile(jid);
+  }
+
+  void unblockedThisUser(String jid) {
+    userUpdatedHisProfile(jid);
+  }
 }
