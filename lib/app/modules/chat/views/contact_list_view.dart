@@ -265,7 +265,7 @@ class _ContactListViewState extends State<ContactListView> {
                                             //       .titleSmall,
                                             // )
                                             Text(
-                                              item.status.toString(),
+                                                MirrorflyUikit.instance.showMobileNumberOnList ? item.mobileNumber.checkNull() : item.status.checkNull(),
                                               style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)
                                             )
                                           ],

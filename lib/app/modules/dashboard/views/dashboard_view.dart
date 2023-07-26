@@ -567,7 +567,7 @@ class _DashboardViewState extends State<DashboardView> {
             return memberItem(
               name: getName(item),
               image: item.image.checkNull(),
-              status: item.status.checkNull(),
+              status: MirrorflyUikit.instance.showMobileNumberOnList ? item.mobileNumber.checkNull() : item.status.checkNull(),
               spantext: controller.search.text.toString(),
               onTap: () {
                 controller.toChatPage(context, item.jid.checkNull());

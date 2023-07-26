@@ -20,6 +20,8 @@ import 'mirrorfly_uikit_plugin_platform_interface.dart';
 class MirrorflyUikit {
   static MirrorFlyAppTheme? getTheme = MirrorFlyTheme.mirrorFlyLightTheme;
   bool isTrialLicenceKey = true;
+  bool showMobileNumberOnList = true;
+  bool showStatusOption = true;
   String googleMapKey = '';
   static bool isSDKInitialized = false;
   static String theme = "light";
@@ -36,6 +38,7 @@ class MirrorflyUikit {
   /// * [googleMapKey] provide the googleMap Key for location messages
   /// * [iOSContainerID] provide the App Group of the iOS Project
   /// * [isTrialLicenceKey] to provide trial/live register and contact sync
+  /// * [showMobileNumberOnList] to show mobile on contact list
   /// * [storageFolderName] provide the Local Storage Folder Name
   initUIKIT(
       {required baseUrl,
@@ -43,7 +46,7 @@ class MirrorflyUikit {
       String? googleMapKey,
       required String iOSContainerID,
       String? storageFolderName,
-      bool isTrialLicenceKey = true}) async {
+      bool isTrialLicenceKey = true,bool showMobileNumberOnList = true,bool showStatusOption = true,}) async {
     Mirrorfly.init(
         baseUrl: baseUrl,
         licenseKey: licenseKey,
@@ -54,6 +57,8 @@ class MirrorflyUikit {
         enableDebugLog: true);
     isSDKInitialized = true;
     this.isTrialLicenceKey = isTrialLicenceKey;
+    this.showMobileNumberOnList = showMobileNumberOnList;
+    this.showStatusOption = showStatusOption;
     this.googleMapKey = googleMapKey ?? '';
     ReplyHashMap.init();
     rootBundle.loadString('assets/mirrorfly_config.json').then((configFile) {

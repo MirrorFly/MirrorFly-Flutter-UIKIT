@@ -246,7 +246,7 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         var item = controller.groupMembers[index];
-                        return memberItem(name: getName(item).checkNull(),image: item.image.checkNull(),isAdmin: item.isGroupAdmin,status: item.status.checkNull(),onTap: (){
+                        return memberItem(name: getName(item).checkNull(),image: item.image.checkNull(),isAdmin: item.isGroupAdmin,status: MirrorflyUikit.instance.showMobileNumberOnList ? item.mobileNumber.checkNull() : item.status.checkNull(),onTap: (){
                           if (item.jid.checkNull() !=
                               SessionManagement.getUserJID().checkNull()) {
                             showOptions(item, context);
@@ -344,7 +344,7 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
                       var item = controller.groupMembers[index];
-                      return memberItem(name: getName(item).checkNull(),image: item.image.checkNull(),isAdmin: item.isGroupAdmin,status: item.status.checkNull(),onTap: (){
+                      return memberItem(name: getName(item).checkNull(),image: item.image.checkNull(),isAdmin: item.isGroupAdmin,status: MirrorflyUikit.instance.showMobileNumberOnList ? item.mobileNumber.checkNull() : item.status.checkNull(),onTap: (){
                         if (item.jid.checkNull() !=
                             SessionManagement.getUserJID().checkNull()) {
                           showOptions(item, context);

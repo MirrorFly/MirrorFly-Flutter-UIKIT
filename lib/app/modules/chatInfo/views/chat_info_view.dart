@@ -274,42 +274,45 @@ class _ChatInfoViewState extends State<ChatInfoView> {
                 ),
               ],
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text("Status",
-                      style: TextStyle(
-                          color: MirrorflyUikit.getTheme?.textPrimaryColor,
-                          //Colors.black,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500)),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 15.0, bottom: 16),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(
-                        statusIcon,
-                        package: package,
-                        color: MirrorflyUikit.getTheme?.textSecondaryColor,
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Obx(() {
-                        return Text(controller.profile.status.checkNull(),
-                            style: TextStyle(
-                                fontSize: 13,
-                                color: MirrorflyUikit
-                                    .getTheme?.textSecondaryColor, //textColor,
-                                fontWeight: FontWeight.w500));
-                      }),
-                    ],
+            Visibility(
+              visible: MirrorflyUikit.instance.showStatusOption,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text("Status",
+                        style: TextStyle(
+                            color: MirrorflyUikit.getTheme?.textPrimaryColor,
+                            //Colors.black,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500)),
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15.0, bottom: 16),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(
+                          statusIcon,
+                          package: package,
+                          color: MirrorflyUikit.getTheme?.textSecondaryColor,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Obx(() {
+                          return Text(controller.profile.status.checkNull(),
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  color: MirrorflyUikit
+                                      .getTheme?.textSecondaryColor, //textColor,
+                                  fontWeight: FontWeight.w500));
+                        }),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
             listItem(
                 leading: SvgPicture.asset(
