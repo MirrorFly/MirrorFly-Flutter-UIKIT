@@ -86,7 +86,7 @@ class ProfileController extends GetxController {
     } else if (!emailPatternMatch.hasMatch(profileEmail.text.toString())) {
       toToast("Please enter a valid Mail");
       return false;
-    } else if(!(await validMobileNumber(profileMobile.text))){
+    } else if(!(await validMobileNumber(profileMobile.text.replaceAll("+", "")))){
       toToast("Please enter a valid mobile number with country code");
       return false;
     } /*else if (profileStatus.value.isEmpty) {
@@ -108,8 +108,11 @@ class ProfileController extends GetxController {
         } else {
           if (await AppUtils.isNetConnected()) {
             debugPrint("profile update");
-            var unformatted = profileMobile.text.toString().replaceAll('+', '').replaceAll(' ', '').trim();
-            // debugPrint('unformatted : $unformatted');
+            var formattedNumber = await FlutterLibphonenumber.parse(profileMobile.text);
+            debugPrint("parse-----> $formattedNumber");
+            var unformatted = formattedNumber['national_number'];//profileMobile.text.replaceAll(" ", "").replaceAll("+", "");
+            // var unformatted = profileMobile.text;
+            debugPrint('unformatted : $unformatted');
             Mirrorfly
                 .updateMyProfile(
                 profileName.text.toString(),
@@ -239,7 +242,10 @@ class ProfileController extends GetxController {
                   mobileEditAccess(!valid);
                 });
               }else {
-                mobileEditAccess(true);
+                var userIdentifier = SessionManagement.getuserIdentifier();
+                debugPrint("userIdentifier : $userIdentifier");
+                validMobileNumber(userIdentifier).then((value) => mobileEditAccess(!value));
+                // mobileEditAccess(true);
               }
               profileEmail.text = data.data!.email ?? "";
               profileStatus.value = data.data!.status.checkNull().isNotEmpty ? data.data!.status.checkNull() : "I am in Mirror Fly";
@@ -416,7 +422,7 @@ class ProfileController extends GetxController {
 
   onMobileChange(String text){
     changed(true);
-    validMobileNumber(text);
+    validMobileNumber(text.replaceAll("+", ""));
     update();
   }
 

@@ -129,6 +129,7 @@ class MirrorflyUikit {
           SessionManagement.setLogin(userData.data!.username!.isNotEmpty);
           SessionManagement.setUser(userData.data!);
           Mirrorfly.enableDisableArchivedSettings(true);
+          SessionManagement.setUserIdentifier(userIdentifier);
           // Mirrorfly.setRegionCode(regionCode ?? 'IN');///if its not set then error comes in contact sync delete from phonebook.
           // SessionManagement.setCountryCode((countryCode ?? "").replaceAll('+', ''));
           await _setUserJID(userData.data!.username!);
