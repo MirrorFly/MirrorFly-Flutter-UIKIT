@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:flutter_libphonenumber/flutter_libphonenumber.dart';
+import 'package:flutter_libphonenumber/flutter_libphonenumber.dart' as FlutterLibphonenumber;
 import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/settings/views/settings_view.dart';
@@ -1314,12 +1314,12 @@ class DashboardController extends FullLifeCycleController
 
   Future<String> getJidFromPhoneNumber(
       String mobileNumber, String countryCode) async {
-    FlutterLibphonenumber().init();
+    FlutterLibphonenumber.init();
     var formatNumberSync =
-    FlutterLibphonenumber().formatNumberSync(mobileNumber);
-    var parse = await FlutterLibphonenumber().parse(formatNumberSync);
+    FlutterLibphonenumber.formatNumberSync(mobileNumber);
+    var parse = await FlutterLibphonenumber.parse(formatNumberSync);
     var format =
-    await FlutterLibphonenumber().format(mobileNumber, countryCode);
+    await FlutterLibphonenumber.format(mobileNumber, countryCode);
     /*bool? isValid =
       await PhoneNumberUtil.isValidPhoneNumber(phoneNumber: mobileNumber, isoCode: countryCode);
   String? normalizedNumber = await PhoneNumberUtil.normalizePhoneNumber(
