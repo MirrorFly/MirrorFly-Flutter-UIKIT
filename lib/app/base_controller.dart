@@ -100,6 +100,7 @@ abstract class BaseController {
       unblockedThisUser(jid);
     });
     Mirrorfly.userBlockedMe.listen((event){
+      mirrorFlyLog("userBlockedMe", event);
           var data = json.decode(event.toString());
           var jid = data["jid"];
           userBlockedMe(jid.toString());
@@ -362,6 +363,9 @@ abstract class BaseController {
 
   void unblockedThisUser(String jid) {
     mirrorFlyLog("unblockedThisUser", jid.toString());
+    if (Get.isRegistered<DashboardController>()) {
+      Get.find<DashboardController>().unblockedThisUser(jid);
+    }
     if (Get.isRegistered<ChatController>()) {
       Get.find<ChatController>().unblockedThisUser(jid);
     }
@@ -378,6 +382,9 @@ abstract class BaseController {
 
   void userBlockedMe(String jid) {
     mirrorFlyLog('userBlockedMe', jid.toString());
+    if (Get.isRegistered<DashboardController>()) {
+      Get.find<DashboardController>().userBlockedMe(jid);
+    }
     if (Get.isRegistered<ChatController>()) {
       Get.find<ChatController>().userBlockedMe(jid);
     }
@@ -433,7 +440,12 @@ abstract class BaseController {
 
   void userProfileFetched(result) {}
 
-  void userUnBlockedMe(result) {}
+  void userUnBlockedMe(result) {
+    mirrorFlyLog("userUnBlockedMe", result);
+    var data = json.decode(result.toString());
+    var jid = data["jid"];
+    unblockedThisUser(jid);
+  }
 
   void userUpdatedHisProfile(String jid) {
     mirrorFlyLog("userUpdatedHisProfile", jid.toString());
@@ -531,8 +543,21 @@ abstract class BaseController {
 
     if(!chatMessageModel.isMessageSentByMe && !isUserMuted.checkNull() && archiveSettings) {
       final String? notificationUri = SessionManagement.getNotificationUri();
-      final UriAndroidNotificationSound uriSound = UriAndroidNotificationSound(
-          notificationUri!);
+      UriAndroidNotificationSound? uriSound;
+      if(notificationUri==null) {
+        await Mirrorfly.getDefaultNotificationUri().then((value) {
+          debugPrint("getDefaultNotificationUri--> $value");
+          if (value != null) {
+            SessionManagement.setNotificationUri(value);
+            Mirrorfly.setNotificationSound(true);
+            Mirrorfly.setDefaultNotificationSound();
+            SessionManagement.setNotificationSound(true);
+            uriSound = UriAndroidNotificationSound(value);
+          }
+        });
+      }else{
+        uriSound = UriAndroidNotificationSound(notificationUri);
+      }
       debugPrint("notificationUri--> $notificationUri");
 
       var messageId = chatMessageModel.messageSentTime.toString().substring(chatMessageModel.messageSentTime.toString().length - 5);

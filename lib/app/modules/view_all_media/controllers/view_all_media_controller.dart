@@ -126,10 +126,12 @@ class ViewAllMediaController extends GetxController {
     });
   }
 
-  navigateMessage(ChatMessageModel linkChatItem) {
+  navigateMessage(ChatMessageModel linkChatItem,BuildContext context) {
     // Get.toNamed(Routes.chat,parameters: {'isFromStarred':'true',"userJid":linkChatItem.chatUserJid,"messageId":linkChatItem.messageId});
-    Get.back();
-    Get.back();
+    // Get.back();
+    // Get.back();
+    Navigator.pop(context);
+    Navigator.pop(context);
     if (Get.isRegistered<ChatController>()) {
       Get.find<ChatController>().navigateToMessage(linkChatItem);
     }
@@ -312,7 +314,7 @@ class ViewAllMediaController extends GetxController {
   }
 
   openImage(BuildContext context,int gridIndex){
-    Navigator.push(context, MaterialPageRoute(builder: (con)=>ViewAllMediaPreviewView(images: previewMediaList,index : gridIndex)));
+    Navigator.push(context, MaterialPageRoute(builder: (con)=>ViewAllMediaPreviewView(images: previewMediaList.value,index : gridIndex)));
     // Get.toNamed(Routes.viewAllMediaPreview, arguments: {"images" : previewMediaList, "index": gridIndex});
   }
 

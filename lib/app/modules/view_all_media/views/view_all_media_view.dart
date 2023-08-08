@@ -29,6 +29,11 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
     super.initState();
   }
   @override
+  void dispose() {
+    Get.delete<ViewAllMediaController>();
+    super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
@@ -160,7 +165,8 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
         if (item.isImageMessage() || item.isVideoMessage()) {
           controller.openImage(context,gridIndex);
         } else if (item.isAudioMessage()) {
-          controller.openFile(item.mediaChatMessage!.mediaLocalStoragePath);
+          // controller.openFile(item.mediaChatMessage!.mediaLocalStoragePath);
+          controller.openImage(context,gridIndex);
         }
       },
     );
@@ -313,7 +319,7 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
             children: [
               InkWell(
                 onTap: (){
-                  launchWeb(item.linkMap!["url"]);
+                  launchInBrowser(item.linkMap!["url"]);
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -370,7 +376,7 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
               ),
               InkWell(
                 onTap: (){
-                  controller.navigateMessage(item.chatMessage);
+                  controller.navigateMessage(item.chatMessage,context);
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(

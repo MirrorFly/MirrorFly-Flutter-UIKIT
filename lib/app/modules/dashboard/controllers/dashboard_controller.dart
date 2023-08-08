@@ -127,7 +127,8 @@ class DashboardController extends FullLifeCycleController
     Mirrorfly.getRecentChatList().then((value) async {
       // String recentList = value.replaceAll('\n', '\\n');
       // debugPrint(recentList);
-      var data = await compute(recentChatFromJson, value.toString());
+      // var data = await compute(recentChatFromJson, value.toString());
+      var data = recentChatFromJson(value.toString());
       //recentChats.clear();
       recentChats(data.data!);
       recentChats.refresh();
@@ -414,28 +415,28 @@ class DashboardController extends FullLifeCycleController
     var chatIndex = recentChats.indexWhere((element) =>
     selectedChats.first == element.jid); //selectedChatsPosition[index];
     var item = recentChats[chatIndex];
-    Helper.progressLoading(context: context);
+    // Helper.progressLoading(context: context);
     clearAllChatSelection();
-    getProfileDetails(item.jid.checkNull()).then((value) {
-      if (value.jid != null) {
-        Helper.hideLoading(context: context);
-        var profile = profiledata(value.toString());
+    // getProfileDetails(item.jid.checkNull()).then((value) {
+      if (item.jid != null) {
+        // Helper.hideLoading(context: context);
+        // var profile = profiledata(value.toString());
         if (item.isGroup!) {
           Future.delayed(const Duration(milliseconds: 100),
                   () => Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (con) =>
-                          GroupInfoView(jid: profile.jid.checkNull()))));//Get.toNamed(Routes.groupInfo, arguments: profile));
+                          GroupInfoView(jid: item.jid.checkNull()))));//Get.toNamed(Routes.groupInfo, arguments: profile));
         } else {
           Future.delayed(const Duration(milliseconds: 100),
                   () =>  Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (con) => ChatInfoView(jid: profile.jid.checkNull()))));//Get.toNamed(Routes.chatInfo, arguments: profile));
+                      builder: (con) => ChatInfoView(jid: item.jid.checkNull()))));//Get.toNamed(Routes.chatInfo, arguments: profile));
         }
       }
-    });
+    // });
   }
 
   isSelected(int index) => selectedChats.contains(recentChats[index].jid);
@@ -1309,4 +1310,12 @@ class DashboardController extends FullLifeCycleController
     userUpdatedHisProfile(jid);
   }
 
+
+  void userBlockedMe(String jid) {
+    userUpdatedHisProfile(jid);
+  }
+
+  void unblockedThisUser(String jid) {
+    userUpdatedHisProfile(jid);
+  }
 }

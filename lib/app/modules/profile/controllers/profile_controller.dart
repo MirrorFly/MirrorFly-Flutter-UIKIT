@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_libphonenumber/flutter_libphonenumber.dart' as libphonenumber;
+import 'package:flutter_libphonenumber/flutter_libphonenumber.dart' as FlutterLibphonenumber;
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
@@ -20,7 +20,7 @@ class ProfileController extends GetxController {
   TextEditingController profileName = TextEditingController();
   TextEditingController profileEmail = TextEditingController();
   TextEditingController profileMobile = TextEditingController();
-  var profileStatus = "I am in Mirror Fly".obs;
+  var profileStatus = "".obs;//I am in Mirror Fly
   var isImageSelected = false.obs;
   var isUserProfileRemoved = false.obs;
   var imagePath = "".obs;
@@ -86,13 +86,13 @@ class ProfileController extends GetxController {
     } else if (!emailPatternMatch.hasMatch(profileEmail.text.toString())) {
       toToast("Please enter a valid Mail");
       return false;
-    } else if(!(await validMobileNumber(profileMobile.text))){
+    } else if(!(await validMobileNumber(profileMobile.text.replaceAll("+", "")))){
       toToast("Please enter a valid mobile number with country code");
       return false;
-    } else if (profileStatus.value.isEmpty) {
+    } /*else if (profileStatus.value.isEmpty) {
       toToast("Enter Profile Status");
       return false;
-    }else{
+    }*/else{
       return true;
     }
   }
@@ -108,8 +108,11 @@ class ProfileController extends GetxController {
         } else {
           if (await AppUtils.isNetConnected()) {
             debugPrint("profile update");
-            var unformatted = profileMobile.text.toString().replaceAll('+', '').replaceAll(' ', '').trim();
-            // debugPrint('unformatted : $unformatted');
+            var formattedNumber = await FlutterLibphonenumber.parse(profileMobile.text);
+            debugPrint("parse-----> $formattedNumber");
+            var unformatted = formattedNumber['national_number'];//profileMobile.text.replaceAll(" ", "").replaceAll("+", "");
+            // var unformatted = profileMobile.text;
+            debugPrint('unformatted : $unformatted');
             Mirrorfly
                 .updateMyProfile(
                 profileName.text.toString(),
@@ -239,7 +242,10 @@ class ProfileController extends GetxController {
                   mobileEditAccess(!valid);
                 });
               }else {
-                mobileEditAccess(true);
+                var userIdentifier = SessionManagement.getuserIdentifier();
+                debugPrint("userIdentifier : $userIdentifier");
+                validMobileNumber(userIdentifier).then((value) => mobileEditAccess(!value));
+                // mobileEditAccess(true);
               }
               profileEmail.text = data.data!.email ?? "";
               profileStatus.value = data.data!.status.checkNull().isNotEmpty ? data.data!.status.checkNull() : "I am in Mirror Fly";
@@ -416,7 +422,7 @@ class ProfileController extends GetxController {
 
   onMobileChange(String text){
     changed(true);
-    validMobileNumber(text);
+    validMobileNumber(text.replaceAll("+", ""));
     update();
   }
 
@@ -427,10 +433,10 @@ class ProfileController extends GetxController {
       coded = SessionManagement.getCountryCode().checkNull()+text;
     }
     var m = coded.contains("+") ? coded : "+$coded";
-    libphonenumber.init();
-    var formatNumberSync = libphonenumber.formatNumberSync(m);
+    FlutterLibphonenumber.init();
+    var formatNumberSync = FlutterLibphonenumber.formatNumberSync(m);
     try {
-      var parse = await libphonenumber.parse(formatNumberSync);
+      var parse = await FlutterLibphonenumber.parse(formatNumberSync);
       debugPrint("parse-----> $parse");
       //{country_code: 91, e164: +91xxxxxxxxxx, national: 0xxxxx xxxxx, type: mobile, international: +91 xxxxx xxxxx, national_number: xxxxxxxxxx, region_code: IN}
       if (parse.isNotEmpty) {
