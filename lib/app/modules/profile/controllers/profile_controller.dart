@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_libphonenumber/flutter_libphonenumber.dart';
+import 'package:flutter_libphonenumber/flutter_libphonenumber.dart' as libphonenumber;
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
@@ -421,11 +421,16 @@ class ProfileController extends GetxController {
   }
 
   Future<bool> validMobileNumber(String text)async{
-    var m = text.contains("+") ? text : "+$text";
-    FlutterLibphonenumber().init();
-    var formatNumberSync = FlutterLibphonenumber().formatNumberSync(m);
+    var coded = text;
+    if(!text.startsWith(SessionManagement.getCountryCode().checkNull().replaceAll("+", "").toString())){
+      mirrorFlyLog("SessionManagement.getCountryCode()", SessionManagement.getCountryCode().toString());
+      coded = SessionManagement.getCountryCode().checkNull()+text;
+    }
+    var m = coded.contains("+") ? coded : "+$coded";
+    libphonenumber.init();
+    var formatNumberSync = libphonenumber.formatNumberSync(m);
     try {
-      var parse = await FlutterLibphonenumber().parse(formatNumberSync);
+      var parse = await libphonenumber.parse(formatNumberSync);
       debugPrint("parse-----> $parse");
       //{country_code: 91, e164: +91xxxxxxxxxx, national: 0xxxxx xxxxx, type: mobile, international: +91 xxxxx xxxxx, national_number: xxxxxxxxxx, region_code: IN}
       if (parse.isNotEmpty) {
