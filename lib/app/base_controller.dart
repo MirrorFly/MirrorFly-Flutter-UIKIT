@@ -7,9 +7,11 @@ import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
+import 'package:mirrorfly_uikit_plugin/app/model/notification_message_model.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/controllers/chat_controller.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/controllers/contact_controller.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/group/controllers/group_info_controller.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/notification/notification_builder.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/settings/views/blocked/blocked_list_controller.dart';
 
 import 'common/main_controller.dart';
@@ -178,11 +180,13 @@ abstract class BaseController {
     ChatMessageModel chatMessageModel = sendMessageModelFromJson(event);
 
     if(SessionManagement.getCurrentChatJID() == chatMessageModel.chatUserJid.checkNull()){
-      debugPrint("Message Status updated user chat screen is in online");
+      debugPrint("Message Received user chat screen is in online");
     }else{
-      if(chatMessageModel.isMessageRecalled.value){
-        // showLocalNotification(chatMessageModel);
+      var data = chatMessageFromJson(event.toString());
+      if(data.messageId!=null) {
+        NotificationBuilder.createNotification(data);
       }
+      // showLocalNotification(chatMessageModel);
     }
 
     if (Get.isRegistered<ChatController>()) {
@@ -301,6 +305,15 @@ abstract class BaseController {
   void onGroupNotificationMessage(event) {
     debugPrint('onGroupNotificationMessage $event');
     ChatMessageModel chatMessageModel = sendMessageModelFromJson(event);
+    if(SessionManagement.getCurrentChatJID() == chatMessageModel.chatUserJid.checkNull()){
+      debugPrint("Message Received group chat screen is in online");
+    }else{
+      var data = chatMessageFromJson(event.toString());
+      if(data.messageId!=null) {
+        NotificationBuilder.createNotification(data);
+      }
+      // showLocalNotification(chatMessageModel);
+    }
     if (Get.isRegistered<DashboardController>()) {
       Get.find<DashboardController>().onMessageReceived(chatMessageModel);
     }
@@ -327,7 +340,7 @@ abstract class BaseController {
 
   }
 
-  void onContactSyncComplete(bool result) {
+  void onContactSyncComplete(dynamic result) {
     mirrorFlyLog("onContactSyncComplete", result.toString());
     // Mirrorfly.getRegisteredUsers(true);
     if(result) {
@@ -406,7 +419,7 @@ abstract class BaseController {
     }
   }
 
-  void userDeletedHisProfile(String jid) {
+  void userDeletedHisProfile(dynamic jid) {
     if (Get.isRegistered<DashboardController>()) {
       Get.find<DashboardController>().userDeletedHisProfile(jid);
     }
