@@ -746,9 +746,10 @@ class ChatController extends FullLifeCycleController
           result.files.first.extension == 'png') {
         debugPrint("Picked Image File");
         imagePath.value = (result.files.single.path!);
-        if (context.mounted)
+        if (context.mounted) {
           Navigator.push(context,
               MaterialPageRoute(builder: (con) => const ImagePreviewView()));
+        }
         /*Get.toNamed(Routes.imagePreview, arguments: {
           "filePath": imagePath.value,
           "userName": getName(profile),
