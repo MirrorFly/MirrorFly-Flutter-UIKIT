@@ -965,14 +965,6 @@ class ChatController extends FullLifeCycleController
                 result.files.single.path!, Constants.mAudio)) {
 
               AudioPlayer player = AudioPlayer();
-              debugPrint("result.files.single.path!${result.files.single.path}");
-              debugPrint("result.paths.single ${result.paths.single}");
-
-              debugPrint("result.paths.first ${result.files.first}");
-              debugPrint("result.paths.first ${result.files}");
-              debugPrint("result.paths.first ${result.files.first.extension}");
-
-              debugPrint("result.-----.first ${result}");
 
               player.setSourceDeviceFile(result.files.single.path ?? "");
               player.onDurationChanged.listen((Duration duration) {
