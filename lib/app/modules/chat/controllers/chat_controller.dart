@@ -18,7 +18,6 @@ import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/permissions.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/camera_pick/views/camera_pick_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_search_view.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/image_preview_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/location_sent_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chatInfo/views/chat_info_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/group/views/group_info_view.dart';
@@ -733,45 +732,6 @@ class ChatController extends FullLifeCycleController
     }
   }
 
-  Future imagePicker() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      allowMultiple: false,
-      type: FileType.custom,
-      allowedExtensions: ['jpg', 'png', 'mp4', 'mov', 'wmv', 'mkv'],
-    );
-    if (result != null && File(result.files.single.path!).existsSync()) {
-      debugPrint(result.files.first.extension);
-      if (result.files.first.extension == 'jpg' ||
-          result.files.first.extension == 'JPEG' ||
-          result.files.first.extension == 'png') {
-        debugPrint("Picked Image File");
-        imagePath.value = (result.files.single.path!);
-        if (context.mounted) {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (con) => const ImagePreviewView()));
-        }
-        /*Get.toNamed(Routes.imagePreview, arguments: {
-          "filePath": imagePath.value,
-          "userName": getName(profile),
-          "profile": profile
-        });*/
-      } else if (result.files.first.extension == 'mp4' ||
-          result.files.first.extension == 'MP4' ||
-          result.files.first.extension == 'mov' ||
-          result.files.first.extension == 'mkv') {
-        debugPrint("Picked Video File");
-        imagePath.value = (result.files.single.path!);
-        /*Get.toNamed(Routes.videoPreview, arguments: {
-          "filePath": imagePath.value,
-          "userName": getName(profile),
-          "profile": profile
-        });*/
-      }
-    } else {
-      // User canceled the picker
-      debugPrint("======User Cancelled=====");
-    }
-  }
 
   documentPickUpload(BuildContext context) {
     AppPermission.getStoragePermission(context).then((permission) {
@@ -997,17 +957,7 @@ class ChatController extends FullLifeCycleController
     AppPermission.getStoragePermission(context).then((permission) {
       if (permission) {
         FilePicker.platform.pickFiles(
-          type: FileType.custom,
-          allowedExtensions: [
-            'wav',
-            'aiff',
-            'alac',
-            'flac',
-            'mp3',
-            'aac',
-            'wma',
-            'ogg'
-          ],
+          type: FileType.audio,
         ).then((result) {
           if (result != null && File(result.files.single.path!).existsSync()) {
             debugPrint(result.files.first.extension);
@@ -1017,6 +967,13 @@ class ChatController extends FullLifeCycleController
               AudioPlayer player = AudioPlayer();
               debugPrint("result.files.single.path!${result.files.single.path}");
               debugPrint("result.paths.single ${result.paths.single}");
+
+              debugPrint("result.paths.first ${result.files.first}");
+              debugPrint("result.paths.first ${result.files}");
+              debugPrint("result.paths.first ${result.files.first.extension}");
+
+              debugPrint("result.-----.first ${result}");
+
               player.setSourceDeviceFile(result.files.single.path ?? "");
               player.onDurationChanged.listen((Duration duration) {
                 mirrorFlyLog("", 'max duration: ${duration.inMilliseconds}');
@@ -2900,6 +2857,7 @@ class ChatController extends FullLifeCycleController
   @override
   void onResumed() {
     mirrorFlyLog("LifeCycle", "onResumed");
+    AppPermission.requestNotificationPermission();
     setChatStatus();
     if (!KeyboardVisibilityController().isVisible) {
       if (focusNode.hasFocus) {
