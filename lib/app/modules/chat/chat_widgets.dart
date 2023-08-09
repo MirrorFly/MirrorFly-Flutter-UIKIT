@@ -320,7 +320,7 @@ getReplyImageHolder(BuildContext context,
                   : mAudioIcon,
               package: package,
               fit: BoxFit.contain,
-              color: Colors.white,
+              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
               height: 18,
             ),
           ),
@@ -814,7 +814,7 @@ class _AudioMessageViewState extends State<AudioMessageView>
               mainAxisSize: MainAxisSize.min,
               children: [
                 widget.chatMessage.isMessageStarred.value
-                    ? SvgPicture.asset(starSmallIcon,package: package,color: widget.chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor)
+                    ? SvgPicture.asset(starSmallIcon,package: package, colorFilter: ColorFilter.mode(widget.chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor, BlendMode.srcIn))
                     : const SizedBox.shrink(),
                 const SizedBox(
                   width: 5,
@@ -939,12 +939,12 @@ class _AudioMessageViewState extends State<AudioMessageView>
                             ? SvgPicture.asset(
                           pauseIcon,package: package,
                           height: 17,
-                          color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor,
+                          colorFilter: ColorFilter.mode(chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor, BlendMode.srcIn),
                         ) //const Icon(Icons.pause)
                             : SvgPicture.asset(
                           playIcon,package: package,
                           height: 17,
-                          color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor,
+                          colorFilter: ColorFilter.mode(chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor, BlendMode.srcIn),
                         ),
                       ),
                     );
@@ -1382,7 +1382,7 @@ class DocumentMessageView extends StatelessWidget {
                   ),
                   const Spacer(),
                   chatMessage.isMessageStarred.value
-                      ? SvgPicture.asset(starSmallIcon,package: package,color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor)
+                      ? SvgPicture.asset(starSmallIcon,package: package, colorFilter: ColorFilter.mode(chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor, BlendMode.srcIn))
                       : const SizedBox.shrink(),
                   const SizedBox(
                     width: 5,
@@ -1497,7 +1497,7 @@ class VideoMessageView extends StatelessWidget {
                       mVideoIcon,
                       package: package,
                       fit: BoxFit.contain,
-                      color: Colors.white,
+                      colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
                     ),
                     const SizedBox(
                       width: 5,
@@ -1522,7 +1522,7 @@ class VideoMessageView extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     chatMessage.isMessageStarred.value
-                        ? SvgPicture.asset(starSmallIcon,package: package,color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor,)
+                        ? SvgPicture.asset(starSmallIcon,package: package, colorFilter: ColorFilter.mode(chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor, BlendMode.srcIn))
                         : const SizedBox.shrink(),
                     const SizedBox(
                       width: 5,
@@ -1606,12 +1606,12 @@ class ImageMessageView extends StatelessWidget {
                 right: 10,
                 child: Stack(
                   children: [
-                    SvgPicture.asset(mediaBg,package: package,),
+                    // SvgPicture.asset(mediaBg,package: package,),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         chatMessage.isMessageStarred.value
-                            ? SvgPicture.asset(starSmallIcon,package: package,color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor,)
+                            ? SvgPicture.asset(starSmallIcon,package: package,colorFilter: ColorFilter.mode(chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor, BlendMode.srcIn))
                             : const SizedBox.shrink(),
                         const SizedBox(
                           width: 5,
@@ -1719,7 +1719,7 @@ Widget setCaptionMessage(MediaChatMessage mediaMessage,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             chatMessage.isMessageStarred.value
-                ? SvgPicture.asset(starSmallIcon,package: package,color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor,)
+                ? SvgPicture.asset(starSmallIcon,package: package,colorFilter: ColorFilter.mode(chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor, BlendMode.srcIn))
                 : const SizedBox.shrink(),
             const SizedBox(
               width: 5,
@@ -2073,12 +2073,12 @@ Widget getImageOverlay(BuildContext context,ChatMessageModel chatMessage,
           child: chatMessage.mediaChatMessage!.isPlaying
               ? SvgPicture.asset(
             pauseIcon,package: package,
-            color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor,
+            colorFilter: ColorFilter.mode(chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor, BlendMode.srcIn),
             height: 17,
           ) //const Icon(Icons.pause)
               : SvgPicture.asset(
             playIcon,package: package,
-            color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textSecondaryColor,
+            colorFilter: ColorFilter.mode(chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor, BlendMode.srcIn),
             height: 17,
           ),
         ),
@@ -2144,7 +2144,7 @@ uploadView(int mediaDownloadStatus, int mediaFileSize, String messageType,bool i
         padding: const EdgeInsets.all(5),
         child: SvgPicture.asset(
           uploadIcon,package: package,
-          color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor,//playIconColor,
+          colorFilter: ColorFilter.mode(isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor, BlendMode.srcIn), //playIconColor,
         ))
         : Container(
         width: 80,
@@ -2159,7 +2159,7 @@ uploadView(int mediaDownloadStatus, int mediaFileSize, String messageType,bool i
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset(uploadIcon,package: package,color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textPrimaryColor,),
+            SvgPicture.asset(uploadIcon,package: package, colorFilter: ColorFilter.mode(isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textPrimaryColor, BlendMode.srcIn)),
             const SizedBox(
               width: 5,
             ),
@@ -2217,7 +2217,7 @@ Widget downloadView(int mediaDownloadStatus, int mediaFileSize,
         padding: const EdgeInsets.all(5),
         child: SvgPicture.asset(
           downloadIcon,package: package,
-          color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor,//playIconColor,
+          colorFilter: ColorFilter.mode(isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor, BlendMode.srcIn), //playIconColor,
         ))
         : Container(
         width: 80,
@@ -2233,7 +2233,7 @@ Widget downloadView(int mediaDownloadStatus, int mediaFileSize,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SvgPicture.asset(downloadIcon,package: package,
-              color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textPrimaryColor,//playIconColor,
+              colorFilter: ColorFilter.mode(isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textPrimaryColor, BlendMode.srcIn),//playIconColor,
             ),
             const SizedBox(
               width: 5,
@@ -2270,7 +2270,7 @@ downloadingOrUploadingView(String messageType, int progress,bool isSentByMe) {
                   downloading,
                   package: package,
                   fit: BoxFit.contain,
-                  color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textPrimaryColor,//playIconColor,
+                  colorFilter: ColorFilter.mode(isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textPrimaryColor, BlendMode.srcIn), //playIconColor,
                 ),
                 Align(
                   alignment: Alignment.bottomCenter,
@@ -2309,7 +2309,7 @@ downloadingOrUploadingView(String messageType, int progress,bool isSentByMe) {
                 downloading,
                 package: package,
                 fit: BoxFit.contain,
-                color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textPrimaryColor,
+                colorFilter: ColorFilter.mode(isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textPrimaryColor, BlendMode.srcIn),
               ),
               Align(
                 alignment: Alignment.bottomCenter,

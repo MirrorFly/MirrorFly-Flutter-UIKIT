@@ -1012,8 +1012,10 @@ class ChatController extends FullLifeCycleController
             debugPrint(result.files.first.extension);
             if (checkFileUploadSize(
                 result.files.single.path!, Constants.mAudio)) {
+
               AudioPlayer player = AudioPlayer();
               debugPrint("result.files.single.path!${result.files.single.path}");
+              debugPrint("result.paths.single ${result.paths.single}");
               player.setSourceDeviceFile(result.files.single.path ?? "");
               player.onDurationChanged.listen((Duration duration) {
                 mirrorFlyLog("", 'max duration: ${duration.inMilliseconds}');
@@ -1047,6 +1049,10 @@ class ChatController extends FullLifeCycleController
 
       isUserTyping(false);
       isReplying(false);
+      debugPrint("Sending Audio path $filePath");
+      var file = File(filePath);
+      var fileExists = await file.exists();
+      debugPrint("filepath exists $fileExists");
       Mirrorfly.sendAudioMessage(
               profile.jid!, filePath, isRecorded, duration, replyMessageId)
           .then((value) {
@@ -1981,7 +1987,8 @@ class ChatController extends FullLifeCycleController
               "$audioSavePath/audio_${DateTime
                   .now()
                   .millisecondsSinceEpoch}.m4a",
-              encoder: AudioEncoder.aacHe,
+              ///If Change the Encode Format, kindly keep in mind to check the iOS record and send Audio.
+              encoder: AudioEncoder.aacLc,
               bitRate: 128000,
               samplingRate: 44100,
             );

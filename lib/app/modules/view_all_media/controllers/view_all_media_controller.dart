@@ -314,7 +314,7 @@ class ViewAllMediaController extends GetxController {
   }
 
   openImage(BuildContext context,int gridIndex){
-    Navigator.push(context, MaterialPageRoute(builder: (con)=>ViewAllMediaPreviewView(images: previewMediaList.value,index : gridIndex)));
+    Navigator.push(context, MaterialPageRoute(builder: (con)=>ViewAllMediaPreviewView(images: previewMediaList,index : gridIndex)));
     // Get.toNamed(Routes.viewAllMediaPreview, arguments: {"images" : previewMediaList, "index": gridIndex});
   }
 
