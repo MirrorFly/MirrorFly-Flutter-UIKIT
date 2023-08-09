@@ -2,9 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/notification_service.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
@@ -154,7 +152,7 @@ abstract class BaseController {
     if(SessionManagement.getCurrentChatJID() == chatMessageModel.chatUserJid.checkNull()){
       debugPrint("Message Received user chat screen is in online");
     }else{
-     showLocalNotification(chatMessageModel);
+     // showLocalNotification(chatMessageModel);
     }
 
     if (Get.isRegistered<ChatController>()) {
@@ -183,7 +181,7 @@ abstract class BaseController {
       debugPrint("Message Status updated user chat screen is in online");
     }else{
       if(chatMessageModel.isMessageRecalled.value){
-        showLocalNotification(chatMessageModel);
+        // showLocalNotification(chatMessageModel);
       }
     }
 
@@ -532,61 +530,6 @@ abstract class BaseController {
   void onProgressChanged(result) {}
 
   void onSuccess(result) {}
-
-  Future<void> showLocalNotification(ChatMessageModel chatMessageModel) async {
-    debugPrint("showing local notification");
-    var isUserMuted = await Mirrorfly.isMuted(chatMessageModel.chatUserJid);
-    var isUserUnArchived = await Mirrorfly.isUserUnArchived(chatMessageModel.chatUserJid);
-    var isArchivedSettingsEnabled =  await Mirrorfly.isArchivedSettingsEnabled();
-
-    var archiveSettings = isArchivedSettingsEnabled.checkNull() ? isUserUnArchived.checkNull() : true;
-
-    if(!chatMessageModel.isMessageSentByMe && !isUserMuted.checkNull() && archiveSettings) {
-      final String? notificationUri = SessionManagement.getNotificationUri();
-      UriAndroidNotificationSound? uriSound;
-      if(notificationUri==null) {
-        await Mirrorfly.getDefaultNotificationUri().then((value) {
-          debugPrint("getDefaultNotificationUri--> $value");
-          if (value != null) {
-            SessionManagement.setNotificationUri(value);
-            Mirrorfly.setNotificationSound(true);
-            Mirrorfly.setDefaultNotificationSound();
-            SessionManagement.setNotificationSound(true);
-            uriSound = UriAndroidNotificationSound(value);
-          }
-        });
-      }else{
-        uriSound = UriAndroidNotificationSound(notificationUri);
-      }
-      debugPrint("notificationUri--> $notificationUri");
-
-      var messageId = chatMessageModel.messageSentTime.toString().substring(chatMessageModel.messageSentTime.toString().length - 5);
-
-      AndroidNotificationDetails androidNotificationDetails =
-      AndroidNotificationDetails(chatMessageModel.messageId, 'MirrorFly',
-          importance: Importance.max,
-          priority: Priority.high,
-          sound: uriSound,
-          styleInformation: const DefaultStyleInformation(true, true));
-      DarwinNotificationDetails iosNotificationDetails =
-      DarwinNotificationDetails(
-        categoryIdentifier: darwinNotificationCategoryPlain,
-        sound: notificationUri,
-        presentSound: true,
-        presentBadge: true,
-        presentAlert: true
-      );
-
-      NotificationDetails notificationDetails =
-      NotificationDetails(android: androidNotificationDetails, iOS: iosNotificationDetails);
-      await flutterLocalNotificationsPlugin.show(
-          int.parse(messageId), chatMessageModel.senderUserName,
-          chatMessageModel.isMessageRecalled.value ? "This message was deleted" : chatMessageModel.messageTextContent, notificationDetails,
-          payload: chatMessageModel.chatUserJid);
-    }else{
-      debugPrint("self sent message don't need notification");
-    }
-  }
 
   void onLogout(isLogout) {
     /*mirrorFlyLog('Get.currentRoute', Get.currentRoute);

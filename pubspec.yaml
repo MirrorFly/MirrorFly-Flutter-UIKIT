@@ -51,7 +51,6 @@ dependencies:
   oktoast: ^3.3.1
   grouped_list: ^5.1.2
   share_plus: ^7.1.0
-  flutter_local_notifications: ^15.1.0+1
   flutter_libphonenumber: ^2.1.5
   open_file_plus: ^3.4.1
   device_info_plus: ^9.0.3
