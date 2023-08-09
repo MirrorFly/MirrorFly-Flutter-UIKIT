@@ -1,3 +1,6 @@
+## 0.0.9
+* MirrorFly Plugin Dependencies updated to latest versions
+
 ## 0.0.8
 * MirrorFly Plugin iTunes Publish Issue Fixed
 
