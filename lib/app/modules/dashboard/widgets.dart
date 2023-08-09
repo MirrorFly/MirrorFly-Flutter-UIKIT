@@ -302,7 +302,7 @@ class RecentChatItem extends StatelessWidget {
         visible: !archiveEnabled && item.isMuted! && !isForwardMessage,
         child: SvgPicture.asset(
           mute,package: package,
-          color: MirrorflyUikit.getTheme?.textPrimaryColor,
+          colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),
           width: 13,
           height: 13,
         ));
@@ -313,7 +313,7 @@ class RecentChatItem extends StatelessWidget {
         visible: !item.isChatArchived! && item.isChatPinned! && !isForwardMessage,
         child: SvgPicture.asset(
           pin,package: package,
-          color: MirrorflyUikit.getTheme?.textPrimaryColor,
+          colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),
           width: 18,
           height: 18,
         ));

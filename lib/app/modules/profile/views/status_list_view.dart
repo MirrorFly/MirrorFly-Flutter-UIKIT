@@ -66,7 +66,7 @@ class _StatusListViewState extends State<StatusListView> {
                   trailing: SvgPicture.asset(
                     pencilEditIcon,package: package,
                     fit: BoxFit.contain,
-                    color: MirrorflyUikit.getTheme?.textSecondaryColor,
+                    colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn)
                   ),
                   onTap: () async {
                     // Get.to(const AddStatusView(), arguments: {

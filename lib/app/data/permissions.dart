@@ -342,7 +342,7 @@ class AppPermission {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 35.0),
             color: MirrorflyUikit.getTheme?.primaryColor,// buttonBgColor,
-            child: Center(child: SvgPicture.asset(icon,package: package,color: MirrorflyUikit.getTheme?.colorOnPrimary,)),
+            child: Center(child: SvgPicture.asset(icon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnPrimary, BlendMode.srcIn),)),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -392,7 +392,7 @@ class AppPermission {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 35.0),
             color: MirrorflyUikit.getTheme?.primaryColor,
-            child: Center(child: SvgPicture.asset(icon,package: package,color: MirrorflyUikit.getTheme?.colorOnPrimary,)),
+            child: Center(child: SvgPicture.asset(icon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnPrimary, BlendMode.srcIn),)),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),

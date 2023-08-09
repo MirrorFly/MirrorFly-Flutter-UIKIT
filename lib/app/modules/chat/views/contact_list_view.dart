@@ -97,7 +97,7 @@ class _ContactListViewState extends State<ContactListView> {
               visible: controller.isSearchVisible,
               child: IconButton(
                   onPressed: () => controller.onSearchPressed(),
-                  icon: SvgPicture.asset(searchIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar)),
+                  icon: SvgPicture.asset(searchIcon,package: package,colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn))),
             ),
             Visibility(
               visible: controller.isClearVisible,

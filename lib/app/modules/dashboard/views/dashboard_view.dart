@@ -140,7 +140,7 @@ class _DashboardViewState extends State<DashboardView> {
                         width: 18,
                         height: 18,
                         fit: BoxFit.contain,
-                        color: MirrorflyUikit.getTheme?.colorOnPrimary ?? Colors.white,
+                        colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme?.colorOnPrimary ?? Colors.white, BlendMode.srcIn)
                       ),
                     ) : null,
               body: SafeArea(
@@ -165,7 +165,7 @@ class _DashboardViewState extends State<DashboardView> {
               onPressed: () {
                 controller.chatInfo(context);
               },
-              icon: SvgPicture.asset(infoIcon, package: package, color: MirrorflyUikit.getTheme?.colorOnAppbar),
+              icon: SvgPicture.asset(infoIcon, package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
               tooltip: 'Info',
             ),
             overflowWidget: Text(
@@ -183,7 +183,7 @@ class _DashboardViewState extends State<DashboardView> {
               onPressed: () {
                 controller.deleteChats(context);
               },
-              icon: SvgPicture.asset(delete, package: package, color: MirrorflyUikit.getTheme?.colorOnAppbar),
+              icon: SvgPicture.asset(delete, package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
               tooltip: 'Delete',
             ),
             overflowWidget: Text("Delete", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
@@ -198,7 +198,7 @@ class _DashboardViewState extends State<DashboardView> {
               onPressed: () {
                 controller.pinChats();
               },
-              icon: SvgPicture.asset(pin, package: package, color: MirrorflyUikit.getTheme?.colorOnAppbar),
+              icon: SvgPicture.asset(pin, package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn),),
               tooltip: 'Pin',
             ),
             overflowWidget: Text("Pin", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
@@ -213,7 +213,7 @@ class _DashboardViewState extends State<DashboardView> {
               onPressed: () {
                 controller.unPinChats();
               },
-              icon: SvgPicture.asset(unpin, package: package, color: MirrorflyUikit.getTheme?.colorOnAppbar),
+              icon: SvgPicture.asset(unpin, package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
               tooltip: 'UnPin',
             ),
             overflowWidget: Text("UnPin", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
@@ -228,7 +228,7 @@ class _DashboardViewState extends State<DashboardView> {
               onPressed: () {
                 controller.muteChats();
               },
-              icon: SvgPicture.asset(mute, package: package, color: MirrorflyUikit.getTheme?.colorOnAppbar),
+              icon: SvgPicture.asset(mute, package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
               tooltip: 'Mute',
             ),
             overflowWidget: Text("Mute", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
@@ -243,7 +243,7 @@ class _DashboardViewState extends State<DashboardView> {
               onPressed: () {
                 controller.unMuteChats();
               },
-              icon: SvgPicture.asset(unMute, package: package, color: MirrorflyUikit.getTheme?.colorOnAppbar),
+              icon: SvgPicture.asset(unMute, package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
               tooltip: 'UnMute',
             ),
             overflowWidget: Text("UnMute", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
@@ -258,7 +258,7 @@ class _DashboardViewState extends State<DashboardView> {
               onPressed: () {
                 controller.archiveChats();
               },
-              icon: SvgPicture.asset(archive, package: package, color: MirrorflyUikit.getTheme?.colorOnAppbar),
+              icon: SvgPicture.asset(archive, package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
               tooltip: 'Archive',
             ),
             overflowWidget: Text("Archived", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
@@ -294,7 +294,7 @@ class _DashboardViewState extends State<DashboardView> {
               icon: SvgPicture.asset(
                 searchIcon,
                 package: package,
-                color: MirrorflyUikit.getTheme?.colorOnAppbar,
+                colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn),
                 width: 18,
                 height: 18,
                 fit: BoxFit.contain,
@@ -399,7 +399,7 @@ class _DashboardViewState extends State<DashboardView> {
                               child: SvgPicture.asset(
                                 archive,
                                 package: package,
-                                color: MirrorflyUikit.getTheme?.textPrimaryColor,
+                                colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),
                               ),
                             ),
                             title: Text(
@@ -463,7 +463,7 @@ class _DashboardViewState extends State<DashboardView> {
                                         child: SvgPicture.asset(
                                           archive,
                                           package: package,
-                                          color: MirrorflyUikit.getTheme?.textPrimaryColor,
+                                          colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),
                                         ),
                                       ),
                                       title: Text(

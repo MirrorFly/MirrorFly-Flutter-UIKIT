@@ -69,7 +69,7 @@ class _LocalContactViewState extends State<LocalContactView> {
                       package: package,
                       width: 18,
                       height: 18,
-                      color: MirrorflyUikit.getTheme?.colorOnAppbar,
+                      colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn),
                       fit: BoxFit.contain,
                     ),
                     onPressed: () {
@@ -112,7 +112,7 @@ class _LocalContactViewState extends State<LocalContactView> {
             child: SvgPicture.asset(
               rightArrowProceed,
               package: package,
-              color: MirrorflyUikit.getTheme?.colorOnPrimary,
+              colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnPrimary, BlendMode.srcIn),
               width: 18,
             ),
           ),

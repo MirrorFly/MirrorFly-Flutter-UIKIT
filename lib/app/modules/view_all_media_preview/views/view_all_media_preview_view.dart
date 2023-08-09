@@ -62,7 +62,7 @@ class _ViewAllMediaPreviewViewState extends State<ViewAllMediaPreviewView> {
                     icon: SvgPicture.asset(
                       shareIcon,
                       package: package,
-                      color: MirrorflyUikit.getTheme?.colorOnAppbar,
+                      colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)
                     ))
               ],
             )

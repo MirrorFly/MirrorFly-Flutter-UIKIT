@@ -191,48 +191,48 @@ class Helper {
           mImageIcon,
           package: package,
           fit: BoxFit.contain,
-          color: playIconColor,
+          colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
         );
       case Constants.mAudio:
         return SvgPicture.asset(
           isAudioRecorded ? mAudioRecordIcon : mAudioIcon,
           package: package,
           fit: BoxFit.contain,
-          color: playIconColor,
+          colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
         );
       case Constants.mVideo:
         return SvgPicture.asset(
           mVideoIcon,
           package: package,
           fit: BoxFit.contain,
-          color: playIconColor,
+          colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
         );
       case Constants.mDocument:
         return SvgPicture.asset(
           mDocumentIcon,
           package: package,
           fit: BoxFit.contain,
-          color: playIconColor,
+          colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
         );
       case Constants.mFile:
         return SvgPicture.asset(
           mDocumentIcon,
           package: package,
           fit: BoxFit.contain,
-          color: playIconColor,
+          colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
         );
       case Constants.mContact:
         return SvgPicture.asset(
           mContactIcon,
           package: package,
           fit: BoxFit.contain,
-          color: playIconColor,
+          colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
         );
       case Constants.mLocation:
         return SvgPicture.asset(
           mLocationIcon,
           fit: BoxFit.contain,
-          color: playIconColor,
+          colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
         );
       default:
         return const SizedBox.shrink();

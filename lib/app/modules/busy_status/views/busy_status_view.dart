@@ -69,7 +69,7 @@ class _BusyStatusViewState extends State<BusyStatusView> {
                           pencilEditIcon,
                           package: package,
                           fit: BoxFit.contain,
-                          color: MirrorflyUikit.getTheme?.textSecondaryColor,
+                          colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn)
                         ),
                         onTap: () {
                           controller.addStatusController.text = controller.busyStatus.value;

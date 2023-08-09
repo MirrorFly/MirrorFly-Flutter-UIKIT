@@ -189,7 +189,7 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
   Widget audioItem(ChatMessageModel item) {
     return Center(
       child: SvgPicture.asset(
-          item.mediaChatMessage!.isAudioRecorded ? audioMic1 : audioWhite,package: package,color: MirrorflyUikit.getTheme?.colorOnPrimary,),
+          item.mediaChatMessage!.isAudioRecorded ? audioMic1 : audioWhite,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnPrimary, BlendMode.srcIn),),
     );
   }
 
@@ -349,7 +349,7 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
                                         topLeft: Radius.circular(8),
                                         bottomLeft: Radius.circular(8))),
                                 child: Center(
-                                  child: SvgPicture.asset(linkImage,package: package,color: MirrorflyUikit.getTheme?.colorOnPrimary,),
+                                  child: SvgPicture.asset(linkImage,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnPrimary, BlendMode.srcIn)),
                                 ),
                               ),
                         Expanded(
