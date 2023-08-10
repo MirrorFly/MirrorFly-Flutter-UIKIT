@@ -42,8 +42,8 @@ class SessionManagement {
   static Future setToken(String firebaseToken) async {
     await _preferences.setString("firebase_token", firebaseToken);
   }
-  static Future setMobile(String mobile) async {
-    await _preferences.setString("mobile", mobile);
+  static Future setUserIdentifier(String userIdentifier) async {
+    await _preferences.setString("userIdentifier", userIdentifier);
   }
   static Future setCountryCode(String countryCode) async {
     await _preferences.setString("country_code", countryCode);
@@ -154,6 +154,7 @@ class SessionManagement {
 
   static bool getLogin() => _preferences.getBool("login") ?? false;
 
+  static String getuserIdentifier() => _preferences.getString("userIdentifier") ?? "";
   static String? getChatJid() => _preferences.getString("chatJid");
   static String getCurrentChatJID() => _preferences.getString("CurrentChatJID") ?? "";
   static String? getName() => _preferences.getString("name");

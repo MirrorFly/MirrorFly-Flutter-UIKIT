@@ -90,7 +90,7 @@ Widget settingListItem(
           children: [
             leading != null ? Padding(
               padding: const EdgeInsets.all(18.0),
-              child: SvgPicture.asset(leading,package: package, color: MirrorflyUikit.getTheme?.textSecondaryColor,),
+              child: SvgPicture.asset(leading,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn),),
             ) : const SizedBox(height: 4,),
             Expanded(
                 child: Text(

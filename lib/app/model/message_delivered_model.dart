@@ -3,9 +3,10 @@
 //     final messageDeliveredStatus = messageDeliveredStatusFromJson(jsonString);
 
 import 'dart:convert';
+import 'dart:io';
 
 MessageDeliveredStatus messageDeliveredStatusFromJson(
-        String str, String type) =>
+    String str, String type) =>
     MessageDeliveredStatus.fromJson(json.decode(str), type);
 
 String messageDeliveredStatusToJson(MessageDeliveredStatus data) =>
@@ -23,24 +24,24 @@ class MessageDeliveredStatus {
   List<DeliveredParticipantList> participantList;
 
   factory MessageDeliveredStatus.fromJson(
-          Map<String, dynamic> json, String type) =>
+      Map<String, dynamic> json, String type) =>
       MessageDeliveredStatus(
         deliveredCount: json["deliveredCount"],
         totalParticipatCount: json["totalParticipatCount"],
         participantList: type == "delivered"
             ? List<DeliveredParticipantList>.from(
-                json["deliveredParticipantList"]
-                    .map((x) => DeliveredParticipantList.fromJson(x)))
+            json["deliveredParticipantList"]
+                .map((x) => DeliveredParticipantList.fromJson(x)))
             : List<DeliveredParticipantList>.from(json["seenParticipantList"]
-                .map((x) => DeliveredParticipantList.fromJson(x))),
+            .map((x) => DeliveredParticipantList.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        "deliveredCount": deliveredCount,
-        "totalParticipatCount": totalParticipatCount,
-        "participantList":
-            List<dynamic>.from(participantList.map((x) => x.toJson())),
-      };
+    "deliveredCount": deliveredCount,
+    "totalParticipatCount": totalParticipatCount,
+    "participantList":
+    List<dynamic>.from(participantList.map((x) => x.toJson())),
+  };
 }
 
 class DeliveredParticipantList {
@@ -61,20 +62,20 @@ class DeliveredParticipantList {
   factory DeliveredParticipantList.fromJson(Map<String, dynamic> json) =>
       DeliveredParticipantList(
         memberProfileDetails:
-            MemberProfileDetails.fromJson(json["memberProfileDetails"]),
+        MemberProfileDetails.fromJson(Platform.isAndroid ? json["memberProfileDetails"] : json["profileDetails"]),
         messageId: json["messageId"],
-        status: Status.fromJson(json["status"]),
-        time: json["time"],
+        status: Platform.isAndroid ? Status.fromJson(json["status"]) : json["status"],
+        time: json["time"].toString(),
         userJid: json["userJid"],
       );
 
   Map<String, dynamic> toJson() => {
-        "memberProfileDetails": memberProfileDetails?.toJson(),
-        "messageId": messageId,
-        "status": status?.toJson(),
-        "time": time,
-        "userJid": userJid,
-      };
+    "memberProfileDetails": memberProfileDetails?.toJson(),
+    "messageId": messageId,
+    "status": status?.toJson(),
+    "time": time,
+    "userJid": userJid,
+  };
 }
 
 class MemberProfileDetails {
@@ -131,16 +132,16 @@ class MemberProfileDetails {
         contactType: json["contactType"] == "unknown"
             ? "unknown_contact"
             : json["contactType"] == "live"
-                ? "live_contact"
-                : json["contactType"] == "local"
-                    ? "local_contact"
-                    : json["contactType"] == "deleted"
-                        ? "deleted_contact"
-                        : json["contactType"],
+            ? "live_contact"
+            : json["contactType"] == "local"
+            ? "local_contact"
+            : json["contactType"] == "deleted"
+            ? "deleted_contact"
+            : json["contactType"],
         email: json["email"],
-        groupCreatedTime: json["groupCreatedTime"],
+        groupCreatedTime: json["groupCreatedTime"].toString(),
         image: json["image"],
-        imagePrivacyFlag: json["imagePrivacyFlag"],
+        imagePrivacyFlag: json["imagePrivacyFlag"].toString(),
         isAdminBlocked: json["isAdminBlocked"],
         isBlocked: json["isBlocked"],
         isBlockedMe: json["isBlockedMe"],
@@ -151,8 +152,8 @@ class MemberProfileDetails {
         isMuted: json["isMuted"],
         isSelected: json["isSelected"],
         jid: json["jid"],
-        lastSeenPrivacyFlag: json["lastSeenPrivacyFlag"],
-        mobileNUmberPrivacyFlag: json["mobileNUmberPrivacyFlag"],
+        lastSeenPrivacyFlag: json["lastSeenPrivacyFlag"].toString(),
+        mobileNUmberPrivacyFlag: json["mobileNUmberPrivacyFlag"].toString(),
         mobileNumber: json["mobileNumber"],
         name: json["name"],
         nickName: json["nickName"],
@@ -161,29 +162,29 @@ class MemberProfileDetails {
       );
 
   Map<String, dynamic> toJson() => {
-        "contactType": contactType,
-        "email": email,
-        "groupCreatedTime": groupCreatedTime,
-        "image": image,
-        "imagePrivacyFlag": imagePrivacyFlag,
-        "isAdminBlocked": isAdminBlocked,
-        "isBlocked": isBlocked,
-        "isBlockedMe": isBlockedMe,
-        "isGroupAdmin": isGroupAdmin,
-        "isGroupInOfflineMode": isGroupInOfflineMode,
-        "isGroupProfile": isGroupProfile,
-        "isItSavedContact": isItSavedContact,
-        "isMuted": isMuted,
-        "isSelected": isSelected,
-        "jid": jid,
-        "lastSeenPrivacyFlag": lastSeenPrivacyFlag,
-        "mobileNUmberPrivacyFlag": mobileNUmberPrivacyFlag,
-        "mobileNumber": mobileNumber,
-        "name": name,
-        "nickName": nickName,
-        "status": status,
-        "thumbImage": thumbImage,
-      };
+    "contactType": contactType,
+    "email": email,
+    "groupCreatedTime": groupCreatedTime,
+    "image": image,
+    "imagePrivacyFlag": imagePrivacyFlag,
+    "isAdminBlocked": isAdminBlocked,
+    "isBlocked": isBlocked,
+    "isBlockedMe": isBlockedMe,
+    "isGroupAdmin": isGroupAdmin,
+    "isGroupInOfflineMode": isGroupInOfflineMode,
+    "isGroupProfile": isGroupProfile,
+    "isItSavedContact": isItSavedContact,
+    "isMuted": isMuted,
+    "isSelected": isSelected,
+    "jid": jid,
+    "lastSeenPrivacyFlag": lastSeenPrivacyFlag,
+    "mobileNUmberPrivacyFlag": mobileNUmberPrivacyFlag,
+    "mobileNumber": mobileNumber,
+    "name": name,
+    "nickName": nickName,
+    "status": status,
+    "thumbImage": thumbImage,
+  };
 }
 
 class Status {
@@ -194,10 +195,10 @@ class Status {
   String? status;
 
   factory Status.fromJson(Map<String, dynamic> json) => Status(
-        status: json["status"],
-      );
+    status: json["status"],
+  );
 
   Map<String, dynamic> toJson() => {
-        "status": status,
-      };
+    "status": status,
+  };
 }

@@ -108,7 +108,7 @@ class Profile {
         isGroupInOfflineMode: json["isGroupInOfflineMode"],
         isGroupProfile: Platform.isAndroid
             ? json["isGroupProfile"]
-            : json["profileChatType"] == "singleChat"
+            : json["profileChatType"].toString().toLowerCase() == "singlechat"
                 ? false
                 : true,
         isItSavedContact: json["isItSavedContact"],

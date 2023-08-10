@@ -110,7 +110,7 @@ class _AddStatusViewState extends State<AddStatusView> {
                               controller.showEmoji(!controller.showEmoji.value);
                             });
                           },
-                          icon: controller.showEmoji.value ? Icon(Icons.keyboard, color: MirrorflyUikit.getTheme?.textSecondaryColor, ) : SvgPicture.asset(smileIcon,package: package, color: MirrorflyUikit.getTheme?.textSecondaryColor,));
+                          icon: controller.showEmoji.value ? Icon(Icons.keyboard, color: MirrorflyUikit.getTheme?.textSecondaryColor, ) : SvgPicture.asset(smileIcon,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn),));
                     })
                   ],
                 ),

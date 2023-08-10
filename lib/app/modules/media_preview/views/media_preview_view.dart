@@ -272,7 +272,7 @@ class _MediaPreviewViewState extends State<MediaPreviewView> {
                                           });
                                         },
                                         child: SvgPicture.asset(
-                                          smileIcon, package: package,color: previewTextColor,))
+                                          smileIcon, package: package,colorFilter : const ColorFilter.mode(previewTextColor, BlendMode.srcIn),))
                                         : controller.filePath.length < 10 &&
                                         controller.showAdd
                                         ? InkWell(
