@@ -40,6 +40,7 @@ import '../../../models.dart';
 import '../../gallery_picker/src/data/models/picked_asset_model.dart';
 import '../../gallery_picker/views/gallery_picker_view.dart';
 import '../../local_contact/views/local_contact_view.dart';
+import '../../notification/notification_builder.dart';
 import '../chat_widgets.dart';
 import '../views/forwardchat_view.dart';
 
@@ -236,6 +237,7 @@ class ChatController extends FullLifeCycleController
   var showHideRedirectToLatest = false.obs;
 
   void ready() {
+    cancelNotification();
     // debugPrint("isBlocked===> ${profile.isBlocked}");
     // debugPrint("profile detail===> ${profile.toJson().toString()}");
     getUnsentMessageOfAJid();
@@ -2850,6 +2852,7 @@ class ChatController extends FullLifeCycleController
   void onResumed() {
     mirrorFlyLog("LifeCycle", "onResumed");
     AppPermission.requestNotificationPermission();
+    cancelNotification();
     setChatStatus();
     if (!KeyboardVisibilityController().isVisible) {
       if (focusNode.hasFocus) {
@@ -3063,5 +3066,8 @@ class ChatController extends FullLifeCycleController
         // chatList.refresh();
       }
     }
+  }
+  void cancelNotification() {
+    NotificationBuilder.cancelNotification(profile.jid.hashCode);
   }
 }
