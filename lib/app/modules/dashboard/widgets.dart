@@ -123,7 +123,7 @@ class RecentChatItem extends StatelessWidget {
           Row(
             children: [
               item.isLastMessageSentByMe.checkNull() && !isForwardMessage && !item.isLastMessageRecalledByUser.checkNull()
-                  ? buildMessageIndicator()
+                  ? (item.lastMessageType ==  Constants.msgTypeText && item.lastMessageContent.checkNull().isNotEmpty || item.lastMessageType != Constants.msgTypeText) ? buildMessageIndicator() : const SizedBox()
                   : const SizedBox(),
               isForwardMessage
                   ? item.isGroup!
@@ -302,7 +302,7 @@ class RecentChatItem extends StatelessWidget {
         visible: !archiveEnabled && item.isMuted! && !isForwardMessage,
         child: SvgPicture.asset(
           mute,package: package,
-          color: MirrorflyUikit.getTheme?.textPrimaryColor,
+          colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),
           width: 13,
           height: 13,
         ));
@@ -313,7 +313,7 @@ class RecentChatItem extends StatelessWidget {
         visible: !item.isChatArchived! && item.isChatPinned! && !isForwardMessage,
         child: SvgPicture.asset(
           pin,package: package,
-          color: MirrorflyUikit.getTheme?.textPrimaryColor,
+          colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),
           width: 18,
           height: 18,
         ));
@@ -347,11 +347,12 @@ class RecentChatItem extends StatelessWidget {
             return Row(
               children: [
                 (item.isGroup.checkNull() &&
-                        !chat.isMessageSentByMe.checkNull() &&
-                        (chat.messageType != Constants.mNotification ||
-                            chat.messageTextContent == " added you"))
+                    !chat.isMessageSentByMe.checkNull() &&
+                    (chat.messageType != Constants.mNotification ||
+                        chat.messageTextContent == " added you") || (item.isGroup.checkNull() && (forMessageTypeString(chat.messageType,
+                    content: chat.messageTextContent.checkNull()).checkNull().isNotEmpty)))
                     ? Text(
-                        "${chat.senderUserName.checkNull()}:",
+                    chat.senderUserName.checkNull().isNotEmpty ? "${chat.senderUserName.checkNull()}:" : "${chat.senderNickName.checkNull()}:",
                         style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,

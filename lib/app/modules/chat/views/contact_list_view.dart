@@ -11,11 +11,12 @@ import '../../../widgets/custom_action_bar_icons.dart';
 import '../../settings/views/settings_view.dart';
 
 class ContactListView extends StatefulWidget {
-   const ContactListView({Key? key,this.messageIds,this.group= false,this.groupJid = '', this.enableAppBar=true}) : super(key: key);
+   const ContactListView({Key? key,this.messageIds,this.group= false,this.groupJid = '', this.enableAppBar=true, this.showSettings=false}) : super(key: key);
    final List<String>? messageIds;
    final bool group;
    final String groupJid;
    final bool enableAppBar;
+   final bool showSettings;
 
    @override
   State<ContactListView> createState() => _ContactListViewState();
@@ -96,7 +97,7 @@ class _ContactListViewState extends State<ContactListView> {
               visible: controller.isSearchVisible,
               child: IconButton(
                   onPressed: () => controller.onSearchPressed(),
-                  icon: SvgPicture.asset(searchIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar)),
+                  icon: SvgPicture.asset(searchIcon,package: package,colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn))),
             ),
             Visibility(
               visible: controller.isClearVisible,
@@ -127,7 +128,7 @@ class _ContactListViewState extends State<ContactListView> {
                       child: Text("Settings", style: TextStyle(fontSize: 16, color: MirrorflyUikit.getTheme?.colorOnAppbar)),
                       onTap: () => Navigator.push(context, MaterialPageRoute(builder: (con)=> const SettingsView())),
                     ),
-                    showAsAction: ShowAsAction.never,
+                    showAsAction: widget.showSettings ? ShowAsAction.never : ShowAsAction.gone,
                     keyValue: 'Settings',
                     onItemClick: () {
                       Navigator.push(context, MaterialPageRoute(builder: (con)=> const SettingsView()));
@@ -264,7 +265,7 @@ class _ContactListViewState extends State<ContactListView> {
                                             //       .titleSmall,
                                             // )
                                             Text(
-                                              item.status.toString(),
+                                                MirrorflyUikit.instance.showMobileNumberOnList ? item.mobileNumber.checkNull() : item.status.checkNull(),
                                               style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)
                                             )
                                           ],

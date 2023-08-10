@@ -191,48 +191,48 @@ class Helper {
           mImageIcon,
           package: package,
           fit: BoxFit.contain,
-          color: playIconColor,
+          colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
         );
       case Constants.mAudio:
         return SvgPicture.asset(
           isAudioRecorded ? mAudioRecordIcon : mAudioIcon,
           package: package,
           fit: BoxFit.contain,
-          color: playIconColor,
+          colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
         );
       case Constants.mVideo:
         return SvgPicture.asset(
           mVideoIcon,
           package: package,
           fit: BoxFit.contain,
-          color: playIconColor,
+          colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
         );
       case Constants.mDocument:
         return SvgPicture.asset(
           mDocumentIcon,
           package: package,
           fit: BoxFit.contain,
-          color: playIconColor,
+          colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
         );
       case Constants.mFile:
         return SvgPicture.asset(
           mDocumentIcon,
           package: package,
           fit: BoxFit.contain,
-          color: playIconColor,
+          colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
         );
       case Constants.mContact:
         return SvgPicture.asset(
           mContactIcon,
           package: package,
           fit: BoxFit.contain,
-          color: playIconColor,
+          colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
         );
       case Constants.mLocation:
         return SvgPicture.asset(
           mLocationIcon,
           fit: BoxFit.contain,
-          color: playIconColor,
+          colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
         );
       default:
         return const SizedBox.shrink();
@@ -459,17 +459,18 @@ extension ProfileDataParsing on ProfileData {
 
 Future<Profile> getProfileDetails(String jid) async {
   var value = await Mirrorfly.getProfileDetails(jid.checkNull());
-  var profile = await compute(profiledata, value.toString());
+  var profile = profiledata(value.toString());
+  // var profile = await compute(profiledata, value.toString());
   debugPrint("profile ${profile.name}");
-  // var str = Profile.fromJson(json.decode(value.toString()));
   return profile;
 }
 
 Future<ProfileData> getUserProfile(String jid, {bool server = false}) async {
   var value = await Mirrorfly.getUserProfile(jid.checkNull(), server);
-  var profile = await compute(profileDataFromJson, value.toString());
+  var profile = profileDataFromJson(value.toString());
+  // var profile = await compute(profileDataFromJson, value.toString());
   debugPrint("profile ${profile.data}");
-  // var str = Profile.fromJson(json.decode(value.toString()));
+  // var str = profileDataFromJson(value.toString());
   return profile.data ?? ProfileData();
 }
 

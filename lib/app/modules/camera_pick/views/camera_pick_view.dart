@@ -24,19 +24,22 @@ class CameraPickView extends StatelessWidget {
                     Listener(
                       onPointerDown: (_) => controller.pointers++,
                       onPointerUp: (_) => controller.pointers--,
-                      child: CameraPreview(
-                        controller.cameraController!, child: LayoutBuilder(
-                          builder: (BuildContext context,
-                              BoxConstraints constraints) {
-                            return GestureDetector(
-                              behavior: HitTestBehavior.opaque,
-                              onScaleStart: controller.handleScaleStart,
-                              onScaleUpdate: controller.handleScaleUpdate,
-                              onTapDown: (TapDownDetails details) =>
-                                  controller.onViewFinderTap(
-                                      details, constraints),
-                            );
-                          }),),
+                      child: SizedBox(
+                        width:MediaQuery.of(context).size.width,
+                        child: CameraPreview(
+                          controller.cameraController!, child: LayoutBuilder(
+                            builder: (BuildContext context,
+                                BoxConstraints constraints) {
+                              return GestureDetector(
+                                behavior: HitTestBehavior.opaque,
+                                onScaleStart: controller.handleScaleStart,
+                                onScaleUpdate: controller.handleScaleUpdate,
+                                onTapDown: (TapDownDetails details) =>
+                                    controller.onViewFinderTap(
+                                        details, constraints),
+                              );
+                            }),),
+                      ),
                     ),
                     /*Stack(
                       alignment: Alignment.center,

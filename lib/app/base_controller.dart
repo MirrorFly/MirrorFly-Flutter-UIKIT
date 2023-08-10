@@ -2,9 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/notification_service.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
@@ -100,6 +98,7 @@ abstract class BaseController {
       unblockedThisUser(jid);
     });
     Mirrorfly.userBlockedMe.listen((event){
+      mirrorFlyLog("userBlockedMe", event);
           var data = json.decode(event.toString());
           var jid = data["jid"];
           userBlockedMe(jid.toString());
@@ -153,7 +152,7 @@ abstract class BaseController {
     if(SessionManagement.getCurrentChatJID() == chatMessageModel.chatUserJid.checkNull()){
       debugPrint("Message Received user chat screen is in online");
     }else{
-     showLocalNotification(chatMessageModel);
+     // showLocalNotification(chatMessageModel);
     }
 
     if (Get.isRegistered<ChatController>()) {
@@ -182,7 +181,7 @@ abstract class BaseController {
       debugPrint("Message Status updated user chat screen is in online");
     }else{
       if(chatMessageModel.isMessageRecalled.value){
-        showLocalNotification(chatMessageModel);
+        // showLocalNotification(chatMessageModel);
       }
     }
 
@@ -362,6 +361,9 @@ abstract class BaseController {
 
   void unblockedThisUser(String jid) {
     mirrorFlyLog("unblockedThisUser", jid.toString());
+    if (Get.isRegistered<DashboardController>()) {
+      Get.find<DashboardController>().unblockedThisUser(jid);
+    }
     if (Get.isRegistered<ChatController>()) {
       Get.find<ChatController>().unblockedThisUser(jid);
     }
@@ -378,6 +380,9 @@ abstract class BaseController {
 
   void userBlockedMe(String jid) {
     mirrorFlyLog('userBlockedMe', jid.toString());
+    if (Get.isRegistered<DashboardController>()) {
+      Get.find<DashboardController>().userBlockedMe(jid);
+    }
     if (Get.isRegistered<ChatController>()) {
       Get.find<ChatController>().userBlockedMe(jid);
     }
@@ -433,7 +438,12 @@ abstract class BaseController {
 
   void userProfileFetched(result) {}
 
-  void userUnBlockedMe(result) {}
+  void userUnBlockedMe(result) {
+    mirrorFlyLog("userUnBlockedMe", result);
+    var data = json.decode(result.toString());
+    var jid = data["jid"];
+    unblockedThisUser(jid);
+  }
 
   void userUpdatedHisProfile(String jid) {
     mirrorFlyLog("userUpdatedHisProfile", jid.toString());
@@ -520,48 +530,6 @@ abstract class BaseController {
   void onProgressChanged(result) {}
 
   void onSuccess(result) {}
-
-  Future<void> showLocalNotification(ChatMessageModel chatMessageModel) async {
-    debugPrint("showing local notification");
-    var isUserMuted = await Mirrorfly.isMuted(chatMessageModel.chatUserJid);
-    var isUserUnArchived = await Mirrorfly.isUserUnArchived(chatMessageModel.chatUserJid);
-    var isArchivedSettingsEnabled =  await Mirrorfly.isArchivedSettingsEnabled();
-
-    var archiveSettings = isArchivedSettingsEnabled.checkNull() ? isUserUnArchived.checkNull() : true;
-
-    if(!chatMessageModel.isMessageSentByMe && !isUserMuted.checkNull() && archiveSettings) {
-      final String? notificationUri = SessionManagement.getNotificationUri();
-      final UriAndroidNotificationSound uriSound = UriAndroidNotificationSound(
-          notificationUri!);
-      debugPrint("notificationUri--> $notificationUri");
-
-      var messageId = chatMessageModel.messageSentTime.toString().substring(chatMessageModel.messageSentTime.toString().length - 5);
-
-      AndroidNotificationDetails androidNotificationDetails =
-      AndroidNotificationDetails(chatMessageModel.messageId, 'MirrorFly',
-          importance: Importance.max,
-          priority: Priority.high,
-          sound: uriSound,
-          styleInformation: const DefaultStyleInformation(true, true));
-      DarwinNotificationDetails iosNotificationDetails =
-      DarwinNotificationDetails(
-        categoryIdentifier: darwinNotificationCategoryPlain,
-        sound: notificationUri,
-        presentSound: true,
-        presentBadge: true,
-        presentAlert: true
-      );
-
-      NotificationDetails notificationDetails =
-      NotificationDetails(android: androidNotificationDetails, iOS: iosNotificationDetails);
-      await flutterLocalNotificationsPlugin.show(
-          int.parse(messageId), chatMessageModel.senderUserName,
-          chatMessageModel.isMessageRecalled.value ? "This message was deleted" : chatMessageModel.messageTextContent, notificationDetails,
-          payload: chatMessageModel.chatUserJid);
-    }else{
-      debugPrint("self sent message don't need notification");
-    }
-  }
 
   void onLogout(isLogout) {
     /*mirrorFlyLog('Get.currentRoute', Get.currentRoute);

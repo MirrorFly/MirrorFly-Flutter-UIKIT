@@ -12,10 +12,25 @@ import '../../../widgets/custom_action_bar_icons.dart';
 import '../../chat/chat_widgets.dart';
 import '../../dashboard/controllers/dashboard_controller.dart';
 
+///* @property [title] indicates the appbar title
+///* @property [enableAppBar] enable the appbar and its functions
+///* @property [showBackIcon] show or hide the back icon on appbar
+///* @property [showSearchMenu] show or hide the back icon on appbar
+///* @property [showCreateGroup] show or hide the create group option
+///* @property [showSettings] show or hide the settings option
+///* @property [showNewChat] show or hide the New Chat option
 class DashboardView extends StatefulWidget {
-  const DashboardView({Key? key, this.title="Chats",this.enableAppBar=true}) : super(key: key);
+  const DashboardView({Key? key, this.title="Chats",this.enableAppBar=true,
+    this.showBackIcon=true, this.showSearchMenu = true,
+    this.showCreateGroup = true, this.showSettings = true,
+    this.showNewChat = true}) : super(key: key);
   final String title;
   final bool enableAppBar;
+  final bool showBackIcon;
+  final bool showSearchMenu;
+  final bool showCreateGroup;
+  final bool showSettings;
+  final bool showNewChat;
 
   @override
   State<DashboardView> createState() => _DashboardViewState();
@@ -58,6 +73,7 @@ class _DashboardViewState extends State<DashboardView> {
               backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
               appBar: widget.enableAppBar ? AppBar(
                 backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
+                centerTitle: false,
                 automaticallyImplyLeading: true,
                 actionsIconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar ?? iconColor),
                 iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar ?? iconColor),
@@ -75,12 +91,12 @@ class _DashboardViewState extends State<DashboardView> {
                               controller.getBackFromSearch();
                             },
                           )
-                        : IconButton(
+                        : widget.showBackIcon ? IconButton(
                             icon: const Icon(Icons.arrow_back),
                             onPressed: () {
                               // Get.back();
                               Navigator.pop(context);
-                            }),
+                            }) : null,
                 title: controller.selected.value
                     ? Text((controller.selectedChats.length).toString(),
                         style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar ?? Colors.black))
@@ -106,7 +122,7 @@ class _DashboardViewState extends State<DashboardView> {
                   buildRecentChatActionBarIcons(context),
                 ],
               ) : null,
-              floatingActionButton: controller.isSearching.value
+              floatingActionButton: widget.showNewChat ? controller.isSearching.value
                   ? null
                   : FloatingActionButton(
                       tooltip: "New Chat",
@@ -124,9 +140,9 @@ class _DashboardViewState extends State<DashboardView> {
                         width: 18,
                         height: 18,
                         fit: BoxFit.contain,
-                        color: MirrorflyUikit.getTheme?.colorOnPrimary ?? Colors.white,
+                        colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme?.colorOnPrimary ?? Colors.white, BlendMode.srcIn)
                       ),
-                    ),
+                    ) : null,
               body: SafeArea(
                 child: Obx(() {
                   return chatView(context);
@@ -149,7 +165,7 @@ class _DashboardViewState extends State<DashboardView> {
               onPressed: () {
                 controller.chatInfo(context);
               },
-              icon: SvgPicture.asset(infoIcon, package: package, color: MirrorflyUikit.getTheme?.colorOnAppbar),
+              icon: SvgPicture.asset(infoIcon, package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
               tooltip: 'Info',
             ),
             overflowWidget: Text(
@@ -167,7 +183,7 @@ class _DashboardViewState extends State<DashboardView> {
               onPressed: () {
                 controller.deleteChats(context);
               },
-              icon: SvgPicture.asset(delete, package: package, color: MirrorflyUikit.getTheme?.colorOnAppbar),
+              icon: SvgPicture.asset(delete, package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
               tooltip: 'Delete',
             ),
             overflowWidget: Text("Delete", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
@@ -182,7 +198,7 @@ class _DashboardViewState extends State<DashboardView> {
               onPressed: () {
                 controller.pinChats();
               },
-              icon: SvgPicture.asset(pin, package: package, color: MirrorflyUikit.getTheme?.colorOnAppbar),
+              icon: SvgPicture.asset(pin, package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn),),
               tooltip: 'Pin',
             ),
             overflowWidget: Text("Pin", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
@@ -197,7 +213,7 @@ class _DashboardViewState extends State<DashboardView> {
               onPressed: () {
                 controller.unPinChats();
               },
-              icon: SvgPicture.asset(unpin, package: package, color: MirrorflyUikit.getTheme?.colorOnAppbar),
+              icon: SvgPicture.asset(unpin, package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
               tooltip: 'UnPin',
             ),
             overflowWidget: Text("UnPin", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
@@ -212,7 +228,7 @@ class _DashboardViewState extends State<DashboardView> {
               onPressed: () {
                 controller.muteChats();
               },
-              icon: SvgPicture.asset(mute, package: package, color: MirrorflyUikit.getTheme?.colorOnAppbar),
+              icon: SvgPicture.asset(mute, package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
               tooltip: 'Mute',
             ),
             overflowWidget: Text("Mute", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
@@ -227,7 +243,7 @@ class _DashboardViewState extends State<DashboardView> {
               onPressed: () {
                 controller.unMuteChats();
               },
-              icon: SvgPicture.asset(unMute, package: package, color: MirrorflyUikit.getTheme?.colorOnAppbar),
+              icon: SvgPicture.asset(unMute, package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
               tooltip: 'UnMute',
             ),
             overflowWidget: Text("UnMute", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
@@ -242,7 +258,7 @@ class _DashboardViewState extends State<DashboardView> {
               onPressed: () {
                 controller.archiveChats();
               },
-              icon: SvgPicture.asset(archive, package: package, color: MirrorflyUikit.getTheme?.colorOnAppbar),
+              icon: SvgPicture.asset(archive, package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
               tooltip: 'Archive',
             ),
             overflowWidget: Text("Archived", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
@@ -278,7 +294,7 @@ class _DashboardViewState extends State<DashboardView> {
               icon: SvgPicture.asset(
                 searchIcon,
                 package: package,
-                color: MirrorflyUikit.getTheme?.colorOnAppbar,
+                colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn),
                 width: 18,
                 height: 18,
                 fit: BoxFit.contain,
@@ -287,7 +303,7 @@ class _DashboardViewState extends State<DashboardView> {
             ),
             overflowWidget: Text("Search", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction:
-                controller.selected.value || controller.isSearching.value ? ShowAsAction.gone : ShowAsAction.always,
+                controller.selected.value || controller.isSearching.value ? ShowAsAction.gone : widget.showSearchMenu ? ShowAsAction.always : ShowAsAction.gone,
             keyValue: 'Search',
             onItemClick: () {
               controller.gotoSearch();
@@ -306,7 +322,7 @@ class _DashboardViewState extends State<DashboardView> {
             visibleWidget: const Icon(Icons.group_add),
             overflowWidget: Text("New Group     ", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction:
-                controller.selected.value || controller.isSearching.value ? ShowAsAction.gone : ShowAsAction.never,
+                controller.selected.value || controller.isSearching.value ? ShowAsAction.gone : widget.showCreateGroup ? ShowAsAction.never : ShowAsAction.gone,
             keyValue: 'New Group',
             onItemClick: () {
               controller.gotoCreateGroup(context);
@@ -316,7 +332,7 @@ class _DashboardViewState extends State<DashboardView> {
             visibleWidget: const Icon(Icons.settings),
             overflowWidget: Text("Settings", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction:
-                controller.selected.value || controller.isSearching.value ? ShowAsAction.gone : ShowAsAction.never,
+                controller.selected.value || controller.isSearching.value ? ShowAsAction.gone : widget.showSettings ? ShowAsAction.never : ShowAsAction.gone,
             keyValue: 'Settings',
             onItemClick: () {
               controller.gotoSettings(context);
@@ -383,7 +399,7 @@ class _DashboardViewState extends State<DashboardView> {
                               child: SvgPicture.asset(
                                 archive,
                                 package: package,
-                                color: MirrorflyUikit.getTheme?.textPrimaryColor,
+                                colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),
                               ),
                             ),
                             title: Text(
@@ -447,7 +463,7 @@ class _DashboardViewState extends State<DashboardView> {
                                         child: SvgPicture.asset(
                                           archive,
                                           package: package,
-                                          color: MirrorflyUikit.getTheme?.textPrimaryColor,
+                                          colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),
                                         ),
                                       ),
                                       title: Text(
@@ -551,7 +567,7 @@ class _DashboardViewState extends State<DashboardView> {
             return memberItem(
               name: getName(item),
               image: item.image.checkNull(),
-              status: item.status.checkNull(),
+              status: MirrorflyUikit.instance.showMobileNumberOnList ? item.mobileNumber.checkNull() : item.status.checkNull(),
               spantext: controller.search.text.toString(),
               onTap: () {
                 controller.toChatPage(context, item.jid.checkNull());

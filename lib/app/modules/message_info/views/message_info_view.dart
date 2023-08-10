@@ -162,7 +162,7 @@ class _MessageInfoViewState extends State<MessageInfoView> {
                                   .messageDeliveredList[index]
                                   .memberProfileDetails!;
                               return memberItem(
-                                name: member.name.checkNull(),
+                                name: member.name.checkNull().isNotEmpty ? member.name.checkNull() : member.nickName.checkNull(),
                                 image: member.image.checkNull(),
                                 status: controller.chatDate(context,
                                     controller.messageDeliveredList[index]),
@@ -210,7 +210,7 @@ class _MessageInfoViewState extends State<MessageInfoView> {
                               var member = controller
                                   .messageReadList[index].memberProfileDetails!;
                               return memberItem(
-                                name: member.name.checkNull(),
+                                name: member.name.checkNull().isNotEmpty ? member.name.checkNull() : member.nickName.checkNull(),
                                 image: member.image.checkNull(),
                                 status: controller.chatDate(context,
                                     controller.messageDeliveredList[index]),

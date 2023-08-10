@@ -92,7 +92,7 @@ class _NameChangeViewState extends State<NameChangeView> {
                                 },
                                 icon: controller.showEmoji.value ? Icon(
                                   Icons.keyboard, color: MirrorflyUikit.getTheme?.textPrimaryColor,) : SvgPicture
-                                    .asset(smileIcon, package: package, color: MirrorflyUikit.getTheme?.textPrimaryColor,));
+                                    .asset(smileIcon, package: package,  colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn)));
                           })
                         ],
                       ),

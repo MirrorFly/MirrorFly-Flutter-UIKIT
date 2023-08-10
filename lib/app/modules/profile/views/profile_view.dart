@@ -231,7 +231,7 @@ class _ProfileViewState extends State<ProfileView> {
                         hintStyle: TextStyle(color: MirrorflyUikit
                             .getTheme?.textSecondaryColor.withOpacity(0.7)),
                         icon: SvgPicture.asset(emailIcon, package: package,
-                          color: MirrorflyUikit.getTheme?.textSecondaryColor,),
+                          colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn),),
                       ),
                       style: TextStyle(fontWeight: FontWeight.normal,
                           color: MirrorflyUikit.getTheme?.textSecondaryColor),
@@ -259,8 +259,7 @@ class _ProfileViewState extends State<ProfileView> {
                           hintStyle: TextStyle(color: MirrorflyUikit
                               .getTheme?.textSecondaryColor.withOpacity(0.7)),
                           icon: SvgPicture.asset(phoneIcon, package: package,
-                              color: MirrorflyUikit.getTheme
-                                  ?.textSecondaryColor),
+                              colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn),),
                         ),
                         style: TextStyle(fontWeight: FontWeight.normal,
                             color: MirrorflyUikit.getTheme?.textSecondaryColor),
@@ -270,51 +269,60 @@ class _ProfileViewState extends State<ProfileView> {
                     const SizedBox(
                       height: 20,
                     ),
-                    Text(
-                      'Status',
-                      style: TextStyle(fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                          color: MirrorflyUikit.getTheme?.textPrimaryColor),
-                    ),
-                    Obx(() =>
-                        ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          title: Text(
-                            controller.profileStatus.value.isNotEmpty
-                                ? controller.profileStatus.value
-                                : Constants.defaultStatus,
-                            style: TextStyle(
-                                color: controller.profileStatus.value.isNotEmpty
-                                    ? MirrorflyUikit.getTheme
-                                    ?.textSecondaryColor
-                                    : Colors.black38,
-                                fontWeight: FontWeight.normal),
+                   Visibility(
+                     visible: MirrorflyUikit.instance.showStatusOption,
+                     child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Status',
+                            style: TextStyle(fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                                color: MirrorflyUikit.getTheme?.textPrimaryColor),
                           ),
-                          minLeadingWidth: 10,
-                          leading: SvgPicture.asset(
-                              statusIcon, package: package,
-                              color: MirrorflyUikit.getTheme
-                                  ?.textSecondaryColor),
-                          onTap: () async {
-                            // Get.toNamed(Routes.statusList, arguments: {'status': controller.profileStatus.value})
-                            //     ?.then((value) {
-                            //   if (value != null) {
-                            //     controller.profileStatus.value = value;
-                            //   }
-                            // });
-                            final result = await Navigator.push(context,
-                                MaterialPageRoute(builder: (con) =>
-                                    StatusListView(
-                                        status: controller.profileStatus
-                                            .value)));
-                            if (result != null) {
-                              controller.profileStatus.value = result;
-                            }
-                          },
-                        )),
-                    const AppDivider(
-                      padding: EdgeInsets.only(bottom: 16),
-                    ),
+                          Obx(() =>
+                              ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Text(
+                                  controller.profileStatus.value.isNotEmpty
+                                      ? controller.profileStatus.value
+                                      : Constants.defaultStatus,
+                                  style: TextStyle(
+                                      color: controller.profileStatus.value.isNotEmpty
+                                          ? MirrorflyUikit.getTheme
+                                          ?.textSecondaryColor
+                                          : Colors.black38,
+                                      fontWeight: FontWeight.normal),
+                                ),
+                                minLeadingWidth: 10,
+                                leading: SvgPicture.asset(
+                                    statusIcon, package: package,
+                                    colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn),),
+                                onTap: () async {
+                                  // Get.toNamed(Routes.statusList, arguments: {'status': controller.profileStatus.value})
+                                  //     ?.then((value) {
+                                  //   if (value != null) {
+                                  //     controller.profileStatus.value = value;
+                                  //   }
+                                  // });
+                                  final result = await Navigator.push(context,
+                                      MaterialPageRoute(builder: (con) =>
+                                          StatusListView(
+                                              status: controller.profileStatus
+                                                  .value)));
+                                  if (result != null) {
+                                    controller.profileStatus.value = result;
+                                  }
+                                },
+                              )),
+                          const AppDivider(
+                            padding: EdgeInsets.only(bottom: 16),
+                          ),
+                        ],
+                      ),
+                   ),
+
                     Center(
                       child: Obx(
                             () =>
