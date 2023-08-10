@@ -29,6 +29,11 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
     super.initState();
   }
   @override
+  void dispose() {
+    Get.delete<ViewAllMediaController>();
+    super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
@@ -160,7 +165,8 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
         if (item.isImageMessage() || item.isVideoMessage()) {
           controller.openImage(context,gridIndex);
         } else if (item.isAudioMessage()) {
-          controller.openFile(item.mediaChatMessage!.mediaLocalStoragePath);
+          // controller.openFile(item.mediaChatMessage!.mediaLocalStoragePath);
+          controller.openImage(context,gridIndex);
         }
       },
     );
@@ -183,7 +189,7 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
   Widget audioItem(ChatMessageModel item) {
     return Center(
       child: SvgPicture.asset(
-          item.mediaChatMessage!.isAudioRecorded ? audioMic1 : audioWhite,package: package,color: MirrorflyUikit.getTheme?.colorOnPrimary,),
+          item.mediaChatMessage!.isAudioRecorded ? audioMic1 : audioWhite,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnPrimary, BlendMode.srcIn),),
     );
   }
 
@@ -313,7 +319,7 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
             children: [
               InkWell(
                 onTap: (){
-                  launchWeb(item.linkMap!["url"]);
+                  launchInBrowser(item.linkMap!["url"]);
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -343,7 +349,7 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
                                         topLeft: Radius.circular(8),
                                         bottomLeft: Radius.circular(8))),
                                 child: Center(
-                                  child: SvgPicture.asset(linkImage,package: package,color: MirrorflyUikit.getTheme?.colorOnPrimary,),
+                                  child: SvgPicture.asset(linkImage,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnPrimary, BlendMode.srcIn)),
                                 ),
                               ),
                         Expanded(
@@ -370,7 +376,7 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
               ),
               InkWell(
                 onTap: (){
-                  controller.navigateMessage(item.chatMessage);
+                  controller.navigateMessage(item.chatMessage,context);
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(

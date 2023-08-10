@@ -90,6 +90,16 @@ class AppPermission {
       }
     }
   }
+  static Future<bool> requestNotificationPermission() async {
+    final PermissionStatus status = await Permission.notification.request();
+    if (status.isGranted) {
+      debugPrint('Notification permission granted');
+      return true;
+    } else {
+      debugPrint('Notification permission denied');
+      return false;
+    }
+  }
 
   static Future<bool> getAndroid13Permission(BuildContext context) async {
     var info = await PackageInfo.fromPlatform();
@@ -342,7 +352,7 @@ class AppPermission {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 35.0),
             color: MirrorflyUikit.getTheme?.primaryColor,// buttonBgColor,
-            child: Center(child: SvgPicture.asset(icon,package: package,color: MirrorflyUikit.getTheme?.colorOnPrimary,)),
+            child: Center(child: SvgPicture.asset(icon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnPrimary, BlendMode.srcIn),)),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -392,7 +402,7 @@ class AppPermission {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 35.0),
             color: MirrorflyUikit.getTheme?.primaryColor,
-            child: Center(child: SvgPicture.asset(icon,package: package,color: MirrorflyUikit.getTheme?.colorOnPrimary,)),
+            child: Center(child: SvgPicture.asset(icon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnPrimary, BlendMode.srcIn),)),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),

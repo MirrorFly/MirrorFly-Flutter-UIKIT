@@ -1,9 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:flutter_libphonenumber/flutter_libphonenumber.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/settings/views/settings_view.dart';
@@ -128,7 +126,8 @@ class DashboardController extends FullLifeCycleController
     Mirrorfly.getRecentChatList().then((value) async {
       // String recentList = value.replaceAll('\n', '\\n');
       // debugPrint(recentList);
-      var data = await compute(recentChatFromJson, value.toString());
+      // var data = await compute(recentChatFromJson, value.toString());
+      var data = recentChatFromJson(value.toString());
       //recentChats.clear();
       recentChats(data.data!);
       recentChats.refresh();
@@ -415,28 +414,28 @@ class DashboardController extends FullLifeCycleController
     var chatIndex = recentChats.indexWhere((element) =>
     selectedChats.first == element.jid); //selectedChatsPosition[index];
     var item = recentChats[chatIndex];
-    Helper.progressLoading(context: context);
+    // Helper.progressLoading(context: context);
     clearAllChatSelection();
-    getProfileDetails(item.jid.checkNull()).then((value) {
-      if (value.jid != null) {
-        Helper.hideLoading(context: context);
-        var profile = profiledata(value.toString());
+    // getProfileDetails(item.jid.checkNull()).then((value) {
+      if (item.jid != null) {
+        // Helper.hideLoading(context: context);
+        // var profile = profiledata(value.toString());
         if (item.isGroup!) {
           Future.delayed(const Duration(milliseconds: 100),
                   () => Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (con) =>
-                          GroupInfoView(jid: profile.jid.checkNull()))));//Get.toNamed(Routes.groupInfo, arguments: profile));
+                          GroupInfoView(jid: item.jid.checkNull()))));//Get.toNamed(Routes.groupInfo, arguments: profile));
         } else {
           Future.delayed(const Duration(milliseconds: 100),
                   () =>  Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (con) => ChatInfoView(jid: profile.jid.checkNull()))));//Get.toNamed(Routes.chatInfo, arguments: profile));
+                      builder: (con) => ChatInfoView(jid: item.jid.checkNull()))));//Get.toNamed(Routes.chatInfo, arguments: profile));
         }
       }
-    });
+    // });
   }
 
   isSelected(int index) => selectedChats.contains(recentChats[index].jid);
@@ -1311,48 +1310,11 @@ class DashboardController extends FullLifeCycleController
   }
 
 
-  Future<String> getJidFromPhoneNumber(
-      String mobileNumber, String countryCode) async {
-    FlutterLibphonenumber().init();
-    var formatNumberSync =
-    FlutterLibphonenumber().formatNumberSync(mobileNumber);
-    var parse = await FlutterLibphonenumber().parse(formatNumberSync);
-    var format =
-    await FlutterLibphonenumber().format(mobileNumber, countryCode);
-    /*bool? isValid =
-      await PhoneNumberUtil.isValidPhoneNumber(phoneNumber: mobileNumber, isoCode: countryCode);
-  String? normalizedNumber = await PhoneNumberUtil.normalizePhoneNumber(
-      phoneNumber: mobileNumber, isoCode: countryCode);
-  RegionInfo regionInfo =
-      await PhoneNumberUtil.getRegionInfo(phoneNumber: mobileNumber, isoCode: countryCode);
-  String? carrierName =
-      await PhoneNumberUtil.getNameForNumber(phoneNumber: mobileNumber, isoCode: countryCode);*/
-    debugPrint('formatNumberSync : $formatNumberSync');
-    debugPrint(
-        'parse : $parse'); //{country_code: 971, e164: +971503209773, national: 050 320 9773, type: mobile, international: +971 50 320 9773, national_number: 503209773, region_code: AE}
-    debugPrint('format : $format'); //{formatted: +971 50 320 9773}
-    // parse.then((value) => debugPrint('parse : $value'));
-    // format.then((value) => debugPrint('format : $value'));
-
-    // debugPrint('normalizedNumber : $normalizedNumber');
-    // debugPrint('regionInfo.regionPrefix : ${regionInfo.regionPrefix}');
-    // debugPrint('regionInfo.isoCode : ${regionInfo.isoCode}');
-    // debugPrint('regionInfo.formattedPhoneNumber : ${regionInfo.formattedPhoneNumber}');
-    // debugPrint('carrierName : $carrierName');
-
-    /*phoneNumberUtil = PhoneNumberUtil.createInstance(context);
-  if (mobileNumber.startsWith("*")) {
-    LogMessage.d(TAG, "Invalid PhoneNumber:"+mobileNumber);
-    return null;
+  void userBlockedMe(String jid) {
+    userUpdatedHisProfile(jid);
   }
-  try {
-    Phonenumber.PhoneNumber phoneNumber = phoneNumberUtil.parse(mobileNumber.replaceAll("^0+", ""), countryCode);
-    String unformattedPhoneNumber = phoneNumberUtil.format(phoneNumber,
-        PhoneNumberUtil.PhoneNumberFormat.E164).replace("+", "");
-    return unformattedPhoneNumber + "@" + Constants.getDomain();
-  } catch (NumberParseException e) {
-  LogMessage.e(TAG, e);
-  }*/
-    return '';
+
+  void unblockedThisUser(String jid) {
+    userUpdatedHisProfile(jid);
   }
 }

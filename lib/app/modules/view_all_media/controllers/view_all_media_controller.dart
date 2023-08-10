@@ -126,10 +126,12 @@ class ViewAllMediaController extends GetxController {
     });
   }
 
-  navigateMessage(ChatMessageModel linkChatItem) {
+  navigateMessage(ChatMessageModel linkChatItem,BuildContext context) {
     // Get.toNamed(Routes.chat,parameters: {'isFromStarred':'true',"userJid":linkChatItem.chatUserJid,"messageId":linkChatItem.messageId});
-    Get.back();
-    Get.back();
+    // Get.back();
+    // Get.back();
+    Navigator.pop(context);
+    Navigator.pop(context);
     if (Get.isRegistered<ChatController>()) {
       Get.find<ChatController>().navigateToMessage(linkChatItem);
     }

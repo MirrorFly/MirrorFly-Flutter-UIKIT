@@ -47,7 +47,7 @@ class ProfileTextImage extends StatelessWidget {
     return radius == 0
         ? Container(
             decoration: BoxDecoration(
-                color: bgColor ?? Color(Helper.getColourCode(text))),
+                color: bgColor ?? (text.isNotEmpty ? Color(Helper.getColourCode(text)) : MirrorflyUikit.getTheme?.primaryColor)),
             child: Center(
               child: Text(
                 getString(text),
@@ -201,7 +201,7 @@ class ImageNetwork extends GetView<MainController> {
             getSingleOrGroup(isGroup),package: package,
             height: height,
             width: width,
-            fit: BoxFit.cover,
+            fit: isGroup ? BoxFit.cover : BoxFit.contain,
           );
         },
         imageBuilder: (context, provider) {
