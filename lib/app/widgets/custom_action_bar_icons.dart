@@ -68,7 +68,7 @@ class CustomActionBarIcons extends StatelessWidget {
             PopupMenuButton(
               color: MirrorflyUikit.getTheme?.scaffoldColor,
               elevation: 4,
-              icon: SvgPicture.asset(moreIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar, width: 3.66, height: 16.31),
+              icon: SvgPicture.asset(moreIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn), width: 3.66, height: 16.31),
               onCanceled: (){ FocusManager.instance.primaryFocus!.unfocus(); },
               itemBuilder: (BuildContext context) => [
                 for (CustomAction customAction in overflow)

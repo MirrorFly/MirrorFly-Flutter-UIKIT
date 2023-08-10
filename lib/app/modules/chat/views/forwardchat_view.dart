@@ -77,7 +77,7 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                   icon: SvgPicture.asset(
                     searchIcon,
                     package: package,
-                    color: MirrorflyUikit.getTheme?.colorOnAppbar,
+                    colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)
                   )),
             )
           ],
@@ -256,7 +256,7 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                                         child: memberItem(
                                           name: getName(item),
                                           image: item.image.checkNull(),
-                                          status: item.status.checkNull(),
+                                          status: MirrorflyUikit.instance.showMobileNumberOnList ? item.mobileNumber.checkNull() : item.status.checkNull(),
                                           spantext: controller.searchQuery.text
                                               .toString(),
                                           onTap: () {

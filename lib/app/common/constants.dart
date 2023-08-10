@@ -8,9 +8,6 @@ import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 import '../models.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:url_launcher/url_launcher.dart';
-
-import '../data/apputils.dart';
 
 //Colors
 const Color appBarColor = Color(0xffF2F2F2);
@@ -222,7 +219,7 @@ const String forwardMedia = "assets/logos/forward_media.svg";
 const String arrowDown = "assets/logos/arrow_down.svg";
 const String arrowUp = "assets/logos/arrow_up.svg";
 
-const String mediaBg = "assets/logos/ic_baloon.svg";
+// const String mediaBg = "assets/logos/ic_baloon.svg";
 
 //contact sync
 const String syncIcon = "assets/logos/sync.svg";
@@ -672,36 +669,6 @@ class Constants {
   static const invalidPinOTPText ='Invalid PIN, Generate OTP to your registered mobile number';
 }
 
-Future<void> launchWeb(String url) async {
-  if (await AppUtils.isNetConnected()) {
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(
-        Uri.parse(url),
-        mode: LaunchMode.externalApplication,
-      );
-    } else {
-      throw "Could not launch $url";
-    }
-  } else {
-    toToast(Constants.noInternetConnection);
-  }
-}
-
-Future<void> launchInWebViewOrVC(String url, String title) async {
-  if (await AppUtils.isNetConnected()) {
-    if (!await launchUrl(
-      Uri.parse(url),
-      mode: LaunchMode.inAppWebView,
-      webViewConfiguration: WebViewConfiguration(
-          headers: <String, String>{'my_header_key': title}),
-    )) {
-      throw Exception('Could not launch $url');
-    }
-  } else {
-    toToast(Constants.noInternetConnection);
-  }
-}
-
 Widget forMessageTypeIcon(String messageType,[MediaChatMessage? mediaChatMessage]) {
   // debugPrint("messagetype $messageType");
   switch (messageType.toUpperCase()) {
@@ -714,7 +681,7 @@ Widget forMessageTypeIcon(String messageType,[MediaChatMessage? mediaChatMessage
       return SvgPicture.asset(
         mediaChatMessage != null ? mediaChatMessage.isAudioRecorded ? mAudioRecordIcon : mAudioIcon : mAudioIcon,package: package,
         fit: BoxFit.contain,
-        color: textColor,
+        colorFilter: const ColorFilter.mode(textColor, BlendMode.srcIn),
       );
     case Constants.mVideo:
       return SvgPicture.asset(

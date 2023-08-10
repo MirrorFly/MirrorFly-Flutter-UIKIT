@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart' as emoji;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -182,7 +182,7 @@ class _ChatViewState extends State<ChatView> {
                                                   right: 8.0,
                                                   bottom: 8),
                                               child: SvgPicture.asset(
-                                                  sendIcon,package: package,color: MirrorflyUikit.getTheme?.primaryColor),
+                                                  sendIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.primaryColor, BlendMode.srcIn)),
                                             ))
                                             : const SizedBox.shrink();
                                       }),
@@ -353,7 +353,7 @@ class _ChatViewState extends State<ChatView> {
                         Icons.keyboard,
                         color: MirrorflyUikit.getTheme?.textPrimaryColor,
                       )
-                    : SvgPicture.asset(smileIcon,package: package,color: MirrorflyUikit.getTheme?.textPrimaryColor))
+                    : SvgPicture.asset(smileIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn)))
             : const SizedBox.shrink(),
         controller.isAudioRecording.value == Constants.audioRecordDelete
             ? const Padding(
@@ -447,7 +447,7 @@ class _ChatViewState extends State<ChatView> {
                 onPressed: () {
                   controller.showAttachmentsView(context);
                 },
-                icon: SvgPicture.asset(attachIcon,package: package,color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                icon: SvgPicture.asset(attachIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn)),
               )
             : const SizedBox.shrink(),
         controller.isAudioRecording.value == Constants.audioRecordInitial
@@ -455,7 +455,7 @@ class _ChatViewState extends State<ChatView> {
                 onPressed: () {
                   controller.startRecording(context);
                 },
-                icon: SvgPicture.asset(micIcon,package: package,color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                icon: SvgPicture.asset(micIcon,package: package,colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),),
               )
             : const SizedBox.shrink(),
         const SizedBox(
@@ -533,7 +533,7 @@ class _ChatViewState extends State<ChatView> {
       if (controller.showEmoji.value) {
         return SizedBox(
           height: 250,
-          child: EmojiPicker(
+          child: emoji.EmojiPicker(
             onBackspacePressed: () {
               controller.isTyping();
               // Do something when the user taps the backspace button (optional)
@@ -542,13 +542,13 @@ class _ChatViewState extends State<ChatView> {
               controller.isTyping();
             },
             textEditingController: controller.messageController,
-            config: Config(
+            config: emoji.Config(
               columns: 7,
               emojiSizeMax: 32 * (Platform.isIOS ? 1.30 : 1.0),
               verticalSpacing: 0,
               horizontalSpacing: 0,
               gridPadding: EdgeInsets.zero,
-              initCategory: Category.RECENT,
+              initCategory: emoji.Category.RECENT,
               bgColor: MirrorflyUikit.getTheme!.scaffoldColor,
               indicatorColor: MirrorflyUikit.getTheme!.primaryColor,
               iconColor: MirrorflyUikit.getTheme!.textPrimaryColor,
@@ -560,8 +560,8 @@ class _ChatViewState extends State<ChatView> {
               // showRecentsTab: true,
               recentsLimit: 28,
               tabIndicatorAnimDuration: kTabScrollDuration,
-              categoryIcons: const CategoryIcons(),
-              buttonMode: ButtonMode.CUPERTINO,
+              categoryIcons: const emoji.CategoryIcons(),
+              buttonMode: emoji.ButtonMode.CUPERTINO,
             ),
           ),
         );
@@ -669,7 +669,7 @@ class _ChatViewState extends State<ChatView> {
                                           controller.forwardSingleMessage(
                                               chatList[index].messageId);
                                         },
-                                        icon: SvgPicture.asset(forwardMedia,package: package,color: MirrorflyUikit.getTheme?.textPrimaryColor,)),
+                                        icon: SvgPicture.asset(forwardMedia,package: package,colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),)),
                                   ),
                                   ChatContainer(
                                     chatMessage: chatList[index],
@@ -839,7 +839,7 @@ class _ChatViewState extends State<ChatView> {
                     controller
                         .clearChatSelection(controller.selectedChatList[0]);
                   },
-                  icon: SvgPicture.asset(replyIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar),
+                  icon: SvgPicture.asset(replyIcon,package: package,colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
                   tooltip: 'Reply',
                 ),
                 overflowWidget: Text("Reply",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
@@ -859,7 +859,7 @@ class _ChatViewState extends State<ChatView> {
                   onPressed: () {
                     controller.checkBusyStatusForForward(context);
                   },
-                  icon: SvgPicture.asset(forwardIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar,),
+                  icon: SvgPicture.asset(forwardIcon,package: package,colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
                   tooltip: 'Forward',
                 ),
                 overflowWidget: Text("Forward",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
@@ -882,7 +882,7 @@ class _ChatViewState extends State<ChatView> {
                   },
                   // icon: controller.getOptionStatus('Favourite') ? const Icon(Icons.star_border_outlined)
                   // icon: controller.selectedChatList[0].isMessageStarred
-                  icon: SvgPicture.asset(favouriteIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar),
+                  icon: SvgPicture.asset(favouriteIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
                   tooltip: 'Favourite',
                 ),
                 overflowWidget: Text("Favourite",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
@@ -902,7 +902,7 @@ class _ChatViewState extends State<ChatView> {
                   },
                   // icon: controller.getOptionStatus('Favourite') ? const Icon(Icons.star_border_outlined)
                   // icon: controller.selectedChatList[0].isMessageStarred
-                  icon: SvgPicture.asset(unFavouriteIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar),
+                  icon: SvgPicture.asset(unFavouriteIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
                   tooltip: 'unFavourite',
                 ),
                 overflowWidget: Text("unFavourite",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
@@ -920,7 +920,7 @@ class _ChatViewState extends State<ChatView> {
                   onPressed: () {
                     controller.deleteMessages(context);
                   },
-                  icon: SvgPicture.asset(deleteIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar),
+                  icon: SvgPicture.asset(deleteIcon,package: package,colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
                   tooltip: 'Delete',
                 ),
                 overflowWidget: Text("Delete",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
@@ -964,7 +964,7 @@ class _ChatViewState extends State<ChatView> {
                   icon: SvgPicture.asset(
                     copyIcon,
                     fit: BoxFit.contain,
-                    package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar
+                    package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn),
                   ),
                   tooltip: 'Copy',
                 ),
@@ -990,7 +990,7 @@ class _ChatViewState extends State<ChatView> {
                   icon: SvgPicture.asset(
                     infoIcon,
                     fit: BoxFit.contain,
-                    package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar
+                    package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)
                   ),
                   tooltip: 'Message Info',
                 ),
@@ -1010,7 +1010,7 @@ class _ChatViewState extends State<ChatView> {
               CustomAction(
                 visibleWidget: IconButton(
                   onPressed: () {},
-                  icon: SvgPicture.asset(shareIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar),
+                  icon: SvgPicture.asset(shareIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
                   tooltip: 'Share',
                 ),
                 overflowWidget: Text("Share",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),

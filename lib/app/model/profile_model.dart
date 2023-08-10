@@ -3,6 +3,7 @@
 //     final profileData = profileDataFromJson(jsonString);
 
 import 'dart:convert';
+import 'dart:io';
 
 ProfileModel profileDataFromJson(String str) =>
     ProfileModel.fromJson(json.decode(str));
@@ -74,7 +75,11 @@ class ProfileData {
         isBlockedMe: json["isBlockedMe"],
         isGroupAdmin: json["isGroupAdmin"],
         isGroupInOfflineMode: json["isGroupInOfflineMode"],
-        isGroupProfile: json["isGroupProfile"],
+        isGroupProfile: Platform.isAndroid
+            ? json["isGroupProfile"]
+            : json["profileChatType"].toString().toLowerCase() == "singlechat"
+                ? false
+                : true,
         isItSavedContact: json["isItSavedContact"],
         isMuted: json["isMuted"],
         isSelected: json["isSelected"],

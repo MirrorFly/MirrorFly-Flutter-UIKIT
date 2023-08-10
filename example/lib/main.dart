@@ -7,7 +7,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   MirrorflyUikit.instance.initUIKIT(
       baseUrl: 'YOUR_BASE_URL',
-      licenseKey: 'Your_Mirrorfly_licence_key',
+      licenseKey: 'Your_Mirrorfly_Licence_Key',
       googleMapKey: 'Your_Google_Map_Key_for_location_messages',
       iOSContainerID: 'Your_iOS_app_Container_id');
   runApp(const MyApp());
