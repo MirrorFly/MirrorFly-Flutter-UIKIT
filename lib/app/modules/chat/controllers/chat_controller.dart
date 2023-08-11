@@ -48,6 +48,7 @@ class ChatController extends FullLifeCycleController
     with FullLifeCycleMixin, GetTickerProviderStateMixin {
   // final translator = Translation(apiKey: Constants.googleTranslateKey);
   late final BuildContext context;
+  late final bool showChatDeliveryIndicator;
   var chatList = List<ChatMessageModel>.empty(growable: true).obs;
   late AnimationController controller;
 
@@ -123,9 +124,10 @@ class ChatController extends FullLifeCycleController
     String? jid,
     bool isUser = false,
     bool isFromStarred = false,
-    String? messageId,
+    String? messageId, required bool showChatDeliveryIndicator,
   }) async {
     this.context = context;
+    this.showChatDeliveryIndicator = showChatDeliveryIndicator;
     var userJid = SessionManagement.getChatJid().checkNull();
     if (jid != null) {
       nJid = jid;
@@ -137,63 +139,9 @@ class ChatController extends FullLifeCycleController
         starredChatMessageId = messageId;
       }
     }
-    // else if (isFromStarred) {
-    //   if (jid != null) {
-    //     userJid = jid;
-    //   }
-    //   if (messageId!= null) {
-    //     starredChatMessageId = messageId;
-    //   }
-    // }
-    /*if (userJid.isEmpty) {
-      var profileDetail = Get.arguments as Profile;
-      profile_(profileDetail);
-      checkAdminBlocked();
-      ready();
-      // initListeners();
-    } else {*/
+
     debugPrint('userJid $userJid');
-    /*if(!isUser) {
-      getProfileDetails(userJid).then((
-          value) {
-        // debugPrint('Mirrorfly.getProfileDetails $value');
-        // var str = profileDataFromJson(value).data;
-        SessionManagement.setChatJid("");
-        profile_(value);
-        ready();
-        checkAdminBlocked();
-        // initListeners();
-      }).catchError((o) {
-        debugPrint('error $o');
-      });
-    }else{
-      getUserProfile(userJid, server: await AppUtils.isNetConnected()).then((value){
-        // if(value!=null){
-          var p = Profile();
-          p.email = value.email;
-          p.image = value.image;
-          p.isAdminBlocked = value.isAdminBlocked;
-          p.isBlocked = value.isBlocked;
-          p.isBlockedMe = value.isBlockedMe;
-          p.isGroupAdmin = false;
-          p.isGroupInOfflineMode = false;
-          p.isGroupProfile = false;
-          p.isItSavedContact = value.isItSavedContact;
-          p.isMuted = value.isMuted;
-          p.isSelected = value.isSelected;
-          p.jid = value.jid;
-          p.mobileNumber = value.mobileNumber;
-          p.name = value.name;
-          p.nickName = value.nickName;
-          p.status = value.status;
-          profile_(p);
-          SessionManagement.setChatJid("");
-          ready();
-          checkAdminBlocked();
-        // }
-      }
-      );
-    }*/
+
     getProfileDetails(userJid).then((value) {
       if (value.jid != null) {
         SessionManagement.setChatJid("");
@@ -201,11 +149,9 @@ class ChatController extends FullLifeCycleController
         ready();
         checkAdminBlocked();
       }
-      // initListeners();
     }).catchError((o) {
       debugPrint('error $o');
     });
-    // }
 
     setAudioPath();
 
@@ -257,21 +203,7 @@ class ChatController extends FullLifeCycleController
         showEmoji(false);
       }
     });
-    /*keyboardSubscription =
-        keyboardVisibilityController.onChange.listen((bool visible) {
-          if (!visible) {
-            focusNode.canRequestFocus = false;
-          }
-        });*/
-    //scrollController.addListener(_scrollController);
-    /*scrollController.addListener(() {
-      if (scrollController.offset <= scrollController.position.minScrollExtent &&
-          !scrollController.position.outOfRange) {
-        showHideRedirectToLatest(false);
-      }else{
-        showHideRedirectToLatest(true);
-      }
-    });*/
+
     itemPositionsListener.itemPositions.addListener(() {
       debugPrint('scrolled : ${findTopFirstVisibleItemPosition()}');
       // j=findLastVisibleItemPosition();
@@ -1393,31 +1325,13 @@ class ChatController extends FullLifeCycleController
                   // messageID: selectedChatList[0].messageId,
                   chatMessage: selected,
                   isGroupProfile: profile.isGroupProfile.checkNull(),
-                  jid: profile.jid.checkNull())));
-      /*Get.toNamed(Routes.messageInfo, arguments: {
-        "messageID": selectedChatList[0].messageId,
-        "chatMessage": selectedChatList[0],
-        "isGroupProfile": profile.isGroupProfile,
-        "jid": profile.jid
-      });*/
+                  jid: profile.jid.checkNull(),
+                  showChatDeliveryIndicator: showChatDeliveryIndicator,)));
       clearChatSelection(selectedChatList[0]);
     });
   }
 
   favouriteMessage() {
-    /*var isMessageStarred = selectedChatList[0].isMessageStarred;
-    Helper.showLoading(
-        message: selectedChatList[0].isMessageStarred
-            ? 'Unfavoriting Message'
-            : 'Favoriting Message');
-
-    Mirrorfly.updateFavouriteStatus(selectedChatList[0].messageId, profile.jid!,
-        !selectedChatList[0].isMessageStarred, profile.getChatType())
-        .then((value) {
-      selectedChatList[0].isMessageStarred = !isMessageStarred;
-      clearChatSelection(selectedChatList[0]);
-      Helper.hideLoading();
-    });*/
     for (var item in selectedChatList) {
       Mirrorfly.updateFavouriteStatus(item.messageId, item.chatUserJid,
           !item.isMessageStarred.value, item.messageChatType);
@@ -1857,30 +1771,8 @@ class ChatController extends FullLifeCycleController
           SessionManagement.setCurrentChatJID(profile.jid.checkNull());
           getChatHistory();
           sendReadReceipt();
-          // Navigator.pop(context);
-          // Navigator.push(context, MaterialPageRoute(builder: (con)=>ChatView(jid: value.jid.checkNull())));
         }
       });
-      /*Get.toNamed(Routes.forwardChat, arguments: {
-        "forward": true,
-        "group": false,
-        "groupJid": "",
-        "messageIds": messageIds
-      })?.then((value) {
-        if (value != null) {
-          debugPrint(
-              "result of forward ==> ${(value as Profile).toJson().toString()}");
-          profile_.value = value;
-          isBlocked(profile.isBlocked);
-          setChatStatus();
-          checkAdminBlocked();
-          memberOfGroup();
-          Mirrorfly.setOnGoingChatUser(profile.jid!);
-          SessionManagement.setCurrentChatJID(profile.jid.checkNull());
-          getChatHistory();
-          sendReadReceipt();
-        }
-      });*/
     }
   }
 
@@ -2063,11 +1955,8 @@ class ChatController extends FullLifeCycleController
   gotoSearch() {
     Future.delayed(const Duration(milliseconds: 100), () {
       Navigator.push(
-          context, MaterialPageRoute(builder: (con) => ChatSearchView()));
-      // Get.toNamed(Routes.chatSearch, arguments: chatList);
-      /*if (searchScrollController.isAttached) {
-        searchScrollController.jumpTo(index: chatList.value.length - 1);
-      }*/
+          context, MaterialPageRoute(builder: (con) => ChatSearchView(showChatDeliveryIndicator: showChatDeliveryIndicator,)));
+
     });
   }
 

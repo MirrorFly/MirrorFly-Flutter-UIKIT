@@ -23,7 +23,7 @@ class DashboardView extends StatefulWidget {
   const DashboardView({Key? key, this.title="Chats",this.enableAppBar=true,
     this.showBackIcon=true, this.showSearchMenu = true,
     this.showCreateGroup = true, this.showSettings = true,
-    this.showNewChat = true}) : super(key: key);
+    this.showNewChat = true, this.showChatDeliveryIndicator = true}) : super(key: key);
   final String title;
   final bool enableAppBar;
   final bool showBackIcon;
@@ -31,6 +31,7 @@ class DashboardView extends StatefulWidget {
   final bool showCreateGroup;
   final bool showSettings;
   final bool showNewChat;
+  final bool showChatDeliveryIndicator;
 
   @override
   State<DashboardView> createState() => _DashboardViewState();
@@ -52,6 +53,7 @@ class _DashboardViewState extends State<DashboardView> {
     // debugPrint("isDark : $isDark");
     return FocusDetector(
       onFocusGained: () {
+        controller.showChatDeliveryIndicator = widget.showChatDeliveryIndicator;
         debugPrint('onFocusGained');
         controller.checkArchiveSetting();
         controller.getRecentChatList();
@@ -145,7 +147,7 @@ class _DashboardViewState extends State<DashboardView> {
                     ) : null,
               body: SafeArea(
                 child: Obx(() {
-                  return chatView(context);
+                  return recentChatView(context);
                 }),
               ));
         }),
@@ -376,7 +378,7 @@ class _DashboardViewState extends State<DashboardView> {
     );
   }
 
-  Widget chatView(BuildContext context) {
+  Widget recentChatView(BuildContext context) {
     return controller.clearVisible.value
         ? recentSearchView(context)
         : (!controller.recentChatLoading.value && controller.recentChats.isEmpty && controller.archivedChats.isEmpty)
@@ -418,7 +420,7 @@ class _DashboardViewState extends State<DashboardView> {
                             dividerPadding: EdgeInsets.zero,
                             onTap: () {
                               // Get.toNamed(Routes.archivedChats);
-                              Navigator.push(context, MaterialPageRoute(builder: (con) => ArchivedChatListView()));
+                              Navigator.push(context, MaterialPageRoute(builder: (con) => ArchivedChatListView(showChatDeliveryIndicator: widget.showChatDeliveryIndicator,)));
                             },
                           ),
                         ),
@@ -435,6 +437,7 @@ class _DashboardViewState extends State<DashboardView> {
                                     item: item,
                                     isSelected: controller.isSelected(index),
                                     typingUserid: controller.typingUser(item.jid.checkNull()),
+                                    showChatDeliveryIndicator: widget.showChatDeliveryIndicator,
                                     onTap: () {
                                       if (controller.selected.value) {
                                         controller.selectOrRemoveChatfromList(index);
@@ -449,6 +452,7 @@ class _DashboardViewState extends State<DashboardView> {
                                     onAvatarClick: () {
                                       controller.getProfileDetail(context, item, index);
                                     },
+
                                   );
                                 });
                               } else {
@@ -484,7 +488,7 @@ class _DashboardViewState extends State<DashboardView> {
                                       onTap: () {
                                         // Get.toNamed(Routes.archivedChats);
                                         Navigator.push(
-                                            context, MaterialPageRoute(builder: (con) => ArchivedChatListView()));
+                                            context, MaterialPageRoute(builder: (con) => ArchivedChatListView(showChatDeliveryIndicator: widget.showChatDeliveryIndicator,)));
                                       },
                                     ),
                                   );
@@ -759,6 +763,7 @@ class _DashboardViewState extends State<DashboardView> {
                     ? RecentChatItem(
                         item: item,
                         spanTxt: controller.search.text,
+                        showChatDeliveryIndicator: widget.showChatDeliveryIndicator,
                         onTap: () {
                           controller.toChatPage(context, item.jid.checkNull());
                         },

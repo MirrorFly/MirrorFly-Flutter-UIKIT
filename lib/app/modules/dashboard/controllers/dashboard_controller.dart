@@ -50,6 +50,8 @@ class DashboardController extends FullLifeCycleController
 
   var archiveSettingEnabled = false.obs;
 
+  late bool showChatDeliveryIndicator;
+
 /*@override
   void onInit() {
     super.onInit();
@@ -152,7 +154,7 @@ class DashboardController extends FullLifeCycleController
 
   toChatPage(BuildContext context,String jid) async {
     if (jid.isNotEmpty) {
-      Navigator.push(context, MaterialPageRoute(builder: (con)=>ChatView(jid: jid)));
+      Navigator.push(context, MaterialPageRoute(builder: (con)=>ChatView(jid: jid, showChatDeliveryIndicator: showChatDeliveryIndicator,)));
       // Helper.progressLoading();
       /*await Mirrorfly.getProfileDetails(jid, false).then((value) {
         if (value != null) {

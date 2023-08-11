@@ -14,6 +14,7 @@ import '../group/views/group_info_view.dart';
 class ArchivedChatListController extends GetxController {
   RxList<RecentChatData> archivedChats = <RecentChatData>[].obs;//Get.find<DashboardController>().archivedChats;
 
+  late final bool showChatDeliveryIndicator;
   //RxList<RecentChatData> archivedChats = <RecentChatData>[].obs;
 
   @override
@@ -127,17 +128,8 @@ class ArchivedChatListController extends GetxController {
 
   toChatPage(String jid,bool isGroup, BuildContext context) async {
     if (jid.isNotEmpty) {
-      Navigator.push(context, MaterialPageRoute(builder: (con)=>ChatView(jid: jid,)));
-      // Helper.progressLoading();
-      /*await Mirrorfly.getProfileDetails(jid, false).then((value) {
-        if (value != null) {
-          Helper.hideLoading(context: context);
-          var profile = profiledata(value.toString());
-           Get.toNamed(Routes.chat, arguments: profile);
-        }
-      });*/
-      // SessionManagement.setChatJid(jid);
-      // Get.toNamed(Routes.chat);
+      Navigator.push(context, MaterialPageRoute(builder: (con)=>ChatView(jid: jid,showChatDeliveryIndicator: showChatDeliveryIndicator,)));
+      
     }
   }
 
