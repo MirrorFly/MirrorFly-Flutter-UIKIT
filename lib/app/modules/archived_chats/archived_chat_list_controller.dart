@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_view.dart';
 import '../../../mirrorfly_uikit_plugin.dart';
+import '../../data/session_management.dart';
 import '../../models.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
@@ -33,6 +34,10 @@ class ArchivedChatListController extends GetxController {
       mirrorFlyLog("archived response", value.toString());
       if(value != null) {
         var data = recentChatFromJson(value);
+
+        ///removing recent chat item if the recent chat has a self chat
+        data.data?.removeWhere((chat) => chat.jid == SessionManagement.getUserJID());
+
         archivedChats(data.data!);
       }else{
         debugPrint("Archive list is empty");
