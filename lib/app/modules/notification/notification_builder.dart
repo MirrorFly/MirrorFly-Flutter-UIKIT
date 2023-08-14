@@ -253,7 +253,7 @@ class NotificationBuilder {
         importance: Importance.max,
         styleInformation: messagingStyle,
         autoCancel: true,
-        icon: 'ic_notification_blue',
+        icon: 'ic_notification',
         color: buttonBgColor,
         groupKey: groupKeyMessage,
         number: unReadMessageCount,
@@ -315,7 +315,7 @@ class NotificationBuilder {
         importance: Importance.max,
         styleInformation: inboxStyle,
         autoCancel: true,
-        icon: 'ic_notification_blue',
+        icon: 'ic_notification',
         color: buttonBgColor,
         groupKey: groupKeyMessage,
         number: chatNotifications.length,
@@ -323,7 +323,7 @@ class NotificationBuilder {
         // category: AndroidNotificationCategory.message,
         priority: Priority.high,
         visibility: NotificationVisibility.public,
-        largeIcon: const DrawableResourceAndroidBitmap('ic_notification_blue'),
+        largeIcon: const DrawableResourceAndroidBitmap('ic_notification'),
         /*sound: isRing && notificationSounUri.checkNull().isNotEmpty ? UriAndroidNotificationSound(
             notificationSounUri!) : null,
         vibrationPattern: (isVibrate *//*|| getDeviceVibrateMode()*//*) ? getDefaultVibrate() : null,*/

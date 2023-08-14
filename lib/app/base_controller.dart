@@ -155,6 +155,10 @@ abstract class BaseController {
       debugPrint("Message Received user chat screen is in online");
     }else{
      // showLocalNotification(chatMessageModel);
+      var data = chatMessageFromJson(chatMessage.toString());
+      if(data.messageId!=null) {
+        NotificationBuilder.createNotification(data);
+      }
     }
 
     if (Get.isRegistered<ChatController>()) {

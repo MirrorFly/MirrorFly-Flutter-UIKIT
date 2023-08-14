@@ -63,7 +63,7 @@ class NotificationService {
     }
 
     const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('ic_notification_blue');
+    AndroidInitializationSettings('ic_notification');
 
     /// Note: permissions aren't requested here just to demonstrate that can be
     /// done later

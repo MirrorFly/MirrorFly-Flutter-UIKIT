@@ -56,6 +56,7 @@ class _DashboardViewState extends State<DashboardView> {
         controller.checkArchiveSetting();
         controller.getRecentChatList();
         controller.getArchivedChatsList();
+        debugPrint("showBackIcon ${widget.showBackIcon}");
       },
       child: WillPopScope(
         onWillPop: () {
