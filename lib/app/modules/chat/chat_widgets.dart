@@ -541,9 +541,9 @@ class LocationMessageView extends StatelessWidget {
                   width: 5,
                 ),
                 Obx(() {
-                  return showChatDeliveryIndicator ? getMessageIndicator(chatMessage.messageStatus.value,
+                  return getMessageIndicator(chatMessage.messageStatus.value,
                       chatMessage.isMessageSentByMe, chatMessage.messageType,
-                      chatMessage.isMessageRecalled.value) : const SizedBox.shrink();
+                      chatMessage.isMessageRecalled.value,showChatDeliveryIndicator: showChatDeliveryIndicator);
                 }),
                 const SizedBox(
                   width: 4,
@@ -822,11 +822,11 @@ class _AudioMessageViewState extends State<AudioMessageView>
                   width: 5,
                 ),
                 Obx(() {
-                  return widget.showChatDeliveryIndicator ? getMessageIndicator(
+                  return getMessageIndicator(
                       widget.chatMessage.messageStatus.value,
                       widget.chatMessage.isMessageSentByMe,
                       widget.chatMessage.messageType,
-                      widget.chatMessage.isMessageRecalled.value) : const SizedBox.shrink();
+                      widget.chatMessage.isMessageRecalled.value,showChatDeliveryIndicator: widget.showChatDeliveryIndicator) ;
                 }),
                 const SizedBox(
                   width: 4,
@@ -1122,9 +1122,9 @@ class ContactMessageView extends StatelessWidget {
                         width: 5,
                       ),
                       Obx(() {
-                        return showChatDeliveryIndicator ? getMessageIndicator(chatMessage.messageStatus.value,
+                        return getMessageIndicator(chatMessage.messageStatus.value,
                             chatMessage.isMessageSentByMe, chatMessage.messageType,
-                      chatMessage.isMessageRecalled.value) : const SizedBox.shrink();
+                      chatMessage.isMessageRecalled.value,showChatDeliveryIndicator:showChatDeliveryIndicator);
                       }),
                       const SizedBox(
                         width: 4,
@@ -1377,9 +1377,9 @@ class DocumentMessageView extends StatelessWidget {
                     width: 5,
                   ),
                   Obx(() {
-                    return showChatDeliveryIndicator ? getMessageIndicator(chatMessage.messageStatus.value,
+                    return getMessageIndicator(chatMessage.messageStatus.value,
                         chatMessage.isMessageSentByMe, chatMessage.messageType,
-                        chatMessage.isMessageRecalled.value) : const SizedBox.shrink();
+                        chatMessage.isMessageRecalled.value,showChatDeliveryIndicator:showChatDeliveryIndicator);
                   }),
                   const SizedBox(
                     width: 4,
@@ -1518,11 +1518,11 @@ class VideoMessageView extends StatelessWidget {
                       width: 5,
                     ),
                     Obx(() {
-                      return showChatDeliveryIndicator ? getMessageIndicator(
+                      return getMessageIndicator(
                           chatMessage.messageStatus.value,
                           chatMessage.isMessageSentByMe,
                           chatMessage.messageType,
-                          chatMessage.isMessageRecalled.value) : const SizedBox.shrink();
+                          chatMessage.isMessageRecalled.value,showChatDeliveryIndicator:showChatDeliveryIndicator);
                     }),
                     const SizedBox(
                       width: 4,
@@ -1544,7 +1544,7 @@ class VideoMessageView extends StatelessWidget {
               .checkNull()
               .isNotEmpty
               ? setCaptionMessage(mediaMessage, chatMessage, context,
-              search: search)
+              search: search,showChatDeliveryIndicator)
               : const SizedBox()
         ],
       ),
@@ -1608,11 +1608,11 @@ class ImageMessageView extends StatelessWidget {
                           width: 5,
                         ),
                         Obx(() {
-                          return showChatDeliveryIndicator ? getMessageIndicator(
+                          return getMessageIndicator(
                               chatMessage.messageStatus.value,
                               chatMessage.isMessageSentByMe,
                               chatMessage.messageType,
-                              chatMessage.isMessageRecalled.value) : const SizedBox.shrink();
+                              chatMessage.isMessageRecalled.value,showChatDeliveryIndicator:showChatDeliveryIndicator);
                         }),
                         const SizedBox(
                           width: 4,
@@ -1636,7 +1636,7 @@ class ImageMessageView extends StatelessWidget {
               .checkNull()
               .isNotEmpty
               ? setCaptionMessage(mediaMessage, chatMessage, context,
-              search: search)
+              search: search,showChatDeliveryIndicator)
               : const SizedBox(),
         ],
       ),
@@ -1691,7 +1691,7 @@ class ImageMessageView extends StatelessWidget {
 }
 
 Widget setCaptionMessage(MediaChatMessage mediaMessage,
-    ChatMessageModel chatMessage, BuildContext context,
+    ChatMessageModel chatMessage, BuildContext context,bool showChatDeliveryIndicator,
     {String search = ""}) {
   return Padding(
     padding: const EdgeInsets.all(10.0),
@@ -1718,7 +1718,7 @@ Widget setCaptionMessage(MediaChatMessage mediaMessage,
             Obx(() {
               return getMessageIndicator(chatMessage.messageStatus.value,
                   chatMessage.isMessageSentByMe, chatMessage.messageType,
-                  chatMessage.isMessageRecalled.value);
+                  chatMessage.isMessageRecalled.value,showChatDeliveryIndicator:showChatDeliveryIndicator);
             }),
             const SizedBox(
               width: 5,
@@ -1938,9 +1938,9 @@ class TextMessageView extends StatelessWidget {
                   width: 5,
                 ),
                 Obx(() {
-                  return showChatDeliveryIndicator ? getMessageIndicator(chatMessage.messageStatus.value,
+                  return getMessageIndicator(chatMessage.messageStatus.value,
                       chatMessage.isMessageSentByMe, chatMessage.messageType,
-                      chatMessage.isMessageRecalled.value) : const SizedBox.shrink();
+                      chatMessage.isMessageRecalled.value,showChatDeliveryIndicator: showChatDeliveryIndicator);
                 }),
                 const SizedBox(
                   width: 5,
@@ -2020,10 +2020,10 @@ class RecalledMessageView extends StatelessWidget {
 }
 
 getMessageIndicator(String? messageStatus, bool isSender, String messageType,
-    bool isRecalled) {
+    bool isRecalled,{bool showChatDeliveryIndicator =true}) {
   // debugPrint("Message Status ==>");
   // debugPrint("Message Status ==> $messageStatus");
-  if(messageType.toUpperCase() != Constants.mNotification) {
+  if(messageType.toUpperCase() != Constants.mNotification && showChatDeliveryIndicator) {
     if (isSender && !isRecalled) {
       if (messageStatus == 'A') {
         return SvgPicture.asset(acknowledgedIcon, package: package,);
