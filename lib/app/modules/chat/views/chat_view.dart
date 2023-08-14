@@ -22,12 +22,13 @@ import '../controllers/chat_controller.dart';
 import '../../../models.dart';
 
 class ChatView extends StatefulWidget {
-  const ChatView({Key? key, required this.jid, this.isUser=false, this.messageId, this.isFromStarred = false, this.enableAppBar=true,}) : super(key: key);
+  const ChatView({Key? key, required this.jid, this.isUser=false, this.messageId, this.isFromStarred = false, this.enableAppBar=true, this.showChatDeliveryIndicator = true}) : super(key: key);
   final String jid;
   final bool isUser;
   final bool isFromStarred;
   final String? messageId;
   final bool enableAppBar;
+  final bool showChatDeliveryIndicator;
 
   @override
   State<ChatView> createState() => _ChatViewState();
@@ -38,7 +39,7 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   void initState() {
-    controller.init(context,jid: widget.jid,isUser: widget.isUser,isFromStarred: widget.isFromStarred,messageId: widget.messageId);
+    controller.init(context,jid: widget.jid,isUser: widget.isUser,isFromStarred: widget.isFromStarred,messageId: widget.messageId, showChatDeliveryIndicator: widget.showChatDeliveryIndicator);
     super.initState();
   }
 
@@ -55,263 +56,271 @@ class _ChatViewState extends State<ChatView> {
     return Scaffold(
         appBar: widget.enableAppBar ? getAppBar(context) : null,
         body: SafeArea(
-          child: Container(
-            width: Get.width,//controller.screenWidth,
-            height: Get.height,//controller.screenHeight,
-            decoration: BoxDecoration(
-              color: MirrorflyUikit.getTheme?.scaffoldColor,
-              /*image: const DecorationImage(
-                image: AssetImage(chatBg,package: package),
-                fit: BoxFit.cover,
-              ),*/
-            ),
-            child: WillPopScope(
-              onWillPop: () {
-                if (controller.showEmoji.value) {
-                  controller.showEmoji(false);
-                } else if (MediaQuery.of(context).viewInsets.bottom > 0.0) {
-                  controller.focusNode.unfocus();
-                } else if (controller.nJid != null) {
-                  // Get.offAllNamed(Routes.dashboard);
-                  return Future.value(true);
-                } else if (controller.isSelected.value) {
-                  controller.clearAllChatSelection();
-                } else {
-                  return Future.value(true);
-                }
-                return Future.value(false);
-              },
-              child: Stack(
-                children: [
-                  Column(
-                    children: [
-                      Expanded(child: Obx(() {
-                        return controller.chatLoading.value
-                            ? Center(
-                                child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
-                              )
-                            : chatListView(controller.chatList);
-                      })),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Obx(() {
-                          return Container(
-                            color: Colors.transparent,
-                            child: controller.isBlocked.value
-                                ? userBlocked()
-                                : controller.isMemberOfGroup
-                                    ? Column(
-                              mainAxisAlignment:
-                              MainAxisAlignment.end,
-                              children: [
-                                Obx(() {
-                                  if (controller.isReplying.value) {
-                                    return ReplyingMessageHeader(
-                                      chatMessage:
-                                      controller.replyChatMessage,
-                                      onCancel: () => controller
-                                          .cancelReplyMessage(),
-                                      onClick: () {
-                                        controller.navigateToMessage(
-                                            controller
-                                                .replyChatMessage);
-                                      },
-                                    );
-                                  } else {
-                                    return const SizedBox.shrink();
-                                  }
-                                }),
-                                const AppDivider(),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                IntrinsicHeight(
-                                  child: Row(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.stretch,
-                                    children: [
-                                      Flexible(
-                                        child: Container(
-                                          padding:
-                                          const EdgeInsets.only(
-                                              left: 10),
-                                          margin:
-                                          const EdgeInsets.only(
-                                              left: 10,
-                                              right: 10,
-                                              bottom: 10),
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: MirrorflyUikit.getTheme!.textSecondaryColor,
-                                            ),
-                                            borderRadius:
-                                            const BorderRadius
-                                                .all(
-                                                Radius.circular(
-                                                    40)),
-                                          ),
-                                          child: Obx(() {
-                                            return messageTypingView(
-                                                context);
-                                          }),
-                                        ),
-                                      ),
-                                      Obx(() {
-                                        return controller
-                                            .isUserTyping.value
-                                            ? InkWell(
-                                            onTap: () {
+          child: GestureDetector(
+            onTap: (){
+              debugPrint("tapping on screen");
+              if(controller.isKeyboardVisible.value){
+                FocusScope.of(context).unfocus();
+              }
+            },
+            child: Container(
+              width: Get.width,//controller.screenWidth,
+              height: Get.height,//controller.screenHeight,
+              decoration: BoxDecoration(
+                color: MirrorflyUikit.getTheme?.scaffoldColor,
+                /*image: const DecorationImage(
+                  image: AssetImage(chatBg,package: package),
+                  fit: BoxFit.cover,
+                ),*/
+              ),
+              child: WillPopScope(
+                onWillPop: () {
+                  if (controller.showEmoji.value) {
+                    controller.showEmoji(false);
+                  } else if (MediaQuery.of(context).viewInsets.bottom > 0.0) {
+                    controller.focusNode.unfocus();
+                  } else if (controller.nJid != null) {
+                    // Get.offAllNamed(Routes.dashboard);
+                    return Future.value(true);
+                  } else if (controller.isSelected.value) {
+                    controller.clearAllChatSelection();
+                  } else {
+                    return Future.value(true);
+                  }
+                  return Future.value(false);
+                },
+                child: Stack(
+                  children: [
+                    Column(
+                      children: [
+                        Expanded(child: Obx(() {
+                          return controller.chatLoading.value
+                              ? Center(
+                                  child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
+                                )
+                              : chatListView(controller.chatList);
+                        })),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Obx(() {
+                            return Container(
+                              color: Colors.transparent,
+                              child: controller.isBlocked.value
+                                  ? userBlocked()
+                                  : controller.isMemberOfGroup
+                                      ? Column(
+                                mainAxisAlignment:
+                                MainAxisAlignment.end,
+                                children: [
+                                  Obx(() {
+                                    if (controller.isReplying.value) {
+                                      return ReplyingMessageHeader(
+                                        chatMessage:
+                                        controller.replyChatMessage,
+                                        onCancel: () => controller
+                                            .cancelReplyMessage(),
+                                        onClick: () {
+                                          controller.navigateToMessage(
                                               controller
-                                                  .isAudioRecording
-                                                  .value ==
-                                                  Constants
-                                                      .audioRecordDone
-                                                  ? controller
-                                                  .sendRecordedAudioMessage(context)
-                                                  : controller
-                                                  .sendMessage(
-                                                  controller
-                                                      .profile, context);
-                                            },
-                                            child: Padding(
-                                              padding:
-                                              const EdgeInsets
-                                                  .only(
-                                                  left: 8.0,
-                                                  right: 8.0,
-                                                  bottom: 8),
-                                              child: SvgPicture.asset(
-                                                  sendIcon,package: package,color: MirrorflyUikit.getTheme?.primaryColor),
-                                            ))
-                                            : const SizedBox.shrink();
-                                      }),
-                                      Obx(() {
-                                        return controller
-                                            .isAudioRecording
-                                            .value ==
-                                            Constants
-                                                .audioRecording
-                                            ? InkWell(
-                                            onTap: () {
-                                              controller
-                                                  .stopRecording();
-                                            },
-                                            child: const Padding(
-                                              padding:
-                                              EdgeInsets.only(
-                                                  bottom:
-                                                  8.0),
-                                              child:
-                                              LottieAnimation(
-                                                lottieJson:
-                                                audioJson1,
-                                                showRepeat: true,
-                                                width: 54,
-                                                height: 54,
-                                              ),
-                                            ))
-                                            : const SizedBox.shrink();
-                                      }),
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                    ],
+                                                  .replyChatMessage);
+                                        },
+                                      );
+                                    } else {
+                                      return const SizedBox.shrink();
+                                    }
+                                  }),
+                                  const AppDivider(),
+                                  const SizedBox(
+                                    height: 10,
                                   ),
-                                ),
-                                emojiLayout(),
-                              ],
-                            )
-                                    : userNoLonger(),
-                          );
-                        }),
-                      ),
-                    ],
-                  ),
-                  Obx(() {
-                    return Visibility(
-                      visible: controller.showHideRedirectToLatest.value,
-                      child: Positioned(
-                        bottom: controller.isReplying.value ? 160 : 100,
-                        right: 0,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            controller.unreadCount.value != 0
-                                ? CircleAvatar(
-                                    radius: 8,
-                                    backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
-                                    child: Text(
-                                      returnFormattedCount(
-                                          controller.unreadCount.value),
-                                      style: TextStyle(
-                                          fontSize: 9,
-                                          color: MirrorflyUikit.getTheme?.colorOnPrimary,
-                                          fontFamily: 'sf_ui'),
+                                  IntrinsicHeight(
+                                    child: Row(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                      children: [
+                                        Flexible(
+                                          child: Container(
+                                            padding:
+                                            const EdgeInsets.only(
+                                                left: 10),
+                                            margin:
+                                            const EdgeInsets.only(
+                                                left: 10,
+                                                right: 10,
+                                                bottom: 10),
+                                            width: double.infinity,
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: MirrorflyUikit.getTheme!.textSecondaryColor,
+                                              ),
+                                              borderRadius:
+                                              const BorderRadius
+                                                  .all(
+                                                  Radius.circular(
+                                                      40)),
+                                            ),
+                                            child: Obx(() {
+                                              return messageTypingView(
+                                                  context);
+                                            }),
+                                          ),
+                                        ),
+                                        Obx(() {
+                                          return controller
+                                              .isUserTyping.value
+                                              ? InkWell(
+                                              onTap: () {
+                                                controller
+                                                    .isAudioRecording
+                                                    .value ==
+                                                    Constants
+                                                        .audioRecordDone
+                                                    ? controller
+                                                    .sendRecordedAudioMessage(context)
+                                                    : controller
+                                                    .sendMessage(
+                                                    controller
+                                                        .profile, context);
+                                              },
+                                              child: Padding(
+                                                padding:
+                                                const EdgeInsets
+                                                    .only(
+                                                    left: 8.0,
+                                                    right: 8.0,
+                                                    bottom: 8),
+                                                child: SvgPicture.asset(
+                                                    sendIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.primaryColor, BlendMode.srcIn)),
+                                              ))
+                                              : const SizedBox.shrink();
+                                        }),
+                                        Obx(() {
+                                          return controller
+                                              .isAudioRecording
+                                              .value ==
+                                              Constants
+                                                  .audioRecording
+                                              ? InkWell(
+                                              onTap: () {
+                                                controller
+                                                    .stopRecording();
+                                              },
+                                              child: const Padding(
+                                                padding:
+                                                EdgeInsets.only(
+                                                    bottom:
+                                                    8.0),
+                                                child:
+                                                LottieAnimation(
+                                                  lottieJson:
+                                                  audioJson1,
+                                                  showRepeat: true,
+                                                  width: 54,
+                                                  height: 54,
+                                                ),
+                                              ))
+                                              : const SizedBox.shrink();
+                                        }),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                      ],
                                     ),
-                                  )
-                                : const SizedBox.shrink(),
-                            Padding(
-                              padding: const EdgeInsets.only(right: 10.0),
-                              child: FloatingActionButton.small(
-                                backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
-                                child: Icon(Icons.keyboard_double_arrow_down_rounded,color: MirrorflyUikit.getTheme?.colorOnPrimary,),
-                                /*icon: Image.asset(
-                                  redirectLastMessage,package: package,
-                                  width: 32,
-                                  height: 32,
-                                ),*/
-                                onPressed: () {
-                                  //scroll to end
-                                  controller.scrollToEnd();
-                                },
-                              ),
-                            ),
-                          ],
+                                  ),
+                                  emojiLayout(),
+                                ],
+                              )
+                                      : userNoLonger(),
+                            );
+                          }),
                         ),
-                      ),
-                    );
-                  }),
-                  if (!controller.isTrail)
+                      ],
+                    ),
                     Obx(() {
-                      return !controller.profile.isItSavedContact.checkNull()
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const SizedBox(
-                                  width: 8,
+                      return Visibility(
+                        visible: controller.showHideRedirectToLatest.value,
+                        child: Positioned(
+                          bottom: controller.isReplying.value ? 160 : 100,
+                          right: 0,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              controller.unreadCount.value != 0
+                                  ? CircleAvatar(
+                                      radius: 8,
+                                      backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
+                                      child: Text(
+                                        returnFormattedCount(
+                                            controller.unreadCount.value),
+                                        style: TextStyle(
+                                            fontSize: 9,
+                                            color: MirrorflyUikit.getTheme?.colorOnPrimary,
+                                            fontFamily: 'sf_ui'),
+                                      ),
+                                    )
+                                  : const SizedBox.shrink(),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10.0),
+                                child: FloatingActionButton.small(
+                                  backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
+                                  child: Icon(Icons.keyboard_double_arrow_down_rounded,color: MirrorflyUikit.getTheme?.colorOnPrimary,),
+                                  /*icon: Image.asset(
+                                    redirectLastMessage,package: package,
+                                    width: 32,
+                                    height: 32,
+                                  ),*/
+                                  onPressed: () {
+                                    //scroll to end
+                                    controller.scrollToEnd();
+                                  },
                                 ),
-                                buttonNotSavedContact(
-                                    text: 'Add',
-                                    onClick: () {
-                                      controller.saveContact();
-                                    }),
-                                const SizedBox(
-                                  width: 8,
-                                ),
-                                buttonNotSavedContact(
-                                    text:
-                                        controller.profile.isBlocked.checkNull()
-                                            ? 'UnBlock'
-                                            : 'Block',
-                                    onClick: () {
-                                      if (controller.profile.isBlocked
-                                          .checkNull()) {
-                                        controller.unBlockUser(context);
-                                      } else {
-                                        controller.blockUser(context);
-                                      }
-                                    }),
-                                const SizedBox(
-                                  width: 8,
-                                ),
-                              ],
-                            )
-                          : const SizedBox.shrink();
-                    })
-                  else
-                    const SizedBox.shrink()
-                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
+                    if (!controller.isTrail)
+                      Obx(() {
+                        return !controller.profile.isItSavedContact.checkNull()
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const SizedBox(
+                                    width: 8,
+                                  ),
+                                  buttonNotSavedContact(
+                                      text: 'Add',
+                                      onClick: () {
+                                        controller.saveContact();
+                                      }),
+                                  const SizedBox(
+                                    width: 8,
+                                  ),
+                                  buttonNotSavedContact(
+                                      text:
+                                          controller.profile.isBlocked.checkNull()
+                                              ? 'UnBlock'
+                                              : 'Block',
+                                      onClick: () {
+                                        if (controller.profile.isBlocked
+                                            .checkNull()) {
+                                          controller.unBlockUser(context);
+                                        } else {
+                                          controller.blockUser(context);
+                                        }
+                                      }),
+                                  const SizedBox(
+                                    width: 8,
+                                  ),
+                                ],
+                              )
+                            : const SizedBox.shrink();
+                      })
+                    else
+                      const SizedBox.shrink()
+                  ],
+                ),
               ),
             ),
           ),
@@ -353,7 +362,7 @@ class _ChatViewState extends State<ChatView> {
                         Icons.keyboard,
                         color: MirrorflyUikit.getTheme?.textPrimaryColor,
                       )
-                    : SvgPicture.asset(smileIcon,package: package,color: MirrorflyUikit.getTheme?.textPrimaryColor))
+                    : SvgPicture.asset(smileIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn)))
             : const SizedBox.shrink(),
         controller.isAudioRecording.value == Constants.audioRecordDelete
             ? const Padding(
@@ -422,6 +431,9 @@ class _ChatViewState extends State<ChatView> {
         controller.isAudioRecording.value == Constants.audioRecordInitial
             ? Expanded(
                 child: TextField(
+                  onTap: (){
+                    controller.isKeyboardVisible(true);
+                  },
                   onChanged: (text) {
                     controller.isTyping(text);
                   },
@@ -447,7 +459,7 @@ class _ChatViewState extends State<ChatView> {
                 onPressed: () {
                   controller.showAttachmentsView(context);
                 },
-                icon: SvgPicture.asset(attachIcon,package: package,color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                icon: SvgPicture.asset(attachIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn)),
               )
             : const SizedBox.shrink(),
         controller.isAudioRecording.value == Constants.audioRecordInitial
@@ -455,7 +467,7 @@ class _ChatViewState extends State<ChatView> {
                 onPressed: () {
                   controller.startRecording(context);
                 },
-                icon: SvgPicture.asset(micIcon,package: package,color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                icon: SvgPicture.asset(micIcon,package: package,colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),),
               )
             : const SizedBox.shrink(),
         const SizedBox(
@@ -616,6 +628,9 @@ class _ChatViewState extends State<ChatView> {
                         } : null,
                         onTap: () {
                           debugPrint("On Tap");
+                          if(controller.isKeyboardVisible.value){
+                            FocusScope.of(context).unfocus();
+                          }
                           if (controller.isSelected.value) {
                             if(controller.isSelected.value) {
                               controller.selectedChatList
@@ -669,7 +684,7 @@ class _ChatViewState extends State<ChatView> {
                                           controller.forwardSingleMessage(
                                               chatList[index].messageId);
                                         },
-                                        icon: SvgPicture.asset(forwardMedia,package: package,color: MirrorflyUikit.getTheme?.textPrimaryColor,)),
+                                        icon: SvgPicture.asset(forwardMedia,package: package,colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),)),
                                   ),
                                   ChatContainer(
                                     chatMessage: chatList[index],
@@ -707,7 +722,7 @@ class _ChatViewState extends State<ChatView> {
                                                     value, chatList[index]);
                                               },
                                               isSelected:
-                                                  controller.isSelected.value);
+                                                  controller.isSelected.value, showChatDeliveryIndicator: widget.showChatDeliveryIndicator,);
                                         })
                                       ],
                                     ),
@@ -839,7 +854,7 @@ class _ChatViewState extends State<ChatView> {
                     controller
                         .clearChatSelection(controller.selectedChatList[0]);
                   },
-                  icon: SvgPicture.asset(replyIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar),
+                  icon: SvgPicture.asset(replyIcon,package: package,colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
                   tooltip: 'Reply',
                 ),
                 overflowWidget: Text("Reply",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
@@ -859,7 +874,7 @@ class _ChatViewState extends State<ChatView> {
                   onPressed: () {
                     controller.checkBusyStatusForForward(context);
                   },
-                  icon: SvgPicture.asset(forwardIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar,),
+                  icon: SvgPicture.asset(forwardIcon,package: package,colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
                   tooltip: 'Forward',
                 ),
                 overflowWidget: Text("Forward",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
@@ -882,7 +897,7 @@ class _ChatViewState extends State<ChatView> {
                   },
                   // icon: controller.getOptionStatus('Favourite') ? const Icon(Icons.star_border_outlined)
                   // icon: controller.selectedChatList[0].isMessageStarred
-                  icon: SvgPicture.asset(favouriteIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar),
+                  icon: SvgPicture.asset(favouriteIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
                   tooltip: 'Favourite',
                 ),
                 overflowWidget: Text("Favourite",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
@@ -902,7 +917,7 @@ class _ChatViewState extends State<ChatView> {
                   },
                   // icon: controller.getOptionStatus('Favourite') ? const Icon(Icons.star_border_outlined)
                   // icon: controller.selectedChatList[0].isMessageStarred
-                  icon: SvgPicture.asset(unFavouriteIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar),
+                  icon: SvgPicture.asset(unFavouriteIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
                   tooltip: 'unFavourite',
                 ),
                 overflowWidget: Text("unFavourite",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
@@ -920,7 +935,7 @@ class _ChatViewState extends State<ChatView> {
                   onPressed: () {
                     controller.deleteMessages(context);
                   },
-                  icon: SvgPicture.asset(deleteIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar),
+                  icon: SvgPicture.asset(deleteIcon,package: package,colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
                   tooltip: 'Delete',
                 ),
                 overflowWidget: Text("Delete",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
@@ -964,7 +979,7 @@ class _ChatViewState extends State<ChatView> {
                   icon: SvgPicture.asset(
                     copyIcon,
                     fit: BoxFit.contain,
-                    package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar
+                    package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn),
                   ),
                   tooltip: 'Copy',
                 ),
@@ -990,7 +1005,7 @@ class _ChatViewState extends State<ChatView> {
                   icon: SvgPicture.asset(
                     infoIcon,
                     fit: BoxFit.contain,
-                    package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar
+                    package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)
                   ),
                   tooltip: 'Message Info',
                 ),
@@ -1010,7 +1025,7 @@ class _ChatViewState extends State<ChatView> {
               CustomAction(
                 visibleWidget: IconButton(
                   onPressed: () {},
-                  icon: SvgPicture.asset(shareIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar),
+                  icon: SvgPicture.asset(shareIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
                   tooltip: 'Share',
                 ),
                 overflowWidget: Text("Share",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),

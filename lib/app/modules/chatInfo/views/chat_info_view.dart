@@ -219,7 +219,7 @@ class _ChatInfoViewState extends State<ChatInfoView> {
                       SvgPicture.asset(
                         emailIcon,
                         package: package,
-                        color: MirrorflyUikit.getTheme?.textSecondaryColor,
+                        colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn)
                       ),
                       const SizedBox(
                         width: 10,
@@ -256,7 +256,7 @@ class _ChatInfoViewState extends State<ChatInfoView> {
                       SvgPicture.asset(
                         phoneIcon,
                         package: package,
-                        color: MirrorflyUikit.getTheme?.textSecondaryColor,
+                        colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn)
                       ),
                       const SizedBox(
                         width: 10,
@@ -295,7 +295,7 @@ class _ChatInfoViewState extends State<ChatInfoView> {
                         SvgPicture.asset(
                           statusIcon,
                           package: package,
-                          color: MirrorflyUikit.getTheme?.textSecondaryColor,
+                          colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn)
                         ),
                         const SizedBox(
                           width: 10,
@@ -318,7 +318,7 @@ class _ChatInfoViewState extends State<ChatInfoView> {
                 leading: SvgPicture.asset(
                   imageOutline,
                   package: package,
-                  color: MirrorflyUikit.getTheme?.textPrimaryColor,
+                  colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn)
                 ),
                 title: Text("View All Media",
                     style: TextStyle(
@@ -338,7 +338,7 @@ class _ChatInfoViewState extends State<ChatInfoView> {
                 leading: SvgPicture.asset(
                   reportUser,
                   package: package,
-                  color: Colors.red,
+                  colorFilter: const ColorFilter.mode(Colors.red, BlendMode.srcIn)
                 ),
                 title: const Text("Report",
                     style: TextStyle(
@@ -404,7 +404,7 @@ class _ChatInfoViewState extends State<ChatInfoView> {
                       SvgPicture.asset(
                         emailIcon,
                         package: package,
-                        color: MirrorflyUikit.getTheme?.textSecondaryColor,
+                        colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn)
                       ),
                       const SizedBox(
                         width: 10,
@@ -441,7 +441,7 @@ class _ChatInfoViewState extends State<ChatInfoView> {
                       SvgPicture.asset(
                         phoneIcon,
                         package: package,
-                        color: MirrorflyUikit.getTheme?.textSecondaryColor,
+                        colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn)
                       ),
                       const SizedBox(
                         width: 10,
@@ -478,7 +478,7 @@ class _ChatInfoViewState extends State<ChatInfoView> {
                       SvgPicture.asset(
                         statusIcon,
                         package: package,
-                        color: MirrorflyUikit.getTheme?.textSecondaryColor,
+                        colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn)
                       ),
                       const SizedBox(
                         width: 10,
@@ -500,7 +500,7 @@ class _ChatInfoViewState extends State<ChatInfoView> {
                 leading: SvgPicture.asset(
                   imageOutline,
                   package: package,
-                  color: MirrorflyUikit.getTheme?.textPrimaryColor,
+                  colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn)
                 ),
                 title: Text("View All Media",
                     style: TextStyle(
@@ -520,7 +520,7 @@ class _ChatInfoViewState extends State<ChatInfoView> {
                 leading: SvgPicture.asset(
                   reportUser,
                   package: package,
-                  color: Colors.red,
+                  colorFilter: const ColorFilter.mode(Colors.red, BlendMode.srcIn)
                 ),
                 title: const Text("Report",
                     style: TextStyle(

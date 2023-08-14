@@ -112,7 +112,7 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                               child: IconButton(
                                 icon: SvgPicture.asset(
                                   edit,package: package,
-                                  color: Colors.white,
+                                  colorFilter : const ColorFilter.mode(Colors.white, BlendMode.srcIn),
                                   width: 16.0,
                                   height: 16.0,
                                 ),
@@ -174,10 +174,10 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                       child: IconButton(
                         icon: SvgPicture.asset(
                           imageEdit,package: package,
-                          color: controller.isSliverAppBarExpanded
+                          colorFilter : ColorFilter.mode(controller.isSliverAppBarExpanded
                               ? Colors.white
                               : MirrorflyUikit
-                              .getTheme?.colorOnAppbar ?? Colors.black,
+                              .getTheme?.colorOnAppbar ?? Colors.black, BlendMode.srcIn),
                         ),
                         tooltip: 'Image edit',
                         onPressed: () {
@@ -231,7 +231,7 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                 Obx(() =>
                     Visibility(
                       visible: controller.isAdmin,
-                      child: ListItem(leading: SvgPicture.asset(addUser,package: package, color: MirrorflyUikit.getTheme?.textSecondaryColor,),
+                      child: ListItem(leading: SvgPicture.asset(addUser,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn),),
                           title: Text("Add Participants",
                               style: TextStyle(
                                   color: MirrorflyUikit.getTheme?.textPrimaryColor,
@@ -258,7 +258,7 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                       });
                 }),
                 ListItem(
-                  leading: SvgPicture.asset(imageOutline,package: package,color: MirrorflyUikit.getTheme?.textPrimaryColor,),
+                  leading: SvgPicture.asset(imageOutline,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn)),
                   title: Text("View All Media",
                       style: TextStyle(
                           color: MirrorflyUikit.getTheme?.textPrimaryColor,
@@ -268,7 +268,7 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                   onTap: ()=>controller.gotoViewAllMedia(context),
                 ),
                 ListItem(
-                  leading: SvgPicture.asset(reportGroup,package: package,color: Colors.red,),
+                  leading: SvgPicture.asset(reportGroup,package: package,colorFilter : const ColorFilter.mode(Colors.red, BlendMode.srcIn)),
                   title: const Text("Report Group",
                       style: TextStyle(
                           color: Colors.red,
@@ -329,7 +329,7 @@ class _GroupInfoViewState extends State<GroupInfoView> {
               Obx(() =>
                   Visibility(
                     visible: controller.isAdmin,
-                    child: ListItem(leading: SvgPicture.asset(addUser,package: package, color: MirrorflyUikit.getTheme?.textSecondaryColor,),
+                    child: ListItem(leading: SvgPicture.asset(addUser,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn),),
                         title: Text("Add Participants",
                             style: TextStyle(
                                 color: MirrorflyUikit.getTheme?.textPrimaryColor,
@@ -356,7 +356,7 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                     });
               }),
               ListItem(
-                leading: SvgPicture.asset(imageOutline,package: package,color: MirrorflyUikit.getTheme?.textPrimaryColor,),
+                leading: SvgPicture.asset(imageOutline,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),),
                 title: Text("View All Media",
                     style: TextStyle(
                         color: MirrorflyUikit.getTheme?.textPrimaryColor,
@@ -366,7 +366,7 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                 onTap: ()=>controller.gotoViewAllMedia(context),
               ),
               ListItem(
-                leading: SvgPicture.asset(reportGroup,package: package,color: Colors.red,),
+                leading: SvgPicture.asset(reportGroup,package: package,colorFilter : const ColorFilter.mode(Colors.red, BlendMode.srcIn),),
                 title: const Text("Report Group",
                     style: TextStyle(
                         color: Colors.red,

@@ -231,7 +231,7 @@ class _ProfileViewState extends State<ProfileView> {
                         hintStyle: TextStyle(color: MirrorflyUikit
                             .getTheme?.textSecondaryColor.withOpacity(0.7)),
                         icon: SvgPicture.asset(emailIcon, package: package,
-                          color: MirrorflyUikit.getTheme?.textSecondaryColor,),
+                          colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn),),
                       ),
                       style: TextStyle(fontWeight: FontWeight.normal,
                           color: MirrorflyUikit.getTheme?.textSecondaryColor),
@@ -259,8 +259,7 @@ class _ProfileViewState extends State<ProfileView> {
                           hintStyle: TextStyle(color: MirrorflyUikit
                               .getTheme?.textSecondaryColor.withOpacity(0.7)),
                           icon: SvgPicture.asset(phoneIcon, package: package,
-                              color: MirrorflyUikit.getTheme
-                                  ?.textSecondaryColor),
+                              colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn),),
                         ),
                         style: TextStyle(fontWeight: FontWeight.normal,
                             color: MirrorflyUikit.getTheme?.textSecondaryColor),
@@ -299,8 +298,7 @@ class _ProfileViewState extends State<ProfileView> {
                                 minLeadingWidth: 10,
                                 leading: SvgPicture.asset(
                                     statusIcon, package: package,
-                                    color: MirrorflyUikit.getTheme
-                                        ?.textSecondaryColor),
+                                    colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn),),
                                 onTap: () async {
                                   // Get.toNamed(Routes.statusList, arguments: {'status': controller.profileStatus.value})
                                   //     ?.then((value) {

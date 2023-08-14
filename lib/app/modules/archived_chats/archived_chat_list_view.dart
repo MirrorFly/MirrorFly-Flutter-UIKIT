@@ -11,13 +11,15 @@ import '../dashboard/widgets.dart';
 import 'archived_chat_list_controller.dart';
 
 class ArchivedChatListView extends StatelessWidget {
-  ArchivedChatListView({Key? key, this.enableAppBar=true}) : super(key: key);
+  ArchivedChatListView({Key? key, this.enableAppBar=true, this.showChatDeliveryIndicator = true}) : super(key: key);
   final bool enableAppBar;
+  final bool showChatDeliveryIndicator;
   final controller = Get.put(ArchivedChatListController());
   @override
   Widget build(BuildContext context) {
     return FocusDetector(
       onFocusGained: () {
+        controller.showChatDeliveryIndicator = showChatDeliveryIndicator;
         controller.getArchivedChatsList();
       },
       child: WillPopScope(
@@ -63,7 +65,7 @@ class ArchivedChatListView extends StatelessWidget {
                               onPressed: () {
                                 controller.deleteChats(context);
                               },
-                              icon: SvgPicture.asset(delete,package: package, color: MirrorflyUikit.getTheme?.colorOnAppbar),tooltip: 'Delete',),
+                              icon: SvgPicture.asset(delete,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),tooltip: 'Delete',),
                           overflowWidget: Text("Delete",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                           showAsAction: controller.delete.value ? ShowAsAction.always : ShowAsAction.gone,
                           keyValue: 'Delete',
@@ -76,7 +78,7 @@ class ArchivedChatListView extends StatelessWidget {
                             onPressed: () {
                               controller.muteChats();
                             },
-                            icon: SvgPicture.asset(mute,package: package, color: MirrorflyUikit.getTheme?.colorOnAppbar),tooltip: 'Mute',),
+                            icon: SvgPicture.asset(mute,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),tooltip: 'Mute',),
                           overflowWidget: Text("Mute",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                           showAsAction: controller.mute.value
                               ? ShowAsAction.always
@@ -91,7 +93,7 @@ class ArchivedChatListView extends StatelessWidget {
                             onPressed: () {
                               controller.unMuteChats();
                             },
-                            icon: SvgPicture.asset(unMute,package: package, color: MirrorflyUikit.getTheme?.colorOnAppbar),tooltip: 'UnMute',),
+                            icon: SvgPicture.asset(unMute,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),tooltip: 'UnMute',),
                           overflowWidget: Text("UnMute",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                           showAsAction: controller.unMute.value
                               ? ShowAsAction.always
@@ -106,7 +108,7 @@ class ArchivedChatListView extends StatelessWidget {
                               onPressed: () {
                                 controller.unArchiveSelectedChats();
                               },
-                              icon: SvgPicture.asset(unarchive,package: package, color: MirrorflyUikit.getTheme?.colorOnAppbar),tooltip: 'UnArchive',),
+                              icon: SvgPicture.asset(unarchive,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),tooltip: 'UnArchive',),
                           overflowWidget: Text("UnArchive",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                           showAsAction: ShowAsAction.always,
                           keyValue: 'UnArchive',
@@ -137,6 +139,7 @@ class ArchivedChatListView extends StatelessWidget {
                                 item.jid.checkNull()),
                             archiveVisible: false,
                             archiveEnabled: controller.archiveEnabled.value,
+                            showChatDeliveryIndicator: showChatDeliveryIndicator,
                             onTap: () {
                               if (controller.selected.value) {
                                 controller.selectOrRemoveChatFromList(index);

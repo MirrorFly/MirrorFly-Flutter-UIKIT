@@ -40,7 +40,8 @@ class RecentChatItem extends StatelessWidget {
       this.isForwardMessage = false,
       this.typingUserid = "",
       this.archiveVisible = true,
-      this.archiveEnabled = false})
+      this.archiveEnabled = false,
+      this.showChatDeliveryIndicator = true,})
       : super(key: key);
   final RecentChatData item;
   final Function() onTap;
@@ -53,6 +54,7 @@ class RecentChatItem extends StatelessWidget {
   final bool archiveVisible;
   final Function(bool? value)? onchange;
   final bool isSelected;
+  final bool showChatDeliveryIndicator;
   final String typingUserid;
 
   final titlestyle = TextStyle(
@@ -69,6 +71,7 @@ class RecentChatItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("showChatDeliveryIndicator $showChatDeliveryIndicator");
     return Container(
       color: isSelected ? MirrorflyUikit.getTheme?.textPrimaryColor.withAlpha(50) : Colors.transparent,
       child: Row(
@@ -122,7 +125,7 @@ class RecentChatItem extends StatelessWidget {
                   titlestyle),
           Row(
             children: [
-              item.isLastMessageSentByMe.checkNull() && !isForwardMessage && !item.isLastMessageRecalledByUser.checkNull()
+              item.isLastMessageSentByMe.checkNull() && !isForwardMessage && !item.isLastMessageRecalledByUser.checkNull() && showChatDeliveryIndicator
                   ? (item.lastMessageType ==  Constants.msgTypeText && item.lastMessageContent.checkNull().isNotEmpty || item.lastMessageType != Constants.msgTypeText) ? buildMessageIndicator() : const SizedBox()
                   : const SizedBox(),
               isForwardMessage
@@ -302,7 +305,7 @@ class RecentChatItem extends StatelessWidget {
         visible: !archiveEnabled && item.isMuted! && !isForwardMessage,
         child: SvgPicture.asset(
           mute,package: package,
-          color: MirrorflyUikit.getTheme?.textPrimaryColor,
+          colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),
           width: 13,
           height: 13,
         ));
@@ -313,7 +316,7 @@ class RecentChatItem extends StatelessWidget {
         visible: !item.isChatArchived! && item.isChatPinned! && !isForwardMessage,
         child: SvgPicture.asset(
           pin,package: package,
-          color: MirrorflyUikit.getTheme?.textPrimaryColor,
+          colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),
           width: 18,
           height: 18,
         ));

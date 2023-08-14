@@ -511,10 +511,11 @@ class SenderHeader extends StatelessWidget {
 
 class LocationMessageView extends StatelessWidget {
   const LocationMessageView(
-      {Key? key, required this.chatMessage, required this.isSelected})
+      {Key? key, required this.chatMessage, required this.isSelected, required this.showChatDeliveryIndicator})
       : super(key: key);
   final ChatMessageModel chatMessage;
   final bool isSelected;
+  final bool showChatDeliveryIndicator;
 
   @override
   Widget build(BuildContext context) {
@@ -540,9 +541,9 @@ class LocationMessageView extends StatelessWidget {
                   width: 5,
                 ),
                 Obx(() {
-                  return getMessageIndicator(chatMessage.messageStatus.value,
+                  return showChatDeliveryIndicator ? getMessageIndicator(chatMessage.messageStatus.value,
                       chatMessage.isMessageSentByMe, chatMessage.messageType,
-                      chatMessage.isMessageRecalled.value);
+                      chatMessage.isMessageRecalled.value) : const SizedBox.shrink();
                 }),
                 const SizedBox(
                   width: 4,
@@ -566,11 +567,12 @@ class AudioMessageView extends StatefulWidget {
   const AudioMessageView({Key? key,
     required this.chatMessage,
     required this.onPlayAudio,
-    required this.onSeekbarChange})
+    required this.onSeekbarChange, required this.showChatDeliveryIndicator})
       : super(key: key);
   final ChatMessageModel chatMessage;
   final Function() onPlayAudio;
   final Function(double) onSeekbarChange;
+  final bool showChatDeliveryIndicator;
 
   @override
   State<AudioMessageView> createState() => _AudioMessageViewState();
@@ -820,11 +822,11 @@ class _AudioMessageViewState extends State<AudioMessageView>
                   width: 5,
                 ),
                 Obx(() {
-                  return getMessageIndicator(
+                  return widget.showChatDeliveryIndicator ? getMessageIndicator(
                       widget.chatMessage.messageStatus.value,
                       widget.chatMessage.isMessageSentByMe,
                       widget.chatMessage.messageType,
-                      widget.chatMessage.isMessageRecalled.value);
+                      widget.chatMessage.isMessageRecalled.value) : const SizedBox.shrink();
                 }),
                 const SizedBox(
                   width: 4,
@@ -1045,11 +1047,12 @@ class ContactMessageView extends StatelessWidget {
   const ContactMessageView({Key? key,
     required this.chatMessage,
     this.search = "",
-    required this.isSelected})
+    required this.isSelected, required this.showChatDeliveryIndicator})
       : super(key: key);
   final ChatMessageModel chatMessage;
   final String search;
   final bool isSelected;
+  final bool showChatDeliveryIndicator;
 
   @override
   Widget build(BuildContext context) {
@@ -1119,9 +1122,9 @@ class ContactMessageView extends StatelessWidget {
                         width: 5,
                       ),
                       Obx(() {
-                        return getMessageIndicator(chatMessage.messageStatus.value,
+                        return showChatDeliveryIndicator ? getMessageIndicator(chatMessage.messageStatus.value,
                             chatMessage.isMessageSentByMe, chatMessage.messageType,
-                      chatMessage.isMessageRecalled.value);
+                      chatMessage.isMessageRecalled.value) : const SizedBox.shrink();
                       }),
                       const SizedBox(
                         width: 4,
@@ -1145,7 +1148,7 @@ class ContactMessageView extends StatelessWidget {
             ),
           ),
           const AppDivider(),
-          getJidOfContact(chatMessage.contactChatMessage),
+          getJidOfContact(contactChatMessage: chatMessage.contactChatMessage, showChatDeliveryIndicator: showChatDeliveryIndicator),
         ],
       ),
     );
@@ -1165,7 +1168,8 @@ class ContactMessageView extends StatelessWidget {
     return '';
   }
 
-  Widget getJidOfContact(ContactChatMessage? contactChatMessage) {
+  Widget getJidOfContact({ContactChatMessage? contactChatMessage,
+      required bool showChatDeliveryIndicator}) {
     // String? userJid;
     if (contactChatMessage == null ||
         contactChatMessage.contactPhoneNumbers.isEmpty) {
@@ -1182,7 +1186,7 @@ class ContactMessageView extends StatelessWidget {
           return InkWell(
             onTap: () {
               (userJid != null && userJid.isNotEmpty)
-                  ? sendToChatPage(context,userJid)
+                  ? sendToChatPage(context,userJid,showChatDeliveryIndicator)
                   : showInvitePopup(contactChatMessage, context);
             },
             child: Row(
@@ -1202,30 +1206,14 @@ class ContactMessageView extends StatelessWidget {
         });
   }
 
-  sendToChatPage(BuildContext context,String userJid) {
-    // Get.back();
-    /*mirrorFlyLog('Get.currentRoute', Get.currentRoute);
-    if (Get.currentRoute == Routes.chat) {
-      Navigator.pop(context);
-      // Get.back();
-      Future.delayed(const Duration(milliseconds: 500), () {
-        Get.toNamed(Routes.chat,
-            parameters: {'isFromStarred': 'true', "userJid": userJid});
-      });
-    } else {
-      // Get.back();
-      Navigator.pop(context);
-      sendToChatPage(context,userJid);
-      *//*Get.toNamed(Routes.chat,
-          parameters: {'isFromStarred': 'true', "userJid": userJid});*//*
-    }*/
+  sendToChatPage(BuildContext context,String userJid, bool showChatDeliveryIndicator) {
     try {
       Navigator.push(context, MaterialPageRoute(
-          builder: (con) => ChatView(jid: userJid,isUser: true,)));
+          builder: (con) => ChatView(jid: userJid,isUser: true, showChatDeliveryIndicator: showChatDeliveryIndicator,)));
     }catch(e){
       Navigator.pop(context);
       Navigator.push(context, MaterialPageRoute(
-          builder: (con) => ChatView(jid: userJid,isUser: true,)));
+          builder: (con) => ChatView(jid: userJid,isUser: true, showChatDeliveryIndicator: showChatDeliveryIndicator,)));
     }
   }
 
@@ -1280,10 +1268,11 @@ class ContactMessageView extends StatelessWidget {
 
 class DocumentMessageView extends StatelessWidget {
   const DocumentMessageView(
-      {Key? key, required this.chatMessage, this.search = ""})
+      {Key? key, required this.chatMessage, this.search = "", required this.showChatDeliveryIndicator})
       : super(key: key);
   final ChatMessageModel chatMessage;
   final String search;
+  final bool showChatDeliveryIndicator;
 
   onDocumentClick() {
     openDocument(
@@ -1388,9 +1377,9 @@ class DocumentMessageView extends StatelessWidget {
                     width: 5,
                   ),
                   Obx(() {
-                    return getMessageIndicator(chatMessage.messageStatus.value,
+                    return showChatDeliveryIndicator ? getMessageIndicator(chatMessage.messageStatus.value,
                         chatMessage.isMessageSentByMe, chatMessage.messageType,
-                        chatMessage.isMessageRecalled.value);
+                        chatMessage.isMessageRecalled.value) : const SizedBox.shrink();
                   }),
                   const SizedBox(
                     width: 4,
@@ -1427,11 +1416,12 @@ class VideoMessageView extends StatelessWidget {
   const VideoMessageView({Key? key,
     required this.chatMessage,
     this.search = "",
-    required this.isSelected})
+    required this.isSelected, required this.showChatDeliveryIndicator})
       : super(key: key);
   final ChatMessageModel chatMessage;
   final String search;
   final bool isSelected;
+  final bool showChatDeliveryIndicator;
 
   onVideoClick(BuildContext context) {
     switch (chatMessage.isMessageSentByMe
@@ -1528,11 +1518,11 @@ class VideoMessageView extends StatelessWidget {
                       width: 5,
                     ),
                     Obx(() {
-                      return getMessageIndicator(
+                      return showChatDeliveryIndicator ? getMessageIndicator(
                           chatMessage.messageStatus.value,
                           chatMessage.isMessageSentByMe,
                           chatMessage.messageType,
-                          chatMessage.isMessageRecalled.value);
+                          chatMessage.isMessageRecalled.value) : const SizedBox.shrink();
                     }),
                     const SizedBox(
                       width: 4,
@@ -1566,11 +1556,12 @@ class ImageMessageView extends StatelessWidget {
   const ImageMessageView({Key? key,
     required this.chatMessage,
     this.search = "",
-    required this.isSelected})
+    required this.isSelected, required this.showChatDeliveryIndicator})
       : super(key: key);
   final ChatMessageModel chatMessage;
   final String search;
   final bool isSelected;
+  final bool showChatDeliveryIndicator;
 
   @override
   Widget build(BuildContext context) {
@@ -1617,11 +1608,11 @@ class ImageMessageView extends StatelessWidget {
                           width: 5,
                         ),
                         Obx(() {
-                          return getMessageIndicator(
+                          return showChatDeliveryIndicator ? getMessageIndicator(
                               chatMessage.messageStatus.value,
                               chatMessage.isMessageSentByMe,
                               chatMessage.messageType,
-                              chatMessage.isMessageRecalled.value);
+                              chatMessage.isMessageRecalled.value) : const SizedBox.shrink();
                         }),
                         const SizedBox(
                           width: 4,
@@ -1811,7 +1802,7 @@ class MessageContent extends StatelessWidget {
     this.search = "",
     this.isSelected = false,
     required this.onPlayAudio,
-    required this.onSeekbarChange})
+    required this.onSeekbarChange, this.showChatDeliveryIndicator = true})
       : super(key: key);
   final List<ChatMessageModel> chatList;
   final int index;
@@ -1819,6 +1810,7 @@ class MessageContent extends StatelessWidget {
   final Function(double) onSeekbarChange;
   final String search;
   final bool isSelected;
+  final bool showChatDeliveryIndicator;
 
   @override
   Widget build(BuildContext context) {
@@ -1834,6 +1826,7 @@ class MessageContent extends StatelessWidget {
         return TextMessageView(
           chatMessage: chatMessage,
           search: search,
+          showChatDeliveryIndicator: showChatDeliveryIndicator,
         );
       } else if (chatList[index].messageType.toUpperCase() ==
           Constants.mNotification) {
@@ -1847,6 +1840,7 @@ class MessageContent extends StatelessWidget {
         return LocationMessageView(
           chatMessage: chatMessage,
           isSelected: isSelected,
+          showChatDeliveryIndicator: showChatDeliveryIndicator,
         );
       } else if (chatList[index].messageType.toUpperCase() ==
           Constants.mContact) {
@@ -1857,6 +1851,7 @@ class MessageContent extends StatelessWidget {
           chatMessage: chatMessage,
           search: search,
           isSelected: isSelected,
+          showChatDeliveryIndicator: showChatDeliveryIndicator,
         );
       } else {
         if (chatList[index].mediaChatMessage == null) {
@@ -1866,26 +1861,26 @@ class MessageContent extends StatelessWidget {
             return ImageMessageView(
                 chatMessage: chatMessage,
                 search: search,
-                isSelected: isSelected);
+                isSelected: isSelected, showChatDeliveryIndicator: showChatDeliveryIndicator);
           } else if (chatList[index].messageType.toUpperCase() ==
               Constants.mVideo) {
             return VideoMessageView(
                 chatMessage: chatMessage,
                 search: search,
-                isSelected: isSelected);
+                isSelected: isSelected, showChatDeliveryIndicator : showChatDeliveryIndicator);
           } else if (chatList[index].messageType.toUpperCase() ==
               Constants.mDocument ||
               chatList[index].messageType.toUpperCase() == Constants.mFile) {
             return DocumentMessageView(
               chatMessage: chatMessage,
-              search: search,
+              search: search, showChatDeliveryIndicator : showChatDeliveryIndicator
             );
           } else if (chatList[index].messageType.toUpperCase() ==
               Constants.mAudio) {
             return AudioMessageView(
               chatMessage: chatMessage,
               onPlayAudio: onPlayAudio,
-              onSeekbarChange: onSeekbarChange,
+              onSeekbarChange: onSeekbarChange, showChatDeliveryIndicator: showChatDeliveryIndicator
             );
           } else {
             return const SizedBox.shrink();
@@ -1901,9 +1896,11 @@ class TextMessageView extends StatelessWidget {
     Key? key,
     required this.chatMessage,
     this.search = "",
+    required this.showChatDeliveryIndicator,
   }) : super(key: key);
   final ChatMessageModel chatMessage;
   final String search;
+  final bool showChatDeliveryIndicator;
 
   @override
   Widget build(BuildContext context) {
@@ -1941,9 +1938,9 @@ class TextMessageView extends StatelessWidget {
                   width: 5,
                 ),
                 Obx(() {
-                  return getMessageIndicator(chatMessage.messageStatus.value,
+                  return showChatDeliveryIndicator ? getMessageIndicator(chatMessage.messageStatus.value,
                       chatMessage.isMessageSentByMe, chatMessage.messageType,
-                      chatMessage.isMessageRecalled.value);
+                      chatMessage.isMessageRecalled.value) : const SizedBox.shrink();
                 }),
                 const SizedBox(
                   width: 5,

@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
@@ -50,6 +49,8 @@ class DashboardController extends FullLifeCycleController
   var shortcut = false.obs;
 
   var archiveSettingEnabled = false.obs;
+
+  late bool showChatDeliveryIndicator;
 
 /*@override
   void onInit() {
@@ -124,19 +125,27 @@ class DashboardController extends FullLifeCycleController
 
   getRecentChatList() {
     mirrorFlyLog("", "recent chats");
-    Mirrorfly.getRecentChatList().then((value) async {
-      // String recentList = value.replaceAll('\n', '\\n');
-      // debugPrint(recentList);
-      // var data = await compute(recentChatFromJson, value.toString());
-      var data = recentChatFromJson(value.toString());
-      //recentChats.clear();
-      recentChats(data.data!);
-      recentChats.refresh();
-      recentChatLoading(false);
-    }).catchError((error) {
-      debugPrint("recent chat issue===> $error");
-      recentChatLoading(false);
-    });
+    try {
+      Mirrorfly.getRecentChatList().then((value) async {
+        // String recentList = value.replaceAll('\n', '\\n');
+        // debugPrint(recentList);
+        // var data = await compute(recentChatFromJson, value.toString());
+        var data = recentChatFromJson(value.toString());
+        ///removing recent chat item if the recent chat has a self chat
+        data.data?.removeWhere((chat) => chat.jid == SessionManagement.getUserJID());
+
+        //recentChats.clear();
+        recentChats(data.data!);
+
+        recentChats.refresh();
+        recentChatLoading(false);
+      }).catchError((error) {
+        debugPrint("recent chat issue===> $error");
+        recentChatLoading(false);
+      });
+    } catch (e, s) {
+      print(s);
+    }
   }
 
   getArchivedChatsList() async {
@@ -144,6 +153,10 @@ class DashboardController extends FullLifeCycleController
       mirrorFlyLog("archived", value.toString());
       if (value != null) {
         var data = recentChatFromJson(value);
+
+        ///removing recent chat item if the recent chat has a self chat
+        data.data?.removeWhere((chat) => chat.jid == SessionManagement.getUserJID());
+
         archivedChats(data.data!);
       }
     }).catchError((error) {
@@ -153,7 +166,7 @@ class DashboardController extends FullLifeCycleController
 
   toChatPage(BuildContext context,String jid) async {
     if (jid.isNotEmpty) {
-      Navigator.push(context, MaterialPageRoute(builder: (con)=>ChatView(jid: jid)));
+      Navigator.push(context, MaterialPageRoute(builder: (con)=>ChatView(jid: jid, showChatDeliveryIndicator: showChatDeliveryIndicator,)));
       // Helper.progressLoading();
       /*await Mirrorfly.getProfileDetails(jid, false).then((value) {
         if (value != null) {
@@ -1083,7 +1096,7 @@ class DashboardController extends FullLifeCycleController
             recentChat.profileName!
                 .toLowerCase()
                 .contains(search.text.trim().toString().toLowerCase()) ==
-                true) {
+                true && recentChat.jid != SessionManagement.getUserJID()) {
           recentChatList.add(recentChat);
         }
       }

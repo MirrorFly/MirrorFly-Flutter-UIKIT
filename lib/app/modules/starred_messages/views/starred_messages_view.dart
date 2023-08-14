@@ -129,7 +129,8 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
                                     controller.playAudio(starredChatList[index]);
                                   },onSeekbarChange:(value){
 
-                                  },),
+                                  },
+                                  ),
                                 ],
                               ),
                             ),
@@ -162,7 +163,7 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
                   width: 18,
                   height: 18,
                   fit: BoxFit.contain,
-                  color: MirrorflyUikit.getTheme?.colorOnAppbar,
+                  colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn),
                 ),
                 onPressed: () {
                   controller.onSearchClick();
@@ -228,7 +229,7 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
                     onPressed: () {
                       controller.checkBusyStatusForForward(context);
                     },
-                    icon: SvgPicture.asset(forwardIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar),tooltip: 'Forward',),
+                    icon: SvgPicture.asset(forwardIcon,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),tooltip: 'Forward',),
                 overflowWidget: const Text("Forward"),
                 showAsAction: controller.canBeForward.value ? ShowAsAction.always : ShowAsAction.gone,
                 keyValue: 'Forward',
@@ -241,7 +242,7 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
                     onPressed: () {
                       controller.favouriteMessage();
                     },
-                    icon: SvgPicture.asset(unFavouriteIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar),tooltip: 'unFavourite',),
+                    icon: SvgPicture.asset(unFavouriteIcon,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),tooltip: 'unFavourite',),
                 overflowWidget: const Text("unFavourite"),
                 showAsAction: ShowAsAction.always,
                 keyValue: 'unfavoured',
@@ -254,7 +255,7 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
                     onPressed: () {
                       controller.share();
                     },
-                    icon: SvgPicture.asset(shareIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar),tooltip: 'Share',),
+                    icon: SvgPicture.asset(shareIcon,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),tooltip: 'Share',),
                 overflowWidget: const Text("Share"),
                 showAsAction: controller.canBeShare.value ? ShowAsAction.always : ShowAsAction.gone,
                 keyValue: 'Share',
@@ -271,7 +272,7 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
                   },
                   icon: SvgPicture.asset(
                     copyIcon,package: package,
-                    fit: BoxFit.contain,color: MirrorflyUikit.getTheme?.colorOnAppbar
+                    fit: BoxFit.contain, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn),
                   ),
                   tooltip: 'Copy',
                 ),
@@ -287,7 +288,7 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
                     onPressed: () {
                       controller.deleteMessages(context);
                     },
-                    icon: SvgPicture.asset(deleteIcon,package: package,color: MirrorflyUikit.getTheme?.colorOnAppbar),tooltip: 'Delete',),
+                    icon: SvgPicture.asset(deleteIcon,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn),),tooltip: 'Delete',),
                 overflowWidget: const Text("Delete"),
                 showAsAction: ShowAsAction.always,
                 keyValue: 'Delete',

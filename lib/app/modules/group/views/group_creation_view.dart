@@ -200,7 +200,7 @@ class _GroupCreationViewState extends State<GroupCreationView> {
                         },
                         icon: controller.showEmoji.value ? Icon(
                           Icons.keyboard, color: MirrorflyUikit.getTheme?.secondaryColor,) : SvgPicture.asset(
-                          smileIcon,package: package, width: 18, height: 18,color: MirrorflyUikit.getTheme?.secondaryColor,));
+                          smileIcon,package: package, width: 18, height: 18, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.secondaryColor, BlendMode.srcIn)));
                   })
                 ],
               ),

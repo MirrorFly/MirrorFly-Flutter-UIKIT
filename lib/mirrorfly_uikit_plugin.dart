@@ -190,6 +190,7 @@ class MirrorflyUikit {
     Get.put<ChatController>(ChatController());
     return const ChatView(
       jid: "",
+      showChatDeliveryIndicator: false,
     );
   }
 }

@@ -77,7 +77,7 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                   icon: SvgPicture.asset(
                     searchIcon,
                     package: package,
-                    color: MirrorflyUikit.getTheme?.colorOnAppbar,
+                    colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)
                   )),
             )
           ],
