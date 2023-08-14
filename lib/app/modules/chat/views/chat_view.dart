@@ -628,6 +628,9 @@ class _ChatViewState extends State<ChatView> {
                         } : null,
                         onTap: () {
                           debugPrint("On Tap");
+                          if(controller.isKeyboardVisible.value){
+                            FocusScope.of(context).unfocus();
+                          }
                           if (controller.isSelected.value) {
                             if(controller.isSelected.value) {
                               controller.selectedChatList
