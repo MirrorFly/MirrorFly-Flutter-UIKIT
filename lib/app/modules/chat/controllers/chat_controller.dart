@@ -114,6 +114,8 @@ class ChatController extends FullLifeCycleController
 
   var profileDetail = Profile();
 
+  var isKeyboardVisible = false.obs;
+
   String? nJid;
   String? starredChatMessageId;
 
