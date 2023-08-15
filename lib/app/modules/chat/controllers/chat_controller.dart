@@ -1980,12 +1980,15 @@ class ChatController extends FullLifeCycleController
 
     if (chatMessageModel.chatUserJid == profile.jid) {
       removeUnreadSeparator();
-
-      chatList.insert(0, chatMessageModel);
-      unreadCount.value++;
-      //scrollToBottom();
-      if(SessionManagement.getCurrentChatJID() != ""){
-        setOnGoingUserAvail();
+      final index = chatList.indexWhere((message) => message.messageId == chatMessageModel.messageId);
+      debugPrint("message received index $index");
+      if (index.isNegative) {
+        chatList.insert(0, chatMessageModel);
+        unreadCount.value++;
+        //scrollToBottom();
+        if(SessionManagement.getCurrentChatJID() != ""){
+          setOnGoingUserAvail();
+        }
       }
     }
   }
@@ -2004,8 +2007,8 @@ class ChatController extends FullLifeCycleController
         chatList.refresh();
       } else {
         debugPrint("messageID--> Inserting the value");
-        chatList.insert(0, chatMessageModel);
-        unreadCount.value++;
+        // chatList.insert(0, chatMessageModel);
+        // unreadCount.value++;
         // scrollToBottom();
       }
     }
