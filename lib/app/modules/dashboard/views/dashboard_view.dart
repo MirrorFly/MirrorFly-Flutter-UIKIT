@@ -519,7 +519,7 @@ class _DashboardViewState extends State<DashboardView> {
                 visible: controller.chatMessages.isNotEmpty,
                 child: searchHeader(Constants.typeSearchMessage, controller.chatMessages.length.toString(), context),
               ),
-              filteredMessageListView(),
+              filteredMessageListView(showChatDeliveryIndicator:widget.showChatDeliveryIndicator),
               Visibility(
                 visible: controller.userList.isNotEmpty && !controller.searchLoading.value,
                 child: searchHeader(Constants.typeSearchContact, controller.userList.length.toString(), context),
@@ -586,7 +586,7 @@ class _DashboardViewState extends State<DashboardView> {
         });
   }
 
-  ListView filteredMessageListView() {
+  ListView filteredMessageListView({bool showChatDeliveryIndicator = true}) {
     return ListView.builder(
         itemCount: controller.chatMessages.length,
         shrinkWrap: true,
@@ -692,7 +692,7 @@ class _DashboardViewState extends State<DashboardView> {
                                               item.messageStatus.value.checkNull(),
                                               item.isMessageSentByMe.checkNull(),
                                               item.messageType.checkNull(),
-                                              item.isMessageRecalled.value),
+                                              item.isMessageRecalled.value,showChatDeliveryIndicator:showChatDeliveryIndicator),
                                         ),
                                         item.isMessageRecalled.value
                                             ? const SizedBox.shrink()

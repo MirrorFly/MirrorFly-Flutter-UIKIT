@@ -519,7 +519,9 @@ class NotificationBuilder {
           var barNotifications = await flutterLocalNotificationsPlugin.getActiveNotifications();
           for (var notification in barNotifications) {
             if(notification.id!=null) {
-              if (notification.id == id) flutterLocalNotificationsPlugin.cancel(notification.id!);
+              if (notification.id == id){
+                flutterLocalNotificationsPlugin.cancel(notification.id!);
+              }
             }
           }
           NotificationBuilder.chatNotifications.remove(id);
