@@ -243,7 +243,7 @@ class NotificationBuilder {
       var userProfile = await getProfileDetails(senderChatJID);
       var name = userProfile.name ?? '';
 
-      title = isGroup ? "$title@$name" : title;
+      title = isGroup ? "$name @ $title" : title;
     }
 
     debugPrint("local notification id $notificationId");
