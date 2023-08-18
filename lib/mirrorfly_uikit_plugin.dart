@@ -40,13 +40,16 @@ class MirrorflyUikit {
   /// * [isTrialLicenceKey] to provide trial/live register and contact sync
   /// * [showMobileNumberOnList] to show mobile on contact list
   /// * [storageFolderName] provide the Local Storage Folder Name
-  initUIKIT(
-      {required baseUrl,
-      required String licenseKey,
-      String? googleMapKey,
-      required String iOSContainerID,
-      String? storageFolderName,
-      bool isTrialLicenceKey = true,bool showMobileNumberOnList = true,bool showStatusOption = true,}) async {
+  initUIKIT({
+    required baseUrl,
+    required String licenseKey,
+    String? googleMapKey,
+    required String iOSContainerID,
+    String? storageFolderName,
+    bool isTrialLicenceKey = true,
+    bool showMobileNumberOnList = true,
+    bool showStatusOption = true,
+  }) async {
     Mirrorfly.init(
         baseUrl: baseUrl,
         licenseKey: licenseKey,
@@ -54,7 +57,8 @@ class MirrorflyUikit {
         storageFolderName: storageFolderName,
         enableMobileNumberLogin: true,
         isTrialLicenceKey: isTrialLicenceKey,
-        enableDebugLog: true);
+        enableDebugLog: true,
+        chatHistoryEnable: false);
     isSDKInitialized = true;
     this.isTrialLicenceKey = isTrialLicenceKey;
     this.showMobileNumberOnList = showMobileNumberOnList;
@@ -66,23 +70,17 @@ class MirrorflyUikit {
       theme = config.appTheme.theme!;
       getTheme = MirrorFlyTheme.customTheme(
           primaryColor: config.appTheme.customTheme!.primaryColor,
-          secondaryColor:
-          config.appTheme.customTheme!.secondaryColor,
-          scaffoldColor:
-          config.appTheme.customTheme!.scaffoldColor,
-          colorOnPrimary:
-          config.appTheme.customTheme!.colorOnPrimary,
-          textPrimaryColor:
-          config.appTheme.customTheme!.textPrimaryColor,
-          textSecondaryColor:
-          config.appTheme.customTheme!.textSecondaryColor,
+          secondaryColor: config.appTheme.customTheme!.secondaryColor,
+          scaffoldColor: config.appTheme.customTheme!.scaffoldColor,
+          colorOnPrimary: config.appTheme.customTheme!.colorOnPrimary,
+          textPrimaryColor: config.appTheme.customTheme!.textPrimaryColor,
+          textSecondaryColor: config.appTheme.customTheme!.textSecondaryColor,
           chatBubblePrimaryColor:
-          config.appTheme.customTheme!.chatBubblePrimaryColor,
-          chatBubbleSecondaryColor: config
-              .appTheme.customTheme!.chatBubbleSecondaryColor,
+              config.appTheme.customTheme!.chatBubblePrimaryColor,
+          chatBubbleSecondaryColor:
+              config.appTheme.customTheme!.chatBubbleSecondaryColor,
           appBarColor: config.appTheme.customTheme!.appBarColor,
-          colorOnAppbar:
-          config.appTheme.customTheme!.colorOnAppbar);
+          colorOnAppbar: config.appTheme.customTheme!.colorOnAppbar);
       /*getTheme = config.appTheme.theme == "light"
           ? MirrorFlyTheme.mirrorFlyLightTheme
           : config.appTheme.theme == "dark"
