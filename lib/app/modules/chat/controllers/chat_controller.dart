@@ -121,6 +121,8 @@ class ChatController extends FullLifeCycleController
 
   bool get isTrail => MirrorflyUikit.instance.isTrialLicenceKey;
 
+  final deBouncer = DeBouncer(milliseconds: 1000);
+
   init(
     BuildContext context, {
     String? jid,
@@ -166,7 +168,10 @@ class ChatController extends FullLifeCycleController
     chatList.bindStream(chatList.stream);
     ever(chatList, (callback) {});
     isUserTyping.bindStream(isUserTyping.stream);
-    ever(isUserTyping, (callback) {
+    ///Commenting this, bcz this executed only when value is changed to true or false. if started typing value changed to true.
+    ///Then after some interval, if we type again the value remains true so this is not calling
+    ///Changing to below messageController.addListener()
+    /*ever(isUserTyping, (callback) {
       mirrorFlyLog("typing ", callback.toString());
       if (callback) {
         sendUserTypingStatus();
@@ -176,9 +181,16 @@ class ChatController extends FullLifeCycleController
       } else {
         sendUserTypingGoneStatus();
       }
-    });
+    });*/
     messageController.addListener(() {
       mirrorFlyLog("typing", "typing..");
+      sendUserTypingStatus();
+      debugPrint('User is typing');
+      deBouncer.cancel();
+      deBouncer.run(() {
+        debugPrint("DeBouncer");
+        sendUserTypingGoneStatus();
+      });
     });
   }
 
