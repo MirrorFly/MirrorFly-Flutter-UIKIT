@@ -144,7 +144,7 @@ class DashboardController extends FullLifeCycleController
         recentChatLoading(false);
       });
     } catch (e, s) {
-      print(s);
+      debugPrint("Error while fetching recent chats $s");
     }
   }
 
