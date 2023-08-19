@@ -1,3 +1,8 @@
+## 0.0.10
+* MirrorFly Plugin Dependencies updated to latest versions
+* Typing Status Bug Fix
+* Code Optimisation
+
 ## 0.0.9
 * MirrorFly Plugin Dependencies updated to latest versions
 

@@ -2,14 +2,16 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
+import 'package:mirrorfly_uikit_plugin/app/model/notification_message_model.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/controllers/chat_controller.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/controllers/contact_controller.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/group/controllers/group_info_controller.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/notification/notification_builder.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/settings/views/blocked/blocked_list_controller.dart';
 
 import 'common/main_controller.dart';
@@ -24,50 +26,58 @@ import 'modules/starred_messages/controllers/starred_messages_controller.dart';
 import 'modules/view_all_media/controllers/view_all_media_controller.dart';
 
 abstract class BaseController {
-
   initListeners() {
     Mirrorfly.onMessageReceived.listen(onMessageReceived);
     Mirrorfly.onMessageStatusUpdated.listen(onMessageStatusUpdated);
     Mirrorfly.onMediaStatusUpdated.listen(onMediaStatusUpdated);
-    Mirrorfly.onUploadDownloadProgressChanged.listen((event){
+    Mirrorfly.onUploadDownloadProgressChanged.listen((event) {
       var data = json.decode(event.toString());
       debugPrint("Media Status Onprogress changed---> flutter $data");
       var messageId = data["message_id"] ?? "";
       var progressPercentage = data["progress_percentage"] ?? 0;
-      onUploadDownloadProgressChanged(messageId,progressPercentage.toString());
+      onUploadDownloadProgressChanged(messageId, progressPercentage.toString());
     });
     Mirrorfly.onGroupProfileFetched.listen(onGroupProfileFetched);
     Mirrorfly.onNewGroupCreated.listen(onNewGroupCreated);
     Mirrorfly.onGroupProfileUpdated.listen(onGroupProfileUpdated);
-    Mirrorfly.onNewMemberAddedToGroup.listen((event){
-      if(event!=null){
+    Mirrorfly.onNewMemberAddedToGroup.listen((event) {
+      if (event != null) {
         var data = json.decode(event.toString());
         var groupJid = data["groupJid"] ?? "";
         var newMemberJid = data["newMemberJid"] ?? "";
         var addedByMemberJid = data["addedByMemberJid"] ?? "";
-        onNewMemberAddedToGroup(groupJid: groupJid, newMemberJid: newMemberJid,addedByMemberJid: addedByMemberJid);
+        onNewMemberAddedToGroup(
+            groupJid: groupJid,
+            newMemberJid: newMemberJid,
+            addedByMemberJid: addedByMemberJid);
       }
     });
-    Mirrorfly.onMemberRemovedFromGroup.listen((event){
-      if(event!=null){
+    Mirrorfly.onMemberRemovedFromGroup.listen((event) {
+      if (event != null) {
         var data = json.decode(event.toString());
         var groupJid = data["groupJid"] ?? "";
         var removedMemberJid = data["removedMemberJid"] ?? "";
         var removedByMemberJid = data["removedByMemberJid"] ?? "";
-        onMemberRemovedFromGroup(groupJid: groupJid, removedMemberJid: removedMemberJid,removedByMemberJid: removedByMemberJid);
+        onMemberRemovedFromGroup(
+            groupJid: groupJid,
+            removedMemberJid: removedMemberJid,
+            removedByMemberJid: removedByMemberJid);
       }
     });
     Mirrorfly.onFetchingGroupMembersCompleted
         .listen(onFetchingGroupMembersCompleted);
     Mirrorfly.onDeleteGroup.listen(onDeleteGroup);
     Mirrorfly.onFetchingGroupListCompleted.listen(onFetchingGroupListCompleted);
-    Mirrorfly.onMemberMadeAsAdmin.listen((event){
-      if(event!=null){
+    Mirrorfly.onMemberMadeAsAdmin.listen((event) {
+      if (event != null) {
         var data = json.decode(event.toString());
         var groupJid = data["groupJid"] ?? "";
         var newAdminMemberJid = data["newAdminMemberJid"] ?? "";
         var madeByMemberJid = data["madeByMemberJid"] ?? "";
-        onMemberMadeAsAdmin(groupJid: groupJid, newAdminMemberJid: newAdminMemberJid,madeByMemberJid: madeByMemberJid);
+        onMemberMadeAsAdmin(
+            groupJid: groupJid,
+            newAdminMemberJid: newAdminMemberJid,
+            madeByMemberJid: madeByMemberJid);
       }
     });
     Mirrorfly.onMemberRemovedAsAdmin.listen(onMemberRemovedAsAdmin);
@@ -92,18 +102,18 @@ abstract class BaseController {
     });
     Mirrorfly.onContactSyncComplete.listen(onContactSyncComplete);
     Mirrorfly.onLoggedOut.listen(onLoggedOut);
-    Mirrorfly.unblockedThisUser.listen((event){
+    Mirrorfly.unblockedThisUser.listen((event) {
       var data = json.decode(event.toString());
       var jid = data["jid"];
       unblockedThisUser(jid);
     });
-    Mirrorfly.userBlockedMe.listen((event){
+    Mirrorfly.userBlockedMe.listen((event) {
       mirrorFlyLog("userBlockedMe", event);
-          var data = json.decode(event.toString());
-          var jid = data["jid"];
-          userBlockedMe(jid.toString());
-        });//{"jid":"919894940560@fly-qa19.mirrorfly.com"}
-    Mirrorfly.userCameOnline.listen((event){
+      var data = json.decode(event.toString());
+      var jid = data["jid"];
+      userBlockedMe(jid.toString());
+    }); //{"jid":"919894940560@fly-qa19.mirrorfly.com"}
+    Mirrorfly.userCameOnline.listen((event) {
       var data = json.decode(event.toString());
       var jid = data["jid"];
       userCameOnline(jid);
@@ -116,7 +126,7 @@ abstract class BaseController {
       var jid = data["jid"];
       userUpdatedHisProfile(jid);
     });
-    Mirrorfly.userWentOffline.listen((event){
+    Mirrorfly.userWentOffline.listen((event) {
       var data = json.decode(event.toString());
       var jid = data["jid"];
       userWentOffline(jid);
@@ -149,10 +159,15 @@ abstract class BaseController {
     mirrorFlyLog("flutter onMessageReceived", chatMessage.toString());
     ChatMessageModel chatMessageModel = sendMessageModelFromJson(chatMessage);
     // debugPrint("")
-    if(SessionManagement.getCurrentChatJID() == chatMessageModel.chatUserJid.checkNull()){
+    if (SessionManagement.getCurrentChatJID() ==
+        chatMessageModel.chatUserJid.checkNull()) {
       debugPrint("Message Received user chat screen is in online");
-    }else{
-     // showLocalNotification(chatMessageModel);
+    } else {
+      // showLocalNotification(chatMessageModel);
+      var data = chatMessageFromJson(chatMessage.toString());
+      if (data.messageId != null) {
+        NotificationBuilder.createNotification(data);
+      }
     }
 
     if (Get.isRegistered<ChatController>()) {
@@ -165,42 +180,49 @@ abstract class BaseController {
     }
     if (Get.isRegistered<ArchivedChatListController>()) {
       // debugPrint("basecontroller ArchivedChatListController registered");
-      Get.find<ArchivedChatListController>().onMessageReceived(chatMessageModel);
+      Get.find<ArchivedChatListController>()
+          .onMessageReceived(chatMessageModel);
     }
 
-    if(Get.isRegistered<ViewAllMediaController>() && chatMessageModel.isTextMessage() && chatMessageModel.messageTextContent!.contains("http")){
+    if (Get.isRegistered<ViewAllMediaController>() &&
+        chatMessageModel.isTextMessage() &&
+        chatMessageModel.messageTextContent!.contains("http")) {
       Get.find<ViewAllMediaController>().onMessageReceived(chatMessageModel);
     }
-
   }
 
   void onMessageStatusUpdated(event) {
     ChatMessageModel chatMessageModel = sendMessageModelFromJson(event);
 
-    if(SessionManagement.getCurrentChatJID() == chatMessageModel.chatUserJid.checkNull()){
-      debugPrint("Message Status updated user chat screen is in online");
-    }else{
-      if(chatMessageModel.isMessageRecalled.value){
-        // showLocalNotification(chatMessageModel);
+    if (SessionManagement.getCurrentChatJID() ==
+        chatMessageModel.chatUserJid.checkNull()) {
+      debugPrint("Message Received user chat screen is in online");
+    } else {
+      var data = chatMessageFromJson(event.toString());
+      if (data.messageId != null && data.isMessageRecalled.checkNull()) {
+        NotificationBuilder.createNotification(data);
       }
+      // showLocalNotification(chatMessageModel);
     }
 
     if (Get.isRegistered<ChatController>()) {
       Get.find<ChatController>().onMessageStatusUpdated(chatMessageModel);
     }
     if (Get.isRegistered<ArchivedChatListController>()) {
-      Get.find<ArchivedChatListController>().onMessageStatusUpdated(chatMessageModel);
+      Get.find<ArchivedChatListController>()
+          .onMessageStatusUpdated(chatMessageModel);
     }
     if (Get.isRegistered<DashboardController>()) {
       Get.find<DashboardController>().onMessageStatusUpdated(chatMessageModel);
     }
     if (Get.isRegistered<MessageInfoController>()) {
-      Get.find<MessageInfoController>().onMessageStatusUpdated(chatMessageModel);
+      Get.find<MessageInfoController>()
+          .onMessageStatusUpdated(chatMessageModel);
     }
     if (Get.isRegistered<StarredMessagesController>()) {
-      Get.find<StarredMessagesController>().onMessageStatusUpdated(chatMessageModel);
+      Get.find<StarredMessagesController>()
+          .onMessageStatusUpdated(chatMessageModel);
     }
-
   }
 
   void onMediaStatusUpdated(event) {
@@ -210,21 +232,27 @@ abstract class BaseController {
       Get.find<ChatController>().onMediaStatusUpdated(chatMessageModel);
     }
     if (Get.isRegistered<StarredMessagesController>()) {
-      Get.find<StarredMessagesController>().onMediaStatusUpdated(chatMessageModel);
+      Get.find<StarredMessagesController>()
+          .onMediaStatusUpdated(chatMessageModel);
     }
 
-    if(Get.isRegistered<ViewAllMediaController>() && chatMessageModel.isMediaMessage() && (chatMessageModel.isMediaUploaded() || chatMessageModel.isMediaDownloaded())){
+    if (Get.isRegistered<ViewAllMediaController>() &&
+        chatMessageModel.isMediaMessage() &&
+        (chatMessageModel.isMediaUploaded() ||
+            chatMessageModel.isMediaDownloaded())) {
       Get.find<ViewAllMediaController>().onMediaStatusUpdated(chatMessageModel);
     }
-
   }
 
-  void onUploadDownloadProgressChanged(String messageId, String progressPercentage){
+  void onUploadDownloadProgressChanged(
+      String messageId, String progressPercentage) {
     if (Get.isRegistered<ChatController>()) {
-      Get.find<ChatController>().onUploadDownloadProgressChanged(messageId,progressPercentage);
+      Get.find<ChatController>()
+          .onUploadDownloadProgressChanged(messageId, progressPercentage);
     }
     if (Get.isRegistered<StarredMessagesController>()) {
-      Get.find<StarredMessagesController>().onUploadDownloadProgressChanged(messageId,progressPercentage);
+      Get.find<StarredMessagesController>()
+          .onUploadDownloadProgressChanged(messageId, progressPercentage);
     }
   }
 
@@ -245,25 +273,41 @@ abstract class BaseController {
     }
   }
 
-  void onNewMemberAddedToGroup({required String groupJid,
-  required String newMemberJid, required String addedByMemberJid}) {
+  void onNewMemberAddedToGroup(
+      {required String groupJid,
+      required String newMemberJid,
+      required String addedByMemberJid}) {
     debugPrint('onNewMemberAddedToGroup $newMemberJid');
     if (Get.isRegistered<GroupInfoController>()) {
-      Get.find<GroupInfoController>().onNewMemberAddedToGroup(groupJid: groupJid, newMemberJid: newMemberJid, addedByMemberJid: addedByMemberJid);
+      Get.find<GroupInfoController>().onNewMemberAddedToGroup(
+          groupJid: groupJid,
+          newMemberJid: newMemberJid,
+          addedByMemberJid: addedByMemberJid);
     }
     if (Get.isRegistered<ChatController>()) {
-      Get.find<ChatController>().onNewMemberAddedToGroup(groupJid: groupJid, newMemberJid: newMemberJid, addedByMemberJid: addedByMemberJid);
+      Get.find<ChatController>().onNewMemberAddedToGroup(
+          groupJid: groupJid,
+          newMemberJid: newMemberJid,
+          addedByMemberJid: addedByMemberJid);
     }
   }
 
-  void onMemberRemovedFromGroup({required String groupJid,
-    required String removedMemberJid, required String removedByMemberJid}) {
+  void onMemberRemovedFromGroup(
+      {required String groupJid,
+      required String removedMemberJid,
+      required String removedByMemberJid}) {
     debugPrint('onMemberRemovedFromGroup $removedMemberJid');
     if (Get.isRegistered<GroupInfoController>()) {
-      Get.find<GroupInfoController>().onMemberRemovedFromGroup(groupJid: groupJid, removedMemberJid: removedMemberJid, removedByMemberJid: removedByMemberJid);
+      Get.find<GroupInfoController>().onMemberRemovedFromGroup(
+          groupJid: groupJid,
+          removedMemberJid: removedMemberJid,
+          removedByMemberJid: removedByMemberJid);
     }
     if (Get.isRegistered<ChatController>()) {
-      Get.find<ChatController>().onMemberRemovedFromGroup(groupJid: groupJid, removedMemberJid: removedMemberJid, removedByMemberJid: removedByMemberJid);
+      Get.find<ChatController>().onMemberRemovedFromGroup(
+          groupJid: groupJid,
+          removedMemberJid: removedMemberJid,
+          removedByMemberJid: removedByMemberJid);
     }
   }
 
@@ -277,11 +321,16 @@ abstract class BaseController {
 
   void onFetchingGroupListCompleted(noOfGroups) {}
 
-  void onMemberMadeAsAdmin({required String groupJid,
-    required String newAdminMemberJid, required String madeByMemberJid}) {
+  void onMemberMadeAsAdmin(
+      {required String groupJid,
+      required String newAdminMemberJid,
+      required String madeByMemberJid}) {
     debugPrint('onMemberMadeAsAdmin $newAdminMemberJid');
     if (Get.isRegistered<GroupInfoController>()) {
-      Get.find<GroupInfoController>().onMemberMadeAsAdmin(groupJid: groupJid, newAdminMemberJid: newAdminMemberJid, madeByMemberJid: madeByMemberJid);
+      Get.find<GroupInfoController>().onMemberMadeAsAdmin(
+          groupJid: groupJid,
+          newAdminMemberJid: newAdminMemberJid,
+          madeByMemberJid: madeByMemberJid);
     }
   }
 
@@ -291,21 +340,34 @@ abstract class BaseController {
 
   void onLeftFromGroup({required String groupJid, required String userJid}) {
     if (Get.isRegistered<ChatController>()) {
-      Get.find<ChatController>().onLeftFromGroup(groupJid: groupJid, userJid : userJid);
+      Get.find<ChatController>()
+          .onLeftFromGroup(groupJid: groupJid, userJid: userJid);
     }
     if (Get.isRegistered<GroupInfoController>()) {
-      Get.find<GroupInfoController>().onLeftFromGroup(groupJid: groupJid, userJid : userJid);
+      Get.find<GroupInfoController>()
+          .onLeftFromGroup(groupJid: groupJid, userJid: userJid);
     }
   }
 
   void onGroupNotificationMessage(event) {
     debugPrint('onGroupNotificationMessage $event');
     ChatMessageModel chatMessageModel = sendMessageModelFromJson(event);
+    if (SessionManagement.getCurrentChatJID() ==
+        chatMessageModel.chatUserJid.checkNull()) {
+      debugPrint("Message Received group chat screen is in online");
+    } else {
+      var data = chatMessageFromJson(event.toString());
+      if (data.messageId != null) {
+        NotificationBuilder.createNotification(data);
+      }
+      // showLocalNotification(chatMessageModel);
+    }
     if (Get.isRegistered<DashboardController>()) {
       Get.find<DashboardController>().onMessageReceived(chatMessageModel);
     }
     if (Get.isRegistered<ArchivedChatListController>()) {
-      Get.find<ArchivedChatListController>().onMessageReceived(chatMessageModel);
+      Get.find<ArchivedChatListController>()
+          .onMessageReceived(chatMessageModel);
     }
     if (Get.isRegistered<ChatController>()) {
       Get.find<ChatController>().onMessageReceived(chatMessageModel);
@@ -324,13 +386,12 @@ abstract class BaseController {
 
   void onAdminBlockedUser(String jid, bool status) {
     Get.find<MainController>().handleAdminBlockedUser(jid, status);
-
   }
 
-  void onContactSyncComplete(bool result) {
+  void onContactSyncComplete(dynamic result) {
     mirrorFlyLog("onContactSyncComplete", result.toString());
     // Mirrorfly.getRegisteredUsers(true);
-    if(result) {
+    if (result) {
       SessionManagement.setInitialContactSync(true);
       SessionManagement.setSyncDone(true);
     }
@@ -406,7 +467,7 @@ abstract class BaseController {
     }
   }
 
-  void userDeletedHisProfile(String jid) {
+  void userDeletedHisProfile(dynamic jid) {
     if (Get.isRegistered<DashboardController>()) {
       Get.find<DashboardController>().userDeletedHisProfile(jid);
     }
@@ -510,10 +571,12 @@ abstract class BaseController {
   void setTypingStatus(
       String singleOrgroupJid, String userId, String typingStatus) {
     if (Get.isRegistered<ChatController>()) {
-      Get.find<ChatController>().setTypingStatus(singleOrgroupJid, userId, typingStatus);
+      Get.find<ChatController>()
+          .setTypingStatus(singleOrgroupJid, userId, typingStatus);
     }
     if (Get.isRegistered<DashboardController>()) {
-      Get.find<DashboardController>().setTypingStatus(singleOrgroupJid, userId, typingStatus);
+      Get.find<DashboardController>()
+          .setTypingStatus(singleOrgroupJid, userId, typingStatus);
     }
     if (Get.isRegistered<ArchivedChatListController>()) {
       Get.find<ArchivedChatListController>()

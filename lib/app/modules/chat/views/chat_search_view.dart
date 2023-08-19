@@ -11,7 +11,9 @@ import '../chat_widgets.dart';
 import '../controllers/chat_controller.dart';
 
 class ChatSearchView extends StatelessWidget {
-  ChatSearchView({super.key});
+  ChatSearchView({super.key, this.showChatDeliveryIndicator = true});
+
+  final bool showChatDeliveryIndicator;
 
   final controller = Get.find<ChatController>();
 
@@ -135,6 +137,7 @@ class ChatSearchView extends StatelessWidget {
                                     controller.playAudio(chatList[index]);
                                   },
                                   onSeekbarChange: (value) {},
+                                  showChatDeliveryIndicator: showChatDeliveryIndicator,
                                 ),
                               ],
                             ),

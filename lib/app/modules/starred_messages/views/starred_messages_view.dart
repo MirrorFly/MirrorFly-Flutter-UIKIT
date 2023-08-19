@@ -129,7 +129,8 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
                                     controller.playAudio(starredChatList[index]);
                                   },onSeekbarChange:(value){
 
-                                  },),
+                                  },
+                                  ),
                                 ],
                               ),
                             ),

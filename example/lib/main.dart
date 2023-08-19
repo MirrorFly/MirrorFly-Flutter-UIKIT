@@ -104,6 +104,7 @@ class _DashboardState extends State<Dashboard> {
                             builder: (con) => const DashboardView(
                                   title: "Chats",
                               enableAppBar: true,
+                              showChatDeliveryIndicator: true,
                                 )));
                   },
                   text: 'chat page',

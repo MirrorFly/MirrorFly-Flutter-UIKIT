@@ -8,7 +8,6 @@ export 'model/language_model.dart';
 export 'model/local_contact_model.dart';
 export 'model/status_model.dart';
 export 'model/user_list_model.dart';
-export 'model/received_notification.dart';
 export 'model/profile_model.dart';
 export 'model/recent_search_model.dart';
 export 'model/recent_chat.dart';

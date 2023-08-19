@@ -63,7 +63,8 @@ class CameraPickView extends StatelessWidget {
                           icon: const Icon(Icons.clear,
                               color: Colors.white),
                           onPressed: () {
-                            Get.back();
+                            // Get.back();
+                            Navigator.pop(context);
                           },
                         ),
                         Expanded(
