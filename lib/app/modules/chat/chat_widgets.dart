@@ -1231,7 +1231,7 @@ class ContactMessageView extends StatelessWidget {
             style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
         onTap: () {
           Clipboard.setData(
-              const ClipboardData(text: Constants.applicationLink));
+              ClipboardData(text: AppConstants.applicationLink));
           // Get.back();
           Navigator.pop(context);
           toToast(AppConstants.linkCopied);
@@ -1251,7 +1251,7 @@ class ContactMessageView extends StatelessWidget {
 
   void sendSMS(String contactPhoneNumber) async {
     var info = await PackageInfo.fromPlatform();
-    Uri sms = Uri.parse('sms:$contactPhoneNumber?body=${Constants.smsContent.replaceAll('MirrorFly', info.appName)}');
+    Uri sms = Uri.parse('sms:$contactPhoneNumber?body=${AppConstants.smsContent.replaceAll('MirrorFly', info.appName)}');
     if (await launchUrl(sms)) {
       //app opened
     } else {

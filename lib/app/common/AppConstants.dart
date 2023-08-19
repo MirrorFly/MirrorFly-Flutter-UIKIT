@@ -6,6 +6,10 @@ class AppConstants{
   static var deletingBusyStatus = "Deleting Busy Status";
   static var unableDeleteBusyStatus = "Unable to delete the Busy Status";
 
+  static var typeSearchRecent = "Chats";
+  static var typeSearchContact = "Contact";
+  static var typeSearchMessage = "Message";
+
   static var fileDoesnotExist = "The Selected file Doesn't Exist or Unable to Open";
   static var youDonthaveApp = "you may not have proper app to view this content";
 
@@ -145,6 +149,10 @@ class AppConstants{
   static var copyLink = "Copy Link";
   static var linkCopied = "Link Copied";
   static var sendSMS = "Send SMS";
+  static var applicationLink = "https://app.contusfly.contus.com";
+  static var smsContent =
+      "Hey, MirrorFly is a real time chat, Audio and Video call solution for B2B and B2C.\n Download the app from this URL: https://app.mirrorfly.com";
+
 
   static var muteNotification = "Mute Notification";
   static var email = "Email";
@@ -269,10 +277,28 @@ class AppConstants{
   static var archiveSettingDec = "Archived chats will remain archived when you receive a new message";
   static var lastSeen = "Last Seen";
   static var lastSeenDec = "Hiding the last seen activity to other users";
+  static var newBusyStatus = "Select your new status";
   static var userBusyStatus = "User Busy Status";
   static var userBusyStatusDec = "Set busy status as the Auto response to the message received from the individuals";
+  static var busyStatusDescription = "Your busy status will be set as auto-response to the messages received from individuals.";
   static var editBusyMessage = "Edit Busy Status Message";
+  static var yourBusyStatus = "Your Busy Status";
   static var clearAllConversation = "Clear All Conversation";
+
+  static var autoDownload = "Auto Download";
+  static var autoDownloadLable =
+      "Enable “Auto download” to turn all types of files received readily viewable";
+  static var dataUsageSettings = "Data Usage Settings";
+  static var dataUsageSettingsLable =
+      "Setup your mobile and wifi data usage based on media type";
+  static var mediaAutoDownload = "Media Auto download";
+  static var whenUsingMobileData = "When using Mobile Data";
+  static var whenUsingWifiData = "When connected on Wi-Fi";
+
+  static var autoDownloadPhoto = "Photos";
+  static var autoDownloadAudio = "Audio";
+  static var autoDownloadVideo = "Videos";
+  static var autoDownloadDocument = "Documents";
 
   static var blockedContactList = "Blocked Contact List";
   static var noBlockedContactsFound = "No Blocked Contacts found";
@@ -301,6 +327,59 @@ class AppConstants{
 
   static var sentMedia = "Sent Media";
   static var receivedMedia = "Received Media";
+
+  static var defaultStatusList = [
+    "Available",
+    "Sleeping...",
+    "Urgent calls only",
+    "At the movies",
+    "I am in Mirror Fly"
+  ];
+
+  static var defaultColorList = [
+    0Xff9068BE,
+    0XffE62739,
+    0Xff845007,
+    0Xff3A4660,
+    0Xff1D1E22,
+    0XffBE7D6A,
+    0Xff005995,
+    0Xff600473,
+    0XffCD5554,
+    0Xff00303F,
+    0XffBE4F0C,
+    0Xff4ABDAC,
+    0XffFC4A1A,
+    0Xff368CBF,
+    0Xff7EBC59,
+    0Xff201D3A,
+    0Xff269CCC,
+    0Xff737272,
+    0Xff237107,
+    0Xff52028E,
+    0XffAF0D74,
+    0Xff6CB883,
+    0Xff0DAFA4,
+    0XffA71515,
+    0Xff157FA7,
+    0Xff7E52B1,
+    0Xff27956A,
+    0Xff9A4B70,
+    0XffFBBE30,
+    0XffED3533,
+    0Xff571C8D,
+    0Xff54181C,
+    0Xff9B6700,
+    0Xff6E8E14,
+    0Xff0752A1,
+    0XffBF6421,
+    0Xff00A59C,
+    0Xff9F0190,
+    0XffAE3A3A,
+    0Xff858102,
+    0Xff027E02,
+    0XffF66E54
+  ];
 
   //Permission dialog contents
   static var settingPermission =

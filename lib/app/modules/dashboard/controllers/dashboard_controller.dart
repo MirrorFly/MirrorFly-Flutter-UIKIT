@@ -196,25 +196,6 @@ class DashboardController extends FullLifeCycleController
     // Get.offAllNamed(Routes.login);
   }
 
-  String getRecentChatTime(BuildContext context, int? epochTime) {
-    if (epochTime == null) return Constants.emptyString;
-    if (epochTime == 0) return Constants.emptyString;
-    var convertedTime = epochTime; // / 1000;
-    //messageDate.time = convertedTime
-    var hourTime = manipulateMessageTime(
-        context, DateTime.fromMicrosecondsSinceEpoch(convertedTime));
-    var currentYear = DateTime.now().year;
-    calendar = DateTime.fromMicrosecondsSinceEpoch(convertedTime);
-    var time = (currentYear == calendar.year)
-        ? DateFormat("dd-MMM").format(calendar)
-        : DateFormat("yyyy/MM/dd").format(calendar);
-    return (equalsWithYesterday(calendar, Constants.today))
-        ? hourTime
-        : (equalsWithYesterday(calendar, Constants.yesterday))
-        ? Constants.yesterdayUpper
-        : time;
-  }
-
   String manipulateMessageTime(BuildContext context, DateTime messageDate) {
     var format = MediaQuery.of(context).alwaysUse24HourFormat ? 24 : 12;
     var hours = calendar.hour;
@@ -234,12 +215,6 @@ class DashboardController extends FullLifeCycleController
     return dateHourFormat;
   }
 
-  bool equalsWithYesterday(DateTime srcDate, String day) {
-    var yesterday = (day == Constants.yesterday)
-        ? calendar.subtract(const Duration(days: 1))
-        : DateTime.now();
-    return yesterday.difference(calendar).inDays == 0;
-  }
 
   final _unreadCount = 0.obs;
 
@@ -1130,7 +1105,7 @@ class DashboardController extends FullLifeCycleController
         var searchMessageItem = RecentSearch(
             jid: message.chatUserJid,
             mid: message.messageId,
-            searchType: Constants.typeSearchMessage,
+            searchType: AppConstants.typeSearchMessage,
             chatType: message.messageChatType.toString(),
             isSearch: true)
             .obs;

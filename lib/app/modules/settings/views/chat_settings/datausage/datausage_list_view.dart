@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 
 import '../../../../../../mirrorfly_uikit_plugin.dart';
@@ -39,7 +40,7 @@ class _DataUsageListViewState extends State<DataUsageListView> {
                 children: [
                   ListTile(
                     title: Text(
-                      Constants.mediaAutoDownload,
+                      AppConstants.mediaAutoDownload,
                       style: TextStyle(
                           color: MirrorflyUikit.getTheme?.textPrimaryColor,
                           fontSize: 14.0,
@@ -48,7 +49,7 @@ class _DataUsageListViewState extends State<DataUsageListView> {
                   ),
                   ListTile(
                     title: Text(
-                      Constants.whenUsingMobileData,
+                      AppConstants.whenUsingMobileData,
                       style: TextStyle(
                           color: MirrorflyUikit.getTheme?.textPrimaryColor,
                           fontSize: 12.0,
@@ -73,7 +74,7 @@ class _DataUsageListViewState extends State<DataUsageListView> {
                   ),
                   ListTile(
                     title: Text(
-                      Constants.whenUsingWifiData,
+                      AppConstants.whenUsingWifiData,
                       style: TextStyle(
                           color: MirrorflyUikit.getTheme?.textPrimaryColor,
                           fontSize: 12.0,
@@ -103,6 +104,20 @@ class _DataUsageListViewState extends State<DataUsageListView> {
         ));
   }
 
+  String getItemTitle(String item){
+    switch (item) {
+      case Constants.photo:
+        return AppConstants.autoDownloadPhoto;
+      case Constants.audio:
+        return AppConstants.autoDownloadAudio;
+      case Constants.video:
+        return AppConstants.autoDownloadVideo;
+      case Constants.document:
+        return AppConstants.autoDownloadDocument;
+      default: return Constants.emptyString;
+    }
+  }
+
   Widget mediaItem(String item, bool on, String type) {
     return Padding(
           padding: const EdgeInsets.only(
@@ -113,7 +128,7 @@ class _DataUsageListViewState extends State<DataUsageListView> {
                 Expanded(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(item,
+                      child: Text(getItemTitle(item),
                           style: TextStyle(
                               color: MirrorflyUikit.getTheme?.textPrimaryColor,
                               fontSize: 12,

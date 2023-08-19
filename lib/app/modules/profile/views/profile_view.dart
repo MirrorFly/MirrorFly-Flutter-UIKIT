@@ -289,7 +289,7 @@ class _ProfileViewState extends State<ProfileView> {
                                 title: Text(
                                   controller.profileStatus.value.isNotEmpty
                                       ? controller.profileStatus.value
-                                      : Constants.defaultStatus,
+                                      : AppConstants.defaultStatus,
                                   style: TextStyle(
                                       color: controller.profileStatus.value.isNotEmpty
                                           ? MirrorflyUikit.getTheme

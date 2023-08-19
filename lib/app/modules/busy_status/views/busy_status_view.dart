@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/widgets.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 
@@ -37,7 +38,7 @@ class _BusyStatusViewState extends State<BusyStatusView> {
     return Scaffold(
         backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
         appBar: widget.enableAppBar ? AppBar(
-          title: Text(Constants.editBusyStatus, style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
+          title: Text(AppConstants.editBusyMessage, style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
           iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
           backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
         ) : null,
@@ -48,7 +49,7 @@ class _BusyStatusViewState extends State<BusyStatusView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  Constants.yourBusyStatus,
+                  AppConstants.yourBusyStatus,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: MirrorflyUikit.getTheme?.textPrimaryColor),
                 ),
                 const SizedBox(
@@ -92,14 +93,14 @@ class _BusyStatusViewState extends State<BusyStatusView> {
                 ),
 
                 Text(
-                  Constants.busyStatusDescription,
+                  AppConstants.busyStatusDescription,
                   style: TextStyle(fontSize: 15, color: MirrorflyUikit.getTheme?.textSecondaryColor),
                 ),
                 const SizedBox(
                   height: 40,
                 ),
                 Text(
-                  Constants.newBusyStatus,
+                  AppConstants.newBusyStatus,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: MirrorflyUikit.getTheme?.textPrimaryColor),
                 ),
                 const SizedBox(

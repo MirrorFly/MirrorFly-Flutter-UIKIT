@@ -76,8 +76,8 @@ class ChatSettingsView extends StatelessWidget {
                             Navigator.push(context, MaterialPageRoute(builder: (con) => const BusyStatusView()))
                           })),
               notificationItem(
-                  title: Constants.autoDownload,
-                  subtitle: Constants.autoDownloadLable,
+                  title: AppConstants.autoDownload,
+                  subtitle: AppConstants.autoDownloadLable,
                   on: controller.autoDownloadEnabled,
                   onTap: ()=>controller.enableDisableAutoDownload(context)),
               Visibility(
@@ -86,14 +86,14 @@ class ChatSettingsView extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(Constants.dataUsageSettings,
+                        Text(AppConstants.dataUsageSettings,
                             style: TextStyle(
                                 fontSize: 14,
                                 color: MirrorflyUikit.getTheme?.textPrimaryColor,
                                 fontWeight: FontWeight.w400)),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 4.0),
-                          child: Text(Constants.dataUsageSettingsLable,
+                          child: Text(AppConstants.dataUsageSettingsLable,
                               style: TextStyle(
                                   color: MirrorflyUikit.getTheme?.textSecondaryColor,
                                   fontSize: 14,

@@ -177,7 +177,7 @@ class Helper {
 
   static int getColourCode(String name) {
     if (name == Constants.you) return 0Xff000000;
-    var colorsArray = Constants.defaultColorList;
+    var colorsArray = AppConstants.defaultColorList;
     var hashcode = name.hashCode;
     var rand = hashcode % colorsArray.length;
     return colorsArray[(rand).abs()];
@@ -659,7 +659,7 @@ String getRecentChatTime(BuildContext context, int? epochTime) {
   return (equalsWithYesterday(calendar, Constants.today))
       ? hourTime
       : (equalsWithYesterday(calendar, Constants.yesterday))
-          ? Constants.yesterdayUpper
+          ? AppConstants.yesterday.toUpperCase()
           : time;
 }
 

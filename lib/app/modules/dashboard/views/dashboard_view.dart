@@ -513,17 +513,17 @@ class _DashboardViewState extends State<DashboardView> {
               Visibility(
                 visible: controller.filteredRecentChatList.isNotEmpty,
                 child: searchHeader(
-                    Constants.typeSearchRecent, controller.filteredRecentChatList.length.toString(), context),
+                    AppConstants.typeSearchRecent, controller.filteredRecentChatList.length.toString(), context),
               ),
               recentChatListView(),
               Visibility(
                 visible: controller.chatMessages.isNotEmpty,
-                child: searchHeader(Constants.typeSearchMessage, controller.chatMessages.length.toString(), context),
+                child: searchHeader(AppConstants.typeSearchMessage, controller.chatMessages.length.toString(), context),
               ),
               filteredMessageListView(showChatDeliveryIndicator:widget.showChatDeliveryIndicator),
               Visibility(
                 visible: controller.userList.isNotEmpty && !controller.searchLoading.value,
-                child: searchHeader(Constants.typeSearchContact, controller.userList.length.toString(), context),
+                child: searchHeader(AppConstants.typeSearchContact, controller.userList.length.toString(), context),
               ),
               Visibility(
                   visible: controller.searchLoading.value,

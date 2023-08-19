@@ -290,7 +290,7 @@ class ProfileController extends GetxController {
           var profileStatus = statusDataFromJson(value.toString());
           if (profileStatus.isNotEmpty) {
             debugPrint("profile status list is not empty");
-            var defaultStatus = Constants.defaultStatusList;
+            var defaultStatus = AppConstants.defaultStatusList;
 
             for (var statusValue in defaultStatus) {
               var isStatusNotExist = true;
@@ -455,7 +455,7 @@ class ProfileController extends GetxController {
 
   static void insertStatus() {
     debugPrint("Inserting Status");
-    var defaultStatus = Constants.defaultStatusList;
+    var defaultStatus = AppConstants.defaultStatusList;
 
     for (var statusValue in defaultStatus) {
       Mirrorfly.insertDefaultStatus(statusValue);
