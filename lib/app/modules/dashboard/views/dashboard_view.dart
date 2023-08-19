@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/dashboard/widgets.dart';
@@ -12,6 +13,8 @@ import '../../../widgets/custom_action_bar_icons.dart';
 import '../../chat/chat_widgets.dart';
 import '../../dashboard/controllers/dashboard_controller.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 ///* @property [title] indicates the appbar title
 ///* @property [enableAppBar] enable the appbar and its functions
 ///* @property [showBackIcon] show or hide the back icon on appbar
@@ -20,11 +23,11 @@ import '../../dashboard/controllers/dashboard_controller.dart';
 ///* @property [showSettings] show or hide the settings option
 ///* @property [showNewChat] show or hide the New Chat option
 class DashboardView extends StatefulWidget {
-  const DashboardView({Key? key, this.title="Chats",this.enableAppBar=true,
+  const DashboardView({Key? key, this.title,this.enableAppBar=true,
     this.showBackIcon=true, this.showSearchMenu = true,
     this.showCreateGroup = true, this.showSettings = true,
     this.showNewChat = true, this.showChatDeliveryIndicator = true}) : super(key: key);
-  final String title;
+  final String? title;
   final bool enableAppBar;
   final bool showBackIcon;
   final bool showSearchMenu;
@@ -48,6 +51,8 @@ class _DashboardViewState extends State<DashboardView> {
 
   @override
   Widget build(BuildContext context) {
+    final local = AppLocalizations.of(context).appTitle;
+    debugPrint("local $local");
     // var isDark = MirrorflyUikit.getTheme == MirrorFlyTheme.mirrorFlyDarkTheme;
     // var isLight = MirrorflyUikit.getTheme == MirrorFlyTheme.mirrorFlyDarkTheme;
     // debugPrint("isDark : $isDark");
@@ -112,13 +117,13 @@ class _DashboardViewState extends State<DashboardView> {
                             style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
                             cursorColor: MirrorflyUikit.getTheme?.colorOnAppbar,
                             decoration: InputDecoration(
-                                hintText: "Search...",
+                                hintText: AppConstants.searchPlaceHolder,
                                 hintStyle: TextStyle(color: MirrorflyUikit
                                     .getTheme?.colorOnAppbar.withOpacity(0.5)),
                                 border: InputBorder.none),
                           )
                         : Text(
-                                widget.title,
+                                widget.title ?? AppConstants.dashboardTitle,
                                 style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar ?? Colors.black),
                               ),
                 actions: [
@@ -128,7 +133,7 @@ class _DashboardViewState extends State<DashboardView> {
               floatingActionButton: widget.showNewChat ? controller.isSearching.value
                   ? null
                   : FloatingActionButton(
-                      tooltip: "New Chat",
+                      tooltip: AppConstants.newChat,
                       elevation: 8,
                       backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
                       onPressed: () {
@@ -169,14 +174,14 @@ class _DashboardViewState extends State<DashboardView> {
                 controller.chatInfo(context);
               },
               icon: SvgPicture.asset(infoIcon, package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
-              tooltip: 'Info',
+              tooltip: AppConstants.info,
             ),
             overflowWidget: Text(
-              "Info",
+              AppConstants.info,
               style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),
             ),
             showAsAction: controller.info.value ? ShowAsAction.always : ShowAsAction.gone,
-            keyValue: 'Info',
+            keyValue: AppConstants.info,
             onItemClick: () {
               controller.chatInfo(context);
             },
@@ -187,11 +192,11 @@ class _DashboardViewState extends State<DashboardView> {
                 controller.deleteChats(context);
               },
               icon: SvgPicture.asset(delete, package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
-              tooltip: 'Delete',
+              tooltip: AppConstants.delete,
             ),
-            overflowWidget: Text("Delete", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+            overflowWidget: Text(AppConstants.delete, style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction: controller.delete.value ? ShowAsAction.always : ShowAsAction.gone,
-            keyValue: 'Delete',
+            keyValue: AppConstants.delete,
             onItemClick: () {
               controller.deleteChats(context);
             },
@@ -202,11 +207,11 @@ class _DashboardViewState extends State<DashboardView> {
                 controller.pinChats();
               },
               icon: SvgPicture.asset(pin, package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn),),
-              tooltip: 'Pin',
+              tooltip: AppConstants.pin,
             ),
-            overflowWidget: Text("Pin", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+            overflowWidget: Text(AppConstants.pin, style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction: controller.pin.value ? ShowAsAction.always : ShowAsAction.gone,
-            keyValue: 'Pin',
+            keyValue: AppConstants.pin,
             onItemClick: () {
               controller.pinChats();
             },
@@ -217,11 +222,11 @@ class _DashboardViewState extends State<DashboardView> {
                 controller.unPinChats();
               },
               icon: SvgPicture.asset(unpin, package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
-              tooltip: 'UnPin',
+              tooltip: AppConstants.unPin,
             ),
-            overflowWidget: Text("UnPin", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+            overflowWidget: Text(AppConstants.unPin, style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction: controller.unpin.value ? ShowAsAction.always : ShowAsAction.gone,
-            keyValue: 'UnPin',
+            keyValue: AppConstants.unPin,
             onItemClick: () {
               controller.unPinChats();
             },
@@ -232,11 +237,11 @@ class _DashboardViewState extends State<DashboardView> {
                 controller.muteChats();
               },
               icon: SvgPicture.asset(mute, package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
-              tooltip: 'Mute',
+              tooltip: AppConstants.mute,
             ),
-            overflowWidget: Text("Mute", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+            overflowWidget: Text(AppConstants.mute, style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction: controller.mute.value ? ShowAsAction.always : ShowAsAction.gone,
-            keyValue: 'Mute',
+            keyValue: AppConstants.mute,
             onItemClick: () {
               controller.muteChats();
             },
@@ -247,11 +252,11 @@ class _DashboardViewState extends State<DashboardView> {
                 controller.unMuteChats();
               },
               icon: SvgPicture.asset(unMute, package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
-              tooltip: 'UnMute',
+              tooltip: AppConstants.unMute,
             ),
-            overflowWidget: Text("UnMute", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+            overflowWidget: Text(AppConstants.unMute, style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction: controller.unmute.value ? ShowAsAction.always : ShowAsAction.gone,
-            keyValue: 'UnMute',
+            keyValue: AppConstants.unMute,
             onItemClick: () {
               controller.unMuteChats();
             },
@@ -262,29 +267,29 @@ class _DashboardViewState extends State<DashboardView> {
                 controller.archiveChats();
               },
               icon: SvgPicture.asset(archive, package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
-              tooltip: 'Archive',
+              tooltip: AppConstants.archived,
             ),
-            overflowWidget: Text("Archived", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+            overflowWidget: Text(AppConstants.archived, style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction: controller.archive.value ? ShowAsAction.always : ShowAsAction.gone,
-            keyValue: 'Archived',
+            keyValue: AppConstants.archived,
             onItemClick: () {
               controller.archiveChats();
             },
           ),
           CustomAction(
             visibleWidget: const Icon(Icons.mark_chat_read),
-            overflowWidget: Text("Mark as read",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+            overflowWidget: Text(AppConstants.markAsRead,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction: controller.read.value ? ShowAsAction.never : ShowAsAction.gone,
-            keyValue: 'Mark as Read',
+            keyValue: AppConstants.markAsRead,
             onItemClick: () {
               controller.itemsRead();
             },
           ),
           CustomAction(
             visibleWidget: const Icon(Icons.mark_chat_unread),
-            overflowWidget: Text("Mark as unread",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+            overflowWidget: Text(AppConstants.markAsUnread,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction: controller.unread.value ? ShowAsAction.never : ShowAsAction.gone,
-            keyValue: 'Mark as unread',
+            keyValue: AppConstants.markAsUnread,
             onItemClick: () {
               controller.itemsUnRead();
             },
@@ -302,41 +307,41 @@ class _DashboardViewState extends State<DashboardView> {
                 height: 18,
                 fit: BoxFit.contain,
               ),
-              tooltip: 'Search',
+              tooltip: AppConstants.search,
             ),
-            overflowWidget: Text("Search", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+            overflowWidget: Text(AppConstants.search, style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction:
                 controller.selected.value || controller.isSearching.value ? ShowAsAction.gone : widget.showSearchMenu ? ShowAsAction.always : ShowAsAction.gone,
-            keyValue: 'Search',
+            keyValue: AppConstants.search,
             onItemClick: () {
               controller.gotoSearch();
             },
           ),
           CustomAction(
             visibleWidget: IconButton(onPressed: () => controller.onClearPressed(), icon: const Icon(Icons.close)),
-            overflowWidget: Text("Clear", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+            overflowWidget: Text(AppConstants.clear, style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction: controller.clearVisible.value ? ShowAsAction.always : ShowAsAction.gone,
-            keyValue: 'Clear',
+            keyValue: AppConstants.clear,
             onItemClick: () {
               controller.onClearPressed();
             },
           ),
           CustomAction(
             visibleWidget: const Icon(Icons.group_add),
-            overflowWidget: Text("New Group     ", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+            overflowWidget: Text(AppConstants.newGroup, style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction:
                 controller.selected.value || controller.isSearching.value ? ShowAsAction.gone : widget.showCreateGroup ? ShowAsAction.never : ShowAsAction.gone,
-            keyValue: 'New Group',
+            keyValue: AppConstants.newGroup,
             onItemClick: () {
               controller.gotoCreateGroup(context);
             },
           ),
           CustomAction(
             visibleWidget: const Icon(Icons.settings),
-            overflowWidget: Text("Settings", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+            overflowWidget: Text(AppConstants.settings, style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction:
                 controller.selected.value || controller.isSearching.value ? ShowAsAction.gone : widget.showSettings ? ShowAsAction.never : ShowAsAction.gone,
-            keyValue: 'Settings',
+            keyValue: AppConstants.settings,
             onItemClick: () {
               controller.gotoSettings(context);
             },
@@ -406,7 +411,7 @@ class _DashboardViewState extends State<DashboardView> {
                               ),
                             ),
                             title: Text(
-                              "Archived",
+                              AppConstants.archived,
                               style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 16,
@@ -472,7 +477,7 @@ class _DashboardViewState extends State<DashboardView> {
                                         ),
                                       ),
                                       title: Text(
-                                        "Archived",
+                                        AppConstants.archived,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w700,
                                             fontSize: 16,
@@ -544,7 +549,7 @@ class _DashboardViewState extends State<DashboardView> {
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
-                        "No data found",
+                        AppConstants.noDataFound,
                         style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),
                       ),
                     ),
@@ -786,7 +791,7 @@ class _DashboardViewState extends State<DashboardView> {
             width: 200,
           ),
           Text(
-            'No new messages',
+            AppConstants.noNewMessages,
             textAlign: TextAlign.center,
             style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),
           ),
@@ -794,7 +799,7 @@ class _DashboardViewState extends State<DashboardView> {
             height: 8,
           ),
           Text(
-            'Any new messages will appear here',
+            AppConstants.anyNewMessagesAppear,
             textAlign: TextAlign.center,
             style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),
           ),
@@ -821,7 +826,7 @@ class _DashboardViewState extends State<DashboardView> {
             width: 200,
           ),
           Text(
-            'No call log history found',
+            AppConstants.noCallLogsFound,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.titleMedium,
           ),
@@ -829,7 +834,7 @@ class _DashboardViewState extends State<DashboardView> {
             height: 8,
           ),
           Text(
-            'Any new calls will appear here',
+            AppConstants.anyNewMessagesAppear,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.titleSmall,
           ),

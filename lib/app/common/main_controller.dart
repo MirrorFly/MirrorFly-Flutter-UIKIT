@@ -9,7 +9,6 @@ import 'package:mirrorfly_uikit_plugin/app/base_controller.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/apputils.dart';
-import 'package:mirrorfly_uikit_plugin/app/data/pushnotification.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/controllers/chat_controller.dart';
@@ -39,7 +38,6 @@ class MainController extends FullLifeCycleController
   Future<void> onInit() async {
     super.onInit();
     //presentPinPage();
-    PushNotifications.init();
     initListeners();
     getMediaEndpoint();
     uploadEndpoint(SessionManagement.getMediaEndPoint().checkNull());

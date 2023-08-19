@@ -284,6 +284,7 @@ class Constants {
   static const String webChatLogin = 'https://webchat-uikit-qa.contus.us/';
   static const String tag = 'Contus Fly';
   static const String googleMapPackageName = "com.google.android.apps.maps";
+  static const String googleMapQuery = "https://www.google.com/maps/search/?api=1&query=";
   static const String packageName = "com.contus.flycommons.";
 
   static const String applicationLink = "https://app.contusfly.contus.com";

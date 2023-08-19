@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/controllers/forwardchat_controller.dart';
 
@@ -66,9 +67,9 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                   decoration: InputDecoration(
                     hintStyle: TextStyle(color: MirrorflyUikit
                         .getTheme?.colorOnAppbar.withOpacity(0.5)),
-                      hintText: "Search...", border: InputBorder.none),
+                      hintText: AppConstants.searchPlaceHolder, border: InputBorder.none),
                 )
-              : Text("Forward to...",style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
+              : Text(AppConstants.forwardTo,style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
           actions: [
             Visibility(
               visible: controller.isSearchVisible,
@@ -100,13 +101,13 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                           child: Center(
                             child: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 20.0),
-                              child: Text('No Results found',style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),),
+                              child: Text(AppConstants.noResultsFound,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),),
                             ),
                           ),
                         ),
                         Visibility(
                           visible: controller.recentChats.isNotEmpty,
-                          child: searchHeader("Recent Chat", "", context),
+                          child: searchHeader(AppConstants.recentChat, Constants.emptyString, context),
                         ),
                         ListView.builder(
                             itemCount: controller.recentChats.length,
@@ -145,7 +146,7 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                             }),
                         Visibility(
                           visible: controller.groupList.isNotEmpty,
-                          child: searchHeader("Groups", "", context),
+                          child: searchHeader(AppConstants.groups, Constants.emptyString, context),
                         ),
                         ListView.builder(
                             itemCount: controller.groupList.length,
@@ -208,7 +209,7 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                             }),
                         Visibility(
                           visible: controller.userList.isNotEmpty,
-                          child: searchHeader("Contacts", "", context),
+                          child: searchHeader(AppConstants.contacts, Constants.emptyString, context),
                         ),
                         Visibility(
                           visible: controller.searchLoading.value ||
@@ -300,7 +301,7 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                   children: [
                     Expanded(
                       child: controller.selectedNames.isEmpty
-                          ? Text("No Users Selected",
+                          ? Text(AppConstants.noUsersSelected,
                               style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor))
                           : Text(
                               controller.selectedNames.join(","),
@@ -318,7 +319,7 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            "NEXT",
+                            AppConstants.next.toUpperCase(),
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.w500,color: MirrorflyUikit.getTheme?.primaryColor),
                           ),

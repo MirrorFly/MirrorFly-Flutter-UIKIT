@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:marquee/marquee.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/widgets.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 
@@ -290,7 +291,7 @@ class _ChatViewState extends State<ChatView> {
                                     width: 8,
                                   ),
                                   buttonNotSavedContact(
-                                      text: 'Add',
+                                      text: AppConstants.add,
                                       onClick: () {
                                         controller.saveContact();
                                       }),
@@ -300,8 +301,8 @@ class _ChatViewState extends State<ChatView> {
                                   buttonNotSavedContact(
                                       text:
                                           controller.profile.isBlocked.checkNull()
-                                              ? 'UnBlock'
-                                              : 'Block',
+                                              ? AppConstants.unblock
+                                              : AppConstants.block,
                                       onClick: () {
                                         if (controller.profile.isBlocked
                                             .checkNull()) {
@@ -405,7 +406,7 @@ class _ChatViewState extends State<ChatView> {
                         height: 50,
                         child: Align(
                             alignment: Alignment.centerRight,
-                            child: Text('< Slide to Cancel',
+                            child: Text(AppConstants.slideToCancel,
                                 textAlign: TextAlign.end,style:TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)))),
                   ),
                 ),
@@ -417,12 +418,12 @@ class _ChatViewState extends State<ChatView> {
                   onTap: () {
                     controller.deleteRecording();
                   },
-                  child: const Padding(
-                    padding: EdgeInsets.all(17.0),
+                  child: Padding(
+                    padding: const EdgeInsets.all(17.0),
                     child: Text(
-                      'Cancel',
+                      AppConstants.cancel,
                       textAlign: TextAlign.end,
-                      style: TextStyle(color: Colors.red),
+                      style: const TextStyle(color: Colors.red),
                     ),
                   ),
                 ),
@@ -450,7 +451,7 @@ class _ChatViewState extends State<ChatView> {
                   cursorColor: MirrorflyUikit.getTheme!.primaryColor,
                   style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor,fontWeight: FontWeight.w400),
                   decoration: InputDecoration(
-                      hintText: "Start Typing...", border: InputBorder.none,hintStyle: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)),
+                      hintText: AppConstants.startTyping, border: InputBorder.none,hintStyle: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)),
                 ),
               )
             : const SizedBox.shrink(),
@@ -487,7 +488,7 @@ class _ChatViewState extends State<ChatView> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "You have blocked ",
+                AppConstants.youHaveBlocked,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontSize: 15,color: MirrorflyUikit.getTheme?.textPrimaryColor),
@@ -508,7 +509,7 @@ class _ChatViewState extends State<ChatView> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'UNBLOCK',
+                      AppConstants.unblock.toLowerCase(),
                     style: TextStyle(
                         decoration: TextDecoration.underline, color: MirrorflyUikit.getTheme?.primaryColor)//),
                   ),
@@ -529,7 +530,7 @@ class _ChatViewState extends State<ChatView> {
         Padding(
           padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
           child: Text(
-            "You can't send messages to this group because you're no longer a participant.",
+            AppConstants.youCantSentMessageNoLonger,
             style: TextStyle(
               fontSize: 15,color: MirrorflyUikit.getTheme?.textPrimaryColor
             ),
@@ -855,13 +856,13 @@ class _ChatViewState extends State<ChatView> {
                         .clearChatSelection(controller.selectedChatList[0]);
                   },
                   icon: SvgPicture.asset(replyIcon,package: package,colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
-                  tooltip: 'Reply',
+                  tooltip: AppConstants.reply,
                 ),
-                overflowWidget: Text("Reply",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                overflowWidget: Text(AppConstants.reply,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: controller.canBeReplied.value
                     ? ShowAsAction.always
                     : ShowAsAction.gone,
-                keyValue: 'Reply',
+                keyValue: AppConstants.reply,
                 onItemClick: () {
                   controller.closeKeyBoard();
                   controller
@@ -875,13 +876,13 @@ class _ChatViewState extends State<ChatView> {
                     controller.checkBusyStatusForForward(context);
                   },
                   icon: SvgPicture.asset(forwardIcon,package: package,colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
-                  tooltip: 'Forward',
+                  tooltip: AppConstants.forward,
                 ),
-                overflowWidget: Text("Forward",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                overflowWidget: Text(AppConstants.forward,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: controller.canBeForwarded.value
                     ? ShowAsAction.always
                     : ShowAsAction.gone,
-                keyValue: 'Forward',
+                keyValue: AppConstants.forward,
                 onItemClick: () {
                   controller.closeKeyBoard();
                   controller.checkBusyStatusForForward(context);
@@ -898,13 +899,13 @@ class _ChatViewState extends State<ChatView> {
                   // icon: controller.getOptionStatus('Favourite') ? const Icon(Icons.star_border_outlined)
                   // icon: controller.selectedChatList[0].isMessageStarred
                   icon: SvgPicture.asset(favouriteIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
-                  tooltip: 'Favourite',
+                  tooltip: AppConstants.favourite,
                 ),
-                overflowWidget: Text("Favourite",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                overflowWidget: Text(AppConstants.favourite,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: controller.canBeStarred.value
                     ? ShowAsAction.always
                     : ShowAsAction.gone,
-                keyValue: 'favourite',
+                keyValue: AppConstants.favourite,
                 onItemClick: () {
                   controller.closeKeyBoard();
                   controller.favouriteMessage();
@@ -918,13 +919,13 @@ class _ChatViewState extends State<ChatView> {
                   // icon: controller.getOptionStatus('Favourite') ? const Icon(Icons.star_border_outlined)
                   // icon: controller.selectedChatList[0].isMessageStarred
                   icon: SvgPicture.asset(unFavouriteIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
-                  tooltip: 'unFavourite',
+                  tooltip: AppConstants.unFavourite,
                 ),
-                overflowWidget: Text("unFavourite",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                overflowWidget: Text(AppConstants.unFavourite,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: controller.canBeUnStarred.value
                     ? ShowAsAction.always
                     : ShowAsAction.gone,
-                keyValue: 'favourite',
+                keyValue: AppConstants.unFavourite,
                 onItemClick: () {
                   controller.closeKeyBoard();
                   controller.favouriteMessage();
@@ -936,11 +937,11 @@ class _ChatViewState extends State<ChatView> {
                     controller.deleteMessages(context);
                   },
                   icon: SvgPicture.asset(deleteIcon,package: package,colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
-                  tooltip: 'Delete',
+                  tooltip: AppConstants.delete,
                 ),
-                overflowWidget: Text("Delete",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                overflowWidget: Text(AppConstants.delete,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: ShowAsAction.always,
-                keyValue: 'Delete',
+                keyValue: AppConstants.delete,
                 onItemClick: () {
                   controller.closeKeyBoard();
                   controller.deleteMessages(context);
@@ -955,11 +956,11 @@ class _ChatViewState extends State<ChatView> {
                       controller.reportChatOrUser(context);
                     },
                     icon: const Icon(Icons.report_problem_rounded)),
-                overflowWidget: Text("Report",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                overflowWidget: Text(AppConstants.report,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: controller.canShowReport.value
                     ? ShowAsAction.never
                     : ShowAsAction.gone,
-                keyValue: 'Report',
+                keyValue: AppConstants.report,
                 onItemClick: () {
                   controller.closeKeyBoard();
                   controller.reportChatOrUser(context);
@@ -983,7 +984,7 @@ class _ChatViewState extends State<ChatView> {
                   ),
                   tooltip: 'Copy',
                 ),
-                overflowWidget: Text("Copy",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                overflowWidget: Text(AppConstants.copy,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: controller.canBeCopied.value
                     ? ShowAsAction.never
                     : ShowAsAction.gone,
@@ -1007,13 +1008,13 @@ class _ChatViewState extends State<ChatView> {
                     fit: BoxFit.contain,
                     package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)
                   ),
-                  tooltip: 'Message Info',
+                  tooltip: AppConstants.messageInfo,
                 ),
-                overflowWidget: Text("Message Info",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                overflowWidget: Text(AppConstants.messageInfo,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: controller.canShowInfo.value
                     ? ShowAsAction.never
                     : ShowAsAction.gone,
-                keyValue: 'MessageInfo',
+                keyValue: AppConstants.messageInfo,
                 onItemClick: () {
                   controller.closeKeyBoard();
                   controller.messageInfo();
@@ -1026,13 +1027,13 @@ class _ChatViewState extends State<ChatView> {
                 visibleWidget: IconButton(
                   onPressed: () {},
                   icon: SvgPicture.asset(shareIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
-                  tooltip: 'Share',
+                  tooltip: AppConstants.share,
                 ),
-                overflowWidget: Text("Share",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                overflowWidget: Text(AppConstants.share,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: controller.canBeShared.value
                     ? ShowAsAction.never
                     : ShowAsAction.gone,
-                keyValue: 'Share',
+                keyValue: AppConstants.share,
                 onItemClick: () {
                   controller.closeKeyBoard();
                   controller.share();
@@ -1163,9 +1164,9 @@ class _ChatViewState extends State<ChatView> {
                   },
                   icon: const Icon(Icons.cancel),
                 ),
-                overflowWidget: Text("Clear Chat",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                overflowWidget: Text(AppConstants.clearChat,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: ShowAsAction.never,
-                keyValue: 'Clear Chat',
+                keyValue: AppConstants.clearChat,
                 onItemClick: () {
                   controller.closeKeyBoard();
                   debugPrint("Clear chat tap");
@@ -1179,9 +1180,9 @@ class _ChatViewState extends State<ChatView> {
                   },
                   icon: const Icon(Icons.report_problem_rounded),
                 ),
-                overflowWidget: Text("Report",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                overflowWidget: Text(AppConstants.report,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: ShowAsAction.never,
-                keyValue: 'Report',
+                keyValue: AppConstants.report,
                 onItemClick: () {
                   controller.closeKeyBoard();
                   controller.reportChatOrUser(context);
@@ -1196,9 +1197,9 @@ class _ChatViewState extends State<ChatView> {
                         },
                         icon: const Icon(Icons.block),
                       ),
-                      overflowWidget: Text("Unblock",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                      overflowWidget: Text(AppConstants.unblock,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                       showAsAction: ShowAsAction.never,
-                      keyValue: 'Unblock',
+                      keyValue: AppConstants.unblock,
                       onItemClick: () {
                         debugPrint('onItemClick unblock');
                         controller.unBlockUser(context);
@@ -1212,11 +1213,11 @@ class _ChatViewState extends State<ChatView> {
                         },
                         icon: const Icon(Icons.block),
                       ),
-                      overflowWidget: Text("Block",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                      overflowWidget: Text(AppConstants.block,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                       showAsAction: controller.profile.isGroupProfile ?? false
                           ? ShowAsAction.gone
                           : ShowAsAction.never,
-                      keyValue: 'Block',
+                      keyValue: AppConstants.block,
                       onItemClick: () {
                         controller.closeKeyBoard();
                         controller.blockUser(context);
@@ -1227,9 +1228,9 @@ class _ChatViewState extends State<ChatView> {
                   onPressed: () {},
                   icon: const Icon(Icons.search),
                 ),
-                overflowWidget: Text("Search",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                overflowWidget: Text(AppConstants.search,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: ShowAsAction.never,
-                keyValue: 'Search',
+                keyValue: AppConstants.search,
                 onItemClick: () {
                   controller.closeKeyBoard();
                   controller.gotoSearch();
@@ -1259,9 +1260,9 @@ class _ChatViewState extends State<ChatView> {
                   onPressed: () {},
                   icon: const Icon(Icons.shortcut),
                 ),
-                overflowWidget: Text("Add Chat Shortcut",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                overflowWidget: Text(AppConstants.addChatShortcut,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: ShowAsAction.never,
-                keyValue: 'Shortcut',
+                keyValue: AppConstants.addChatShortcut,
                 onItemClick: () {
                   controller.closeKeyBoard();
                 },
@@ -1282,14 +1283,5 @@ class _ChatViewState extends State<ChatView> {
         );
       }),
     );
-  }
-
-  customEmptyAction() {
-    return CustomAction(
-        visibleWidget: const SizedBox.shrink(),
-        overflowWidget: const SizedBox.shrink(),
-        showAsAction: ShowAsAction.always,
-        keyValue: 'Empty',
-        onItemClick: () {});
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/controllers/contact_controller.dart';
@@ -69,19 +70,19 @@ class _ContactListViewState extends State<ContactListView> {
                   controller: controller.searchQuery,
                   autofocus: true,
                   decoration: InputDecoration(
-                      hintText: "Search...", border: InputBorder.none, hintStyle: TextStyle(
+                      hintText: AppConstants.searchPlaceHolder, border: InputBorder.none, hintStyle: TextStyle(
                   color: MirrorflyUikit
                       .getTheme?.colorOnAppbar.withOpacity(0.5))),
                 )
               : controller.isForward.value
-                  ? Text("Forward to...", style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar))
+                  ? Text(AppConstants.forwardTo, style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar))
                   : controller.isCreateGroup.value
                       ? Text(
-                          "Add Participants",
+              AppConstants.addParticipants,
                           overflow: TextOverflow.fade,
               style: TextStyle(fontSize: 16, color: MirrorflyUikit.getTheme?.colorOnAppbar)
                         )
-                      : Text('Contacts', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar)),
+                      : Text(AppConstants.contacts, style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar)),
           actions: [
             Visibility(
               visible: controller.progressSpinner.value,
@@ -110,7 +111,7 @@ class _ContactListViewState extends State<ContactListView> {
               child: TextButton(
                   onPressed: () => controller.backToCreateGroup(context),
                   child: Text(
-                    controller.groupJid.value.isNotEmpty ? "NEXT" : "CREATE",
+                    controller.groupJid.value.isNotEmpty ? AppConstants.next.toUpperCase() : AppConstants.create.toUpperCase(),
                     style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
                   )),
             ),
@@ -125,11 +126,11 @@ class _ContactListViewState extends State<ContactListView> {
                     visibleWidget: IconButton(
                         onPressed: () {}, icon: Icon(Icons.settings, color: MirrorflyUikit.getTheme?.colorOnAppbar,)),
                     overflowWidget: InkWell(
-                      child: Text("Settings", style: TextStyle(fontSize: 16, color: MirrorflyUikit.getTheme?.colorOnAppbar)),
+                      child: Text(AppConstants.settings, style: TextStyle(fontSize: 16, color: MirrorflyUikit.getTheme?.colorOnAppbar)),
                       onTap: () => Navigator.push(context, MaterialPageRoute(builder: (con)=> const SettingsView())),
                     ),
                     showAsAction: widget.showSettings ? ShowAsAction.never : ShowAsAction.gone,
-                    keyValue: 'Settings',
+                    keyValue: AppConstants.settings,
                     onItemClick: () {
                       Navigator.push(context, MaterialPageRoute(builder: (con)=> const SettingsView()));
                     },
@@ -138,14 +139,14 @@ class _ContactListViewState extends State<ContactListView> {
                     visibleWidget: IconButton(
                         onPressed: () {}, icon: const Icon(Icons.refresh)),
                     overflowWidget: InkWell(
-                      child: Text("Refresh", style: TextStyle(fontSize: 16, color: MirrorflyUikit.getTheme?.colorOnAppbar)),
+                      child: Text(AppConstants.refresh, style: TextStyle(fontSize: 16, color: MirrorflyUikit.getTheme?.colorOnAppbar)),
                       onTap: (){
                         Navigator.pop(context);
                         controller.refreshContacts(true);
                       },
                     ),
                     showAsAction: (!MirrorflyUikit.instance.isTrialLicenceKey && !controller.progressSpinner.value) ? ShowAsAction.never : ShowAsAction.gone,
-                    keyValue: 'Refresh',
+                    keyValue: AppConstants.refresh,
                     onItemClick: () {
                       // Get.back();
                       controller.refreshContacts(true);
@@ -159,7 +160,7 @@ class _ContactListViewState extends State<ContactListView> {
         floatingActionButton: controller.isForward.value &&
                 controller.selectedUsersList.isNotEmpty
             ? FloatingActionButton(
-                tooltip: "Forward",
+                tooltip: AppConstants.forward,
                 onPressed: () {
                   FocusManager.instance.primaryFocus!.unfocus();
                   controller.forwardMessages(context);
@@ -180,7 +181,7 @@ class _ContactListViewState extends State<ContactListView> {
                     visible: !controller.isPageLoading.value && controller.usersList.isEmpty,
                       child: Center(child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 20.0),
-                        child: Text("No Contacts found", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                        child: Text(AppConstants.noContactsFound, style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                       ),)),
                   controller.isPageLoading.value
                       ? Center(

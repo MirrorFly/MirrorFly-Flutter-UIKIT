@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 
 import '../../../../mirrorfly_uikit_plugin.dart';
@@ -164,373 +165,197 @@ class _ChatInfoViewState extends State<ChatInfoView> {
             }),
           ];
         },
-        body: ListView(
+        body: items(),
+      ) : SafeArea(
+        child: items()
+      ),
+    );
+  }
+
+  Widget items (){
+    return ListView(
+      children: [
+        Obx(() {
+          return controller.isSliverAppBarExpanded
+              ? const SizedBox.shrink()
+              : const SizedBox(height: 60);
+        }),
+        Obx(() {
+          return listItem(
+            title: Text(AppConstants.muteNotification,
+                style: TextStyle(
+                    color: MirrorflyUikit.getTheme?.textPrimaryColor,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600)),
+            trailing: FlutterSwitch(
+                width: 40.0,
+                height: 20.0,
+                valueFontSize: 12.0,
+                toggleSize: 12.0,
+                activeColor: MirrorflyUikit.getTheme!.primaryColor,
+                //Colors.white,
+                activeToggleColor: MirrorflyUikit.getTheme?.colorOnPrimary,
+                //Colors.blue,
+                inactiveToggleColor: Colors.grey,
+                inactiveColor: Colors.white,
+                switchBorder: Border.all(
+                    color: controller.mute.value
+                        ? MirrorflyUikit.getTheme!.colorOnPrimary
+                        : Colors.grey,
+                    width: 1),
+                value: controller.mute.value,
+                onToggle: (value) => {controller.onToggleChange(value)}),
+            onTap: () {
+              controller.onToggleChange(!controller.mute.value);
+            },
+          );
+        }),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Obx(() {
-              return controller.isSliverAppBarExpanded
-                  ? const SizedBox.shrink()
-                  : const SizedBox(height: 60);
-            }),
-            Obx(() {
-              return listItem(
-                title: Text("Mute Notification",
-                    style: TextStyle(
-                        color: MirrorflyUikit.getTheme?.textPrimaryColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600)),
-                trailing: FlutterSwitch(
-                    width: 40.0,
-                    height: 20.0,
-                    valueFontSize: 12.0,
-                    toggleSize: 12.0,
-                    activeColor: MirrorflyUikit.getTheme!.primaryColor,
-                    //Colors.white,
-                    activeToggleColor: MirrorflyUikit.getTheme?.colorOnPrimary,
-                    //Colors.blue,
-                    inactiveToggleColor: Colors.grey,
-                    inactiveColor: Colors.white,
-                    switchBorder: Border.all(
-                        color: controller.mute.value
-                            ? MirrorflyUikit.getTheme!.colorOnPrimary
-                            : Colors.grey,
-                        width: 1),
-                    value: controller.mute.value,
-                    onToggle: (value) => {controller.onToggleChange(value)}),
-                onTap: () {
-                  controller.onToggleChange(!controller.mute.value);
-                },
-              );
-            }),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text("Email",
-                      style: TextStyle(
-                          color: MirrorflyUikit.getTheme?.textPrimaryColor,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500)),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 15.0, bottom: 16),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(
-                        emailIcon,
-                        package: package,
-                        colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn)
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Obx(() {
-                        return Text(controller.profile.email.checkNull(),
-                            style: TextStyle(
-                                fontSize: 13,
-                                color: MirrorflyUikit
-                                    .getTheme?.textSecondaryColor, //textColor,
-                                fontWeight: FontWeight.w500));
-                      }),
-                    ],
-                  ),
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(AppConstants.email,
+                  style: TextStyle(
+                      color: MirrorflyUikit.getTheme?.textPrimaryColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500)),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text("Mobile Number",
-                      style: TextStyle(
-                          color: MirrorflyUikit.getTheme?.textPrimaryColor,
-                          //Colors.black,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500)),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 15.0, bottom: 16),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(
-                        phoneIcon,
-                        package: package,
-                        colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn)
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Obx(() {
-                        return Text(controller.profile.mobileNumber.checkNull(),
-                            style: TextStyle(
-                                fontSize: 13,
-                                color: MirrorflyUikit
-                                    .getTheme?.textSecondaryColor, //textColor,
-                                fontWeight: FontWeight.w500));
-                      }),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Visibility(
-              visible: MirrorflyUikit.instance.showStatusOption,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0, bottom: 16),
+              child: Row(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text("Status",
+                  SvgPicture.asset(
+                      emailIcon,
+                      package: package,
+                      colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn)
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Obx(() {
+                    return Text(controller.profile.email.checkNull(),
                         style: TextStyle(
-                            color: MirrorflyUikit.getTheme?.textPrimaryColor,
-                            //Colors.black,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500)),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 15.0, bottom: 16),
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(
-                          statusIcon,
-                          package: package,
-                          colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn)
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Obx(() {
-                          return Text(controller.profile.status.checkNull(),
-                              style: TextStyle(
-                                  fontSize: 13,
-                                  color: MirrorflyUikit
-                                      .getTheme?.textSecondaryColor, //textColor,
-                                  fontWeight: FontWeight.w500));
-                        }),
-                      ],
-                    ),
-                  ),
+                            fontSize: 13,
+                            color: MirrorflyUikit
+                                .getTheme?.textSecondaryColor, //textColor,
+                            fontWeight: FontWeight.w500));
+                  }),
                 ],
               ),
             ),
-            listItem(
-                leading: SvgPicture.asset(
-                  imageOutline,
-                  package: package,
-                  colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn)
-                ),
-                title: Text("View All Media",
+          ],
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(AppConstants.mobileNumber,
+                  style: TextStyle(
+                      color: MirrorflyUikit.getTheme?.textPrimaryColor,
+                      //Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500)),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0, bottom: 16),
+              child: Row(
+                children: [
+                  SvgPicture.asset(
+                      phoneIcon,
+                      package: package,
+                      colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn)
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Obx(() {
+                    return Text(controller.profile.mobileNumber.checkNull(),
+                        style: TextStyle(
+                            fontSize: 13,
+                            color: MirrorflyUikit
+                                .getTheme?.textSecondaryColor, //textColor,
+                            fontWeight: FontWeight.w500));
+                  }),
+                ],
+              ),
+            ),
+          ],
+        ),
+        Visibility(
+          visible: MirrorflyUikit.instance.showStatusOption,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(AppConstants.status,
                     style: TextStyle(
                         color: MirrorflyUikit.getTheme?.textPrimaryColor,
                         //Colors.black,
                         fontSize: 14,
                         fontWeight: FontWeight.w500)),
-                trailing: Icon(
-                  Icons.keyboard_arrow_right,
-                  color: MirrorflyUikit.getTheme?.textPrimaryColor,
-                ),
-                onTap: () => {
-                      controller.gotoViewAllMedia(context)
-                    } //controller.gotoViewAllMedia(),
-                ),
-            listItem(
-                leading: SvgPicture.asset(
-                  reportUser,
-                  package: package,
-                  colorFilter: const ColorFilter.mode(Colors.red, BlendMode.srcIn)
-                ),
-                title: const Text("Report",
-                    style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500)),
-                onTap: () => {controller.reportChatOrUser(context)}),
-          ],
-        ),
-      ) : SafeArea(
-        child: ListView(
-          children: [
-            Obx(() {
-              return controller.isSliverAppBarExpanded
-                  ? const SizedBox.shrink()
-                  : const SizedBox(height: 60);
-            }),
-            Obx(() {
-              return listItem(
-                title: Text("Mute Notification",
-                    style: TextStyle(
-                        color: MirrorflyUikit.getTheme?.textPrimaryColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600)),
-                trailing: FlutterSwitch(
-                    width: 40.0,
-                    height: 20.0,
-                    valueFontSize: 12.0,
-                    toggleSize: 12.0,
-                    activeColor: MirrorflyUikit.getTheme!.primaryColor,
-                    //Colors.white,
-                    activeToggleColor: MirrorflyUikit.getTheme?.colorOnPrimary,
-                    //Colors.blue,
-                    inactiveToggleColor: Colors.grey,
-                    inactiveColor: Colors.white,
-                    switchBorder: Border.all(
-                        color: controller.mute.value
-                            ? MirrorflyUikit.getTheme!.colorOnPrimary
-                            : Colors.grey,
-                        width: 1),
-                    value: controller.mute.value,
-                    onToggle: (value) => {controller.onToggleChange(value)}),
-                onTap: () {
-                  controller.onToggleChange(!controller.mute.value);
-                },
-              );
-            }),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text("Email",
-                      style: TextStyle(
-                          color: MirrorflyUikit.getTheme?.textPrimaryColor,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500)),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 15.0, bottom: 16),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(
-                        emailIcon,
-                        package: package,
-                        colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn)
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Obx(() {
-                        return Text(controller.profile.email.checkNull(),
-                            style: TextStyle(
-                                fontSize: 13,
-                                color: MirrorflyUikit
-                                    .getTheme?.textSecondaryColor, //textColor,
-                                fontWeight: FontWeight.w500));
-                      }),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text("Mobile Number",
-                      style: TextStyle(
-                          color: MirrorflyUikit.getTheme?.textPrimaryColor,
-                          //Colors.black,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500)),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 15.0, bottom: 16),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(
-                        phoneIcon,
-                        package: package,
-                        colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn)
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Obx(() {
-                        return Text(controller.profile.mobileNumber.checkNull(),
-                            style: TextStyle(
-                                fontSize: 13,
-                                color: MirrorflyUikit
-                                    .getTheme?.textSecondaryColor, //textColor,
-                                fontWeight: FontWeight.w500));
-                      }),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text("Status",
-                      style: TextStyle(
-                          color: MirrorflyUikit.getTheme?.textPrimaryColor,
-                          //Colors.black,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500)),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 15.0, bottom: 16),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 15.0, bottom: 16),
+                child: Row(
+                  children: [
+                    SvgPicture.asset(
                         statusIcon,
                         package: package,
                         colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn)
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Obx(() {
-                        return Text(controller.profile.status.checkNull(),
-                            style: TextStyle(
-                                fontSize: 13,
-                                color: MirrorflyUikit
-                                    .getTheme?.textSecondaryColor, //textColor,
-                                fontWeight: FontWeight.w500));
-                      }),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Obx(() {
+                      return Text(controller.profile.status.checkNull(),
+                          style: TextStyle(
+                              fontSize: 13,
+                              color: MirrorflyUikit
+                                  .getTheme?.textSecondaryColor, //textColor,
+                              fontWeight: FontWeight.w500));
+                    }),
+                  ],
                 ),
-              ],
-            ),
-            listItem(
-                leading: SvgPicture.asset(
-                  imageOutline,
-                  package: package,
-                  colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn)
-                ),
-                title: Text("View All Media",
-                    style: TextStyle(
-                        color: MirrorflyUikit.getTheme?.textPrimaryColor,
-                        //Colors.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500)),
-                trailing: Icon(
-                  Icons.keyboard_arrow_right,
-                  color: MirrorflyUikit.getTheme?.textPrimaryColor,
-                ),
-                onTap: () => {
-                  controller.gotoViewAllMedia(context)
-                } //controller.gotoViewAllMedia(),
-            ),
-            listItem(
-                leading: SvgPicture.asset(
-                  reportUser,
-                  package: package,
-                  colorFilter: const ColorFilter.mode(Colors.red, BlendMode.srcIn)
-                ),
-                title: const Text("Report",
-                    style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500)),
-                onTap: () => {controller.reportChatOrUser(context)}),
-          ],
+              ),
+            ],
+          ),
         ),
-      ),
+        listItem(
+            leading: SvgPicture.asset(
+                imageOutline,
+                package: package,
+                colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn)
+            ),
+            title: Text(AppConstants.viewAllMedia,
+                style: TextStyle(
+                    color: MirrorflyUikit.getTheme?.textPrimaryColor,
+                    //Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500)),
+            trailing: Icon(
+              Icons.keyboard_arrow_right,
+              color: MirrorflyUikit.getTheme?.textPrimaryColor,
+            ),
+            onTap: () => {
+              controller.gotoViewAllMedia(context)
+            } //controller.gotoViewAllMedia(),
+        ),
+        listItem(
+            leading: SvgPicture.asset(
+                reportUser,
+                package: package,
+                colorFilter: const ColorFilter.mode(Colors.red, BlendMode.srcIn)
+            ),
+            title: Text(AppConstants.report,
+                style: const TextStyle(
+                    color: Colors.red,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500)),
+            onTap: () => {controller.reportChatOrUser(context)}),
+      ],
     );
   }
 }

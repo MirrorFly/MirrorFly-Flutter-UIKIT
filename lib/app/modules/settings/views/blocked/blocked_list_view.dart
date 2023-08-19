@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/settings/views/blocked/blocked_list_controller.dart';
 
@@ -22,7 +23,7 @@ class _BlockedListViewState extends State<BlockedListView> {
     return Scaffold(
       backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
       appBar: widget.enableAppBar ? AppBar(
-        title: Text('Blocked Contact List', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
+        title: Text(AppConstants.blockedContactList, style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
         automaticallyImplyLeading: true,
         iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
         backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
@@ -30,7 +31,7 @@ class _BlockedListViewState extends State<BlockedListView> {
       body: Obx(() {
         return Center(
           child: controller.blockedUsers.isEmpty ? Text(
-            "No Blocked Contacts found",
+            AppConstants.noBlockedContactsFound,
             style: TextStyle(fontSize: 17, color: MirrorflyUikit.getTheme?.textPrimaryColor),) :
           ListView.builder(
             itemCount: controller.blockedUsers.length,

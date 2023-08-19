@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/widgets.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/profile/controllers/status_controller.dart';
 
@@ -31,7 +32,7 @@ class _AddStatusViewState extends State<AddStatusView> {
       backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
       appBar: widget.enableAppBar ? AppBar(
         automaticallyImplyLeading: true,
-        title: Text('Add New Status', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
+        title: Text(AppConstants.addNewStatus, style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
         iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
         backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
       ) : null,
@@ -71,7 +72,7 @@ class _AddStatusViewState extends State<AddStatusView> {
                         keyboardAppearance: MirrorflyUikit.theme == "dark" ? Brightness.dark : Brightness.light,
                         controller: controller.addStatusController,
                         decoration: const InputDecoration(
-                            border: InputBorder.none, counterText: ""),
+                            border: InputBorder.none, counterText: Constants.emptyString),
                         onTap: () {
                           if (controller.showEmoji.value) {
                             controller.showEmoji(false);
@@ -125,7 +126,7 @@ class _AddStatusViewState extends State<AddStatusView> {
                       shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.zero)),
                   child: Text(
-                    "CANCEL",
+                    AppConstants.cancel.toUpperCase(),
                     style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor, fontSize: 16.0),
                   ),
                 ),
@@ -141,7 +142,7 @@ class _AddStatusViewState extends State<AddStatusView> {
                       shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.zero)),
                   child: Text(
-                    "OK",
+                    AppConstants.ok.toUpperCase(),
                     style: TextStyle(color:  MirrorflyUikit.getTheme?.textPrimaryColor, fontSize: 16.0),
                   ),
                 ),

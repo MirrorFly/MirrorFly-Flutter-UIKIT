@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   MirrorflyUikit.instance.initUIKIT(
@@ -10,6 +12,7 @@ void main() {
       licenseKey: 'ckIjaccWBoMNvxdbql8LJ2dmKqT5bp',
       googleMapKey: 'AIzaSyBaKkrQnLT4nacpKblIE5d4QK6GpaX5luQ',
       iOSContainerID: 'group.com.mirrorfly.flutter');
+
   runApp(const MyApp());
 }
 
@@ -21,6 +24,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         themeMode: ThemeMode.dark,
         debugShowCheckedModeBanner: false,
+        locale: const Locale("es"),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         theme: ThemeData(textTheme: GoogleFonts.latoTextTheme()),
         home: const Dashboard());
   }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/gallery_picker/src/data/models/picked_asset_model.dart';
@@ -160,9 +161,9 @@ class _MediaPreviewViewState extends State<MediaPreviewView> {
                               ),
                             ),
                             const SizedBox(height: 50),
-                            const Text(
-                              'No Media selected',
-                              style: TextStyle(
+                            Text(
+                              AppConstants.noMediaSelected,
+                              style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                   color: Colors.white70),
@@ -312,10 +313,10 @@ class _MediaPreviewViewState extends State<MediaPreviewView> {
                                         ),
                                         maxLines: 6,
                                         minLines: 1,
-                                        decoration: const InputDecoration(
+                                        decoration: InputDecoration(
                                           border: InputBorder.none,
-                                          hintText: "Add Caption...",
-                                          hintStyle: TextStyle(
+                                          hintText: AppConstants.addCaption,
+                                          hintStyle: const TextStyle(
                                             color: previewTextColor,
                                             fontSize: 15,
                                           ),

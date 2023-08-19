@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/widgets.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/model/chat_message_model.dart';
@@ -54,7 +55,7 @@ class _MessageInfoViewState extends State<MessageInfoView> {
               IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
           backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
           title: Text(
-            'Message Info',
+            AppConstants.messageInfo,
             style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
           ),
         ) : null,
@@ -142,7 +143,7 @@ class _MessageInfoViewState extends State<MessageInfoView> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 15.0, vertical: 10.0),
                     child: Text(
-                      "Delivered to ${controller.messageDeliveredList.length} of ${controller.statusCount.value}",
+                      "${AppConstants.deliveredTo} ${controller.messageDeliveredList.length} ${AppConstants.of} ${controller.statusCount.value}",
                       style: TextStyle(
                           fontSize: 18.0, fontWeight: FontWeight.w600,color: MirrorflyUikit.getTheme?.textPrimaryColor),
                       textAlign: TextAlign.left,
@@ -177,7 +178,7 @@ class _MessageInfoViewState extends State<MessageInfoView> {
                               );
                             })
                         : emptyDeliveredSeen(
-                            context, 'Message sent, not delivered yet')),
+                            context, AppConstants.sentNotDelivered)),
                 const AppDivider(padding: EdgeInsets.only(top: 8),),
                 ListItem(
                   leading: !controller.visibleReadList.value
@@ -191,7 +192,7 @@ class _MessageInfoViewState extends State<MessageInfoView> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 15.0, vertical: 10.0),
                     child: Text(
-                      "Read by ${controller.messageReadList.length} of ${controller.statusCount.value}",
+                      "${AppConstants.readBy} ${controller.messageReadList.length} ${AppConstants.of} ${controller.statusCount.value}",
                       style: TextStyle(
                           fontSize: 18.0, fontWeight: FontWeight.w600,color: MirrorflyUikit.getTheme?.textPrimaryColor),
                       textAlign: TextAlign.left,
@@ -225,7 +226,7 @@ class _MessageInfoViewState extends State<MessageInfoView> {
                               );
                             })
                         : emptyDeliveredSeen(
-                            context, "Your message is not read")),
+                            context, AppConstants.yourMessageNotRead)),
                 const AppDivider(padding: EdgeInsets.only(top: 8),),
               ],
             )
@@ -235,7 +236,7 @@ class _MessageInfoViewState extends State<MessageInfoView> {
               children: [
                 const AppDivider(padding: EdgeInsets.symmetric(vertical: 8),),
                 Text(
-                  "Delivered",
+                  AppConstants.delivered,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18,color: MirrorflyUikit.getTheme?.textPrimaryColor),
                 ),
                 const SizedBox(
@@ -243,7 +244,7 @@ class _MessageInfoViewState extends State<MessageInfoView> {
                 ),
                 Obx(() {
                   return Text(controller.deliveredTime.value == ""
-                      ? "Message sent, not delivered yet"
+                      ? AppConstants.sentNotDelivered
                       : controller.getChatTime(
                           context, int.parse(controller.deliveredTime.value)),style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor),);
                 }),
@@ -252,7 +253,7 @@ class _MessageInfoViewState extends State<MessageInfoView> {
                 ),
                 const AppDivider(padding: EdgeInsets.symmetric(vertical: 8),),
                 Text(
-                  "Read",
+                  AppConstants.read,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18,color: MirrorflyUikit.getTheme?.textPrimaryColor),
                 ),
                 const SizedBox(
@@ -260,7 +261,7 @@ class _MessageInfoViewState extends State<MessageInfoView> {
                 ),
                 Obx(() {
                   return Text(controller.readTime.value == ""
-                      ? "Your message is not read"
+                      ? AppConstants.notRead
                       : controller.getChatTime(
                           context, int.parse(controller.readTime.value)),style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor),);
                 }),

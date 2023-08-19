@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
@@ -154,7 +155,7 @@ class ForwardChatController extends GetxController {
   }
 
   var pageNum = 1;
-  var searchQuery = TextEditingController(text: '');
+  var searchQuery = TextEditingController(text: Constants.emptyString);
   var searching = false;
   var searchLoading = false.obs;
   var contactLoading = false.obs;
@@ -187,7 +188,7 @@ class ForwardChatController extends GetxController {
         contactLoading(false);
       });
     } else {
-      toToast(Constants.noInternetConnection);
+      toToast(AppConstants.noInternetConnection);
     }
   }
 
@@ -255,7 +256,7 @@ class ForwardChatController extends GetxController {
         searchLoading(false);
       });
     } else {
-      toToast(Constants.noInternetConnection);
+      toToast(AppConstants.noInternetConnection);
     }
   }
 
@@ -270,13 +271,13 @@ class ForwardChatController extends GetxController {
   }
 
   unBlock(String jid, String name, BuildContext context,){
-    Helper.showAlert(message: "Unblock $name?", actions: [
+    Helper.showAlert(message: "${AppConstants.unblock} $name?", actions: [
       TextButton(
           onPressed: () {
             // Get.back();
             Navigator.pop(context);
           },
-          child: Text("NO",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
+          child: Text(AppConstants.no.toUpperCase(),style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
       TextButton(
           onPressed: () async {
             if(await AppUtils.isNetConnected()) {
@@ -286,7 +287,7 @@ class ForwardChatController extends GetxController {
               Mirrorfly.unblockUser(jid.checkNull()).then((value) {
                 // Helper.hideLoading();
                 if(value!=null && value.checkNull()) {
-                  toToast("$name has been Unblocked");
+                  toToast("$name ${AppConstants.hasUnBlocked}");
                   userUpdatedHisProfile(jid);
                 }
               }).catchError((error) {
@@ -294,11 +295,11 @@ class ForwardChatController extends GetxController {
                 debugPrint(error.toString());
               });
             }else{
-              toToast(Constants.noInternetConnection);
+              toToast(AppConstants.noInternetConnection);
             }
 
           },
-          child: Text("YES",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
+          child: Text(AppConstants.yes.toUpperCase(),style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
     ], context: context);
   }
 
@@ -311,7 +312,7 @@ class ForwardChatController extends GetxController {
         selectedJids.add(jid);
         selectedNames.add(name);
       } else {
-        toToast("You can only forward with upto 5 users or groups");
+        toToast(AppConstants.onlyForwardUpto5);
       }
     }
 
@@ -321,7 +322,7 @@ class ForwardChatController extends GetxController {
   }
 
   final deBouncer = DeBouncer(milliseconds: 700);
-  String lastInputValue = "";
+  String lastInputValue = Constants.emptyString;
 
   void onSearch(String search) {
     mirrorFlyLog("search", "onSearch");
@@ -375,16 +376,16 @@ class ForwardChatController extends GetxController {
         }
       } else {
         //show busy status popup
-        // var messageObject = MessageObject(toJid: profile.jid.toString(),replyMessageId: (isReplying.value) ? replyChatMessage.messageId : "", messageType: Constants.mText,textMessage: messageController.text);
+        // var messageObject = MessageObject(toJid: profile.jid.toString(),replyMessageId: (isReplying.value) ? replyChatMessage.messageId : Constants.emptyString, messageType: Constants.mText,textMessage: messageController.text);
         //showBusyStatusAlert(disableBusyChatAndSend());
       }
     } else {
-      toToast(Constants.noInternetConnection);
+      toToast(AppConstants.noInternetConnection);
     }
   }
 
   Future<String> getParticipantsNameAsCsv(String jid) async {
-    var groupParticipantsName = "";
+    var groupParticipantsName = Constants.emptyString;
     await Mirrorfly.getGroupMembersList(jid, false).then((value) {
       if (value != null) {
         var str = <String>[];
@@ -454,7 +455,7 @@ class ForwardChatController extends GetxController {
     getAllGroups();
     getUsers();
     if (searchQuery.text.toString().trim().isNotEmpty) {
-      lastInputValue='';
+      lastInputValue=Constants.emptyString;
       onSearch(searchQuery.text.toString());
     }
   }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/widgets.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
@@ -97,7 +98,7 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                                           fontSize: 12.0,
                                         ) //TextStyle
                                     ),
-                                    Text("${controller.groupMembers.length} members",
+                                    Text("${controller.groupMembers.length} ${AppConstants.members}",
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 8.0,
@@ -184,7 +185,7 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                           if (controller.isMemberOfGroup) {
                             bottomSheetView(context);
                           }else{
-                            toToast("You're no longer a participant in this group");
+                            toToast(AppConstants.youAreNoLonger);
                           }
                         },
                       ),
@@ -198,7 +199,7 @@ class _GroupInfoViewState extends State<GroupInfoView> {
             child: ListView(
               children: <Widget>[
                 Obx(() {
-                  return ListItem(title: Text("Mute Notification",
+                  return ListItem(title: Text(AppConstants.muteNotification,
                       style: TextStyle(
                           color: MirrorflyUikit
                               .getTheme?.textPrimaryColor,
@@ -232,7 +233,7 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                     Visibility(
                       visible: controller.isAdmin,
                       child: ListItem(leading: SvgPicture.asset(addUser,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn),),
-                          title: Text("Add Participants",
+                          title: Text(AppConstants.addParticipants,
                               style: TextStyle(
                                   color: MirrorflyUikit.getTheme?.textPrimaryColor,
                                   fontSize: 14,
@@ -259,7 +260,7 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                 }),
                 ListItem(
                   leading: SvgPicture.asset(imageOutline,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn)),
-                  title: Text("View All Media",
+                  title: Text(AppConstants.viewAllMedia,
                       style: TextStyle(
                           color: MirrorflyUikit.getTheme?.textPrimaryColor,
                           fontSize: 14,
@@ -269,8 +270,8 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                 ),
                 ListItem(
                   leading: SvgPicture.asset(reportGroup,package: package,colorFilter : const ColorFilter.mode(Colors.red, BlendMode.srcIn)),
-                  title: const Text("Report Group",
-                      style: TextStyle(
+                  title: Text(AppConstants.reportGroup,
+                      style: const TextStyle(
                           color: Colors.red,
                           fontSize: 14,
                           fontWeight: FontWeight.w500)),
@@ -280,8 +281,8 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                   return ListItem(
                     leading: SvgPicture.asset(leaveGroup,package: package, width: 18,),
                     title: Text(!controller.isMemberOfGroup
-                        ? "Delete Group"
-                        : "Leave Group",
+                        ? AppConstants.deleteGroup
+                        : AppConstants.leaveGroup,
                         style: const TextStyle(
                             color: Colors.red,
                             fontSize: 14,
@@ -296,7 +297,7 @@ class _GroupInfoViewState extends State<GroupInfoView> {
           child: ListView(
             children: <Widget>[
               Obx(() {
-                return ListItem(title: Text("Mute Notification",
+                return ListItem(title: Text(AppConstants.muteNotification,
                     style: TextStyle(
                         color: MirrorflyUikit
                             .getTheme?.textPrimaryColor,
@@ -330,7 +331,7 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                   Visibility(
                     visible: controller.isAdmin,
                     child: ListItem(leading: SvgPicture.asset(addUser,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn),),
-                        title: Text("Add Participants",
+                        title: Text(AppConstants.addParticipants,
                             style: TextStyle(
                                 color: MirrorflyUikit.getTheme?.textPrimaryColor,
                                 fontSize: 14,
@@ -357,7 +358,7 @@ class _GroupInfoViewState extends State<GroupInfoView> {
               }),
               ListItem(
                 leading: SvgPicture.asset(imageOutline,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),),
-                title: Text("View All Media",
+                title: Text(AppConstants.viewAllMedia,
                     style: TextStyle(
                         color: MirrorflyUikit.getTheme?.textPrimaryColor,
                         fontSize: 14,
@@ -367,7 +368,7 @@ class _GroupInfoViewState extends State<GroupInfoView> {
               ),
               ListItem(
                 leading: SvgPicture.asset(reportGroup,package: package,colorFilter : const ColorFilter.mode(Colors.red, BlendMode.srcIn),),
-                title: const Text("Report Group",
+                title: Text(AppConstants.reportGroup,
                     style: TextStyle(
                         color: Colors.red,
                         fontSize: 14,
@@ -378,8 +379,8 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                 return ListItem(
                   leading: SvgPicture.asset(leaveGroup,package: package, width: 18,),
                   title: Text(!controller.isMemberOfGroup
-                      ? "Delete Group"
-                      : "Leave Group",
+                      ? AppConstants.deleteGroup
+                      : AppConstants.leaveGroup,
                       style: const TextStyle(
                           color: Colors.red,
                           fontSize: 14,
@@ -395,7 +396,7 @@ class _GroupInfoViewState extends State<GroupInfoView> {
 
   showOptions(Profile item, BuildContext context) {
     Helper.showButtonAlert(actions: [
-        ListTile(title: const Text("Start Chat", style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16),), onTap: () {
+        ListTile(title: Text(AppConstants.startChat, style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 16),), onTap: () {
           // Get.toNamed(Routes.CHAT, arguments: item);
           // Get.back();
           Navigator.pop(context);
@@ -405,7 +406,7 @@ class _GroupInfoViewState extends State<GroupInfoView> {
           });
         },
         visualDensity: const VisualDensity(horizontal: 0, vertical: -3)),
-        ListTile(title: const Text("View Info",style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16),), onTap: () {
+        ListTile(title: Text(AppConstants.viewInfo,style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 16),), onTap: () {
           // Get.back();
           Navigator.pop(context);
           Navigator.push(context, MaterialPageRoute(builder: (con)=>ChatInfoView(jid:item.jid.checkNull())));
@@ -413,47 +414,47 @@ class _GroupInfoViewState extends State<GroupInfoView> {
         },
         visualDensity: const VisualDensity(horizontal: 0, vertical: -3)),
         Visibility(visible: controller.isAdmin,
-            child: ListTile(title: const Text("Remove from Group",style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16),), onTap: () {
+            child: ListTile(title: Text(AppConstants.removeFromGroup,style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 16),), onTap: () {
               Navigator.pop(context);
               // Get.back();
               Helper.showAlert(
-                  message: "Are you sure you want to remove ${getName(item)}?",
+                  message: "${AppConstants.areSureToRemove} ${getName(item)}?",
                   actions: [
                     TextButton(
                         onPressed: () {
                           Navigator.pop(context);
                           // Get.back();
                         },
-                        child: const Text("NO")),
+                        child: Text(AppConstants.no.toUpperCase())),
                     TextButton(
                         onPressed: () {
                           Navigator.pop(context);
                           // Get.back();
                           controller.removeUser(item.jid.checkNull(), context);
                         },
-                        child: const Text("YES")),
+                        child: Text(AppConstants.yes.toUpperCase())),
                   ], context: context);
             },
             visualDensity: const VisualDensity(horizontal: 0, vertical: -3))),
         Visibility(
             visible: (!item.isGroupAdmin! && controller.isAdmin),
-            child: ListTile(title: const Text("Make Admin", style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16),), onTap: () {
+            child: ListTile(title: Text(AppConstants.makeAdmin, style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 16),), onTap: () {
               Navigator.pop(context);
               // Get.back();
-              Helper.showAlert(message: "Are you sure you want to make ${getName(item)} the admin?", actions: [
+              Helper.showAlert(message: "${AppConstants.areYouSureMakeAdmin} ${getName(item)} ${AppConstants.theAdmin}", actions: [
                 TextButton(
                     onPressed: () {
                       Navigator.pop(context);
                       // Get.back();
                     },
-                    child: const Text("NO")),
+                    child: Text(AppConstants.no.toUpperCase())),
                 TextButton(
                     onPressed: () {
                       Navigator.pop(context);
                       // Get.back();
                       controller.makeAdmin(item.jid.checkNull(), context);
                     },
-                    child: const Text("YES")),
+                    child: Text(AppConstants.yes.toUpperCase())),
               ], context: context);
             },
             visualDensity: const VisualDensity(horizontal: 0, vertical: -3))),
@@ -484,7 +485,7 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const SizedBox(height: 10,),
-                      Text("Options", style: TextStyle(
+                      Text(AppConstants.options, style: TextStyle(
                           color: MirrorflyUikit.getTheme?.textPrimaryColor),),
                       const SizedBox(height: 10,),
                       TextButton(
@@ -497,7 +498,7 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                               padding: EdgeInsets.zero,
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               alignment: Alignment.centerLeft),
-                          child: Text("Take Photo",
+                          child: Text(AppConstants.takePhoto,
                               style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor, fontWeight: FontWeight.bold))),
                       TextButton(
                           onPressed: () {
@@ -509,7 +510,7 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                               padding: EdgeInsets.zero,
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               alignment: Alignment.centerLeft),
-                          child: Text("Choose from Gallery",
+                          child: Text(AppConstants.chooseFromGallery,
                               style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor, fontWeight: FontWeight.bold))),
                       controller.profile.image
                           .checkNull()
@@ -525,7 +526,7 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               alignment: Alignment.centerLeft),
                           child: Text(
-                            "Remove Photo",
+                            AppConstants.removePhoto,
                             style: TextStyle(color: MirrorflyUikit.getTheme
                                 ?.textPrimaryColor, fontWeight: FontWeight
                                 .bold),

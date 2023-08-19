@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/widgets.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/profile/controllers/status_controller.dart';
@@ -33,7 +34,7 @@ class _StatusListViewState extends State<StatusListView> {
       backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
       appBar: widget.enableAppBar ? AppBar(
         automaticallyImplyLeading: true,
-        title: Text('Status', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
+        title: Text(AppConstants.status, style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
         iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
         backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
       ):null,
@@ -51,7 +52,7 @@ class _StatusListViewState extends State<StatusListView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Your current status',
+                AppConstants.yourCurrentStatus,
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: MirrorflyUikit.getTheme?.textPrimaryColor,),
               ),
               Obx(
@@ -88,7 +89,7 @@ class _StatusListViewState extends State<StatusListView> {
                 height: 10,
               ),
               Text(
-                'Select your new status',
+                AppConstants.selectNewStatus,
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: MirrorflyUikit.getTheme?.textPrimaryColor),
               ),
               Obx(() => controller.statusList.isNotEmpty

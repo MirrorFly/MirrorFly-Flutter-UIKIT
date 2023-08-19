@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/view_all_media_preview/views/view_all_media_preview_view.dart';
@@ -28,8 +29,8 @@ class ViewAllMediaController extends GetxController {
   set linklist(Map<String, List<MessageItem>> value) => _linklist.value = value;
   Map<String, List<MessageItem>> get linklistdata => _linklist;
 
-  var name = "";
-  var jid = "";
+  var name = Constants.emptyString;
+  var jid = Constants.emptyString;
   var isGroup = false;
 
   var imageCount = 0.obs;
@@ -203,7 +204,7 @@ class ViewAllMediaController extends GetxController {
   }
 
   List<MessageItem> getMapMessageWithURLList(List<MessageItem> messageList,ChatMessageModel message) {
-    var textContent = "";
+    var textContent = Constants.emptyString;
     if (message.isTextMessage()) {
       textContent = message.messageTextContent!;
     } else if (message.isImageMessage()) {
@@ -279,23 +280,23 @@ class ViewAllMediaController extends GetxController {
       return MapEntry(5, year.toString());
     } else if ((currentMonth - month) == 1) {
       if (day > currentDay) {
-        return const MapEntry(3, "Last Month");
+        return MapEntry(3, AppConstants.lastMonth);
       } else {
         return MapEntry(4, dateSymbols[month]);
       }
     } else if (currentMonth > month) {
       return MapEntry(4, dateSymbols[month]);
     } else if ((currentDay - day) > 7) {
-      return const MapEntry(2, "Last Month");
+      return MapEntry(2, AppConstants.lastMonth);
     } else if ((currentDay - day) > 2) {
-      return const MapEntry(1, "Last Week");
+      return MapEntry(1, AppConstants.lastWeek);
     }
-    return const MapEntry(0, "Recent");
+    return MapEntry(0, AppConstants.recent);
   }
 
   Image imageFromBase64String(String base64String,
       double? width, double? height) {
-    var decodedBase64 = base64String.replaceAll("\n", "");
+    var decodedBase64 = base64String.replaceAll("\n", Constants.emptyString);
     Uint8List image = const Base64Decoder().convert(decodedBase64);
     return Image.memory(
       image,

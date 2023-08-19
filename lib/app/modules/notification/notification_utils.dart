@@ -1,9 +1,10 @@
+import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/model/notification_message_model.dart';
 
 class NotificationUtils{
-  static var deletedMessage = 'This message was deleted';
+  static var deletedMessage = AppConstants.thisMessageWasDeleted;
   static var imageEmoji = "📷";
   static var videoEmoji = "📽️";
   static var contactEmoji = "👤";
@@ -43,19 +44,19 @@ class NotificationUtils{
     var contentBuilder = StringBuffer();
     switch(message.messageType){
       case Constants.mAudio:
-        contentBuilder.write("$audioEmoji Audio");
+        contentBuilder.write("$audioEmoji ${AppConstants.nAudio}");
         break;
       case Constants.mContact:
-        contentBuilder.write("$contactEmoji Contact");
+        contentBuilder.write("$contactEmoji ${AppConstants.nContact}");
         break;
       case Constants.mDocument:
-        contentBuilder.write("$fileEmoji File");
+        contentBuilder.write("$fileEmoji ${AppConstants.nFile}");
         break;
       case Constants.mImage:
         contentBuilder.write("$imageEmoji ${getMentionMediaCaptionTextFormat(message)}");
         break;
       case Constants.mLocation:
-        contentBuilder.write("$locationEmoji Location");
+        contentBuilder.write("$locationEmoji ${AppConstants.nLocation}");
         break;
       case Constants.mVideo:
         contentBuilder.write("$videoEmoji ${getMentionMediaCaptionTextFormat(message)}");
@@ -77,13 +78,13 @@ class NotificationUtils{
 
   static String getMessageTypeText(String messageType){
     switch(messageType){
-      case Constants.mImage: return "Image";
-      case Constants.mFile: return "File";
-      case Constants.mAudio: return "Audio";
-      case Constants.mVideo: return "Video";
-      case Constants.mDocument: return "Document";
-      case Constants.mContact: return "Contact";
-      case Constants.mLocation: return "Location";
+      case Constants.mImage: return AppConstants.nImage;
+      case Constants.mFile: return AppConstants.nFile;
+      case Constants.mAudio: return AppConstants.nAudio;
+      case Constants.mVideo: return AppConstants.nVideo;
+      case Constants.mDocument: return AppConstants.nDocument;
+      case Constants.mContact: return AppConstants.nContact;
+      case Constants.mLocation: return AppConstants.nLocation;
       default: return messageType;
     }
   }

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../controllers/location_controller.dart';
@@ -31,7 +32,7 @@ class _LocationSentViewState extends State<LocationSentView> {
           appBar: widget.enableAppBar ? AppBar(
             iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
             backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-          title: Text('User Location',style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
+          title: Text(AppConstants.userLocation,style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
       automaticallyImplyLeading: true,
           ) : null,
         body:SafeArea(
@@ -67,7 +68,7 @@ class _LocationSentViewState extends State<LocationSentView> {
                           ()=>controller.address1.value.isNotEmpty ? Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Send this Location',style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor,fontSize: 14,fontWeight: FontWeight.normal),),
+                              Text(AppConstants.sendThisLocation,style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor,fontSize: 14,fontWeight: FontWeight.normal),),
                               Padding(
                                 padding: const EdgeInsets.only(top: 8.0),
                                 child: Text(controller.address1.value,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor,fontSize: 16,fontWeight: FontWeight.w700),),

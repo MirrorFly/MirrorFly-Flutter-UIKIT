@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/settings/views/chat_settings/chat_settings_controller.dart';
 
 import '../../../../../mirrorfly_uikit_plugin.dart';
@@ -20,7 +21,7 @@ class ChatSettingsView extends StatelessWidget {
       backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
       appBar: enableAppBar ? AppBar(
         title: Text(
-          'Chats',
+          AppConstants.chatsSettings,
           style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
         ),
         automaticallyImplyLeading: true,
@@ -33,18 +34,18 @@ class ChatSettingsView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               lockItem(
-                  title: "Archive Settings",
-                  subtitle: "Archived chats will remain archived when you receive a new message",
+                  title: AppConstants.archiveSetting,
+                  subtitle: AppConstants.archiveSettingDec,
                   on: controller.archiveEnabled,
                   onToggle: (value) => controller.enableArchive()),
               notificationItem(
-                  title: "Last Seen",
-                  subtitle: "Hiding the last seen activity to other users",
+                  title: AppConstants.lastSeen,
+                  subtitle: AppConstants.lastSeenDec,
                   on: controller.lastSeenPreference.value,
                   onTap: () => controller.lastSeenEnableDisable()),
               notificationItem(
-                  title: "User Busy Status",
-                  subtitle: "Set busy status as the Auto response to the message received from the individuals",
+                  title: AppConstants.userBusyStatus,
+                  subtitle: AppConstants.userBusyStatusDec,
                   on: controller.busyStatusPreference.value,
                   onTap: () => controller.busyStatusEnable()),
               Visibility(
@@ -53,7 +54,7 @@ class ChatSettingsView extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Edit Busy Status Message',
+                          Text(AppConstants.editBusyMessage,
                               style: TextStyle(
                                   fontSize: 14,
                                   color: MirrorflyUikit.getTheme?.textPrimaryColor,
@@ -133,8 +134,8 @@ class ChatSettingsView extends StatelessWidget {
                     ],
                   ), rightArrowIcon, () => controller.chooseLanguage())),*/
               ListItem(
-                  title: const Text('Clear All Conversation',
-                      style: TextStyle(color: Colors.red, fontSize: 14, fontWeight: FontWeight.w400)),
+                  title: Text(AppConstants.clearAllConversation,
+                      style: const TextStyle(color: Colors.red, fontSize: 14, fontWeight: FontWeight.w400)),
                   dividerPadding: const EdgeInsets.symmetric(horizontal: 16),
                   onTap: () {
                     controller.clearAllConversation(context);

@@ -1,6 +1,7 @@
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 
 import '../../../common/constants.dart';
 import '../../../data/helper.dart';
@@ -11,8 +12,8 @@ class PreviewContactController extends GetxController {
   var contactList = <LocalContactPhone>[].obs;
   var argContactList = <LocalContact>[];
   var previewContactList = <String>[];
-  var previewContactName = "";
-  var from = "";
+  var previewContactName = Constants.emptyString;
+  var from = Constants.emptyString;
 
 
   void init(List<LocalContact>? contactList, List<String>? previewContactList, String from, String? contactName) {
@@ -36,7 +37,7 @@ class PreviewContactController extends GetxController {
       var newContactList = <ContactDetail>[];
       for (var phone in previewContactList) {
         ContactDetail contactDetail =
-            ContactDetail(mobNo: phone, isSelected: true, mobNoType: "");
+            ContactDetail(mobNo: phone, isSelected: true, mobNoType: Constants.emptyString);
         newContactList.add(contactDetail);
       }
       LocalContactPhone localContactPhone = LocalContactPhone(
@@ -66,13 +67,13 @@ class PreviewContactController extends GetxController {
         item.middleName ??
         item.androidAccountName ??
         item.familyName ??
-        "";
+        Constants.emptyString;
   }
 
   shareContact(BuildContext context) async {
 
     Helper.showLoading(
-        message: "Sharing Contact", buildContext: context);
+        message: AppConstants.sharingContact, buildContext: context);
     var contactServerSharing = <ShareContactDetails>[];
       for (var item in contactList) {
         var contactSharing = <String>[];
@@ -85,7 +86,7 @@ class PreviewContactController extends GetxController {
           }
         }
         if (contactSharing.isEmpty) {
-          toToast("Select at least one number");
+          toToast(AppConstants.selectLeastOne);
           return;
         }
         debugPrint("adding contact list--> ${contactSharing.toString()}");

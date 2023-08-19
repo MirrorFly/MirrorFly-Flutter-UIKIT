@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
@@ -16,7 +17,7 @@ class ChatSettingsController extends GetxController {
   final _archiveEnabled = false.obs;
   final lastSeenPreference = false.obs;
   final busyStatusPreference = false.obs;
-  final busyStatus = "".obs;
+  final busyStatus = Constants.emptyString.obs;
   bool get archiveEnabled => _archiveEnabled.value;
 
   final _autoDownloadEnabled = false.obs;
@@ -56,7 +57,7 @@ class ChatSettingsController extends GetxController {
       Mirrorfly.enableDisableArchivedSettings(!archiveEnabled);
       _archiveEnabled(!archiveEnabled);
     }else{
-      toToast(Constants.noInternetConnection);
+      toToast(AppConstants.noInternetConnection);
     }
   }
 
@@ -77,7 +78,7 @@ class ChatSettingsController extends GetxController {
       SessionManagement.setGoogleTranslationEnable(enable);
       _translationEnabled(enable);
     /*}else{
-      toToast(Constants.noInternetConnection);
+      toToast(AppConstants.noInternetConnection);
     }*/
   }
 
@@ -91,20 +92,20 @@ class ChatSettingsController extends GetxController {
   }
 
   void clearAllConversation(BuildContext context){
-    Helper.showAlert(message: 'Are you sure want to clear your conversation history?',actions: [
+    Helper.showAlert(message: AppConstants.areYouClearAllChat,actions: [
       TextButton(
           onPressed: () {
             // Get.back();
             Navigator.pop(context);
           },
-          child: Text("NO", style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
+          child: Text(AppConstants.no.toUpperCase(), style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
       TextButton(
           onPressed: () {
             // Get.back();
             Navigator.pop(context);
             clearAllConv();
           },
-          child: Text("YES", style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
+          child: Text(AppConstants.yes.toUpperCase(), style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
     ], context: context);
   }
 
@@ -112,12 +113,12 @@ class ChatSettingsController extends GetxController {
     if (await AppUtils.isNetConnected()) {
       var result = await Mirrorfly.clearAllConversation();
       if(result.checkNull()){
-        toToast('All your conversation are cleared');
+        toToast(AppConstants.allChatsCleared);
       }else{
-        toToast('Server error, kindly try again later');
+        toToast(AppConstants.serverError);
       }
     } else {
-      toToast(Constants.noInternetConnection);
+      toToast(AppConstants.noInternetConnection);
     }
   }
 
@@ -130,7 +131,7 @@ class ChatSettingsController extends GetxController {
         }
       });
     }else{
-      toToast(Constants.noInternetConnection);
+      toToast(AppConstants.noInternetConnection);
     }
   }
 

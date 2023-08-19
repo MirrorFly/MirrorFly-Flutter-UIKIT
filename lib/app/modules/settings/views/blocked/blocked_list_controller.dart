@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
@@ -55,13 +56,13 @@ class BlockedListController extends GetxController {
 
   }
   unBlock(Member item, BuildContext context){
-    Helper.showAlert(message: "Unblock ${getMemberName(item)}?", actions: [
+    Helper.showAlert(message: "${AppConstants.unblock} ${getMemberName(item)}?", actions: [
       TextButton(
           onPressed: () {
             // Get.back();
             Navigator.pop(context);
           },
-          child: Text("NO", style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
+          child: Text(AppConstants.no.toUpperCase(), style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
       TextButton(
           onPressed: () async {
             if(await AppUtils.isNetConnected()) {
@@ -71,7 +72,7 @@ class BlockedListController extends GetxController {
               Mirrorfly.unblockUser(item.jid.checkNull()).then((value) {
                 Helper.hideLoading(context: context);
                 if(value!=null && value) {
-                  toToast("${getMemberName(item)} has been Unblocked");
+                  toToast("${getMemberName(item)} ${AppConstants.hasUnBlocked}");
                   getUsersIBlocked(false);
                 }
               }).catchError((error) {
@@ -79,10 +80,10 @@ class BlockedListController extends GetxController {
                 debugPrint(error);
               });
             }else{
-              toToast(Constants.noInternetConnection);
+              toToast(AppConstants.noInternetConnection);
             }
           },
-          child: Text("YES", style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
+          child: Text(AppConstants.yes.toUpperCase(), style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
     ], context: context);
   }
 

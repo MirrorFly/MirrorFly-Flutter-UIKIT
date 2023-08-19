@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../../../../mirrorfly_uikit_plugin.dart';
@@ -41,12 +42,12 @@ class ChatSearchView extends StatelessWidget {
             cursorColor: MirrorflyUikit.getTheme?.colorOnAppbar,
             style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
             decoration: InputDecoration(
-                hintText: "Search...", border: InputBorder.none,hintStyle: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar.withOpacity(0.5))),
+                hintText: AppConstants.searchPlaceHolder, border: InputBorder.none,hintStyle: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar.withOpacity(0.5))),
             onSubmitted: (str) {
               if (controller.filteredPosition.isNotEmpty) {
                 controller.scrollUp();
               } else {
-                toToast("No Results Found");
+                toToast(AppConstants.noResultsFound);
               }
             },
           ),

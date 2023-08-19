@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 
 import '../../../common/constants.dart';
 import '../../../data/apputils.dart';
@@ -65,7 +66,7 @@ class StatusListController extends FullLifeCycleController with FullLifeCycleMix
         selectedStatus.value= statusText;
         addStatusController.text= statusText;
         var data = json.decode(value.toString());
-        toToast('Status update successfully');
+        toToast(AppConstants.statusUpdated);
         Navigator.pop(context);
         if(data['status']) {
           getStatusList();
@@ -74,7 +75,7 @@ class StatusListController extends FullLifeCycleController with FullLifeCycleMix
         toToast(er);
       });
     }else{
-      toToast(Constants.noInternetConnection);
+      toToast(AppConstants.noInternetConnection);
     }
   }
 
@@ -86,7 +87,7 @@ class StatusListController extends FullLifeCycleController with FullLifeCycleMix
           selectedStatus.value = addStatusController.text.trim().toString();
           addStatusController.text = addStatusController.text.trim().toString();
           var data = json.decode(value.toString());
-          toToast('Status update successfully');
+          toToast(AppConstants.statusUpdated);
           // Helper.hideLoading();
           Navigator.pop(context);
           if (data['status']) {
@@ -96,7 +97,7 @@ class StatusListController extends FullLifeCycleController with FullLifeCycleMix
           toToast(er);
         });
     }else{
-      toToast(Constants.noInternetConnection);
+      toToast(AppConstants.noInternetConnection);
     }
   }
 
@@ -107,12 +108,12 @@ class StatusListController extends FullLifeCycleController with FullLifeCycleMix
         //     .trim().toString());
         if (context.mounted) Navigator.pop(context, addStatusController.text.trim().toString());
       }else{
-        toToast(Constants.noInternetConnection);
+        toToast(AppConstants.noInternetConnection);
         // Get.back();
         if (context.mounted) Navigator.pop(context);
       }
     }else{
-      toToast("Status cannot be empty");
+      toToast(AppConstants.statusCantEmpty);
     }
   }
 
@@ -148,8 +149,8 @@ class StatusListController extends FullLifeCycleController with FullLifeCycleMix
       Helper.showButtonAlert(actions: [
         ListTile(
           contentPadding: const EdgeInsets.only(left: 10),
-          title: const Text("Delete",
-              style: TextStyle(
+          title: Text(AppConstants.delete,
+              style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.normal)),
 
@@ -167,19 +168,19 @@ class StatusListController extends FullLifeCycleController with FullLifeCycleMix
   }
 
   void statusDeleteConfirmation(StatusData item, BuildContext context) {
-    Helper.showAlert(message: "Do you want to delete the status?", actions: [
+    Helper.showAlert(message: AppConstants.deleteStatus, actions: [
       TextButton(
           onPressed: () {
             // Get.back();
             Navigator.pop(context);
           },
-          child: const Text("No")),
+          child: Text(AppConstants.no)),
       TextButton(
           onPressed: () async {
             if (await AppUtils.isNetConnected()) {
               // Get.back();
               if(context.mounted) Navigator.pop(context);
-              if(context.mounted)Helper.showLoading(message: "Deleting Status", buildContext: context);
+              if(context.mounted)Helper.showLoading(message: AppConstants.deletingStatus, buildContext: context);
               Mirrorfly.deleteProfileStatus(item.id!, item.status!, item.isCurrentStatus!)
                   .then((value) {
                 statusList.remove(item);
@@ -188,13 +189,13 @@ class StatusListController extends FullLifeCycleController with FullLifeCycleMix
               }).catchError((error) {
                 // Helper.hideLoading();
                 Navigator.pop(context);
-                toToast("Unable to delete the Busy Status");
+                toToast(AppConstants.unableToDeleteProfileStatus);
               });
             } else {
-              toToast(Constants.noInternetConnection);
+              toToast(AppConstants.noInternetConnection);
             }
           },
-          child: const Text("Yes")),
+          child: Text(AppConstants.yes)),
     ], context: context);
   }
 

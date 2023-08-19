@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mirrorfly_plugin/logmessage.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/apputils.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
@@ -40,7 +41,7 @@ class NotificationBuilder {
     if (profileDetails.isMuted == true) {
       return;
     }
-    var messagingStyle = MessagingStyleInformation(const Person(name: "Me"),messages: []);
+    var messagingStyle = MessagingStyleInformation(Person(name: AppConstants.me),messages: []);
     if (!chatNotifications.containsKey(notificationId)) {
       chatNotifications[notificationId] = NotificationModel(
           messagingStyle: messagingStyle, messages: [], unReadMessageCount: 0);
@@ -174,7 +175,7 @@ class NotificationBuilder {
       int messageCount, MessagingStyleInformation messagingStyle) {
     var title = profileDetails.name ?? '';
     if (messageCount > 1) {
-      var appendMessageLable = " messages)";
+      var appendMessageLable = " ${AppConstants.messages})";
       String modifiedTitle;
       if (profileDetails.isGroupProfile ?? false) {
         LogMessage.d("newMessagingStyle", messagingStyle);
@@ -299,9 +300,9 @@ class NotificationBuilder {
     var summaryText = StringBuffer();
     final info = await PackageInfo.fromPlatform();
     var appTitle = info.appName;
-    summaryText.write("${getMessagesCount()} messages from ${chatNotifications.length} chats");
+    summaryText.write("${getMessagesCount()} ${AppConstants.messages} ${AppConstants.from} ${chatNotifications.length} ${AppConstants.chats}");
     var inlineMessages = <String>[];
-    chatNotifications.forEach((key, value) { inlineMessages.add("notificationInlineMessage");});
+    chatNotifications.forEach((key, value) { inlineMessages.add(AppConstants.notificationInlineMessage);});
     var inboxStyle = InboxStyleInformation(inlineMessages,summaryText: summaryText.toString(),contentTitle: appTitle);
 
     var channel = buildNotificationChannel(Constants.emptyString, summaryChannelName, true);
@@ -353,7 +354,7 @@ class NotificationBuilder {
           channel);
       await flutterLocalNotificationsPlugin.show(
         summaryId, appTitle, lastMessageContent.toString(),
-          notificationDetails,payload: "");
+          notificationDetails,payload: Constants.emptyString);
     }
   }
 
@@ -430,11 +431,11 @@ class NotificationBuilder {
     var notificationSounUri = SessionManagement.getNotificationUri();
     var isVibrate = SessionManagement.getVibration();
     var isRing = SessionManagement.getNotificationSound();
-    var channelName = chatChannelName ?? "App Notifications";
+    var channelName = chatChannelName ?? AppConstants.appNotifications;
     var channelId = getNotificationChannelId(
         isSummaryNotification, chatChannelId);
     var vibrateImportance = (isVibrate) ? Importance.high : Importance.low;
-    var channelDescription = "Notification behaviours for the group chat messages";
+    var channelDescription = AppConstants.appNotificationsDesc;
     var ringImportance = (isRing) ? Importance.high : Importance.low;
     if (isRing) {
       return AndroidNotificationChannel(
@@ -466,7 +467,7 @@ class NotificationBuilder {
 
   static String getNotificationChannelId(bool isSummaryNotification,
       String chatChannelId) {
-    var channelId = "";
+    var channelId = Constants.emptyString;
     var randomNumberGenerator = Random();
     if (isSummaryNotification) {
       var summaryChannelId = randomNumberGenerator.nextInt(1000).toString();

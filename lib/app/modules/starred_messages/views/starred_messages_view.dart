@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
@@ -56,7 +57,7 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
             SingleChildScrollView(child: favouriteChatListView(controller.starredChatList)) :
             controller.isListLoading.value ? Center(child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),) : Center(child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 30),
-              child: Text(controller.isSearch.value ? "No result found" : "No Starred Messages Found", style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),),
+              child: Text(controller.isSearch.value ? AppConstants.noResultsFound : AppConstants.noStarredMessages, style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),),
             ));
           })
         ),
@@ -153,7 +154,7 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
       child: Obx(() {
         return Container(
           child: controller.isSelected.value ? selectedAppBar(context) : controller.isSearch.value ? searchBar() : AppBar(
-            title: Text('Starred Messages', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
+            title: Text(AppConstants.starredMessages, style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
             iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
             backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
             actions: [
@@ -189,7 +190,7 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
         cursorColor: MirrorflyUikit.getTheme?.colorOnAppbar,
         autofocus: true,
         decoration: InputDecoration(
-            hintText: "Search...", border: InputBorder.none, hintStyle: TextStyle(
+            hintText: AppConstants.searchPlaceHolder, border: InputBorder.none, hintStyle: TextStyle(
             color: MirrorflyUikit
                 .getTheme?.colorOnAppbar.withOpacity(0.5)),),
       ),
@@ -229,10 +230,10 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
                     onPressed: () {
                       controller.checkBusyStatusForForward(context);
                     },
-                    icon: SvgPicture.asset(forwardIcon,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),tooltip: 'Forward',),
-                overflowWidget: const Text("Forward"),
+                    icon: SvgPicture.asset(forwardIcon,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),tooltip: AppConstants.forward,),
+                overflowWidget: Text(AppConstants.forward),
                 showAsAction: controller.canBeForward.value ? ShowAsAction.always : ShowAsAction.gone,
-                keyValue: 'Forward',
+                keyValue: AppConstants.forward,
                 onItemClick: () {
                   controller.checkBusyStatusForForward(context);
                 },
@@ -242,10 +243,10 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
                     onPressed: () {
                       controller.favouriteMessage();
                     },
-                    icon: SvgPicture.asset(unFavouriteIcon,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),tooltip: 'unFavourite',),
-                overflowWidget: const Text("unFavourite"),
+                    icon: SvgPicture.asset(unFavouriteIcon,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),tooltip: AppConstants.unFavourite,),
+                overflowWidget: Text(AppConstants.unFavourite),
                 showAsAction: ShowAsAction.always,
-                keyValue: 'unfavoured',
+                keyValue: AppConstants.unFavourite,
                 onItemClick: () {
                   controller.favouriteMessage();
                 },
@@ -255,10 +256,10 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
                     onPressed: () {
                       controller.share();
                     },
-                    icon: SvgPicture.asset(shareIcon,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),tooltip: 'Share',),
-                overflowWidget: const Text("Share"),
+                    icon: SvgPicture.asset(shareIcon,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),tooltip: AppConstants.share,),
+                overflowWidget: Text(AppConstants.share),
                 showAsAction: controller.canBeShare.value ? ShowAsAction.always : ShowAsAction.gone,
-                keyValue: 'Share',
+                keyValue: AppConstants.share,
                 onItemClick: () {},
               ),
               controller.selectedChatList.length > 1 ||
@@ -274,11 +275,11 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
                     copyIcon,package: package,
                     fit: BoxFit.contain, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn),
                   ),
-                  tooltip: 'Copy',
+                  tooltip: AppConstants.copy,
                 ),
-                overflowWidget: const Text("Copy"),
+                overflowWidget: Text(AppConstants.copy),
                 showAsAction: ShowAsAction.always,
-                keyValue: 'Copy',
+                keyValue: AppConstants.copy,
                 onItemClick: () {
                   controller.copyTextMessages();
                 },
@@ -288,10 +289,10 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
                     onPressed: () {
                       controller.deleteMessages(context);
                     },
-                    icon: SvgPicture.asset(deleteIcon,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn),),tooltip: 'Delete',),
-                overflowWidget: const Text("Delete"),
+                    icon: SvgPicture.asset(deleteIcon,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn),),tooltip: AppConstants.delete,),
+                overflowWidget: Text(AppConstants.delete),
                 showAsAction: ShowAsAction.always,
-                keyValue: 'Delete',
+                keyValue: AppConstants.delete,
                 onItemClick: () {
                   controller.deleteMessages(context);
                 },
