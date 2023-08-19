@@ -13,8 +13,6 @@ import '../../../widgets/custom_action_bar_icons.dart';
 import '../../chat/chat_widgets.dart';
 import '../../dashboard/controllers/dashboard_controller.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 ///* @property [title] indicates the appbar title
 ///* @property [enableAppBar] enable the appbar and its functions
 ///* @property [showBackIcon] show or hide the back icon on appbar
@@ -51,8 +49,6 @@ class _DashboardViewState extends State<DashboardView> {
 
   @override
   Widget build(BuildContext context) {
-    final local = AppLocalizations.of(context).appTitle;
-    debugPrint("local $local");
     // var isDark = MirrorflyUikit.getTheme == MirrorFlyTheme.mirrorFlyDarkTheme;
     // var isLight = MirrorflyUikit.getTheme == MirrorFlyTheme.mirrorFlyDarkTheme;
     // debugPrint("isDark : $isDark");
