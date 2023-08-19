@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_view.dart';
 import '../../../mirrorfly_uikit_plugin.dart';
+import '../../data/session_management.dart';
 import '../../models.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
@@ -14,6 +15,7 @@ import '../group/views/group_info_view.dart';
 class ArchivedChatListController extends GetxController {
   RxList<RecentChatData> archivedChats = <RecentChatData>[].obs;//Get.find<DashboardController>().archivedChats;
 
+  late final bool showChatDeliveryIndicator;
   //RxList<RecentChatData> archivedChats = <RecentChatData>[].obs;
 
   @override
@@ -32,6 +34,10 @@ class ArchivedChatListController extends GetxController {
       mirrorFlyLog("archived response", value.toString());
       if(value != null) {
         var data = recentChatFromJson(value);
+
+        ///removing recent chat item if the recent chat has a self chat
+        data.data?.removeWhere((chat) => chat.jid == SessionManagement.getUserJID());
+
         archivedChats(data.data!);
       }else{
         debugPrint("Archive list is empty");
@@ -127,17 +133,8 @@ class ArchivedChatListController extends GetxController {
 
   toChatPage(String jid,bool isGroup, BuildContext context) async {
     if (jid.isNotEmpty) {
-      Navigator.push(context, MaterialPageRoute(builder: (con)=>ChatView(jid: jid,)));
-      // Helper.progressLoading();
-      /*await Mirrorfly.getProfileDetails(jid, false).then((value) {
-        if (value != null) {
-          Helper.hideLoading(context: context);
-          var profile = profiledata(value.toString());
-           Get.toNamed(Routes.chat, arguments: profile);
-        }
-      });*/
-      // SessionManagement.setChatJid(jid);
-      // Get.toNamed(Routes.chat);
+      Navigator.push(context, MaterialPageRoute(builder: (con)=>ChatView(jid: jid,showChatDeliveryIndicator: showChatDeliveryIndicator,)));
+      
     }
   }
 

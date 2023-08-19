@@ -4,6 +4,7 @@ import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import '../../../../mirrorfly_uikit_plugin.dart';
+import '../../../data/session_management.dart';
 import '../../../models.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -118,6 +119,10 @@ class ForwardChatController extends GetxController {
   void getRecentChatList() {
     Mirrorfly.getRecentChatList().then((value) {
       var data = recentChatFromJson(value);
+
+      ///removing recent chat item if the recent chat has a self chat
+      data.data?.removeWhere((chat) => chat.jid == SessionManagement.getUserJID());
+
       if (_mainrecentChats.isEmpty) {
         _mainrecentChats.addAll(data.data!);
       }
