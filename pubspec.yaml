@@ -11,7 +11,8 @@ dependencies:
   flutter:
     sdk: flutter
   get: ^4.6.5
-  mirrorfly_plugin: ^0.0.9
+  mirrorfly_plugin: ^0.0.10
+    #path: ../p078-mirrorfly-flutter-plugin
   plugin_platform_interface: ^2.0.2
   flutter_svg: ^2.0.7
   cached_network_image: ^3.2.3

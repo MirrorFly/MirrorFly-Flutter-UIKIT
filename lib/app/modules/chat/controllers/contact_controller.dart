@@ -445,7 +445,7 @@ class ContactController extends FullLifeCycleController
         if (!await Mirrorfly.contactSyncStateValue()) {
           var contactPermissionHandle = await AppPermission.checkPermission(context!,
               Permission.contacts, contactPermission,
-              Constants.contactSyncPermission);
+              AppConstants.contactSyncPermission);
           if (contactPermissionHandle) {
             progressSpinner(true);
             Mirrorfly.syncContacts(!SessionManagement.isInitialContactSyncDone())

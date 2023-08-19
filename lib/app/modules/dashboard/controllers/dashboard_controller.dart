@@ -1302,7 +1302,7 @@ class DashboardController extends FullLifeCycleController
       var contactPermissionHandle = await AppPermission.checkPermission(context,
           Permission.contacts,
           contactPermission,
-          Constants.contactSyncPermission);
+          AppConstants.contactSyncPermission);
       if (contactPermissionHandle) {
         if(context.mounted)Navigator.push(context, MaterialPageRoute(builder: (con)=>const ContactListView()));
         /*Get.toNamed(Routes.contacts,

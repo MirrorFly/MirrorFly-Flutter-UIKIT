@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -35,7 +36,7 @@ class AppPermission {
               // newPermission.request();
             },
             icon: contactPermission,
-            content: Constants.contactPermission,appName: info.appName);
+            content: AppConstants.contactPermission,appName: info.appName);
         if(deniedPopupValue) {
           return await newPermission.request();
         }else {
@@ -71,7 +72,7 @@ class AppPermission {
                 // newPermission.request();
               },
               icon: filePermission,
-              content: Constants.filePermission,appName: info.appName);
+              content: AppConstants.filePermission,appName: info.appName);
           if(deniedPopupValue) {
             return await newPermission.request().isGranted;
           }else{
@@ -127,7 +128,7 @@ class AppPermission {
               // newPermission.request();
             },
             icon: filePermission,
-            content: Constants.filePermission,appName: info.appName);
+            content: AppConstants.filePermission,appName: info.appName);
         if(deniedPopupValue) {
           var newp = await newPermission.request();
           PermissionStatus? photo = newp[Permission.photos];
@@ -175,7 +176,7 @@ class AppPermission {
               newPermission.request();
             },
             icon: cameraPermission,
-            content: Constants.cameraPermission,appName: info.appName);
+            content: AppConstants.cameraPermission,appName: info.appName);
       }
       return newPermission.status;
     } else {
@@ -199,7 +200,7 @@ class AppPermission {
               newPermission.request();
             },
             icon: audioPermission,
-            content: Constants.audioPermission,appName: info.appName);
+            content: AppConstants.audioPermission,appName: info.appName);
       }
       return newPermission.status;
     } else {
@@ -231,7 +232,7 @@ class AppPermission {
               }
             },
             icon: cameraPermission,
-            content: Constants.cameraPermission,appName: info.appName);
+            content: AppConstants.cameraPermission,appName: info.appName);
       }
     } else {
       return true;
@@ -265,22 +266,22 @@ class AppPermission {
 
       switch (permissionName.toLowerCase()){
         case "camera":
-          permissionAlertMessage = Constants.cameraPermissionDenied;
+          permissionAlertMessage = AppConstants.cameraPermissionDenied;
           break;
         case "microphone":
-          permissionAlertMessage = Constants.microPhonePermissionDenied;
+          permissionAlertMessage = AppConstants.microPhonePermissionDenied;
           break;
         case "storage":
-          permissionAlertMessage = Constants.storagePermissionDenied;
+          permissionAlertMessage = AppConstants.storagePermissionDenied;
           break;
         case "contacts":
-          permissionAlertMessage = Constants.contactPermissionDenied;
+          permissionAlertMessage = AppConstants.contactPermissionDenied;
           break;
         case "location":
-          permissionAlertMessage = Constants.locationPermissionDenied;
+          permissionAlertMessage = AppConstants.locationPermissionDenied;
           break;
         default:
-          permissionAlertMessage = "${info.appName} need the ${permissionName.toUpperCase()} Permission. But they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"${permissionName.toUpperCase()}\"";
+          permissionAlertMessage = "${info.appName} need the ${permissionName.toUpperCase()} Permission.${AppConstants.otherPermissionDenied} \"${permissionName.toUpperCase()}\"";
       }
       if(context.mounted) {
         var deniedPopupValue = await customPermissionDialog(context, icon: permissionIcon, content: permissionAlertMessage, appName: info.appName);

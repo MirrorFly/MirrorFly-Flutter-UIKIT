@@ -301,4 +301,38 @@ class AppConstants{
 
   static var sentMedia = "Sent Media";
   static var receivedMedia = "Received Media";
+
+  //Permission dialog contents
+  static var settingPermission =
+      "You will not receive notifications while the app is in background if you disable these permissions";
+  static var filePermission =
+      "To send media, allow MirrorFly access to your device's photos,media, and files.";
+  static var cameraPermission =
+      "To capture photos and video, allow MirrorFly access to the camera and storage.";
+  static var locationPermission =
+      "MirrorFly needs access to your location in order to share your current location.";
+  static var contactPermission =
+      "To help you connect with friends and family, allow Mirrorfly access to your contacts.";
+  static var contactSyncPermission =
+      "MirrorFly will continuously upload your contacts to its encrypted servers to let you discover and connect with your friends. Your contacts are uploaded using MirrorFly private contact discovery which means they are end-to-end encrypted and secured.";
+
+  static var audioPermission =
+      "To send audio messages, allow MirrorFly access to your Microphone.";
+
+  static var contactPermissionDenied =
+      "MirrorFly need the Contacts Permission in order to help you connect with friends and family, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Contacts\"";
+  static var locationPermissionDenied =
+      "MirrorFly need the Location Permission in order to attach a location, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Location\".";
+  static var cameraPermissionDenied =
+      "MirrorFly need the Camera and Storage Permission in order to capture photos and video, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Camera\" and \"Storage\".";
+  static var storagePermissionDenied =
+      "MirrorFly need the Storage Permission in order to attach photos, media, and files, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Storage\".";
+  static var microPhonePermissionDenied =
+      "MirrorFly need the Microphone Permission in order to send audio messages, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Microphone\".";
+  static var audioCallPermissionDenied =
+      "MirrorFly need the Microphone Permission in order to call Family, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Microphone\".";
+  static var videoCallPermissionDenied =
+      "MirrorFly need the Microphone and Camera Permissions in order to call Family, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Microphone\" and \"Camera\".";
+
+  static var otherPermissionDenied = "But they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable";
 }

@@ -2141,7 +2141,7 @@ class ChatController extends FullLifeCycleController
   onCameraClick() async {
     // if (await AppPermission.askFileCameraAudioPermission()) {
     var cameraPermissionStatus = await AppPermission.checkPermission(context,
-        Permission.camera, cameraPermission, Constants.cameraPermission);
+        Permission.camera, cameraPermission, AppConstants.cameraPermission);
     debugPrint("Camera Permission Status---> $cameraPermissionStatus");
     if (cameraPermissionStatus) {
       if (context.mounted) {
@@ -2287,7 +2287,7 @@ class ChatController extends FullLifeCycleController
 
   onContactClick() async {
     AppPermission.checkPermission(context, Permission.contacts,
-            contactPermission, Constants.contactPermission)
+            contactPermission, AppConstants.contactPermission)
         .then((value) {
       if (value) {
         if (context.mounted) {
@@ -2341,7 +2341,7 @@ class ChatController extends FullLifeCycleController
       if (context.mounted) {
         setOnGoingUserGone();
         AppPermission.checkPermission(context, Permission.location,
-                locationPinPermission, Constants.locationPermission)
+                locationPinPermission, AppConstants.locationPermission)
             .then((value) {
           if (value) {
             if (context.mounted) {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
+// import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 
 void main() {
@@ -11,7 +11,7 @@ void main() {
       licenseKey: 'ckIjaccWBoMNvxdbql8LJ2dmKqT5bp',
       googleMapKey: 'AIzaSyBaKkrQnLT4nacpKblIE5d4QK6GpaX5luQ',
       iOSContainerID: 'group.com.mirrorfly.flutter');
-  AppConstants.dashboardTitle = "";
+  // AppConstants.dashboardTitle = "";
   runApp(const MyApp());
 }
 
@@ -104,6 +104,7 @@ class _DashboardState extends State<Dashboard> {
                         context,
                         MaterialPageRoute(
                             builder: (con) => const DashboardView(
+                              title: "Chats",
                               enableAppBar: true,
                               showChatDeliveryIndicator: true,
                                 )));
