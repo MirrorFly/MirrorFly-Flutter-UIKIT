@@ -11,7 +11,7 @@ void main() {
       licenseKey: 'Your_Mirrorfly_Licence_Key',
       googleMapKey: 'Your_Google_Map_Key_for_location_messages',
       iOSContainerID: 'Your_iOS_app_Container_id');
-  // AppConstants.dashboardTitle = "";
+  // AppConstants.newGroup = "New Group Create";
   runApp(const MyApp());
 }
 
