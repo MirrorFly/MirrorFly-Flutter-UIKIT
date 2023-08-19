@@ -58,7 +58,7 @@ Installing the Mirrorfly UIKit Plugin is a simple process. Follow the steps ment
         mavenCentral()
         jcenter()
         maven {
-            url "https://repo.mirrorfly.com/snapshot/"
+            url "https://repo.mirrorfly.com/release"
         }
     }
   }
@@ -96,7 +96,7 @@ Goto Project -> Target -> Signing & Capabilities -> Click `+ Capability` at the 
 
 ```yaml
 dependencies:
-  mirrorfly_uikit_plugin: ^0.0.10
+  mirrorfly_uikit_plugin: ^0.0.11
 ```
 
 - Run `flutter pub get` command in your project directory.

@@ -1,3 +1,6 @@
+## 0.0.11
+* app constants are editable
+
 ## 0.0.10
 * MirrorFly Plugin Dependencies updated to latest versions
 * Typing Status Bug Fix
