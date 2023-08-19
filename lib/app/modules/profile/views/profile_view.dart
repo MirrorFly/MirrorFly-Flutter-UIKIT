@@ -17,8 +17,9 @@ import '../../../common/widgets.dart';
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends StatefulWidget {
-  const ProfileView({Key? key, this.enableAppBar=true}) : super(key: key);
+  const ProfileView({Key? key, this.enableAppBar=true, this.showBackIcon=true,}) : super(key: key);
   final bool enableAppBar;
+  final bool showBackIcon;
   @override
   State<ProfileView> createState() => _ProfileViewState();
 }
@@ -63,7 +64,7 @@ class _ProfileViewState extends State<ProfileView> {
             backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
             automaticallyImplyLeading: /*controller.from.value == Routes.login
                 ? false
-                : */true,
+                : */widget.showBackIcon ? true : false,
           ) : null,
           body: SafeArea(
             child: SingleChildScrollView(

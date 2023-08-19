@@ -145,7 +145,7 @@ class DashboardController extends FullLifeCycleController
         recentChatLoading(false);
       });
     } catch (e, s) {
-      debugPrint(s.toString());
+      debugPrint("Error while fetching recent chats $s");
     }
   }
 
@@ -810,7 +810,7 @@ class DashboardController extends FullLifeCycleController
       }else{
         toToast(AppConstants.chatMarkedAsRead);
       }
-      
+
     } else {
       toToast(AppConstants.noInternetConnection);
     }

@@ -100,7 +100,7 @@ class _DashboardViewState extends State<DashboardView> {
                             onPressed: () {
                               // Get.back();
                               Navigator.pop(context);
-                            }) : null,
+                            }) : const SizedBox(),
                 title: controller.selected.value
                     ? Text((controller.selectedChats.length).toString(),
                         style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar ?? Colors.black))

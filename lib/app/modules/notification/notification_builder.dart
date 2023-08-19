@@ -51,6 +51,12 @@ class NotificationBuilder {
 
     if (notificationModel != null) {
       // notificationModel.messages?.forEach((element) { LogMessage.d("notificationModel", "${element.messageId}");});
+      if (Platform.isIOS) {
+        lastMessageContent.write(NotificationUtils.getMessageSummary(message));
+        lastMessageTime = (message.messageSentTime.toString().length > 13)
+            ? (message.messageSentTime / 1000).toInt()
+            : message.messageSentTime;
+      } else {
       if (isMessageRecalled) { // if message was recalled then rebuild the message style
         List<ChatMessage> oldMessages = [];
         oldMessages.addAll(notificationModel.messages!);
@@ -61,12 +67,14 @@ class NotificationBuilder {
               chatMessage.messageId == message.messageId
                   ? message
                   : chatMessage);
-          await appendChatMessageInMessageStyle(lastMessageContent, messagingStyle,
+          await appendChatMessageInMessageStyle(
+              lastMessageContent, messagingStyle,
               (chatMessage.messageId == message.messageId)
                   ? message
                   : chatMessage);
         }
-        LogMessage.d("messagingStyle", messagingStyle.messages!.length.toString());
+        LogMessage.d(
+            "messagingStyle", messagingStyle.messages!.length.toString());
         notificationModel.messagingStyle = messagingStyle;
       } else {
         //if username or profile image are changed
@@ -79,18 +87,21 @@ class NotificationBuilder {
               chatMessage.messageId == message.messageId
                   ? message
                   : chatMessage);
-          await appendChatMessageInMessageStyle(lastMessageContent, messagingStyle,
+          await appendChatMessageInMessageStyle(
+              lastMessageContent, messagingStyle,
               (chatMessage.messageId == message.messageId)
                   ? message
                   : chatMessage);
         }
-        LogMessage.d("messagingStyle", messagingStyle.messages!.length.toString());
+        LogMessage.d(
+            "messagingStyle", messagingStyle.messages!.length.toString());
         // messagingStyle = notificationModel.messagingStyle!;
         notificationModel.messagingStyle = messagingStyle;
         notificationModel.messages?.add(message);
         await appendChatMessageInMessageStyle(
             lastMessageContent, messagingStyle, message);
       }
+    }
 
       var newMessageStyle = setConversationTitleMessagingStyle(
           profileDetails, notificationModel.messages!.length, messagingStyle);
@@ -102,7 +113,7 @@ class NotificationBuilder {
       messagingStyle = newMessageStyle;
     }
     displayMessageNotification(notificationId,messageId, profileDetails, messagingStyle,
-        lastMessageContent.toString(), lastMessageTime);
+        lastMessageContent.toString(), lastMessageTime, message.senderUserJid ?? "");
 
     if(Platform.isAndroid){
       displaySummaryNotification(lastMessageContent);
@@ -220,12 +231,20 @@ class NotificationBuilder {
    /// * @parameter lastMessageTime Time of the last message
   static displayMessageNotification(int notificationId,int messageId, Profile profileDetails,
       MessagingStyleInformation messagingStyle, String lastMessageContent,
-      int lastMessageTime) async {
+      int lastMessageTime, String senderChatJID) async {
     var title = profileDetails.getName().checkNull();
     var chatJid = profileDetails.jid.checkNull();
 
     if (Platform.isIOS) {
+      debugPrint("lastMessageTime $lastMessageTime");
       notificationId = int.parse(lastMessageTime.toString().substring(lastMessageTime.toString().length - 5));
+      debugPrint("ios notification id $notificationId");
+      var isGroup = profileDetails.isGroupProfile ?? false;
+
+      var userProfile = await getProfileDetails(senderChatJID);
+      var name = userProfile.name ?? '';
+
+      title = isGroup ? "$name @ $title" : title;
     }
 
     debugPrint("local notification id $notificationId");
