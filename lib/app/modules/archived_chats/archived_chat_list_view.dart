@@ -11,13 +11,15 @@ import '../dashboard/widgets.dart';
 import 'archived_chat_list_controller.dart';
 
 class ArchivedChatListView extends StatelessWidget {
-  ArchivedChatListView({Key? key, this.enableAppBar=true}) : super(key: key);
+  ArchivedChatListView({Key? key, this.enableAppBar=true, this.showChatDeliveryIndicator = true}) : super(key: key);
   final bool enableAppBar;
+  final bool showChatDeliveryIndicator;
   final controller = Get.put(ArchivedChatListController());
   @override
   Widget build(BuildContext context) {
     return FocusDetector(
       onFocusGained: () {
+        controller.showChatDeliveryIndicator = showChatDeliveryIndicator;
         controller.getArchivedChatsList();
       },
       child: WillPopScope(
@@ -137,6 +139,7 @@ class ArchivedChatListView extends StatelessWidget {
                                 item.jid.checkNull()),
                             archiveVisible: false,
                             archiveEnabled: controller.archiveEnabled.value,
+                            showChatDeliveryIndicator: showChatDeliveryIndicator,
                             onTap: () {
                               if (controller.selected.value) {
                                 controller.selectOrRemoveChatFromList(index);

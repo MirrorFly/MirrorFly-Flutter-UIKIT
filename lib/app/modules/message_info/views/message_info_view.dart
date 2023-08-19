@@ -16,7 +16,7 @@ class MessageInfoView extends StatefulWidget {
       {Key? key,
       required this.chatMessage,
       required this.isGroupProfile,
-      required this.jid,this.enableAppBar=true})
+      required this.jid,this.enableAppBar=true, this.showChatDeliveryIndicator = true})
       : super(key: key);
 
   // final String messageID;
@@ -24,6 +24,7 @@ class MessageInfoView extends StatefulWidget {
   final bool isGroupProfile;
   final String jid;
   final bool enableAppBar;
+  final bool showChatDeliveryIndicator;
 
   @override
   State<MessageInfoView> createState() => _MessageInfoViewState();
@@ -97,6 +98,7 @@ class _MessageInfoViewState extends State<MessageInfoView> {
                             MessageContent(
                               chatList: controller.chatMessage,
                               index: 0,
+                              showChatDeliveryIndicator: widget.showChatDeliveryIndicator,
                               onPlayAudio: () {
                                 controller.playAudio(controller.chatMessage[0]);
                               },
