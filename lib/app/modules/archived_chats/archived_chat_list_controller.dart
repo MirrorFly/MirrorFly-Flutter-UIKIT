@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_view.dart';
 import '../../../mirrorfly_uikit_plugin.dart';
 import '../../data/session_management.dart';

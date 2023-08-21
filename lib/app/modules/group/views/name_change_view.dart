@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/widgets.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/group/controllers/group_info_controller.dart';
 

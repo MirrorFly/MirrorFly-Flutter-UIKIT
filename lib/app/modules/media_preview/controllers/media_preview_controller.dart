@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import '../../../models.dart';
 import 'package:get/get.dart';
 

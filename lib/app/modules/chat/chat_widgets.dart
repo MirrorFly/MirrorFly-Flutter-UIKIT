@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/image_view/views/image_view_view.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -426,7 +426,7 @@ Widget getLocationImage(LocationChatMessage? locationChatMessage, double width,
       },
     child: CachedNetworkImage(imageUrl: Helper.getMapImageUri(
         locationChatMessage!.latitude, locationChatMessage.longitude),errorWidget: (c,l,er){
-      return  Center(child: Text(MirrorflyUikit.instance.googleMapKey.isEmpty ? AppConstants.googleMapKeyisRequired : AppConstants.invalidMapKey),);
+      return  Center(child: Text(MirrorflyUikit.instance.googleMapKey.isEmpty ? AppConstants.googleMapKeyIsRequired : AppConstants.invalidMapKey),);
 
     },width: width,height: height,fit: BoxFit.fill,)
       /*child: Image.network(

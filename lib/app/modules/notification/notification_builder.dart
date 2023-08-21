@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mirrorfly_plugin/logmessage.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/apputils.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';

@@ -7,7 +7,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 import '../../../models.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';

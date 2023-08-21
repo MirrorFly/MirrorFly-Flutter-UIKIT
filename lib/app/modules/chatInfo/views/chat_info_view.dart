@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 
 import 'package:get/get.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 
 import '../../../../mirrorfly_uikit_plugin.dart';

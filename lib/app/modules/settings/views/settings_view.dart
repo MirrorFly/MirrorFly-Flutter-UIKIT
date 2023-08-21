@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/settings/views/settings_widgets.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit_plugin.dart';
 

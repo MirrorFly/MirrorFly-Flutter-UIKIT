@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/settings/views/settings_view.dart';
 import '../../../../mirrorfly_uikit_plugin.dart';
@@ -605,7 +605,7 @@ class DashboardController extends FullLifeCycleController
         toToast(AppConstants.chatsPinned);
       }
     } else {
-      toToast(AppConstants.pinUpto3);
+      toToast(AppConstants.pinUpTo3);
     }
   }
 
@@ -641,14 +641,14 @@ class DashboardController extends FullLifeCycleController
     if (selectedChats.length == 1) {
       _itemUnPin(0);
       clearAllChatSelection();
-      toToast(AppConstants.chatunPinned);
+      toToast(AppConstants.chatUnPinned);
     } else {
       selected(false);
       selectedChats.asMap().forEach((key, value) {
         _itemUnPin(key);
       });
       clearAllChatSelection();
-      toToast(AppConstants.chatsunPinned);
+      toToast(AppConstants.chatsUnPinned);
     }
   }
 
@@ -799,9 +799,9 @@ class DashboardController extends FullLifeCycleController
     }
     //toToast("Chat${selectedChats.length == 1 ? Constants.emptyString : "s"} marked as unread");
     if(selectedChats.length > 1){
-      toToast(AppConstants.chatsMarkedAsunRead);
+      toToast(AppConstants.chatsMarkedAsUnRead);
     }else{
-      toToast(AppConstants.chatMarkedAsunRead);
+      toToast(AppConstants.chatMarkedAsUnRead);
     }
     clearAllChatSelection();
     updateUnReadChatCount();

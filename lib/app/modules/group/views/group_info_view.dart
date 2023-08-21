@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:get/get.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/widgets.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
@@ -369,7 +369,7 @@ class _GroupInfoViewState extends State<GroupInfoView> {
               ListItem(
                 leading: SvgPicture.asset(reportGroup,package: package,colorFilter : const ColorFilter.mode(Colors.red, BlendMode.srcIn),),
                 title: Text(AppConstants.reportGroup,
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Colors.red,
                         fontSize: 14,
                         fontWeight: FontWeight.w500)),

@@ -1,5 +1,5 @@
 ## 0.0.11
-* app constants are editable
+* App constants are not editable. If a value is passed as an argument (like a page title), it will be considered; otherwise, the App Constants value will be used.
 
 ## 0.0.10
 * MirrorFly Plugin Dependencies updated to latest versions

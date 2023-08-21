@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/settings/views/chat_settings/chat_settings_controller.dart';
 
 import '../../../../../mirrorfly_uikit_plugin.dart';
@@ -77,7 +77,7 @@ class ChatSettingsView extends StatelessWidget {
                           })),
               notificationItem(
                   title: AppConstants.autoDownload,
-                  subtitle: AppConstants.autoDownloadLable,
+                  subtitle: AppConstants.autoDownloadLabel,
                   on: controller.autoDownloadEnabled,
                   onTap: ()=>controller.enableDisableAutoDownload(context)),
               Visibility(
@@ -93,7 +93,7 @@ class ChatSettingsView extends StatelessWidget {
                                 fontWeight: FontWeight.w400)),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 4.0),
-                          child: Text(AppConstants.dataUsageSettingsLable,
+                          child: Text(AppConstants.dataUsageSettingsLabel,
                               style: TextStyle(
                                   color: MirrorflyUikit.getTheme?.textSecondaryColor,
                                   fontSize: 14,

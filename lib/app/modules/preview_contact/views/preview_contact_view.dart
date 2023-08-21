@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/model/local_contact_model.dart';
 
 import '../../../../mirrorfly_uikit_plugin.dart';
@@ -44,8 +44,8 @@ class _PreviewContactViewState extends State<PreviewContactView> {
           iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
           backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
           title: controller.from == "contact_pick"
-              ? Text(AppConstants.sendConstacts, style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),)
-              : Text(AppConstants.contactDetils, style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
+              ? Text(AppConstants.sendContacts, style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),)
+              : Text(AppConstants.contactDetails, style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
         ):null,
         body: SafeArea(
           child: Stack(

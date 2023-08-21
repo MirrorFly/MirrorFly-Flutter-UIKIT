@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
@@ -312,7 +312,7 @@ class ForwardChatController extends GetxController {
         selectedJids.add(jid);
         selectedNames.add(name);
       } else {
-        toToast(AppConstants.onlyForwardUpto5);
+        toToast(AppConstants.onlyForwardUpTo5);
       }
     }
 

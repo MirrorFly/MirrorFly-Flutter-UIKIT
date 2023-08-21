@@ -10,8 +10,8 @@ class AppConstants{
   static var typeSearchContact = "Contact";
   static var typeSearchMessage = "Message";
 
-  static var fileDoesnotExist = "The Selected file Doesn't Exist or Unable to Open";
-  static var youDonthaveApp = "you may not have proper app to view this content";
+  static var fileDoesNotExist = "The Selected file Doesn't Exist or Unable to Open";
+  static var youDoNotHaveApp = "you may not have proper app to view this content";
 
   static var online = "Online";
   static var lastSeenOn = "last seen on";
@@ -66,14 +66,14 @@ class AppConstants{
   static var clearChat = "Clear Chat";
   static var addChatShortcut = "Add Chat Shortcut";
   static var chatPinned = "Chat pinned";
-  static var chatunPinned = "Chat unpinned";
+  static var chatUnPinned = "Chat unpinned";
   static var chatsPinned = "Chats pinned";
-  static var chatsunPinned = "Chats unpinned";
-  static var pinUpto3 = "You can only pin upto 3 chats";
+  static var chatsUnPinned = "Chats unpinned";
+  static var pinUpTo3 = "You can only pin up-to 3 chats";
   static var chatMarkedAsRead = "Chat marked as read";
   static var chatsMarkedAsRead = "Chats marked as read";
-  static var chatMarkedAsunRead = "Chat marked as unread";
-  static var chatsMarkedAsunRead = "Chats marked as unread";
+  static var chatMarkedAsUnRead = "Chat marked as unread";
+  static var chatsMarkedAsUnRead = "Chats marked as unread";
   static var chatArchived = "1 Chat archived";
   static var chatsArchived = "Chats archived";
   static var deleteChatWith = "Delete chat with";
@@ -99,13 +99,13 @@ class AppConstants{
   static var hasUnBlocked = "has been unblocked";
   static var permissionDenied = "permission denied";
   static var audioTooShort = "Recorded Audio Time is too Short";
-  static var groupNoLonger = "This group is no longer availablet";
-  static var chatNoLonger = "This chat is no longer availablet";
+  static var groupNoLonger = "This group is no longer available";
+  static var chatNoLonger = "This chat is no longer available";
   static var contactSaved = "Contact Saved";
   static var messageNotFound = "Message not found";
   static var addAtLeastTwoContacts = "Add at least two contacts";
   static var selectAnyContacts = "Select any contacts";
-  static var onlyForwardUpto5 = "You can only forward with upto 5 users or groups";
+  static var onlyForwardUpTo5 = "You can only forward with up-to 5 users or groups";
 
   static var noResultsFound = "No Results Found";
 
@@ -141,7 +141,7 @@ class AppConstants{
 
   static var today = "Today";
   static var yesterday = "Yesterday";
-  static var googleMapKeyisRequired = "Google map key is required show location";
+  static var googleMapKeyIsRequired = "Google map key is required show location";
   static var invalidMapKey = "Invalid Google map key";
   static var message = "Message";
   static var invite = "Invite";
@@ -234,8 +234,8 @@ class AppConstants{
 
   static var sharingContact = "Sharing Contact";
   static var selectLeastOne = "Select at least one number";
-  static var sendConstacts = "Send Contacts";
-  static var contactDetils = "Contact Details";
+  static var sendContacts = "Send Contacts";
+  static var contactDetails = "Contact Details";
 
   static var removedProfileImage = "Removed profile image successfully";
   static var pleaseEnterUserName = "Please enter your username";
@@ -255,7 +255,7 @@ class AppConstants{
   static var statusUpdated = "Status update successfully";
 
   static var addNewStatus = "Add New Status";
-  static var areYouremovePhoto = "Are you sure you want to remove the photo?";
+  static var areYouSureToRemovePhoto = "Are you sure you want to remove the photo?";
 
   static var profileTitle = "Profile";
   static var userName = "Username";
@@ -286,10 +286,10 @@ class AppConstants{
   static var clearAllConversation = "Clear All Conversation";
 
   static var autoDownload = "Auto Download";
-  static var autoDownloadLable =
+  static var autoDownloadLabel =
       "Enable “Auto download” to turn all types of files received readily viewable";
   static var dataUsageSettings = "Data Usage Settings";
-  static var dataUsageSettingsLable =
+  static var dataUsageSettingsLabel =
       "Setup your mobile and wifi data usage based on media type";
   static var mediaAutoDownload = "Media Auto download";
   static var whenUsingMobileData = "When using Mobile Data";
@@ -391,11 +391,12 @@ class AppConstants{
   static var locationPermission =
       "MirrorFly needs access to your location in order to share your current location.";
   static var contactPermission =
-      "To help you connect with friends and family, allow Mirrorfly access to your contacts.";
+      "To help you connect with friends and family, allow MirrorFly access to your contacts.";
   static var contactSyncPermission =
       "MirrorFly will continuously upload your contacts to its encrypted servers to let you discover and connect with your friends. Your contacts are uploaded using MirrorFly private contact discovery which means they are end-to-end encrypted and secured.";
 
   static var audioPermission =
+
       "To send audio messages, allow MirrorFly access to your Microphone.";
 
   static var contactPermissionDenied =

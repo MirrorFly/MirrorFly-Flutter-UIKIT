@@ -6,7 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 
 import 'package:get/get.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/image_view/views/image_view_view.dart';
@@ -429,7 +429,7 @@ class _ProfileViewState extends State<ProfileView> {
                           onPressed: () {
                             Navigator.pop(context);
                             Helper.showAlert(
-                                message: AppConstants.areYouremovePhoto,
+                                message: AppConstants.areYouSureToRemovePhoto,
                                 actions: [
                                   TextButton(
                                       onPressed: () {

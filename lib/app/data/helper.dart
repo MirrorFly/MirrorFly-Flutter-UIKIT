@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
@@ -732,9 +732,9 @@ openDocument(String mediaLocalStoragePath) async {
     final result = await OpenFile.open(mediaLocalStoragePath);
     debugPrint(result.message);
     if (result.message.contains("file does not exist")) {
-      toToast(AppConstants.fileDoesnotExist);
+      toToast(AppConstants.fileDoesNotExist);
     } else if (result.message.contains('No APP found to open this file')) {
-      toToast(AppConstants.youDonthaveApp);
+      toToast(AppConstants.youDoNotHaveApp);
     }
 
     /*Mirrorfly.openFile(mediaLocalStoragePath).catchError((onError) {
