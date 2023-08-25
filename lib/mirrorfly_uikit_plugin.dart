@@ -54,6 +54,7 @@ class MirrorflyUikit {
         storageFolderName: storageFolderName,
         enableMobileNumberLogin: true,
         isTrialLicenceKey: isTrialLicenceKey,
+        chatHistoryEnable: false,
         enableDebugLog: true);
     isSDKInitialized = true;
     this.isTrialLicenceKey = isTrialLicenceKey;
@@ -127,7 +128,7 @@ class MirrorflyUikit {
       return setResponse(false, 'SDK Not Initialized');
     }
     if (await AppUtils.isNetConnected()) {
-      var value = await Mirrorfly.registerUser(userIdentifier, token: token);
+      var value = await Mirrorfly.registerUser(userIdentifier, fcmToken: token);
       try {
         var userData = registerModelFromJson(value); //message
         if (userData.data != null) {
