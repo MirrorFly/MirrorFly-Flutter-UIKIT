@@ -415,4 +415,6 @@ class AppConstants{
       "MirrorFly need the Microphone and Camera Permissions in order to call Family, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Microphone\" and \"Camera\".";
 
   static var otherPermissionDenied = "But they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable";
+
+  static var notificationIcon = "notification_icon";
 }
