@@ -12,6 +12,7 @@ import 'package:flutter_libphonenumber/flutter_libphonenumber.dart' as lib_phone
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:mirrorfly_plugin/logmessage.dart';
 import 'package:mirrorfly_plugin/model/export_model.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/de_bouncer.dart';
@@ -904,43 +905,69 @@ class ChatController extends FullLifeCycleController
   }
 
   pickAudio(BuildContext context) async {
-    AppPermission.getStoragePermission(context).then((permission) {
+    AppPermission.getStoragePermission(context).then((permission) async {
       if (permission) {
         setOnGoingUserGone();
-        FilePicker.platform.pickFiles(
-          type: FileType.custom,
-          allowedExtensions: [
-            'wav',
-            'aiff',
-            'alac',
-            'flac',
-            'mp3',
-            'aac',
-            'wma',
-            'ogg'
-          ],
-        ).then((result) {
-          if (result != null && File(result.files.single.path!).existsSync()) {
-            debugPrint(result.files.first.extension);
-            if (checkFileUploadSize(
-                result.files.single.path!, Constants.mAudio)) {
+        if (Platform.isIOS) {
+          FilePicker.platform.pickFiles(
+            type: FileType.custom,
+            allowedExtensions: [
+              'wav',
+              'aiff',
+              'alac',
+              'flac',
+              'mp3',
+              'aac',
+              'wma',
+              'ogg'
+            ],
+          ).then((result) {
+            if (result != null &&
+                File(result.files.single.path!).existsSync()) {
+              debugPrint(result.files.first.extension);
+              if (checkFileUploadSize(
+                  result.files.single.path!, Constants.mAudio)) {
+                AudioPlayer player = AudioPlayer();
 
+                player.setSourceDeviceFile(
+                    result.files.single.path ?? Constants.emptyString);
+                player.onDurationChanged.listen((Duration duration) {
+                  mirrorFlyLog(Constants.emptyString,
+                      'max duration: ${duration.inMilliseconds}');
+                  filePath.value = (result.files.single.path!);
+                  sendAudioMessage(filePath.value, false,
+                      duration.inMilliseconds.toString(), context);
+                });
+              } else {
+                toToast("File Size should not exceed ${Constants
+                    .maxAudioFileSize} MB");
+              }
+            } else {
+              // User canceled the picker
+            }
+            setOnGoingUserAvail();
+          });
+        }
+      }else{
+        await Mirrorfly.openAudioFilePicker().then((value) {
+          if(value!=null){
+            if (checkFileUploadSize(value, Constants.mAudio)) {
               AudioPlayer player = AudioPlayer();
-
-              player.setSourceDeviceFile(result.files.single.path ?? Constants.emptyString);
+              player.setSourceDeviceFile(value);
               player.onDurationChanged.listen((Duration duration) {
-                mirrorFlyLog(Constants.emptyString, 'max duration: ${duration.inMilliseconds}');
-                filePath.value = (result.files.single.path!);
-                sendAudioMessage(filePath.value, false,
-                    duration.inMilliseconds.toString(), context);
+                mirrorFlyLog("", 'max duration: ${duration.inMilliseconds}');
+                filePath.value = (value);
+                sendAudioMessage(
+                    filePath.value, false, duration.inMilliseconds.toString(), context);
               });
             } else {
-              toToast("File Size should not exceed ${Constants
-                  .maxAudioFileSize} MB");
+              toToast("File Size should not exceed ${Constants.maxAudioFileSize} MB");
             }
-          } else {
-            // User canceled the picker
+          }else{
+            setOnGoingUserAvail();
           }
+        }).catchError((onError){
+          LogMessage.d("openAudioFilePicker",onError);
           setOnGoingUserAvail();
         });
       }
