@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:mirrorfly_plugin/logmessage.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
@@ -34,6 +33,10 @@ class NotificationBuilder {
     var messageId = message.messageId.hashCode;
     var profileDetails = await getProfileDetails(chatJid!);
     if (profileDetails.isMuted == true) {
+      return;
+    }
+
+    if(!SessionManagement.getBool(AppConstants.enableLocalNotification)){
       return;
     }
     // var isMessageRecalled = message.isMessageRecalled.checkNull();
@@ -103,7 +106,8 @@ class NotificationBuilder {
     debugPrint("notificationUri--> $notificationSounUri");
     debugPrint("notificationId--> $notificationId");
     debugPrint("messageId.hashCode--> ${messageId.hashCode}");
-    var unReadMessageCount = await Mirrorfly.getUnreadMessageCountExceptMutedChat();
+    // var unReadMessageCount = await Mirrorfly.getUnreadMessageCountExceptMutedChat();
+    var unReadMessageCount = 1;
     var androidNotificationDetails = AndroidNotificationDetails(
         channel.id, channel.name,
         channelDescription: channel.description,

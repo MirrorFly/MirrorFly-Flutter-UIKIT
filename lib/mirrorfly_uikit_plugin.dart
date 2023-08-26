@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/model/app_config.dart';
 import 'package:mirrorfly_uikit_plugin/app/model/reply_hash_map.dart';
@@ -22,6 +23,7 @@ class MirrorflyUikit {
   bool isTrialLicenceKey = true;
   bool showMobileNumberOnList = true;
   bool showStatusOption = true;
+  bool enableLocalNotification = true;
   String googleMapKey = '';
   static bool isSDKInitialized = false;
   static String theme = "light";
@@ -46,7 +48,7 @@ class MirrorflyUikit {
       String? googleMapKey,
       required String iOSContainerID,
       String? storageFolderName,
-      bool isTrialLicenceKey = true,bool showMobileNumberOnList = true,bool showStatusOption = true,}) async {
+      bool isTrialLicenceKey = true,bool showMobileNumberOnList = true,bool showStatusOption = true, bool enableLocalNotification = true}) async {
     Mirrorfly.init(
         baseUrl: baseUrl,
         licenseKey: licenseKey,
@@ -60,6 +62,7 @@ class MirrorflyUikit {
     this.isTrialLicenceKey = isTrialLicenceKey;
     this.showMobileNumberOnList = showMobileNumberOnList;
     this.showStatusOption = showStatusOption;
+    this.enableLocalNotification = enableLocalNotification;
     this.googleMapKey = googleMapKey ?? '';
     ReplyHashMap.init();
     rootBundle.loadString('assets/mirrorfly_config.json').then((configFile) {
@@ -114,6 +117,7 @@ class MirrorflyUikit {
     });
     SessionManagement.onInit().then((value) {
       Get.put<MainController>(MainController());
+      SessionManagement.setBool(AppConstants.enableLocalNotification, enableLocalNotification);
     });
   }
 

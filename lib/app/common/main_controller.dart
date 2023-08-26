@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 
 import 'package:mirrorfly_uikit_plugin/app/base_controller.dart';
@@ -18,6 +20,8 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../../mirrorfly_uikit_plugin.dart';
 import '../modules/chatInfo/controllers/chat_info_controller.dart';
+import '../modules/notification/notification_service.dart';
+import 'app_constants.dart';
 
 class MainController extends FullLifeCycleController
     with BaseController, FullLifeCycleMixin /*with FullLifeCycleMixin */ {
@@ -29,7 +33,7 @@ class MainController extends FullLifeCycleController
   var audioPlayed = false.obs;
   AudioPlayer player = AudioPlayer();
   String currentPostLabel = "00:00";
-  // bool _notificationsEnabled = false;
+  bool _notificationsEnabled = false;
 
   //network listener
   static StreamSubscription<InternetConnectionStatus>? listener;
@@ -45,8 +49,82 @@ class MainController extends FullLifeCycleController
     getAuthToken();
     startNetworkListen();
 
+    if(SessionManagement.getBool(AppConstants.enableLocalNotification)) {
+      NotificationService notificationService = NotificationService();
+      await notificationService.init();
+      _isAndroidPermissionGranted();
+      _requestPermissions();
+      _configureSelectNotificationSubject();
+    }
   }
 
+  Future<void> _isAndroidPermissionGranted() async {
+    if (Platform.isAndroid) {
+      final bool granted = await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
+          ?.areNotificationsEnabled() ??
+          false;
+
+      // setState(() {
+      _notificationsEnabled = granted;
+      debugPrint("Notification Enabled--> $_notificationsEnabled");
+      // });
+    }
+  }
+
+  Future<void> _requestPermissions() async {
+    if (Platform.isIOS || Platform.isMacOS) {
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+          MacOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+    } else if (Platform.isAndroid) {
+      final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+      flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>();
+
+      final bool? granted = await androidImplementation?.requestPermission();
+      // setState(() {
+      _notificationsEnabled = granted ?? false;
+      // });
+    }
+  }
+
+  void _configureSelectNotificationSubject() {
+    selectNotificationStream.stream.listen((String? payload) async {
+
+      debugPrint("#Mirrorfly Notification -> opening chat page--> $payload ${Get.currentRoute}");
+      if(payload != null && payload.isNotEmpty){
+        // if (Get.isRegistered<ChatController>()) {
+        //   if(Get.currentRoute == Routes.forwardChat || Get.currentRoute == Routes.chatInfo || Get.currentRoute == Routes.groupInfo || Get.currentRoute == Routes.messageInfo){
+        //     Get.back();
+        //   }
+        //   if(Get.currentRoute.contains("from_notification=true")){
+        //     Get.offAllNamed("${AppPages.chat}?jid=$payload&from_notification=true");
+        //   }else {
+        //     Get.offNamed(Routes.chat,
+        //         parameters: {"chatJid": payload});
+        //   }
+        // }else {
+        //   Get.toNamed(Routes.chat,
+        //       parameters: {"chatJid": payload});
+        // }
+      }
+    });
+  }
 
   getMediaEndpoint() async {
     if (SessionManagement.getMediaEndPoint().checkNull().isEmpty) {
@@ -67,7 +145,7 @@ class MainController extends FullLifeCycleController
   getAuthToken() async {
     if (SessionManagement.getUsername().checkNull().isNotEmpty &&
         SessionManagement.getPassword().checkNull().isNotEmpty) {
-      await Mirrorfly.authToken().then((value) {
+      await Mirrorfly.refreshAndGetAuthToken().then((value) {
         mirrorFlyLog("RetryAuth", value.toString());
         if (value != null) {
           if (value.isNotEmpty) {

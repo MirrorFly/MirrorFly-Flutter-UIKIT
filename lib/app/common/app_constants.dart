@@ -108,6 +108,7 @@ class AppConstants{
   static var onlyForwardUpTo5 = "You can only forward with up-to 5 users or groups";
 
   static var noResultsFound = "No Results Found";
+  static var enableLocalNotification = "enableLocalNotification";
 
   static var forwardTo = "Forward to...";
   static var addParticipants = "Add Participants";
