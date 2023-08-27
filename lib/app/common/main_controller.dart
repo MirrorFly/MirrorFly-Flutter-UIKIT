@@ -54,7 +54,7 @@ class MainController extends FullLifeCycleController
       await notificationService.init();
       _isAndroidPermissionGranted();
       _requestPermissions();
-      _configureSelectNotificationSubject();
+      // _configureSelectNotificationSubject();
     }
   }
 
@@ -103,28 +103,52 @@ class MainController extends FullLifeCycleController
     }
   }
 
-  void _configureSelectNotificationSubject() {
+  /*void _configureSelectNotificationSubject() {
+    debugPrint("_configureSelectNotificationSubject");
+    final context = Get.context;
     selectNotificationStream.stream.listen((String? payload) async {
 
       debugPrint("#Mirrorfly Notification -> opening chat page--> $payload ${Get.currentRoute}");
       if(payload != null && payload.isNotEmpty){
-        // if (Get.isRegistered<ChatController>()) {
-        //   if(Get.currentRoute == Routes.forwardChat || Get.currentRoute == Routes.chatInfo || Get.currentRoute == Routes.groupInfo || Get.currentRoute == Routes.messageInfo){
-        //     Get.back();
-        //   }
-        //   if(Get.currentRoute.contains("from_notification=true")){
-        //     Get.offAllNamed("${AppPages.chat}?jid=$payload&from_notification=true");
-        //   }else {
-        //     Get.offNamed(Routes.chat,
-        //         parameters: {"chatJid": payload});
-        //   }
-        // }else {
-        //   Get.toNamed(Routes.chat,
-        //       parameters: {"chatJid": payload});
-        // }
+        if (Get.isRegistered<ChatController>()) {
+          // if(Get.currentRoute == Routes.forwardChat || Get.currentRoute == Routes.chatInfo || Get.currentRoute == Routes.groupInfo || Get.currentRoute == Routes.messageInfo){
+          //   Get.back();
+          // }
+          if(Get.currentRoute.contains("from_notification=true")){
+            // Get.offAllNamed("${AppPages.chat}?jid=$payload&from_notification=true");
+            Navigator.pushAndRemoveUntil(
+              context!,
+              MaterialPageRoute(
+                builder: (context) => ChatView(jid: payload),
+              ),
+                  (route) => false, // This removes all previous routes from the stack
+            );
+
+          }else {
+            Navigator.pushAndRemoveUntil(
+              context!,
+              MaterialPageRoute(
+                builder: (context) => ChatView(jid: payload),
+              ),
+                  (route) => false, // This removes all previous routes from the stack
+            );
+            // Get.offNamed(Routes.chat,
+            //     parameters: {"chatJid": payload});
+          }
+        }else {
+          // Get.toNamed(Routes.chat,
+          //     parameters: {"chatJid": payload});
+          Navigator.pushAndRemoveUntil(
+            context!,
+            MaterialPageRoute(
+              builder: (context) => ChatView(jid: payload),
+            ),
+                (route) => false, // This removes all previous routes from the stack
+          );
+        }
       }
     });
-  }
+  }*/
 
   getMediaEndpoint() async {
     if (SessionManagement.getMediaEndPoint().checkNull().isEmpty) {
