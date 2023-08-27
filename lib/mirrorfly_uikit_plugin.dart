@@ -124,15 +124,15 @@ class MirrorflyUikit {
   ///Used as a register class for [MirrorflyUikit]
   ///
   ///* [userIdentifier] provide the Unique Id to Register the User
-  ///* [token] provide the FCM token this is an optional
+  ///* [fcmToken] provide the FCM token this is an optional
   ///sample response {'status': true, 'message': 'Register Success};
-  static Future<Map> registerUser(String userIdentifier,
-      {String token = ""}) async {
+  static Future<Map> registerUser({required String userIdentifier,
+      String fcmToken = ""}) async {
     if (!isSDKInitialized) {
       return setResponse(false, 'SDK Not Initialized');
     }
     if (await AppUtils.isNetConnected()) {
-      var value = await Mirrorfly.registerUser(userIdentifier, fcmToken: token);
+      var value = await Mirrorfly.registerUser(userIdentifier, fcmToken: fcmToken);
       try {
         var userData = registerModelFromJson(value); //message
         if (userData.data != null) {

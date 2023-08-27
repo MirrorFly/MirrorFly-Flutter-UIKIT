@@ -96,7 +96,7 @@ Goto Project -> Target -> Signing & Capabilities -> Click `+ Capability` at the 
 
 ```yaml
 dependencies:
-  mirrorfly_uikit_plugin: ^0.0.11
+  mirrorfly_uikit_plugin: ^0.0.12
 ```
 
 - Run `flutter pub get` command in your project directory.
@@ -125,7 +125,8 @@ To initialize the plugin, place the below code in your `main.dart` file inside `
   MirrorflyUikit.instance.initUIKIT(  baseUrl: 'YOUR_BASE_URL',
       licenseKey: 'Your_Mirrorfly_Licence_Key',
       googleMapKey: 'Your_Google_Map_Key_for_location_messages',
-      iOSContainerID: 'Your_iOS_app_Container_id');
+      iOSContainerID: 'Your_iOS_app_Container_id',
+      enableLocalNotification: true);
   runApp(const MyApp());
 }
 ```
@@ -142,11 +143,11 @@ Use the below method to register a user in sandbox Live mode.
 
 > **Info** Unless you log out the session, make a note that should never call the registration method more than once in an application
 
-> **Note**: While registration, the below `registerUser` method will accept the `FCM_TOKEN` as an optional param and pass it across. `The connection will be established automatically upon completion of registration and not required for seperate login`.
+> **Note**: While registration, the below `registerUser` method will accept the `fcmToken` as an optional param and pass it across. `The connection will be established automatically upon completion of registration and not required for seperate login`.
 
 ```dart
 try {
-    var response = await MirrorflyUikit.registerUser(uniqueId);
+    var response = await MirrorflyUikit.registerUser(userIdentifier: uniqueId, fcmToken: "Your Google FCM Token");
     debugPrint("register user $response");
     //{'status': true, 'message': 'Register Success};
 } catch (e) {
@@ -158,6 +159,42 @@ try {
 
 ```dart
 Navigator.push(context, MaterialPageRoute(builder: (con)=> const DashboardView(title: "Chats",)));
+```
+
+### Local Notification
+To enable or disable local notifications, use the `enableLocalNotification` parameter in `MirrorflyUikit.instance.initUIKIT`.
+
+You can achieve handling local notification clicks as follows:
+
+```dart
+selectNotificationStream.stream.listen((String? jid) async {
+// 'jid' represents the user JID who sent the message.
+// You can customize the logic here, or navigate to a Chat page as shown in step 4.
+});
+
+```
+
+### Remote Push Notification
+
+To configure remote push notifications, you can set up the `firebase_messaging` package in your app and then send the FCM token through the `registerUser` method.
+
+### Additionally:
+
+- The handleReceivedMessage method is added to receive chat messages from FCM notifications, specifically for Android.
+- For iOS, you will need to add a Notification Extension Service and follow the steps provided in the Notification Service class.
+
+```dart
+import mirrorfly_plugin
+```
+
+```swift
+ override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
+        self.contentHandler = contentHandler
+        bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
+        
+        MirrorFlyNotification().handleNotification(notificationRequest: request, contentHandler: contentHandler, containerID: "containerID", licenseKey: "Your License Key")
+        
+    }
 ```
 
 ## Getting Help

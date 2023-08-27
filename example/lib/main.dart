@@ -103,7 +103,7 @@ class _DashboardState extends State<Dashboard> {
                           if (uniqueId.isNotEmpty) {
                             try {
                               var response =
-                                  await MirrorflyUikit.registerUser(uniqueId);
+                                  await MirrorflyUikit.registerUser(userIdentifier: uniqueId);
                               debugPrint("register user $response");
                               showSnack(response['message']);
                             } catch (e) {
