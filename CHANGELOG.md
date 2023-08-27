@@ -1,3 +1,9 @@
+## 0.0.12
+* Added Notification Feature.
+* Modified the Audio Picker behavior for Android.
+* Fixed the issue with Shared Preferences clearing globally.
+* The parameter names for the Register method have been updated.
+
 ## 0.0.11
 * App constants are editable. If a value is passed as an argument (like a page title), it will be considered; otherwise, the App Constants value will be used.
 
