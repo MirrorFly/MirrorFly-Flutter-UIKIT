@@ -4,14 +4,13 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'mirrorfly_uikit_plugin'
-  s.version          = '0.0.1'
-  s.summary          = 'A new Flutter project.'
-  s.description      = <<-DESC
-A new Flutter project.
-                       DESC
-  s.homepage         = 'http://example.com'
+  s.version          = '0.0.12'
+  s.summary          = 'A Mirrorfly Flutter UIKIT Plugin'
+  s.description      = 'A Mirrorfly Flutter UIKIT plugin to Experience an outstanding real time messaging solution. The powerful communication that adds an extra mileage to build your chat app.'
+
+  s.homepage         = 'https://www.mirrorfly.com/docs/uikit/flutter/quick-start/'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Your Company' => 'email@example.com' }
+  s.author           = { 'CONTUS TECH' => 'manivendhan.m@contus.in' }
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
