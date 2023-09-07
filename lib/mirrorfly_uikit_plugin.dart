@@ -48,7 +48,10 @@ class MirrorflyUikit {
       String? googleMapKey,
       required String iOSContainerID,
       String? storageFolderName,
-      bool isTrialLicenceKey = true,bool showMobileNumberOnList = true,bool showStatusOption = true, bool enableLocalNotification = true}) async {
+      bool isTrialLicenceKey = true,
+        bool showMobileNumberOnList = true,
+        bool showStatusOption = true,
+        bool enableLocalNotification = true}) async {
     Mirrorfly.init(
         baseUrl: baseUrl,
         licenseKey: licenseKey,
