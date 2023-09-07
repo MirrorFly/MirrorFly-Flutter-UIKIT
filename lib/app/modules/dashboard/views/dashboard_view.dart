@@ -12,7 +12,7 @@ import '../../../common/widgets.dart';
 import '../../../widgets/custom_action_bar_icons.dart';
 import '../../chat/chat_widgets.dart';
 import '../../dashboard/controllers/dashboard_controller.dart';
-
+typedef ResumeCallback = void Function();
 ///* @property [title] indicates the appbar title
 ///* @property [enableAppBar] enable the appbar and its functions
 ///* @property [showBackIcon] show or hide the back icon on appbar
@@ -24,7 +24,7 @@ class DashboardView extends StatefulWidget {
   const DashboardView({Key? key, this.title,this.enableAppBar=true,
     this.showBackIcon=true, this.showSearchMenu = true,
     this.showCreateGroup = true, this.showSettings = true,
-    this.showNewChat = true, this.showChatDeliveryIndicator = true}) : super(key: key);
+    this.showNewChat = true, this.showChatDeliveryIndicator = true, this.onFocusGain}) : super(key: key);
   final String? title;
   final bool enableAppBar;
   final bool showBackIcon;
@@ -33,12 +33,13 @@ class DashboardView extends StatefulWidget {
   final bool showSettings;
   final bool showNewChat;
   final bool showChatDeliveryIndicator;
+  final ResumeCallback? onFocusGain;
 
   @override
   State<DashboardView> createState() => _DashboardViewState();
 }
 
-class _DashboardViewState extends State<DashboardView> {
+class _DashboardViewState extends State<DashboardView>{
   final controller = Get.put(DashboardController());
 
   @override
@@ -60,6 +61,7 @@ class _DashboardViewState extends State<DashboardView> {
         controller.getRecentChatList();
         controller.getArchivedChatsList();
         debugPrint("showBackIcon ${widget.showBackIcon}");
+        widget.onFocusGain?.call();
       },
       child: WillPopScope(
         onWillPop: () {
