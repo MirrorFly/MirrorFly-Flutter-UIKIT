@@ -42,6 +42,38 @@ const Color previewTextColor = Color(0xff7f7f7f);
 const Color dummy = Color(0xffe5c8c8);
 const Color darkPopupColor = Color(0xff262626);
 
+class AppColors{
+  static const Color callerBackground = Color(0xff152134);
+  static const Color audioCallBackground = Color(0xff0B111C);
+  static const Color colorBlackTransparent = Color(0x80000000);
+  static const Color callerStatus = Color(0xffDEDEDE);
+  static const Color callerName = Color(0xffffffff);
+  static const Color endButton = Color(0xffff4d67);
+}
+//call Assets
+const String callEndButton = 'assets/calls/call_end_button.svg';
+const String speakerInactive = 'assets/calls/speaker_inactive.svg';
+const String speakerActive = 'assets/calls/speaker_active.svg';
+const String speakerBluetooth = 'assets/calls/bluetooth.svg';
+const String speakerHeadset = 'assets/calls/head_set.svg';
+
+const String audioCallIcon = 'assets/calls/audiocall.svg';
+const String videoCallIcon = 'assets/calls/videocall.svg';
+
+const String videoInactive = 'assets/calls/video_inactive.svg';
+const String videoActive = 'assets/calls/video_active.svg';
+const String muteActive = 'assets/calls/mute_active.svg';
+const String muteInactive = 'assets/calls/mute_inactive.svg';
+const String addUserCall = 'assets/calls/ic_add_user.svg';
+const String audioMute = 'assets/calls/ic_audio_mute.svg';
+const String moreMenu = 'assets/calls/ic_call_more_menu.svg';
+const String unpinUser = 'assets/calls/ic_unpin_user.svg';
+const String cameraSwitchInactive = 'assets/calls/camera_switch_inactive.svg';
+const String cameraSwitchActive = 'assets/calls/camera_switch_active.svg';
+const String callOptionsUpArrow = 'assets/calls/call_options_up_arrow.svg';
+const String callOptionsBottomBg = 'assets/calls/ic_group_user_info_layout.png';
+const String callOptionsToolbarBg = 'assets/calls/ic_call_header_overlay.png';
+
 //Assets
 const String package = 'mirrorfly_uikit_plugin/lib';
 const String registerIcon = 'assets/logos/register_logo.svg';
@@ -665,6 +697,20 @@ class Constants {
   static const pinAlert = pinExpiry-5;//in Days
   static const forgetPinOTPText ='Generate OTP to your registered mobile number';
   static const invalidPinOTPText ='Invalid PIN, Generate OTP to your registered mobile number';
+
+  //asked permission
+  static const locationPermissionAsked = "location_permission_asked_before";
+  static const contactPermissionAsked = "contact_permission_asked_before";
+  static const contactSavePermissionAsked = "contact_save_permission_asked_before";
+  static const storagePermissionAsked = "storage_permission_asked_before";
+  static const notificationPermissionAsked = "notification_permission_asked_before";
+
+  static const audioRecordPermissionAsked = "audio_record_permission_asked_before";
+  static const cameraPermissionAsked = "camera_permission_asked_before";
+  static const readPhoneStatePermissionAsked = "read_phone_state_asked_before";
+  static const bluetoothPermissionAsked = "bluetooth_permission_asked_before";
+
+  static const remoteEngagedToast = "is on another call";
 }
 
 Widget forMessageTypeIcon(String messageType,[MediaChatMessage? mediaChatMessage]) {

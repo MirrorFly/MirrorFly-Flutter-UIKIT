@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
@@ -460,9 +461,10 @@ extension ProfileDataParsing on ProfileData {
 
 Future<Profile> getProfileDetails(String jid) async {
   var value = await Mirrorfly.getProfileDetails(jid.checkNull());
-  var profile = profiledata(value.toString());
+  // var profile = profiledata(value.toString());
   // var profile = await compute(profiledata, value.toString());
-  debugPrint("profile ${profile.name}");
+  // debugPrint("profile ${profile.name}");
+  var profile = Profile.fromJson(json.decode(value.toString()));
   return profile;
 }
 
