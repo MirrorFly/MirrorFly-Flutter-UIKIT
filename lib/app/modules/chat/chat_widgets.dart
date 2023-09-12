@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/image_view/views/image_view_view.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -111,7 +112,7 @@ class ReplyingMessageHeader extends StatelessWidget {
 getReplyTitle(bool isMessageSentByMe, String senderUserName) {
   return isMessageSentByMe
       ? Text(
-    'You',
+    AppConstants.you,
     style: TextStyle(fontWeight: FontWeight.bold,color:MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textPrimaryColor,),
   )
       : Text(senderUserName,
@@ -243,7 +244,7 @@ getReplyImageHolder(BuildContext context,
     isReply = true;
   }
   switch (isReply
-      ? mediaChatMessage == null ? "LOCATION" : mediaChatMessage.messageType
+      ? mediaChatMessage == null ? Constants.mLocation : mediaChatMessage.messageType
       .checkNull().toUpperCase()
       : replyChatMessageModel?.messageType ?? chatMessageModel.messageType.checkNull().toUpperCase()) {
     case Constants.mImage:
@@ -391,7 +392,7 @@ class ReplyMessageHeader extends StatelessWidget {
 
 Image imageFromBase64String(String base64String, BuildContext context,
     double? width, double? height) {
-  var decodedBase64 = base64String.replaceAll("\n", "");
+  var decodedBase64 = base64String.replaceAll("\n", Constants.emptyString);
   Uint8List image = const Base64Decoder().convert(decodedBase64);
   return Image.memory(
     image,
@@ -415,7 +416,7 @@ Widget getLocationImage(LocationChatMessage? locationChatMessage, double width,
           ? null
           : () async {
         String googleUrl =
-            'https://www.google.com/maps/search/?api=1&query=${locationChatMessage!
+            '${Constants.googleMapQuery}${locationChatMessage!
             .latitude}, ${locationChatMessage.longitude}';
         if (await canLaunchUrl(Uri.parse(googleUrl))) {
           await launchUrl(Uri.parse(googleUrl));
@@ -425,7 +426,7 @@ Widget getLocationImage(LocationChatMessage? locationChatMessage, double width,
       },
     child: CachedNetworkImage(imageUrl: Helper.getMapImageUri(
         locationChatMessage!.latitude, locationChatMessage.longitude),errorWidget: (c,l,er){
-      return  Center(child: Text(MirrorflyUikit.instance.googleMapKey.isEmpty ? "Google map key is required show location" : "Invalid Google map key"),);
+      return  Center(child: Text(MirrorflyUikit.instance.googleMapKey.isEmpty ? AppConstants.googleMapKeyIsRequired : AppConstants.invalidMapKey),);
 
     },width: width,height: height,fit: BoxFit.fill,)
       /*child: Image.network(
@@ -924,14 +925,14 @@ class _AudioMessageViewState extends State<AudioMessageView>
                           // if (result == 1) {
                             isPlaying(true);
                           // } else {
-                          //   mirrorFlyLog("", "Error while playing audio.");
+                          //   mirrorFlyLog(Constants.emptyString, "Error while playing audio.");
                           // }
                         } else {
                           await player.pause();
                           // if (result == 1) {
                             isPlaying(false);
                           // } else {
-                          //   mirrorFlyLog("", "Error on pause audio.");
+                          //   mirrorFlyLog(Constants.emptyString, "Error on pause audio.");
                           // }
                         }
                       },
@@ -1046,7 +1047,7 @@ class _AudioMessageViewState extends State<AudioMessageView>
 class ContactMessageView extends StatelessWidget {
   const ContactMessageView({Key? key,
     required this.chatMessage,
-    this.search = "",
+    this.search = Constants.emptyString,
     required this.isSelected, required this.showChatDeliveryIndicator})
       : super(key: key);
   final ChatMessageModel chatMessage;
@@ -1162,10 +1163,10 @@ class ContactMessageView extends StatelessWidget {
       if (contactChatMessage.isChatAppUser[i]) {
         return await Mirrorfly.getJidFromPhoneNumber(
             contactChatMessage.contactPhoneNumbers[i],
-            (SessionManagement.getCountryCode() ?? "").replaceAll('+', ''));
+            (SessionManagement.getCountryCode() ?? Constants.emptyString).replaceAll('+', Constants.emptyString));
       }
     }
-    return '';
+    return Constants.emptyString;
   }
 
   Widget getJidOfContact({ContactChatMessage? contactChatMessage,
@@ -1197,8 +1198,8 @@ class ContactMessageView extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: (userJid != null && userJid.isNotEmpty)
-                              ? Text("Message",style: TextStyle(color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textPrimaryColor),)
-                              : Text("Invite",style: TextStyle(color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textPrimaryColor),)
+                              ? Text(AppConstants.message,style: TextStyle(color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textPrimaryColor),)
+                              : Text(AppConstants.invite,style: TextStyle(color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textPrimaryColor),)
                         ))),
               ],
             ),
@@ -1219,27 +1220,27 @@ class ContactMessageView extends StatelessWidget {
 
   showInvitePopup(ContactChatMessage contactChatMessage, BuildContext context) {
     Helper.showButtonAlert(actions: [
-      const ListTile(
-        contentPadding: EdgeInsets.only(left: 10),
-        title: Text("Invite Friend",
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+      ListTile(
+        contentPadding: const EdgeInsets.only(left: 10),
+        title: Text(AppConstants.inviteFriend,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
       ),
       ListTile(
         contentPadding: const EdgeInsets.only(left: 10),
-        title: const Text("Copy Link",
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
+        title: Text(AppConstants.copyLink,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
         onTap: () {
           Clipboard.setData(
-              const ClipboardData(text: Constants.applicationLink));
+              ClipboardData(text: AppConstants.applicationLink));
           // Get.back();
           Navigator.pop(context);
-          toToast("Link Copied");
+          toToast(AppConstants.linkCopied);
         },
       ),
       ListTile(
         contentPadding: const EdgeInsets.only(left: 10),
-        title: const Text("Send SMS",
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
+        title: Text(AppConstants.sendSMS,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
         onTap: () {
           Get.back();
           sendSMS(contactChatMessage.contactPhoneNumbers[0]);
@@ -1250,7 +1251,7 @@ class ContactMessageView extends StatelessWidget {
 
   void sendSMS(String contactPhoneNumber) async {
     var info = await PackageInfo.fromPlatform();
-    Uri sms = Uri.parse('sms:$contactPhoneNumber?body=${Constants.smsContent.replaceAll('MirrorFly', info.appName)}');
+    Uri sms = Uri.parse('sms:$contactPhoneNumber?body=${AppConstants.smsContent.replaceAll('MirrorFly', info.appName)}');
     if (await launchUrl(sms)) {
       //app opened
     } else {
@@ -1268,7 +1269,7 @@ class ContactMessageView extends StatelessWidget {
 
 class DocumentMessageView extends StatelessWidget {
   const DocumentMessageView(
-      {Key? key, required this.chatMessage, this.search = "", required this.showChatDeliveryIndicator})
+      {Key? key, required this.chatMessage, this.search = Constants.emptyString, required this.showChatDeliveryIndicator})
       : super(key: key);
   final ChatMessageModel chatMessage;
   final String search;
@@ -1415,7 +1416,7 @@ Widget getImageHolder(String mediaFileName, double size) {
 class VideoMessageView extends StatelessWidget {
   const VideoMessageView({Key? key,
     required this.chatMessage,
-    this.search = "",
+    this.search = Constants.emptyString,
     required this.isSelected, required this.showChatDeliveryIndicator})
       : super(key: key);
   final ChatMessageModel chatMessage;
@@ -1429,7 +1430,7 @@ class VideoMessageView extends StatelessWidget {
         : chatMessage.mediaChatMessage?.mediaDownloadStatus) {
       case Constants.mediaDownloaded:
       case Constants.mediaUploaded:
-        if (chatMessage.messageType.toUpperCase() == 'VIDEO') {
+        if (chatMessage.messageType.toUpperCase() == Constants.mVideo) {
           if (checkFile(chatMessage.mediaChatMessage!.mediaLocalStoragePath) &&
               (chatMessage.mediaChatMessage!.mediaDownloadStatus ==
                   Constants.mediaDownloaded ||
@@ -1555,7 +1556,7 @@ class VideoMessageView extends StatelessWidget {
 class ImageMessageView extends StatelessWidget {
   const ImageMessageView({Key? key,
     required this.chatMessage,
-    this.search = "",
+    this.search = Constants.emptyString,
     required this.isSelected, required this.showChatDeliveryIndicator})
       : super(key: key);
   final ChatMessageModel chatMessage;
@@ -1692,7 +1693,7 @@ class ImageMessageView extends StatelessWidget {
 
 Widget setCaptionMessage(MediaChatMessage mediaMessage,
     ChatMessageModel chatMessage, BuildContext context,bool showChatDeliveryIndicator,
-    {String search = ""}) {
+    {String search = Constants.emptyString}) {
   return Padding(
     padding: const EdgeInsets.all(10.0),
     child: Column(
@@ -1750,7 +1751,7 @@ class NotificationMessageView extends StatelessWidget {
         decoration: BoxDecoration(
             color: MirrorflyUikit.getTheme?.secondaryColor.withOpacity(0.5),
             borderRadius: const BorderRadius.all(Radius.circular(15))),
-        child: Text(chatMessage ?? "",
+        child: Text(chatMessage ?? Constants.emptyString,
             style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w400,
@@ -1799,7 +1800,7 @@ class MessageContent extends StatelessWidget {
   const MessageContent({Key? key,
     required this.chatList,
     required this.index,
-    this.search = "",
+    this.search = Constants.emptyString,
     this.isSelected = false,
     required this.onPlayAudio,
     required this.onSeekbarChange, this.showChatDeliveryIndicator = true})
@@ -1895,7 +1896,7 @@ class TextMessageView extends StatelessWidget {
   const TextMessageView({
     Key? key,
     required this.chatMessage,
-    this.search = "",
+    this.search = Constants.emptyString,
     required this.showChatDeliveryIndicator,
   }) : super(key: key);
   final ChatMessageModel chatMessage;
@@ -1915,9 +1916,9 @@ class TextMessageView extends StatelessWidget {
         children: [
           Flexible(
             child: search.isEmpty
-                ? textMessageSpannableText(chatMessage.messageTextContent ?? "",chatMessage.isMessageSentByMe)
+                ? textMessageSpannableText(chatMessage.messageTextContent ?? Constants.emptyString,chatMessage.isMessageSentByMe)
                 : chatSpannedText(
-              chatMessage.messageTextContent ?? "",
+              chatMessage.messageTextContent ?? Constants.emptyString,
               search,
               TextStyle(fontSize: 14, color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textPrimaryColor),
                 chatMessage.isMessageSentByMe
@@ -1990,8 +1991,8 @@ class RecalledMessageView extends StatelessWidget {
                 Expanded(
                   child: Text(
                     chatMessage.isMessageSentByMe
-                        ? "You deleted this message"
-                        : "This message was deleted",
+                        ? AppConstants.youDeletedThisMessage
+                        : AppConstants.thisMessageWasDeleted,
                     maxLines: 1,
                     style: TextStyle(fontSize: 14,color: chatMessage.isMessageSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textPrimaryColor),
                   ),
@@ -2053,7 +2054,7 @@ Widget getImageOverlay(BuildContext context,ChatMessageModel chatMessage,
   //     "getImageOverlay ${(checkFile(chatMessage.mediaChatMessage!.mediaLocalStoragePath) && chatMessage.messageStatus != 'N')}");
   if (checkFile(chatMessage.mediaChatMessage!.mediaLocalStoragePath) &&
       chatMessage.messageStatus.value != 'N') {
-    if (chatMessage.messageType.toUpperCase() == 'VIDEO') {
+    if (chatMessage.messageType.toUpperCase() == Constants.mVideo) {
       return FloatingActionButton.small(
         onPressed: onVideo,
         backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
@@ -2062,7 +2063,7 @@ Widget getImageOverlay(BuildContext context,ChatMessageModel chatMessage,
           color: MirrorflyUikit.getTheme?.colorOnPrimary,
         ),
       );
-    } else if (chatMessage.messageType.toUpperCase() == 'AUDIO') {
+    } else if (chatMessage.messageType.toUpperCase() == Constants.mAudio) {
       return InkWell(
         onTap: onAudio,
         child: Padding(
@@ -2133,7 +2134,7 @@ Widget getImageOverlay(BuildContext context,ChatMessageModel chatMessage,
 uploadView(int mediaDownloadStatus, int mediaFileSize, String messageType,bool isSentByMe) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 8.0),
-    child: messageType == 'AUDIO' || messageType == 'DOCUMENT'
+    child: messageType == Constants.mAudio || messageType == Constants.mDocument
         ? Container(
         decoration: BoxDecoration(
             border: Border.all(color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor),
@@ -2161,7 +2162,7 @@ uploadView(int mediaDownloadStatus, int mediaFileSize, String messageType,bool i
               width: 5,
             ),
             Text(
-              "RETRY",
+              AppConstants.retry.toUpperCase(),
               style: TextStyle(color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textPrimaryColor, fontSize: 10),
             ),
           ],
@@ -2177,7 +2178,7 @@ void uploadMedia(String messageId) async {
   if (await AppUtils.isNetConnected()) {
     Mirrorfly.uploadMedia(messageId);
   } else {
-    toToast(Constants.noInternetConnection);
+    toToast(AppConstants.noInternetConnection);
   }
 }
 
@@ -2197,7 +2198,7 @@ void downloadMedia(BuildContext context,String messageId) async {
       });
     }
   } else {
-    toToast(Constants.noInternetConnection);
+    toToast(AppConstants.noInternetConnection);
   }
 }
 
@@ -2206,7 +2207,7 @@ Widget downloadView(int mediaDownloadStatus, int mediaFileSize,
     String messageType,bool isSentByMe) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 8.0),
-    child: messageType == 'AUDIO' || messageType == 'DOCUMENT'
+    child: messageType == Constants.mAudio || messageType == Constants.mDocument
         ? Container(
         decoration: BoxDecoration(
             border: Border.all(color: isSentByMe ? MirrorflyUikit.getTheme!.chatBubblePrimaryColor.textSecondaryColor : MirrorflyUikit.getTheme!.chatBubbleSecondaryColor.textSecondaryColor,),
@@ -2246,7 +2247,7 @@ Widget downloadView(int mediaDownloadStatus, int mediaFileSize,
 
 downloadingOrUploadingView(String messageType, int progress,bool isSentByMe) {
   debugPrint('downloadingOrUploadingView progress $progress');
-  if (messageType == "AUDIO" || messageType == "DOCUMENT") {
+  if (messageType == Constants.mAudio || messageType == Constants.mDocument) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Container(
@@ -2357,9 +2358,9 @@ class AttachmentsSheetView extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                iconCreation(documentImg, "Document", onDocument),
-                iconCreation(cameraImg, "Camera", onCamera),
-                iconCreation(galleryImg, "Gallery", onGallery),
+                iconCreation(documentImg, AppConstants.document, onDocument),
+                iconCreation(cameraImg, AppConstants.camera, onCamera),
+                iconCreation(galleryImg, AppConstants.gallery, onGallery),
               ],
             ),
             const SizedBox(
@@ -2368,9 +2369,9 @@ class AttachmentsSheetView extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                iconCreation(audioImg, "Audio", onAudio),
-                iconCreation(contactImg, "Contact", onContact),
-                iconCreation(locationImg, "Location", onLocation),
+                iconCreation(audioImg, AppConstants.audio, onAudio),
+                iconCreation(contactImg, AppConstants.contact, onContact),
+                iconCreation(locationImg, AppConstants.location, onLocation),
               ],
             ),
           ],
@@ -2426,64 +2427,9 @@ Widget chatSpannedText(String text, String spannableText, TextStyle? style,bool 
   }
 }
 
-/*handleMediaUploadDownload(
-    int mediaDownloadStatus, ChatMessageModel chatList) {
-  switch (chatList.isMessageSentByMe
-      ? chatList.mediaChatMessage?.mediaUploadStatus
-      : mediaDownloadStatus) {
-    case Constants.mediaDownloaded:
-    case Constants.mediaUploaded:
-      if (chatList.messageType.toUpperCase() == 'VIDEO') {
-        if (checkFile(
-            chatList.mediaChatMessage!.mediaLocalStoragePath) &&
-            (chatList.mediaChatMessage!.mediaDownloadStatus ==
-                Constants.mediaDownloaded ||
-                chatList.mediaChatMessage!.mediaDownloadStatus ==
-                    Constants.mediaUploaded ||
-                chatList.isMessageSentByMe)) {
-          Get.toNamed(Routes.videoPlay, arguments: {
-            "filePath": chatList.mediaChatMessage!.mediaLocalStoragePath,
-          });
-        }
-      }
-      if (chatList.messageType.toUpperCase() == 'AUDIO') {
-        if (checkFile(
-            chatList.mediaChatMessage!.mediaLocalStoragePath) &&
-            (chatList.mediaChatMessage!.mediaDownloadStatus ==
-                Constants.mediaDownloaded ||
-                chatList.mediaChatMessage!.mediaDownloadStatus ==
-                    Constants.mediaUploaded ||
-                chatList.isMessageSentByMe)) {
-          debugPrint("audio click1");
-          //playAudio(chatList, chatList.mediaChatMessage!.mediaLocalStoragePath);
-        } else {
-          debugPrint("condition failed");
-        }
-      }
-      break;
-
-    case Constants.mediaDownloadedNotAvailable:
-    case Constants.mediaNotDownloaded:
-    //download
-      debugPrint("Download");
-      debugPrint(chatList.messageId);
-      chatList.mediaChatMessage!.mediaDownloadStatus =
-          Constants.mediaDownloading;
-      downloadMedia(chatList.messageId);
-      break;
-    case Constants.mediaUploadedNotAvailable:
-    //upload
-      break;
-    case Constants.mediaNotUploaded:
-    case Constants.mediaDownloading:
-    case Constants.mediaUploading:
-      return uploadingView(chatList.messageType);
-  // break;
-  }
-}*/
 
 class AudioMessagePlayerController extends GetxController {
-  final _obj = ''.obs;
+  final _obj = Constants.emptyString.obs;
 
   set obj(value) => _obj.value = value;
 
@@ -2531,21 +2477,21 @@ class AudioMessagePlayerController extends GetxController {
       // if (result == 1) {
         playingChat!.mediaChatMessage!.isPlaying = true;
       // } else {
-      //   mirrorFlyLog("", "Error while playing audio.");
+      //   mirrorFlyLog(Constants.emptyString, "Error while playing audio.");
       // }
     } else if (!playingChat!.mediaChatMessage!.isPlaying) {
       await player.resume();
       // if (result == 1) {
         playingChat!.mediaChatMessage!.isPlaying = true;
       // } else {
-      //   mirrorFlyLog("", "Error on resume audio.");
+      //   mirrorFlyLog(Constants.emptyString, "Error on resume audio.");
       // }
     } else {
       await player.pause();
       // if (result == 1) {
         playingChat!.mediaChatMessage!.isPlaying = false;
       // } else {
-      //   mirrorFlyLog("", "Error on pause audio.");
+      //   mirrorFlyLog(Constants.emptyString, "Error on pause audio.");
       // }
     }
   }
@@ -2605,16 +2551,16 @@ String addDateHeaderMessage(ChatMessageModel item) {
   // debugPrint("today $today");
   // debugPrint("yesterday $yesterday");
   if (messageDate.toString() == (today).toString()) {
-    return "Today";
+    return AppConstants.today;
     //dateHeaderMessage = createDateHeaderMessageWithDate(date, item)
   } else if (messageDate == yesterday) {
-    return "Yesterday";
+    return AppConstants.yesterday;
     //dateHeaderMessage = createDateHeaderMessageWithDate(date, item)
   } else if (!messageDate.contains("1970")) {
     //dateHeaderMessage = createDateHeaderMessageWithDate(messageDate, item)
     return messageDate;
   }
-  return "";
+  return Constants.emptyString;
 }
 
 String checkTwoDigitsForDate(int date) {
@@ -2628,7 +2574,7 @@ String checkTwoDigitsForDate(int date) {
 }
 
 String getMonthForInt(int num) {
-  var month = "";
+  var month = Constants.emptyString;
   var dateFormatSymbols = DateFormat().dateSymbols.STANDALONEMONTHS;
   var months = dateFormatSymbols;
   if (num <= 11) {

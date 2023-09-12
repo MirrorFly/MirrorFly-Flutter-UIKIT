@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/widgets.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/group/controllers/group_info_controller.dart';
 
@@ -23,7 +24,7 @@ class _NameChangeViewState extends State<NameChangeView> {
       backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
       appBar: widget.enableAppBar ? AppBar(
         automaticallyImplyLeading: true,
-        title: Text('Enter New Name', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
+        title: Text(AppConstants.enterNewName, style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
         iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
         backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
       ) : null,
@@ -60,7 +61,7 @@ class _NameChangeViewState extends State<NameChangeView> {
                               focusNode: controller.focusNode,
                               controller: controller.nameController,
                               cursorColor: MirrorflyUikit.getTheme?.primaryColor,
-                              decoration: const InputDecoration(border: InputBorder.none,counterText:"" ),
+                              decoration: const InputDecoration(border: InputBorder.none,counterText:Constants.emptyString ),
                             ),
                           ),
                           Container(
@@ -102,42 +103,6 @@ class _NameChangeViewState extends State<NameChangeView> {
                 ),
 
               ),
-              // const Divider(thickness: 1, color: Colors.grey, height: 1,),
-              /*IntrinsicHeight(
-                child: Row(children: [
-                  Expanded(
-                    child: TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text(
-                        "CANCEL",
-                        style: TextStyle(color: Colors.black, fontSize: 16.0),
-                      ),
-                    ),
-                  ),
-                  const VerticalDivider(
-                    color: Colors.grey,
-                    thickness: 1,
-                  ),
-                  Expanded(
-                    child: TextButton(
-                      onPressed: () {
-                        if(controller.nameController.text.trim().isNotEmpty) {
-                          // Get.back(result: controller.nameController.text
-                          //     .trim().toString());
-                          Navigator.pop(context, controller.nameController.text
-                              .trim().toString());
-                        }else{
-                          toToast("Name cannot be empty");
-                        }
-                      },
-                      child: const Text(
-                        "OK",
-                        style: TextStyle(color: Colors.black, fontSize: 16.0),
-                      ),
-                    ),
-                  ),
-                ]),
-              ),*/
               Row(children: [
                 Expanded(
                   child: ElevatedButton(
@@ -148,7 +113,7 @@ class _NameChangeViewState extends State<NameChangeView> {
                         shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.zero)),
                     child: Text(
-                      "CANCEL",
+                      AppConstants.cancel.toUpperCase(),
                       style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor, fontSize: 16.0),
                     ),
                   ),
@@ -166,7 +131,7 @@ class _NameChangeViewState extends State<NameChangeView> {
                         Navigator.pop(context, controller.nameController.text
                             .trim().toString());
                       }else{
-                        toToast("Name cannot be empty");
+                        toToast(AppConstants.nameCantEmpty);
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -175,7 +140,7 @@ class _NameChangeViewState extends State<NameChangeView> {
                         shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.zero)),
                     child: Text(
-                      "OK",
+                      AppConstants.ok.toUpperCase(),
                       style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor, fontSize: 16.0),
                     ),
                   ),

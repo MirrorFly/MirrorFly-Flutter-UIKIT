@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/main_controller.dart';
 import 'package:photo_view/photo_view.dart';
 
@@ -100,8 +101,8 @@ class _ImageViewViewState extends State<ImageViewView> {
                           ),
                         ),
                       )
-                    : const Center(
-                        child: Text('Unable to Load Image'),
+                    : Center(
+                        child: Text(AppConstants.unableToLoad),
                       );
           }),
         ),

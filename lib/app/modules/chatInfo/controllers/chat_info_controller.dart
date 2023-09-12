@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 
@@ -77,10 +78,10 @@ class ChatInfoController extends GetxController {
         var lastSeen = convertSecondToLastSeen(value!);
         userPresenceStatus(lastSeen.toString());
       }).catchError((er) {
-        userPresenceStatus("");
+        userPresenceStatus(Constants.emptyString);
       });
     }else{
-      userPresenceStatus("");
+      userPresenceStatus(Constants.emptyString);
     }
   }
 
@@ -119,9 +120,9 @@ class ChatInfoController extends GetxController {
   reportChatOrUser(BuildContext context) {
     Future.delayed(const Duration(milliseconds: 100), () {
       Helper.showAlert(
-          title: "Report ${profile.name}?",
+          title: "${AppConstants.report} ${profile.name}?",
           message:
-              "The last 5 messages from this contact will be forwarded to admin. This Contact will not be notified.",
+              AppConstants.last5Message,
           actions: [
             TextButton(
                 onPressed: () {
@@ -133,9 +134,9 @@ class ChatInfoController extends GetxController {
                       .then((value) {
                     // Helper.hideLoading();
                     if(value.checkNull()){
-                      toToast("Report sent");
+                      toToast(AppConstants.reportSent);
                     }else{
-                      toToast("There are no messages available");
+                      toToast(AppConstants.noMessagesAvailable);
                     }
 
                     // debugPrint(value.toString());
@@ -143,13 +144,13 @@ class ChatInfoController extends GetxController {
                     debugPrint(onError.toString());
                   });
                 },
-                child: Text("REPORT",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
+                child: Text(AppConstants.report.toUpperCase(),style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
             TextButton(
                 onPressed: () {
                   // Get.back();
                   Navigator.pop(context);
                 },
-                child: Text("CANCEL",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
+                child: Text(AppConstants.cancel.toUpperCase(),style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
           ], context: context);
     });
   }

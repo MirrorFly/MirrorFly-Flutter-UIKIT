@@ -7,6 +7,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 import '../../../models.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
@@ -63,7 +64,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
         }
         isListLoading(false);
         if(isSearch.value){
-          lastInputValue="";
+          lastInputValue=Constants.emptyString;
           startSearch(searchedText.text.toString());
         }
       });
@@ -139,8 +140,8 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
   }
 
   String getChatTime(int? epochTime) {
-    if (epochTime == null) return "";
-    if (epochTime == 0) return "";
+    if (epochTime == null) return Constants.emptyString;
+    if (epochTime == 0) return Constants.emptyString;
     var convertedTime = epochTime; // / 1000;
     //messageDate.time = convertedTime
     // var hourTime = manipulateMessageTime(
@@ -206,49 +207,6 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
     selectedChatList.clear();
   }
 
-  bool getOptionStatus(String optionName) {
-    switch (optionName) {
-      case 'Reply':
-        return selectedChatList.length > 1 ? false : true;
-
-      case 'Report':
-        return selectedChatList.length > 1
-            ? false
-            : selectedChatList[0].isMessageSentByMe
-                ? false
-                : true;
-
-      case 'Message Info':
-        return selectedChatList.length > 1
-            ? false
-            : selectedChatList[0].isMessageSentByMe
-                ? true
-                : false;
-
-      case 'Share':
-        for (var chatList in selectedChatList) {
-          if (chatList.messageType == Constants.mText ||
-              chatList.messageType == Constants.mLocation ||
-              chatList.messageType == Constants.mContact) {
-            return false;
-          }
-        }
-        return true;
-
-      case 'Favourite':
-        // for (var chatList in selectedChatList) {
-        //   if (chatList.isMessageStarred) {
-        //     return true;
-        //   }
-        // }
-        // return false;
-        return selectedChatList.length > 1 ? false : true;
-
-      default:
-        return false;
-    }
-  }
-
   checkBusyStatusForForward(BuildContext context) async {
     var busyStatus = await Mirrorfly.isBusyStatusEnabled();
     if (!busyStatus.checkNull()) {
@@ -260,14 +218,14 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
 
   showBusyStatusAlert(Function? function, BuildContext context) {
     Helper.showAlert(
-        message: "Disable busy status. Do you want to continue?",
+        message: AppConstants.disableBusy,
         actions: [
           TextButton(
               onPressed: () {
                 // Get.back();
                 Navigator.pop(context);
               },
-              child: Text("No",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
+              child: Text(AppConstants.no,style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
           TextButton(
               onPressed: () async {
                 // Get.back();
@@ -277,7 +235,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
                   function();
                 }
               },
-              child: Text("Yes",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
+              child: Text(AppConstants.yes,style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
         ], context: context);
   }
 
@@ -334,7 +292,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
     Clipboard.setData(
         ClipboardData(text: selectedChatList[0].messageTextContent.toString()));
     clearChatSelection(selectedChatList[0]);
-    toToast("1 Text Copied Successfully to the clipboard");
+    toToast(AppConstants.textCopied);
   }
 
   Map<bool, bool> isMessageCanbeRecalled() {
@@ -371,7 +329,9 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-                "Are you sure you want to delete selected Message${selectedChatList.length > 1 ? "s" : ""}?", style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor),),
+        selectedChatList.length > 1 ? AppConstants.deleteSelectedMessages : AppConstants.deleteSelectedMessage,
+                // "Are you sure you want to delete selected Message${selectedChatList.length > 1 ? "s" : ""}?"
+          style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor),),
             isCheckBoxShown
                 ? Column(
                     mainAxisSize: MainAxisSize.min,
@@ -401,7 +361,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
                               );
                             }),
                             Expanded(
-                              child: Text("Delete media from my phone", style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)),
+                              child: Text(AppConstants.deleteMediaFromPhone, style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)),
                             ),
                           ],
                         ),
@@ -411,14 +371,14 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
                 : const SizedBox(),
           ],
         ),
-        message: "",
+        message: Constants.emptyString,
         actions: [
           TextButton(
               onPressed: () {
                 // Get.back();
                 Navigator.pop(context);
               },
-              child: Text("CANCEL", style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
+              child: Text(AppConstants.cancel.toUpperCase(), style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
           TextButton(
               onPressed: () {
                 // Get.back();
@@ -439,7 +399,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
                 isSelected(false);
                 selectedChatList.clear();
               },
-              child: Text("DELETE FOR ME", style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
+              child: Text(AppConstants.deleteForMe.toUpperCase(), style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
           /*isRecallAvailable
               ? TextButton(
               onPressed: () {
@@ -556,7 +516,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
   var isSearch = false.obs;
   var clear = false.obs;
   var searchedText = TextEditingController();
-  String lastInputValue = "";
+  String lastInputValue = Constants.emptyString;
   void startSearch(String str){
     if(str.isNotEmpty) {
       clear(true);
@@ -566,7 +526,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
         addSearchedMessagesToList(str.trim());
       }
     }else{
-      lastInputValue='';
+      lastInputValue=Constants.emptyString;
       clear(false);
       starredChatList.clear();
       starredChatList.addAll(searchedStarredMessageList);
@@ -585,7 +545,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
   }
 
   clearSearch(){
-    lastInputValue='';
+    lastInputValue=Constants.emptyString;
     isSearch(false);
     clear(false);
     searchedText.clear();
@@ -649,7 +609,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
             // debugPrint('starredChatList ${message.messageId}sender');
           }
         } else if (message.isMessageSentByMe &&
-            "You".toLowerCase().contains(filterKey.toLowerCase())) {
+            AppConstants.you.toLowerCase().contains(filterKey.toLowerCase())) {
           if(starredChatList.indexWhere((element) => element.messageId==message.messageId).isNegative) {
             starredChatList.add(message);
             // debugPrint('starredChatList ${message.messageId}you');

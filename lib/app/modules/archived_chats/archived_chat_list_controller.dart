@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_view.dart';
 import '../../../mirrorfly_uikit_plugin.dart';
 import '../../data/session_management.dart';
@@ -108,7 +109,7 @@ class ArchivedChatListController extends GetxController {
     var index =
         typingAndGoneStatus.indexWhere((it) => it.singleOrgroupJid == jid);
     if (index.isNegative) {
-      return "";
+      return Constants.emptyString;
     } else {
       return typingAndGoneStatus[index].userId.isNotEmpty
           ? typingAndGoneStatus[index].userId
@@ -151,7 +152,7 @@ class ArchivedChatListController extends GetxController {
       if (selectedChats.length == 1) {
         _itemUnArchive(0);
         clearAllChatSelection();
-        toToast("1 chat has been unarchived");
+        toToast(AppConstants.chatUnArchived);
       } else {
         selected(false);
         var count = selectedChats.length;
@@ -159,10 +160,10 @@ class ArchivedChatListController extends GetxController {
           _itemUnArchive(key);
         });
         clearAllChatSelection();
-        toToast("$count chats has been unarchived");
+        toToast("$count ${AppConstants.chatsUnArchived}");
       }
     } else {
-      toToast(Constants.noInternetConnection);
+      toToast(AppConstants.noInternetConnection);
     }
   }
 
@@ -333,21 +334,21 @@ class ArchivedChatListController extends GetxController {
   }
 
   deleteChats(BuildContext context) {
-    String? profile = '';
+    String? profile = Constants.emptyString;
     profile = archivedChats
         .firstWhere((element) => selectedChats.first == element.jid)
         .profileName;
     Helper.showAlert(
         title: selectedChats.length == 1
-            ? "Delete chat with $profile?"
-            : "Delete ${selectedChats.length} selected chats?",
+            ? "${AppConstants.deleteChatWith} $profile?"
+            : "${AppConstants.delete} ${selectedChats.length} ${AppConstants.selectedChats}?",
         actions: [
           TextButton(
               onPressed: () {
                 // Get.back();
                 Navigator.pop(context);
               },
-              child: Text("NO",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
+              child: Text(AppConstants.no.toUpperCase(),style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
           TextButton(
               onPressed: () {
                 // Get.back();
@@ -358,9 +359,9 @@ class ArchivedChatListController extends GetxController {
                   itemsDelete();
                 }
               },
-              child: Text("YES",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
+              child: Text(AppConstants.yes.toUpperCase(),style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
         ],
-        message: '', context: context);
+        message: Constants.emptyString, context: context);
   }
 
   _itemDelete(int index) {

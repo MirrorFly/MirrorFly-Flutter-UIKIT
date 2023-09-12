@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
@@ -22,7 +23,7 @@ class _AddBusyStatusViewState extends State<AddBusyStatusView> {
       backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
       appBar: widget.enableAppBar ? AppBar(
         automaticallyImplyLeading: true,
-        title: Text('Add Busy Status', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
+        title: Text(AppConstants.addBusyStatus, style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
         iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
         backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
       ):null,
@@ -69,7 +70,7 @@ class _AddBusyStatusViewState extends State<AddBusyStatusView> {
                               focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: MirrorflyUikit.getTheme!.primaryColor),
                               ),
-                              counterText: ""),
+                              counterText: Constants.emptyString),
                           onTap: () {
                             if (controller.showEmoji.value) {
                               controller.showEmoji(false);
@@ -121,7 +122,7 @@ class _AddBusyStatusViewState extends State<AddBusyStatusView> {
                         shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.zero)),
                     child: Text(
-                      "CANCEL",
+                      AppConstants.cancel.toUpperCase(),
                       style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor, fontSize: 16.0),
                     ),
                   ),
@@ -144,7 +145,7 @@ class _AddBusyStatusViewState extends State<AddBusyStatusView> {
                         shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.zero)),
                     child: Text(
-                      "OK",
+                      AppConstants.ok.toUpperCase(),
                       style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor, fontSize: 16.0),
                     ),
                   ),

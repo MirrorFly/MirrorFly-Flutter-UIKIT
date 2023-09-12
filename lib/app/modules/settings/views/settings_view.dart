@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/settings/views/settings_widgets.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit_plugin.dart';
 
@@ -23,7 +24,7 @@ class _SettingsViewState extends State<SettingsView> {
       backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
       appBar: widget.enableAppBar ? AppBar(
         title: Text(
-          'Settings',
+          AppConstants.settingsTitle,
           style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
         ),
         iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
@@ -36,19 +37,19 @@ class _SettingsViewState extends State<SettingsView> {
             children: [
               // Get.toNamed(Routes.profile,arguments: {"from":Routes.settings})
               settingListItem(
-                  "Profile",
+                  AppConstants.profileTitle,
                   profileIcon,
                   rightArrowIcon,
                   () => Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (con) => const ProfileView()))),
-              settingListItem("Chats", chatIcon, rightArrowIcon, () {
+              settingListItem(AppConstants.chatsSettings, chatIcon, rightArrowIcon, () {
                 // Get.toNamed(Routes.chatSettings);
                 Navigator.push(context,
                     MaterialPageRoute(builder: (con) => ChatSettingsView()));
               }),
-              settingListItem("Starred Messages", staredMsgIcon, rightArrowIcon,
+              settingListItem(AppConstants.starredMessages, staredMsgIcon, rightArrowIcon,
                   () {
                 // Get.toNamed(Routes.starredMessages);
                 Navigator.push(
@@ -59,7 +60,7 @@ class _SettingsViewState extends State<SettingsView> {
               // settingListItem(
               //     "Notifications", notificationIcon, rightArrowIcon, ()=>Get.toNamed(Routes.notification)),
               settingListItem(
-                  "Blocked Contacts",
+                  AppConstants.blockedContacts,
                   blockedIcon,
                   rightArrowIcon,
                   () => Navigator.push(context,

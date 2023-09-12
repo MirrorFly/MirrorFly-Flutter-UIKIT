@@ -9,8 +9,8 @@ import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 class LocationController extends GetxController{
   Completer<GoogleMapController> completer = Completer();
   late GoogleMapController controller;
-  var address1="".obs;
-  var address2="".obs;
+  var address1=Constants.emptyString.obs;
+  var address2=Constants.emptyString.obs;
   var location = const LatLng(0, 0).obs;
   var kGoogle = const CameraPosition(
     target: LatLng(20.42796133580664, 80.885749655962),
