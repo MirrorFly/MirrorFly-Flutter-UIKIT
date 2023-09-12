@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../controllers/camera_pick_controller.dart';
@@ -152,9 +153,9 @@ class CameraPickView extends StatelessWidget {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Text(
-                    "Hold for Video, tap for photo",
-                    style: TextStyle(color: Colors.white),
+                  Text(
+                    AppConstants.holdToRecord,
+                    style: const TextStyle(color: Colors.white),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(

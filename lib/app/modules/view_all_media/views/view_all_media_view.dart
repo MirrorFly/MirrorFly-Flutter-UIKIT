@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/widgets.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 
@@ -62,24 +63,24 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
                 Center(
                   child: Container(
                       padding: const EdgeInsets.all(10.0),
-                      child: const Text(
-                        "Media",
-                        style: TextStyle(
+                      child: Text(
+                        AppConstants.media,
+                        style: const TextStyle(
                             fontWeight: FontWeight.w600, fontSize: 16),
                       )),
                 ),
                 Center(
                   child: Container(
                       padding: const EdgeInsets.all(10.0),
-                      child: const Text("Docs",
-                          style: TextStyle(
+                      child: Text(AppConstants.docs,
+                          style: const TextStyle(
                               fontWeight: FontWeight.w600, fontSize: 16))),
                 ),
                 Center(
                   child: Container(
                       padding: const EdgeInsets.all(10.0),
-                      child: const Text("Links",
-                          style: TextStyle(
+                      child: Text(AppConstants.links,
+                          style: const TextStyle(
                               fontWeight: FontWeight.w600, fontSize: 16))),
                 ),
               ]),
@@ -108,11 +109,11 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
                       );
                     }),
                 const SizedBox(height: 10,),
-                Text("${controller.imageCount} Photos, ${controller.videoCount} Videos, ${controller.audioCount} Audios",style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor),),
+                Text("${controller.imageCount} ${AppConstants.sPhotos}, ${controller.videoCount} ${AppConstants.sVideos}, ${controller.audioCount} ${AppConstants.sAudios}",style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor),),
               ],
             ),
           )
-          : Center(child: Text("No Media Found...!!!",style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)));
+          : Center(child: Text(AppConstants.noMediaFound,style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)));
     });
   }
 
@@ -197,7 +198,7 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
     return Obx(() {
       return controller.docslistdata.isNotEmpty
           ? listView(controller.docslistdata, true)
-          : Center(child: Text("No Docs Found...!!!",style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)));
+          : Center(child: Text(AppConstants.noDocsFound,style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)));
     });
   }
 
@@ -240,7 +241,7 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
                 );
               }),
           const SizedBox(height: 10,),
-          doc ? Text("${controller.documentCount} Documents") : Text("${controller.linkCount} Links",style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor))
+          doc ? Text("${controller.documentCount} ${AppConstants.sDocuments}") : Text("${controller.linkCount} ${AppConstants.sLinks}",style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor))
         ],
       ),
     );
@@ -421,7 +422,7 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
     return Obx(() {
       return controller.linklistdata.isNotEmpty
           ? listView(controller.linklistdata, false)
-          : Center(child: Text("No Links Found...!!!",style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)));
+          : Center(child: Text(AppConstants.noLinksFound,style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)));
     });
   }
 }

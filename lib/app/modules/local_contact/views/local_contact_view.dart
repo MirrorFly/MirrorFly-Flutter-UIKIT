@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/model/local_contact_model.dart';
 
 import '../../../../mirrorfly_uikit_plugin.dart';
@@ -43,7 +44,7 @@ class _LocalContactViewState extends State<LocalContactView> {
                   keyboardAppearance: MirrorflyUikit.theme == "dark" ? Brightness.dark : Brightness.light,
                   style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
                   decoration: InputDecoration(
-                      hintText: "Search...",
+                      hintText: AppConstants.searchPlaceHolder,
                       border: InputBorder.none,
                       hintStyle: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar.withOpacity(0.6))),
                 )
@@ -51,11 +52,11 @@ class _LocalContactViewState extends State<LocalContactView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Contact to send',
+                      AppConstants.contactToSend,
                       style: TextStyle(fontSize: 15, color: MirrorflyUikit.getTheme?.colorOnAppbar),
                     ),
                     Text(
-                      '${controller.contactsSelected.length} Selected',
+                      '${controller.contactsSelected.length} ${AppConstants.selected}',
                       style: TextStyle(fontSize: 12, color: MirrorflyUikit.getTheme?.colorOnAppbar),
                     ),
                   ],
@@ -178,7 +179,7 @@ class _LocalContactViewState extends State<LocalContactView> {
               ? Expanded(
                   child: Center(
                       child: Text(
-                  "No result found",
+                  AppConstants.noResultsFound,
                   style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),
                 )))
               : Expanded(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
@@ -28,12 +29,12 @@ class ContactController extends FullLifeCycleController
   var selectedUsersJIDList = List<String>.empty(growable: true).obs;
   var forwardMessageIds = List<String>.empty(growable: true).obs;
   final TextEditingController searchQuery = TextEditingController();
-  var _searchText = "";
+  var _searchText = Constants.emptyString;
   var _first = true;
 
   var isForward = false.obs;
   var isCreateGroup = false.obs;
-  var groupJid = "".obs;
+  var groupJid = Constants.emptyString.obs;
   BuildContext? context;
   @override
   void onInit(){
@@ -41,7 +42,7 @@ class ContactController extends FullLifeCycleController
     debugPrint('controller init');
   }
 
-  Future<void> init(BuildContext context,{bool forward = false,List<String>? messageIds ,bool group = false,String groupjid = ''}) async {
+  Future<void> init(BuildContext context,{bool forward = false,List<String>? messageIds ,bool group = false,String groupjid = Constants.emptyString}) async {
     this.context=context;
     isForward(forward);
     if (isForward.value) {
@@ -59,7 +60,7 @@ class ContactController extends FullLifeCycleController
       isPageLoading(true);
       fetchUsers(false);
     } else {
-      toToast(Constants.noInternetConnection);
+      toToast(AppConstants.noInternetConnection);
     }
     //Mirrorfly.syncContacts(true);
     //Mirrorfly.getRegisteredUsers(true).then((value) => mirrorFlyLog("registeredUsers", value.toString()));
@@ -134,14 +135,14 @@ class ContactController extends FullLifeCycleController
   }
 
   final deBouncer = DeBouncer(milliseconds: 700);
-  RxString lastInputValue = "".obs;
+  RxString lastInputValue = Constants.emptyString.obs;
 
   searchListener(String text) async {
     debugPrint("searching .. ");
     if (lastInputValue.value != searchQuery.text.trim()) {
       lastInputValue(searchQuery.text.trim());
       if (searchQuery.text.trim().isEmpty) {
-        _searchText = "";
+        _searchText = Constants.emptyString;
         pageNum = 1;
       } else {
         isPageLoading(true);
@@ -161,8 +162,8 @@ class ContactController extends FullLifeCycleController
   backFromSearch() {
     _search.value = false;
     searchQuery.clear();
-    _searchText = "";
-    lastInputValue('');
+    _searchText = Constants.emptyString;
+    lastInputValue(Constants.emptyString);
     //if(!_IsSearching){
     //isPageLoading.value=true;
     pageNum = 1;
@@ -289,7 +290,7 @@ class ContactController extends FullLifeCycleController
         toToast(error.toString());
       });
     } else {
-      toToast(Constants.noInternetConnection);
+      toToast(AppConstants.noInternetConnection);
     }
   }
 
@@ -309,13 +310,13 @@ class ContactController extends FullLifeCycleController
   get users => usersList;
 
   String imagePath(String? imgUrl) {
-    if (imgUrl == null || imgUrl == "") {
-      return "";
+    if (imgUrl == null || imgUrl == Constants.emptyString) {
+      return Constants.emptyString;
     }
     Mirrorfly.imagePath(imgUrl).then((value) {
-      return value ?? "";
+      return value ?? Constants.emptyString;
     });
-    return "";
+    return Constants.emptyString;
   }
 
   contactSelected(Profile item) {
@@ -342,7 +343,7 @@ class ContactController extends FullLifeCycleController
         Navigator.pop(context, selectedUsersList[0]);
       });
     } else {
-      toToast(Constants.noInternetConnection);
+      toToast(AppConstants.noInternetConnection);
     }
   }
 
@@ -362,13 +363,13 @@ class ContactController extends FullLifeCycleController
   }
 
   unBlock(Profile item, BuildContext context) {
-    Helper.showAlert(message: "Unblock ${getName(item)}?", actions: [
+    Helper.showAlert(message: "${AppConstants.unblock} ${getName(item)}?", actions: [
       TextButton(
           onPressed: () {
             // Get.back();
             Navigator.pop(context);
           },
-          child: Text("NO", style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
+          child: Text(AppConstants.no.toUpperCase(), style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
       TextButton(
           onPressed: () async {
             if (await AppUtils.isNetConnected()) {
@@ -378,7 +379,7 @@ class ContactController extends FullLifeCycleController
               Mirrorfly.unblockUser(item.jid.checkNull()).then((value) {
                 Helper.hideLoading(context: context);
                 if (value != null && value) {
-                  toToast("${getName(item)} has been Unblocked");
+                  toToast("${getName(item)} ${AppConstants.hasUnBlocked}");
                   userUpdatedHisProfile(item.jid.checkNull());
                 }
               }).catchError((error) {
@@ -386,10 +387,10 @@ class ContactController extends FullLifeCycleController
                 debugPrint(error);
               });
             } else {
-              toToast(Constants.noInternetConnection);
+              toToast(AppConstants.noInternetConnection);
             }
           },
-          child: Text("YES", style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
+          child: Text(AppConstants.yes.toUpperCase(), style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
     ], context: context);
   }
 
@@ -405,18 +406,18 @@ class ContactController extends FullLifeCycleController
           // Get.back(result: selectedUsersJIDList);
           if(context.mounted) Navigator.pop(context, selectedUsersJIDList);
         } else {
-          toToast("Add at least two contacts");
+          toToast(AppConstants.addAtLeastTwoContacts);
         }
       } else {
         if (selectedUsersJIDList.isNotEmpty) {
           // Get.back(result: selectedUsersJIDList);
           if(context.mounted) Navigator.pop(context, selectedUsersJIDList);
         } else {
-          toToast("Select any contacts");
+          toToast(AppConstants.selectAnyContacts);
         }
       }
     } else {
-      toToast(Constants.noInternetConnection);
+      toToast(AppConstants.noInternetConnection);
     }
     /*if(groupJid.value.isEmpty) {
       if (selectedUsersJIDList.length >= Constants.minGroupMembers) {
@@ -444,7 +445,7 @@ class ContactController extends FullLifeCycleController
         if (!await Mirrorfly.contactSyncStateValue()) {
           var contactPermissionHandle = await AppPermission.checkPermission(context!,
               Permission.contacts, contactPermission,
-              Constants.contactSyncPermission);
+              AppConstants.contactSyncPermission);
           if (contactPermissionHandle) {
             progressSpinner(true);
             Mirrorfly.syncContacts(!SessionManagement.isInitialContactSyncDone())
@@ -472,7 +473,7 @@ class ContactController extends FullLifeCycleController
         }
       } else {
         if(isNetworkToastNeeded) {
-          toToast(Constants.noInternetConnection);
+          toToast(AppConstants.noInternetConnection);
         }
         // viewModel.onContactSyncFinished(false);
       }

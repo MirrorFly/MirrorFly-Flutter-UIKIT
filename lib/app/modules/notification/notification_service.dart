@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 
 import '../../model/received_notification.dart';
 
@@ -62,8 +63,8 @@ class NotificationService {
       // initialRoute = SecondPage.routeName;
     }
 
-    const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('ic_notification');
+    AndroidInitializationSettings initializationSettingsAndroid =
+    AndroidInitializationSettings(AppConstants.notificationIcon);
 
     /// Note: permissions aren't requested here just to demonstrate that can be
     /// done later

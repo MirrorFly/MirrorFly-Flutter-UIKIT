@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
@@ -206,13 +207,13 @@ class GroupInfoController extends GetxController {
   }
 
   reportGroup(BuildContext context){
-    Helper.showAlert(title: "Report this group?",message: "The last 5 messages from this group will be forwarded to admin. No one in this group will be notified.",actions: [
+    Helper.showAlert(title: AppConstants.reportThisGroup,message: AppConstants.reportThisGroupContent,actions: [
       TextButton(
           onPressed: () {
             // Get.back();
             Navigator.pop(context);
           },
-          child: Text("CANCEL",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
+          child: Text(AppConstants.cancel.toUpperCase(),style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
       TextButton(
           onPressed: () {
             // Get.back();
@@ -222,16 +223,16 @@ class GroupInfoController extends GetxController {
               Helper.hideLoading(context: context);
               if(value!=null){
                 if(value){
-                  toToast("Report sent");
+                  toToast(AppConstants.reportSent);
                 }else{
-                  toToast("There are no messages available");
+                  toToast(AppConstants.thereNoMessagesAvailable);
                 }
               }
             }).catchError((error) {
               Helper.hideLoading(context: context);
             });
           },
-          child: Text("REPORT",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
+          child: Text(AppConstants.report.toUpperCase(),style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
     ], context: context);
   }
   exitOrDeleteGroup(BuildContext context){
@@ -244,20 +245,20 @@ class GroupInfoController extends GetxController {
     }
   }
   leaveGroup(BuildContext context){
-    Helper.showAlert(message: "Are you sure you want to leave from group?.",actions: [
+    Helper.showAlert(message: AppConstants.areYouLeave,actions: [
       TextButton(
           onPressed: () {
             // Get.back();
             Navigator.pop(context);
           },
-          child: Text("CANCEL",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
+          child: Text(AppConstants.cancel.toUpperCase(),style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
       TextButton(
           onPressed: () {
             // Get.back();
             Navigator.pop(context);
             exitFromGroup(context);
           },
-          child: Text("LEAVE",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
+          child: Text(AppConstants.leave.toUpperCase(),style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
     ], context: context);
   }
   exitFromGroup(BuildContext context)async{
@@ -274,17 +275,17 @@ class GroupInfoController extends GetxController {
         Helper.hideLoading(context: context);
       });
     }else{
-      toToast(Constants.noInternetConnection);
+      toToast(AppConstants.noInternetConnection);
     }
   }
   deleteGroup(BuildContext context){
-    Helper.showAlert(message: "Are you sure you want to delete this group?.",actions: [
+    Helper.showAlert(message: AppConstants.areYouDelete,actions: [
       TextButton(
           onPressed: () {
             // Get.back();
             Navigator.pop(context);
           },
-          child: Text("CANCEL",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
+          child: Text(AppConstants.cancel.toUpperCase(),style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
       TextButton(
           onPressed: () async {
             if(await AppUtils.isNetConnected()) {
@@ -305,11 +306,11 @@ class GroupInfoController extends GetxController {
                 Helper.hideLoading(context: context);
               });
             }else{
-              toToast(Constants.noInternetConnection);
+              toToast(AppConstants.noInternetConnection);
             }
 
           },
-          child: Text("DELETE",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
+          child: Text(AppConstants.delete.toUpperCase(),style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
     ], context: context);
   }
 
@@ -341,7 +342,7 @@ class GroupInfoController extends GetxController {
         // User canceled the picker
       }
     }else{
-      toToast(Constants.noInternetConnection);
+      toToast(AppConstants.noInternetConnection);
     }
   }
 
@@ -373,7 +374,7 @@ class GroupInfoController extends GetxController {
         // User canceled the Camera
       }
     }else{
-      toToast(Constants.noInternetConnection);
+      toToast(AppConstants.noInternetConnection);
     }
   }
 
@@ -405,20 +406,20 @@ class GroupInfoController extends GetxController {
   }
 
   removeProfileImage(BuildContext context) {
-    Helper.showAlert(message: "Are you sure you want to remove the group photo?",actions: [
+    Helper.showAlert(message: AppConstants.areYouRemoveGroupPhoto,actions: [
       TextButton(
           onPressed: () {
             // Get.back();
             Navigator.pop(context);
           },
-          child: Text("CANCEL",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
+          child: Text(AppConstants.cancel.toUpperCase(),style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
       TextButton(
           onPressed: () {
             // Get.back();
             Navigator.pop(context);
             revokeAccessForProfileImage(context);
           },
-          child: Text("REMOVE",style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
+          child: Text(AppConstants.remove.toUpperCase(),style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
     ], context: context);
   }
 
@@ -437,7 +438,7 @@ class GroupInfoController extends GetxController {
         hideLoader(context);
       });
     }else{
-      toToast(Constants.noInternetConnection);
+      toToast(AppConstants.noInternetConnection);
     }
   }
 
@@ -470,11 +471,11 @@ class GroupInfoController extends GetxController {
         if(value!=null && value){
           //getGroupMembers(false);
         }else{
-          toToast("Error while adding Members in this group");
+          toToast(AppConstants.errorWhileAddingMember);
         }
       });
     }else{
-      toToast(Constants.noInternetConnection);
+      toToast(AppConstants.noInternetConnection);
     }
   }
 
@@ -492,11 +493,11 @@ class GroupInfoController extends GetxController {
           if(value!=null && value){
             //getGroupMembers(false);
           }else{
-            toToast("Error while Removing this member");
+            toToast(AppConstants.errorWhileRemovingMember);
           }
         });
       }else{
-        toToast(Constants.noInternetConnection);
+        toToast(AppConstants.noInternetConnection);
       }
     }
   }
@@ -510,11 +511,11 @@ class GroupInfoController extends GetxController {
           if(value!=null && value){
             //getGroupMembers(false);
           }else{
-            toToast("Error while make admin this member");
+            toToast(AppConstants.errorWhileMakeAdmin);
           }
         });
       }else{
-        toToast(Constants.noInternetConnection);
+        toToast(AppConstants.noInternetConnection);
       }
     }
   }
@@ -533,7 +534,7 @@ class GroupInfoController extends GetxController {
         }
       });
     }else{
-      toToast("You're no longer a participant in this group");
+      toToast(AppConstants.youAreNoLonger);
     }
   }
   var nameController = TextEditingController();

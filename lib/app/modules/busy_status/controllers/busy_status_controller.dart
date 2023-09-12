@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../models.dart';
 import 'package:get/get.dart';
@@ -13,9 +14,9 @@ import '../../../data/helper.dart';
 import '../../settings/views/chat_settings/chat_settings_controller.dart';
 
 class BusyStatusController extends FullLifeCycleController with FullLifeCycleMixin {
-  final busyStatus = "".obs;
+  final busyStatus = Constants.emptyString.obs;
   var busyStatusList = List<StatusData>.empty(growable: true).obs;
-  var selectedStatus = "".obs;
+  var selectedStatus = Constants.emptyString.obs;
   var loading = false.obs;
 
   var addStatusController = TextEditingController();
@@ -80,8 +81,8 @@ class BusyStatusController extends FullLifeCycleController with FullLifeCycleMix
       Helper.showButtonAlert(actions: [
         ListTile(
           contentPadding: const EdgeInsets.only(left: 10),
-          title: const Text("Delete",
-              style: TextStyle(
+          title: Text(AppConstants.delete,
+              style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.normal)),
 
@@ -119,11 +120,11 @@ class BusyStatusController extends FullLifeCycleController with FullLifeCycleMix
       //   Get.back(result: addStatusController.text.trim().toString());
         Navigator.pop(context, addStatusController.text.trim().toString());
       // } else {
-      //   toToast(Constants.noInternetConnection);
+      //   toToast(AppConstants.noInternetConnection);
       //   Get.back();
       // }
     } else {
-      toToast("Status cannot be empty");
+      toToast(AppConstants.statusCantEmpty);
     }
   }
 
@@ -137,19 +138,19 @@ class BusyStatusController extends FullLifeCycleController with FullLifeCycleMix
   }
 
   void busyDeleteConfirmation(StatusData item, BuildContext context) {
-    Helper.showAlert(message: "Do you want to delete the status?", actions: [
+    Helper.showAlert(message: AppConstants.youWantDeleteStatus, actions: [
       TextButton(
           onPressed: () {
             // Get.back();
             Navigator.pop(context);
           },
-          child: Text("No", style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
+          child: Text(AppConstants.no, style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
       TextButton(
           onPressed: () async {
             if (await AppUtils.isNetConnected()) {
               // Get.back();
               if(context.mounted)Navigator.pop(context);
-              if(context.mounted)Helper.showLoading(message: "Deleting Busy Status", buildContext: context);
+              if(context.mounted)Helper.showLoading(message: AppConstants.deletingBusyStatus, buildContext: context);
               Mirrorfly.deleteBusyStatus(
                   item.id!, item.status!, item.isCurrentStatus!)
                   .then((value) {
@@ -157,13 +158,13 @@ class BusyStatusController extends FullLifeCycleController with FullLifeCycleMix
                 Helper.hideLoading(context: context);
               }).catchError((error) {
                 Helper.hideLoading(context: context);
-                toToast("Unable to delete the Busy Status");
+                toToast(AppConstants.unableDeleteBusyStatus);
               });
             } else {
-              toToast(Constants.noInternetConnection);
+              toToast(AppConstants.noInternetConnection);
             }
           },
-          child: Text("Yes", style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
+          child: Text(AppConstants.yes, style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
     ], context: context);
   }
 

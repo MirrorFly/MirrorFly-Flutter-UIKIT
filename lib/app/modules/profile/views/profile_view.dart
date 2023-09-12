@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/image_view/views/image_view_view.dart';
@@ -54,7 +55,7 @@ class _ProfileViewState extends State<ProfileView> {
           backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
           appBar: widget.enableAppBar ? AppBar(
             title: Text(
-                'Profile',
+                AppConstants.profileTitle,
                 style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar)
             ),
             centerTitle: true,
@@ -200,8 +201,8 @@ class _ProfileViewState extends State<ProfileView> {
                               border: InputBorder.none,
                               hintStyle: TextStyle(color: MirrorflyUikit
                                   .getTheme?.textSecondaryColor.withOpacity(0.7)),
-                              hintText: 'Username',
-                              counterText: '',
+                              hintText: AppConstants.userName,
+                              counterText: Constants.emptyString,
                             ),
                             style: TextStyle(fontWeight: FontWeight.bold,
                                 color: MirrorflyUikit.getTheme
@@ -214,7 +215,7 @@ class _ProfileViewState extends State<ProfileView> {
                       height: 20,
                     ),
                     Text(
-                      'Email',
+                      AppConstants.email,
                       style: TextStyle(fontWeight: FontWeight.w600,
                           fontSize: 14,
                           color: MirrorflyUikit.getTheme?.textPrimaryColor),
@@ -228,7 +229,7 @@ class _ProfileViewState extends State<ProfileView> {
                       cursorColor: MirrorflyUikit.getTheme?.primaryColor,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: 'Enter Email Id',
+                        hintText: AppConstants.enterEmailID,
                         hintStyle: TextStyle(color: MirrorflyUikit
                             .getTheme?.textSecondaryColor.withOpacity(0.7)),
                         icon: SvgPicture.asset(emailIcon, package: package,
@@ -242,7 +243,7 @@ class _ProfileViewState extends State<ProfileView> {
                       height: 20,
                     ),
                     Text(
-                      'Mobile Number',
+                      AppConstants.mobileNumber,
                       style: TextStyle(fontWeight: FontWeight.w600,
                           fontSize: 14,
                           color: MirrorflyUikit.getTheme?.textPrimaryColor),
@@ -256,7 +257,7 @@ class _ProfileViewState extends State<ProfileView> {
                         keyboardType: TextInputType.phone,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: 'Enter Mobile Number',
+                          hintText: AppConstants.enterMobileNumber,
                           hintStyle: TextStyle(color: MirrorflyUikit
                               .getTheme?.textSecondaryColor.withOpacity(0.7)),
                           icon: SvgPicture.asset(phoneIcon, package: package,
@@ -277,7 +278,7 @@ class _ProfileViewState extends State<ProfileView> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            'Status',
+                            AppConstants.status,
                             style: TextStyle(fontWeight: FontWeight.w600,
                                 fontSize: 14,
                                 color: MirrorflyUikit.getTheme?.textPrimaryColor),
@@ -288,7 +289,7 @@ class _ProfileViewState extends State<ProfileView> {
                                 title: Text(
                                   controller.profileStatus.value.isNotEmpty
                                       ? controller.profileStatus.value
-                                      : Constants.defaultStatus,
+                                      : AppConstants.defaultStatus,
                                   style: TextStyle(
                                       color: controller.profileStatus.value.isNotEmpty
                                           ? MirrorflyUikit.getTheme
@@ -349,8 +350,8 @@ class _ProfileViewState extends State<ProfileView> {
                                 /*controller.from.value == Routes.login
                                     ? 'Save'
                                     : */controller.changed.value
-                                    ? 'Update & Continue'
-                                    : 'Save',
+                                    ? AppConstants.updateAndContinue
+                                    : AppConstants.save,
                                 style: TextStyle(fontWeight: FontWeight.w600,
                                     color: MirrorflyUikit.getTheme
                                         ?.colorOnPrimary),
@@ -392,7 +393,7 @@ class _ProfileViewState extends State<ProfileView> {
                       const SizedBox(
                         height: 10,
                       ),
-                      Text("Options", style: TextStyle(
+                      Text(AppConstants.options, style: TextStyle(
                           color: MirrorflyUikit.getTheme?.textPrimaryColor),),
                       const SizedBox(
                         height: 10,
@@ -406,7 +407,7 @@ class _ProfileViewState extends State<ProfileView> {
                               padding: EdgeInsets.zero,
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               alignment: Alignment.centerLeft),
-                          child: Text("Take Photo",
+                          child: Text(AppConstants.takePhoto,
                               style: TextStyle(color: MirrorflyUikit.getTheme
                                   ?.textPrimaryColor, fontWeight: FontWeight
                                   .bold))),
@@ -419,7 +420,7 @@ class _ProfileViewState extends State<ProfileView> {
                               padding: EdgeInsets.zero,
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               alignment: Alignment.centerLeft),
-                          child: Text("Choose from Gallery",
+                          child: Text(AppConstants.chooseFromGallery,
                               style: TextStyle(color: MirrorflyUikit.getTheme
                                   ?.textPrimaryColor, fontWeight: FontWeight
                                   .bold))),
@@ -428,13 +429,13 @@ class _ProfileViewState extends State<ProfileView> {
                           onPressed: () {
                             Navigator.pop(context);
                             Helper.showAlert(
-                                message: "Are you sure you want to remove the photo?",
+                                message: AppConstants.areYouSureToRemovePhoto,
                                 actions: [
                                   TextButton(
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
-                                      child: Text("CANCEL", style: TextStyle(
+                                      child: Text(AppConstants.cancel.toUpperCase(), style: TextStyle(
                                           color: MirrorflyUikit.getTheme
                                               ?.primaryColor),)),
                                   TextButton(
@@ -442,7 +443,7 @@ class _ProfileViewState extends State<ProfileView> {
                                         Navigator.pop(context);
                                         controller.removeProfileImage(context);
                                       },
-                                      child: Text("REMOVE", style: TextStyle(
+                                      child: Text(AppConstants.remove.toUpperCase(), style: TextStyle(
                                           color: MirrorflyUikit.getTheme
                                               ?.primaryColor)))
 
@@ -454,7 +455,7 @@ class _ProfileViewState extends State<ProfileView> {
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               alignment: Alignment.centerLeft),
                           child: Text(
-                            "Remove Photo",
+                            AppConstants.removePhoto,
                             style: TextStyle(color: MirrorflyUikit.getTheme
                                 ?.textPrimaryColor, fontWeight: FontWeight
                                 .bold),

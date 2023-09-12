@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import '../../../models.dart';
 import 'package:get/get.dart';
 
@@ -13,7 +14,7 @@ import '../../gallery_picker/src/data/models/picked_asset_model.dart';
 
 class MediaPreviewController extends FullLifeCycleController
     with FullLifeCycleMixin {
-  var userName = "";//Get.arguments['userName'];
+  var userName = Constants.emptyString;//Get.arguments['userName'];
   Rx<Profile> profile = Profile().obs;//Get.arguments['profile'] as Profile;
 
   TextEditingController caption = TextEditingController();
@@ -21,7 +22,7 @@ class MediaPreviewController extends FullLifeCycleController
   var filePath = <PickedAssetModel>[].obs;
 
   var captionMessage = <String>[].obs;
-  var textMessage = "";//Get.arguments['caption'];
+  var textMessage = Constants.emptyString;//Get.arguments['caption'];
   var showAdd = true;
   var currentPageIndex = 0.obs;
   var isFocused = false.obs;
@@ -54,7 +55,7 @@ class MediaPreviewController extends FullLifeCycleController
           captionMessage.add(textMessage);
           index = index + 1;
         } else {
-          captionMessage.add("");
+          captionMessage.add(Constants.emptyString);
         }
       }
     });
@@ -78,7 +79,7 @@ class MediaPreviewController extends FullLifeCycleController
       int i = 0;
       Platform.isIOS
           ? Helper.showLoading(
-              message: "Compressing files", buildContext: context)
+              message: AppConstants.compressingFiles, buildContext: context)
           : null;
       for (var data in filePath) {
         /// show image
@@ -86,7 +87,7 @@ class MediaPreviewController extends FullLifeCycleController
         if (data.type == 'image') {
           debugPrint("sending image");
           var response = await Get.find<ChatController>()
-              .sendImageMessage(data.path, captionMessage[i], "", context);
+              .sendImageMessage(data.path, captionMessage[i], Constants.emptyString, context);
           debugPrint("Preview View ==> $response");
           if (response != null) {
             debugPrint("Image send Success");
@@ -94,7 +95,7 @@ class MediaPreviewController extends FullLifeCycleController
         } else if (data.type == 'video') {
           debugPrint("sending video");
           var response = await Get.find<ChatController>()
-              .sendVideoMessage(data.path!, captionMessage[i], "", context);
+              .sendVideoMessage(data.path!, captionMessage[i], Constants.emptyString, context);
           debugPrint("Preview View ==> $response");
           if (response != null) {
             debugPrint("Video send Success");
@@ -113,7 +114,7 @@ class MediaPreviewController extends FullLifeCycleController
     }
     // Get.back();
     /*} else {
-      toToast(Constants.noInternetConnection);
+      toToast(AppConstants.noInternetConnection);
     }*/
     // debugPrint("caption text-> $captionMessage");
   }
