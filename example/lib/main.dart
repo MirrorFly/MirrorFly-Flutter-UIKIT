@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/notification/notification_service.dart';
+// import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 
 void main() {
@@ -10,12 +12,23 @@ void main() {
       licenseKey: 'Your_Mirrorfly_Licence_Key',
       googleMapKey: 'Your_Google_Map_Key_for_location_messages',
       iOSContainerID: 'Your_iOS_app_Container_id');
+  // AppConstants.newGroup = "New Group Create";
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    _configureSelectNotificationSubject();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -24,6 +37,15 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(textTheme: GoogleFonts.latoTextTheme()),
         home: const Dashboard());
   }
+
+  void _configureSelectNotificationSubject() {
+    ///Used to perform the action when local notification is selected.
+    selectNotificationStream.stream.listen((String? payload) async {
+      debugPrint("payload $payload");
+    });
+  }
+
+
 }
 
 class Dashboard extends StatefulWidget {
@@ -81,7 +103,7 @@ class _DashboardState extends State<Dashboard> {
                           if (uniqueId.isNotEmpty) {
                             try {
                               var response =
-                                  await MirrorflyUikit.registerUser(uniqueId);
+                                  await MirrorflyUikit.registerUser(userIdentifier: uniqueId);
                               debugPrint("register user $response");
                               showSnack(response['message']);
                             } catch (e) {

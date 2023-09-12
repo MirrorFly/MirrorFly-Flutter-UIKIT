@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
@@ -176,7 +177,7 @@ class Helper {
 
   static int getColourCode(String name) {
     if (name == Constants.you) return 0Xff000000;
-    var colorsArray = Constants.defaultColorList;
+    var colorsArray = AppConstants.defaultColorList;
     var hashcode = name.hashCode;
     var rand = hashcode % colorsArray.length;
     return colorsArray[(rand).abs()];
@@ -658,7 +659,7 @@ String getRecentChatTime(BuildContext context, int? epochTime) {
   return (equalsWithYesterday(calendar, Constants.today))
       ? hourTime
       : (equalsWithYesterday(calendar, Constants.yesterday))
-          ? Constants.yesterdayUpper
+          ? AppConstants.yesterday.toUpperCase()
           : time;
 }
 
@@ -731,9 +732,9 @@ openDocument(String mediaLocalStoragePath) async {
     final result = await OpenFile.open(mediaLocalStoragePath);
     debugPrint(result.message);
     if (result.message.contains("file does not exist")) {
-      toToast("The Selected file Doesn't Exist or Unable to Open");
+      toToast(AppConstants.fileDoesNotExist);
     } else if (result.message.contains('No APP found to open this file')) {
-      toToast('you may not have proper app to view this content');
+      toToast(AppConstants.youDoNotHaveApp);
     }
 
     /*Mirrorfly.openFile(mediaLocalStoragePath).catchError((onError) {
@@ -764,7 +765,7 @@ Future<void> launchInBrowser(String url) async {
       throw 'Could not launch $url';
     }
   } else {
-    toToast(Constants.noInternetConnection);
+    toToast(AppConstants.noInternetConnection);
   }
 }
 
@@ -961,7 +962,7 @@ String getMobileNumberFromJid(String jid) {
 
 String convertSecondToLastSeen(String seconds) {
   if(seconds.isNotEmpty) {
-    if(seconds=="0") return "Online";
+    if(seconds=="0") return AppConstants.online;
     // var userLastSeenDate = DateTime.now().subtract(Duration(milliseconds: double.parse(seconds).toInt()));
     DateTime lastSeen = DateTime.fromMillisecondsSinceEpoch(
         double.parse(seconds).toInt());
@@ -969,19 +970,19 @@ String convertSecondToLastSeen(String seconds) {
 
     if (int.parse(DateFormat('yyyy').format(lastSeen)) <
         int.parse(DateFormat('yyyy').format(DateTime.now()))) {
-      return 'last seen on ${DateFormat('dd/mm/yyyy')}';
+      return '${AppConstants.lastSeenOn} ${DateFormat('dd/mm/yyyy')}';
     } else if (diff.inDays > 1) {
-      return 'last seen on ${DateFormat('dd MMM').format(lastSeen)}';
+      return '${AppConstants.lastSeenOn} ${DateFormat('dd MMM').format(lastSeen)}';
     } else if (diff.inDays == 1) {
-      return 'last seen on Yesterday';
+      return AppConstants.lastSeenYesterday;
     } else
     if (diff.inHours >= 1 || diff.inMinutes >= 1 || diff.inSeconds >= 1) {
-      return 'last seen at ${DateFormat('hh:mm a').format(lastSeen)}';
+      return '${AppConstants.lastSeenAt} ${DateFormat('hh:mm a').format(lastSeen)}';
     } else {
-      return 'Online';
+      return AppConstants.online;
     }
   }else{
-    return "";
+    return Constants.emptyString;
   }
 }
 

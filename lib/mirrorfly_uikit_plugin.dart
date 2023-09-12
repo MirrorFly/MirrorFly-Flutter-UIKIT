@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/model/app_config.dart';
 import 'package:mirrorfly_uikit_plugin/app/model/reply_hash_map.dart';
@@ -22,6 +23,7 @@ class MirrorflyUikit {
   bool isTrialLicenceKey = true;
   bool showMobileNumberOnList = true;
   bool showStatusOption = true;
+  bool enableLocalNotification = true;
   String googleMapKey = '';
   static bool isSDKInitialized = false;
   static String theme = "light";
@@ -46,7 +48,10 @@ class MirrorflyUikit {
       String? googleMapKey,
       required String iOSContainerID,
       String? storageFolderName,
-      bool isTrialLicenceKey = true,bool showMobileNumberOnList = true,bool showStatusOption = true,}) async {
+      bool isTrialLicenceKey = true,
+        bool showMobileNumberOnList = true,
+        bool showStatusOption = true,
+        bool enableLocalNotification = true}) async {
     Mirrorfly.init(
         baseUrl: baseUrl,
         licenseKey: licenseKey,
@@ -54,11 +59,13 @@ class MirrorflyUikit {
         storageFolderName: storageFolderName,
         enableMobileNumberLogin: true,
         isTrialLicenceKey: isTrialLicenceKey,
+        chatHistoryEnable: false,
         enableDebugLog: true);
     isSDKInitialized = true;
     this.isTrialLicenceKey = isTrialLicenceKey;
     this.showMobileNumberOnList = showMobileNumberOnList;
     this.showStatusOption = showStatusOption;
+    this.enableLocalNotification = enableLocalNotification;
     this.googleMapKey = googleMapKey ?? '';
     ReplyHashMap.init();
     rootBundle.loadString('assets/mirrorfly_config.json').then((configFile) {
@@ -113,21 +120,22 @@ class MirrorflyUikit {
     });
     SessionManagement.onInit().then((value) {
       Get.put<MainController>(MainController());
+      SessionManagement.setBool(AppConstants.enableLocalNotification, enableLocalNotification);
     });
   }
 
   ///Used as a register class for [MirrorflyUikit]
   ///
   ///* [userIdentifier] provide the Unique Id to Register the User
-  ///* [token] provide the FCM token this is an optional
+  ///* [fcmToken] provide the FCM token this is an optional
   ///sample response {'status': true, 'message': 'Register Success};
-  static Future<Map> registerUser(String userIdentifier,
-      {String token = ""}) async {
+  static Future<Map> registerUser({required String userIdentifier,
+      String fcmToken = ""}) async {
     if (!isSDKInitialized) {
       return setResponse(false, 'SDK Not Initialized');
     }
     if (await AppUtils.isNetConnected()) {
-      var value = await Mirrorfly.registerUser(userIdentifier, token: token);
+      var value = await Mirrorfly.registerUser(userIdentifier, fcmToken: fcmToken);
       try {
         var userData = registerModelFromJson(value); //message
         if (userData.data != null) {

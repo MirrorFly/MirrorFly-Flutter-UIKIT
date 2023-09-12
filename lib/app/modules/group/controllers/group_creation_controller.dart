@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
@@ -57,7 +58,7 @@ class GroupCreationController extends GetxController {
       });
 
     }else{
-      toToast("Please provide group name");
+      toToast(AppConstants.pleaseProvideGroupName);
     }
   }
 
@@ -159,7 +160,7 @@ class GroupCreationController extends GetxController {
       if(value!=null) {
         // Get.back();
         Navigator.pop(context);
-        toToast('Group created Successfully');
+        toToast(AppConstants.groupCreatedSuccessfully);
       }
     });
   }
@@ -171,13 +172,13 @@ class GroupCreationController extends GetxController {
             Navigator.pop(context);
             imagePick(context);
           },
-          title: Text("Choose from Gallery",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),)),
+          title: Text(AppConstants.chooseFromGallery,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),)),
       ListTile(
           onTap: () async{
             Navigator.pop(context);
             camera(context);
           },
-          title: Text("Take Photo",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor))),
+          title: Text(AppConstants.takePhoto,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor))),
     ]);
   }
 }

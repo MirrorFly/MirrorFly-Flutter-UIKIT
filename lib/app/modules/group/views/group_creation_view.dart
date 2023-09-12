@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/group/controllers/group_creation_controller.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/image_view/views/image_view_view.dart';
@@ -43,12 +44,12 @@ class _GroupCreationViewState extends State<GroupCreationView> {
             color: MirrorflyUikit.getTheme?.colorOnAppbar ??
                 iconColor),
         title: Text(
-          'New Group',style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar)),
+          AppConstants.newGroup,style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar)),
         actions: [
           TextButton(
               onPressed: () => controller.goToAddParticipantsPage(context),
               child: Text(
-                "NEXT", style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),)),
+                AppConstants.next.toUpperCase(), style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),)),
         ],
       ):null,
       body: WillPopScope(
@@ -175,8 +176,8 @@ class _GroupCreationViewState extends State<GroupCreationView> {
                         controller: controller.groupName,
                         decoration: InputDecoration(
                             border: InputBorder.none,
-                            counterText: "",
-                            hintText: "Type group name here...", hintStyle: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)),
+                            counterText: Constants.emptyString,
+                            hintText: AppConstants.typeGroupName, hintStyle: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)),
                       ),
                     ),
                   ),
@@ -206,7 +207,7 @@ class _GroupCreationViewState extends State<GroupCreationView> {
               ),
               const AppDivider(),
               const SizedBox(height: 20,),
-              Text("Provide a Group Name and Icon",
+              Text(AppConstants.provideGroupNameIcon,
                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15, color: MirrorflyUikit.getTheme?.textPrimaryColor),),
               Expanded(
                 child: Obx(() {

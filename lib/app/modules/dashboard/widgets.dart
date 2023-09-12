@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 
 import '../../../mirrorfly_uikit_plugin.dart';
@@ -20,7 +21,7 @@ Widget searchHeader(String? type, String count, BuildContext context) {
     color: MirrorflyUikit.getTheme?.scaffoldColor ?? dividerColor,
     child: Text.rich(TextSpan(text: type, children: [
       TextSpan(
-          text: count.isNotEmpty ? " ($count)" : "",)
+          text: count.isNotEmpty ? " ($count)" : Constants.emptyString,)
     ]),style: TextStyle(fontWeight: FontWeight.bold, color: MirrorflyUikit.getTheme?.textPrimaryColor)),
   );
 }
@@ -33,12 +34,12 @@ class RecentChatItem extends StatelessWidget {
       this.onLongPress,
       this.onAvatarClick,
       this.onchange,
-      this.spanTxt = "",
+      this.spanTxt = Constants.emptyString,
       this.isSelected = false,
       this.isCheckBoxVisible = false,
       this.isChecked = false,
       this.isForwardMessage = false,
-      this.typingUserid = "",
+      this.typingUserid = Constants.emptyString,
       this.archiveVisible = true,
       this.archiveEnabled = false,
       this.showChatDeliveryIndicator = true,})
@@ -267,7 +268,7 @@ class RecentChatItem extends StatelessWidget {
             child: Text(
               returnFormattedCount(item.unreadMessageCount!) != "0"
                   ? returnFormattedCount(item.unreadMessageCount!)
-                  : "",
+                  : Constants.emptyString,
               style: TextStyle(
                   fontSize: 8, color: MirrorflyUikit.getTheme?.colorOnPrimary, fontFamily: 'sf_ui'),
             ),
@@ -289,7 +290,7 @@ class RecentChatItem extends StatelessWidget {
               borderRadius: BorderRadius.circular(4.0),
               border: Border.all(color: MirrorflyUikit.getTheme?.primaryColor ?? buttonBgColor, width: 0.8)),
           child: Text(
-            "Archived",
+            AppConstants.archived,
             style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor ?? buttonBgColor),
           ),
         ) /*SvgPicture.asset(
@@ -328,7 +329,7 @@ class RecentChatItem extends StatelessWidget {
         builder: (context, data) {
           if (data.hasData) {
             return Text(
-              "${getName(data.data!).checkNull()} typing...",
+              "${getName(data.data!).checkNull()} ${AppConstants.typing}",
               //"${data.data!.name.checkNull()} typing...",
               style: typingstyle,
               maxLines: 1,
@@ -354,12 +355,14 @@ class RecentChatItem extends StatelessWidget {
                     (chat.messageType != Constants.mNotification ||
                         chat.messageTextContent == " added you") || (item.isGroup.checkNull() && (forMessageTypeString(chat.messageType,
                     content: chat.messageTextContent.checkNull()).checkNull().isNotEmpty)))
-                    ? Text(
-                    chat.senderUserName.checkNull().isNotEmpty ? "${chat.senderUserName.checkNull()}:" : "${chat.senderNickName.checkNull()}:",
-                        style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      )
+                    ? Flexible(
+                      child: Text(
+                      chat.senderUserName.checkNull().isNotEmpty ? "${chat.senderUserName.checkNull()}:" : "${chat.senderNickName.checkNull()}:",
+                          style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                    )
                     : const SizedBox.shrink(),
                 chat.isMessageRecalled.value
                     ? const SizedBox.shrink() : forMessageTypeIcon(
@@ -415,9 +418,9 @@ class RecentChatItem extends StatelessWidget {
             future: getProfileDetails(item.jid!),
             builder: (context, profileData) {
               if (profileData.hasData) {
-                return Text(profileData.data?.status ?? "",style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor),);
+                return Text(profileData.data?.status ?? Constants.emptyString,style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor),);
               }
-              return const Text("");
+              return const Text(Constants.emptyString);
             }));
   }
 
@@ -428,13 +431,13 @@ class RecentChatItem extends StatelessWidget {
           builder: (BuildContext context, data) {
             if (data.hasData) {
               return Text(
-                data.data ?? "",
+                data.data ?? Constants.emptyString,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor),
               );
             }
-            return const Text("");
+            return const Text(Constants.emptyString);
           }),
     );
   }
@@ -460,8 +463,8 @@ class RecentChatItem extends StatelessWidget {
 
   String setRecalledMessageText(bool isFromSender) {
     return (isFromSender)
-        ? "You deleted this message"
-        : "This message was deleted";
+        ? AppConstants.youDeletedThisMessage
+        : AppConstants.thisMessageWasDeleted;
   }
 }
 
@@ -531,7 +534,7 @@ Widget textMessageSpannableText(String message,bool isSentByMe, {int? maxLines, 
       fontSize: 14,
       color: Colors.blueAccent);
   TextStyle normalStyle = TextStyle(fontSize: 14, color: isSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textPrimaryColor);
-  var prevValue = "";
+  var prevValue = Constants.emptyString;
   return Text.rich(
     customTextSpan(message, prevValue, normalStyle, underlineStyle, isClickable),
     maxLines: maxLines,
@@ -545,9 +548,9 @@ TextSpan customTextSpan(String message, String prevValue,
     children: message.split(" ").map((e) {
       if (isCountryCode(e)) {
         prevValue = e;
-      } else if (prevValue != "" && spannableTextType(e) == "mobile") {
+      } else if (prevValue != Constants.emptyString && spannableTextType(e) == "mobile") {
         e = "$prevValue $e";
-        prevValue = "";
+        prevValue = Constants.emptyString;
       }
       return TextSpan(
           text: "$e ",

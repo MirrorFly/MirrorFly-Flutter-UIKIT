@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 
+import '../../../common/constants.dart';
 import 'chat_controller.dart';
 
 class ImagePreviewController extends GetxController {
@@ -12,9 +13,9 @@ class ImagePreviewController extends GetxController {
 
   TextEditingController caption = TextEditingController();
 
-  var filePath = "".obs;
+  var filePath = Constants.emptyString.obs;
 
-  var textMessage = "";
+  var textMessage = Constants.emptyString;
 
   @override
   void onInit() {
@@ -30,13 +31,13 @@ class ImagePreviewController extends GetxController {
     if (File(filePath.value).existsSync()) {
       // if(await AppUtils.isNetConnected()) {
         var response = await Get.find<ChatController>().sendImageMessage(
-            filePath.value, caption.text, "", context);
+            filePath.value, caption.text, Constants.emptyString, context);
         // debugPrint("Preview View ==> $response");
         if (response != null) {
           Get.back();
         }
       // }else{
-      //   toToast(Constants.noInternetConnection);
+      //   toToast(AppConstants.noInternetConnection);
       // }
     } else {
       debugPrint("File Not Found For Image Upload");
