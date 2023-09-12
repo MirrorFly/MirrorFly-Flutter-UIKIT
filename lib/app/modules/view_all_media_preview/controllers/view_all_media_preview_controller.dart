@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import '../../../models.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
@@ -10,7 +11,7 @@ class ViewAllMediaPreviewController extends GetxController {
   var previewMediaList = List<ChatMessageModel>.empty(growable: true).obs;
   var index = 0.obs;
   late PageController pageViewController;
-  var title = "Sent Media".obs;
+  var title = AppConstants.sentMedia.obs;
 
   /*@override
   void onInit() {
@@ -33,9 +34,9 @@ class ViewAllMediaPreviewController extends GetxController {
 
   void setTitle(int index) {
     if(previewMediaList.elementAt(index).isMessageSentByMe){
-      title("Sent Media");
+      title(AppConstants.sentMedia);
     }else{
-      title("Received Media");
+      title(AppConstants.receivedMedia);
     }
   }
 }

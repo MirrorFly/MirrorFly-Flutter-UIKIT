@@ -128,7 +128,7 @@ class CameraPickController extends GetxController with WidgetsBindingObserver  {
     //final CameraController? cameraController = controller;
 
     if (cameraController == null || !cameraController!.value.isInitialized) {
-      showInSnackBar(context,'Error: select a camera first.');
+      showInSnackBar(context,'Error: camera not Initialized.');
       return;
     }
 

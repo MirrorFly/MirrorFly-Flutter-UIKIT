@@ -284,11 +284,12 @@ class Constants {
   static const String webChatLogin = 'https://webchat-uikit-qa.contus.us/';
   static const String tag = 'Contus Fly';
   static const String googleMapPackageName = "com.google.android.apps.maps";
+  static const String googleMapQuery = "https://www.google.com/maps/search/?api=1&query=";
   static const String packageName = "com.contus.flycommons.";
 
-  static const String applicationLink = "https://app.contusfly.contus.com";
+/*static const String applicationLink = "https://app.contusfly.contus.com";
   static const String smsContent =
-      "Hey, MirrorFly is a real time chat, Audio and Video call solution for B2B and B2C.\n Download the app from this URL: https://app.mirrorfly.com";
+      "Hey, MirrorFly is a real time chat, Audio and Video call solution for B2B and B2C.\n Download the app from this URL: https://app.mirrorfly.com";*/
 
   static const String rosterJid = "roster_jid";
   static const String isLiveUser = "is_live_user";
@@ -444,9 +445,9 @@ class Constants {
   static const String O = "o";
   static const String N = "n";
 
-  static const String typeSearchRecent = "Chats";
+/*  static const String typeSearchRecent = "Chats";
   static const String typeSearchContact = "Contact";
-  static const String typeSearchMessage = "Message";
+  static const String typeSearchMessage = "Message";*/
 
   static const String you = "You";
   static const String deletedUser = "Deleted User";
@@ -455,11 +456,8 @@ class Constants {
 
   static const String yesterday = "yesterday";
   static const String today = "today";
-  static const String yesterdayUpper = "YESTERDAY";
+  // static const String yesterdayUpper = "YESTERDAY";
   static const bool isMobileLogin = true;
-  static const String baseUrl = "com.contus.flycommons.base_url";
-  static const String apiKey = "com.contus.flycommons.api_key";
-  static const String mix = "@mix.";
 
   static const String bulletPoint = "\u2022 ";
 
@@ -487,14 +485,14 @@ class Constants {
   static const maxImageFileSize = 10;
   static const maxDocFileSize = 20;
 
-  static const List<String> defaultStatusList = [
+  /*static const List<String> defaultStatusList = [
     "Available",
     "Sleeping...",
     "Urgent calls only",
     "At the movies",
     "I am in Mirror Fly"
-  ];
-  static const List<int> defaultColorList = [
+  ];*/
+  /*static const List<int> defaultColorList = [
     0Xff9068BE,
     0XffE62739,
     0Xff845007,
@@ -537,8 +535,8 @@ class Constants {
     0Xff858102,
     0Xff027E02,
     0XffF66E54
-  ];
-  static const String defaultStatus = "I am in Mirror Fly";
+  ];*/
+  // static const String defaultStatus = "I am in Mirror Fly";
 
   static const int mediaDownloading = 3;
   static const int mediaDownloaded = 4;
@@ -583,7 +581,7 @@ class Constants {
   static const String audioRecordDelete = "AUDIO_RECORDING_DELETE";
   static const String audioRecordInitial = "AUDIO_RECORDING_NOT_INITIALIZED";
 
-  //Permission dialog contents
+  /*//Permission dialog contents
   static const String settingPermission =
       "You will not receive notifications while the app is in background if you disable these permissions";
   static const String filePermission =
@@ -614,7 +612,7 @@ class Constants {
       "MirrorFly need the Microphone Permission in order to call Family, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Microphone\".";
   static const String videoCallPermissionDenied =
       "MirrorFly need the Microphone and Camera Permissions in order to call Family, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Microphone\" and \"Camera\".";
-
+*/
   static const String noInternetConnection =
       "Please check your internet connection";
   static const String adminBlockedMessage =
@@ -632,13 +630,13 @@ class Constants {
   static const String googleTranslationLanguageDoubleTap =
       "Double Tap the received messages to translate";
 
-  static const String editBusyStatus = "Edit Busy Status Message";
+  /*static const String editBusyStatus = "Edit Busy Status Message";
   static const String yourBusyStatus = "Your Busy Status";
   static const String newBusyStatus = "Select your new status";
   static const String busyStatusDescription =
-      "Your busy status will be set as auto-response to the messages received from individuals.";
+      "Your busy status will be set as auto-response to the messages received from individuals.";*/
 
-  static const String autoDownload = "Auto Download";
+  /*static const String autoDownload = "Auto Download";
   static const String autoDownloadLable =
       "Enable “Auto download” to turn all types of files received readily viewable";
   static const String dataUsageSettings = "Data Usage Settings";
@@ -646,7 +644,7 @@ class Constants {
       "Setup your mobile and wifi data usage based on media type";
   static const String mediaAutoDownload = "Media Auto download";
   static const String whenUsingMobileData = "When using Mobile Data";
-  static const String whenUsingWifiData = "When connected on Wi-Fi";
+  static const String whenUsingWifiData = "When connected on Wi-Fi";*/
   static const List<String> mediaTypes = [
     "Photos",
     "Videos",

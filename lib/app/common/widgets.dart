@@ -72,7 +72,7 @@ class ProfileTextImage extends StatelessWidget {
   }
 
   String getString(String str) {
-    String string = "";
+    String string = Constants.emptyString;
     // debugPrint("str.characters.length ${str}");
     if (str.characters.length >= 2) {
       if (str.trim().contains(" ")) {
@@ -307,7 +307,7 @@ Widget memberItem(
     required String status,
     bool? isAdmin,
     required Function() onTap,
-    String spantext = "",
+    String spantext = Constants.emptyString,
     bool isCheckBoxVisible = false,
     bool isChecked = false,
     Function(bool? value)? onchange,

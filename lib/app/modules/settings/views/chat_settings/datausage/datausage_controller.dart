@@ -103,33 +103,6 @@ class DataUsageController extends GetxController{
     saveDataUsageSettings();
   }
 
-  RxBool getItem(String item,String type){
-    if(item==mobile){
-      switch(type){
-        case Constants.photo:
-          return _autoDownloadMobilePhoto;
-        case Constants.audio:
-          return _autoDownloadMobileAudio;
-        case Constants.video:
-          return _autoDownloadMobileVideo;
-        case Constants.document:
-          return _autoDownloadMobileDocument;
-      }
-    }else if(item==wifi){
-      switch(type){
-        case Constants.photo:
-          return _autoDownloadWifiPhoto;
-        case Constants.audio:
-          return _autoDownloadWifiAudio;
-        case Constants.video:
-          return _autoDownloadWifiVideo;
-        case Constants.document:
-          return _autoDownloadWifiDocument;
-      }
-    }
-    return false.obs;
-  }
-
   saveDataUsageSettings(){
     Mirrorfly.saveMediaSettings(autoDownloadMobilePhoto, autoDownloadMobileVideo, autoDownloadMobileAudio, autoDownloadMobileDocument, 0);
     Mirrorfly.saveMediaSettings(autoDownloadWifiPhoto, autoDownloadWifiVideo, autoDownloadWifiAudio, autoDownloadWifiDocument, 1);

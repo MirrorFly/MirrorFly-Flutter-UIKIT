@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 import '../../../models.dart';
@@ -88,7 +89,7 @@ class StarredMessageHeader extends StatelessWidget {
                               color: MirrorflyUikit.getTheme?.textPrimaryColor,
                               size: 14,
                             )),
-                        Text("You",
+                        Text(AppConstants.you,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 15, color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                         const SizedBox(
@@ -145,7 +146,7 @@ class StarredMessageHeader extends StatelessWidget {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               )
-                            : Text("You",
+                            : Text(AppConstants.you,
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 15, color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                         const SizedBox(

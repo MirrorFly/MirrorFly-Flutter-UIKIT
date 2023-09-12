@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 
 import '../../../mirrorfly_uikit_plugin.dart';
@@ -47,7 +48,7 @@ class ArchivedChatListView extends StatelessWidget {
               title: controller.selected.value
                   ? Text(
                   (controller.selectedChats.length).toString())
-                  : Text('Archived Chats',style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
+                  : Text(AppConstants.archivedChats,style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
               actions: [
                 Visibility(
                   visible: controller.selected.value,
@@ -65,10 +66,10 @@ class ArchivedChatListView extends StatelessWidget {
                               onPressed: () {
                                 controller.deleteChats(context);
                               },
-                              icon: SvgPicture.asset(delete,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),tooltip: 'Delete',),
-                          overflowWidget: Text("Delete",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                              icon: SvgPicture.asset(delete,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),tooltip: AppConstants.delete,),
+                          overflowWidget: Text(AppConstants.delete,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                           showAsAction: controller.delete.value ? ShowAsAction.always : ShowAsAction.gone,
-                          keyValue: 'Delete',
+                          keyValue: AppConstants.delete,
                           onItemClick: () {
                             controller.deleteChats(context);
                           },
@@ -78,12 +79,12 @@ class ArchivedChatListView extends StatelessWidget {
                             onPressed: () {
                               controller.muteChats();
                             },
-                            icon: SvgPicture.asset(mute,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),tooltip: 'Mute',),
-                          overflowWidget: Text("Mute",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                            icon: SvgPicture.asset(mute,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),tooltip: AppConstants.mute,),
+                          overflowWidget: Text(AppConstants.mute,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                           showAsAction: controller.mute.value
                               ? ShowAsAction.always
                               : ShowAsAction.gone,
-                          keyValue: 'Mute',
+                          keyValue: AppConstants.mute,
                           onItemClick: () {
                             controller.muteChats();
                           },
@@ -93,12 +94,12 @@ class ArchivedChatListView extends StatelessWidget {
                             onPressed: () {
                               controller.unMuteChats();
                             },
-                            icon: SvgPicture.asset(unMute,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),tooltip: 'UnMute',),
-                          overflowWidget: Text("UnMute",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                            icon: SvgPicture.asset(unMute,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),tooltip: AppConstants.unMute,),
+                          overflowWidget: Text(AppConstants.unMute,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                           showAsAction: controller.unMute.value
                               ? ShowAsAction.always
                               : ShowAsAction.gone,
-                          keyValue: 'UnMute',
+                          keyValue: AppConstants.unMute,
                           onItemClick: () {
                             controller.unMuteChats();
                           },
@@ -108,10 +109,10 @@ class ArchivedChatListView extends StatelessWidget {
                               onPressed: () {
                                 controller.unArchiveSelectedChats();
                               },
-                              icon: SvgPicture.asset(unarchive,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),tooltip: 'UnArchive',),
-                          overflowWidget: Text("UnArchive",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                              icon: SvgPicture.asset(unarchive,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),tooltip: AppConstants.unArchived,),
+                          overflowWidget: Text(AppConstants.unArchived,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                           showAsAction: ShowAsAction.always,
-                          keyValue: 'UnArchive',
+                          keyValue: AppConstants.unArchived,
                           onItemClick: () {
                             controller.unArchiveSelectedChats();
                           },
@@ -154,7 +155,7 @@ class ArchivedChatListView extends StatelessWidget {
                           );
                         });
                       }) : Center(
-                    child: Text('No archived chats',style: TextStyle( color: MirrorflyUikit.getTheme?.textPrimaryColor),),
+                    child: Text(AppConstants.noArchivedChats,style: TextStyle( color: MirrorflyUikit.getTheme?.textPrimaryColor),),
                   )),
             ),
           );
