@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_plugin/model/user_list_model.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import '../../../../mirrorfly_uikit_plugin.dart';
-import '../../../models.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
 import 'package:permission_handler/permission_handler.dart';
 

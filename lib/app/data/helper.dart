@@ -7,6 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:mirrorfly_plugin/model/group_members_model.dart';
+import 'package:mirrorfly_plugin/model/message_delivered_model.dart';
+import 'package:mirrorfly_plugin/model/profile_model.dart';
+import 'package:mirrorfly_plugin/model/recent_chat.dart';
+import 'package:mirrorfly_plugin/model/user_list_model.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
@@ -18,11 +23,6 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../mirrorfly_uikit_plugin.dart';
 import '../common/widgets.dart';
 import '../model/chat_message_model.dart';
-import '../model/group_members_model.dart';
-import '../model/message_delivered_model.dart';
-import '../model/profile_model.dart';
-import '../model/recent_chat.dart';
-import '../model/user_list_model.dart';
 import 'apputils.dart';
 
 class Helper {

@@ -7,13 +7,14 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
+import 'package:mirrorfly_plugin/model/user_list_model.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
-import '../../../models.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../common/constants.dart';
+import '../../../model/chat_message_model.dart';
 
 class StarredMessagesController extends FullLifeCycleController with FullLifeCycleMixin {
   var starredChatList = List<ChatMessageModel>.empty(growable: true).obs;

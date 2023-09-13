@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
+import 'package:mirrorfly_plugin/model/recent_chat.dart';
+import 'package:mirrorfly_plugin/model/user_list_model.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_view.dart';
 import '../../../mirrorfly_uikit_plugin.dart';

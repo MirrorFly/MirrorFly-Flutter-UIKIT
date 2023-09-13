@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_plugin/model/profile_model.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
@@ -7,7 +8,6 @@ import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 import '../../../common/constants.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import '../../../data/apputils.dart';
-import '../../../models.dart';
 
 class ChatInfoController extends GetxController {
   var profile_ = ProfileData().obs;

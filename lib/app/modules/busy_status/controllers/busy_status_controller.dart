@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
+import 'package:mirrorfly_plugin/model/status_model.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import '../../../../mirrorfly_uikit_plugin.dart';
-import '../../../models.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 

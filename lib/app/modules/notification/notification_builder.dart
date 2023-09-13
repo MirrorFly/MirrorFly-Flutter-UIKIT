@@ -5,14 +5,13 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mirrorfly_plugin/logmessage.dart';
+import 'package:mirrorfly_plugin/model/user_list_model.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
 import 'package:mirrorfly_uikit_plugin/app/model/notification_message_model.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/notification/notification_utils.dart';
-
 import '../../data/helper.dart';
-import '../../model/user_list_model.dart';
 import 'notification_service.dart';
 
 class NotificationBuilder {

@@ -4,13 +4,13 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mirrorfly_plugin/model/user_list_model.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/view_all_media/views/view_all_media_view.dart';
 import '../../../../mirrorfly_uikit_plugin.dart';
-import '../../../models.dart';
 
 import '../../../common/crop_image.dart';
 import '../../../data/apputils.dart';

@@ -1,5 +1,6 @@
+import 'package:mirrorfly_plugin/model/user_list_model.dart';
+
 import '../../../data/helper.dart';
-import '../../../models.dart';
 import 'package:get/get.dart';
 
 import '../src/data/models/picked_asset_model.dart';

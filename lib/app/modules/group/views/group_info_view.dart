@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_plugin/model/user_list_model.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/widgets.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
@@ -13,7 +14,6 @@ import 'package:mirrorfly_uikit_plugin/app/modules/group/controllers/group_info_
 
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
-import '../../../models.dart';
 import '../../image_view/views/image_view_view.dart';
 
 

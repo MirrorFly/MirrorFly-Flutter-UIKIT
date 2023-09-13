@@ -1,4 +1,6 @@
-import '../models.dart';
+import 'package:mirrorfly_plugin/model/profile_update.dart';
+import 'package:mirrorfly_plugin/model/register_model.dart';
+
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

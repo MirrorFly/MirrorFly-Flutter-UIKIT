@@ -6,11 +6,12 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import 'package:mirrorfly_plugin/flychat.dart';
+import 'package:mirrorfly_plugin/model/message_delivered_model.dart';
+import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import '../../../models.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/controllers/chat_controller.dart';
 
 import '../../../common/constants.dart';
-import '../../../data/helper.dart';
 
 class MessageInfoController extends GetxController {
   var chatController = Get.find<ChatController>();

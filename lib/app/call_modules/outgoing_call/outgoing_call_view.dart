@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:mirror_fly_demo/app/call_modules/call_widgets.dart';
-import 'package:mirror_fly_demo/app/call_modules/outgoing_call/call_controller.dart';
-import 'package:mirror_fly_demo/app/call_modules/ripple_animation_view.dart';
 import 'package:mirrorfly_plugin/mirrorflychat.dart';
+import 'package:mirrorfly_uikit_plugin/app/call_modules/call_widgets.dart';
 
 import '../../common/constants.dart';
+import '../ripple_animation_view.dart';
+import 'call_controller.dart';
 
 class OutGoingCallView extends GetView<CallController> {
   const OutGoingCallView({Key? key}) : super(key: key);

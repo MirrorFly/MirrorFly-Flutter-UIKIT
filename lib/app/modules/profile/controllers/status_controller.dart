@@ -3,13 +3,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_plugin/model/status_model.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 
 import '../../../common/constants.dart';
 import '../../../data/apputils.dart';
 import '../../../data/helper.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
-import '../../../models.dart';
 
 class StatusListController extends FullLifeCycleController with FullLifeCycleMixin{
   var statusList = List<StatusData>.empty(growable: true).obs;
