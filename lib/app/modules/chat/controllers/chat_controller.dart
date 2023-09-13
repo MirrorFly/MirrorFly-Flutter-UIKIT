@@ -35,6 +35,7 @@ import 'package:record/record.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../../mirrorfly_uikit_plugin.dart';
+import '../../../call_modules/outgoing_call/outgoing_call_view.dart';
 import '../../../common/constants.dart';
 import '../../../data/apputils.dart';
 import '../../../data/helper.dart';
@@ -2985,5 +2986,75 @@ class ChatController extends FullLifeCycleController
     SessionManagement.setCurrentChatJID(profile.jid.checkNull());
     sendReadReceipt();
     cancelNotification();
+  }
+
+  void makeVoiceCall() async {
+    debugPrint("#FLY CALL VOICE CALL CALLING");
+    closeKeyBoard();
+    if (await AppUtils.isNetConnected()) {
+      if(context.mounted) {
+        if (await AppPermission.askAudioCallPermissions(context)) {
+          Mirrorfly.makeVoiceCall(profile.jid.checkNull()).then((value) {
+            if (value) {
+              debugPrint("#Mirrorfly Call userjid ${profile.jid}");
+              setOnGoingUserGone();
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => OutGoingCallView(userJid: profile.jid!),
+              //   ),
+              // ).then((value) => setOnGoingUserAvail());
+
+              try{
+              MirrorflyUikit.instance.navigatorKey.currentState?.push(MaterialPageRoute(
+                builder: (context) => OutGoingCallView(userJid: profile.jid!),
+              )).then((value) => setOnGoingUserAvail());
+            } catch (e) {
+            print("Navigation error: $e");
+            }
+
+
+            }
+          }).catchError((e) {
+            debugPrint("#Mirrorfly Call $e");
+          });
+        } else {
+          debugPrint("permission not given");
+        }
+      }else{
+        debugPrint("context is not mount");
+      }
+    } else {
+      toToast(Constants.noInternetConnection);
+    }
+  }
+
+  void makeVideoCall() async {
+    closeKeyBoard();
+    if (await AppUtils.isNetConnected()) {
+      if(context.mounted) {
+        if (Platform.isAndroid
+            ? await AppPermission.askVideoCallPermissions(context)
+            : await AppPermission.askiOSVideoCallPermissions(context)) {
+          Mirrorfly.makeVideoCall(profile.jid.checkNull()).then((value) {
+            if (value) {
+              setOnGoingUserGone();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => OutGoingCallView(userJid: profile.jid!),
+                ),
+              ).then((value) => setOnGoingUserAvail());
+            }
+          }).catchError((e) {
+            debugPrint("#Mirrorfly Call $e");
+          });
+        } else {
+          LogMessage.d("askVideoCallPermissions", "false");
+        }
+      }
+    } else {
+      toToast(Constants.noInternetConnection);
+    }
   }
 }

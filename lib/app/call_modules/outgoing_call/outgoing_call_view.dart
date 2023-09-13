@@ -8,9 +8,17 @@ import '../../common/constants.dart';
 import '../ripple_animation_view.dart';
 import 'call_controller.dart';
 
-class OutGoingCallView extends GetView<CallController> {
-  const OutGoingCallView({Key? key}) : super(key: key);
+class OutGoingCallView extends StatefulWidget {
+  const OutGoingCallView({Key? key,  required this.userJid}) : super(key: key);
 
+  final String userJid;
+
+  @override
+  State<OutGoingCallView> createState() => _OutGoingCallViewState();
+}
+
+class _OutGoingCallViewState extends State<OutGoingCallView> {
+  final controller = Get.put(CallController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -30,9 +30,12 @@ class MirrorflyUikit {
 
   static var instance = MirrorflyUikit();
 
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
   static Future<String?> getPlatformVersion() {
     return MirrorflyUikitPluginPlatform.instance.getPlatformVersion();
   }
+
 
   ///Used as a initUIKIT class for [MirrorflyUikit]
   /// * [baseUrl] provide the base url for making api calls

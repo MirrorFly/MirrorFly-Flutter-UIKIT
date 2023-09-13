@@ -41,6 +41,7 @@ class _ChatViewState extends State<ChatView> {
   @override
   void initState() {
     controller.init(context,jid: widget.jid,isUser: widget.isUser,isFromStarred: widget.isFromStarred,messageId: widget.messageId, showChatDeliveryIndicator: widget.showChatDeliveryIndicator);
+    controller.profile.isGroupProfile.checkNull() ? debugPrint("this is group profile") : debugPrint("this is single page");
     super.initState();
   }
 
@@ -1265,6 +1266,34 @@ class _ChatViewState extends State<ChatView> {
                 keyValue: AppConstants.addChatShortcut,
                 onItemClick: () {
                   controller.closeKeyBoard();
+                },
+              ),
+              CustomAction(
+                visibleWidget: IconButton(
+                  onPressed: () {
+                    controller.makeVideoCall();
+                  },
+                  icon: SvgPicture.asset(videoCallIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.primaryColor, BlendMode.srcIn)),
+                ),
+                overflowWidget: const  Text("Video Call"),
+                showAsAction: controller.profile.isGroupProfile.checkNull() ? ShowAsAction.gone : ShowAsAction.always,
+                keyValue: 'Video Call',
+                onItemClick: () {
+                  controller.makeVideoCall();
+                },
+              ),
+              CustomAction(
+                visibleWidget: IconButton(
+                  onPressed: () {
+                    controller.makeVoiceCall();
+                  },
+                  icon: SvgPicture.asset(audioCallIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.primaryColor, BlendMode.srcIn)),
+                ),
+                overflowWidget: const Text("Call"),
+                showAsAction: controller.profile.isGroupProfile.checkNull() ? ShowAsAction.gone : ShowAsAction.always,
+                keyValue: 'Audio Call',
+                onItemClick: () {
+                  controller.makeVoiceCall();
                 },
               ),
             ],

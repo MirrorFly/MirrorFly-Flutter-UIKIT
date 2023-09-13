@@ -613,7 +613,7 @@ class Constants {
   static const String audioRecordDelete = "AUDIO_RECORDING_DELETE";
   static const String audioRecordInitial = "AUDIO_RECORDING_NOT_INITIALIZED";
 
-  /*//Permission dialog contents
+  //Permission dialog contents
   static const String settingPermission =
       "You will not receive notifications while the app is in background if you disable these permissions";
   static const String filePermission =
@@ -630,6 +630,12 @@ class Constants {
   static const String audioPermission =
       "To send audio messages, allow MirrorFly access to your Microphone.";
 
+  static const String audioCallPermission =
+      "MirrorFly need the Microphone Permissions in order to call Family";
+
+  static const String videoCallPermission =
+      "MirrorFly need the Microphone and Camera Permissions in order to call Family";
+
   static const String contactPermissionDenied =
       "MirrorFly need the Contacts Permission in order to help you connect with friends and family, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Contacts\"";
   static const String locationPermissionDenied =
@@ -644,7 +650,7 @@ class Constants {
       "MirrorFly need the Microphone Permission in order to call Family, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Microphone\".";
   static const String videoCallPermissionDenied =
       "MirrorFly need the Microphone and Camera Permissions in order to call Family, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Microphone\" and \"Camera\".";
-*/
+
   static const String noInternetConnection =
       "Please check your internet connection";
   static const String adminBlockedMessage =

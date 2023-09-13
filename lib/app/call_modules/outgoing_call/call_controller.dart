@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_plugin/mirrorfly.dart';
 import 'package:mirrorfly_uikit_plugin/app/model/call_user_list.dart';
+import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 
 import '../../common/constants.dart';
 import '../../data/helper.dart';
@@ -48,9 +49,9 @@ class CallController extends GetxController {
       calleeName(data.getName());
     }
     audioDeviceChanged();
-    if (Get.currentRoute == Routes.onGoingCallView) {
-      //startTimer();
-    }
+    // if (Get.currentRoute == Routes.onGoingCallView) {
+    //   //startTimer();
+    // }
     Mirrorfly.getAllAvailableAudioInput().then((value) {
       final availableList = audioDevicesFromJson(value);
       availableAudioList(availableList);
@@ -199,7 +200,8 @@ class CallController extends GetxController {
         if (callList.isNotEmpty) {
           callList.clear();
         }
-        if (Get.previousRoute.isNotEmpty) {
+        //change here mani
+        /*if (Get.previousRoute.isNotEmpty) {
           debugPrint("#Disconnect previous route is not empty");
           if (Get.currentRoute == Routes.onGoingCallView) {
             debugPrint("#Disconnect current route is ongoing call view");
@@ -213,7 +215,7 @@ class CallController extends GetxController {
           }
         } else {
           Get.offNamed(getInitialRoute());
-        }
+        }*/
       }
     });
   }
@@ -268,7 +270,8 @@ class CallController extends GetxController {
         // in iOS needs to call disconnect.
         disconnectCall();
       } else {
-        if (Get.previousRoute.isNotEmpty) {
+        //change here mani
+        /*if (Get.previousRoute.isNotEmpty) {
           if (Get.currentRoute == Routes.onGoingCallView) {
             callTimer("Disconnected");
             Future.delayed(const Duration(seconds: 1), () {
@@ -279,7 +282,7 @@ class CallController extends GetxController {
           }
         } else {
           Get.offNamed(getInitialRoute());
-        }
+        }*/
       }
     }
   }
@@ -327,15 +330,19 @@ class CallController extends GetxController {
     // this.callStatus(callStatus);
     // getNames();
     // startTimer();
-    Future.delayed(const Duration(milliseconds: 500), () {
+    //change here mani
+    /*Future.delayed(const Duration(milliseconds: 500), () {
       Get.offNamed(Routes.onGoingCallView, arguments: {"userJid": userJid});
-    });
+    });*/
   }
 
   void timeout(
       String callMode, String userJid, String callType, String callStatus) {
     // this.callStatus("Disconnected");
-    Get.back();
+    // Get.back();
+    // Navigator.pop(context);
+    debugPrint("timeout");
+    MirrorflyUikit.instance.navigatorKey.currentState?.pop();
   }
 
   void declineCall() {

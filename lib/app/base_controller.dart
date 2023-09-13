@@ -17,20 +17,22 @@ import 'package:mirrorfly_uikit_plugin/app/modules/chat/controllers/contact_cont
 import 'package:mirrorfly_uikit_plugin/app/modules/group/controllers/group_info_controller.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/notification/notification_builder.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/settings/views/blocked/blocked_list_controller.dart';
+import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 
 import 'call_modules/outgoing_call/call_controller.dart';
+import 'common/RouteObserverProvider.dart';
 import 'common/main_controller.dart';
 import 'model/chat_message_model.dart';
 import 'modules/archived_chats/archived_chat_list_controller.dart';
 import 'modules/chat/controllers/forwardchat_controller.dart';
 import 'modules/chatInfo/controllers/chat_info_controller.dart';
 import 'modules/dashboard/controllers/dashboard_controller.dart';
-// import 'modules/dashboard/controllers/recent_chat_search_controller.dart';
 import 'modules/message_info/controllers/message_info_controller.dart';
 import 'modules/starred_messages/controllers/starred_messages_controller.dart';
 import 'modules/view_all_media/controllers/view_all_media_controller.dart';
 
 abstract class BaseController {
+  final RouteObserver<PageRoute<dynamic>> routeObserver = RouteObserverProvider();
   initListeners() {
     Mirrorfly.onMessageReceived.listen(onMessageReceived);
     Mirrorfly.onMessageStatusUpdated.listen(onMessageStatusUpdated);
@@ -195,11 +197,12 @@ abstract class BaseController {
         case CallStatus.inviteCallTimeout:
           break;
         case CallStatus.attended:
-          if(Get.currentRoute != Routes.onGoingCallView) {
+          //change here mani
+          /*if(Get.currentRoute != Routes.onGoingCallView) {
             debugPrint("***opening cal page");
             Get.toNamed(
                 Routes.onGoingCallView, arguments: { "userJid": userJid});
-          }
+          }*/
           break;
 
         case CallStatus.disconnected:
@@ -827,5 +830,26 @@ abstract class BaseController {
   void stopTimer(){
     timer?.cancel();
     timer=null;
+  }
+}
+class RouteAwareController extends BaseController with RouteAware {
+  void didChangeDependencies() {
+    final currentRouteName =
+        ModalRoute.of<PageRoute<dynamic>>(MirrorflyUikit.instance.navigatorKey.currentContext!)?.settings.name;
+    debugPrint("Current route: $currentRouteName");
+  }
+
+  @override
+  void didPushNext() {
+    // This method is called when a new route is pushed.
+    // You can perform actions when a new route is pushed.
+    debugPrint("didPushNext");
+  }
+
+  @override
+  void didPopNext() {
+    // This method is called when the current route is popped.
+    // You can perform actions when the current route is popped.
+    debugPrint("didPopNext");
   }
 }
