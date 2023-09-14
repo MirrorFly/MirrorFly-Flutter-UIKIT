@@ -122,7 +122,7 @@ class _OutGoingCallViewState extends State<OutGoingCallView> {
                             controller.audioOutputType.value == AudioDeviceType.receiver
                                 ? Colors.white.withOpacity(0.3)
                                 : Colors.white,
-                            onPressed: () => controller.changeSpeaker(),
+                            onPressed: () => controller.changeSpeaker(context),
                             child: controller.audioOutputType.value == AudioDeviceType.receiver
                                 ? SvgPicture.asset(speakerInactive,package: package,)
                                 : controller.audioOutputType.value == AudioDeviceType.speaker
