@@ -30,6 +30,7 @@ class NavigationManager {
     // Push the current route to the history before navigating
     if (currentRoute != null) {
       debugPrint("Adding the current route");
+      routeHistory.removeLast();
       routeHistory.add(currentRoute!);
     } else {
       debugPrint("current route is null not adding the history");

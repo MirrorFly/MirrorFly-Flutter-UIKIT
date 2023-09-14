@@ -39,8 +39,8 @@ class CallController extends GetxController {
 
   late BuildContext context;
 
-  Future<void> initCallController(
-      {String? userJid, required BuildContext buildContext}) async {
+  Future<void> initCallController({String? userJid,required BuildContext buildContext}) async {
+    debugPrint("#Mirrorfly Call Controller onInit");
     context = buildContext;
     if (userJid != null && userJid != "") {
       debugPrint("#Mirrorfly Call initCallController UserJid $userJid");
@@ -48,21 +48,6 @@ class CallController extends GetxController {
       profile(data);
       calleeName(data.getName());
     }
-  }
-
-  @override
-  Future<void> onInit() async {
-    super.onInit();
-    debugPrint("#Mirrorfly Call Controller onInit");
-    // var userJid = Get.arguments?["userJid"];
-    // if (userJid != null && userJid != "") {
-    //   debugPrint("#Mirrorfly Call UserJid $userJid");
-    //   // var profile = await Mirrorfly.getUserProfile(userJid);
-    //   // var data = profileDataFromJson(profile);
-    //   var data = await getProfileDetails(userJid);
-    //   profile(data);
-    //   calleeName(data.getName());
-    // }
     audioDeviceChanged();
     // if (Get.currentRoute == Routes.onGoingCallView) {
     //   //startTimer();
@@ -157,8 +142,7 @@ class CallController extends GetxController {
                           onTap: () {
                             if (audioOutputType.value != audioItem.type) {
                               // Get.back();
-                              MirrorflyUikit.instance.navigationManager
-                                  .navigateBack(context: context);
+                              Navigator.pop(context);
                               debugPrint(
                                   "selected audio item ${audioItem.type}");
                               audioOutputType(audioItem.type);
