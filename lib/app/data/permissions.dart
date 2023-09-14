@@ -31,12 +31,6 @@ class AppPermission {
       const newPermission = Permission.contacts;
       if(context.mounted) {
         var deniedPopupValue = await mirrorFlyPermissionDialog(
-            notNowBtn: () {
-              return false;
-            },
-            continueBtn: () async {
-              // newPermission.request();
-            },
             icon: contactPermission,
             content: AppConstants.contactPermission,appName: info.appName, context: context);
         if(deniedPopupValue) {
@@ -67,12 +61,6 @@ class AppPermission {
         const newPermission = Permission.storage;
         if(context.mounted) {
           var deniedPopupValue = await mirrorFlyPermissionDialog(context: context,
-              notNowBtn: () {
-                return false;
-              },
-              continueBtn: () async {
-                // newPermission.request();
-              },
               icon: filePermission,
               content: AppConstants.filePermission,appName: info.appName);
           if(deniedPopupValue) {
@@ -123,12 +111,6 @@ class AppPermission {
       if(context.mounted) {
         mirrorFlyLog("showing mirror fly popup", "");
         var deniedPopupValue = await mirrorFlyPermissionDialog(context: context,
-            notNowBtn: () {
-              return false;
-            },
-            continueBtn: () {
-              // newPermission.request();
-            },
             icon: filePermission,
             content: AppConstants.filePermission,appName: info.appName);
         if(deniedPopupValue) {
@@ -184,7 +166,11 @@ class AppPermission {
       LogMessage.d("alreadyAsked audio", alreadyAsked);
 
       if (shouldShowRequestRationale) {
-        return requestAudioCallPermissions(permissions: permissions,showFromRational: true, context: context);
+        if(context.mounted) {
+          return requestAudioCallPermissions(permissions: permissions, showFromRational: true, context: context);
+        }else{
+          return Future.value(false);
+        }
       } else if (alreadyAsked) {
         if(context.mounted) {
           var popupValue = await customPermissionDialog(
@@ -204,7 +190,11 @@ class AppPermission {
         }
       } else {
         if(permissions.isNotEmpty) {
-          return requestAudioCallPermissions(permissions: permissions, context: context);
+          if(context.mounted) {
+            return requestAudioCallPermissions(permissions: permissions, context: context);
+          }else{
+            return Future.value(false);
+          }
         }else{
           if(context.mounted) {
             var popupValue = await customPermissionDialog(
@@ -236,8 +226,6 @@ class AppPermission {
           icon: audioPermission,
           content: Constants.audioCallPermission,
           context: context,
-          notNowBtn: () {},
-          continueBtn: () {},
           appName: info.appName);
       if (deniedPopupValue) {
         var newp = await permissions.request();
@@ -304,7 +292,11 @@ class AppPermission {
           SessionManagement.getBool(Constants.bluetoothPermissionAsked));
       LogMessage.d("alreadyAsked video", alreadyAsked);
       if (shouldShowRequestRationale) {
-        return requestVideoCallPermissions(permissions: permissions, context: context);
+        if(context.mounted) {
+          return requestAudioCallPermissions(permissions: permissions, context: context);
+        }else{
+          return Future.value(false);
+        }
       } else if (alreadyAsked) {
         if(context.mounted) {
           var popupValue = await customPermissionDialog(
@@ -324,7 +316,11 @@ class AppPermission {
         }
       } else {
         if(permissions.isNotEmpty) {
-          return requestVideoCallPermissions(permissions: permissions, context: context);
+          if(context.mounted) {
+            return requestAudioCallPermissions(permissions: permissions, context: context);
+          }else{
+            return Future.value(false);
+          }
         }else{
           if(context.mounted) {
             var popupValue = await customPermissionDialog(
@@ -351,29 +347,35 @@ class AppPermission {
 
   static Future<bool> requestVideoCallPermissions({required List<Permission> permissions, bool showFromRational = false, required BuildContext context}) async {
     var info = await PackageInfo.fromPlatform();
-    var deniedPopupValue = await mirrorFlyPermissionDialog(
-        icon: recordAudioVideoPermission,
-        content: Constants.videoCallPermission, context: context, notNowBtn: () {  }, continueBtn: () {  }, appName: info.appName);
-    if (deniedPopupValue) {
-      var newp = await permissions.request();
-      PermissionStatus? microphone_ = newp[Permission.microphone];
-      PermissionStatus? phone_ = newp[Permission.phone];
-      PermissionStatus? camera_ = newp[Permission.camera];
-      PermissionStatus? bluetoothConnect_ = newp[Permission.bluetoothConnect];
-      if(camera_!=null && camera_.isPermanentlyDenied) {
-        SessionManagement.setBool(Constants.cameraPermissionAsked, true);
+    if(context.mounted) {
+      var deniedPopupValue = await mirrorFlyPermissionDialog(
+          icon: recordAudioVideoPermission,
+          content: Constants.videoCallPermission, context: context, appName: info.appName);
+      if (deniedPopupValue) {
+        var newp = await permissions.request();
+        PermissionStatus? microphone_ = newp[Permission.microphone];
+        PermissionStatus? phone_ = newp[Permission.phone];
+        PermissionStatus? camera_ = newp[Permission.camera];
+        PermissionStatus? bluetoothConnect_ = newp[Permission.bluetoothConnect];
+        if (camera_ != null && camera_.isPermanentlyDenied) {
+          SessionManagement.setBool(Constants.cameraPermissionAsked, true);
+        }
+        if (microphone_ != null && microphone_.isPermanentlyDenied) {
+          SessionManagement.setBool(Constants.audioRecordPermissionAsked, true);
+        }
+        if (phone_ != null && phone_.isPermanentlyDenied) {
+          SessionManagement.setBool(Constants.readPhoneStatePermissionAsked, true);
+        }
+        if (bluetoothConnect_ != null && bluetoothConnect_.isPermanentlyDenied) {
+          SessionManagement.setBool(Constants.bluetoothPermissionAsked, true);
+        }
+        return (camera_?.isGranted ?? true) && (microphone_?.isGranted ?? true) && (phone_?.isGranted ?? true) &&
+            (bluetoothConnect_?.isGranted ?? true);
+      } else {
+        return false;
       }
-      if(microphone_!=null &&microphone_.isPermanentlyDenied) {
-        SessionManagement.setBool(Constants.audioRecordPermissionAsked, true);
-      }
-      if(phone_!=null && phone_.isPermanentlyDenied) {
-        SessionManagement.setBool(Constants.readPhoneStatePermissionAsked, true);
-      }
-      if(bluetoothConnect_!=null &&bluetoothConnect_.isPermanentlyDenied) {
-        SessionManagement.setBool(Constants.bluetoothPermissionAsked, true);
-      }
-      return (camera_?.isGranted ?? true) && (microphone_?.isGranted ?? true) && (phone_?.isGranted ?? true) && (bluetoothConnect_?.isGranted ?? true);
     }else{
+      LogMessage.d("requestAudioCallPermissions", "Context is Not Mounted");
       return false;
     }
   }
@@ -392,8 +394,6 @@ class AppPermission {
             icon: recordAudioVideoPermission,
             content: Constants.videoCallPermission,
             appName: info.appName,
-            notNowBtn: () {},
-            continueBtn: () {},
             context: context);
         if (permissionPopupValue) {
           var newp = await newPermission.request();
@@ -653,8 +653,8 @@ class AppPermission {
         ], context: context);
   }
   static Future<bool> mirrorFlyPermissionDialog({required BuildContext context,
-      required Function() notNowBtn,
-      required Function() continueBtn,
+      Function()? notNowBtn,
+      Function()? continueBtn,
       required String icon,
       required String content,required String appName}) async {
     return await showDialog(context: context, builder: (BuildContext context) { return AlertDialog(
@@ -682,7 +682,7 @@ class AppPermission {
             onPressed: () {
               Navigator.pop(context,false);
               // Get.back(result: "no");
-              notNowBtn();
+              // notNowBtn();
             },
             child: Text(
               "NOT NOW",
@@ -692,7 +692,7 @@ class AppPermission {
             onPressed: () {
               Navigator.pop(context,true);
               // Get.back(result: "yes");
-              continueBtn();
+              // continueBtn();
             },
             child: Text(
               "CONTINUE",

@@ -716,8 +716,6 @@ class Constants {
   static const readPhoneStatePermissionAsked = "read_phone_state_asked_before";
   static const bluetoothPermissionAsked = "bluetooth_permission_asked_before";
 
-  static const remoteEngagedToast = "is on another call";
-
   //For UIKIT Call Routes Only
 
   static const onGoingCallView = "ongoing_call_view";

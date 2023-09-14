@@ -189,6 +189,14 @@ class MirrorflyUikit {
     }
   }
 
+  ///Used as a [isOnGoingCall] class for [MirrorflyUikit]
+  ///used to check if there is an ongoing call
+  ///this method works in [Android], in [iOS] returns always false
+  ///returns the bool value
+  static Future<bool?> isOnGoingCall() async {
+    return await Mirrorfly.isOnGoingCall();
+  }
+
   static Map<String, dynamic> setResponse(bool status, String message) {
     return {'status': status, 'message': message};
   }
