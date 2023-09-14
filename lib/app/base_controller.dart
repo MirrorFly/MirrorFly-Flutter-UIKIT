@@ -20,8 +20,8 @@ import 'package:mirrorfly_uikit_plugin/app/modules/settings/views/blocked/blocke
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 
 import 'call_modules/outgoing_call/call_controller.dart';
-import 'common/RouteObserverProvider.dart';
 import 'common/main_controller.dart';
+import 'common/route_observer_provider.dart';
 import 'model/chat_message_model.dart';
 import 'modules/archived_chats/archived_chat_list_controller.dart';
 import 'modules/chat/controllers/forwardchat_controller.dart';

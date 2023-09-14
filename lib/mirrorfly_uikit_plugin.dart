@@ -10,9 +10,9 @@ import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/model/app_config.dart';
 import 'package:mirrorfly_uikit_plugin/app/model/reply_hash_map.dart';
 
-import 'app/common/NavigationManager.dart';
 import 'app/common/app_theme.dart';
 import 'app/common/main_controller.dart';
+import 'app/common/navigation_manager.dart';
 import 'app/data/apputils.dart';
 import 'app/data/session_management.dart';
 import 'app/modules/chat/controllers/chat_controller.dart';
