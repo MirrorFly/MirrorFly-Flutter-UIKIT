@@ -23,6 +23,42 @@ class NavigationManager {
     });
   }
 
+  void navigatePushReplacement({required BuildContext context, required Widget pageToNavigate, required String routeName, Function()? onNavigateComplete}) {
+    // Navigate to the new route (simulated navigation)
+    currentRoute = routeName;
+    debugPrint("Navigating to $routeName");
+    // Push the current route to the history before navigating
+    if (currentRoute != null) {
+      debugPrint("Adding the current route");
+      routeHistory.add(currentRoute!);
+    } else {
+      debugPrint("current route is null not adding the history");
+    }
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => pageToNavigate,
+      ),
+    ).then((value) => onNavigateComplete?.call());
+  }
+  void navigatePushRemoveUntil({required BuildContext context, required Widget pageToNavigate, required String routeName, Function()? onNavigateComplete}) {
+    // Navigate to the new route (simulated navigation)
+    currentRoute = routeName;
+    debugPrint("Navigating to $routeName");
+    // Push the current route to the history before navigating
+    if (currentRoute != null) {
+      debugPrint("Adding the current route");
+      routeHistory.add(currentRoute!);
+    } else {
+      debugPrint("current route is null not adding the history");
+    }
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (context) => pageToNavigate,
+      ), (route) => false,
+    ).then((value) => onNavigateComplete?.call());
+  }
+
+
   void navigateBack({required BuildContext context}) {
     if (routeHistory.isNotEmpty) {
       currentRoute = routeHistory.removeLast();
