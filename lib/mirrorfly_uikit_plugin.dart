@@ -46,7 +46,7 @@ class MirrorflyUikit {
   /// * [showMobileNumberOnList] to show mobile on contact list
   /// * [storageFolderName] provide the Local Storage Folder Name
   initUIKIT(
-      {required baseUrl,
+      {required String baseUrl,
       required String licenseKey,
       String? googleMapKey,
       required String iOSContainerID,

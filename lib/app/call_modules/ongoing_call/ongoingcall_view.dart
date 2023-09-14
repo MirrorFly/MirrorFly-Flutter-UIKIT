@@ -5,7 +5,6 @@ import 'package:mirrorfly_plugin/mirrorfly_view.dart';
 import 'package:mirrorfly_plugin/mirrorflychat.dart';
 
 import '../../common/constants.dart';
-import '../../common/widgets.dart';
 import '../../model/call_user_list.dart';
 import '../outgoing_call/call_controller.dart';
 
@@ -36,7 +35,7 @@ class OnGoingCallView extends GetView<CallController> {
                                 controller.layoutSwitch.value
                             ? MirrorFlyView(
                                     userJid:
-                                        controller.callList[1].userJid ?? "",
+                                        controller.callList[1].userJid ?? Constants.emptyString,
                                     alignProfilePictureCenter: false,
                                     profileSize: 100)
                                 .setBorderRadius(
@@ -147,7 +146,7 @@ class OnGoingCallView extends GetView<CallController> {
                             height: 180,
                             width: 130,
                             child: MirrorFlyView(
-                              userJid: controller.callList[0].userJid ?? "",
+                              userJid: controller.callList[0].userJid ?? Constants.emptyString,
                               viewBgColor: Colors.blueGrey,
                             ).setBorderRadius(
                                 const BorderRadius.all(Radius.circular(10))),
@@ -194,30 +193,6 @@ class OnGoingCallView extends GetView<CallController> {
     );
   }
 
-  Widget buildProfileView() {
-    return Center(
-      child: FutureBuilder(
-          // future: getProfileDetails(""),
-          builder: (cxt, data) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: const [
-            ProfileTextImage(
-              text: "Name",
-            ),
-            SizedBox(
-              height: 4,
-            ),
-            Text(
-              "Name",
-              style: TextStyle(color: Colors.white),
-            )
-          ],
-        );
-      }),
-    );
-  }
-
   Widget buildToolbar() {
     return Stack(
       children: [
@@ -234,11 +209,11 @@ class OnGoingCallView extends GetView<CallController> {
             const Spacer(),
             IconButton(
               onPressed: () {},
-              icon: SvgPicture.asset(addUserCall),
+              icon: SvgPicture.asset(addUserCall,package: package,),
             ),
             IconButton(
               onPressed: () {},
-              icon: SvgPicture.asset(moreMenu),
+              icon: SvgPicture.asset(moreMenu,package: package,),
             )
           ],
         ),
@@ -296,7 +271,7 @@ class OnGoingCallView extends GetView<CallController> {
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: SvgPicture.asset(
-                callOptionsUpArrow,
+                callOptionsUpArrow,package: package,
                 width: 30,
               ),
             ),
@@ -316,10 +291,10 @@ class OnGoingCallView extends GetView<CallController> {
                 onPressed: () => controller.muteAudio(),
                 child: controller.muted.value
                     ? SvgPicture.asset(
-                        muteActive,
+                        muteActive,package: package,
                       )
                     : SvgPicture.asset(
-                        muteInactive,
+                        muteInactive,package: package,
                       ),
               ),
               SizedBox(width: rightSideWidth),
@@ -333,8 +308,8 @@ class OnGoingCallView extends GetView<CallController> {
                           : Colors.white.withOpacity(0.3),
                       onPressed: () => controller.switchCamera(),
                       child: controller.cameraSwitch.value
-                          ? SvgPicture.asset(cameraSwitchActive)
-                          : SvgPicture.asset(cameraSwitchInactive),
+                          ? SvgPicture.asset(cameraSwitchActive,package: package,)
+                          : SvgPicture.asset(cameraSwitchInactive,package: package,),
                     )
                   : const SizedBox.shrink(),
               controller.callType.value == 'video' &&
@@ -349,8 +324,8 @@ class OnGoingCallView extends GetView<CallController> {
                     : Colors.white.withOpacity(0.3),
                 onPressed: () => controller.videoMute(),
                 child: controller.videoMuted.value
-                    ? SvgPicture.asset(videoInactive)
-                    : SvgPicture.asset(videoActive),
+                    ? SvgPicture.asset(videoInactive,package: package,)
+                    : SvgPicture.asset(videoActive,package: package,),
               ),
               SizedBox(
                 width: rightSideWidth,
@@ -365,17 +340,17 @@ class OnGoingCallView extends GetView<CallController> {
                 onPressed: () => controller.changeSpeaker(),
                 child:
                     controller.audioOutputType.value == AudioDeviceType.receiver
-                        ? SvgPicture.asset(speakerInactive)
+                        ? SvgPicture.asset(speakerInactive,package: package,)
                         : controller.audioOutputType.value ==
                                 AudioDeviceType.speaker
-                            ? SvgPicture.asset(speakerActive)
+                            ? SvgPicture.asset(speakerActive,package: package,)
                             : controller.audioOutputType.value ==
                                     AudioDeviceType.bluetooth
-                                ? SvgPicture.asset(speakerBluetooth)
+                                ? SvgPicture.asset(speakerBluetooth,package: package,)
                                 : controller.audioOutputType.value ==
                                         AudioDeviceType.headset
-                                    ? SvgPicture.asset(speakerHeadset)
-                                    : SvgPicture.asset(speakerActive),
+                                    ? SvgPicture.asset(speakerHeadset,package: package,)
+                                    : SvgPicture.asset(speakerActive,package: package,),
               ),
             ],
           ),
@@ -394,7 +369,7 @@ class OnGoingCallView extends GetView<CallController> {
                   controller.disconnectCall();
                 },
                 child: SvgPicture.asset(
-                  callEndButton,
+                  callEndButton,package: package,
                 )),
           ),
           // )
@@ -411,7 +386,7 @@ class OnGoingCallView extends GetView<CallController> {
         itemCount: users.length,
         itemBuilder: (cxt, index) {
           return MirrorFlyView(
-            userJid: users[index].userJid ?? "",
+            userJid: users[index].userJid ?? Constants.emptyString,
             viewBgColor: Colors.blueGrey,
           ).setBorderRadius(const BorderRadius.all(Radius.circular(
               10))); /*controller.callUsers.first !=

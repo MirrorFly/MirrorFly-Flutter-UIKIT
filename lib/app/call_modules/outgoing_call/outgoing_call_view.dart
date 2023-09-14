@@ -86,7 +86,7 @@ class _OutGoingCallViewState extends State<OutGoingCallView> {
                                   backgroundColor: Colors.white,
                                   onPressed: () => controller.muteAudio(),
                                   child: SvgPicture.asset(
-                                    muteActive,
+                                    muteActive,package: package,
                                   ),
                                 )
                               : FloatingActionButton(
@@ -96,7 +96,7 @@ class _OutGoingCallViewState extends State<OutGoingCallView> {
                                       Colors.white.withOpacity(0.3),
                                   onPressed: () => controller.muteAudio(),
                                   child: SvgPicture.asset(
-                                    muteInactive,
+                                    muteInactive,package: package,
                                   ),
                                 ),
                           FloatingActionButton(
@@ -107,8 +107,8 @@ class _OutGoingCallViewState extends State<OutGoingCallView> {
                                 : Colors.white.withOpacity(0.3),
                             onPressed: () => controller.videoMute(),
                             child: controller.videoMuted.value
-                                ? SvgPicture.asset(videoInactive)
-                                : SvgPicture.asset(videoActive),
+                                ? SvgPicture.asset(videoInactive,package: package,)
+                                : SvgPicture.asset(videoActive,package: package,),
                           ),
                           FloatingActionButton(
                             heroTag: "speaker",
@@ -119,16 +119,16 @@ class _OutGoingCallViewState extends State<OutGoingCallView> {
                                 : Colors.white,
                             onPressed: () => controller.changeSpeaker(),
                             child: controller.audioOutputType.value == AudioDeviceType.receiver
-                                ? SvgPicture.asset(speakerInactive)
+                                ? SvgPicture.asset(speakerInactive,package: package,)
                                 : controller.audioOutputType.value == AudioDeviceType.speaker
-                                ? SvgPicture.asset(speakerActive)
+                                ? SvgPicture.asset(speakerActive,package: package,)
                                 : controller.audioOutputType.value ==
                                 AudioDeviceType.bluetooth
-                                ? SvgPicture.asset(speakerBluetooth)
+                                ? SvgPicture.asset(speakerBluetooth,package: package,)
                                 : controller.audioOutputType.value ==
                                 AudioDeviceType.headset
-                                ? SvgPicture.asset(speakerHeadset)
-                                : SvgPicture.asset(speakerActive),
+                                ? SvgPicture.asset(speakerHeadset,package: package,)
+                                : SvgPicture.asset(speakerActive,package: package,),
                           ),
                         ],
                       ),
@@ -146,7 +146,7 @@ class _OutGoingCallViewState extends State<OutGoingCallView> {
                           controller.declineCall();
                         },
                         child: SvgPicture.asset(
-                          callEndButton,
+                          callEndButton,package: package,
                         )),
                   ),
                 ],

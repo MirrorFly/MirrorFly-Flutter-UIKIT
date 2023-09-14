@@ -81,6 +81,7 @@ flutter:
     - lib/assets/countries.txt
     - lib/assets/languages.txt
     - lib/assets/logos/
+    - lib/assets/calls/
     - lib/assets/animation/
     - assets/countries.txt
     - assets/languages.txt
