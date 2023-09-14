@@ -34,7 +34,7 @@ class MirrorflyUikit {
   // Initialize the NavigationManager in the constructor
   final NavigationManager navigationManager = NavigationManager();
 
-  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  GlobalKey<NavigatorState>? globalNavigatorKey;
 
   static Future<String?> getPlatformVersion() {
     return MirrorflyUikitPluginPlatform.instance.getPlatformVersion();
@@ -50,7 +50,7 @@ class MirrorflyUikit {
   /// * [showMobileNumberOnList] to show mobile on contact list
   /// * [storageFolderName] provide the Local Storage Folder Name
   initUIKIT(
-      {required String baseUrl,
+      {required String baseUrl,required GlobalKey<NavigatorState> navigatorKey,
       required String licenseKey,
       String? googleMapKey,
       required String iOSContainerID,
@@ -74,6 +74,7 @@ class MirrorflyUikit {
     this.showStatusOption = showStatusOption;
     this.enableLocalNotification = enableLocalNotification;
     this.googleMapKey = googleMapKey ?? '';
+    globalNavigatorKey = navigatorKey;
     ReplyHashMap.init();
     rootBundle.loadString('assets/mirrorfly_config.json').then((configFile) {
       var config = AppConfig.fromJson(json.decode(configFile));

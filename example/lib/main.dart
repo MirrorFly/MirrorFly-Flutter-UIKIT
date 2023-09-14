@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/notification/notification_service.dart';
 // import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
-
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   MirrorflyUikit.instance.initUIKIT(
@@ -32,6 +32,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
         themeMode: ThemeMode.dark,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(textTheme: GoogleFonts.latoTextTheme()),

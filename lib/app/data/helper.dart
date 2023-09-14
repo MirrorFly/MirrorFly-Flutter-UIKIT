@@ -460,6 +460,7 @@ extension ProfileDataParsing on ProfileData {
 }
 
 Future<Profile> getProfileDetails(String jid) async {
+  debugPrint("getProfileDetails jid $jid");
   var value = await Mirrorfly.getProfileDetails(jid.checkNull());
   // var profile = profiledata(value.toString());
   // var profile = await compute(profiledata, value.toString());

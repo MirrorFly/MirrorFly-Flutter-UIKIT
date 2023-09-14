@@ -22,7 +22,7 @@ class _OutGoingCallViewState extends State<OutGoingCallView> {
   @override
   void initState() {
     super.initState();
-    controller.initCallController(buildContext: context);
+    controller.initCallController(buildContext: context,widget.userJid);
   }
   @override
   Widget build(BuildContext context) {

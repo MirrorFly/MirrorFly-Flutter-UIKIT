@@ -8,9 +8,24 @@ import '../../common/constants.dart';
 import '../../model/call_user_list.dart';
 import '../outgoing_call/call_controller.dart';
 
-class OnGoingCallView extends GetView<CallController> {
-  const OnGoingCallView({super.key});
+class OnGoingCallView extends StatefulWidget {
+  const OnGoingCallView({Key? key,  required this.userJid}) : super(key: key);
 
+  final String userJid;
+
+  @override
+  State<OnGoingCallView> createState() => _OnGoingCallViewState();
+}
+
+
+class _OnGoingCallViewState extends State<OnGoingCallView> {
+  final controller = Get.put(CallController());
+
+  @override
+  void initState() {
+    super.initState();
+    controller.initCallController(buildContext: context,widget.userJid);
+  }
   @override
   Widget build(BuildContext context) {
     return WillPopScope(

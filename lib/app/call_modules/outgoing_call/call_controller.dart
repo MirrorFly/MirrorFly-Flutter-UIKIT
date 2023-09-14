@@ -37,8 +37,14 @@ class CallController extends GetxController {
 
   late BuildContext context;
 
-  void initCallController({required BuildContext buildContext}) {
+  Future<void> initCallController(String? userJid,{required BuildContext buildContext}) async {
     context = buildContext;
+    if (userJid != null && userJid != "") {
+      debugPrint("#Mirrorfly Call initCallController UserJid $userJid");
+      var data = await getProfileDetails(userJid);
+      profile(data);
+      calleeName(data.getName());
+    }
   }
 
   @override

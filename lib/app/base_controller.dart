@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:mirrorfly_plugin/logmessage.dart';
 import 'package:mirrorfly_plugin/model/call_constants.dart';
+import 'package:mirrorfly_uikit_plugin/app/call_modules/ongoing_call/ongoingcall_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
@@ -203,11 +204,11 @@ abstract class BaseController {
                 Routes.onGoingCallView, arguments: { "userJid": userJid});
           }*/
         //Need to get context here
-        /*if(MirrorflyUikit.instance.navigationManager.getCurrentRoute() != Constants.onGoingCallView){
+        if(MirrorflyUikit.instance.navigationManager.getCurrentRoute() != Constants.onGoingCallView){
           debugPrint("***opening call page");
-          MirrorflyUikit.instance.navigationManager.navigateTo(context: context,
+          MirrorflyUikit.instance.navigationManager.navigateTo(context: MirrorflyUikit.instance.globalNavigatorKey!.currentState!.context,
               pageToNavigate: OnGoingCallView(userJid: userJid), routeName: 'ongoing_call_view');
-        }*/
+        }
           break;
 
         case CallStatus.disconnected:
@@ -839,9 +840,9 @@ abstract class BaseController {
 }
 class RouteAwareController extends BaseController with RouteAware {
   void didChangeDependencies() {
-    final currentRouteName =
+    /*final currentRouteName =
         ModalRoute.of<PageRoute<dynamic>>(MirrorflyUikit.instance.navigatorKey.currentContext!)?.settings.name;
-    debugPrint("Current route: $currentRouteName");
+    debugPrint("Current route: $currentRouteName");*/
   }
 
   @override
