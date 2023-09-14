@@ -1273,7 +1273,7 @@ class _ChatViewState extends State<ChatView> {
                   onPressed: () {
                     controller.makeVideoCall();
                   },
-                  icon: SvgPicture.asset(videoCallIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.primaryColor, BlendMode.srcIn)),
+                  icon: SvgPicture.asset(shareIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.primaryColor, BlendMode.srcIn)),
                 ),
                 overflowWidget: const  Text("Video Call"),
                 showAsAction: controller.profile.isGroupProfile.checkNull() ? ShowAsAction.gone : ShowAsAction.always,
@@ -1287,7 +1287,7 @@ class _ChatViewState extends State<ChatView> {
                   onPressed: () {
                     controller.makeVoiceCall();
                   },
-                  icon: SvgPicture.asset(audioCallIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.primaryColor, BlendMode.srcIn)),
+                  icon: SvgPicture.asset(shareIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.primaryColor, BlendMode.srcIn)),
                 ),
                 overflowWidget: const Text("Call"),
                 showAsAction: controller.profile.isGroupProfile.checkNull() ? ShowAsAction.gone : ShowAsAction.always,

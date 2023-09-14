@@ -197,12 +197,17 @@ abstract class BaseController {
         case CallStatus.inviteCallTimeout:
           break;
         case CallStatus.attended:
-          //change here mani
           /*if(Get.currentRoute != Routes.onGoingCallView) {
             debugPrint("***opening cal page");
             Get.toNamed(
                 Routes.onGoingCallView, arguments: { "userJid": userJid});
           }*/
+        //Need to get context here
+        /*if(MirrorflyUikit.instance.navigationManager.getCurrentRoute() != Constants.onGoingCallView){
+          debugPrint("***opening call page");
+          MirrorflyUikit.instance.navigationManager.navigateTo(context: context,
+              pageToNavigate: OnGoingCallView(userJid: userJid), routeName: 'ongoing_call_view');
+        }*/
           break;
 
         case CallStatus.disconnected:

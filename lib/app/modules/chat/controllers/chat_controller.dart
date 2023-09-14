@@ -3001,17 +3001,23 @@ class ChatController extends FullLifeCycleController
               // Navigator.push(
               //   context,
               //   MaterialPageRoute(
-              //     builder: (context) => OutGoingCallView(userJid: profile.jid!),
+              //     builder: (context) => OutGoingCallView(userJid: profile.jid!)
               //   ),
               // ).then((value) => setOnGoingUserAvail());
 
-              try{
+              MirrorflyUikit.instance.navigationManager.navigateTo(context: context,
+                  pageToNavigate: OutGoingCallView(userJid: profile.jid!), routeName: 'outgoing_call_view',
+                  onNavigateComplete: (){
+                    setOnGoingUserAvail();
+                  });
+
+             /* try{
               MirrorflyUikit.instance.navigatorKey.currentState?.push(MaterialPageRoute(
                 builder: (context) => OutGoingCallView(userJid: profile.jid!),
               )).then((value) => setOnGoingUserAvail());
             } catch (e) {
             print("Navigation error: $e");
-            }
+            }*/
 
 
             }

@@ -10,6 +10,7 @@ import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/model/app_config.dart';
 import 'package:mirrorfly_uikit_plugin/app/model/reply_hash_map.dart';
 
+import 'app/common/NavigationManager.dart';
 import 'app/common/app_theme.dart';
 import 'app/common/main_controller.dart';
 import 'app/data/apputils.dart';
@@ -29,6 +30,9 @@ class MirrorflyUikit {
   static String theme = "light";
 
   static var instance = MirrorflyUikit();
+
+  // Initialize the NavigationManager in the constructor
+  final NavigationManager navigationManager = NavigationManager();
 
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
