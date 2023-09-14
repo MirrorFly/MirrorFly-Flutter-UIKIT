@@ -35,6 +35,12 @@ class CallController extends GetxController {
   var audioOutputType = "receiver".obs;
   var callStatus = CallStatus.calling.obs;
 
+  late BuildContext context;
+
+  void initCallController({required BuildContext buildContext}) {
+    context = buildContext;
+  }
+
   @override
   Future<void> onInit() async {
     super.onInit();
@@ -138,7 +144,8 @@ class CallController extends GetxController {
                           : const SizedBox.shrink(),
                       onTap: () {
                         if (audioOutputType.value != audioItem.type) {
-                          Get.back();
+                          // Get.back();
+                          MirrorflyUikit.instance.navigationManager.navigateBack(context: context);
                           debugPrint("selected audio item ${audioItem.type}");
                           audioOutputType(audioItem.type);
                           Mirrorfly.routeAudioTo(
@@ -200,7 +207,24 @@ class CallController extends GetxController {
         if (callList.isNotEmpty) {
           callList.clear();
         }
-        //change here mani
+        if(MirrorflyUikit.instance.navigationManager.routeHistory.isNotEmpty){
+          debugPrint("#Disconnect previous route is not empty");
+          if(MirrorflyUikit.instance.navigationManager.getCurrentRoute() == Constants.onGoingCallView){
+            debugPrint("#Disconnect current route is ongoing call view");
+            callTimer("Disconnected");
+            Future.delayed(const Duration(seconds: 1), () {
+              debugPrint("#Disconnect call controller back called");
+              MirrorflyUikit.instance.navigationManager.navigateBack(context: context);
+            });
+          } else {
+            MirrorflyUikit.instance.navigationManager.navigateBack(context: context);
+          }
+        }else{
+          //Need to check the Navigation here
+          //Get.offNamed(getInitialRoute());
+          MirrorflyUikit.instance.navigationManager.navigateBack(context: context);
+        }
+        //Code Changed to Above.
         /*if (Get.previousRoute.isNotEmpty) {
           debugPrint("#Disconnect previous route is not empty");
           if (Get.currentRoute == Routes.onGoingCallView) {
@@ -270,7 +294,21 @@ class CallController extends GetxController {
         // in iOS needs to call disconnect.
         disconnectCall();
       } else {
-        //change here mani
+        if(MirrorflyUikit.instance.navigationManager.routeHistory.isNotEmpty){
+          if(MirrorflyUikit.instance.navigationManager.getCurrentRoute() == Constants.onGoingCallView){
+            callTimer("Disconnected");
+            Future.delayed(const Duration(seconds: 1), () {
+              MirrorflyUikit.instance.navigationManager.navigateBack(context: context);
+            });
+          }else{
+            MirrorflyUikit.instance.navigationManager.navigateBack(context: context);
+          }
+        }else{
+          //Need to check the Navigation here
+          //Get.offNamed(getInitialRoute());
+          MirrorflyUikit.instance.navigationManager.navigateBack(context: context);
+        }
+        //Code Changed to above
         /*if (Get.previousRoute.isNotEmpty) {
           if (Get.currentRoute == Routes.onGoingCallView) {
             callTimer("Disconnected");
@@ -334,6 +372,7 @@ class CallController extends GetxController {
     /*Future.delayed(const Duration(milliseconds: 500), () {
       Get.offNamed(Routes.onGoingCallView, arguments: {"userJid": userJid});
     });*/
+
   }
 
   void timeout(
@@ -342,13 +381,14 @@ class CallController extends GetxController {
     // Get.back();
     // Navigator.pop(context);
     debugPrint("timeout");
-    MirrorflyUikit.instance.navigatorKey.currentState?.pop();
+    MirrorflyUikit.instance.navigationManager.navigateBack(context: context);
   }
 
   void declineCall() {
     Mirrorfly.declineCall();
     callList.clear();
-    Get.back();
+    // Get.back();
+    MirrorflyUikit.instance.navigationManager.navigateBack(context: context);
   }
 
   void statusUpdate(String userJid, String callStatus) {
@@ -440,4 +480,5 @@ class CallController extends GetxController {
   void callDuration(String timer) {
     callTimer(timer);
   }
+
 }

@@ -20,6 +20,11 @@ class OutGoingCallView extends StatefulWidget {
 class _OutGoingCallViewState extends State<OutGoingCallView> {
   final controller = Get.put(CallController());
   @override
+  void initState() {
+    super.initState();
+    controller.initCallController(buildContext: context);
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.callerBackground,
