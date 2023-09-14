@@ -16,7 +16,8 @@ Future<void> main() async {
     iOSContainerID: 'Your_iOS_app_Container_id',
   );
   isOnGoingCall = (await MirrorflyUikit.isOnGoingCall()) ?? false;
-  //if isOnGoingCall is returns True
+  //if isOnGoingCall is returns True then Navigate to OnGoingCallView() this will only for app killed state, call received via FCM
+
   // AppConstants.newGroup = "New Group Create";
   runApp(const MyApp());
 }

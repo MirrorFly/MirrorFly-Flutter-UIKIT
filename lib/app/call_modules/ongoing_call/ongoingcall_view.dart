@@ -9,9 +9,9 @@ import '../../model/call_user_list.dart';
 import '../outgoing_call/call_controller.dart';
 
 class OnGoingCallView extends StatefulWidget {
-  const OnGoingCallView({Key? key,  required this.userJid}) : super(key: key);
+  const OnGoingCallView({Key? key,  this.userJid}) : super(key: key);
 
-  final String userJid;
+  final String? userJid;
 
   @override
   State<OnGoingCallView> createState() => _OnGoingCallViewState();
