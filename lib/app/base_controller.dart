@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
-import 'package:mirrorfly_plugin/logmessage.dart';
 import 'package:mirrorfly_plugin/model/call_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/call_modules/ongoing_call/ongoingcall_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
@@ -825,7 +824,7 @@ abstract class BaseController {
         String min = minDur < 10 ? "0$minDur" : minDur.toString();
         String sec = secDur < 10 ? "0$secDur" : secDur.toString();
         var time = "$min:$sec";
-        LogMessage.d("callTimer", time);
+        // LogMessage.d("callTimer", time);
         if (Get.isRegistered<CallController>()) {
           Get.find<CallController>().callDuration(time);
         }
