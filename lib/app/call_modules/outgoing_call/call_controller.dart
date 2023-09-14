@@ -11,6 +11,7 @@ import '../../common/app_constants.dart';
 import '../../common/constants.dart';
 import '../../data/helper.dart';
 import '../../data/session_management.dart';
+import '../ongoing_call/ongoingcall_view.dart';
 
 class CallController extends GetxController {
   final RxBool isVisible = true.obs;
@@ -375,10 +376,10 @@ class CallController extends GetxController {
     // this.callStatus(callStatus);
     // getNames();
     // startTimer();
-    //change here mani
     /*Future.delayed(const Duration(milliseconds: 500), () {
       Get.offNamed(Routes.onGoingCallView, arguments: {"userJid": userJid});
     });*/
+    MirrorflyUikit.instance.navigationManager.navigatePushReplacement(context: context, pageToNavigate: OnGoingCallView(userJid: userJid), routeName: 'ongoing_call_view');
 
   }
 
