@@ -418,4 +418,5 @@ class AppConstants{
   static var otherPermissionDenied = "But they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable";
 
   static var notificationIcon = "notification_icon";
+  static var remoteEngagedToast = "is on another call";
 }

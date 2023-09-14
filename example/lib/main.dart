@@ -5,13 +5,18 @@ import 'package:mirrorfly_uikit_plugin/app/modules/notification/notification_ser
 // import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-void main() {
+var isOnGoingCall = false;
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MirrorflyUikit.instance.initUIKIT(
-      baseUrl: 'YOUR_BASE_URL',
-      licenseKey: 'Your_Mirrorfly_Licence_Key',
-      googleMapKey: 'Your_Google_Map_Key_for_location_messages',
-      iOSContainerID: 'Your_iOS_app_Container_id');
+    baseUrl: 'YOUR_BASE_URL',
+    navigatorKey:navigatorKey,
+    licenseKey: 'Your_Mirrorfly_Licence_Key',
+    googleMapKey: 'Your_Google_Map_Key_for_location_messages',
+    iOSContainerID: 'Your_iOS_app_Container_id',
+  );
+  isOnGoingCall = (await MirrorflyUikit.isOnGoingCall()) ?? false;
+  //if isOnGoingCall is returns True
   // AppConstants.newGroup = "New Group Create";
   runApp(const MyApp());
 }
@@ -32,7 +37,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      navigatorKey: navigatorKey,
+        navigatorKey: navigatorKey,
         themeMode: ThemeMode.dark,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(textTheme: GoogleFonts.latoTextTheme()),
