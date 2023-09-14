@@ -3045,12 +3045,17 @@ class ChatController extends FullLifeCycleController
           Mirrorfly.makeVideoCall(profile.jid.checkNull()).then((value) {
             if (value) {
               setOnGoingUserGone();
-              Navigator.push(
+              /*Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => OutGoingCallView(userJid: profile.jid!),
                 ),
-              ).then((value) => setOnGoingUserAvail());
+              ).then((value) => setOnGoingUserAvail());*/
+              MirrorflyUikit.instance.navigationManager.navigateTo(context: context,
+                  pageToNavigate: OutGoingCallView(userJid: profile.jid!), routeName: 'outgoing_call_view',
+                  onNavigateComplete: (){
+                    setOnGoingUserAvail();
+                  });
             }
           }).catchError((e) {
             debugPrint("#Mirrorfly Call $e");

@@ -37,7 +37,7 @@ class CallController extends GetxController {
 
   late BuildContext context;
 
-  Future<void> initCallController(String? userJid,{required BuildContext buildContext}) async {
+  Future<void> initCallController({String? userJid,required BuildContext buildContext}) async {
     context = buildContext;
     if (userJid != null && userJid != "") {
       debugPrint("#Mirrorfly Call initCallController UserJid $userJid");
@@ -51,15 +51,15 @@ class CallController extends GetxController {
   Future<void> onInit() async {
     super.onInit();
     debugPrint("#Mirrorfly Call Controller onInit");
-    var userJid = Get.arguments?["userJid"];
-    if (userJid != null && userJid != "") {
-      debugPrint("#Mirrorfly Call UserJid $userJid");
-      // var profile = await Mirrorfly.getUserProfile(userJid);
-      // var data = profileDataFromJson(profile);
-      var data = await getProfileDetails(userJid);
-      profile(data);
-      calleeName(data.getName());
-    }
+    // var userJid = Get.arguments?["userJid"];
+    // if (userJid != null && userJid != "") {
+    //   debugPrint("#Mirrorfly Call UserJid $userJid");
+    //   // var profile = await Mirrorfly.getUserProfile(userJid);
+    //   // var data = profileDataFromJson(profile);
+    //   var data = await getProfileDetails(userJid);
+    //   profile(data);
+    //   calleeName(data.getName());
+    // }
     audioDeviceChanged();
     // if (Get.currentRoute == Routes.onGoingCallView) {
     //   //startTimer();

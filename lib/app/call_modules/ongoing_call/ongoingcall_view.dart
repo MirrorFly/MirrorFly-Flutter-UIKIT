@@ -19,12 +19,13 @@ class OnGoingCallView extends StatefulWidget {
 
 
 class _OnGoingCallViewState extends State<OnGoingCallView> {
+
   final controller = Get.put(CallController());
 
   @override
   void initState() {
     super.initState();
-    controller.initCallController(buildContext: context,widget.userJid);
+    controller.initCallController(buildContext: context, userJid: widget.userJid);
   }
   @override
   Widget build(BuildContext context) {
