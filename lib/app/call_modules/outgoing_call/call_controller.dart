@@ -39,7 +39,8 @@ class CallController extends GetxController {
 
   late BuildContext context;
 
-  Future<void> initCallController({String? userJid,required BuildContext buildContext}) async {
+  Future<void> initCallController(
+      {String? userJid, required BuildContext buildContext}) async {
     context = buildContext;
     if (userJid != null && userJid != "") {
       debugPrint("#Mirrorfly Call initCallController UserJid $userJid");
@@ -120,12 +121,62 @@ class CallController extends GetxController {
     muted(!muted.value);
   }
 
-  changeSpeaker() {
+  changeSpeaker(BuildContext context) {
     // speakerOff(!speakerOff.value);
     debugPrint("availableAudioList.length ${availableAudioList.length}");
     //if connected other audio devices
     // if (availableAudioList.length > 2) {
-    Get.dialog(
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            // backgroundColor:
+            //     MirrorflyUikit.theme == "dark" ? darkPopupColor : Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Obx(() {
+                return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: availableAudioList.length,
+                    itemBuilder: (context, index) {
+                      var audioItem = availableAudioList[index];
+                      debugPrint("audio item name ${audioItem.name}");
+                      return Obx(() {
+                        return ListTile(
+                          contentPadding: const EdgeInsets.only(left: 10),
+                          title: Text(audioItem.name ?? "",
+                              style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.normal)),
+                          trailing: audioItem.type == audioOutputType.value
+                              ? const Icon(
+                                  Icons.check_outlined,
+                                  color: Colors.green,
+                                )
+                              : const SizedBox.shrink(),
+                          onTap: () {
+                            if (audioOutputType.value != audioItem.type) {
+                              // Get.back();
+                              MirrorflyUikit.instance.navigationManager
+                                  .navigateBack(context: context);
+                              debugPrint(
+                                  "selected audio item ${audioItem.type}");
+                              audioOutputType(audioItem.type);
+                              Mirrorfly.routeAudioTo(
+                                  routeType: audioItem.type ?? "");
+                            } else {
+                              LogMessage.d("routeAudioOption",
+                                  "clicked on same audio type selected");
+                            }
+                          },
+                        );
+                      });
+                    });
+              }),
+            ),
+          );
+        });
+    /* Get.dialog(
       Dialog(
         child: WillPopScope(
           onWillPop: () {
@@ -169,7 +220,7 @@ class CallController extends GetxController {
           }),
         ),
       ),
-    );
+    );*/
     // }else{
     //   //speaker or ear-piece option only available then change accordingly
     //   var speaker = availableAudioList[0];
@@ -215,22 +266,26 @@ class CallController extends GetxController {
         if (callList.isNotEmpty) {
           callList.clear();
         }
-        if(MirrorflyUikit.instance.navigationManager.routeHistory.isNotEmpty){
+        if (MirrorflyUikit.instance.navigationManager.routeHistory.isNotEmpty) {
           debugPrint("#Disconnect previous route is not empty");
-          if(MirrorflyUikit.instance.navigationManager.getCurrentRoute() == Constants.onGoingCallView){
+          if (MirrorflyUikit.instance.navigationManager.getCurrentRoute() ==
+              Constants.onGoingCallView) {
             debugPrint("#Disconnect current route is ongoing call view");
             callTimer("Disconnected");
             Future.delayed(const Duration(seconds: 1), () {
               debugPrint("#Disconnect call controller back called");
-              MirrorflyUikit.instance.navigationManager.navigateBack(context: context);
+              MirrorflyUikit.instance.navigationManager
+                  .navigateBack(context: context);
             });
           } else {
-            MirrorflyUikit.instance.navigationManager.navigateBack(context: context);
+            MirrorflyUikit.instance.navigationManager
+                .navigateBack(context: context);
           }
-        }else{
+        } else {
           //Need to check the Navigation here
           //Get.offNamed(getInitialRoute());
-          MirrorflyUikit.instance.navigationManager.navigateBack(context: context);
+          MirrorflyUikit.instance.navigationManager
+              .navigateBack(context: context);
         }
         //Code Changed to Above.
         /*if (Get.previousRoute.isNotEmpty) {
@@ -302,19 +357,23 @@ class CallController extends GetxController {
         // in iOS needs to call disconnect.
         disconnectCall();
       } else {
-        if(MirrorflyUikit.instance.navigationManager.routeHistory.isNotEmpty){
-          if(MirrorflyUikit.instance.navigationManager.getCurrentRoute() == Constants.onGoingCallView){
+        if (MirrorflyUikit.instance.navigationManager.routeHistory.isNotEmpty) {
+          if (MirrorflyUikit.instance.navigationManager.getCurrentRoute() ==
+              Constants.onGoingCallView) {
             callTimer("Disconnected");
             Future.delayed(const Duration(seconds: 1), () {
-              MirrorflyUikit.instance.navigationManager.navigateBack(context: context);
+              MirrorflyUikit.instance.navigationManager
+                  .navigateBack(context: context);
             });
-          }else{
-            MirrorflyUikit.instance.navigationManager.navigateBack(context: context);
+          } else {
+            MirrorflyUikit.instance.navigationManager
+                .navigateBack(context: context);
           }
-        }else{
+        } else {
           //Need to check the Navigation here
           //Get.offNamed(getInitialRoute());
-          MirrorflyUikit.instance.navigationManager.navigateBack(context: context);
+          MirrorflyUikit.instance.navigationManager
+              .navigateBack(context: context);
         }
         //Code Changed to above
         /*if (Get.previousRoute.isNotEmpty) {
@@ -379,8 +438,10 @@ class CallController extends GetxController {
     /*Future.delayed(const Duration(milliseconds: 500), () {
       Get.offNamed(Routes.onGoingCallView, arguments: {"userJid": userJid});
     });*/
-    MirrorflyUikit.instance.navigationManager.navigatePushReplacement(context: context, pageToNavigate: OnGoingCallView(userJid: userJid), routeName: 'ongoing_call_view');
-
+    MirrorflyUikit.instance.navigationManager.navigatePushReplacement(
+        context: context,
+        pageToNavigate: OnGoingCallView(userJid: userJid),
+        routeName: 'ongoing_call_view');
   }
 
   void timeout(
@@ -488,5 +549,4 @@ class CallController extends GetxController {
   void callDuration(String timer) {
     callTimer(timer);
   }
-
 }
