@@ -1,3 +1,7 @@
+## 0.0.13
+* Added One to One Call Feature
+* iOS SDK Optimisation
+
 ## 0.0.12
 * Added Notification Feature.
 * Modified the Audio Picker behavior for Android.

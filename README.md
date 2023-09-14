@@ -6,9 +6,10 @@
 ## Table of contents
 
 1. [Introduction](#Introduction)
-1. [Requirements](#requirements)
-1. [Integration](#Integration)
-1. [Getting help](#getting-help)
+2. [Requirements](#requirements)
+3. [Integration](#Integration)
+4. [Call Feature](#call-feature)
+5. [Getting help](#getting-help)
 
 ## Introduction
 
@@ -96,7 +97,7 @@ Goto Project -> Target -> Signing & Capabilities -> Click `+ Capability` at the 
 
 ```yaml
 dependencies:
-  mirrorfly_uikit_plugin: ^0.0.12
+  mirrorfly_uikit_plugin: ^0.0.13
 ```
 
 - Run `flutter pub get` command in your project directory.
@@ -196,6 +197,15 @@ import mirrorfly_plugin
         
     }
 ```
+
+## Call Feature
+
+> **Note**: To enable the Call Feature in iOS, need to enable VOIP as shown below.
+
+
+![Screenshot](https://www.mirrorfly.com/docs/assets/images/capabilities-voip2-1760b4b8264b2f928df4d6fb5d933b62.png)
+
+
 
 ## Getting Help
 

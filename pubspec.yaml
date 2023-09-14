@@ -1,6 +1,6 @@
 name: mirrorfly_uikit_plugin
 description: A Mirrorfly Flutter UIKit plugin to Experience an outstanding real time messaging solution. The powerful communication that adds an extra mileage to build your chat app.
-version: 0.0.12
+version: 0.0.13
 homepage: "https://www.mirrorfly.com/docs/UIKit/flutter/quick-start/"
 
 environment:
@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   get: ^4.6.5
-  mirrorfly_plugin: ^0.0.11
+  mirrorfly_plugin: ^0.0.12
   http: ^1.1.0
   plugin_platform_interface: ^2.0.2
   flutter_svg: ^2.0.7
