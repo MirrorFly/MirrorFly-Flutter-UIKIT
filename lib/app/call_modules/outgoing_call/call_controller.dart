@@ -246,9 +246,11 @@ class CallController extends GetxController {
       debugPrint("#Disconnect call disconnect value $value");
       if (value.checkNull()) {
         debugPrint("#Disconnect call disconnect list size ${callList.length}");
-        if (callList.isNotEmpty) {
+        //Commenting for iOS crash. everytime during initialisation, list is created newly. so no issues
+
+        /*if (callList.isNotEmpty) {
           callList.clear();
-        }
+        }*/
         if (MirrorflyUikit.instance.navigationManager.routeHistory.isNotEmpty) {
           debugPrint("#Disconnect previous route is not empty");
           if (MirrorflyUikit.instance.navigationManager.getCurrentRoute() ==
