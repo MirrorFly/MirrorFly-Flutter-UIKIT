@@ -73,9 +73,8 @@ class CallController extends GetxController {
         debugPrint("#Mirrorfly Call getCallUsersList");
         Mirrorfly.getCallUsersList().then((value) {
           debugPrint("#Mirrorfly call get users --> $value");
-          callList.clear();
           final callUserList = callUserListFromJson(value);
-          callList.addAll(callUserList);
+          callList(callUserList);
           getNames();
         });
       }
@@ -266,10 +265,8 @@ class CallController extends GetxController {
                 .navigateBack(context: context);
           }
         } else {
-          //Need to check the Navigation here
           //Get.offNamed(getInitialRoute());
-          MirrorflyUikit.instance.navigationManager
-              .navigateBack(context: context);
+          Navigator.pop(context,true);
         }
         //Code Changed to Above.
         /*if (Get.previousRoute.isNotEmpty) {
@@ -292,6 +289,7 @@ class CallController extends GetxController {
   }
 
   getNames() async {
+    callTitle("");
     callList.asMap().forEach((index, users) async {
       if (users.userJid == SessionManagement.getUserJID()) {
         callTitle("$callTitle You");
@@ -354,10 +352,8 @@ class CallController extends GetxController {
                 .navigateBack(context: context);
           }
         } else {
-          //Need to check the Navigation here
           //Get.offNamed(getInitialRoute());
-          MirrorflyUikit.instance.navigationManager
-              .navigateBack(context: context);
+          Navigator.pop(context,true);
         }
         //Code Changed to above
         /*if (Get.previousRoute.isNotEmpty) {
