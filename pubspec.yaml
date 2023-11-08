@@ -1,6 +1,6 @@
 name: mirrorfly_uikit_plugin
 description: A Mirrorfly Flutter UIKit plugin to Experience an outstanding real time messaging solution. The powerful communication that adds an extra mileage to build your chat app.
-version: 0.0.13
+version: 0.0.14
 homepage: "https://www.mirrorfly.com/docs/UIKit/flutter/quick-start/"
 
 environment:
@@ -14,52 +14,52 @@ dependencies:
   mirrorfly_plugin: ^0.0.12
   http: ^1.1.0
   plugin_platform_interface: ^2.0.2
-  flutter_svg: ^2.0.7
-  cached_network_image: ^3.2.3
-  file_picker: ^5.3.3 #file picker
+  flutter_svg: ^2.0.9
+  cached_network_image: ^3.3.0
+  file_picker: ^6.1.1 #file picker
   fluttertoast: ^8.2.2 #toast
   intl: ^0.18.1 #datetime
-  package_info_plus: ^4.1.0 #package info
-  image_picker: ^1.0.2
-  flutter_profile_picture: ^2.0.0
-  permission_handler: ^10.4.3
-  emoji_picker_flutter: ^1.6.1
+  package_info_plus: ^4.2.0 #package info
+  image_picker: ^1.0.4
+#  flutter_profile_picture: ^2.0.0
+  permission_handler: ^11.0.1
+  emoji_picker_flutter: ^1.6.3
   #image_cropping: ^0.0.13 #crop image
-  path_provider: ^2.1.0 #path provider
-  video_player: ^2.7.0
-  lottie: ^2.6.0
-  url_launcher: ^6.1.12 #url Launcher
-  custom_image_crop: ^0.0.10 #crop image
+  path_provider: ^2.1.1 #path provider
+  video_player: ^2.8.1
+  lottie: ^2.7.0
+  url_launcher: ^6.2.1 #url Launcher
+  custom_image_crop: ^0.0.13 #crop image
   photo_view: ^0.14.0
   fluttercontactpicker: ^4.7.0
-  audioplayers: ^5.1.0
+  audioplayers: ^5.2.0
   contacts_service: ^0.6.3
-  google_maps_flutter: ^2.4.0 #google map
-  geolocator: ^10.0.0 #geolocator
-  geocoding: ^2.1.0 #geocoder for address
+  google_maps_flutter: ^2.5.0 #google map
+  geolocator: ^10.1.0 #geolocator
+  geocoding: ^2.1.1 #geocoder for address
   focus_detector: ^2.0.1 #focus detector
-  record: ^4.4.4
+  record: ^5.0.1
   swipe_to: ^1.0.2
   flutter_keyboard_visibility: ^5.4.1
   keyboard_dismisser: ^3.0.0
   scrollable_positioned_list: ^0.3.8 #scrollable position
   marquee: ^2.2.3 # marquee text
   path: ^1.8.3
-  camera: ^0.10.5+3
+  camera: ^0.10.5+5
   internet_connection_checker: ^1.0.0+1 # connectivity check
   provider: ^6.0.5
-  photo_manager: ^2.7.1
-  oktoast: ^3.3.1
-  grouped_list: ^5.1.2
-  share_plus: ^7.1.0
+  photo_manager: ^2.7.2
+  oktoast: ^3.3.2+1
+#  grouped_list: ^5.1.2
+  share_plus: ^7.2.1
   flutter_libphonenumber: ^2.1.5
   open_file_plus: ^3.4.1
-  device_info_plus: ^9.0.3
+  device_info_plus: ^9.1.0
   flutter_switch: ^0.3.2 #switchbox
   qr_code_scanner: ^1.0.1 #qr scanner
   yaml: ^3.1.2
-  shared_preferences: ^2.2.0
-  flutter_local_notifications: ^15.1.0+1
+  shared_preferences: ^2.2.2
+  flutter_local_notifications: ^16.1.0
 
 dev_dependencies:
   flutter_test:
