@@ -82,7 +82,7 @@ class ChatController extends FullLifeCycleController
 
   late String audioSavePath;
   late String recordedAudioPath;
-  late Record record;
+  late AudioRecorder record;
 
   TextEditingController messageController = TextEditingController();
 
@@ -1843,20 +1843,21 @@ class ChatController extends FullLifeCycleController
       if (context.mounted) {
         var permission = await AppPermission.getStoragePermission(context);
         if (permission) {
-          if (await Record().hasPermission()) {
-            record = Record();
+          if (await record.hasPermission()) {
+            record = AudioRecorder();
             timerInit("00:00");
             isAudioRecording(Constants.audioRecording);
             startTimer();
             await record.start(
+              const RecordConfig(),
               path:
               "$audioSavePath/audio_${DateTime
                   .now()
                   .millisecondsSinceEpoch}.m4a",
-              ///If Change the Encode Format, kindly keep in mind to check the iOS record and send Audio.
-              encoder: AudioEncoder.aacLc,
-              bitRate: 128000,
-              samplingRate: 44100,
+              // ///If Change the Encode Format, kindly keep in mind to check the iOS record and send Audio.
+              // encoder: AudioEncoder.aacLc,
+              // bitRate: 128000,
+              // samplingRate: 44100,
             );
             Future.delayed(const Duration(seconds: 300), () {
               if (isAudioRecording.value == Constants.audioRecording) {
@@ -1877,7 +1878,7 @@ class ChatController extends FullLifeCycleController
     isUserTyping(true);
     _audioTimer?.cancel();
     _audioTimer = null;
-    await Record().stop().then((filePath) async {
+    await record.stop().then((filePath) async {
       if (File(filePath!).existsSync()) {
         recordedAudioPath = filePath;
       } else {

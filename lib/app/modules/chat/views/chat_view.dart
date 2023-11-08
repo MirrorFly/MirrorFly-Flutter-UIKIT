@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
-import 'package:grouped_list/grouped_list.dart';
+// import 'package:grouped_list/grouped_list.dart';
 import 'package:marquee/marquee.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/widgets.dart';
@@ -757,7 +757,7 @@ class _ChatViewState extends State<ChatView> {
     );
   }
 
-  Widget chatGroupedListView(List<ChatMessageModel> chatList) {
+ /* Widget chatGroupedListView(List<ChatMessageModel> chatList) {
     return GroupedListView<dynamic, String>(
       elements: chatList,
       groupBy: (element) => element['group'],
@@ -770,7 +770,7 @@ class _ChatViewState extends State<ChatView> {
       // optional
       order: GroupedListOrder.ASC, // optional
     );
-  }
+  }*/
 
   /*handleMediaUploadDownload(
       int mediaDownloadStatus, ChatMessageModel chatList) {

@@ -101,7 +101,7 @@ class MainController extends FullLifeCycleController
       flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>();
 
-      final bool? granted = await androidImplementation?.requestPermission();
+      final bool? granted = await androidImplementation?.requestNotificationsPermission();
       // setState(() {
       _notificationsEnabled = granted ?? false;
       // });
