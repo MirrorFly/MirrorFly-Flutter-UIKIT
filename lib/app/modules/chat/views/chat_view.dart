@@ -66,8 +66,8 @@ class _ChatViewState extends State<ChatView> {
               }
             },
             child: Container(
-              width: Get.width,//controller.screenWidth,
-              height: Get.height,//controller.screenHeight,
+              width: MediaQuery.of(context).size.width,//controller.screenWidth,
+              height: MediaQuery.of(context).size.height,//controller.screenHeight,
               decoration: BoxDecoration(
                 color: MirrorflyUikit.getTheme?.scaffoldColor,
                 /*image: const DecorationImage(
@@ -844,7 +844,7 @@ class _ChatViewState extends State<ChatView> {
       title: Text(controller.selectedChatList.length.toString(),style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
       actions: [
         CustomActionBarIcons(
-            availableWidth: Get.width / 2, // half the screen width
+            availableWidth: MediaQuery.of(context).size.width / 2, // half the screen width
             actionWidth: 48, // default for IconButtons
             actions: [
               // controller.getOptionStatus('Reply')
@@ -1112,7 +1112,7 @@ class _ChatViewState extends State<ChatView> {
           ),
         ),
         title: SizedBox(
-          width: (Get.width) / 1.9,
+          width: (MediaQuery.of(context).size.width) / 1.9,
           child: InkWell(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1130,7 +1130,7 @@ class _ChatViewState extends State<ChatView> {
                 Obx(() {
                   return controller.groupParticipantsName.isNotEmpty
                       ? SizedBox(
-                          width: (Get.width) * 0.90,
+                          width: (MediaQuery.of(context).size.width) * 0.90,
                           height: 15,
                           child: Marquee(
                               text:
@@ -1155,7 +1155,7 @@ class _ChatViewState extends State<ChatView> {
         ),
         actions: [
           CustomActionBarIcons(
-            availableWidth: Get.width / 2, // half the screen width
+            availableWidth: MediaQuery.of(context).size.width / 2, // half the screen width
             actionWidth: 48, // default for IconButtons
             actions: [
               CustomAction(

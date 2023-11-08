@@ -679,6 +679,9 @@ class _AudioMessageViewState extends State<AudioMessageView>
       case AppLifecycleState.detached:
         debugPrint('appLifeCycleState detached');
         break;
+      case AppLifecycleState.hidden:
+        debugPrint('appLifeCycleState hidden');
+        break;
     }
   }
 
@@ -705,7 +708,7 @@ class _AudioMessageViewState extends State<AudioMessageView>
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         color: Colors.transparent,
       ),
-      width: Get.width * 0.70,
+      width: MediaQuery.of(context).size.width * 0.70,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1460,7 +1463,7 @@ class VideoMessageView extends StatelessWidget {
     //     .size
     //     .width;
     return Container(
-      width: Get.width * 0.60,
+      width: MediaQuery.of(context).size.width * 0.60,
       padding: const EdgeInsets.all(2.0),
       child: Column(
         children: [
@@ -1770,7 +1773,7 @@ class ChatContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       constraints:
-      BoxConstraints(maxWidth: Get.width * 0.80),
+      BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.80),
       decoration: BoxDecoration(
           borderRadius: chatMessage.isMessageSentByMe
               ? const BorderRadius.only(

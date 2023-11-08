@@ -360,9 +360,10 @@ class ContactController extends FullLifeCycleController
         contactSelected(item);
       }
     } else {
-      // mirrorFlyLog("Contact Profile", item.toJson().toString());
+      mirrorFlyLog("Contact Profile", item.toJson().toString());
       // Get.toNamed(Routes.chat, arguments: item);
-      Navigator.push(context, MaterialPageRoute(builder: (con) => ChatView(jid: item.jid!,isUser: true,)));
+      mirrorFlyLog("Opening Chat JID", item.jid ?? "jid is empty");
+      Navigator.push(context, MaterialPageRoute(builder: (con) => ChatView(jid: item.jid.checkNull(),isUser: true,)));
 
     }
   }

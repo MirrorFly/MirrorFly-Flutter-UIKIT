@@ -137,13 +137,13 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                           ))
                           : ImageNetwork(
                         url: controller.profile.image.checkNull(),
-                        width: Get.width,
+                        width: MediaQuery.of(context).size.width,
                         height: 300,
                         clipOval: false,
                         errorWidget: Image.asset(
                           groupImg,package: package,
                           height: 300,
-                          width: Get.width,
+                          width: MediaQuery.of(context).size.width,
                           fit: BoxFit.fill,
                         ),
                         onTap: (){

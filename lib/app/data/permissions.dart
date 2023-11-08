@@ -54,8 +54,9 @@ class AppPermission {
     } else {
       sdkVersion = 0;
     }
-    final permission = await Permission.storage.status;
+
     if (sdkVersion < 33) {
+      final permission = await Permission.storage.status;
       if (permission != PermissionStatus.granted &&
           permission != PermissionStatus.permanentlyDenied) {
         const newPermission = Permission.storage;
@@ -64,7 +65,16 @@ class AppPermission {
               icon: filePermission,
               content: AppConstants.filePermission,appName: info.appName);
           if(deniedPopupValue) {
-            return await newPermission.request().isGranted;
+            // return await newPermission.request().isGranted;
+            var newp = await newPermission.request();
+            if (newp.isGranted) {
+              return true;
+            } else {
+
+                openAppSettings();
+                return false;
+
+            }
           }else{
             return newPermission.status.isGranted;
           }

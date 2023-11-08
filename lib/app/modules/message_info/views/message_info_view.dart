@@ -69,7 +69,7 @@ class _MessageInfoViewState extends State<MessageInfoView> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: Container(
-                      constraints: BoxConstraints(maxWidth: Get.width * 0.6),
+                      constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
                       decoration: BoxDecoration(
                           borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(10),

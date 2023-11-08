@@ -85,7 +85,7 @@ class _ChatInfoViewState extends State<ChatInfoView> {
                   centerTitle: false,
                   background: ImageNetwork(
                     url: controller.profile.image.checkNull(),
-                    width: Get.width,
+                    width: MediaQuery.of(context).size.width,
                     height: Get.height * 0.45,
                     clipOval: false,
                     errorWidget: ProfileTextImage(

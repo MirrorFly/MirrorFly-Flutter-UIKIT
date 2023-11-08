@@ -82,7 +82,7 @@ class ChatController extends FullLifeCycleController
 
   late String audioSavePath;
   late String recordedAudioPath;
-  late AudioRecorder record;
+  AudioRecorder record = AudioRecorder();
 
   TextEditingController messageController = TextEditingController();
 
@@ -955,9 +955,35 @@ class ChatController extends FullLifeCycleController
             }
             setOnGoingUserAvail();
           });
+        }else {
+          await Mirrorfly.openAudioFilePicker().then((value) {
+            if (value != null) {
+              if (checkFileUploadSize(value, Constants.mAudio)) {
+                AudioPlayer player = AudioPlayer();
+                player.setSourceDeviceFile(value);
+                player.onDurationChanged.listen((Duration duration) {
+                  mirrorFlyLog("", 'max duration: ${duration.inMilliseconds}');
+                  Future.delayed(const Duration(seconds: 1), () {
+                    filePath.value = (value);
+                    sendAudioMessage(
+                        filePath.value, false, duration.inMilliseconds.toString(), context);
+                  });
+                });
+              } else {
+                toToast("File Size should not exceed ${Constants.maxAudioFileSize} MB");
+              }
+            } else {
+              setOnGoingUserAvail();
+            }
+          }).catchError((onError) {
+            LogMessage.d("openAudioFilePicker", onError);
+            setOnGoingUserAvail();
+          });
         }
       }else{
-        await Mirrorfly.openAudioFilePicker().then((value) {
+        mirrorFlyLog("#MirrorflyUIKIT", "Permission Not Granted");
+        toToast("Storage Permission denied for Audio Pick");
+        /*await Mirrorfly.openAudioFilePicker().then((value) {
           if(value!=null){
             if (checkFileUploadSize(value, Constants.mAudio)) {
               AudioPlayer player = AudioPlayer();
@@ -977,7 +1003,7 @@ class ChatController extends FullLifeCycleController
         }).catchError((onError){
           LogMessage.d("openAudioFilePicker",onError);
           setOnGoingUserAvail();
-        });
+        });*/
       }
     });
   }
