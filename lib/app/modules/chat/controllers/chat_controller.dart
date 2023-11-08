@@ -128,6 +128,10 @@ class ChatController extends FullLifeCycleController
   bool get isTrail => MirrorflyUikit.instance.isTrialLicenceKey;
 
   final deBouncer = DeBouncer(milliseconds: 1000);
+  @override
+  void onHidden() {
+    // Your implementation here
+  }
 
   init(
     BuildContext context, {

@@ -39,6 +39,11 @@ class MediaPreviewController extends FullLifeCycleController
 
   }*/
 
+  @override
+  void onHidden() {
+    // Your implementation here
+  }
+
   void init(List<PickedAssetModel> filePath, String userName, Profile profile,
       String textMessage, bool showAdd, bool isFromGalleryPicker) {
     this.userName= userName;

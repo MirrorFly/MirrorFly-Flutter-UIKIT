@@ -39,6 +39,11 @@ class MainController extends FullLifeCycleController
   static StreamSubscription<InternetConnectionStatus>? listener;
 
   @override
+  void onHidden() {
+    // Your implementation here
+  }
+
+  @override
   Future<void> onInit() async {
     super.onInit();
     //presentPinPage();

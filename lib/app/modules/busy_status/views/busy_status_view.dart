@@ -30,6 +30,7 @@ class _BusyStatusViewState extends State<BusyStatusView> {
   @override
   void dispose() {
     Get.delete<BusyStatusController>();
+    controller.close();
     super.dispose();
   }
 

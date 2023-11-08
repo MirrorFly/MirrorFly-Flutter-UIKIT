@@ -26,6 +26,11 @@ class StatusListController extends FullLifeCycleController with FullLifeCycleMix
     count(139 - addStatusController.text.characters.length);
   }
 
+  @override
+  void onHidden() {
+    // Your implementation here
+  }
+
   void init(String status) {
     selectedStatus.value = status;
     addStatusController.text = selectedStatus.value;

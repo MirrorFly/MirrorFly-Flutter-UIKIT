@@ -70,6 +70,11 @@ class DashboardController extends FullLifeCycleController
   }*/
 
   @override
+  void onHidden() {
+    // Your implementation here
+  }
+
+  @override
   void onReady(){
     super.onReady();
     recentChats.bindStream(recentChats.stream);

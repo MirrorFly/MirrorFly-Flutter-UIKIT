@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+// import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:mirrorfly_plugin/model/status_model.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
@@ -13,7 +13,7 @@ import '../../../data/apputils.dart';
 import '../../../data/helper.dart';
 import '../../settings/views/chat_settings/chat_settings_controller.dart';
 
-class BusyStatusController extends FullLifeCycleController with FullLifeCycleMixin {
+class BusyStatusController extends GetxController with WidgetsBindingObserver{
   final busyStatus = Constants.emptyString.obs;
   var busyStatusList = List<StatusData>.empty(growable: true).obs;
   var selectedStatus = Constants.emptyString.obs;
@@ -29,6 +29,7 @@ class BusyStatusController extends FullLifeCycleController with FullLifeCycleMix
   }
 
   void init(String? status) {
+    WidgetsBinding.instance.addObserver(this);
     if(status != null) {
       selectedStatus.value = status;
       addStatusController.text = selectedStatus.value;
@@ -168,29 +169,29 @@ class BusyStatusController extends FullLifeCycleController with FullLifeCycleMix
     ], context: context);
   }
 
-  @override
-  void onDetached() {
-  }
+  // @override
+  // void onDetached() {
+  // }
+  //
+  // @override
+  // void onInactive() {
+  // }
+  //
+  // @override
+  // void onPaused() {
+  // }
 
-  @override
-  void onInactive() {
-  }
-
-  @override
-  void onPaused() {
-  }
-
-  @override
-  void onResumed() {
-    if(!KeyboardVisibilityController().isVisible) {
-      if (focusNode.hasFocus) {
-        focusNode.unfocus();
-        Future.delayed(const Duration(milliseconds: 100), () {
-          focusNode.requestFocus();
-        });
-      }
-    }
-  }
+  // @override
+  // void onResumed() {
+  //   if(!KeyboardVisibilityController().isVisible) {
+  //     if (focusNode.hasFocus) {
+  //       focusNode.unfocus();
+  //       Future.delayed(const Duration(milliseconds: 100), () {
+  //         focusNode.requestFocus();
+  //       });
+  //     }
+  //   }
+  // }
 
   void showHideEmoji(BuildContext context) {
     if (!showEmoji.value) {
@@ -204,5 +205,16 @@ class BusyStatusController extends FullLifeCycleController with FullLifeCycleMix
     });
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // This code will be executed when the app is resumed
+      debugPrint('App resumed');
+    }
+  }
+
+  void close() {
+    WidgetsBinding.instance.removeObserver(this);
+  }
 
 }

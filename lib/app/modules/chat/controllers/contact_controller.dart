@@ -42,6 +42,11 @@ class ContactController extends FullLifeCycleController
     debugPrint('controller init');
   }
 
+  @override
+  void onHidden() {
+    // Your implementation here
+  }
+
   Future<void> init(BuildContext context,{bool forward = false,List<String>? messageIds ,bool group = false,String groupjid = Constants.emptyString}) async {
     this.context=context;
     isForward(forward);

@@ -49,6 +49,11 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
     // player.stop();
     // player.dispose();
   }*/
+  @override
+  void onHidden() {
+    // Your implementation here
+  }
+
   getFavouriteMessages() {
     if(!isSelected.value) {
       isListLoading(true);
