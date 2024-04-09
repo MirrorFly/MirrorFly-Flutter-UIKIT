@@ -758,7 +758,7 @@ class ChatController extends FullLifeCycleController
 
 
   documentPickUpload(BuildContext context) {
-    AppPermission.getStoragePermission(context).then((permission) {
+    AppPermission.getStoragePermission(context: context).then((permission) {
       if (permission) {
         setOnGoingUserGone();
         FilePicker.platform.pickFiles(
@@ -1848,7 +1848,7 @@ class ChatController extends FullLifeCycleController
 
   exportChat() async {
     if (chatList.isNotEmpty) {
-      var permission = await AppPermission.getStoragePermission(context);
+      var permission = await AppPermission.getStoragePermission(context: context);
       if (permission) {
         Mirrorfly.exportChatConversationToEmail(
             jid: profile.jid.checkNull(),
@@ -1956,7 +1956,7 @@ class ChatController extends FullLifeCycleController
         : false;
     if (!busyStatus.checkNull()) {
       if (context.mounted) {
-        var permission = await AppPermission.getStoragePermission(context);
+        var permission = await AppPermission.getStoragePermission(context: context);
         if (permission) {
           if (await record.hasPermission()) {
             record = AudioRecorder();
@@ -2338,7 +2338,7 @@ class ChatController extends FullLifeCycleController
       Helper.showFeatureUnavailable(context);
       return;
     }
-    AppPermission.getStoragePermission(context).then((value) {
+    AppPermission.getStoragePermission(context: context).then((value) {
       if (value) {
         pickAudio(context);
       }

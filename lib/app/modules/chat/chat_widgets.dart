@@ -2293,7 +2293,7 @@ void uploadMedia(String messageId) async {
 void downloadMedia(BuildContext context, String messageId) async {
   if (await AppUtils.isNetConnected()) {
     if (context.mounted) {
-      AppPermission.getStoragePermission(context).then((value) {
+      AppPermission.getStoragePermission(context: context).then((value) {
         if (value) {
           debugPrint("media permission granted");
           Mirrorfly.downloadMedia(messageId: messageId);

@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
-import 'package:mirrorfly_plugin/model/user_list_model.dart';
+import 'package:mirrorfly_plugin/mirrorfly.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
-import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/extensions.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/gallery_picker/src/data/models/picked_asset_model.dart';
 import 'package:photo_view/photo_view.dart';
 
@@ -19,11 +19,10 @@ import '../controllers/media_preview_controller.dart';
 
 class MediaPreviewView extends StatefulWidget {
   const MediaPreviewView(
-      {Key? key, required this.filePath, required this.userName, required this.profile, required this.caption, required this.showAdd, this.isFromGalleryPicker = false,this.enableAppBar=true})
-      : super(key: key);
+      {super.key, required this.filePath, required this.userName, required this.profile, required this.caption, required this.showAdd, this.isFromGalleryPicker = false,this.enableAppBar=true});
   final List<PickedAssetModel> filePath;
   final String userName;
-  final Profile profile;
+  final ProfileDetails profile;
   final String caption;
   final bool showAdd;
   final bool isFromGalleryPicker;
@@ -125,11 +124,13 @@ class _MediaPreviewViewState extends State<MediaPreviewView> {
             })
           ],
         ) : null,
-        body: WillPopScope(
-          onWillPop: () {
+        body: PopScope(
+          canPop: false,
+          onPopInvoked: (didPop) {
+            if (didPop) {
+              return;
+            }
             Navigator.pop(context,"back");
-            // Get.back(result: "back");
-            return Future.value(false);
           },
           child: SafeArea(
             child: Container(
@@ -175,7 +176,7 @@ class _MediaPreviewViewState extends State<MediaPreviewView> {
                       /// selected media
                           : PageView(
                         controller: controller.pageViewController,
-                        onPageChanged: onMediaPreviewPageChanged,
+                        onPageChanged: controller.onMediaPreviewPageChanged,
                         children: [
                           ...controller.filePath.map((data) {
                             /// show image
@@ -201,35 +202,11 @@ class _MediaPreviewViewState extends State<MediaPreviewView> {
                                                 ?.primaryColor,),
                                         ),
                                   )
-                                // PhotoView.customChild(
-                                //   enablePanAlways: true,
-                                //   maxScale: 2.0,
-                                //   minScale: 1.0,
-                                //   child: Image.file(File(data.path)),
-                                // ),
                               );
                             }
 
                             /// show video
                             else {
-                              /*return AspectRatio(
-                                aspectRatio: 16.0 / 9.0,
-                                child: BetterVideoPlayer(
-                                  configuration:
-                                  const BetterVideoPlayerConfiguration(
-                                    looping: false,
-                                    autoPlay: false,
-                                    allowedScreenSleep: false,
-                                    autoPlayWhenResume: false,
-                                  ),
-                                  controller:
-                                  BetterVideoPlayerController(),
-                                  dataSource: BetterVideoPlayerDataSource(
-                                    BetterVideoPlayerDataSourceType.file,
-                                    data.path!,
-                                  ),
-                                ),
-                              );*/
                               return VideoPlayerWidget(
                                 videoPath: data.path ?? "", videoTitle: data.title ?? "Video",
                               );
@@ -332,13 +309,6 @@ class _MediaPreviewViewState extends State<MediaPreviewView> {
                                   ),
                                 ],
                               ),
-                              // SvgPicture.asset(
-                              //   rightArrow,
-                              //   width: 18,
-                              //   height: 18,
-                              //   fit: BoxFit.contain,
-                              //   color: Colors.white,
-                              // ),
                               Row(
                                 children: [
                                   const Icon(
@@ -431,7 +401,7 @@ class _MediaPreviewViewState extends State<MediaPreviewView> {
         ));
   }
 
-  void onMediaPreviewPageChanged(int value) {
+/*  void onMediaPreviewPageChanged(int value) {
     debugPrint(value.toString());
     // final deBouncer = DeBouncer(milliseconds: 200);
     // deBouncer.run(() {
@@ -443,7 +413,7 @@ class _MediaPreviewViewState extends State<MediaPreviewView> {
     //   controller.currentPageIndex(value);
     //   controller.caption.text = controller.captionMessage[value];
     // });
-  }
+  }*/
 
   Widget emojiLayout() {
     return Obx(() {
