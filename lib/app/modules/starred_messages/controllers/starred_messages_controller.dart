@@ -1,4 +1,4 @@
-import 'dart:convert';
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -7,8 +7,10 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
+import 'package:mirrorfly_plugin/model/callback.dart';
 import 'package:mirrorfly_plugin/model/user_list_model.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/extensions.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:share_plus/share_plus.dart';
@@ -100,8 +102,9 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
     final index = starredChatList.indexWhere(
             (message) => message.messageId == chatMessageModel.messageId);
     if (!index.isNegative) {
-      starredChatList[index] = chatMessageModel;
-      starredChatList.refresh();
+      starredChatList[index].mediaChatMessage?.mediaLocalStoragePath(chatMessageModel.mediaChatMessage!.mediaLocalStoragePath.value);
+      starredChatList[index].mediaChatMessage?.mediaDownloadStatus(chatMessageModel.mediaChatMessage!.mediaDownloadStatus.value);
+      starredChatList[index].mediaChatMessage?.mediaUploadStatus(chatMessageModel.mediaChatMessage!.mediaUploadStatus.value);
     }
 
     if (isSelected.value) {
@@ -213,6 +216,49 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
     selectedChatList.clear();
   }
 
+  bool getOptionStatus(String optionName) {
+    switch (optionName) {
+      case 'Reply':
+        return selectedChatList.length > 1 ? false : true;
+
+      case 'Report':
+        return selectedChatList.length > 1
+            ? false
+            : selectedChatList[0].isMessageSentByMe
+            ? false
+            : true;
+
+      case 'Message Info':
+        return selectedChatList.length > 1
+            ? false
+            : selectedChatList[0].isMessageSentByMe
+            ? true
+            : false;
+
+      case 'Share':
+        for (var chatList in selectedChatList) {
+          if (chatList.messageType == Constants.mText ||
+              chatList.messageType == Constants.mLocation ||
+              chatList.messageType == Constants.mContact) {
+            return false;
+          }
+        }
+        return true;
+
+      case 'Favourite':
+      // for (var chatList in selectedChatList) {
+      //   if (chatList.isMessageStarred) {
+      //     return true;
+      //   }
+      // }
+      // return false;
+        return selectedChatList.length > 1 ? false : true;
+
+      default:
+        return false;
+    }
+  }
+
   checkBusyStatusForForward(BuildContext context) async {
     var busyStatus = await Mirrorfly.isBusyStatusEnabled();
     if (!busyStatus.checkNull()) {
@@ -236,10 +282,13 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
               onPressed: () async {
                 // Get.back();
                 Navigator.pop(context);
-                await Mirrorfly.enableDisableBusyStatus(false);
-                if (function != null) {
-                  function();
-                }
+                await Mirrorfly.enableDisableBusyStatus(enable: false, flyCallBack: (FlyResponse response) {
+                  if(response.isSuccess) {
+                    if (function != null) {
+                      function();
+                    }
+                  }
+                });
               },
               child: Text(AppConstants.yes,style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
         ], context: context);
@@ -271,7 +320,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
 
       Navigator.push(context, MaterialPageRoute(builder: (con) => ForwardChatView(forwardMessageIds: messageIds))).then((value) {
         if (value != null) {
-          debugPrint("result of forward ==> ${(value as Profile).toJson().toString()}");
+          debugPrint("result of forward ==> ${(value as ProfileDetails).toJson().toString()}");
           Navigator.push(context, MaterialPageRoute(builder: (con) => ChatView(jid: value.jid!)));
         }
 
@@ -281,13 +330,10 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
 
   favouriteMessage() {
     for (var item in selectedChatList) {
-      Mirrorfly.updateFavouriteStatus(
-          item.messageId, item.chatUserJid, !item.isMessageStarred.value, item.messageChatType);
-      starredChatList
-          .removeWhere((element) => item.messageId == element.messageId);
+      Mirrorfly.updateFavouriteStatus(messageId: item.messageId,chatUserJid: item.chatUserJid,isFavourite: !item.isMessageStarred.value,chatType: item.messageChatType, flyCallBack: (FlyResponse response) {});
+      starredChatList.removeWhere((element) => item.messageId == element.messageId);
       if(isSearch.value){
-        searchedStarredMessageList
-            .removeWhere((element) => item.messageId == element.messageId);
+        searchedStarredMessageList.removeWhere((element) => item.messageId == element.messageId);
       }
     }
     selectedChatList.clear();
@@ -312,7 +358,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
           selectedChatList.any((element) =>
               !element.isMessageRecalled.value &&
               (element.isMediaMessage() &&
-                  element.mediaChatMessage!.mediaLocalStoragePath
+                  element.mediaChatMessage!.mediaLocalStoragePath.value
                       .checkNull()
                       .isNotEmpty))
     };
@@ -389,8 +435,23 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
               onPressed: () {
                 // Get.back();
                 Navigator.pop(context);
-                for (var item in selectedChatList) {
-                  Mirrorfly.deleteMessagesForMe(
+                // for (var item in selectedChatList) {
+                  var messageIds = selectedChatList.map((item) => item.messageId).toList();
+                  Mirrorfly.deleteMessagesForMe(jid: selectedChatList[0].chatUserJid,
+                      chatType: selectedChatList[0].messageChatType, messageIds: messageIds,
+                      isMediaDelete: isMediaDelete.value, flyCallBack: (FlyResponse response) {
+                        for (var item in messageIds) {
+                          starredChatList.removeWhere((element) => item == element.messageId);
+                          if(isSearch.value){
+                            searchedStarredMessageList
+                                .removeWhere((element) => item == element.messageId);
+                          }
+                        }
+                        isSelected(false);
+                        selectedChatList.clear();
+                      });
+
+                 /* Mirrorfly.deleteMessagesForMe(
                       item.chatUserJid,
                       item.messageChatType,
                       [item.messageId],
@@ -400,8 +461,8 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
                   if(isSearch.value){
                     searchedStarredMessageList
                         .removeWhere((element) => item.messageId == element.messageId);
-                  }
-                }
+                  }*/
+                // }
                 isSelected(false);
                 selectedChatList.clear();
               },
@@ -490,7 +551,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
   validateForForwardMessage(){
     for (var value in selectedChatList) {
       if(value.isMediaMessage()) {
-        if ((value.isMediaDownloaded() || value.isMediaUploaded()) && value.mediaChatMessage!.mediaLocalStoragePath.checkNull().isNotEmpty) {
+        if ((value.isMediaDownloaded() || value.isMediaUploaded()) && value.mediaChatMessage!.mediaLocalStoragePath.value.checkNull().isNotEmpty) {
           canBeForward(true);
         } else {
           canBeForward(false);
@@ -506,7 +567,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
   validateForShareMessage(){
     for (var value in selectedChatList) {
       if(value.isMediaMessage()) {
-        if ((value.isMediaDownloaded() || value.isMediaUploaded()) && checkFile(value.mediaChatMessage!.mediaLocalStoragePath.checkNull())) {
+        if ((value.isMediaDownloaded() || value.isMediaUploaded()) && checkFile(value.mediaChatMessage!.mediaLocalStoragePath.value.checkNull())) {
           canBeShare(true);
         } else {
           canBeShare(false);
@@ -669,10 +730,10 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
             .toLowerCase()
             .contains(filterKey.toLowerCase());
   }
-  Future<Profile> getProfile(String jid) async {
+ /* Future<Profile> getProfile(String jid) async {
     var value = await Mirrorfly.getProfileDetails(jid);
     return Profile.fromJson(json.decode(value.toString()));
-  }
+  }*/
 
   navigateMessage(ChatMessageModel starredChat, BuildContext context) {
     Navigator.push(context, MaterialPageRoute(builder: (con) => ChatView(jid: starredChat.chatUserJid, isFromStarred: true, messageId: starredChat.messageId,)));
@@ -683,8 +744,8 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
     var mediaPaths = <XFile>[];
     for(var item in selectedChatList){
       if(item.isMediaMessage()){
-        if((item.isMediaDownloaded() || item.isMediaUploaded()) && item.mediaChatMessage!.mediaLocalStoragePath.checkNull().isNotEmpty){
-          mediaPaths.add(XFile(item.mediaChatMessage!.mediaLocalStoragePath.checkNull()));
+        if((item.isMediaDownloaded() || item.isMediaUploaded()) && item.mediaChatMessage!.mediaLocalStoragePath.value.checkNull().isNotEmpty){
+          mediaPaths.add(XFile(item.mediaChatMessage!.mediaLocalStoragePath.value.checkNull()));
         }
       }
     }

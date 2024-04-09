@@ -15,7 +15,7 @@ import '../controllers/starred_messages_controller.dart';
 import '../../../models.dart';
 
 class StarredMessagesView extends StatefulWidget {
-  const StarredMessagesView({Key? key,this.enableAppBar=true}) : super(key: key);
+  const StarredMessagesView({super.key, this.enableAppBar = true});
   final bool enableAppBar;
 
   @override
@@ -38,16 +38,20 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
       onFocusGained: () {
         controller.getFavouriteMessages();
       },
-      child: WillPopScope(
-        onWillPop: () {
+      child: PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) {
+          if (didPop) {
+            return;
+          }
           if (controller.isSelected.value) {
             controller.clearAllChatSelection();
-            return Future.value(false);
+            return;
           }else if(controller.isSearch.value){
             controller.clearSearch();
-            return Future.value(false);
+            return;
           }
-          return Future.value(true);
+          Navigator.pop(context);
         },
         child: Scaffold(
             backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
@@ -114,24 +118,42 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
                             alignment: (starredChatList[index].isMessageSentByMe
                                 ? Alignment.bottomRight
                                 : Alignment.bottomLeft),
-                            child: ChatContainer(
-                              chatMessage: starredChatList[index],
+                            child: Container(
+                              constraints:
+                              BoxConstraints(maxWidth: controller.width * 0.75),
+                              decoration: BoxDecoration(
+                                  borderRadius: starredChatList[index].isMessageSentByMe
+                                      ? const BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
+                                      bottomLeft: Radius.circular(10))
+                                      : const BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
+                                      bottomRight: Radius.circular(10)),
+                                  color: (starredChatList[index].isMessageSentByMe
+                                      ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor
+                                      .color
+                                      : Colors.white),
+                                  border: starredChatList[index].isMessageSentByMe
+                                      ? Border.all(color: MirrorflyUikit.getTheme!.chatBubblePrimaryColor
+                                      .color)
+                                      : Border.all(color: MirrorflyUikit.getTheme!
+                                      .chatBubblePrimaryColor.textSecondaryColor
+                                      .withOpacity(0.2)/*chatBorderColor*/)),
                               child: Column(
                                 crossAxisAlignment:
                                 CrossAxisAlignment.start,
                                 children: [
-                                  (starredChatList[index]
-                                      .replyParentChatMessage ==
-                                      null)
-                                      ? const SizedBox.shrink()
+                                  starredChatList[index].isThisAReplyMessage ? starredChatList[index].replyParentChatMessage == null
+                                      ? messageNotAvailableWidget(starredChatList[index])
                                       : ReplyMessageHeader(
-                                      chatMessage: starredChatList[index]),
+                                      chatMessage: starredChatList[index]) : const SizedBox.shrink(),
                                   MessageContent(chatList: starredChatList,search: controller.searchedText.text.trim(),index:index, onPlayAudio: (){
                                     controller.playAudio(starredChatList[index]);
                                   },onSeekbarChange:(value){
 
-                                  },
-                                  ),
+                                  },),
                                 ],
                               ),
                             ),
