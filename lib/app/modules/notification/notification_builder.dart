@@ -14,7 +14,7 @@ import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/notification/notification_utils.dart';
 import '../../data/helper.dart';
 import '../../model/chat_message_model.dart';
-import 'notification_service.dart';
+import '../../common/notification_service.dart';
 
 class NotificationBuilder {
   NotificationBuilder._();

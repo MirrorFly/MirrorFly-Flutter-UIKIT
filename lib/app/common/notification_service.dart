@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 
-import '../../model/received_notification.dart';
+import '../model/received_notification.dart';
 
 
 

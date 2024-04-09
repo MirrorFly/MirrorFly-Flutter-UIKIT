@@ -35,7 +35,7 @@ import 'modules/chatInfo/controllers/chat_info_controller.dart';
 import 'modules/dashboard/controllers/dashboard_controller.dart';
 import 'modules/media_preview/controllers/media_preview_controller.dart';
 import 'modules/message_info/controllers/message_info_controller.dart';
-import 'modules/notification/notification_service.dart';
+import 'common/notification_service.dart';
 import 'modules/starred_messages/controllers/starred_messages_controller.dart';
 import 'modules/view_all_media/controllers/view_all_media_controller.dart';
 

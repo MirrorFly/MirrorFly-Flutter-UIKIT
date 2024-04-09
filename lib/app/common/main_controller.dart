@@ -23,7 +23,7 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../mirrorfly_uikit_plugin.dart';
 import '../modules/chatInfo/controllers/chat_info_controller.dart';
 import '../modules/notification/notification_builder.dart';
-import '../modules/notification/notification_service.dart';
+import 'notification_service.dart';
 import 'app_constants.dart';
 import 'extensions.dart';
 
