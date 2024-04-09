@@ -39,7 +39,7 @@ class _OutGoingCallViewState extends State<OutGoingCallView> {
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
           onTap: () {
-            debugPrint("clicked");
+            // debugPrint("clicked");
             controller.isVisible(!controller.isVisible.value);
           },
           child: Stack(
@@ -129,7 +129,7 @@ class _OutGoingCallViewState extends State<OutGoingCallView> {
                     ],
                   )),
                   Obx(() {
-                    debugPrint("audio item changed ${controller.audioOutputType.value}");
+                    // debugPrint("audio item changed ${controller.audioOutputType.value}");
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 50),
                       child: Row(

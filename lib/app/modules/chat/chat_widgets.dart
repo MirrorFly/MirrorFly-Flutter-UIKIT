@@ -253,7 +253,7 @@ getReplyImageHolder(BuildContext context,
       .checkNull().toUpperCase()
       : replyChatMessageModel?.messageType ?? chatMessageModel.messageType.checkNull().toUpperCase()) {
     case Constants.mImage:
-      debugPrint("reply header--> IMAGE");
+      // debugPrint("reply header--> IMAGE");
       return ClipRRect(
         borderRadius: const BorderRadius.only(
             topRight: Radius.circular(5), bottomRight: Radius.circular(5)),
@@ -328,7 +328,7 @@ getReplyImageHolder(BuildContext context,
         ),
       );
     default:
-      debugPrint("reply header--> DEFAULT");
+      // debugPrint("reply header--> DEFAULT");
       return SizedBox(
         height: size,
       );
@@ -721,9 +721,9 @@ class _AudioMessageViewState extends State<AudioMessageView>
   @override
   Widget build(BuildContext context) {
     var currentPos = 0.0;
-    debugPrint(
-        "max duration--> ${double.parse(
-            widget.chatMessage.mediaChatMessage!.mediaDuration.toString())}");
+    // debugPrint(
+    //     "max duration--> ${double.parse(
+    //         widget.chatMessage.mediaChatMessage!.mediaDuration.toString())}");
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
@@ -814,7 +814,7 @@ class _AudioMessageViewState extends State<AudioMessageView>
                             divisions: widget
                                 .chatMessage.mediaChatMessage!.mediaDuration,
                             onChanged: (double value) {
-                              debugPrint('onChanged $value');
+                              // debugPrint('onChanged $value');
                               /*setState(() {
                                 currentPos = value;
                               });*/
@@ -1819,7 +1819,7 @@ class ChatContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       constraints:
-      BoxConstraints(maxWidth: Get.width * 0.80),
+      BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.80),
       decoration: BoxDecoration(
           borderRadius: chatMessage.isMessageSentByMe
               ? const BorderRadius.only(

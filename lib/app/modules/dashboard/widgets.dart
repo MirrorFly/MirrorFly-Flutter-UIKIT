@@ -76,7 +76,7 @@ class RecentChatItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("showChatDeliveryIndicator $showChatDeliveryIndicator");
+    // debugPrint("showChatDeliveryIndicator $showChatDeliveryIndicator");
     return Container(
       color: isSelected ? MirrorflyUikit.getTheme?.textPrimaryColor.withAlpha(50) : Colors.transparent,
       child: Row(

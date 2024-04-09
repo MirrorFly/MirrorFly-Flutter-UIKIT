@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
@@ -48,7 +47,7 @@ abstract class BaseController {
     Mirrorfly.onMediaStatusUpdated.listen(onMediaStatusUpdated);
     Mirrorfly.onUploadDownloadProgressChanged.listen((event) {
       var data = json.decode(event.toString());
-      debugPrint("Media Status Onprogress changed---> flutter $data");
+      // debugPrint("Media Status Onprogress changed---> flutter $data");
       var messageId = data["message_id"] ?? "";
       var progressPercentage = data["progress_percentage"] ?? 0;
       onUploadDownloadProgressChanged(messageId, progressPercentage.toString());
@@ -219,13 +218,13 @@ abstract class BaseController {
           break;
         case CallStatus.attended:
           if (MirrorflyUikit.instance.navigationManager.getCurrentRoute() != Constants.callTimeOutView) {
-            debugPrint("onCallStatusUpdated Inside Get.back");
+            // debugPrint("onCallStatusUpdated Inside Get.back");
             Navigator.pop(MirrorflyUikit.instance.globalNavigatorKey!.currentState!.context);
           }
           //Need to get context here
           if (MirrorflyUikit.instance.navigationManager.getCurrentRoute() != Constants.onGoingCallView &&
               MirrorflyUikit.instance.navigationManager.getCurrentRoute() != Constants.participantView) {
-            debugPrint("***opening call page");
+            // debugPrint("***opening call page");
             MirrorflyUikit.instance.navigationManager.navigateTo(
                 context: MirrorflyUikit.instance.globalNavigatorKey!.currentState!.context,
                 pageToNavigate: OnGoingCallView(userJid: [userJid]),

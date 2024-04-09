@@ -113,7 +113,7 @@ class AppUtils{
       // Get dimensions
       final int width = image.width;
       final int height = image.height;
-      debugPrint('Image dimensions: $width x $height');
+      // debugPrint('Image dimensions: $width x $height');
       return Tuple2(width,height);
     } catch (e) {
       debugPrint('Error: $e');

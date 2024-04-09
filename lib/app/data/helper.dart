@@ -284,9 +284,9 @@ class Helper {
 bool checkFileUploadSize(String path, String mediaType) {
   var file = File(path);
   int sizeInBytes = file.lengthSync();
-  debugPrint("file size --> $sizeInBytes");
+  // debugPrint("file size --> $sizeInBytes");
   double sizeInMb = sizeInBytes / (1024 * 1024);
-  debugPrint("sizeInBytes $sizeInMb");
+  // debugPrint("sizeInBytes $sizeInMb");
 
   // debugPrint(getFileSizeText(sizeInBytes.toString()));
 
@@ -344,7 +344,7 @@ String getDateFromTimestamp(int convertedTime, String format) {
 
 
 Future<ProfileDetails> getProfileDetails(String jid) async {
-  debugPrint("getProfileDetails jid $jid");
+  // debugPrint("getProfileDetails jid $jid");
   var value = await Mirrorfly.getProfileDetails(jid: jid.checkNull());
   // var profile = profiledata(value.toString());
   // var profile = await compute(profiledata, value.toString());
@@ -757,8 +757,8 @@ void showQuickProfilePopup(
                 child: InkWell(
                   onTap: () {
                     mirrorFlyLog('image click', 'true');
-                    debugPrint(
-                        "quick profile click--> ${profile.toJson().toString()}");
+                    // debugPrint(
+                    //     "quick profile click--> ${profile.toJson().toString()}");
                     if (profile.value.image!.isNotEmpty &&
                         !(profile.value.isBlockedMe.checkNull() ||
                             profile.value.isAdminBlocked.checkNull()) &&
@@ -957,8 +957,8 @@ String getDocAsset(String filename) {
   if (filename.isEmpty || !filename.contains(".")) {
     return "";
   }
-  debugPrint(
-      "helper document--> ${filename.toLowerCase().substring(filename.lastIndexOf(".") + 1)}");
+  // debugPrint(
+  //     "helper document--> ${filename.toLowerCase().substring(filename.lastIndexOf(".") + 1)}");
   switch (filename.toLowerCase().substring(filename.lastIndexOf(".") + 1)) {
     case "csv":
       return csvImage;

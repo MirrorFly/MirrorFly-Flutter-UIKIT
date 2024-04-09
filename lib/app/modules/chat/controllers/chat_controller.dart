@@ -159,7 +159,7 @@ class ChatController extends FullLifeCycleController
     var userJid = SessionManagement.getChatJid().checkNull();
     if (jid != null) {
       nJid = jid;
-      debugPrint("parameter :$jid");
+      // debugPrint("parameter :$jid");
       if (nJid != null) {
         userJid = jid;
       }
@@ -168,7 +168,7 @@ class ChatController extends FullLifeCycleController
       }
     }
 
-    debugPrint('userJid $userJid');
+    // debugPrint('userJid $userJid');
     //make unreadMessageTypeMessageId
     if (Platform.isAndroid) {
       unreadMessageTypeMessageId = "M$userJid";
@@ -225,7 +225,7 @@ class ChatController extends FullLifeCycleController
 
   void getAvailableFeatures() {
     Mirrorfly.getAvailableFeatures().then((features) {
-      debugPrint("getAvailableFeatures $features");
+      // debugPrint("getAvailableFeatures $features");
       var featureAvailable = availableFeaturesFromJson(features);
       updateAvailableFeature(featureAvailable);
     });
@@ -256,7 +256,7 @@ class ChatController extends FullLifeCycleController
     });
 
     itemPositionsListener.itemPositions.addListener(() {
-      debugPrint('scrolled : ${findTopFirstVisibleItemPosition()}');
+      // debugPrint('scrolled : ${findTopFirstVisibleItemPosition()}');
       // j=findLastVisibleItemPosition();
     });
     newitemPositionsListener.itemPositions.addListener(() {
@@ -272,8 +272,8 @@ class ChatController extends FullLifeCycleController
     SessionManagement.setCurrentChatJID(profile.jid.checkNull());
     _loadMessages();
     // compute(getChatHistory, profile.jid);
-    debugPrint("==================");
-    debugPrint(profile.image);
+    // debugPrint("==================");
+    // debugPrint(profile.image);
     setOnGoingUserAvail();
   }
 
@@ -521,7 +521,7 @@ class ChatController extends FullLifeCycleController
                 flyCallBack: (FlyResponse response) {
                   if (response.isSuccess) {
 
-                    debugPrint(response.toString());
+                    // debugPrint(response.toString());
                     profile.isBlocked = false;
                     isBlocked(false);
                     Helper.hideLoading(context: context);
@@ -687,9 +687,9 @@ class ChatController extends FullLifeCycleController
   showStarredMessage() {
     Future.delayed(const Duration(milliseconds: 200), () {
       if (starredChatMessageId != null) {
-        debugPrint('starredChatMessageId $starredChatMessageId');
+        // debugPrint('starredChatMessageId $starredChatMessageId');
         var chat = chatList.indexWhere((element) => element.messageId == starredChatMessageId);
-        debugPrint('chat $chat');
+        // debugPrint('chat $chat');
         if (!chat.isNegative) {
           navigateToMessage(chatList[chat]);
           starredChatMessageId = null;
@@ -703,7 +703,7 @@ class ChatController extends FullLifeCycleController
 
   sendImageMessage(String? path, String? caption, String? replyMessageID,
       BuildContext context) async {
-    debugPrint("Path ==> $path");
+    // debugPrint("Path ==> $path");
     var busyStatus = !profile.isGroupProfile.checkNull()
         ? await Mirrorfly.isBusyStatusEnabled()
         : false;
@@ -919,11 +919,11 @@ class ChatController extends FullLifeCycleController
 
   sendContactMessage(List<String> contactList, String contactName,
       BuildContext context) async {
-    debugPrint("sendingName--> $contactName");
+    // debugPrint("sendingName--> $contactName");
     var busyStatus = !profile.isGroupProfile.checkNull()
         ? await Mirrorfly.isBusyStatusEnabled()
         : false;
-    debugPrint("sendContactMessage busyStatus--> $busyStatus");
+    // debugPrint("sendContactMessage busyStatus--> $busyStatus");
     if (!busyStatus.checkNull()) {
       debugPrint("busy status not enabled");
       var replyMessageId = Constants.emptyString;
@@ -941,7 +941,7 @@ class ChatController extends FullLifeCycleController
           flyCallback: (response) {
             if (response.isSuccess) {
               mirrorFlyLog("contact message", response.data.toString());
-              debugPrint("response--> ${response.data}");
+              // debugPrint("response--> ${response.data}");
               scrollToBottom();
               updateLastMessage(response.data);
             } else {

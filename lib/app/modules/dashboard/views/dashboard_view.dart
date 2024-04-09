@@ -441,135 +441,136 @@ class _DashboardViewState extends State<DashboardView> {
                     ),
                   )
                 : SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Visibility(
-                          visible: controller.archivedChats.isNotEmpty &&
-                              controller.archiveSettingEnabled.value /*&& controller.archivedCount.isNotEmpty*/,
-                          child: ListItem(
-                            leading: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: SvgPicture.asset(
-                                archive,
-                                package: package,
-                                colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),
-                              ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Visibility(
+                        visible: controller.archivedChats.isNotEmpty &&
+                            controller.archiveSettingEnabled.value /*&& controller.archivedCount.isNotEmpty*/,
+                        child: ListItem(
+                          leading: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: SvgPicture.asset(
+                              archive,
+                              package: package,
+                              colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),
                             ),
-                            title: Text(
-                              AppConstants.archived,
-                              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16, color: MirrorflyUikit.getTheme?.textPrimaryColor),
-                            ),
-                            trailing: controller.archivedCount != "0"
-                                ? Text(
-                                    controller.archivedCount,
-                                    style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor ?? buttonBgColor),
-                                  )
-                                : null,
-                            dividerPadding: EdgeInsets.zero,
-                            onTap: () {
-                              // Get.toNamed(Routes.archivedChats);
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (con) => ArchivedChatListView(
-                                            showChatDeliveryIndicator: widget.showChatDeliveryIndicator,
-                                          )));
-                            },
                           ),
-                        ),
-                        Expanded(child: Obx(() {
-                          return controller.recentChatLoading.value
-                              ? const Center(
-                                  child: CircularProgressIndicator(),
+                          title: Text(
+                            AppConstants.archived,
+                            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16, color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                          ),
+                          trailing: controller.archivedCount != "0"
+                              ? Text(
+                                  controller.archivedCount,
+                                  style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor ?? buttonBgColor),
                                 )
-                              : ListView.builder(
-                                  padding: EdgeInsets.zero,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: controller.recentChats.length + 2,
-                                  shrinkWrap: true,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    if (index < controller.recentChats.length) {
-                                      var item = controller.recentChats[index];
-                                      return Obx(() {
-                                        return RecentChatItem(
-                                          item: item,
-                                          isSelected: controller.isSelected(index),
-                                          typingUserid: controller.typingUser(item.jid.checkNull()),
+                              : null,
+                          dividerPadding: EdgeInsets.zero,
+                          onTap: () {
+                            // Get.toNamed(Routes.archivedChats);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (con) => ArchivedChatListView(
                                           showChatDeliveryIndicator: widget.showChatDeliveryIndicator,
-                                          onTap: () {
-                                            if (controller.selected.value) {
-                                              controller.selectOrRemoveChatfromList(index);
-                                            } else {
-                                              controller.toChatPage(context, item.jid.checkNull());
-                                            }
-                                          },
-                                          onLongPress: widget.enableAppBar
-                                              ? () {
-                                                  controller.selected(true);
-                                                  controller.selectOrRemoveChatfromList(index);
-                                                }
-                                              : null,
-                                          onAvatarClick: () {
-                                            controller.getProfileDetail(context, item, index);
-                                          },
-                                        );
-                                      });
-                                    } else if (index == controller.recentChats.length) {
-                                      // Display loading indicator
-                                      return Obx(() {
-                                        return controller.isRecentHistoryLoading.value
-                                            ? const Padding(
-                                                padding: EdgeInsets.all(8.0),
-                                                child: Center(
-                                                  child: SizedBox(width: 24, height: 24, child: CircularProgressIndicator()),
-                                                ),
-                                              )
-                                            : const SizedBox.shrink();
-                                      });
-                                    } else {
-                                      return Obx(() {
-                                        return Visibility(
-                                          visible: controller.archivedChats.isNotEmpty &&
-                                              !controller.archiveSettingEnabled.value /*&& controller.archivedCount.isNotEmpty*/,
-                                          child: ListItem(
-                                            leading: Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                              child: SvgPicture.asset(
-                                                archive,
-                                                package: package,
-                                                colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),
+                                        )));
+                          },
+                        ),
+                      ),
+                      Obx(() {
+                        return controller.recentChatLoading.value
+                            ? const Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : ListView.builder(
+                                padding: EdgeInsets.zero,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: controller.recentChats.length + 2,
+                                shrinkWrap: true,
+                                itemBuilder: (BuildContext context, int index) {
+                                  if (index < controller.recentChats.length) {
+                                    var item = controller.recentChats[index];
+                                    return Obx(() {
+                                      return RecentChatItem(
+                                        item: item,
+                                        isSelected: controller.isSelected(index),
+                                        typingUserid: controller.typingUser(item.jid.checkNull()),
+                                        showChatDeliveryIndicator: widget.showChatDeliveryIndicator,
+                                        onTap: () {
+                                          if (controller.selected.value) {
+                                            controller.selectOrRemoveChatfromList(index);
+                                          } else {
+                                            controller.toChatPage(context, item.jid.checkNull());
+                                          }
+                                        },
+                                        onLongPress: widget.enableAppBar
+                                            ? () {
+                                                controller.selected(true);
+                                                controller.selectOrRemoveChatfromList(index);
+                                              }
+                                            : null,
+                                        onAvatarClick: () {
+                                          controller.getProfileDetail(context, item, index);
+                                        },
+                                      );
+                                    });
+                                  } else if (index == controller.recentChats.length) {
+                                    // Display loading indicator
+                                    return Obx(() {
+                                      return controller.isRecentHistoryLoading.value
+                                          ? const Padding(
+                                              padding: EdgeInsets.all(8.0),
+                                              child: Center(
+                                                child: SizedBox(width: 24, height: 24, child: CircularProgressIndicator()),
                                               ),
+                                            )
+                                          : const SizedBox.shrink();
+                                    });
+                                  } else {
+                                    return Obx(() {
+                                      return Visibility(
+                                        visible: controller.archivedChats.isNotEmpty &&
+                                            !controller.archiveSettingEnabled.value /*&& controller.archivedCount.isNotEmpty*/,
+                                        child: ListItem(
+                                          leading: Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                            child: SvgPicture.asset(
+                                              archive,
+                                              package: package,
+                                              colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),
                                             ),
-                                            title: Text(
-                                              AppConstants.archived,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w700, fontSize: 16, color: MirrorflyUikit.getTheme?.textPrimaryColor),
-                                            ),
-                                            trailing: controller.archivedChats.isNotEmpty
-                                                ? Text(
-                                                    controller.archivedChats.length.toString(),
-                                                    style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor ?? buttonBgColor),
-                                                  )
-                                                : null,
-                                            dividerPadding: EdgeInsets.zero,
-                                            onTap: () {
-                                              // Get.toNamed(Routes.archivedChats);
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (con) => ArchivedChatListView(
-                                                            showChatDeliveryIndicator: widget.showChatDeliveryIndicator,
-                                                          )));
-                                            },
                                           ),
-                                        );
-                                      });
-                                    }
-                                  });
-                        })),
-                      ],
-                    ),
-                  );
+                                          title: Text(
+                                            AppConstants.archived,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700, fontSize: 16, color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                                          ),
+                                          trailing: controller.archivedChats.isNotEmpty
+                                              ? Text(
+                                                  controller.archivedChats.length.toString(),
+                                                  style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor ?? buttonBgColor),
+                                                )
+                                              : null,
+                                          dividerPadding: EdgeInsets.zero,
+                                          onTap: () {
+                                            // Get.toNamed(Routes.archivedChats);
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (con) => ArchivedChatListView(
+                                                          showChatDeliveryIndicator: widget.showChatDeliveryIndicator,
+                                                        )));
+                                          },
+                                        ),
+                                      );
+                                    });
+                                  }
+                                });
+                      }),
+                    ],
+                  ),
+                );
   }
 
   Widget recentSearchView(BuildContext context) {

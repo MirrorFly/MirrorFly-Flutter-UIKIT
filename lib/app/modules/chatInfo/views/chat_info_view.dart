@@ -44,7 +44,7 @@ class _ChatInfoViewState extends State<ChatInfoView> {
       body: widget.enableAppBar ? NestedScrollView(
         controller: controller.scrollController,
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          controller.silverBarHeight = Get.height * 0.45;
+          controller.silverBarHeight = MediaQuery.of(context).size.height * 0.45;
           return <Widget>[
             Obx(() {
               return SliverAppBar(
