@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/extensions.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/controllers/forwardchat_controller.dart';
 
@@ -11,8 +12,7 @@ import '../../../common/widgets.dart';
 import '../../dashboard/widgets.dart';
 
 class ForwardChatView extends StatefulWidget {
-  const ForwardChatView({Key? key, required this.forwardMessageIds, this.enableAppBar=true})
-      : super(key: key);
+  const ForwardChatView({super.key, required this.forwardMessageIds, this.enableAppBar=true});
   final List<String> forwardMessageIds;
   final bool enableAppBar;
   @override
@@ -125,7 +125,7 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                                           item.jid.checkNull(),
                                           getRecentName(
                                               item) /*item.profileName.checkNull()*/,
-                                          item.isBlocked.checkNull(),
+                                          item.isBlocked.checkNull(),item.isGroup.checkNull(),
                                           context);
                                     },
                                     spanTxt:
@@ -139,7 +139,7 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                                           item.jid.checkNull(),
                                           getRecentName(
                                               item) /*item.profileName.checkNull()*/,
-                                          item.isBlocked.checkNull(),
+                                          item.isBlocked.checkNull(),item.isGroup.checkNull(),
                                           context);
                                     }),
                               );
@@ -179,7 +179,7 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                                                   item.jid.checkNull(),
                                                   getName(
                                                       item) /*item.name.checkNull()*/,
-                                                  item.isBlocked.checkNull(),
+                                                  item.isBlocked.checkNull(),item.isGroupProfile.checkNull(),
                                                   context);
                                             },
                                             isCheckBoxVisible: true,
@@ -190,7 +190,7 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                                                   item.jid.checkNull(),
                                                   getName(
                                                       item) /*item.name.checkNull()*/,
-                                                  item.isBlocked.checkNull(),
+                                                  item.isBlocked.checkNull(),item.isGroupProfile.checkNull(),
                                                   context);
                                             },
                                             blocked: item.isBlockedMe
@@ -202,7 +202,7 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                                           ),
                                         );
                                       } else {
-                                        return const SizedBox();
+                                        return const Offstage();
                                       }
                                     }
                                   });
@@ -265,7 +265,7 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                                                 item.jid.checkNull(),
                                                 getName(
                                                     item) /*item.name.checkNull()*/,
-                                                item.isBlocked.checkNull(),
+                                                item.isBlocked.checkNull(),item.isGroupProfile.checkNull(),
                                                 context);
                                           },
                                           isCheckBoxVisible: true,
@@ -276,7 +276,7 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                                                 item.jid.checkNull(),
                                                 getName(
                                                     item) /*item.name.checkNull()*/,
-                                                item.isBlocked.checkNull(),
+                                                item.isBlocked.checkNull(),item.isGroupProfile.checkNull(),
                                                 context);
                                           },
                                           blocked: item.isBlockedMe
