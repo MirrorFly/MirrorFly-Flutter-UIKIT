@@ -11,7 +11,7 @@ import '../settings_widgets.dart';
 import 'datausage/datausage_list_view.dart';
 
 class ChatSettingsView extends StatelessWidget {
-  ChatSettingsView({Key? key,this.enableAppBar=true}) : super(key: key);
+  ChatSettingsView({super.key,this.enableAppBar=true});
   final bool enableAppBar;
   final controller = Get.put(ChatSettingsController());
 

@@ -34,15 +34,15 @@ class DataUsageController extends GetxController{
   @override
   void onInit() async{
     super.onInit();
-    _autoDownloadMobilePhoto(await Mirrorfly.getMediaSetting(0,"Photos"));
-    _autoDownloadMobileVideo(await Mirrorfly.getMediaSetting(0,"Videos"));
-    _autoDownloadMobileAudio(await Mirrorfly.getMediaSetting(0,"Audio"));
-    _autoDownloadMobileDocument(await Mirrorfly.getMediaSetting(0,"Documents"));
+    _autoDownloadMobilePhoto(await Mirrorfly.getMediaSetting(networkType : 0, type: "Photos"));
+    _autoDownloadMobileVideo(await Mirrorfly.getMediaSetting(networkType : 0, type: "Videos"));
+    _autoDownloadMobileAudio(await Mirrorfly.getMediaSetting(networkType : 0, type: "Audio"));
+    _autoDownloadMobileDocument(await Mirrorfly.getMediaSetting(networkType : 0, type: "Documents"));
 
-    _autoDownloadWifiPhoto(await Mirrorfly.getMediaSetting(1,"Photos"));
-    _autoDownloadWifiVideo(await Mirrorfly.getMediaSetting(1,"Videos"));
-    _autoDownloadWifiAudio(await Mirrorfly.getMediaSetting(1,"Audio"));
-    _autoDownloadWifiDocument(await Mirrorfly.getMediaSetting(1,"Documents"));
+    _autoDownloadWifiPhoto(await Mirrorfly.getMediaSetting(networkType : 1, type: "Photos"));
+    _autoDownloadWifiVideo(await Mirrorfly.getMediaSetting(networkType : 1, type: "Videos"));
+    _autoDownloadWifiAudio(await Mirrorfly.getMediaSetting(networkType : 1, type: "Audio"));
+    _autoDownloadWifiDocument(await Mirrorfly.getMediaSetting(networkType : 1, type: "Documents"));
   }
 
   void selectMedia(String item){
@@ -103,8 +103,35 @@ class DataUsageController extends GetxController{
     saveDataUsageSettings();
   }
 
+  RxBool getItem(String item,String type){
+    if(item==mobile){
+      switch(type){
+        case Constants.photo:
+          return _autoDownloadMobilePhoto;
+        case Constants.audio:
+          return _autoDownloadMobileAudio;
+        case Constants.video:
+          return _autoDownloadMobileVideo;
+        case Constants.document:
+          return _autoDownloadMobileDocument;
+      }
+    }else if(item==wifi){
+      switch(type){
+        case Constants.photo:
+          return _autoDownloadWifiPhoto;
+        case Constants.audio:
+          return _autoDownloadWifiAudio;
+        case Constants.video:
+          return _autoDownloadWifiVideo;
+        case Constants.document:
+          return _autoDownloadWifiDocument;
+      }
+    }
+    return false.obs;
+  }
+
   saveDataUsageSettings(){
-    Mirrorfly.saveMediaSettings(autoDownloadMobilePhoto, autoDownloadMobileVideo, autoDownloadMobileAudio, autoDownloadMobileDocument, 0);
-    Mirrorfly.saveMediaSettings(autoDownloadWifiPhoto, autoDownloadWifiVideo, autoDownloadWifiAudio, autoDownloadWifiDocument, 1);
+    Mirrorfly.saveMediaSettings(photos: autoDownloadMobilePhoto, videos: autoDownloadMobileVideo, audios: autoDownloadMobileAudio, documents: autoDownloadMobileDocument, networkType: 0);
+    Mirrorfly.saveMediaSettings(photos: autoDownloadWifiPhoto, videos: autoDownloadWifiVideo, audios: autoDownloadWifiAudio, documents : autoDownloadWifiDocument, networkType: 1);
   }
 }

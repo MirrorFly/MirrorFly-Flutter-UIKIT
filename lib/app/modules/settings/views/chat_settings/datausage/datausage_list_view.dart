@@ -8,7 +8,7 @@ import '../../../../../../mirrorfly_uikit_plugin.dart';
 import 'datausage_controller.dart';
 
 class DataUsageListView extends StatefulWidget {
-  const DataUsageListView({Key? key,this.enableAppBar=true}) : super(key: key);
+  const DataUsageListView({super.key,this.enableAppBar=true});
   final bool enableAppBar;
   @override
   State<DataUsageListView> createState() => _DataUsageListViewState();
@@ -16,10 +16,17 @@ class DataUsageListView extends StatefulWidget {
 
 class _DataUsageListViewState extends State<DataUsageListView> {
   final controller = Get.put(DataUsageController());
+
   @override
   void initState() {
-    Get.delete<DataUsageController>();
     super.initState();
+  }
+
+
+  @override
+  void dispose() {
+    super.dispose();
+    Get.delete<DataUsageController>();
   }
 
   @override
@@ -27,7 +34,7 @@ class _DataUsageListViewState extends State<DataUsageListView> {
     return Scaffold(
         backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
         appBar:widget.enableAppBar ?  AppBar(
-          title: Text('Data Usage Settings', style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar)),
+          title: Text(AppConstants.dataUsageSettings, style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar)),
           automaticallyImplyLeading: true,
           iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
           backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
@@ -136,10 +143,6 @@ class _DataUsageListViewState extends State<DataUsageListView> {
                     )),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  // child: SvgPicture.asset(
-                  //   on ? tickRoundBlue : tickRound,package: package,
-                  //   // color: on ? MirrorflyUikit.getTheme!.primaryColor : Colors.grey,
-                  // ),
                   child: on ? Icon(Icons.check_circle_rounded, color: MirrorflyUikit.getTheme?.primaryColor, size: 20,) :
                   const Icon(Icons.check_circle_rounded, color: Colors.grey, size: 20,),
                 ),
