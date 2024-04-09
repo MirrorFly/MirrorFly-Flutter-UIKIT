@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/extensions.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/widgets.dart';
-import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/profile/controllers/status_controller.dart';
 
 import '../../../../mirrorfly_uikit_plugin.dart';
@@ -11,7 +11,7 @@ import '../../../common/constants.dart';
 import 'add_status_view.dart';
 
 class StatusListView extends StatefulWidget {
-  const StatusListView({Key? key, required this.status,this.enableAppBar=true}) : super(key: key);
+  const StatusListView({super.key, required this.status,this.enableAppBar=true});
   final bool enableAppBar;
   final String status;
 
@@ -38,11 +38,14 @@ class _StatusListViewState extends State<StatusListView> {
         iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
         backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
       ):null,
-      body: WillPopScope(
-        onWillPop: () {
-          // Get.back(result: controller.selectedStatus.value);
-          Navigator.pop(context, controller.selectedStatus.value);
-          return Future.value(false);
+        // Navigator.pop(context, controller.selectedStatus.value);
+      body: PopScope(
+        canPop: false,
+        onPopInvoked: (didPop){
+          if (didPop) {
+            return;
+          }
+          controller.onBackPressed(context, controller.selectedStatus.value);
         },
         child: Container(
           padding: const EdgeInsets.all(
@@ -70,13 +73,6 @@ class _StatusListViewState extends State<StatusListView> {
                     colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn)
                   ),
                   onTap: () async {
-                    // Get.to(const AddStatusView(), arguments: {
-                    //   "status": controller.selectedStatus.value
-                    // })?.then((value) {
-                    //   if (value != null) {
-                    //     controller.insertStatus();
-                    //   }
-                    // });
                     final result = await Navigator.push(context, MaterialPageRoute(builder: (con)=> AddStatusView(status: controller.selectedStatus.value)));
                     if (result != null) {
                       if(context.mounted)controller.insertStatus(context);

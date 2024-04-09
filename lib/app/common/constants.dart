@@ -846,6 +846,10 @@ class Constants {
   static const String removeFromCallLog = "Remove from call log";
   static const String callInfo = "Call Info";
 
+  static const String profileImageRemoveFailed = "Error while removing profile image";
+  static const String profileImageUpdateFailed = "Error while updating profile image";
+
+
 }
 
 Widget forMessageTypeIcon(String messageType,[MediaChatMessage? mediaChatMessage]) {

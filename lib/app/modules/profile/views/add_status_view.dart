@@ -9,7 +9,7 @@ import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
 
 class AddStatusView extends StatefulWidget {
-  const AddStatusView({Key? key, required this.status,this.enableAppBar=true}) : super(key: key);
+  const AddStatusView({super.key, required this.status,this.enableAppBar=true});
   final bool enableAppBar;
   final String status;
   @override
@@ -36,15 +36,17 @@ class _AddStatusViewState extends State<AddStatusView> {
         iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
         backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
       ) : null,
-      body: WillPopScope(
-        onWillPop: () {
+      body: PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) {
+          if (didPop) {
+            return;
+          }
           if (controller.showEmoji.value) {
             controller.showEmoji(false);
           } else {
-            // Get.back();
-            Navigator.pop(context);
+            controller.onBackPressed(context);
           }
-          return Future.value(false);
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,7 +122,7 @@ class _AddStatusViewState extends State<AddStatusView> {
             Row(children: [
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () =>  Navigator.pop(context),
+                  onPressed: () =>  controller.onBackPressed(context),
                   style: ElevatedButton.styleFrom(
                       backgroundColor: MirrorflyUikit.getTheme?.secondaryColor,
                       shape: const RoundedRectangleBorder(
@@ -159,9 +161,9 @@ class _AddStatusViewState extends State<AddStatusView> {
     return Obx(() {
       if (controller.showEmoji.value) {
         return EmojiLayout(
-            textController: controller.addStatusController,
-            onBackspacePressed: () => controller.onChanged(),
-            onEmojiSelected: (cat, emoji) => controller.onChanged());
+            textController: TextEditingController(),
+            onBackspacePressed: () => controller.onEmojiBackPressed(),
+            onEmojiSelected: (cat, emoji) => controller.onEmojiSelected(emoji));
       } else {
         return const SizedBox.shrink();
       }
