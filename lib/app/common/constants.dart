@@ -341,6 +341,7 @@ mirrorFlyLog(String tag, String msg) {
 class Constants {
   static const bool enableContactSync = false;
   static const bool enableTopic = false;
+  static const String topicId = enableTopic ? "5d3788c1-78ef-4158-a92b-a48f092da0b9" : "";//Mirrorfly Topic id
   static const String package = 'com.mirrorfly.uikit_flutter';
   static const String webChatLogin = 'https://webchat-uikit-qa.contus.us/';
   static const String tag = 'Contus Fly';
@@ -541,10 +542,10 @@ class Constants {
   static const String privacyPolicy =
       "https://www.mirrorfly.com/privacy-policy.php";
 
-  static const maxAudioFileSize = 30;
-  static const maxVideoFileSize = 30;
-  static const maxImageFileSize = 10;
-  static const maxDocFileSize = 20;
+  static const maxAudioFileSize = 2 * 1024;//30;
+  static const maxVideoFileSize = 2 * 1024;//30;
+  static const maxImageFileSize = 2 * 1024;//10;
+  static const maxDocFileSize = 2 * 1024;//20;
 
   static const mobileImageMaxWidth = 250;
   static const mobileImageMinWidth = 210;
@@ -553,7 +554,7 @@ class Constants {
 
   static const editMessageTimeLimit = 15; // in Minutes
 
-  static const mediaMaxLimitRestriction = 'File size is too large. Try uploading file size below %d MB';
+  static const mediaMaxLimitRestriction =  'File size is too large. Try uploading file size below %d MB';
   static const mediaSizeError = 'File size is too large. Try uploading file size below';
   static const supportedFormats = [
     "jpg",
@@ -819,6 +820,19 @@ class Constants {
   static const String noCallLog = "No Call Log";
   static const String noCallLogHistoryFound = "No Call log history found";
   static const String anyNewCallsWillAppearHere = "Any new Calls will appear here";
+
+
+  static const String cameraPermissionName = "Camera";
+  static const String microphonePermissionName = "Microphone";
+  static const String bluetoothPermissionName = "Nearby devices";
+  static const String notificationPermissionName = "Notifications";
+  static const String phonePermissionName = "Phone";
+  static const String notificationPermissionTitle = "Turn on notification for MirrorFly";
+  static const String notificationPermissionMessage = "Allow MirrorFly to send you notifications to stay \nconnected with friends and family.\n\n Please continue to app Settings > select Permission > enable Notification.\n";
+  static const String callPermission =
+      "MirrorFly need the %d Permissions in order to call Family";
+  static const String callPermissionDenied =
+      "MirrorFly need the %d Permissions in order to call Family, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable %d.";
 
 
   static const String deleteCallLog = "Do you want to delete a call log?";

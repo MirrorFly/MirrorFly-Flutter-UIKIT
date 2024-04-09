@@ -1,4 +1,5 @@
 class AppConstants{
+  static var appName = "Mirrorfly";
   static var noInternetConnection = "Please check your internet connection";
   static var holdToRecord = "Hold for Video, tap for photo";
   static var addBusyStatus = "Add Busy Status";
@@ -79,6 +80,7 @@ class AppConstants{
   static var deleteChatWith = "Delete chat with";
   static var selectedChats = "selected chats";
   static var disableBusy = "Disable busy status. Do you want to continue?";
+  static var unBlockMsg = "Unblock to send a message?";
   static var fileSizeExceed = "File Size should not exceed";
   static var compressingVideo = "Compressing Video";
   static var thisMessageForwardToAdmin = "This message will be forwarded to admin.";
@@ -91,6 +93,7 @@ class AppConstants{
   static var unableToDelete = "Unable to delete the selected Messages";
   static var youWantBlock = "Are you sure you want to Block";
   static var blockingUser = "Blocking User";
+  static var unblockingUser = "Unblocking User";
   static var hasBlocked = "has been blocked";
   static var areYouClearChat = "Are you sure you want to clear the chat?";
   static var clearAll = "Clear All";
@@ -406,6 +409,10 @@ class AppConstants{
       "MirrorFly need the Location Permission in order to attach a location, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Location\".";
   static var cameraPermissionDenied =
       "MirrorFly need the Camera and Storage Permission in order to capture photos and video, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Camera\" and \"Storage\".";
+  static var cameraCapturePermanentlyDeniedContent =
+      "MirrorFly need the Camera and Microphone Permission in order to capture photos and video, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Camera\" and \"Microphone\".";
+  static var writeStoragePermissionDenied =
+      "MirrorFly need the Storage Permission in order to download photos, media, and files, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Storage\".";
   static var storagePermissionDenied =
       "MirrorFly need the Storage Permission in order to attach photos, media, and files, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Storage\".";
   static var microPhonePermissionDenied =
