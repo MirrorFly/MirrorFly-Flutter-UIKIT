@@ -13,6 +13,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:mirrorfly_plugin/logmessage.dart';
+import 'package:mirrorfly_plugin/model/callback.dart';
 import 'package:mirrorfly_plugin/model/export_model.dart';
 import 'package:mirrorfly_plugin/model/group_members_model.dart';
 import 'package:mirrorfly_plugin/model/message_object.dart';
@@ -90,9 +91,9 @@ class ChatController extends FullLifeCycleController
   FocusNode searchfocusNode = FocusNode();
 
   var calendar = DateTime.now();
-  var profile_ = Profile().obs;
+  var profile_ = ProfileDetails().obs;
 
-  Profile get profile => profile_.value;
+  ProfileDetails get profile => profile_.value;
   var base64img = Constants.emptyString.obs;
   var imagePath = Constants.emptyString.obs;
   var filePath = Constants.emptyString.obs;
@@ -118,7 +119,7 @@ class ChatController extends FullLifeCycleController
   bool get isMemberOfGroup =>
       profile.isGroupProfile ?? false ? _isMemberOfGroup.value : true;
 
-  var profileDetail = Profile();
+  // var profileDetail = Profile();
 
   var isKeyboardVisible = false.obs;
 
@@ -3025,36 +3026,26 @@ class ChatController extends FullLifeCycleController
     if (await AppUtils.isNetConnected()) {
       if(context.mounted) {
         if (await AppPermission.askAudioCallPermissions(context)) {
-          Mirrorfly.makeVoiceCall(profile.jid.checkNull()).then((value) {
-            if (value) {
-              debugPrint("#Mirrorfly Call userjid ${profile.jid}");
-              setOnGoingUserGone();
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => OutGoingCallView(userJid: profile.jid!)
-              //   ),
-              // ).then((value) => setOnGoingUserAvail());
+          if (profile.isGroupProfile.checkNull()) {
+            Get.toNamed(Routes.groupParticipants, arguments: {"groupId": profile.jid, "callType": CallType.audio});
+          } else {
 
-              MirrorflyUikit.instance.navigationManager.navigateTo(context: context,
-                  pageToNavigate: OutGoingCallView(userJid: profile.jid!), routeName: 'outgoing_call_view',
-                  onNavigateComplete: (){
-                    setOnGoingUserAvail();
-                  });
+            Mirrorfly.makeVoiceCall(
+                toUserJid: profile.jid.checkNull(),
+                flyCallBack: (FlyResponse response) {
+                  if (response.isSuccess) {
+                    debugPrint("#Mirrorfly Call userjid ${profile.jid}");
+                    setOnGoingUserGone();
 
-             /* try{
-              MirrorflyUikit.instance.navigatorKey.currentState?.push(MaterialPageRoute(
-                builder: (context) => OutGoingCallView(userJid: profile.jid!),
-              )).then((value) => setOnGoingUserAvail());
-            } catch (e) {
-            print("Navigation error: $e");
-            }*/
+                    MirrorflyUikit.instance.navigationManager.navigateTo(context: context,
+                        pageToNavigate: OutGoingCallView(userJid: profile.jid!), routeName: 'outgoing_call_view',
+                        onNavigateComplete: () {
+                          setOnGoingUserAvail();
+                        });
+                  }
+                });
 
-
-            }
-          }).catchError((e) {
-            debugPrint("#Mirrorfly Call $e");
-          });
+          }
         } else {
           debugPrint("permission not given");
         }

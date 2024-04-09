@@ -4,15 +4,15 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/widgets.dart';
-import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
+import '../../../common/extensions.dart';
 import '../controllers/busy_status_controller.dart';
 import 'add_busy_status_view.dart';
 
 class BusyStatusView extends StatefulWidget {
-  const BusyStatusView({Key? key, this.status,this.enableAppBar=true}) : super(key: key);
+  const BusyStatusView({super.key, this.status,this.enableAppBar=true});
   final String? status;
   final bool enableAppBar;
   @override
@@ -76,11 +76,6 @@ class _BusyStatusViewState extends State<BusyStatusView> {
                         onTap: () {
                           controller.addStatusController.text = controller.busyStatus.value;
                           controller.onChanged();
-                          // Get.to(const AddBusyStatusView(),arguments: {"status":controller.selectedStatus.value})?.then((value){
-                          //   if(value!=null){
-                          //     controller.insertBusyStatus(value);
-                          //   }
-                          // });
                           Navigator.push(context, MaterialPageRoute(builder: (con) => AddBusyStatusView(status: controller.selectedStatus.value))).then((value) {
                             if(value!=null){
                               controller.insertBusyStatus(value);

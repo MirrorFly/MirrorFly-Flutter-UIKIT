@@ -71,20 +71,16 @@ class MirrorFlyTheme {
   }
 }
 
-/*class CustomSafeArea extends StatelessWidget {
+class CustomSafeArea extends StatelessWidget {
   final Widget child;
   final Color? color;
 
-  const CustomSafeArea({Key? key, required this.child, this.color})
-      : super(key: key);
+  const CustomSafeArea({super.key, required this.child, this.color});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // color: color ?? appBarColor,
-      child: SafeArea(
-        child: child,
-      ),
+    return SafeArea(
+      child: child,
     );
   }
-}*/
+}

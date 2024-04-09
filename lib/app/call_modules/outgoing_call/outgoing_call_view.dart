@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_plugin/mirrorfly_view.dart';
 import 'package:mirrorfly_plugin/mirrorflychat.dart';
 import 'package:mirrorfly_uikit_plugin/app/call_modules/call_widgets.dart';
 
 import '../../common/constants.dart';
+import '../../common/widgets.dart';
+import '../../common/extensions.dart';
+import '../../data/helper.dart';
+import '../../data/session_management.dart';
+import '../call_utils.dart';
 import '../ripple_animation_view.dart';
 import 'call_controller.dart';
 
 class OutGoingCallView extends StatefulWidget {
-  const OutGoingCallView({Key? key,  required this.userJid}) : super(key: key);
+  const OutGoingCallView({super.key, required this.userJid});
 
-  final String userJid;
+  final List<String?> userJid;
 
   @override
   State<OutGoingCallView> createState() => _OutGoingCallViewState();
@@ -38,10 +44,18 @@ class _OutGoingCallViewState extends State<OutGoingCallView> {
           },
           child: Stack(
             children: [
+              Obx(() {
+                return controller.callType.value == CallType.video ?
+                MirrorFlyView(
+                  userJid: SessionManagement.getUserJID().checkNull(),
+                  viewBgColor: AppColors.callerBackground,
+                  hideProfileView: true,
+                ) :
+                const SizedBox.shrink();
+              }),
               Column(
                 children: [
-                  Expanded(
-                      child: Column(
+                  Expanded(child: Column(
                     children: [
                       const SizedBox(
                         height: 10,
@@ -50,28 +64,66 @@ class _OutGoingCallViewState extends State<OutGoingCallView> {
                         return Text(
                           controller.callStatus.value,
                           style: const TextStyle(
-                              color: AppColors.callerStatus,
-                              fontWeight: FontWeight.w100,
-                              fontSize: 14),
+                              color: AppColors.callerStatus, fontWeight: FontWeight.w100, fontSize: 14),
                         );
                       }),
                       const SizedBox(
                         height: 16,
                       ),
                       Obx(() {
-                        return Text(
-                          controller.calleeName.value,
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 18),
-                          overflow: TextOverflow.ellipsis,
-                        );
-                      }),
+                        return controller.groupId.isNotEmpty ? Padding(
+                            padding: const EdgeInsets.only(left: 30.0,right: 30.0,bottom: 16.0),
+                            child: FutureBuilder(future:getProfileDetails(controller.groupId.value),builder: (ctx,snap) {
+                              return snap.hasData && snap.data!=null ? Text(
+                                snap.data!.getName(),
+                                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 18)
+                                ,
+                                overflow: TextOverflow.ellipsis,) : const SizedBox.shrink();
+                            })): const SizedBox.shrink();}),
                       Obx(() {
-                        return RipplesAnimation(
+                        return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: FutureBuilder(future:CallUtils.getCallersName(controller.users,controller.users.length==1),builder: (ctx,snap) {
+                              return snap.hasData && snap.data!=null ? Text(
+                                snap.data!, //controller.calleeNames.length>3 ? "${controller.calleeNames.take(3).join(",")} and (+${controller.calleeNames.length - 3 })" : controller.calleeNames.join(","),
+                                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 18)
+                                ,
+                                overflow: TextOverflow.ellipsis,) : const SizedBox.shrink();
+                            }));}),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      Obx(() {
+                        return controller.groupId.isNotEmpty ? RipplesAnimation(
+                          onPressed: (){},
+                          child: FutureBuilder(future: getProfileDetails(controller.groupId.value), builder: (ctx, snap) {
+                            return snap.hasData && snap.data != null ? buildProfileImage(snap.data!) : const SizedBox
+                                .shrink();
+                          }),
+                        ) : controller.users.length == 1 ? RipplesAnimation(
                           onPressed: () {},
-                          child: buildProfileImage(controller.profile.value),
+                          child: FutureBuilder(future: getProfileDetails(controller.users[0]!), builder: (ctx, snap) {
+                            return snap.hasData && snap.data != null ? buildProfileImage(snap.data!) : const SizedBox
+                                .shrink();
+                          }),
+                        ) : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(
+                              controller.users.length > 3 ? 4 : controller.users.length, (index) =>
+                          (index == 3) ? Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: ProfileTextImage(
+                              text: "+${(controller.users.length) - 3}",
+                              radius: 45 / 2,
+                              bgColor: Colors.white,
+                              fontColor: Colors.grey,
+                            ),
+                          ) : FutureBuilder(future: getProfileDetails(controller.users[index]!), builder: (ctx, snap) {
+                            return snap.hasData && snap.data != null ? Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: buildProfileImage(snap.data!, size: 45),
+                            ) : const SizedBox.shrink();
+                          })),
                         );
                       }),
                     ],
@@ -86,34 +138,42 @@ class _OutGoingCallViewState extends State<OutGoingCallView> {
                         children: [
                           controller.muted.value
                               ? FloatingActionButton(
-                                  heroTag: "mute",
-                                  elevation: 0,
-                                  backgroundColor: Colors.white,
-                                  onPressed: () => controller.muteAudio(),
-                                  child: SvgPicture.asset(
-                                    muteActive,package: package,
-                                  ),
-                                )
+                            heroTag: "mute",
+                            elevation: 0,
+                            backgroundColor: Colors.white,
+                            onPressed: () => controller.muteAudio(),
+                            child: SvgPicture.asset(
+                              muteActive,
+                            ),
+                          )
                               : FloatingActionButton(
-                                  heroTag: "mute",
-                                  elevation: 0,
-                                  backgroundColor:
-                                      Colors.white.withOpacity(0.3),
-                                  onPressed: () => controller.muteAudio(),
-                                  child: SvgPicture.asset(
-                                    muteInactive,package: package,
-                                  ),
-                                ),
+                            heroTag: "mute",
+                            elevation: 0,
+                            backgroundColor: Colors.white.withOpacity(0.3),
+                            onPressed: () => controller.muteAudio(),
+                            child: SvgPicture.asset(
+                              muteInactive,
+                            ),
+                          ),
+                          if(controller.callType.value == CallType.video && !controller.videoMuted.value)...[
+                            FloatingActionButton(
+                              heroTag: "switchCamera",
+                              elevation: 0,
+                              backgroundColor: controller.cameraSwitch.value ? Colors.white : Colors.white.withOpacity(
+                                  0.3),
+                              onPressed: () => controller.switchCamera(),
+                              child: controller.cameraSwitch.value
+                                  ? SvgPicture.asset(cameraSwitchActive)
+                                  : SvgPicture.asset(cameraSwitchInactive),
+                            ),
+                          ],
                           FloatingActionButton(
                             heroTag: "video",
                             elevation: 0,
-                            backgroundColor: controller.videoMuted.value
-                                ? Colors.white
-                                : Colors.white.withOpacity(0.3),
+                            backgroundColor: controller.videoMuted.value ? Colors.white : Colors.white.withOpacity(0.3),
                             onPressed: () => controller.videoMute(),
-                            child: controller.videoMuted.value
-                                ? SvgPicture.asset(videoInactive,package: package,)
-                                : SvgPicture.asset(videoActive,package: package,),
+                            child: controller.videoMuted.value ? SvgPicture.asset(videoInactive) : SvgPicture.asset(
+                                videoActive),
                           ),
                           FloatingActionButton(
                             heroTag: "speaker",
@@ -124,16 +184,14 @@ class _OutGoingCallViewState extends State<OutGoingCallView> {
                                 : Colors.white,
                             onPressed: () => controller.changeSpeaker(context),
                             child: controller.audioOutputType.value == AudioDeviceType.receiver
-                                ? SvgPicture.asset(speakerInactive,package: package,)
+                                ? SvgPicture.asset(speakerInactive)
                                 : controller.audioOutputType.value == AudioDeviceType.speaker
-                                ? SvgPicture.asset(speakerActive,package: package,)
-                                : controller.audioOutputType.value ==
-                                AudioDeviceType.bluetooth
-                                ? SvgPicture.asset(speakerBluetooth,package: package,)
-                                : controller.audioOutputType.value ==
-                                AudioDeviceType.headset
-                                ? SvgPicture.asset(speakerHeadset,package: package,)
-                                : SvgPicture.asset(speakerActive,package: package,),
+                                ? SvgPicture.asset(speakerActive)
+                                : controller.audioOutputType.value == AudioDeviceType.bluetooth
+                                ? SvgPicture.asset(speakerBluetooth)
+                                : controller.audioOutputType.value == AudioDeviceType.headset
+                                ? SvgPicture.asset(speakerHeadset)
+                                : SvgPicture.asset(speakerActive),
                           ),
                         ],
                       ),
@@ -148,10 +206,10 @@ class _OutGoingCallViewState extends State<OutGoingCallView> {
                             shape: const StadiumBorder(),
                             backgroundColor: AppColors.endButton),
                         onPressed: () {
-                          controller.declineCall();
+                          controller.disconnectOutgoingCall();
                         },
                         child: SvgPicture.asset(
-                          callEndButton,package: package,
+                          callEndButton,
                         )),
                   ),
                 ],

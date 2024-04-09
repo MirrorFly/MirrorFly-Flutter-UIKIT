@@ -1,7 +1,9 @@
 import 'dart:convert';
 
-// import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
+import 'package:mirrorfly_plugin/logmessage.dart';
+import 'package:mirrorfly_plugin/model/callback.dart';
 import 'package:mirrorfly_plugin/model/status_model.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import '../../../../mirrorfly_uikit_plugin.dart';
@@ -26,6 +28,59 @@ class BusyStatusController extends GetxController with WidgetsBindingObserver{
 
   onChanged() {
     count(139 - addStatusController.text.characters.length);
+  }
+
+
+  onEmojiBackPressed(){
+    var text = addStatusController.text;
+    var cursorPosition = addStatusController.selection.base.offset;
+
+    // If cursor is not set, then place it at the end of the textfield
+    if (cursorPosition < 0) {
+      addStatusController.selection = TextSelection(
+        baseOffset: addStatusController.text.length,
+        extentOffset: addStatusController.text.length,
+      );
+      cursorPosition = addStatusController.selection.base.offset;
+    }
+
+    if (cursorPosition >= 0) {
+      final selection = addStatusController.value.selection;
+      final newTextBeforeCursor =
+      selection.textBefore(text).characters.skipLast(1).toString();
+      LogMessage.d("newTextBeforeCursor", newTextBeforeCursor);
+      addStatusController
+        ..text = newTextBeforeCursor + selection.textAfter(text)
+        ..selection = TextSelection.fromPosition(
+            TextPosition(offset: newTextBeforeCursor.length));
+    }
+    count((139 - addStatusController.text.characters.length));
+  }
+
+  onEmojiSelected(Emoji emoji){
+    if(addStatusController.text.characters.length < 139){
+      final controller = addStatusController;
+      final text = controller.text;
+      final selection = controller.selection;
+      final cursorPosition = controller.selection.base.offset;
+
+      if (cursorPosition < 0) {
+        controller.text += emoji.emoji;
+        // widget.onEmojiSelected?.call(category, emoji);
+        return;
+      }
+
+      final newText =
+      text.replaceRange(selection.start, selection.end, emoji.emoji);
+      final emojiLength = emoji.emoji.length;
+      controller
+        ..text = newText
+        ..selection = selection.copyWith(
+          baseOffset: selection.start + emojiLength,
+          extentOffset: selection.start + emojiLength,
+        );
+    }
+    count((139 - addStatusController.text.characters.length));
   }
 
   void init(String? status) {
@@ -108,7 +163,7 @@ class BusyStatusController extends GetxController with WidgetsBindingObserver{
       }
     }
 
-    Mirrorfly.insertBusyStatus(newBusyStatus).then((value) {
+    Mirrorfly.insertBusyStatus(busyStatus: newBusyStatus).then((value) {
       busyStatus(newBusyStatus);
       setCurrentStatus(newBusyStatus);
     });
@@ -116,22 +171,17 @@ class BusyStatusController extends GetxController with WidgetsBindingObserver{
 
   validateAndFinish(BuildContext context) async {
     if (addStatusController.text.trim().isNotEmpty) {
-      //FLUTTER-567
-      // if (await AppUtils.isNetConnected()) {
-      //   Get.back(result: addStatusController.text.trim().toString());
+
         Navigator.pop(context, addStatusController.text.trim().toString());
-      // } else {
-      //   toToast(AppConstants.noInternetConnection);
-      //   Get.back();
-      // }
+
     } else {
       toToast(AppConstants.statusCantEmpty);
     }
   }
 
   void setCurrentStatus(String status) {
-    Mirrorfly.setMyBusyStatus(status).then((value) {
-      debugPrint("status value $value");
+    Mirrorfly.setMyBusyStatus(busyStatus: status, flyCallBack: (FlyResponse response) {
+      debugPrint("status value $response");
       var settingController = Get.find<ChatSettingsController>();
       settingController.busyStatus(status);
       getMyBusyStatusList();
@@ -152,8 +202,8 @@ class BusyStatusController extends GetxController with WidgetsBindingObserver{
               // Get.back();
               if(context.mounted)Navigator.pop(context);
               if(context.mounted)Helper.showLoading(message: AppConstants.deletingBusyStatus, buildContext: context);
-              Mirrorfly.deleteBusyStatus(
-                  item.id!, item.status!, item.isCurrentStatus!)
+              Mirrorfly.deleteBusyStatus(id:
+                  item.id!, status: item.status!, isCurrentStatus: item.isCurrentStatus!)
                   .then((value) {
                     busyStatusList.remove(item);
                 Helper.hideLoading(context: context);

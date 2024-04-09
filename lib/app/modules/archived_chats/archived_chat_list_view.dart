@@ -3,16 +3,16 @@ import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
-import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 
 import '../../../mirrorfly_uikit_plugin.dart';
 import '../../common/constants.dart';
+import '../../common/extensions.dart';
 import '../../widgets/custom_action_bar_icons.dart';
 import '../dashboard/widgets.dart';
 import 'archived_chat_list_controller.dart';
 
 class ArchivedChatListView extends StatelessWidget {
-  ArchivedChatListView({Key? key, this.enableAppBar=true, this.showChatDeliveryIndicator = true}) : super(key: key);
+  ArchivedChatListView({super.key, this.enableAppBar=true, this.showChatDeliveryIndicator = true});
   final bool enableAppBar;
   final bool showChatDeliveryIndicator;
   final controller = Get.put(ArchivedChatListController());
@@ -23,13 +23,17 @@ class ArchivedChatListView extends StatelessWidget {
         controller.showChatDeliveryIndicator = showChatDeliveryIndicator;
         controller.getArchivedChatsList();
       },
-      child: WillPopScope(
-        onWillPop: () {
+      child: PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) {
+          if (didPop) {
+            return;
+          }
           if (controller.selected.value) {
             controller.clearAllChatSelection();
-            return Future.value(false);
+            return;
           }
-          return Future.value(true);
+          Get.back();
         },
         child: Obx(() {
           return Scaffold(

@@ -9,7 +9,7 @@ import '../../../common/widgets.dart';
 import '../controllers/busy_status_controller.dart';
 
 class AddBusyStatusView extends StatefulWidget {
-  const AddBusyStatusView({Key? key, required String status,this.enableAppBar=true}) : super(key: key);
+  const AddBusyStatusView({super.key, required String status,this.enableAppBar=true});
   final bool enableAppBar;
   @override
   State<AddBusyStatusView> createState() => _AddBusyStatusViewState();
@@ -27,15 +27,17 @@ class _AddBusyStatusViewState extends State<AddBusyStatusView> {
         iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
         backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
       ):null,
-      body: WillPopScope(
-        onWillPop: () {
+      body: PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) {
+          if (didPop) {
+            return;
+          }
           if (controller.showEmoji.value) {
             controller.showEmoji(false);
           } else {
-            // Get.back();
-            Navigator.pop(context);
+            Get.back();
           }
-          return Future.value(false);
         },
         child: SafeArea(
           child: Column(
@@ -163,11 +165,11 @@ class _AddBusyStatusViewState extends State<AddBusyStatusView> {
     return Obx(() {
       if (controller.showEmoji.value) {
         return EmojiLayout(
-            textController: controller.addStatusController,
+            textController: TextEditingController(),//controller.addStatusController,
             onBackspacePressed: () {
-              controller.onChanged();
+              controller.onEmojiBackPressed();
             },
-            onEmojiSelected: (cat, emoji) => controller.onChanged());
+            onEmojiSelected: (cat, emoji) => controller.onEmojiSelected(emoji));
       } else {
         return const SizedBox.shrink();
       }

@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
+import 'package:mirrorfly_plugin/model/callback.dart';
 import 'package:mirrorfly_plugin/model/register_model.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
-import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/model/app_config.dart';
 import 'package:mirrorfly_uikit_plugin/app/model/reply_hash_map.dart';
 
 import 'app/common/app_theme.dart';
+import 'app/common/constants.dart';
 import 'app/common/main_controller.dart';
 import 'app/common/navigation_manager.dart';
 import 'app/data/apputils.dart';
@@ -18,6 +19,7 @@ import 'app/data/session_management.dart';
 import 'app/modules/chat/controllers/chat_controller.dart';
 import 'app/modules/chat/views/chat_view.dart';
 import 'mirrorfly_uikit_plugin_platform_interface.dart';
+import 'app/common/extensions.dart';
 
 class MirrorflyUikit {
   static MirrorFlyAppTheme? getTheme = MirrorFlyTheme.mirrorFlyLightTheme;
@@ -143,27 +145,42 @@ class MirrorflyUikit {
       return setResponse(false, 'SDK Not Initialized');
     }
     if (await AppUtils.isNetConnected()) {
-      var value = await Mirrorfly.registerUser(userIdentifier, fcmToken: fcmToken);
-      try {
-        var userData = registerModelFromJson(value); //message
-        if (userData.data != null) {
-          SessionManagement.setLogin(userData.data!.username!.isNotEmpty);
-          SessionManagement.setUser(userData.data!);
-          Mirrorfly.enableDisableArchivedSettings(true);
-          SessionManagement.setUserIdentifier(userIdentifier);
-          // Mirrorfly.setRegionCode(regionCode ?? 'IN');///if its not set then error comes in contact sync delete from phonebook.
-          // SessionManagement.setCountryCode((countryCode ?? "").replaceAll('+', ''));
-          await _setUserJID(userData.data!.username!);
-          return setResponse(true, 'Register Success');
-        } else {
-          return setResponse(false, userData.message.toString());
-        }
-      } catch (e) {
-        return setResponse(false, '$e');
-      }
-    } else {
-      return Future.value(
-          setResponse(false, 'Check your internet connection and try again'));
+      var value = await Mirrorfly.login(userIdentifier: userIdentifier, fcmToken: fcmToken,
+          flyCallback: (FlyResponse response) {
+            if (response.isSuccess) {
+              if (response.hasData) {
+                var userData = registerModelFromJson(value); //message
+                if (userData.data != null) {
+                  SessionManagement.setLogin(userData.data!.username!.isNotEmpty);
+                  SessionManagement.setUser(userData.data!);
+                  Mirrorfly.enableDisableArchivedSettings(true);
+                  SessionManagement.setUserIdentifier(userIdentifier);
+                  // Mirrorfly.setRegionCode(regionCode ?? 'IN');///if its not set then error comes in contact sync delete from phonebook.
+                  // SessionManagement.setCountryCode((countryCode ?? "").replaceAll('+', ''));
+                  await _setUserJID(userData.data!.username!);
+                  return setResponse(true, 'Register Success');
+                } else {
+                  return setResponse(false, userData.message.toString());
+                }
+              }
+            } else {
+              debugPrint("issue===> ${response.errorMessage.toString()}");
+              hideLoading();
+              if (response.exception?.code == "403") {
+                debugPrint("issue 403 ===> ${response.errorMessage }");
+                Get.offAllNamed(Routes.adminBlocked);
+              } else if (response.exception?.code == "405") {
+                debugPrint("issue 405 ===> ${response.errorMessage }");
+                sessionExpiredDialogShow(Constants.maximumLoginReached);
+              } else {
+                debugPrint("issue else code ===> ${response.exception?.code }");
+                debugPrint("issue else ===> ${response.errorMessage }");
+                toToast(response.exception!.message.toString());
+              }
+            }
+          });
+    }else {
+      toToast(Constants.noInternetConnection);
     }
   }
 
@@ -172,9 +189,10 @@ class MirrorflyUikit {
   ///this will clear all the chat data.
   ///sample response {'status': true, 'message': 'Logout successfully};
   static Future<Map<String, dynamic>> logoutFromUIKIT() async {
-    try {
-      var value = await Mirrorfly.logoutOfChatSDK(); //.then((value) {
-      if (value) {
+
+    Mirrorfly.logoutOfChatSDK(flyCallBack: (response)
+    {
+      if (response.isSuccess) {
         var token = SessionManagement.getToken().checkNull();
         SessionManagement.clear().then((value) {
           SessionManagement.setToken(token);
@@ -183,10 +201,8 @@ class MirrorflyUikit {
       } else {
         return setResponse(false, 'Logout Failed');
       }
-      //});
-    } catch (e) {
-      return setResponse(false, 'Logout Failed');
-    }
+    });
+
   }
 
   ///Used as a [isOnGoingCall] class for [MirrorflyUikit]
@@ -202,8 +218,8 @@ class MirrorflyUikit {
   }
 
   static _setUserJID(String username) async {
-    Mirrorfly.getAllGroups(true);
-    await Mirrorfly.getJid(username).then((value) {
+    Mirrorfly.getAllGroups(fetchFromServer: true,flyCallBack: (_){});
+    await Mirrorfly.getJid(username: username).then((value) {
       if (value != null) {
         SessionManagement.setUserJID(value);
       }

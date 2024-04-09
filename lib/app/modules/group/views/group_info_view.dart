@@ -18,7 +18,7 @@ import '../../image_view/views/image_view_view.dart';
 
 
 class GroupInfoView extends StatefulWidget {
-  const GroupInfoView({Key? key, required this.jid,this.enableAppBar=true}) : super(key: key);
+  const GroupInfoView({super.key, required this.jid,this.enableAppBar=true});
   final String jid;
   final bool enableAppBar;
   @override

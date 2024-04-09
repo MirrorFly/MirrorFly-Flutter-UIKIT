@@ -80,7 +80,13 @@ class NavigationManager {
       debugPrint("routeHistory is empty");
       return "";
     }
+  }
 
+  bool hasPrevRoute(){
+    if(routeHistory.isNotEmpty){
+      return true;
+    }
+    return false;
   }
 }
 

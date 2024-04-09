@@ -6,8 +6,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 import '../models.dart';
-import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:path_provider/path_provider.dart';
+import 'extensions.dart';
 
 //Colors
 const Color appBarColor = Color(0xffF2F2F2);
@@ -44,18 +44,38 @@ const Color darkPopupColor = Color(0xff262626);
 
 class AppColors{
   static const Color callerBackground = Color(0xff152134);
+  static const Color bottomCallOptionBackground = Color(0xff162337);
+  static const Color callOptionBackground = Color(0xff10294d);
+  static const Color callAgainButtonBackground = Color(0xff009f46);
   static const Color audioCallBackground = Color(0xff0B111C);
+  static const Color audioCallerBackground = Color(0xff0D2852);
+  static const Color callerTitleBackground = Color(0xff151F32);
   static const Color colorBlackTransparent = Color(0x80000000);
   static const Color callerStatus = Color(0xffDEDEDE);
   static const Color callerName = Color(0xffffffff);
   static const Color endButton = Color(0xffff4d67);
+  static const Color audioMutedIconBgColor = Color(0x80000000);
+  static const Color checkBoxBorder = Color(0xffbdbdbd);
+  static const Color checkBoxChecked = Color(0xff30c076);
+  static const Color callBg = Color(0xff0B111C);
+  static const Color speakingBg = Color(0xff3abf87);
+  static const Color transBlack75 = Color(0xBF000000);
+  static const Color participantUnMuteColor = Color(0xffe3e2e2);
 }
 //call Assets
+const String plusIcon = 'assets/calls/plus_icon.svg';
+const String audioCallSmallIcon = 'assets/calls/audio_call_small_icon.svg';
+const String videoCallSmallIcon = 'assets/calls/video_call_small_icon.svg';
+const String callMutedIcon = 'assets/calls/call_muted_icon.svg';
 const String callEndButton = 'assets/calls/call_end_button.svg';
 const String speakerInactive = 'assets/calls/speaker_inactive.svg';
 const String speakerActive = 'assets/calls/speaker_active.svg';
 const String speakerBluetooth = 'assets/calls/bluetooth.svg';
 const String speakerHeadset = 'assets/calls/head_set.svg';
+const String audioCallAgain = 'assets/calls/call_icon.svg';
+const String videoCallAgain = 'assets/calls/video_call.svg';
+const String callCancel = 'assets/calls/cancel_icon.svg';
+const String gridIcon = 'assets/calls/grid_icon.svg';
 
 const String audioCallIcon = 'assets/calls/audiocall.svg';
 const String videoCallIcon = 'assets/calls/videocall.svg';
@@ -73,6 +93,13 @@ const String cameraSwitchActive = 'assets/calls/camera_switch_active.svg';
 const String callOptionsUpArrow = 'assets/calls/call_options_up_arrow.svg';
 const String callOptionsBottomBg = 'assets/calls/ic_group_user_info_layout.png';
 const String callOptionsToolbarBg = 'assets/calls/ic_call_header_overlay.png';
+
+//Call Participant assets
+const String participantMute = 'assets/calls/participant_mute.svg';
+const String participantUnMute = 'assets/calls/participant_unmute.svg';
+const String participantVideoEnabled = 'assets/calls/participant_video_enabled.svg';
+const String participantVideoDisabled = 'assets/calls/participant_video_disabled.svg';
+const String addParticipantsInCall = 'assets/calls/add_user_in_call.svg';
 
 //Assets
 const String package = 'mirrorfly_uikit_plugin/lib';
@@ -312,6 +339,8 @@ mirrorFlyLog(String tag, String msg) {
 }
 
 class Constants {
+  static const bool enableContactSync = false;
+  static const bool enableTopic = false;
   static const String package = 'com.mirrorfly.uikit_flutter';
   static const String webChatLogin = 'https://webchat-uikit-qa.contus.us/';
   static const String tag = 'Contus Fly';
@@ -517,6 +546,38 @@ class Constants {
   static const maxImageFileSize = 10;
   static const maxDocFileSize = 20;
 
+  static const mobileImageMaxWidth = 250;
+  static const mobileImageMinWidth = 210;
+  static const mobileImageMaxHeight = 320;
+  static const mobileImageMinHeight = 80;
+
+  static const editMessageTimeLimit = 15; // in Minutes
+
+  static const mediaMaxLimitRestriction = 'File size is too large. Try uploading file size below %d MB';
+  static const mediaSizeError = 'File size is too large. Try uploading file size below';
+  static const supportedFormats = [
+    "jpg",
+    "jpeg",
+    "png",
+    "mp3",
+    "wav",
+    "aac",
+    "mpeg",
+    "mp4",
+    "doc",
+    "docx",
+    "pdf",
+    "xls",
+    "xlsx",
+    "txt",
+    "csv",
+    "ppt",
+    "zip",
+    "rar",
+    "pptx",
+    "acc"
+  ];
+
   /*static const List<String> defaultStatusList = [
     "Available",
     "Sleeping...",
@@ -574,6 +635,7 @@ class Constants {
   static const int mediaDownloaded = 4;
   static const int mediaNotDownloaded = 5;
   static const int mediaDownloadedNotAvailable = 6;
+  static const int storageNotEnough = 8;
   static const int mediaNotUploaded = 0;
   static const int mediaUploading = 1;
   static const int mediaUploaded = 2;
@@ -584,6 +646,12 @@ class Constants {
 
   static const double borderRadius = 27;
   static const double defaultPadding = 8;
+
+  static const String mediaDoesNotExist = "Sorry. Media file isn't available in your internal storage";
+  static const String mediaNotExist = "Sorry, media isn't available";
+  static const String insufficientMemoryError = "Not enough storage space on your device. Please free up space in your phone's memory.";
+  static const String errorTryAgain = "Error Occurred, Please try again";
+  static const String errorVideoInitialize = "Error Occurred during video initialize";
 
   // static GlobalKey<AnimatedListState> audioListKey =
   // GlobalKey<AnimatedListState>();
@@ -597,6 +665,7 @@ class Constants {
   static const String xlsx = "xlsx";
 
   //Message Types
+  static const String mAutoText = "AUTO_TEXT";
   static const String mText = "TEXT";
   static const String mImage = "IMAGE";
   static const String mAudio = "AUDIO";
@@ -720,6 +789,48 @@ class Constants {
 
   static const onGoingCallView = "ongoing_call_view";
   static const outGoingCallView = "outgoing_call_view";
+  static const participantView = "participant_view";
+
+//Call
+  static const unavailableTryAgain = "Unavailable, Try again later";
+  static const cancel = "Cancel";
+  static const ok = "OK";
+  static const callAgain = "Call Again";
+  static const callTimeoutMessage = "Seems like no one attended the call";
+  static const remoteEngagedToast = " is on another call";
+
+  static const callNotificationId = 124;
+
+  //Call Types
+  static const audioCall = "audio";
+  static const videoCall = "video";
+
+  static const videoSwitchMessage = "Are you sure you want to switch to Video Call?";
+  static const videoSwitchRequestMessage = "Requesting to switch to Video Call";
+  static const videoSwitchRequestedMessage = "requesting to switch to video call";
+  static const callMembersLimit = "Maximum %d members allowed in a call";
+  static const callMembersLimit6 = "You can only select %d participants";
+  static const maxNameLength = 26;
+  static const msgOngoingCallAlert = "You are already on another call";
+  static const addParticipantsToCall = "Add participant to the call";
+
+  //Call Log
+  static const String noCallLog = "No Call Log";
+  static const String noCallLogHistoryFound = "No Call log history found";
+  static const String anyNewCallsWillAppearHere = "Any new Calls will appear here";
+
+
+  static const String deleteCallLog = "Do you want to delete a call log?";
+  static const String deleteSelectedCallLog = "Do you want to delete the selected call logs?";
+  static const String deleteAllCallLog = "Do you want to clear your entire call log?";
+  static const String noCallLogs = "No Call log history found";
+  static const String noCallLogsMessage = "Any new Calls will appear here";
+  static const String noChats = "No new messages";
+  static const String noChatsMessage = "Any new messages will appear here";
+  static const String noDataFound = "No data found";
+  static const String removeFromCallLog = "Remove from call log";
+  static const String callInfo = "Call Info";
+
 }
 
 Widget forMessageTypeIcon(String messageType,[MediaChatMessage? mediaChatMessage]) {
