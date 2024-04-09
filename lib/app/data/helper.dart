@@ -611,7 +611,7 @@ String getName(ProfileDetails item) {
 }
 
 String getRecentName(RecentChatData item) {
-  if (MirrorflyUikit.instance.isTrialLicenceKey) {
+  if (!Constants.enableContactSync) {
     /*return item.name.toString().checkNull().isEmpty
         ? item.nickName.toString()
         : item.name.toString();*/
@@ -635,7 +635,7 @@ String getRecentName(RecentChatData item) {
 }
 
 String getMemberName(ProfileDetails item) {
-  if (MirrorflyUikit.instance.isTrialLicenceKey) {
+  if (!Constants.enableContactSync) {
     /*return item.name.toString().checkNull().isEmpty
         ? item.nickName.toString()
         : item.name.toString();*/
@@ -733,8 +733,8 @@ String getDisplayImage(RecentChatData recentChat) {
 void showQuickProfilePopup(
     {required context,
     required Function() chatTap,
-    required Function() callTap,
-    required Function() videoTap,
+      Function()? callTap,
+      Function()? videoTap,
     required Function() infoTap,
     required Rx<ProfileDetails> profile,
       required Rx<AvailableFeatures> availableFeatures}) {
@@ -812,7 +812,7 @@ void showQuickProfilePopup(
                         child: Text(
                           profile.value.isGroupProfile!
                               ? profile.value.name.checkNull()
-                              : MirrorflyUikit.instance.isTrialLicenceKey
+                              : !Constants.enableContactSync
                               ? profile.value.mobileNumber.checkNull()
                               : profile.value.nickName.checkNull(),
                           style: const TextStyle(color: Colors.white),

@@ -628,7 +628,7 @@ Widget callLogTime(String time, int? callState) {
 
 class ContactItem extends StatelessWidget {
   const ContactItem({
-    Key? key,
+    super.key,
     required this.item,
     this.onAvatarClick,
     this.spanTxt = "",
@@ -636,7 +636,7 @@ class ContactItem extends StatelessWidget {
     required this.checkValue,
     required this.onCheckBoxChange,
     this.onListItemPressed,
-  }) : super(key: key);
+  });
   final ProfileDetails item;
   final Function()? onAvatarClick;
   final String spanTxt;

@@ -428,6 +428,7 @@ class AppConstants{
   static var remoteEngagedToast = "is on another call";
 
   static var featureNotAvailable = "You can't send messages to this group because Feature unavailable for your plan.";
+  static var callNow = "CALL NOW ( %d )";
   static var unableToLoadProfileData = "Unable to load profile data, please login again";
 
 

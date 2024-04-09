@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_plugin/model/user_list_model.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/extensions.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 import '../../../models.dart';
@@ -10,24 +11,9 @@ import '../../../models.dart';
 import '../../../common/widgets.dart';
 import '../../starred_messages/controllers/starred_messages_controller.dart';
 
-/*
-class StarredMessageHeader extends StatefulWidget {
-  const StarredMessageHeader(
-      {Key? key, required this.chatList, required this.isTapEnabled})
-      : super(key: key);
-
-  final ChatMessageModel chatList;
-  final bool isTapEnabled;
-
-  @override
-  State<StarredMessageHeader> createState() => _StarredMessageHeaderState();
-}
-*/
-
 class StarredMessageHeader extends StatelessWidget {
   StarredMessageHeader(
-      {Key? key, required this.chatList, required this.isTapEnabled})
-      : super(key: key);
+      {super.key, required this.chatList, required this.isTapEnabled});
   final ChatMessageModel chatList;
   final bool isTapEnabled;
   final controller = Get.find<StarredMessagesController>();
@@ -43,7 +29,7 @@ class StarredMessageHeader extends StatelessWidget {
     );
   }
 
-  Future<Profile> getProfile() async {
+  Future<ProfileDetails> getProfile() async {
     /*var value = await Mirrorfly.getProfileDetails(chatList.chatUserJid);
     return Profile.fromJson(json.decode(value.toString()));*/
     return await getProfileDetails(chatList.chatUserJid);
@@ -173,7 +159,7 @@ class StarredMessageHeader extends StatelessWidget {
     );
   }
 
-  getProfileImage(Profile userProfile) {
+  getProfileImage(ProfileDetails userProfile) {
     if (userProfile.image.checkNull().isNotEmpty) {
       return ImageNetwork(
         url: userProfile.image.checkNull(),
