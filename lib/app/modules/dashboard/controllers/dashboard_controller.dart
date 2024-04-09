@@ -3,13 +3,17 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
+import 'package:mirrorfly_plugin/logmessage.dart';
+import 'package:mirrorfly_plugin/model/available_features.dart';
 import 'package:mirrorfly_plugin/model/recent_chat.dart';
 import 'package:mirrorfly_plugin/model/recent_search_model.dart';
 import 'package:mirrorfly_plugin/model/user_list_model.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/extensions.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/settings/views/settings_view.dart';
 import '../../../../mirrorfly_uikit_plugin.dart';
+import '../../../common/main_controller.dart';
 import '../../../models.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
@@ -29,6 +33,7 @@ import '../../group/views/group_info_view.dart';
 
 class DashboardController extends FullLifeCycleController
     with FullLifeCycleMixin, GetTickerProviderStateMixin {
+  var availableFeatures = Get.find<MainController>().availableFeature;
   var recentChats = <RecentChatData>[].obs;
   var archivedChats = <RecentChatData>[].obs;
   var calendar = DateTime.now();
@@ -36,9 +41,9 @@ class DashboardController extends FullLifeCycleController
   var selectedChatsPosition = <int>[].obs;
   var selected = false.obs;
 
-  var profile_ = Profile().obs;
+  var profile_ = ProfileDetails().obs;
 
-  Profile get profile => profile_.value;
+  ProfileDetails get profile => profile_.value;
 
   //action icon visibles
   var archive = false.obs;
@@ -262,7 +267,7 @@ class DashboardController extends FullLifeCycleController
     }
   }
 
-  updateRecentChat(String jid) {
+  updateRecentChat({required String jid, bool changePosition = true) {
     //updateArchiveRecentChat(jid);
     getRecentChatOfJid(jid).then((recent) {
       final index = recentChats.indexWhere((chat) => chat.jid == jid);
@@ -895,7 +900,7 @@ class DashboardController extends FullLifeCycleController
   void onMessageReceived(chatMessageModel) {
     mirrorFlyLog("dashboard controller", "onMessageReceived");
 
-    updateRecentChat(chatMessageModel.chatUserJid);
+    updateRecentChat(jid: chatMessageModel.chatUserJid);
   }
 
   void onMessageStatusUpdated(ChatMessageModel chatMessageModel) {
@@ -909,13 +914,36 @@ class DashboardController extends FullLifeCycleController
     }
   }
 
+  void markConversationReadNotifyUI(String jid) {
+    var index = recentChats.indexWhere((element) => element.jid == jid);
+    if (!index.isNegative) {
+      if (recentChats[index].isConversationUnRead.checkNull()) {
+        recentChats[index].isConversationUnRead = false;
+        recentChats[index].unreadMessageCount = 0;
+        recentChats.refresh();
+      }
+    }
+  }
+
+  Future<void> chatMuteChangesNotifyUI(String jid) async {
+    var index = recentChats.indexWhere((element) => element.jid == jid);
+    if (!index.isNegative) {
+      var isMuted = await Mirrorfly.isChatMuted(jid: jid);
+      LogMessage.d("chatMuteChangesNotifyUI", "isMuted : $isMuted");
+      recentChats[index].isMuted = isMuted;
+      recentChats.refresh();
+    }else{
+      LogMessage.d("chatMuteChangesNotifyUI", "chat not available in the list");
+    }
+  }
+
   void onGroupProfileUpdated(groupJid) {
     mirrorFlyLog("super", groupJid.toString());
-    updateRecentChat(groupJid);
+    updateRecentChat(jid: groupJid);
   }
 
   void onDeleteGroup(groupJid) {
-    updateRecentChat(groupJid);
+    updateRecentChat(jid: groupJid);
   }
 
   void onGroupDeletedLocally(groupJid) {
@@ -1316,6 +1344,14 @@ class DashboardController extends FullLifeCycleController
 
   void userDeletedHisProfile(String jid) {
     userUpdatedHisProfile(jid);
+  }
+
+  void onAvailableFeaturesUpdated(AvailableFeatures features) {
+    LogMessage.d("DashboardView", "onAvailableFeaturesUpdated ${features.toJson()}");
+    availableFeatures(features);
+    if (selectedChats.isNotEmpty) {
+      menuValidationForItem();
+    }
   }
 
 

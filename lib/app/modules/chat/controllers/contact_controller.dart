@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_plugin/logmessage.dart';
+import 'package:mirrorfly_plugin/model/available_features.dart';
 import 'package:mirrorfly_plugin/model/user_list_model.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
@@ -11,6 +13,7 @@ import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../common/de_bouncer.dart';
+import '../../../common/main_controller.dart';
 import '../../../data/apputils.dart';
 import '../../../data/permissions.dart';
 import '../../chatInfo/views/chat_info_view.dart';
@@ -23,9 +26,9 @@ class ContactController extends FullLifeCycleController
   var pageNum = 1;
   var isPageLoading = false.obs;
   var scrollable = MirrorflyUikit.instance.isTrialLicenceKey.obs;
-  var usersList = <Profile>[].obs;
-  var mainUsersList = List<Profile>.empty(growable: true).obs;
-  var selectedUsersList = List<Profile>.empty(growable: true).obs;
+  var usersList = <ProfileDetails>[].obs;
+  var mainUsersList = List<ProfileDetails>.empty(growable: true).obs;
+  var selectedUsersList = List<ProfileDetails>.empty(growable: true).obs;
   var selectedUsersJIDList = List<String>.empty(growable: true).obs;
   var forwardMessageIds = List<String>.empty(growable: true).obs;
   final TextEditingController searchQuery = TextEditingController();
@@ -558,5 +561,13 @@ class ContactController extends FullLifeCycleController
 
   void unblockedThisUser(String jid) {
     userUpdatedHisProfile(jid);
+  }
+
+
+  var availableFeatures = Get.find<MainController>().availableFeature;
+
+  void onAvailableFeaturesUpdated(AvailableFeatures features) {
+    LogMessage.d("Contact", "onAvailableFeaturesUpdated ${features.toJson()}");
+    availableFeatures(features);
   }
 }

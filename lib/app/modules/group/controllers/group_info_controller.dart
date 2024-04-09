@@ -4,6 +4,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mirrorfly_plugin/logmessage.dart';
+import 'package:mirrorfly_plugin/model/available_features.dart';
 import 'package:mirrorfly_plugin/model/user_list_model.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
@@ -13,14 +15,16 @@ import 'package:mirrorfly_uikit_plugin/app/modules/view_all_media/views/view_all
 import '../../../../mirrorfly_uikit_plugin.dart';
 
 import '../../../common/crop_image.dart';
+import '../../../common/main_controller.dart';
 import '../../../data/apputils.dart';
 import '../../../data/session_management.dart';
 import '../../chat/views/contact_list_view.dart';
 import '../views/name_change_view.dart';
 
 class GroupInfoController extends GetxController {
+  var availableFeatures = Get.find<MainController>().availableFeature;
   ScrollController scrollController = ScrollController();
-  var groupMembers = <Profile>[].obs;
+  var groupMembers = <ProfileDetails>[].obs;
   final _mute = false.obs;
   set mute(value) => _mute.value=value;
   bool get mute => _mute.value;
@@ -33,9 +37,9 @@ class GroupInfoController extends GetxController {
   set isMemberOfGroup(value) => _isMemberOfGroup.value=value;
   bool get isMemberOfGroup => _isMemberOfGroup.value;
 
-  var profile_ = Profile().obs;
+  var profile_ = ProfileDetails().obs;
   //set profile(value) => _profile.value = value;
-  Profile get profile => profile_.value;
+  ProfileDetails get profile => profile_.value;
 
   final _isSliverAppBarExpanded = true.obs;
   set isSliverAppBarExpanded(value) => _isSliverAppBarExpanded.value = value;
@@ -560,6 +564,13 @@ class GroupInfoController extends GetxController {
 
   void userBlockedMe(String jid) {
     userUpdatedHisProfile(jid);
+  }
+
+  void onAvailableFeaturesUpdated(AvailableFeatures features) {
+    LogMessage.d("GroupInfo", "onAvailableFeaturesUpdated ${features.toJson()}");
+    availableFeatures(features);
+    _isMemberOfGroup.refresh();
+    // loadGroupExistence();
   }
 
   void showHideEmoji(BuildContext context) {

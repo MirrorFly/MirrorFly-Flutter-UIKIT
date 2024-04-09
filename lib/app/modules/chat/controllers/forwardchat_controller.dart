@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_plugin/logmessage.dart';
+import 'package:mirrorfly_plugin/model/available_features.dart';
 import 'package:mirrorfly_plugin/model/group_members_model.dart';
 import 'package:mirrorfly_plugin/model/recent_chat.dart';
 import 'package:mirrorfly_plugin/model/user_list_model.dart';
@@ -8,6 +10,7 @@ import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import '../../../../mirrorfly_uikit_plugin.dart';
+import '../../../common/main_controller.dart';
 import '../../../data/session_management.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -17,8 +20,8 @@ import '../../../data/apputils.dart';
 class ForwardChatController extends GetxController {
   //main list
   final _mainrecentChats = <RecentChatData>[];
-  final _maingroupList = <Profile>[];
-  final _mainuserList = <Profile>[];
+  final _maingroupList = <ProfileDetails>[];
+  final _mainuserList = <ProfileDetails>[];
 
   final _recentChats = <RecentChatData>[].obs;
 
@@ -26,20 +29,20 @@ class ForwardChatController extends GetxController {
 
   List<RecentChatData> get recentChats => _recentChats.take(3).toList();
 
-  final _groupList = List<Profile>.empty(growable: true).obs;//<Profile>[].obs;
+  final _groupList = List<ProfileDetails>.empty(growable: true).obs;//<Profile>[].obs;
 
-  set groupList(List<Profile> value) => _groupList.value = value;
+  set groupList(List<ProfileDetails> value) => _groupList.value = value;
 
-  List<Profile> get groupList => _groupList.take(6).toList();
+  List<ProfileDetails> get groupList => _groupList.take(6).toList();
 
   var userlistScrollController = ScrollController();
   var scrollable = MirrorflyUikit.instance.isTrialLicenceKey.obs;
   var isPageLoading = false.obs;
-  final _userList = <Profile>[].obs;
+  final _userList = <ProfileDetails>[].obs;
 
-  set userList(List<Profile> value) => _userList.value = value;
+  set userList(List<ProfileDetails> value) => _userList.value = value;
 
-  List<Profile> get userList => _userList;
+  List<ProfileDetails> get userList => _userList;
 
   final _search = false.obs;
 
@@ -474,5 +477,11 @@ class ForwardChatController extends GetxController {
 
   void userDeletedHisProfile(String jid) {
     userUpdatedHisProfile(jid);
+  }
+
+  var availableFeatures = Get.find<MainController>().availableFeature;
+  void onAvailableFeaturesUpdated(AvailableFeatures features) {
+    LogMessage.d("Forward", "onAvailableFeaturesUpdated ${features.toJson()}");
+    availableFeatures(features);
   }
 }

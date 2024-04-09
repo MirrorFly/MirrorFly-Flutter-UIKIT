@@ -703,6 +703,17 @@ callDisconnectedStatus(){
     }
   }
 
+  void videoMuteStatusChanged(String muteEvent, String userJid) {
+    var callUserIndex = callList.indexWhere((element) => element.userJid!.value == userJid);
+    if (!callUserIndex.isNegative) {
+      debugPrint("index $callUserIndex");
+      callList[callUserIndex].isVideoMuted(muteEvent == MuteStatus.remoteVideoMute);
+    } else {
+      debugPrint("#Mirrorfly call User Not Found in list to video mute the status");
+    }
+  }
+
+
   void callDuration(String timer) {
     // callTimer(timer);
     if(callTimer.value!="Disconnected") {

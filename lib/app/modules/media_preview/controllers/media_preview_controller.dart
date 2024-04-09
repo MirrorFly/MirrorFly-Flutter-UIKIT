@@ -3,11 +3,14 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:mirrorfly_plugin/logmessage.dart';
+import 'package:mirrorfly_plugin/model/available_features.dart';
 import 'package:mirrorfly_plugin/model/user_list_model.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:get/get.dart';
 
 import '../../../common/constants.dart';
+import '../../../common/main_controller.dart';
 import '../../../data/helper.dart';
 import '../../chat/controllers/chat_controller.dart';
 import '../../gallery_picker/src/data/models/picked_asset_model.dart';
@@ -15,7 +18,7 @@ import '../../gallery_picker/src/data/models/picked_asset_model.dart';
 class MediaPreviewController extends FullLifeCycleController
     with FullLifeCycleMixin {
   var userName = Constants.emptyString;//Get.arguments['userName'];
-  Rx<Profile> profile = Profile().obs;//Get.arguments['profile'] as Profile;
+  Rx<ProfileDetails> profile = ProfileDetails().obs;//Get.arguments['profile'] as Profile;
 
   TextEditingController caption = TextEditingController();
 
@@ -44,7 +47,7 @@ class MediaPreviewController extends FullLifeCycleController
     // Your implementation here
   }
 
-  void init(List<PickedAssetModel> filePath, String userName, Profile profile,
+  void init(List<PickedAssetModel> filePath, String userName, ProfileDetails profile,
       String textMessage, bool showAdd, bool isFromGalleryPicker) {
     this.userName= userName;
     this.profile(profile);
@@ -158,4 +161,10 @@ class MediaPreviewController extends FullLifeCycleController
 
   @override
   void onInactive() {}
+
+  var availableFeatures = Get.find<MainController>().availableFeature;
+  void onAvailableFeaturesUpdated(AvailableFeatures features) {
+    LogMessage.d("MediaPreview", "onAvailableFeaturesUpdated ${features.toJson()}");
+    availableFeatures(features);
+  }
 }

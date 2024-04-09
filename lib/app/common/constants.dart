@@ -790,6 +790,7 @@ class Constants {
   static const onGoingCallView = "ongoing_call_view";
   static const outGoingCallView = "outgoing_call_view";
   static const participantView = "participant_view";
+  static const callTimeOutView = "time_out_view";
 
 //Call
   static const unavailableTryAgain = "Unavailable, Try again later";
