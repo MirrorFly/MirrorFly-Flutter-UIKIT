@@ -10,6 +10,7 @@ import 'package:mirrorfly_plugin/logmessage.dart';
 import 'package:mirrorfly_plugin/model/available_features.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_view.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/chat/widgets/image_message_view.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import '../../../mirrorfly_uikit_plugin.dart';
 import '../../models.dart';
