@@ -671,12 +671,13 @@ class GroupInfoController extends GetxController {
     }
   }
 
-  onBackPressed() {
+  onBackPressed(BuildContext context) {
     if (showEmoji.value) {
       showEmoji(false);
     } else {
       nameController.text = profile.nickName.checkNull();
-      Get.back();
+      // Get.back();
+      Navigator.pop(context);
     }
   }
 }

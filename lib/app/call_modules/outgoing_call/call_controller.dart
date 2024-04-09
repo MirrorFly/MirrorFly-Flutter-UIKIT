@@ -284,16 +284,20 @@ class CallController extends GetxController {
         debugPrint("#Disconnect current route is ongoing call view");
         Future.delayed(const Duration(seconds: 1), () {
           debugPrint("#Disconnect call controller back called from Ongoing Screen");
-          Get.back();
+          // Get.back();
+          MirrorflyUikit.instance.navigationManager.navigateBack(context: context);
         });
       }else if(MirrorflyUikit.instance.navigationManager.getCurrentRoute() == Constants.participantView){
-        Get.back();
+        // Get.back();
+        MirrorflyUikit.instance.navigationManager.navigateBack(context: context);
         Future.delayed(const Duration(seconds: 1), () {
           debugPrint("#Disconnect call controller back called from Participant Screen");
-          Get.back();
+          // Get.back();
+          MirrorflyUikit.instance.navigationManager.navigateBack(context: context);
         });
       }else{
-        Get.back();
+        // Get.back();
+        MirrorflyUikit.instance.navigationManager.navigateBack(context: context);
       }
     } else {
       // Get.offNamed(getInitialRoute());
@@ -340,7 +344,8 @@ class CallController extends GetxController {
     if(MirrorflyUikit.instance.navigationManager.getCurrentRoute() == Constants.outGoingCallView){
       // This if condition is added for the group call remote busy - call action
       if(callList.length < 2){
-        Get.back();
+        // Get.back();
+        MirrorflyUikit.instance.navigationManager.navigateBack(context: context);
       }
       return;
     }

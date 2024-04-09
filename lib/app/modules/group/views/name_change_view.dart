@@ -34,7 +34,7 @@ class _NameChangeViewState extends State<NameChangeView> {
           if (didPop) {
             return;
           }
-          controller.onBackPressed();
+          controller.onBackPressed(context);
         },
         child: SafeArea(
           child: Column(

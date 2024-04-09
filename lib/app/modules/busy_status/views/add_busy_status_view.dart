@@ -36,7 +36,8 @@ class _AddBusyStatusViewState extends State<AddBusyStatusView> {
           if (controller.showEmoji.value) {
             controller.showEmoji(false);
           } else {
-            Get.back();
+            // Get.back();
+            Navigator.pop(context);
           }
         },
         child: SafeArea(

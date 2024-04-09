@@ -28,7 +28,7 @@ class LanguageController extends GetxController{
     languageList.refresh();
   }
 
-  void backFromSearch(){
+  void backFromSearch(BuildContext context){
     searchQuery.text="";
     search.value=false;
     if(isSearching){
@@ -37,7 +37,8 @@ class LanguageController extends GetxController{
      languageList.refresh();
      isSearching=false;
     }else{
-      Get.back();
+      // Get.back();
+      Navigator.pop(context);
     }
   }
 

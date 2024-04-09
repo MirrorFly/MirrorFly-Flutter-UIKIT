@@ -510,12 +510,14 @@ class ChatController extends FullLifeCycleController
     Helper.showAlert(message: AppConstants.unBlockMsg, actions: [
       TextButton(
           onPressed: () {
-            Get.back();
+            // Get.back();
+            Navigator.pop(context);
           },
           child: Text(AppConstants.cancel, style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
       TextButton(
           onPressed: () async {
-            Get.back();
+            // Get.back();
+            Navigator.pop(context);
             Mirrorfly.unblockUser(
                 userJid: profile.jid!,
                 flyCallBack: (FlyResponse response) {

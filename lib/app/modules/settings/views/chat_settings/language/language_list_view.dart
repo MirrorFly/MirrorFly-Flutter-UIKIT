@@ -18,7 +18,7 @@ class LanguageListView extends GetView<LanguageController> {
                   leading: IconButton(
                     icon: const Icon(Icons.arrow_back, color: iconColor),
                     onPressed: () {
-                      controller.backFromSearch();
+                      controller.backFromSearch(context);
                     },
                   ),
                   title: controller.search.value

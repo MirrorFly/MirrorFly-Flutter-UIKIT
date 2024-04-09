@@ -1270,7 +1270,8 @@ class ContactMessageView extends StatelessWidget {
         title: Text(AppConstants.sendSMS,
             style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
         onTap: () {
-          Get.back();
+          // Get.back();
+          Navigator.pop(context);
           sendSMS(contactChatMessage.contactPhoneNumbers[0]);
         },
       ),

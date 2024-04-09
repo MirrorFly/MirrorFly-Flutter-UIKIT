@@ -33,7 +33,8 @@ class ArchivedChatListView extends StatelessWidget {
             controller.clearAllChatSelection();
             return;
           }
-          Get.back();
+          // Get.back();
+          Navigator.pop(context);
         },
         child: Obx(() {
           return Scaffold(

@@ -34,7 +34,8 @@ class ImagePreviewController extends GetxController {
             filePath.value, caption.text, Constants.emptyString, context);
         // debugPrint("Preview View ==> $response");
         if (response != null) {
-          Get.back();
+          // Get.back();
+          Navigator.pop(context);
         }
       // }else{
       //   toToast(AppConstants.noInternetConnection);
