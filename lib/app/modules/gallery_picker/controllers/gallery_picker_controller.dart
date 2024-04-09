@@ -1,4 +1,5 @@
 import 'package:mirrorfly_plugin/model/user_list_model.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/gallery_picker/src/presentation/pages/gallery_media_picker_controller.dart';
 
 import '../../../data/helper.dart';
 import 'package:get/get.dart';
@@ -6,10 +7,10 @@ import 'package:get/get.dart';
 import '../src/data/models/picked_asset_model.dart';
 
 class GalleryPickerController extends GetxController {
-
+  var provider = GalleryMediaPickerController();
   var pickedFile = <PickedAssetModel>[].obs;
   var textMessage = ''.obs;
-  var profile = Profile().obs;
+  var profile = ProfileDetails().obs;
   var maxPickImages = 10;
 
 
