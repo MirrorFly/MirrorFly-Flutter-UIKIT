@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/extensions.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/widgets.dart';
-import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/model/chat_message_model.dart';
 
 import '../../../../mirrorfly_uikit_plugin.dart';
@@ -14,11 +14,10 @@ import '../controllers/message_info_controller.dart';
 
 class MessageInfoView extends StatefulWidget {
   const MessageInfoView(
-      {Key? key,
+      {super.key,
       required this.chatMessage,
       required this.isGroupProfile,
-      required this.jid,this.enableAppBar=true, this.showChatDeliveryIndicator = true})
-      : super(key: key);
+      required this.jid,this.enableAppBar=true, this.showChatDeliveryIndicator = true});
 
   // final String messageID;
   final ChatMessageModel chatMessage;
@@ -83,14 +82,12 @@ class _MessageInfoViewState extends State<MessageInfoView> {
                                 .withOpacity(0.2), //chatSentBgColor
                           )),
                       child: Obx(() {
-                        return controller.chatMessage.isNotEmpty ?Column(
+                        return Column(
                           children: [
-                            (controller.chatMessage[0].replyParentChatMessage ==
-                                    null)
-                                ? const SizedBox.shrink()
+                        controller.chatMessage[0].isThisAReplyMessage ?controller.chatMessage[0].replyParentChatMessage == null
+                                ? messageNotAvailableWidget(controller.chatMessage[0])
                                 : ReplyMessageHeader(
-                                    chatMessage: controller.chatMessage[0],
-                                  ),
+                                    chatMessage: controller.chatMessage[0],)  : const SizedBox.shrink(),
                             SenderHeader(
                                 isGroupProfile: controller.isGroupProfile.value,
                                 chatList: controller.chatMessage,
@@ -111,7 +108,7 @@ class _MessageInfoViewState extends State<MessageInfoView> {
                             //MessageHeader(chatList: controller.chatMessage, isTapEnabled: false,),
                             //MessageContent(chatList: controller.chatMessage, isTapEnabled: false,),
                           ],
-                        ) : const SizedBox.shrink();
+                        );
                       }),
                     ),
                   ),
@@ -161,9 +158,7 @@ class _MessageInfoViewState extends State<MessageInfoView> {
                             physics: const NeverScrollableScrollPhysics(),
                             itemCount: controller.messageDeliveredList.length,
                             itemBuilder: (cxt, index) {
-                              var member = controller
-                                  .messageDeliveredList[index]
-                                  .memberProfileDetails!;
+                              var member = controller.messageDeliveredList[index].profileDetails!;
                               return memberItem(
                                 name: member.name.checkNull().isNotEmpty ? member.name.checkNull() : member.nickName.checkNull(),
                                 image: member.image.checkNull(),
@@ -211,7 +206,7 @@ class _MessageInfoViewState extends State<MessageInfoView> {
                             itemCount: controller.messageReadList.length,
                             itemBuilder: (cxt, index) {
                               var member = controller
-                                  .messageReadList[index].memberProfileDetails!;
+                                  .messageReadList[index].profileDetails!;
                               return memberItem(
                                 name: member.name.checkNull().isNotEmpty ? member.name.checkNull() : member.nickName.checkNull(),
                                 image: member.image.checkNull(),

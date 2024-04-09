@@ -322,7 +322,7 @@ class ProfileController extends GetxController {
   }
 
   Future imagePicker(BuildContext context) async {
-    if (await AppPermission.getStoragePermission(context)) {
+    if (await AppPermission.getStoragePermission(context: context)) {
       if (await AppUtils.isNetConnected()) {
         FilePickerResult? result = await FilePicker.platform
             .pickFiles(allowMultiple: false, type: FileType.image);

@@ -45,7 +45,7 @@ class AppPermission {
     }
   }
 
-  static Future<bool> getStoragePermission(BuildContext context) async {
+  static Future<bool> getStoragePermission({required BuildContext context, String? permissionContent, String? deniedContent}) async {
     // var info = await PackageInfo.fromPlatform();
     var sdkVersion=0;
     if (Platform.isAndroid) {
@@ -55,7 +55,7 @@ class AppPermission {
       sdkVersion = 0;
     }
 
-    if (sdkVersion < 33) {
+    if (sdkVersion < 33 && Platform.isAndroid) {
       final permission = await Permission.storage.status;
       if (permission != PermissionStatus.granted &&
           permission != PermissionStatus.permanentlyDenied) {
@@ -70,9 +70,15 @@ class AppPermission {
             if (newp.isGranted) {
               return true;
             } else {
-
+              var popupValue = await customPermissionDialog(
+                  icon: filePermission,
+                  content: deniedContent ?? getPermissionAlertMessage("storage"), context: context, appName: AppConstants.appName);
+              if (popupValue) {
                 openAppSettings();
                 return false;
+              } else {
+                return false;
+              }
 
             }
           }else{
@@ -82,6 +88,53 @@ class AppPermission {
         return false;
       } else {
         return permission.isGranted;
+      }
+    } else if (Platform.isIOS) {
+      final photos = await Permission.photos.status;
+      final storage = await Permission.storage.status;
+
+      const newPermission = [
+        Permission.photos,
+        Permission.storage,
+        // Permission.audio
+      ];
+      if ((photos != PermissionStatus.granted &&
+          photos != PermissionStatus.permanentlyDenied) ||
+          (storage != PermissionStatus.granted &&
+              storage != PermissionStatus.permanentlyDenied)) {
+        mirrorFlyLog("showing mirrorfly popup", "");
+        var deniedPopupValue = await mirrorFlyPermissionDialog(
+            icon: filePermission, content: permissionContent ?? Constants.filePermission, context: context, appName: AppConstants.appName);
+        if (deniedPopupValue) {
+          var newp = await newPermission.request();
+          PermissionStatus? photo = newp[Permission.photos];
+          PermissionStatus? storage = newp[Permission.storage];
+          // var audio = await newPermission[2].isGranted;
+          if (photo!.isGranted && storage!.isGranted) {
+            return true;
+          } else if (photo.isPermanentlyDenied ||
+              storage!.isPermanentlyDenied) {
+            var popupValue = await customPermissionDialog(
+                icon: filePermission,
+                content: deniedContent ?? getPermissionAlertMessage("storage"), context: context, appName: AppConstants.appName);
+            if (popupValue) {
+              openAppSettings();
+              return false;
+            } else {
+              return false;
+            }
+          } else {
+            return false;
+          }
+        } else {
+          return false; //PermissionStatus.denied;
+        }
+      } else {
+        mirrorFlyLog("showing mirrorfly popup",
+            "${photos.isGranted} ${storage.isGranted}");
+        return (photos.isGranted && storage.isGranted);
+        // ? photos
+        // : photos;
       }
     } else {
       if(context.mounted) {

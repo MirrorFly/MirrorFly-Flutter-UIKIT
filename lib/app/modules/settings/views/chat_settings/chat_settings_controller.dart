@@ -67,7 +67,7 @@ class ChatSettingsController extends GetxController {
   }
 
   Future<void> enableDisableAutoDownload(BuildContext context) async {
-    AppPermission.getStoragePermission(context).then((value) {
+    AppPermission.getStoragePermission(context: context).then((value) {
       if(value){
       // if (await askStoragePermission(context)) {
         var enable = !_autoDownloadEnabled.value;//SessionManagement.isAutoDownloadEnable();
