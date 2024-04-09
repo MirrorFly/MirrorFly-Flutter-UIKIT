@@ -5,6 +5,7 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/extensions.dart';
 
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
@@ -13,8 +14,7 @@ import '../../image_view/views/image_view_view.dart';
 import '../controllers/chat_info_controller.dart';
 
 class ChatInfoView extends StatefulWidget {
-  const ChatInfoView({Key? key, required this.jid, this.enableAppBar = true})
-      : super(key: key);
+  const ChatInfoView({super.key, required this.jid, this.enableAppBar = true});
   final String jid;
   final bool enableAppBar;
 
@@ -86,7 +86,7 @@ class _ChatInfoViewState extends State<ChatInfoView> {
                   background: ImageNetwork(
                     url: controller.profile.image.checkNull(),
                     width: MediaQuery.of(context).size.width,
-                    height: Get.height * 0.45,
+                    height: MediaQuery.of(context).size.height * 0.45,
                     clipOval: false,
                     errorWidget: ProfileTextImage(
                       text: controller.profile.getName(),
