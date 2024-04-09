@@ -518,7 +518,6 @@ class Constants {
 
   static const String yesterday = "yesterday";
   static const String today = "today";
-  // static const String yesterdayUpper = "YESTERDAY";
   static const bool isMobileLogin = true;
 
   static const String bulletPoint = "\u2022 ";

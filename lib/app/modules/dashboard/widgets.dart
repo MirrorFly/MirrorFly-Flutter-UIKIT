@@ -62,12 +62,12 @@ class RecentChatItem extends StatelessWidget {
   final bool showChatDeliveryIndicator;
   final String typingUserid;
 
-  final titlestyle = TextStyle(
+  final titleStyle = TextStyle(
       fontSize: 16.0,
       fontWeight: FontWeight.w700,
       fontFamily: 'sf_ui',
       color: MirrorflyUikit.getTheme?.textPrimaryColor ?? textHintColor);
-  final typingstyle =  TextStyle(
+  final typingStyle =  TextStyle(
       fontSize: 14.0,
       fontWeight: FontWeight.w600,
       fontFamily: 'sf_ui',
@@ -119,7 +119,7 @@ class RecentChatItem extends StatelessWidget {
           spanTxt.isEmpty
               ? Text(
                   getRecentName(item),
-                  style: titlestyle,
+                  style: titleStyle,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 )
@@ -127,11 +127,13 @@ class RecentChatItem extends StatelessWidget {
                   getRecentName(item),
                   //item.profileName.checkNull(),
                   spanTxt,
-                  titlestyle),
+                  titleStyle),
           Row(
             children: [
               item.isLastMessageSentByMe.checkNull() && !isForwardMessage && !item.isLastMessageRecalledByUser.checkNull() && showChatDeliveryIndicator
-                  ? (item.lastMessageType ==  Constants.msgTypeText && item.lastMessageContent.checkNull().isNotEmpty || item.lastMessageType != Constants.msgTypeText) ? buildMessageIndicator() : const SizedBox()
+                  ? (item.lastMessageType ==  Constants.msgTypeText && item.lastMessageContent.checkNull().isNotEmpty || item.lastMessageType != Constants.msgTypeText) &&
+                  typingUserid.isEmpty ? buildMessageIndicator()
+                  : const SizedBox()
                   : const SizedBox(),
               isForwardMessage
                   ? item.isGroup!
@@ -153,6 +155,7 @@ class RecentChatItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: 16.0, left: 8, top: 5),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           buildRecentChatTime(context),
           Visibility(
@@ -172,7 +175,7 @@ class RecentChatItem extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              buildArchivedIconVisibility(),
+              buildPinIconVisibility(),
               buildMuteIconVisibility(),
               buildArchivedTextVisibility()
             ],
@@ -206,12 +209,7 @@ class RecentChatItem extends StatelessWidget {
       child: getMessageIndicator(
           item.lastMessageStatus.checkNull(),
           item.isLastMessageSentByMe.checkNull(),
-          item.lastMessageType.checkNull(),item.isLastMessageRecalledByUser.checkNull())
-      /*CircleAvatar(
-        radius: 4,
-        backgroundColor: Colors.green,
-      )*/
-      ,
+          item.lastMessageType.checkNull(),item.isLastMessageRecalledByUser.checkNull()),
     );
   }
 
@@ -252,9 +250,7 @@ class RecentChatItem extends StatelessWidget {
             )
           : ProfileTextImage(
               text: getRecentName(
-                  item), /* item.profileName.checkNull().isEmpty
-                              ? item.nickName.checkNull()
-                              : item.profileName.checkNull(),*/
+                  item),
             ),
       isGroup: item.isGroup.checkNull(),
       blocked: item.isBlockedMe.checkNull() || item.isAdminBlocked.checkNull(),
@@ -297,11 +293,7 @@ class RecentChatItem extends StatelessWidget {
             AppConstants.archived,
             style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor ?? buttonBgColor),
           ),
-        ) /*SvgPicture.asset(
-                                      archive,
-                                      width: 18,
-                                      height: 18,
-                                    )*/
+        )
         );
   }
 
@@ -316,16 +308,18 @@ class RecentChatItem extends StatelessWidget {
         ));
   }
 
-  Visibility buildArchivedIconVisibility() {
+  Visibility buildPinIconVisibility() {
     return Visibility(
         visible: !item.isChatArchived! && item.isChatPinned! && !isForwardMessage,
         child: SvgPicture.asset(
-          pin,package: package,
-          colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),
+          pin, package: package,
           width: 18,
           height: 18,
-        ));
+        colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),
+
+    ));
   }
+
   Widget buildTypingUser() {
     return typingUserid.checkNull().isEmpty
         ? const SizedBox(
@@ -338,7 +332,7 @@ class RecentChatItem extends StatelessWidget {
             return Text(
               getTypingUser(data.data!, item.isGroup),
               //"${data.data!.name.checkNull()} typing...",
-              style: typingstyle,
+              style: typingStyle,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             );
@@ -554,7 +548,7 @@ Widget textMessageSpannableText(String message,bool isSentByMe, {int? maxLines, 
   return Text.rich(
     customTextSpan(message, prevValue, normalStyle, underlineStyle, isClickable),
     maxLines: maxLines,
-    overflow: maxLines==null ? null : TextOverflow.ellipsis,
+    overflow: maxLines == null ? null : TextOverflow.ellipsis,
   );
 }
 
@@ -573,13 +567,13 @@ TextSpan customTextSpan(String message, String prevValue,
           style: spannableTextType(e) == "text" ? normalStyle : underlineStyle,
           recognizer:TapGestureRecognizer()
             ..onTap = isClickable ? () {
-              onTapForSpantext(e);
+              onTapForSpanText(e);
             } : null) ;
     }).toList(),
   );
 }
 
-onTapForSpantext(String e) {
+onTapForSpanText(String e) {
   var stringType = spannableTextType(e);
   debugPrint("Text span click");
   if (stringType == "website") {

@@ -13,12 +13,11 @@ import '../controllers/image_view_controller.dart';
 
 class ImageViewView extends StatefulWidget {
   const ImageViewView(
-      {Key? key,
+      {super.key,
       required this.imageName,
       this.imagePath,
       this.imageUrl,
-      this.enableAppBar = true})
-      : super(key: key);
+      this.enableAppBar = true});
 
   final String imageName;
   final String? imagePath;
@@ -85,7 +84,7 @@ class _ImageViewViewState extends State<ImageViewView> {
                     ? PhotoView(
                         imageProvider: CachedNetworkImageProvider(
                             controller.imageUrl.value,
-                            headers: {"Authorization": main.authToken.value}),
+                            headers: {"Authorization": main.currentAuthToken.value}),
                         // Contained = the smallest possible size to fit one dimension of the screen
                         minScale: PhotoViewComputedScale.contained * 0.8,
                         // Covered = the smallest possible size to fit the whole screen
