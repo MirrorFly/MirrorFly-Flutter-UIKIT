@@ -20,20 +20,17 @@ import 'package:mirrorfly_uikit_plugin/app/modules/chat/controllers/chat_control
 import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../../mirrorfly_uikit_plugin.dart';
 import '../modules/chatInfo/controllers/chat_info_controller.dart';
 import '../modules/notification/notification_builder.dart';
 import 'notification_service.dart';
 import 'app_constants.dart';
 import 'extensions.dart';
 
-class MainController extends FullLifeCycleController
-    with BaseController, FullLifeCycleMixin /*with FullLifeCycleMixin */ {
+class MainController extends FullLifeCycleController with BaseController, FullLifeCycleMixin /*with FullLifeCycleMixin */ {
   // var authToken = "".obs;
   var currentAuthToken = "".obs;
   var googleMapKey = "";
   Rx<String> mediaEndpoint = "".obs;
-  Rx<String> uploadEndpoint = "".obs;
   var maxDuration = 100.obs;
   var currentPos = 0.obs;
   var isPlaying = false.obs;
@@ -68,7 +65,7 @@ class MainController extends FullLifeCycleController
 
     getAvailableFeatures();
 
-    if(SessionManagement.getBool(AppConstants.enableLocalNotification)) {
+    if (SessionManagement.getBool(AppConstants.enableLocalNotification)) {
       NotificationService notificationService = NotificationService();
       await notificationService.init();
       _isAndroidPermissionGranted();
@@ -82,9 +79,8 @@ class MainController extends FullLifeCycleController
   Future<void> _isAndroidPermissionGranted() async {
     if (Platform.isAndroid) {
       final bool granted = await flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-          ?.areNotificationsEnabled() ??
+              .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+              ?.areNotificationsEnabled() ??
           false;
 
       // setState(() {
@@ -96,26 +92,19 @@ class MainController extends FullLifeCycleController
 
   Future<void> _requestPermissions() async {
     if (Platform.isIOS || Platform.isMacOS) {
-      await flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-          IOSFlutterLocalNotificationsPlugin>()
-          ?.requestPermissions(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
-      await flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-          MacOSFlutterLocalNotificationsPlugin>()
-          ?.requestPermissions(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
+      await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()?.requestPermissions(
+            alert: true,
+            badge: true,
+            sound: true,
+          );
+      await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<MacOSFlutterLocalNotificationsPlugin>()?.requestPermissions(
+            alert: true,
+            badge: true,
+            sound: true,
+          );
     } else if (Platform.isAndroid) {
       final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
-      flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>();
+          flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
 
       final bool? granted = await androidImplementation?.requestNotificationsPermission();
       // setState(() {
@@ -179,19 +168,17 @@ class MainController extends FullLifeCycleController
   }
 
   getMediaEndpoint() async {
-    if (SessionManagement.getMediaEndPoint().checkNull().isEmpty) {
-      Mirrorfly.mediaEndPoint().then((value) {
-        mirrorFlyLog("media_endpoint", value.toString());
-        if (value != null) {
-          if (value.isNotEmpty) {
-            uploadEndpoint(value);
-            SessionManagement.setMediaEndPoint(value);
-          } else {
-            uploadEndpoint(SessionManagement.getMediaEndPoint().checkNull());
-          }
+    Mirrorfly.mediaEndPoint().then((value) {
+      mirrorFlyLog("media_endpoint", value.toString());
+      if (value != null) {
+        if (value.isNotEmpty) {
+          mediaEndpoint(value);
+          SessionManagement.setMediaEndPoint(value);
+        } else {
+          mediaEndpoint(SessionManagement.getMediaEndPoint().checkNull());
         }
-      });
-    }
+      }
+    });
   }
 
   getCurrentAuthToken() async {
@@ -206,7 +193,7 @@ class MainController extends FullLifeCycleController
     });
   }
 
- /* getAuthToken() async {
+  /* getAuthToken() async {
     if (SessionManagement.getUsername().checkNull().isNotEmpty &&
         SessionManagement.getPassword().checkNull().isNotEmpty) {
       await Mirrorfly.refreshAndGetAuthToken().then((value) {
@@ -237,8 +224,7 @@ class MainController extends FullLifeCycleController
   handleAdminBlockedUserFromRegister() {}
 
   void startNetworkListen() {
-    final InternetConnectionChecker customInstance =
-        InternetConnectionChecker.createInstance(
+    final InternetConnectionChecker customInstance = InternetConnectionChecker.createInstance(
       checkTimeout: const Duration(seconds: 1),
       checkInterval: const Duration(seconds: 1),
     );
@@ -311,7 +297,7 @@ class MainController extends FullLifeCycleController
 
     NotificationBuilder.cancelNotifications();
     checkShouldShowPin();
-    if (!MirrorflyUikit.instance.isTrialLicenceKey) {
+    if (Constants.enableContactSync) {
       syncContacts();
     }
     unreadMissedCallCount();
@@ -319,13 +305,11 @@ class MainController extends FullLifeCycleController
 
   void syncContacts() async {
     if (await Permission.contacts.isGranted) {
-      if (await AppUtils.isNetConnected() &&
-          !await Mirrorfly.contactSyncStateValue()) {
+      if (await AppUtils.isNetConnected() && !await Mirrorfly.contactSyncStateValue()) {
         final permission = await Permission.contacts.status;
         if (permission == PermissionStatus.granted) {
           if (SessionManagement.getLogin()) {
-            Mirrorfly.syncContacts(isFirstTime:
-                !SessionManagement.isInitialContactSyncDone(), flyCallBack: (_) {});
+            Mirrorfly.syncContacts(isFirstTime: !SessionManagement.isInitialContactSyncDone(), flyCallBack: (_) {});
           }
         }
       }
@@ -353,14 +337,11 @@ class MainController extends FullLifeCycleController
   void checkShouldShowPin() {
     var lastSession = SessionManagement.appLastSession();
     var lastPinChangedAt = SessionManagement.lastPinChangedAt();
-    var sessionDifference = DateTime.now()
-        .difference(DateTime.fromMillisecondsSinceEpoch(lastSession));
-    var lockSessionDifference = DateTime.now()
-        .difference(DateTime.fromMillisecondsSinceEpoch(lastPinChangedAt));
+    var sessionDifference = DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(lastSession, isUtc: true));
+    var lockSessionDifference = DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(lastPinChangedAt, isUtc: true));
     debugPrint('sessionDifference seconds ${sessionDifference.inSeconds}');
     debugPrint('lockSessionDifference days ${lockSessionDifference.inDays}');
-    if (Constants.pinAlert <= lockSessionDifference.inDays &&
-        Constants.pinExpiry >= lockSessionDifference.inDays) {
+    if (Constants.pinAlert <= lockSessionDifference.inDays && Constants.pinExpiry >= lockSessionDifference.inDays) {
       //Alert Day
       debugPrint('Alert Day');
     } else if (Constants.pinExpiry < lockSessionDifference.inDays) {
@@ -370,8 +351,7 @@ class MainController extends FullLifeCycleController
     } else {
       //if 30 days not completed
       debugPrint('Not Expired');
-      if (Constants.sessionLockTime <= sessionDifference.inSeconds ||
-          fromLockScreen) {
+      if (Constants.sessionLockTime <= sessionDifference.inSeconds || fromLockScreen) {
         //Show Pin if App Lock Enabled
         debugPrint('Show Pin');
         presentPinPage();

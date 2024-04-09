@@ -7,7 +7,7 @@ import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 
 import '../../mirrorfly_uikit_plugin.dart';
 class CropImage extends StatefulWidget {
-  const CropImage({Key? key, required this.imageFile}) : super(key: key);
+  const CropImage({super.key, required this.imageFile});
   final File imageFile;
 
   // File? _file;

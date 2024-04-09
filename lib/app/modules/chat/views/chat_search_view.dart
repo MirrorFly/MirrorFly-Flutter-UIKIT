@@ -20,10 +20,13 @@ class ChatSearchView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
         controller.searchInit();
-        return Future.value(true);
+        if (didPop) {
+          return;
+        }
       },
       child: Scaffold(
         backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
@@ -126,10 +129,10 @@ class ChatSearchView extends StatelessWidget {
                                         controller.profile.isGroupProfile,
                                     chatList: chatList,
                                     index: index),
-                                (chatList[index].replyParentChatMessage == null)
-                                    ? const SizedBox.shrink()
+                                chatList[index].isThisAReplyMessage ? chatList[index].replyParentChatMessage == null
+                                    ? messageNotAvailableWidget(chatList[index])
                                     : ReplyMessageHeader(
-                                        chatMessage: chatList[index]),
+                                        chatMessage: chatList[index]) : const SizedBox.shrink(),
                                 MessageContent(
                                   chatList: chatList,
                                   index: index,

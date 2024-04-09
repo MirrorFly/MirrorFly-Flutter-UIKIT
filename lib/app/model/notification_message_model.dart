@@ -211,11 +211,11 @@ class ChatMessage {
         "senderUserJid": senderUserJid,
         "senderUserName": senderUserName,
         "contactChatMessage":
-            contactChatMessage == null ? null : contactChatMessage!.toJson(),
+            contactChatMessage?.toJson(),
         "mediaChatMessage":
-            mediaChatMessage == null ? null : mediaChatMessage!.toJson(),
+            mediaChatMessage?.toJson(),
         "locationChatMessage":
-            locationChatMessage == null ? null : locationChatMessage!.toJson(),
+            locationChatMessage?.toJson(),
       };
 }
 

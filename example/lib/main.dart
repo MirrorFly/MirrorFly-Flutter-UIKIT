@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/notification/notification_service.dart';
-// import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/notification_service.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 var isOnGoingCall = false;
@@ -10,7 +9,6 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MirrorflyUikit.instance.initUIKIT(
     navigatorKey:navigatorKey,
-  baseUrl: 'https://api-uikit-qa.contus.us/api/v1/',
   licenseKey: 'ckIjaccWBoMNvxdbql8LJ2dmKqT5bp',
   googleMapKey: 'AIzaSyBaKkrQnLT4nacpKblIE5d4QK6GpaX5luQ',
   iOSContainerID: 'group.com.mirrorfly.flutter');
@@ -109,7 +107,7 @@ class _DashboardState extends State<Dashboard> {
                           if (uniqueId.isNotEmpty) {
                             try {
                               var response =
-                                  await MirrorflyUikit.registerUser(userIdentifier: uniqueId);
+                                  await MirrorflyUikit.login(userIdentifier: uniqueId);
                               debugPrint("register user $response");
                               showSnack(response['message']);
                             } catch (e) {

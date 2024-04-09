@@ -11,7 +11,7 @@ import '../../../common/widgets.dart';
 import '../controllers/local_contact_controller.dart';
 
 class LocalContactView extends StatefulWidget {
-  const LocalContactView({Key? key,this.enableAppBar=true}) : super(key: key);
+  const LocalContactView({super.key,this.enableAppBar=true});
   final bool enableAppBar;
   @override
   State<LocalContactView> createState() => _LocalContactViewState();
@@ -83,15 +83,19 @@ class _LocalContactViewState extends State<LocalContactView> {
                   ),
           ],
         ) : null,
-        body: WillPopScope(
-          onWillPop: () {
+        body: PopScope(
+          canPop: false,
+          onPopInvoked: (didPop) {
+            if (didPop) {
+              return;
+            }
             if (controller.search.value) {
               controller.searchTextController.text = "";
               controller.onSearchCancelled();
               controller.search.value = false;
-              return Future.value(false);
+              return;
             } else {
-              return Future.value(true);
+              Navigator.pop(context);
             }
           },
           child: SafeArea(

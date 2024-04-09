@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -11,13 +10,7 @@ import 'package:flutter_libphonenumber/flutter_libphonenumber.dart' as lib_phone
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:mirrorfly_plugin/logmessage.dart';
 import 'package:mirrorfly_plugin/mirrorflychat.dart';
-import 'package:mirrorfly_plugin/model/callback.dart';
-import 'package:mirrorfly_plugin/model/export_model.dart';
-import 'package:mirrorfly_plugin/model/group_members_model.dart';
-import 'package:mirrorfly_plugin/model/message_object.dart';
-import 'package:mirrorfly_plugin/model/user_list_model.dart';
 import 'package:mirrorfly_uikit_plugin/app/call_modules/group_participants/group_participants_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/de_bouncer.dart';
@@ -46,7 +39,6 @@ import '../../../common/constants.dart';
 import '../../../data/apputils.dart';
 import '../../../data/helper.dart';
 
-import 'package:mirrorfly_plugin/flychat.dart';
 import '../../../models.dart';
 
 import '../../gallery_picker/src/data/models/picked_asset_model.dart';
@@ -179,7 +171,7 @@ class ChatController extends FullLifeCycleController
     debugPrint('userJid $userJid');
     //make unreadMessageTypeMessageId
     if (Platform.isAndroid) {
-      unreadMessageTypeMessageId = "M${userJid}";
+      unreadMessageTypeMessageId = "M$userJid";
     } else if (Platform.isIOS) {
       unreadMessageTypeMessageId = "M_${getMobileNumberFromJid(userJid)}";
     }
@@ -2481,9 +2473,9 @@ class ChatController extends FullLifeCycleController
   bool forwardMessageVisibility(ChatMessageModel chat) {
     if (!chat.isMessageRecalled.value && !chat.isMessageDeleted) {
       if (chat.isMediaMessage()) {
-        if (chat.mediaChatMessage!.mediaDownloadStatus ==
+        if (chat.mediaChatMessage!.mediaDownloadStatus.value ==
                 Constants.mediaDownloaded ||
-            chat.mediaChatMessage!.mediaUploadStatus ==
+            chat.mediaChatMessage!.mediaUploadStatus.value ==
                 Constants.mediaUploaded) {
           return true;
         }

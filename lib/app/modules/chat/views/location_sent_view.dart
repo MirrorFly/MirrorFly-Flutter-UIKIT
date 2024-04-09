@@ -8,7 +8,7 @@ import '../../../../mirrorfly_uikit_plugin.dart';
 import '../controllers/location_controller.dart';
 
 class LocationSentView extends StatefulWidget{
-  const LocationSentView({Key? key,this.enableAppBar=true}) : super(key: key);
+  const LocationSentView({super.key,this.enableAppBar=true});
   final bool enableAppBar;
   @override
   State<LocationSentView> createState() => _LocationSentViewState();
@@ -23,9 +23,12 @@ class _LocationSentViewState extends State<LocationSentView> {
   }
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        return Future.value(true);
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          return;
+        }
       },
       child: Scaffold(
         backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,

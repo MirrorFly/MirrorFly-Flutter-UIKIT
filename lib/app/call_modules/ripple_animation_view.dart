@@ -3,8 +3,8 @@ import 'dart:math' as math;
 
 
 class RipplesAnimation extends StatefulWidget {
-  const RipplesAnimation({Key? key, this.size = 50.0, this.color = Colors.red,
-    required this.onPressed, required this.child,}) : super(key: key);
+  const RipplesAnimation({super.key, this.size = 50.0, this.color = Colors.red,
+    required this.onPressed, required this.child,});
   final double size;
   final Color color;
   final Widget child;

@@ -10,7 +10,7 @@ import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
 
 class NameChangeView extends StatefulWidget {
-  const NameChangeView({Key? key,this.enableAppBar=true}) : super(key: key);
+  const NameChangeView({super.key,this.enableAppBar=true});
   final bool enableAppBar;
   @override
   State<NameChangeView> createState() => _NameChangeViewState();
@@ -28,15 +28,13 @@ class _NameChangeViewState extends State<NameChangeView> {
         iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
         backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
       ) : null,
-      body: WillPopScope(
-        onWillPop: () {
-          if (controller.showEmoji.value) {
-            controller.showEmoji(false);
-          } else {
-            // Get.back();
-            Navigator.pop(context);
+      body: PopScope(
+        canPop: false,
+        onPopInvoked: (didPop){
+          if (didPop) {
+            return;
           }
-          return Future.value(false);
+          controller.onBackPressed();
         },
         child: SafeArea(
           child: Column(
@@ -56,7 +54,7 @@ class _NameChangeViewState extends State<NameChangeView> {
                               style:
                                   TextStyle(fontSize: 20, fontWeight: FontWeight.normal,overflow: TextOverflow.visible,color: MirrorflyUikit.getTheme?.textPrimaryColor,),
                               onChanged: (_) => controller.onChanged(),
-                              maxLength: 121,
+                              maxLength: 25,
                               maxLines: 1,
                               focusNode: controller.focusNode,
                               controller: controller.nameController,
@@ -103,49 +101,53 @@ class _NameChangeViewState extends State<NameChangeView> {
                 ),
 
               ),
-              Row(children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => Navigator.pop(context),
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: MaterialStateColor.resolveWith(
-                                (states) => MirrorflyUikit.getTheme!.secondaryColor),
-                        shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.zero)),
-                    child: Text(
-                      AppConstants.cancel.toUpperCase(),
-                      style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor, fontSize: 16.0),
+
+              const Divider(thickness: 1, color: Colors.grey, height: 1,),
+              IntrinsicHeight(
+                child: Row(children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: MaterialStateColor.resolveWith(
+                                  (states) => MirrorflyUikit.getTheme!.secondaryColor),
+                          shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.zero)),
+                      child: Text(
+                        AppConstants.cancel.toUpperCase(),
+                        style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor, fontSize: 16.0),
+                      ),
                     ),
                   ),
-                ),
-                const Divider(
-                  color: Colors.grey,
-                  thickness: 0.2,
-                ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if(controller.nameController.text.trim().isNotEmpty) {
-                        // Get.back(result: controller.nameController.text
-                        //     .trim().toString());
-                        Navigator.pop(context, controller.nameController.text
-                            .trim().toString());
-                      }else{
-                        toToast(AppConstants.nameCantEmpty);
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: MaterialStateColor.resolveWith(
-                                (states) => MirrorflyUikit.getTheme!.secondaryColor),
-                        shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.zero)),
-                    child: Text(
-                      AppConstants.ok.toUpperCase(),
-                      style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor, fontSize: 16.0),
+                  const Divider(
+                    color: Colors.grey,
+                    thickness: 0.2,
+                  ),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if(controller.nameController.text.trim().isNotEmpty) {
+                          // Get.back(result: controller.nameController.text
+                          //     .trim().toString());
+                          Navigator.pop(context, controller.nameController.text
+                              .trim().toString());
+                        }else{
+                          toToast(AppConstants.nameCantEmpty);
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: MaterialStateColor.resolveWith(
+                                  (states) => MirrorflyUikit.getTheme!.secondaryColor),
+                          shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.zero)),
+                      child: Text(
+                        AppConstants.ok.toUpperCase(),
+                        style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor, fontSize: 16.0),
+                      ),
                     ),
                   ),
-                ),
-              ]),
+                ]),
+              ),
               emojiLayout(),
             ],
           ),
@@ -158,8 +160,9 @@ class _NameChangeViewState extends State<NameChangeView> {
     return Obx(() {
       if (controller.showEmoji.value) {
         return EmojiLayout(
-          textController: controller.nameController,
-            onEmojiSelected : (cat, emoji)=>controller.onChanged()
+          textController: TextEditingController(),
+          onEmojiSelected : (cat, emoji)=>controller.onEmojiSelected(emoji),
+          onBackspacePressed: () => controller.onEmojiBackPressed(),
         );
       } else {
         return const SizedBox.shrink();

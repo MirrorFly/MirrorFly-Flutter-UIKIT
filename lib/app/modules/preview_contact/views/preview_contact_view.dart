@@ -9,7 +9,7 @@ import '../../../common/widgets.dart';
 import '../controllers/preview_contact_controller.dart';
 
 class PreviewContactView extends StatefulWidget {
-  const PreviewContactView({Key? key, this.contactList, this.previewContactList, required this.from, this.contactName,this.enableAppBar=true}) : super(key: key);
+  const PreviewContactView({super.key, this.contactList, this.previewContactList, required this.from, this.contactName,this.enableAppBar=true});
 
   final List<LocalContact>? contactList;
   final List<String>? previewContactList;

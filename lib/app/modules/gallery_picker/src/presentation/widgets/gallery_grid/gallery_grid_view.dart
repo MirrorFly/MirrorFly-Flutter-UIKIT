@@ -6,6 +6,7 @@ import 'package:photo_manager/photo_manager.dart';
 import '../../pages/gallery_media_picker_controller.dart';
 
 typedef OnAssetItemClick = void Function(AssetEntity entity, int index);
+typedef RemoveAssetItem = void Function(AssetEntity entity, int index);
 
 class GalleryGridView extends StatefulWidget {
   /// asset album
@@ -16,6 +17,10 @@ class GalleryGridView extends StatefulWidget {
 
   /// on tap thumbnail
   final OnAssetItemClick? onAssetItemClick;
+
+
+  /// remove if size exceeds the limit
+  final RemoveAssetItem? onAssetRemove;
 
   /// picker data provider
   final GalleryMediaPickerController provider;
@@ -57,10 +62,11 @@ class GalleryGridView extends StatefulWidget {
   final int? thumbnailQuality;
 
   const GalleryGridView(
-      {Key? key,
+      {super.key,
       required this.path,
       required this.provider,
       this.onAssetItemClick,
+        this.onAssetRemove,
       this.loadWhenScrolling = false,
       this.childAspectRatio = 0.5,
       this.gridViewBackgroundColor = Colors.white,
@@ -73,8 +79,7 @@ class GalleryGridView extends StatefulWidget {
       this.imageBackgroundColor = Colors.white,
       this.thumbnailBoxFix = BoxFit.cover,
       this.selectedCheckBackgroundColor = Colors.white,
-      this.thumbnailQuality = 200})
-      : super(key: key);
+      this.thumbnailQuality = 200});
 
   @override
   GalleryGridViewState createState() => GalleryGridViewState();
@@ -114,10 +119,8 @@ class GalleryGridViewState extends State<GalleryGridView> {
                         key: ValueKey(widget.path),
                         shrinkWrap: true,
                         padding: widget.padding ?? const EdgeInsets.all(0),
-                        physics:
-                            widget.gridViewPhysics ?? const ScrollPhysics(),
-                        controller:
-                            widget.gridViewController ?? ScrollController(),
+                        physics: widget.gridViewPhysics ?? const ScrollPhysics(),
+                        controller: widget.gridViewController ?? ScrollController(),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           childAspectRatio: widget.childAspectRatio,
                           crossAxisCount: widget.crossAxisCount,
@@ -126,13 +129,14 @@ class GalleryGridViewState extends State<GalleryGridView> {
                         ),
 
                         /// render thumbnail
-                        itemBuilder: (context, index) =>
-                            _buildItem(context, index, widget.provider),
+                        itemBuilder: (context, index) => _buildItem(context, index, widget.provider),
                         itemCount: widget.provider.assetCount,
                         addRepaintBoundaries: true,
                       )
                     : Center(
-                        child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
+                        child: CircularProgressIndicator(
+                          color: MirrorflyUikit.getTheme?.primaryColor,
+                        ),
                       ),
               ),
             ),
@@ -145,8 +149,7 @@ class GalleryGridViewState extends State<GalleryGridView> {
           );
   }
 
-  Widget _buildItem(
-      BuildContext context, index, GalleryMediaPickerController provider) {
+  Widget _buildItem(BuildContext context, index, GalleryMediaPickerController provider) {
     debugPrint("asset build index --> $index");
     debugPrint("asset build provider--> ${provider.assetCount}");
     return GestureDetector(
@@ -154,8 +157,7 @@ class GalleryGridViewState extends State<GalleryGridView> {
       onTap: () async {
         var asset = cacheMap[index];
         if (asset == null) {
-          asset = (await widget.path!
-              .getAssetListRange(start: index, end: index + 1))[0];
+          asset = (await widget.path!.getAssetListRange(start: index, end: index + 1))[0];
           cacheMap[index] = asset;
         }
         widget.onAssetItemClick?.call(asset, index);
@@ -166,8 +168,7 @@ class GalleryGridViewState extends State<GalleryGridView> {
     );
   }
 
-  Widget _buildScrollItem(
-      BuildContext context, int index, GalleryMediaPickerController provider) {
+  Widget _buildScrollItem(BuildContext context, int index, GalleryMediaPickerController provider) {
     /// load cache images
     final asset = cacheMap[index];
     if (asset != null) {
@@ -198,16 +199,21 @@ class GalleryGridViewState extends State<GalleryGridView> {
           cacheMap[index] = asset;
 
           /// thumbnail widget
-          return ThumbnailWidget(
-            asset: asset,
-            index: index,
-            provider: provider,
-            thumbnailQuality: widget.thumbnailQuality!,
-            selectedBackgroundColor: widget.selectedBackgroundColor,
-            selectedCheckColor: widget.selectedCheckColor,
-            imageBackgroundColor: widget.imageBackgroundColor,
-            thumbnailBoxFix: widget.thumbnailBoxFix,
-            selectedCheckBackgroundColor: widget.selectedCheckBackgroundColor,
+          return GestureDetector(
+            onTap: () async {
+              widget.onAssetItemClick?.call(asset, index);
+            },
+            child: ThumbnailWidget(
+              asset: asset,
+              index: index,
+              provider: provider,
+              thumbnailQuality: widget.thumbnailQuality!,
+              selectedBackgroundColor: widget.selectedBackgroundColor,
+              selectedCheckColor: widget.selectedCheckColor,
+              imageBackgroundColor: widget.imageBackgroundColor,
+              thumbnailBoxFix: widget.thumbnailBoxFix,
+              selectedCheckBackgroundColor: widget.selectedCheckBackgroundColor,
+            ),
           );
         },
       );
