@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_plugin/model/user_list_model.dart';
@@ -58,7 +57,10 @@ class StarredMessageHeader extends StatelessWidget {
                           child: Text(
                             userProfile.name.checkNull(),
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 15, color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color:
+                                    MirrorflyUikit.getTheme?.textPrimaryColor),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -78,7 +80,10 @@ class StarredMessageHeader extends StatelessWidget {
                             )),
                         Text(AppConstants.you,
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 15, color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color:
+                                    MirrorflyUikit.getTheme?.textPrimaryColor)),
                         const SizedBox(
                           width: 10,
                         ),
@@ -103,9 +108,14 @@ class StarredMessageHeader extends StatelessWidget {
                       children: [
                         Flexible(
                           child: Text(
-                        userProfile.isGroupProfile.checkNull() ? chatList.senderNickName : userProfile.name.checkNull(),
+                            userProfile.isGroupProfile.checkNull()
+                                ? chatList.senderNickName
+                                : userProfile.name.checkNull(),
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 15, color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color:
+                                    MirrorflyUikit.getTheme?.textPrimaryColor),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -127,7 +137,9 @@ class StarredMessageHeader extends StatelessWidget {
                                 child: Text(
                                   userProfile.name.checkNull(),
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold, color: MirrorflyUikit.getTheme?.textPrimaryColor,
+                                      fontWeight: FontWeight.bold,
+                                      color: MirrorflyUikit
+                                          .getTheme?.textPrimaryColor,
                                       fontSize: 15),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
@@ -135,7 +147,10 @@ class StarredMessageHeader extends StatelessWidget {
                               )
                             : Text(AppConstants.you,
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 15, color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    color: MirrorflyUikit
+                                        .getTheme?.textPrimaryColor)),
                         const SizedBox(
                           width: 10,
                         ),
@@ -155,7 +170,8 @@ class StarredMessageHeader extends StatelessWidget {
   getChatTime(int messageSentTime) {
     return Text(
       controller.getChatTime(messageSentTime),
-      style: TextStyle(fontSize: 12, color: MirrorflyUikit.getTheme?.textSecondaryColor),
+      style: TextStyle(
+          fontSize: 12, color: MirrorflyUikit.getTheme?.textSecondaryColor),
     );
   }
 
@@ -172,8 +188,10 @@ class StarredMessageHeader extends StatelessWidget {
               : userProfile.name.checkNull(),
         ),
         isGroup: userProfile.isGroupProfile.checkNull(),
-        blocked: userProfile.isBlockedMe.checkNull() || userProfile.isAdminBlocked.checkNull(),
-        unknown: (!userProfile.isItSavedContact.checkNull() || userProfile.isDeletedContact()),
+        blocked: userProfile.isBlockedMe.checkNull() ||
+            userProfile.isAdminBlocked.checkNull(),
+        unknown: (!userProfile.isItSavedContact.checkNull() ||
+            userProfile.isDeletedContact()),
       );
     } else {
       return ProfileTextImage(

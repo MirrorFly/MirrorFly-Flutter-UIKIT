@@ -6,7 +6,7 @@ class CallInfoBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<CallInfoController>(
-          () => CallInfoController(),
+      () => CallInfoController(),
     );
   }
 }

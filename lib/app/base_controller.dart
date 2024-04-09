@@ -40,7 +40,8 @@ import 'modules/starred_messages/controllers/starred_messages_controller.dart';
 import 'modules/view_all_media/controllers/view_all_media_controller.dart';
 
 abstract class BaseController {
-  final RouteObserver<PageRoute<dynamic>> routeObserver = RouteObserverProvider();
+  final RouteObserver<PageRoute<dynamic>> routeObserver =
+      RouteObserverProvider();
   initListeners() {
     Mirrorfly.onMessageReceived.listen(onMessageReceived);
     Mirrorfly.onMessageStatusUpdated.listen(onMessageStatusUpdated);
@@ -61,7 +62,10 @@ abstract class BaseController {
         var groupJid = data["groupJid"] ?? "";
         var newMemberJid = data["newMemberJid"] ?? "";
         var addedByMemberJid = data["addedByMemberJid"] ?? "";
-        onNewMemberAddedToGroup(groupJid: groupJid, newMemberJid: newMemberJid, addedByMemberJid: addedByMemberJid);
+        onNewMemberAddedToGroup(
+            groupJid: groupJid,
+            newMemberJid: newMemberJid,
+            addedByMemberJid: addedByMemberJid);
       }
     });
     Mirrorfly.onMemberRemovedFromGroup.listen((event) {
@@ -70,17 +74,24 @@ abstract class BaseController {
         var groupJid = data["groupJid"] ?? "";
         var removedMemberJid = data["removedMemberJid"] ?? "";
         var removedByMemberJid = data["removedByMemberJid"] ?? "";
-        onMemberRemovedFromGroup(groupJid: groupJid, removedMemberJid: removedMemberJid, removedByMemberJid: removedByMemberJid);
+        onMemberRemovedFromGroup(
+            groupJid: groupJid,
+            removedMemberJid: removedMemberJid,
+            removedByMemberJid: removedByMemberJid);
       }
     });
-    Mirrorfly.onFetchingGroupMembersCompleted.listen(onFetchingGroupMembersCompleted);
+    Mirrorfly.onFetchingGroupMembersCompleted
+        .listen(onFetchingGroupMembersCompleted);
     Mirrorfly.onMemberMadeAsAdmin.listen((event) {
       if (event != null) {
         var data = json.decode(event.toString());
         var groupJid = data["groupJid"] ?? "";
         var newAdminMemberJid = data["newAdminMemberJid"] ?? "";
         var madeByMemberJid = data["madeByMemberJid"] ?? "";
-        onMemberMadeAsAdmin(groupJid: groupJid, newAdminMemberJid: newAdminMemberJid, madeByMemberJid: madeByMemberJid);
+        onMemberMadeAsAdmin(
+            groupJid: groupJid,
+            newAdminMemberJid: newAdminMemberJid,
+            madeByMemberJid: madeByMemberJid);
       }
     });
     Mirrorfly.onMemberRemovedAsAdmin.listen(onMemberRemovedAsAdmin);
@@ -199,14 +210,17 @@ abstract class BaseController {
           break;
         case CallStatus.onResume:
           if (Get.isRegistered<CallController>()) {
-            Get.find<CallController>().onResume(callMode, userJid, callType, callStatus);
+            Get.find<CallController>()
+                .onResume(callMode, userJid, callType, callStatus);
           } else {
-            debugPrint("#Mirrorfly call call controller not registered for onHold event");
+            debugPrint(
+                "#Mirrorfly call call controller not registered for onHold event");
           }
           break;
         case CallStatus.userJoined:
           if (Get.isRegistered<CallController>()) {
-            Get.find<CallController>().onUserJoined(callMode, userJid, callType, callStatus);
+            Get.find<CallController>()
+                .onUserJoined(callMode, userJid, callType, callStatus);
           }
           break;
         case CallStatus.userLeft:
@@ -217,16 +231,21 @@ abstract class BaseController {
         case CallStatus.inviteCallTimeout:
           break;
         case CallStatus.attended:
-          if (MirrorflyUikit.instance.navigationManager.getCurrentRoute() != Constants.callTimeOutView) {
+          if (MirrorflyUikit.instance.navigationManager.getCurrentRoute() !=
+              Constants.callTimeOutView) {
             // debugPrint("onCallStatusUpdated Inside Get.back");
-            Navigator.pop(MirrorflyUikit.instance.globalNavigatorKey!.currentState!.context);
+            Navigator.pop(MirrorflyUikit
+                .instance.globalNavigatorKey!.currentState!.context);
           }
           //Need to get context here
-          if (MirrorflyUikit.instance.navigationManager.getCurrentRoute() != Constants.onGoingCallView &&
-              MirrorflyUikit.instance.navigationManager.getCurrentRoute() != Constants.participantView) {
+          if (MirrorflyUikit.instance.navigationManager.getCurrentRoute() !=
+                  Constants.onGoingCallView &&
+              MirrorflyUikit.instance.navigationManager.getCurrentRoute() !=
+                  Constants.participantView) {
             // debugPrint("***opening call page");
             MirrorflyUikit.instance.navigationManager.navigateTo(
-                context: MirrorflyUikit.instance.globalNavigatorKey!.currentState!.context,
+                context: MirrorflyUikit
+                    .instance.globalNavigatorKey!.currentState!.context,
                 pageToNavigate: OnGoingCallView(userJid: [userJid]),
                 routeName: 'ongoing_call_view');
           }
@@ -240,7 +259,8 @@ abstract class BaseController {
               stopTimer();
             }
           } else {
-            debugPrint("#Mirrorfly call call controller not registered for disconnect event");
+            debugPrint(
+                "#Mirrorfly call call controller not registered for disconnect event");
           }
           break;
         case CallStatus.calling10s:
@@ -249,30 +269,38 @@ abstract class BaseController {
           break;
         case CallStatus.calling:
           if (Get.isRegistered<CallController>()) {
-            Get.find<CallController>().calling(callMode, userJid, callType, callStatus);
+            Get.find<CallController>()
+                .calling(callMode, userJid, callType, callStatus);
           } else {
-            debugPrint("#Mirrorfly call call controller not registered for calling event");
+            debugPrint(
+                "#Mirrorfly call call controller not registered for calling event");
           }
           break;
         case CallStatus.reconnected:
           if (Get.isRegistered<CallController>()) {
-            Get.find<CallController>().reconnected(callMode, userJid, callType, callStatus);
+            Get.find<CallController>()
+                .reconnected(callMode, userJid, callType, callStatus);
           } else {
-            debugPrint("#Mirrorfly call call controller not registered for reconnected event");
+            debugPrint(
+                "#Mirrorfly call call controller not registered for reconnected event");
           }
           break;
         case CallStatus.ringing:
           if (Get.isRegistered<CallController>()) {
-            Get.find<CallController>().ringing(callMode, userJid, callType, callStatus);
+            Get.find<CallController>()
+                .ringing(callMode, userJid, callType, callStatus);
           } else {
-            debugPrint("#Mirrorfly call call controller not registered for ringing event");
+            debugPrint(
+                "#Mirrorfly call call controller not registered for ringing event");
           }
           break;
         case CallStatus.onHold:
           if (Get.isRegistered<CallController>()) {
-            Get.find<CallController>().onHold(callMode, userJid, callType, callStatus);
+            Get.find<CallController>()
+                .onHold(callMode, userJid, callType, callStatus);
           } else {
-            debugPrint("#Mirrorfly call call controller not registered for onHold event");
+            debugPrint(
+                "#Mirrorfly call call controller not registered for onHold event");
           }
           break;
         case CallStatus.connected:
@@ -280,17 +308,21 @@ abstract class BaseController {
             startTimer();
           }
           if (Get.isRegistered<CallController>()) {
-            Get.find<CallController>().connected(callMode, userJid, callType, callStatus);
+            Get.find<CallController>()
+                .connected(callMode, userJid, callType, callStatus);
           } else {
-            debugPrint("#Mirrorfly call call controller not registered for connected event");
+            debugPrint(
+                "#Mirrorfly call call controller not registered for connected event");
           }
           break;
 
         case CallStatus.callTimeout:
           if (Get.isRegistered<CallController>()) {
-            Get.find<CallController>().timeout(callMode, userJid, callType, callStatus);
+            Get.find<CallController>()
+                .timeout(callMode, userJid, callType, callStatus);
           } else {
-            debugPrint("#Mirrorfly call call controller not registered for timeout event");
+            debugPrint(
+                "#Mirrorfly call call controller not registered for timeout event");
           }
           break;
 
@@ -312,23 +344,27 @@ abstract class BaseController {
             stopTimer();
             if (Get.isRegistered<CallController>()) {
               //if user hangup the call from background notification
-              Get.find<CallController>().localHangup(callMode, userJid, callType, callAction);
+              Get.find<CallController>()
+                  .localHangup(callMode, userJid, callType, callAction);
             }
             break;
           }
         case CallAction.inviteUsers:
           if (Get.isRegistered<CallController>()) {
-            Get.find<CallController>().onUserInvite(callMode, userJid, callType);
+            Get.find<CallController>()
+                .onUserInvite(callMode, userJid, callType);
           }
           if (Get.isRegistered<AddParticipantsController>()) {
-            Get.find<AddParticipantsController>().onUserInvite(callMode, userJid, callType);
+            Get.find<AddParticipantsController>()
+                .onUserInvite(callMode, userJid, callType);
           }
           break;
         case CallAction.remoteOtherBusy:
           {
             // for group call users decline the call before attend
             if (Get.isRegistered<CallController>()) {
-              Get.find<CallController>().remoteOtherBusy(callMode, userJid, callType, callAction);
+              Get.find<CallController>()
+                  .remoteOtherBusy(callMode, userJid, callType, callAction);
             }
             break;
           }
@@ -336,7 +372,8 @@ abstract class BaseController {
         case CallAction.remoteBusy:
           {
             if (Get.isRegistered<CallController>()) {
-              Get.find<CallController>().remoteBusy(callMode, userJid, callType, callAction);
+              Get.find<CallController>()
+                  .remoteBusy(callMode, userJid, callType, callAction);
             }
             break;
           }
@@ -344,7 +381,8 @@ abstract class BaseController {
         case CallAction.remoteHangup:
           {
             if (Get.isRegistered<CallController>()) {
-              Get.find<CallController>().remoteHangup(callMode, userJid, callType, callAction);
+              Get.find<CallController>()
+                  .remoteHangup(callMode, userJid, callType, callAction);
             }
             break;
           }
@@ -352,7 +390,8 @@ abstract class BaseController {
         case CallAction.remoteEngaged:
           {
             if (Get.isRegistered<CallController>()) {
-              Get.find<CallController>().remoteEngaged(userJid, callMode, callType);
+              Get.find<CallController>()
+                  .remoteEngaged(userJid, callMode, callType);
             }
             break;
           }
@@ -436,10 +475,12 @@ abstract class BaseController {
       var muteEvent = muteStatus["muteEvent"].toString();
       var userJid = muteStatus["userJid"].toString();
       if (Get.isRegistered<CallController>()) {
-        if (muteEvent == MuteStatus.remoteAudioMute || muteEvent == MuteStatus.remoteAudioUnMute) {
+        if (muteEvent == MuteStatus.remoteAudioMute ||
+            muteEvent == MuteStatus.remoteAudioUnMute) {
           Get.find<CallController>().audioMuteStatusChanged(muteEvent, userJid);
         }
-        if (muteEvent == MuteStatus.remoteVideoMute || muteEvent == MuteStatus.remoteVideoUnMute) {
+        if (muteEvent == MuteStatus.remoteVideoMute ||
+            muteEvent == MuteStatus.remoteVideoUnMute) {
           Get.find<CallController>().videoMuteStatusChanged(muteEvent, userJid);
         }
       }
@@ -493,16 +534,19 @@ abstract class BaseController {
       Get.find<GroupInfoController>().onAvailableFeaturesUpdated(features);
     }
     if (Get.isRegistered<ArchivedChatListController>()) {
-      Get.find<ArchivedChatListController>().onAvailableFeaturesUpdated(features);
+      Get.find<ArchivedChatListController>()
+          .onAvailableFeaturesUpdated(features);
     }
     if (Get.isRegistered<GroupParticipantsController>()) {
-      Get.find<GroupParticipantsController>().onAvailableFeaturesUpdated(features);
+      Get.find<GroupParticipantsController>()
+          .onAvailableFeaturesUpdated(features);
     }
     if (Get.isRegistered<ContactController>()) {
       Get.find<ContactController>().onAvailableFeaturesUpdated(features);
     }
     if (Get.isRegistered<AddParticipantsController>()) {
-      Get.find<AddParticipantsController>().onAvailableFeaturesUpdated(features);
+      Get.find<AddParticipantsController>()
+          .onAvailableFeaturesUpdated(features);
     }
   }
 
@@ -520,17 +564,22 @@ abstract class BaseController {
     }
     if (Get.isRegistered<ArchivedChatListController>()) {
       // debugPrint("basecontroller ArchivedChatListController registered");
-      Get.find<ArchivedChatListController>().onMessageReceived(chatMessageModel);
+      Get.find<ArchivedChatListController>()
+          .onMessageReceived(chatMessageModel);
     }
 
-    if (Get.isRegistered<ViewAllMediaController>() && chatMessageModel.isTextMessage() && chatMessageModel.messageTextContent!.contains("http")) {
+    if (Get.isRegistered<ViewAllMediaController>() &&
+        chatMessageModel.isTextMessage() &&
+        chatMessageModel.messageTextContent!.contains("http")) {
       Get.find<ViewAllMediaController>().onMessageReceived(chatMessageModel);
     }
   }
 
-  void onMessageDeleteNotifyUI({required String chatJid, bool changePosition = true}) {
+  void onMessageDeleteNotifyUI(
+      {required String chatJid, bool changePosition = true}) {
     if (Get.isRegistered<DashboardController>()) {
-      Get.find<DashboardController>().updateRecentChat(jid: chatJid, changePosition: changePosition);
+      Get.find<DashboardController>()
+          .updateRecentChat(jid: chatJid, changePosition: changePosition);
     }
   }
 
@@ -547,16 +596,19 @@ abstract class BaseController {
       Get.find<ChatController>().onMessageStatusUpdated(chatMessageModel);
     }
     if (Get.isRegistered<ArchivedChatListController>()) {
-      Get.find<ArchivedChatListController>().onMessageStatusUpdated(chatMessageModel);
+      Get.find<ArchivedChatListController>()
+          .onMessageStatusUpdated(chatMessageModel);
     }
     if (Get.isRegistered<DashboardController>()) {
       Get.find<DashboardController>().onMessageStatusUpdated(chatMessageModel);
     }
     if (Get.isRegistered<MessageInfoController>()) {
-      Get.find<MessageInfoController>().onMessageStatusUpdated(chatMessageModel);
+      Get.find<MessageInfoController>()
+          .onMessageStatusUpdated(chatMessageModel);
     }
     if (Get.isRegistered<StarredMessagesController>()) {
-      Get.find<StarredMessagesController>().onMessageStatusUpdated(chatMessageModel);
+      Get.find<StarredMessagesController>()
+          .onMessageStatusUpdated(chatMessageModel);
     }
   }
 
@@ -588,27 +640,34 @@ abstract class BaseController {
       Get.find<ChatController>().onMediaStatusUpdated(chatMessageModel);
     }
     if (Get.isRegistered<StarredMessagesController>()) {
-      Get.find<StarredMessagesController>().onMediaStatusUpdated(chatMessageModel);
+      Get.find<StarredMessagesController>()
+          .onMediaStatusUpdated(chatMessageModel);
     }
 
     if (Get.isRegistered<ViewAllMediaController>() &&
         chatMessageModel.isMediaMessage() &&
-        (chatMessageModel.isMediaUploaded() || chatMessageModel.isMediaDownloaded())) {
+        (chatMessageModel.isMediaUploaded() ||
+            chatMessageModel.isMediaDownloaded())) {
       Get.find<ViewAllMediaController>().onMediaStatusUpdated(chatMessageModel);
     }
-    if (chatMessageModel.mediaChatMessage!.mediaUploadStatus.value == MediaUploadStatus.mediaUploadedNotAvailable.value) {
+    if (chatMessageModel.mediaChatMessage!.mediaUploadStatus.value ==
+        MediaUploadStatus.mediaUploadedNotAvailable.value) {
       toToast(Constants.mediaDoesNotExist);
-    } else if (chatMessageModel.mediaChatMessage!.mediaDownloadStatus.value == MediaDownloadStatus.storageNotEnough.value) {
+    } else if (chatMessageModel.mediaChatMessage!.mediaDownloadStatus.value ==
+        MediaDownloadStatus.storageNotEnough.value) {
       toToast(Constants.insufficientMemoryError);
     }
   }
 
-  void onUploadDownloadProgressChanged(String messageId, String progressPercentage) {
+  void onUploadDownloadProgressChanged(
+      String messageId, String progressPercentage) {
     if (Get.isRegistered<ChatController>()) {
-      Get.find<ChatController>().onUploadDownloadProgressChanged(messageId, progressPercentage);
+      Get.find<ChatController>()
+          .onUploadDownloadProgressChanged(messageId, progressPercentage);
     }
     if (Get.isRegistered<StarredMessagesController>()) {
-      Get.find<StarredMessagesController>().onUploadDownloadProgressChanged(messageId, progressPercentage);
+      Get.find<StarredMessagesController>()
+          .onUploadDownloadProgressChanged(messageId, progressPercentage);
     }
   }
 
@@ -629,25 +688,41 @@ abstract class BaseController {
     }
   }
 
-  void onNewMemberAddedToGroup({required String groupJid, required String newMemberJid, required String addedByMemberJid}) {
+  void onNewMemberAddedToGroup(
+      {required String groupJid,
+      required String newMemberJid,
+      required String addedByMemberJid}) {
     debugPrint('onNewMemberAddedToGroup $newMemberJid');
     if (Get.isRegistered<GroupInfoController>()) {
-      Get.find<GroupInfoController>().onNewMemberAddedToGroup(groupJid: groupJid, newMemberJid: newMemberJid, addedByMemberJid: addedByMemberJid);
+      Get.find<GroupInfoController>().onNewMemberAddedToGroup(
+          groupJid: groupJid,
+          newMemberJid: newMemberJid,
+          addedByMemberJid: addedByMemberJid);
     }
     if (Get.isRegistered<ChatController>()) {
-      Get.find<ChatController>().onNewMemberAddedToGroup(groupJid: groupJid, newMemberJid: newMemberJid, addedByMemberJid: addedByMemberJid);
+      Get.find<ChatController>().onNewMemberAddedToGroup(
+          groupJid: groupJid,
+          newMemberJid: newMemberJid,
+          addedByMemberJid: addedByMemberJid);
     }
   }
 
-  void onMemberRemovedFromGroup({required String groupJid, required String removedMemberJid, required String removedByMemberJid}) {
+  void onMemberRemovedFromGroup(
+      {required String groupJid,
+      required String removedMemberJid,
+      required String removedByMemberJid}) {
     debugPrint('onMemberRemovedFromGroup $removedMemberJid');
     if (Get.isRegistered<GroupInfoController>()) {
-      Get.find<GroupInfoController>()
-          .onMemberRemovedFromGroup(groupJid: groupJid, removedMemberJid: removedMemberJid, removedByMemberJid: removedByMemberJid);
+      Get.find<GroupInfoController>().onMemberRemovedFromGroup(
+          groupJid: groupJid,
+          removedMemberJid: removedMemberJid,
+          removedByMemberJid: removedByMemberJid);
     }
     if (Get.isRegistered<ChatController>()) {
-      Get.find<ChatController>()
-          .onMemberRemovedFromGroup(groupJid: groupJid, removedMemberJid: removedMemberJid, removedByMemberJid: removedByMemberJid);
+      Get.find<ChatController>().onMemberRemovedFromGroup(
+          groupJid: groupJid,
+          removedMemberJid: removedMemberJid,
+          removedByMemberJid: removedByMemberJid);
     }
   }
 
@@ -659,10 +734,16 @@ abstract class BaseController {
     }
   }
 
-  void onMemberMadeAsAdmin({required String groupJid, required String newAdminMemberJid, required String madeByMemberJid}) {
+  void onMemberMadeAsAdmin(
+      {required String groupJid,
+      required String newAdminMemberJid,
+      required String madeByMemberJid}) {
     debugPrint('onMemberMadeAsAdmin $newAdminMemberJid');
     if (Get.isRegistered<GroupInfoController>()) {
-      Get.find<GroupInfoController>().onMemberMadeAsAdmin(groupJid: groupJid, newAdminMemberJid: newAdminMemberJid, madeByMemberJid: madeByMemberJid);
+      Get.find<GroupInfoController>().onMemberMadeAsAdmin(
+          groupJid: groupJid,
+          newAdminMemberJid: newAdminMemberJid,
+          madeByMemberJid: madeByMemberJid);
     }
   }
 
@@ -672,10 +753,12 @@ abstract class BaseController {
 
   void onLeftFromGroup({required String groupJid, required String userJid}) {
     if (Get.isRegistered<ChatController>()) {
-      Get.find<ChatController>().onLeftFromGroup(groupJid: groupJid, userJid: userJid);
+      Get.find<ChatController>()
+          .onLeftFromGroup(groupJid: groupJid, userJid: userJid);
     }
     if (Get.isRegistered<GroupInfoController>()) {
-      Get.find<GroupInfoController>().onLeftFromGroup(groupJid: groupJid, userJid: userJid);
+      Get.find<GroupInfoController>()
+          .onLeftFromGroup(groupJid: groupJid, userJid: userJid);
     }
   }
 
@@ -687,15 +770,19 @@ abstract class BaseController {
       Get.find<DashboardController>().onMessageReceived(chatMessageModel);
     }
     if (Get.isRegistered<ArchivedChatListController>()) {
-      Get.find<ArchivedChatListController>().onMessageReceived(chatMessageModel);
+      Get.find<ArchivedChatListController>()
+          .onMessageReceived(chatMessageModel);
     }
     if (Get.isRegistered<ChatController>()) {
       Get.find<ChatController>().onMessageReceived(chatMessageModel);
     }
   }
 
-  Future<void> showOrUpdateOrCancelNotification(String jid, ChatMessageModel chatMessage) async {
-    if (SessionManagement.getCurrentChatJID() == chatMessage.chatUserJid.checkNull() && chatMessage.isMessageEdited.value.checkNull()) {
+  Future<void> showOrUpdateOrCancelNotification(
+      String jid, ChatMessageModel chatMessage) async {
+    if (SessionManagement.getCurrentChatJID() ==
+            chatMessage.chatUserJid.checkNull() &&
+        chatMessage.isMessageEdited.value.checkNull()) {
       return;
     }
     var profileDetails = await getProfileDetails(jid);
@@ -824,13 +911,15 @@ abstract class BaseController {
       Get.find<ChatController>().userDeletedHisProfile(jid.toString());
     }
     if (Get.isRegistered<ArchivedChatListController>()) {
-      Get.find<ArchivedChatListController>().userDeletedHisProfile(jid.toString());
+      Get.find<ArchivedChatListController>()
+          .userDeletedHisProfile(jid.toString());
     }
     if (Get.isRegistered<ContactController>()) {
       Get.find<ContactController>().userDeletedHisProfile(jid.toString());
     }
     if (Get.isRegistered<AddParticipantsController>()) {
-      Get.find<AddParticipantsController>().userDeletedHisProfile(jid.toString());
+      Get.find<AddParticipantsController>()
+          .userDeletedHisProfile(jid.toString());
     }
     if (Get.isRegistered<BlockedListController>()) {
       Get.find<BlockedListController>().userDeletedHisProfile(jid.toString());
@@ -845,7 +934,8 @@ abstract class BaseController {
       Get.find<GroupInfoController>().userDeletedHisProfile(jid.toString());
     }
     if (Get.isRegistered<StarredMessagesController>()) {
-      Get.find<StarredMessagesController>().userDeletedHisProfile(jid.toString());
+      Get.find<StarredMessagesController>()
+          .userDeletedHisProfile(jid.toString());
     }
   }
 
@@ -929,18 +1019,23 @@ abstract class BaseController {
 
   void onWebChatPasswordChanged(result) {}
 
-  void setTypingStatus(String singleOrgroupJid, String userId, String typingStatus) {
+  void setTypingStatus(
+      String singleOrgroupJid, String userId, String typingStatus) {
     if (Get.isRegistered<ChatController>()) {
-      Get.find<ChatController>().setTypingStatus(singleOrgroupJid, userId, typingStatus);
+      Get.find<ChatController>()
+          .setTypingStatus(singleOrgroupJid, userId, typingStatus);
     }
     if (Get.isRegistered<DashboardController>()) {
-      Get.find<DashboardController>().setTypingStatus(singleOrgroupJid, userId, typingStatus);
+      Get.find<DashboardController>()
+          .setTypingStatus(singleOrgroupJid, userId, typingStatus);
     }
     if (Get.isRegistered<MyController>()) {
-      Get.find<MyController>().setTypingStatus(singleOrgroupJid, userId, typingStatus);
+      Get.find<MyController>()
+          .setTypingStatus(singleOrgroupJid, userId, typingStatus);
     }
     if (Get.isRegistered<ArchivedChatListController>()) {
-      Get.find<ArchivedChatListController>().setTypingStatus(singleOrgroupJid, userId, typingStatus);
+      Get.find<ArchivedChatListController>()
+          .setTypingStatus(singleOrgroupJid, userId, typingStatus);
     }
   }
 
@@ -956,45 +1051,77 @@ abstract class BaseController {
 
   Future<void> showLocalNotification(ChatMessageModel chatMessageModel) async {
     debugPrint("showing local notification");
-    var isUserMuted = await Mirrorfly.isChatMuted(jid: chatMessageModel.chatUserJid);
-    var isUserUnArchived = await Mirrorfly.isChatUnArchived(jid: chatMessageModel.chatUserJid);
+    var isUserMuted =
+        await Mirrorfly.isChatMuted(jid: chatMessageModel.chatUserJid);
+    var isUserUnArchived =
+        await Mirrorfly.isChatUnArchived(jid: chatMessageModel.chatUserJid);
     var isArchivedSettingsEnabled = await Mirrorfly.isArchivedSettingsEnabled();
 
-    var archiveSettings = isArchivedSettingsEnabled.checkNull() ? isUserUnArchived.checkNull() : true;
+    var archiveSettings = isArchivedSettingsEnabled.checkNull()
+        ? isUserUnArchived.checkNull()
+        : true;
 
-    if (!chatMessageModel.isMessageSentByMe && !isUserMuted.checkNull() && archiveSettings) {
+    if (!chatMessageModel.isMessageSentByMe &&
+        !isUserMuted.checkNull() &&
+        archiveSettings) {
       final String? notificationUri = SessionManagement.getNotificationUri();
-      final UriAndroidNotificationSound uriSound = UriAndroidNotificationSound(notificationUri!);
+      final UriAndroidNotificationSound uriSound =
+          UriAndroidNotificationSound(notificationUri!);
       debugPrint("notificationUri--> $notificationUri");
 
-      var messageId = chatMessageModel.messageSentTime.toString().substring(chatMessageModel.messageSentTime.toString().length - 5);
+      var messageId = chatMessageModel.messageSentTime
+          .toString()
+          .substring(chatMessageModel.messageSentTime.toString().length - 5);
       debugPrint("Mani Message ID $messageId");
-      AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(chatMessageModel.messageId, 'MirrorFly',
-          importance: Importance.max, priority: Priority.high, sound: uriSound, styleInformation: const DefaultStyleInformation(true, true));
-      DarwinNotificationDetails iosNotificationDetails = DarwinNotificationDetails(
-          categoryIdentifier: darwinNotificationCategoryPlain, sound: notificationUri, presentSound: true, presentBadge: true, presentAlert: true);
+      AndroidNotificationDetails androidNotificationDetails =
+          AndroidNotificationDetails(chatMessageModel.messageId, 'MirrorFly',
+              importance: Importance.max,
+              priority: Priority.high,
+              sound: uriSound,
+              styleInformation: const DefaultStyleInformation(true, true));
+      DarwinNotificationDetails iosNotificationDetails =
+          DarwinNotificationDetails(
+              categoryIdentifier: darwinNotificationCategoryPlain,
+              sound: notificationUri,
+              presentSound: true,
+              presentBadge: true,
+              presentAlert: true);
 
-      NotificationDetails notificationDetails = NotificationDetails(android: androidNotificationDetails, iOS: iosNotificationDetails);
-      await flutterLocalNotificationsPlugin.show(12345, chatMessageModel.senderUserName,
-          chatMessageModel.isMessageRecalled.value ? "This message was deleted" : chatMessageModel.messageTextContent, notificationDetails,
+      NotificationDetails notificationDetails = NotificationDetails(
+          android: androidNotificationDetails, iOS: iosNotificationDetails);
+      await flutterLocalNotificationsPlugin.show(
+          12345,
+          chatMessageModel.senderUserName,
+          chatMessageModel.isMessageRecalled.value
+              ? "This message was deleted"
+              : chatMessageModel.messageTextContent,
+          notificationDetails,
           payload: chatMessageModel.chatUserJid);
     } else {
       debugPrint("self sent message don't need notification");
     }
   }
 
-  Future<void> onMissedCall(bool isOneToOneCall, String userJid, String groupId, String callType, List<String> userList) async {
+  Future<void> onMissedCall(bool isOneToOneCall, String userJid, String groupId,
+      String callType, List<String> userList) async {
     if (SessionManagement.getCurrentChatJID() == userJid.checkNull()) {
       return;
     }
     //show MissedCall Notification
-    var missedCallTitleContent = await getMissedCallNotificationContent(isOneToOneCall, userJid, groupId, callType, userList);
-    LogMessage.d("onMissedCallContent", "${missedCallTitleContent.first} ${missedCallTitleContent.last}");
-    NotificationBuilder.createCallNotification(missedCallTitleContent.first, missedCallTitleContent.last);
+    var missedCallTitleContent = await getMissedCallNotificationContent(
+        isOneToOneCall, userJid, groupId, callType, userList);
+    LogMessage.d("onMissedCallContent",
+        "${missedCallTitleContent.first} ${missedCallTitleContent.last}");
+    NotificationBuilder.createCallNotification(
+        missedCallTitleContent.first, missedCallTitleContent.last);
   }
 
   Future<List<String>> getMissedCallNotificationContent(
-      bool isOneToOneCall, String userJid, String groupId, String callType, List<String> userList) async {
+      bool isOneToOneCall,
+      String userJid,
+      String groupId,
+      String callType,
+      List<String> userList) async {
     String messageContent;
     StringBuffer missedCallTitle = StringBuffer();
     missedCallTitle.write("You missed ");

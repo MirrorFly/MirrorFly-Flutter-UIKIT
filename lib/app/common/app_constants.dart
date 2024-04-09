@@ -1,4 +1,4 @@
-class AppConstants{
+class AppConstants {
   static var appName = "Mirrorfly";
   static var noInternetConnection = "Please check your internet connection";
   static var errorTryAgain = "Error Occurred, Please try again";
@@ -12,8 +12,10 @@ class AppConstants{
   static var typeSearchContact = "Contact";
   static var typeSearchMessage = "Message";
 
-  static var fileDoesNotExist = "The Selected file Doesn't Exist or Unable to Open";
-  static var youDoNotHaveApp = "you may not have proper app to view this content";
+  static var fileDoesNotExist =
+      "The Selected file Doesn't Exist or Unable to Open";
+  static var youDoNotHaveApp =
+      "you may not have proper app to view this content";
 
   static var online = "Online";
   static var lastSeenOn = "last seen on";
@@ -55,7 +57,8 @@ class AppConstants{
   static var cancel = "Cancel";
   static var startTyping = "Start Typing...";
   static var youHaveBlocked = "You have blocked ";
-  static var youCantSentMessageNoLonger =  "You can't send messages to this group because you're no longer a participant.";
+  static var youCantSentMessageNoLonger =
+      "You can't send messages to this group because you're no longer a participant.";
   static var reply = "Reply";
   static var forward = "Forward";
   static var favourite = "Favourite";
@@ -84,10 +87,13 @@ class AppConstants{
   static var unBlockMsg = "Unblock to send a message?";
   static var fileSizeExceed = "File Size should not exceed";
   static var compressingVideo = "Compressing Video";
-  static var thisMessageForwardToAdmin = "This message will be forwarded to admin.";
+  static var thisMessageForwardToAdmin =
+      "This message will be forwarded to admin.";
   static var textCopied = "1 Text Copied Successfully to the clipboard";
-  static var deleteSelectedMessage = "Are you sure you want to delete selected Message";
-  static var deleteSelectedMessages = "Are you sure you want to delete selected Messages";
+  static var deleteSelectedMessage =
+      "Are you sure you want to delete selected Message";
+  static var deleteSelectedMessages =
+      "Are you sure you want to delete selected Messages";
   static var deleteMediaFromPhone = "Delete media from my phone";
   static var deleteForMe = "Delete for me";
   static var deleteForEveryone = "Delete for everyone";
@@ -109,7 +115,8 @@ class AppConstants{
   static var messageNotFound = "Message not found";
   static var addAtLeastTwoContacts = "Add at least two contacts";
   static var selectAnyContacts = "Select any contacts";
-  static var onlyForwardUpTo5 = "You can only forward with up-to 5 users or groups";
+  static var onlyForwardUpTo5 =
+      "You can only forward with up-to 5 users or groups";
 
   static var noResultsFound = "No Results Found";
   static var enableLocalNotification = "enableLocalNotification";
@@ -146,7 +153,8 @@ class AppConstants{
 
   static var today = "Today";
   static var yesterday = "Yesterday";
-  static var googleMapKeyIsRequired = "Google map key is required show location";
+  static var googleMapKeyIsRequired =
+      "Google map key is required show location";
   static var invalidMapKey = "Invalid Google map key";
   static var message = "Message";
   static var invite = "Invite";
@@ -158,27 +166,30 @@ class AppConstants{
   static var smsContent =
       "Hey, MirrorFly is a real time chat, Audio and Video call solution for B2B and B2C.\n Download the app from this URL: https://app.mirrorfly.com";
 
-
   static var muteNotification = "Mute Notification";
   static var email = "Email";
   static var mobileNumber = "Mobile Number";
   static var status = "Status";
   static var viewAllMedia = "View All Media";
-  static var last5Message = "The last 5 messages from this contact will be forwarded to admin. This Contact will not be notified.";
+  static var last5Message =
+      "The last 5 messages from this contact will be forwarded to admin. This Contact will not be notified.";
   static var noMessagesAvailable = "There are no messages available";
 
   static var typing = "typing...";
 
   static var reportThisGroup = "Report this group?";
-  static var reportThisGroupContent = "The last 5 messages from this group will be forwarded to admin. No one in this group will be notified.";
+  static var reportThisGroupContent =
+      "The last 5 messages from this group will be forwarded to admin. No one in this group will be notified.";
   static var reportSent = "Report sent";
   static var thereNoMessagesAvailable = "There are no messages available";
-  static var areYouRemoveGroupPhoto = "Are you sure you want to remove the group photo?";
+  static var areYouRemoveGroupPhoto =
+      "Are you sure you want to remove the group photo?";
   static var remove = "remove";
   static var areYouDelete = "Are you sure you want to delete this group?.";
   static var areYouLeave = "Are you sure you want to leave from group?.";
   static var leave = "leave";
-  static var errorWhileAddingMember = "Error while adding Members in this group";
+  static var errorWhileAddingMember =
+      "Error while adding Members in this group";
   static var errorWhileRemovingMember = "Error while Removing this member";
   static var errorWhileMakeAdmin = "Error while make admin this member";
   static var youAreNoLonger = "You're no longer a participant in this group";
@@ -229,7 +240,8 @@ class AppConstants{
   static var chats = "chats";
   static var notificationInlineMessage = "notificationInlineMessage";
   static var appNotifications = "App Notifications";
-  static var appNotificationsDesc = "Notification behaviours for the group chat messages";
+  static var appNotificationsDesc =
+      "Notification behaviours for the group chat messages";
   static var nImage = "Image";
   static var nFile = "File";
   static var nAudio = "Audio";
@@ -248,20 +260,24 @@ class AppConstants{
   static var userNameTooShort = "Username is too short";
   static var emailNotEmpty = "Email should not be empty";
   static var pleaseEnterValidMail = "Please enter a valid Mail";
-  static var pleaseEnterValidMobileWithCode = "Please enter a valid mobile number with country code";
+  static var pleaseEnterValidMobileWithCode =
+      "Please enter a valid mobile number with country code";
   static var unableToUpdateProfile = "Unable to update profile";
   static var defaultStatus = "I am in Mirror Fly";
-  static var unableConnectServer = "Unable to Connect to Server. Please login Again";
+  static var unableConnectServer =
+      "Unable to Connect to Server. Please login Again";
   static var imageLess10mb = "Please select Image less than 10MB";
 
   static var statusCantEmpty = "Status cannot be empty";
   static var deleteStatus = "Do you want to delete the status?";
   static var deletingStatus = "Deleting Status";
-  static var unableToDeleteProfileStatus = "Unable to delete the Profile Status";
+  static var unableToDeleteProfileStatus =
+      "Unable to delete the Profile Status";
   static var statusUpdated = "Status update successfully";
 
   static var addNewStatus = "Add New Status";
-  static var areYouSureToRemovePhoto = "Are you sure you want to remove the photo?";
+  static var areYouSureToRemovePhoto =
+      "Are you sure you want to remove the photo?";
 
   static var profileTitle = "Profile";
   static var userName = "Username";
@@ -278,15 +294,17 @@ class AppConstants{
   static var starredMessages = "Starred Messages";
   static var chatsSettings = "Chats";
 
-
   static var archiveSetting = "Archive Settings";
-  static var archiveSettingDec = "Archived chats will remain archived when you receive a new message";
+  static var archiveSettingDec =
+      "Archived chats will remain archived when you receive a new message";
   static var lastSeen = "Last Seen";
   static var lastSeenDec = "Hiding the last seen activity to other users";
   static var newBusyStatus = "Select your new status";
   static var userBusyStatus = "User Busy Status";
-  static var userBusyStatusDec = "Set busy status as the Auto response to the message received from the individuals";
-  static var busyStatusDescription = "Your busy status will be set as auto-response to the messages received from individuals.";
+  static var userBusyStatusDec =
+      "Set busy status as the Auto response to the message received from the individuals";
+  static var busyStatusDescription =
+      "Your busy status will be set as auto-response to the messages received from individuals.";
   static var editBusyMessage = "Edit Busy Status Message";
   static var yourBusyStatus = "Your Busy Status";
   static var clearAllConversation = "Clear All Conversation";
@@ -309,7 +327,8 @@ class AppConstants{
   static var blockedContactList = "Blocked Contact List";
   static var noBlockedContactsFound = "No Blocked Contacts found";
 
-  static var areYouClearAllChat = "Are you sure want to clear your conversation history?";
+  static var areYouClearAllChat =
+      "Are you sure want to clear your conversation history?";
   static var allChatsCleared = "All your conversation are cleared";
   static var serverError = "Server error, kindly try again later";
 
@@ -402,7 +421,6 @@ class AppConstants{
       "MirrorFly will continuously upload your contacts to its encrypted servers to let you discover and connect with your friends. Your contacts are uploaded using MirrorFly private contact discovery which means they are end-to-end encrypted and secured.";
 
   static var audioPermission =
-
       "To send audio messages, allow MirrorFly access to your Microphone.";
 
   static var contactPermissionDenied =
@@ -424,14 +442,15 @@ class AppConstants{
   static var videoCallPermissionDenied =
       "MirrorFly need the Microphone and Camera Permissions in order to call Family, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Microphone\" and \"Camera\".";
 
-  static var otherPermissionDenied = "But they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable";
+  static var otherPermissionDenied =
+      "But they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable";
 
   static var notificationIcon = "notification_icon";
   static var remoteEngagedToast = "is on another call";
 
-  static var featureNotAvailable = "You can't send messages to this group because Feature unavailable for your plan.";
+  static var featureNotAvailable =
+      "You can't send messages to this group because Feature unavailable for your plan.";
   static var callNow = "CALL NOW ( %d )";
-  static var unableToLoadProfileData = "Unable to load profile data, please login again";
-
-
+  static var unableToLoadProfileData =
+      "Unable to load profile data, please login again";
 }

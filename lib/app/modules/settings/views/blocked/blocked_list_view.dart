@@ -9,7 +9,7 @@ import '../../../../../mirrorfly_uikit_plugin.dart';
 import '../../../../common/widgets.dart';
 
 class BlockedListView extends StatefulWidget {
-  const BlockedListView({super.key,this.enableAppBar=true});
+  const BlockedListView({super.key, this.enableAppBar = true});
   final bool enableAppBar;
 
   @override
@@ -23,28 +23,46 @@ class _BlockedListViewState extends State<BlockedListView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-      appBar: widget.enableAppBar ? AppBar(
-        title: Text(AppConstants.blockedContactList, style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
-        automaticallyImplyLeading: true,
-        iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
-        backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-      ) : null,
+      appBar: widget.enableAppBar
+          ? AppBar(
+              title: Text(
+                AppConstants.blockedContactList,
+                style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+              ),
+              automaticallyImplyLeading: true,
+              iconTheme:
+                  IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+              backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
+            )
+          : null,
       body: Obx(() {
         return Center(
-          child: controller.blockedUsers.isEmpty ? Text(
-            AppConstants.noBlockedContactsFound,
-            style: TextStyle(fontSize: 17, color: MirrorflyUikit.getTheme?.textPrimaryColor),) :
-          ListView.builder(
-            itemCount: controller.blockedUsers.length,
-              itemBuilder: (context, index) {
-            var item = controller.blockedUsers[index];
-            return memberItem(name :getMemberName(item).checkNull(),image: item.image.checkNull(),status: item.mobileNumber.checkNull(),onTap: (){
-              if (item.jid.checkNull().isNotEmpty) {
-                controller.unBlock(item, context);
-              }
-            },blocked: item.isBlockedMe.checkNull() || item.isAdminBlocked.checkNull(),
-              unknown: (!item.isItSavedContact.checkNull() || item.isDeletedContact()),);
-          }),
+          child: controller.blockedUsers.isEmpty
+              ? Text(
+                  AppConstants.noBlockedContactsFound,
+                  style: TextStyle(
+                      fontSize: 17,
+                      color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                )
+              : ListView.builder(
+                  itemCount: controller.blockedUsers.length,
+                  itemBuilder: (context, index) {
+                    var item = controller.blockedUsers[index];
+                    return memberItem(
+                      name: getMemberName(item).checkNull(),
+                      image: item.image.checkNull(),
+                      status: item.mobileNumber.checkNull(),
+                      onTap: () {
+                        if (item.jid.checkNull().isNotEmpty) {
+                          controller.unBlock(item, context);
+                        }
+                      },
+                      blocked: item.isBlockedMe.checkNull() ||
+                          item.isAdminBlocked.checkNull(),
+                      unknown: (!item.isItSavedContact.checkNull() ||
+                          item.isDeletedContact()),
+                    );
+                  }),
         );
       }),
     );

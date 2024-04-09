@@ -9,7 +9,6 @@ import 'package:mirrorfly_uikit_plugin/app/common/widgets.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_list_view.dart';
 
-
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
 import '../../../widgets/custom_action_bar_icons.dart';
@@ -18,7 +17,14 @@ import '../chat_widgets.dart';
 import '../controllers/chat_controller.dart';
 
 class ChatView extends StatefulWidget {
-  const ChatView({super.key, required this.jid, this.isUser=false, this.messageId, this.isFromStarred = false, this.enableAppBar=true, this.showChatDeliveryIndicator = true});
+  const ChatView(
+      {super.key,
+      required this.jid,
+      this.isUser = false,
+      this.messageId,
+      this.isFromStarred = false,
+      this.enableAppBar = true,
+      this.showChatDeliveryIndicator = true});
   final String jid;
   final bool isUser;
   final bool isFromStarred;
@@ -35,8 +41,15 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   void initState() {
-    controller.init(context,jid: widget.jid,isUser: widget.isUser,isFromStarred: widget.isFromStarred,messageId: widget.messageId, showChatDeliveryIndicator: widget.showChatDeliveryIndicator);
-    controller.profile.isGroupProfile.checkNull() ? debugPrint("this is group profile") : debugPrint("this is single page");
+    controller.init(context,
+        jid: widget.jid,
+        isUser: widget.isUser,
+        isFromStarred: widget.isFromStarred,
+        messageId: widget.messageId,
+        showChatDeliveryIndicator: widget.showChatDeliveryIndicator);
+    controller.profile.isGroupProfile.checkNull()
+        ? debugPrint("this is group profile")
+        : debugPrint("this is single page");
     super.initState();
   }
 
@@ -54,15 +67,17 @@ class _ChatViewState extends State<ChatView> {
         appBar: widget.enableAppBar ? getAppBar(context) : null,
         body: SafeArea(
           child: GestureDetector(
-            onTap: (){
+            onTap: () {
               debugPrint("tapping on screen");
-              if(controller.isKeyboardVisible.value){
+              if (controller.isKeyboardVisible.value) {
                 FocusScope.of(context).unfocus();
               }
             },
             child: Container(
-              width: MediaQuery.of(context).size.width,//controller.screenWidth,
-              height: MediaQuery.of(context).size.height,//controller.screenHeight,
+              width:
+                  MediaQuery.of(context).size.width, //controller.screenWidth,
+              height:
+                  MediaQuery.of(context).size.height, //controller.screenHeight,
               decoration: BoxDecoration(
                 color: MirrorflyUikit.getTheme?.scaffoldColor,
                 /*image: const DecorationImage(
@@ -76,7 +91,8 @@ class _ChatViewState extends State<ChatView> {
                   if (didPop) {
                     return;
                   }
-                  mirrorFlyLog("viewInsets", MediaQuery.of(context).viewInsets.bottom.toString());
+                  mirrorFlyLog("viewInsets",
+                      MediaQuery.of(context).viewInsets.bottom.toString());
                   if (controller.showEmoji.value) {
                     controller.showEmoji(false);
                   } else if (MediaQuery.of(context).viewInsets.bottom > 0.0) {
@@ -96,9 +112,14 @@ class _ChatViewState extends State<ChatView> {
                         Expanded(child: Obx(() {
                           return controller.chatLoading.value
                               ? Center(
-                                  child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
+                                  child: CircularProgressIndicator(
+                                    color:
+                                        MirrorflyUikit.getTheme?.primaryColor,
+                                  ),
                                 )
-                              : ChatListView(chatController: controller, chatList: controller.chatList);
+                              : ChatListView(
+                                  chatController: controller,
+                                  chatList: controller.chatList);
                         })),
                         Align(
                           alignment: Alignment.bottomCenter,
@@ -109,130 +130,152 @@ class _ChatViewState extends State<ChatView> {
                                   ? userBlocked()
                                   : controller.isMemberOfGroup
                                       ? Column(
-                                mainAxisAlignment:
-                                MainAxisAlignment.end,
-                                children: [
-                                  Obx(() {
-                                    if (controller.isReplying.value) {
-                                      return ReplyingMessageHeader(
-                                        chatMessage:
-                                        controller.replyChatMessage,
-                                        onCancel: () => controller
-                                            .cancelReplyMessage(),
-                                        onClick: () {
-                                          controller.navigateToMessage(
-                                              controller
-                                                  .replyChatMessage);
-                                        },
-                                      );
-                                    } else {
-                                      return const SizedBox.shrink();
-                                    }
-                                  }),
-                                  const AppDivider(),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  IntrinsicHeight(
-                                    child: Row(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                      children: [
-                                        Flexible(
-                                          child: Container(
-                                            padding:
-                                            const EdgeInsets.only(
-                                                left: 10),
-                                            margin:
-                                            const EdgeInsets.only(
-                                                left: 10,
-                                                right: 10,
-                                                bottom: 10),
-                                            width: double.infinity,
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color: MirrorflyUikit.getTheme!.textSecondaryColor,
-                                              ),
-                                              borderRadius:
-                                              const BorderRadius
-                                                  .all(
-                                                  Radius.circular(
-                                                      40)),
-                                            ),
-                                            child: Obx(() {
-                                              return messageTypingView(
-                                                  context);
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Obx(() {
+                                              if (controller.isReplying.value) {
+                                                return ReplyingMessageHeader(
+                                                  chatMessage: controller
+                                                      .replyChatMessage,
+                                                  onCancel: () => controller
+                                                      .cancelReplyMessage(),
+                                                  onClick: () {
+                                                    controller.navigateToMessage(
+                                                        controller
+                                                            .replyChatMessage);
+                                                  },
+                                                );
+                                              } else {
+                                                return const SizedBox.shrink();
+                                              }
                                             }),
-                                          ),
-                                        ),
-                                        Obx(() {
-                                          return controller
-                                              .isUserTyping.value
-                                              ? InkWell(
-                                              onTap: () {
-                                                controller
-                                                    .isAudioRecording
-                                                    .value ==
-                                                    Constants
-                                                        .audioRecordDone
-                                                    ? controller
-                                                    .sendRecordedAudioMessage(context)
-                                                    : controller
-                                                    .sendMessage(
+                                            const AppDivider(),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            IntrinsicHeight(
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.stretch,
+                                                children: [
+                                                  Flexible(
+                                                    child: Container(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 10),
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              left: 10,
+                                                              right: 10,
+                                                              bottom: 10),
+                                                      width: double.infinity,
+                                                      decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                          color: MirrorflyUikit
+                                                              .getTheme!
+                                                              .textSecondaryColor,
+                                                        ),
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                .all(
+                                                                Radius.circular(
+                                                                    40)),
+                                                      ),
+                                                      child: Obx(() {
+                                                        return messageTypingView(
+                                                            context);
+                                                      }),
+                                                    ),
+                                                  ),
+                                                  Obx(() {
+                                                    return controller
+                                                            .isUserTyping.value
+                                                        ? InkWell(
+                                                            onTap: () {
+                                                              controller.isAudioRecording
+                                                                          .value ==
+                                                                      Constants
+                                                                          .audioRecordDone
+                                                                  ? controller
+                                                                      .sendRecordedAudioMessage(
+                                                                          context)
+                                                                  : controller.sendMessage(
+                                                                      controller
+                                                                          .profile,
+                                                                      context);
+                                                            },
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      left: 8.0,
+                                                                      right:
+                                                                          8.0,
+                                                                      bottom:
+                                                                          8),
+                                                              child: SvgPicture.asset(
+                                                                  sendIcon,
+                                                                  package:
+                                                                      package,
+                                                                  colorFilter: ColorFilter.mode(
+                                                                      MirrorflyUikit
+                                                                          .getTheme!
+                                                                          .primaryColor,
+                                                                      BlendMode
+                                                                          .srcIn)),
+                                                            ))
+                                                        : const SizedBox
+                                                            .shrink();
+                                                  }),
+                                                  Obx(() {
+                                                    return controller
+                                                                .isAudioRecording
+                                                                .value ==
+                                                            Constants
+                                                                .audioRecording
+                                                        ? InkWell(
+                                                            onTap: () {
+                                                              controller
+                                                                  .stopRecording();
+                                                            },
+                                                            child:
+                                                                const Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      bottom:
+                                                                          8.0),
+                                                              child:
+                                                                  LottieAnimation(
+                                                                lottieJson:
+                                                                    audioJson1,
+                                                                showRepeat:
+                                                                    true,
+                                                                width: 54,
+                                                                height: 54,
+                                                              ),
+                                                            ))
+                                                        : const SizedBox
+                                                            .shrink();
+                                                  }),
+                                                  const SizedBox(
+                                                    width: 5,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            controller.emojiLayout(
+                                                textEditingController:
                                                     controller
-                                                        .profile, context);
-                                              },
-                                              child: Padding(
-                                                padding:
-                                                const EdgeInsets
-                                                    .only(
-                                                    left: 8.0,
-                                                    right: 8.0,
-                                                    bottom: 8),
-                                                child: SvgPicture.asset(
-                                                    sendIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.primaryColor, BlendMode.srcIn)),
-                                              ))
-                                              : const SizedBox.shrink();
-                                        }),
-                                        Obx(() {
-                                          return controller
-                                              .isAudioRecording
-                                              .value ==
-                                              Constants
-                                                  .audioRecording
-                                              ? InkWell(
-                                              onTap: () {
-                                                controller
-                                                    .stopRecording();
-                                              },
-                                              child: const Padding(
-                                                padding:
-                                                EdgeInsets.only(
-                                                    bottom:
-                                                    8.0),
-                                                child:
-                                                LottieAnimation(
-                                                  lottieJson:
-                                                  audioJson1,
-                                                  showRepeat: true,
-                                                  width: 54,
-                                                  height: 54,
-                                                ),
-                                              ))
-                                              : const SizedBox.shrink();
-                                        }),
-                                        const SizedBox(
-                                          width: 5,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  controller.emojiLayout(textEditingController: controller.messageController, sendTypingStatus: true),
-                                ],
-                              )
-                                  : !controller.availableFeatures.value.isGroupChatAvailable.checkNull()
-                                  ? featureNotAvailable()
-                                  : userNoLonger(),
+                                                        .messageController,
+                                                sendTypingStatus: true),
+                                          ],
+                                        )
+                                      : !controller.availableFeatures.value
+                                              .isGroupChatAvailable
+                                              .checkNull()
+                                          ? featureNotAvailable()
+                                          : userNoLonger(),
                             );
                           }),
                         ),
@@ -250,13 +293,15 @@ class _ChatViewState extends State<ChatView> {
                               controller.unreadCount.value != 0
                                   ? CircleAvatar(
                                       radius: 8,
-                                      backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
+                                      backgroundColor:
+                                          MirrorflyUikit.getTheme?.primaryColor,
                                       child: Text(
                                         returnFormattedCount(
                                             controller.unreadCount.value),
                                         style: TextStyle(
                                             fontSize: 9,
-                                            color: MirrorflyUikit.getTheme?.colorOnPrimary,
+                                            color: MirrorflyUikit
+                                                .getTheme?.colorOnPrimary,
                                             fontFamily: 'sf_ui'),
                                       ),
                                     )
@@ -264,8 +309,13 @@ class _ChatViewState extends State<ChatView> {
                               Padding(
                                 padding: const EdgeInsets.only(right: 10.0),
                                 child: FloatingActionButton.small(
-                                  backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
-                                  child: Icon(Icons.keyboard_double_arrow_down_rounded,color: MirrorflyUikit.getTheme?.colorOnPrimary,),
+                                  backgroundColor:
+                                      MirrorflyUikit.getTheme?.primaryColor,
+                                  child: Icon(
+                                    Icons.keyboard_double_arrow_down_rounded,
+                                    color:
+                                        MirrorflyUikit.getTheme?.colorOnPrimary,
+                                  ),
                                   onPressed: () {
                                     //scroll to end
                                     controller.scrollToEnd();
@@ -281,7 +331,8 @@ class _ChatViewState extends State<ChatView> {
                       Obx(() {
                         return !controller.profile.isItSavedContact.checkNull()
                             ? Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   const SizedBox(
                                     width: 8,
@@ -295,10 +346,10 @@ class _ChatViewState extends State<ChatView> {
                                     width: 8,
                                   ),
                                   buttonNotSavedContact(
-                                      text:
-                                          controller.profile.isBlocked.checkNull()
-                                              ? AppConstants.unblock
-                                              : AppConstants.block,
+                                      text: controller.profile.isBlocked
+                                              .checkNull()
+                                          ? AppConstants.unblock
+                                          : AppConstants.block,
                                       onClick: () {
                                         if (controller.profile.isBlocked
                                             .checkNull()) {
@@ -359,7 +410,11 @@ class _ChatViewState extends State<ChatView> {
                         Icons.keyboard,
                         color: MirrorflyUikit.getTheme?.textPrimaryColor,
                       )
-                    : SvgPicture.asset(smileIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn)))
+                    : SvgPicture.asset(smileIcon,
+                        package: package,
+                        colorFilter: ColorFilter.mode(
+                            MirrorflyUikit.getTheme!.textPrimaryColor,
+                            BlendMode.srcIn)))
             : const SizedBox.shrink(),
         controller.isAudioRecording.value == Constants.audioRecordDelete
             ? const Padding(
@@ -403,7 +458,10 @@ class _ChatViewState extends State<ChatView> {
                         child: Align(
                             alignment: Alignment.centerRight,
                             child: Text(AppConstants.slideToCancel,
-                                textAlign: TextAlign.end,style:TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)))),
+                                textAlign: TextAlign.end,
+                                style: TextStyle(
+                                    color: MirrorflyUikit
+                                        .getTheme?.textPrimaryColor)))),
                   ),
                 ),
               )
@@ -428,14 +486,16 @@ class _ChatViewState extends State<ChatView> {
         controller.isAudioRecording.value == Constants.audioRecordInitial
             ? Expanded(
                 child: TextField(
-                  onTap: (){
+                  onTap: () {
                     controller.isKeyboardVisible(true);
                   },
                   onChanged: (text) {
                     controller.isTyping(text);
                   },
                   keyboardType: TextInputType.multiline,
-                  keyboardAppearance: MirrorflyUikit.theme == "dark" ? Brightness.dark : Brightness.light,
+                  keyboardAppearance: MirrorflyUikit.theme == "dark"
+                      ? Brightness.dark
+                      : Brightness.light,
                   minLines: 1,
                   maxLines: 5,
                   enabled: controller.isAudioRecording.value ==
@@ -445,27 +505,45 @@ class _ChatViewState extends State<ChatView> {
                   controller: controller.messageController,
                   focusNode: controller.focusNode,
                   cursorColor: MirrorflyUikit.getTheme!.primaryColor,
-                  style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor,fontWeight: FontWeight.w400),
+                  style: TextStyle(
+                      color: MirrorflyUikit.getTheme?.textPrimaryColor,
+                      fontWeight: FontWeight.w400),
                   decoration: InputDecoration(
-                      hintText: AppConstants.startTyping, border: InputBorder.none,hintStyle: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)),
+                      hintText: AppConstants.startTyping,
+                      border: InputBorder.none,
+                      hintStyle: TextStyle(
+                          color: MirrorflyUikit.getTheme?.textSecondaryColor)),
                 ),
               )
             : const SizedBox.shrink(),
-        (controller.isAudioRecording.value == Constants.audioRecordInitial && controller.availableFeatures.value.isAttachmentAvailable.checkNull())
+        (controller.isAudioRecording.value == Constants.audioRecordInitial &&
+                controller.availableFeatures.value.isAttachmentAvailable
+                    .checkNull())
             ? IconButton(
                 onPressed: () {
                   controller.showAttachmentsView(context);
                 },
-                icon: SvgPicture.asset(attachIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn)),
+                icon: SvgPicture.asset(attachIcon,
+                    package: package,
+                    colorFilter: ColorFilter.mode(
+                        MirrorflyUikit.getTheme!.textPrimaryColor,
+                        BlendMode.srcIn)),
               )
             : const SizedBox.shrink(),
         (controller.isAudioRecording.value == Constants.audioRecordInitial &&
-            controller.availableFeatures.value.isAudioAttachmentAvailable.checkNull())
+                controller.availableFeatures.value.isAudioAttachmentAvailable
+                    .checkNull())
             ? IconButton(
                 onPressed: () {
                   controller.startRecording(context);
                 },
-                icon: SvgPicture.asset(micIcon,package: package,colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),),
+                icon: SvgPicture.asset(
+                  micIcon,
+                  package: package,
+                  colorFilter: ColorFilter.mode(
+                      MirrorflyUikit.getTheme!.textPrimaryColor,
+                      BlendMode.srcIn),
+                ),
               )
             : const SizedBox.shrink(),
         const SizedBox(
@@ -488,7 +566,9 @@ class _ChatViewState extends State<ChatView> {
                 AppConstants.youHaveBlocked,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 15,color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                style: TextStyle(
+                    fontSize: 15,
+                    color: MirrorflyUikit.getTheme?.textPrimaryColor),
               ),
               const SizedBox(
                 width: 5,
@@ -499,17 +579,19 @@ class _ChatViewState extends State<ChatView> {
                   //controller.profile.name.checkNull(),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 15,color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                  style: TextStyle(
+                      fontSize: 15,
+                      color: MirrorflyUikit.getTheme?.textPrimaryColor),
                 ),
               ),
               InkWell(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                      AppConstants.unblock.toLowerCase(),
-                    style: TextStyle(
-                        decoration: TextDecoration.underline, color: MirrorflyUikit.getTheme?.primaryColor)//),
-                  ),
+                  child: Text(AppConstants.unblock.toLowerCase(),
+                      style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          color: MirrorflyUikit.getTheme?.primaryColor) //),
+                      ),
                 ),
                 onTap: () => controller.unBlockUser(context),
               ),
@@ -529,8 +611,7 @@ class _ChatViewState extends State<ChatView> {
           child: Text(
             AppConstants.youCantSentMessageNoLonger,
             style: TextStyle(
-              fontSize: 15,color: MirrorflyUikit.getTheme?.textPrimaryColor
-            ),
+                fontSize: 15, color: MirrorflyUikit.getTheme?.textPrimaryColor),
             textAlign: TextAlign.center,
           ),
         ),
@@ -560,21 +641,23 @@ class _ChatViewState extends State<ChatView> {
     return AppBar(
       backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
       actionsIconTheme: IconThemeData(
-          color: MirrorflyUikit.getTheme?.colorOnAppbar ??
-              iconColor),
+          color: MirrorflyUikit.getTheme?.colorOnAppbar ?? iconColor),
       iconTheme: IconThemeData(
-          color: MirrorflyUikit.getTheme?.colorOnAppbar ??
-              iconColor),
+          color: MirrorflyUikit.getTheme?.colorOnAppbar ?? iconColor),
       leading: IconButton(
         icon: const Icon(Icons.clear),
         onPressed: () {
           controller.clearAllChatSelection();
         },
       ),
-      title: Text(controller.selectedChatList.length.toString(),style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
+      title: Text(
+        controller.selectedChatList.length.toString(),
+        style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+      ),
       actions: [
         CustomActionBarIcons(
-            availableWidth: MediaQuery.of(context).size.width / 2, // half the screen width
+            availableWidth:
+                MediaQuery.of(context).size.width / 2, // half the screen width
             actionWidth: 48, // default for IconButtons
             actions: [
               // controller.getOptionStatus('Reply')
@@ -586,11 +669,19 @@ class _ChatViewState extends State<ChatView> {
                     controller
                         .clearChatSelection(controller.selectedChatList[0]);
                   },
-                  icon: SvgPicture.asset(replyIcon,package: package,colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
+                  icon: SvgPicture.asset(replyIcon,
+                      package: package,
+                      colorFilter: ColorFilter.mode(
+                          MirrorflyUikit.getTheme!.colorOnAppbar,
+                          BlendMode.srcIn)),
                   tooltip: AppConstants.reply,
                 ),
-                overflowWidget: Text(AppConstants.reply,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
-                showAsAction: (controller.canBeReplied.value && controller.availableFeatures.value.isClearChatAvailable.checkNull())
+                overflowWidget: Text(AppConstants.reply,
+                    style: TextStyle(
+                        color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                showAsAction: (controller.canBeReplied.value &&
+                        controller.availableFeatures.value.isClearChatAvailable
+                            .checkNull())
                     ? ShowAsAction.always
                     : ShowAsAction.gone,
                 keyValue: AppConstants.reply,
@@ -606,10 +697,16 @@ class _ChatViewState extends State<ChatView> {
                   onPressed: () {
                     controller.checkBusyStatusForForward(context);
                   },
-                  icon: SvgPicture.asset(forwardIcon,package: package,colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
+                  icon: SvgPicture.asset(forwardIcon,
+                      package: package,
+                      colorFilter: ColorFilter.mode(
+                          MirrorflyUikit.getTheme!.colorOnAppbar,
+                          BlendMode.srcIn)),
                   tooltip: AppConstants.forward,
                 ),
-                overflowWidget: Text(AppConstants.forward,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                overflowWidget: Text(AppConstants.forward,
+                    style: TextStyle(
+                        color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: controller.canBeForwarded.value
                     ? ShowAsAction.always
                     : ShowAsAction.gone,
@@ -629,10 +726,16 @@ class _ChatViewState extends State<ChatView> {
                   },
                   // icon: controller.getOptionStatus('Favourite') ? const Icon(Icons.star_border_outlined)
                   // icon: controller.selectedChatList[0].isMessageStarred
-                  icon: SvgPicture.asset(favouriteIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
+                  icon: SvgPicture.asset(favouriteIcon,
+                      package: package,
+                      colorFilter: ColorFilter.mode(
+                          MirrorflyUikit.getTheme!.colorOnAppbar,
+                          BlendMode.srcIn)),
                   tooltip: AppConstants.favourite,
                 ),
-                overflowWidget: Text(AppConstants.favourite,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                overflowWidget: Text(AppConstants.favourite,
+                    style: TextStyle(
+                        color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: controller.canBeStarred.value
                     ? ShowAsAction.always
                     : ShowAsAction.gone,
@@ -649,10 +752,16 @@ class _ChatViewState extends State<ChatView> {
                   },
                   // icon: controller.getOptionStatus('Favourite') ? const Icon(Icons.star_border_outlined)
                   // icon: controller.selectedChatList[0].isMessageStarred
-                  icon: SvgPicture.asset(unFavouriteIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
+                  icon: SvgPicture.asset(unFavouriteIcon,
+                      package: package,
+                      colorFilter: ColorFilter.mode(
+                          MirrorflyUikit.getTheme!.colorOnAppbar,
+                          BlendMode.srcIn)),
                   tooltip: AppConstants.unFavourite,
                 ),
-                overflowWidget: Text(AppConstants.unFavourite,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                overflowWidget: Text(AppConstants.unFavourite,
+                    style: TextStyle(
+                        color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: controller.canBeUnStarred.value
                     ? ShowAsAction.always
                     : ShowAsAction.gone,
@@ -667,11 +776,21 @@ class _ChatViewState extends State<ChatView> {
                   onPressed: () {
                     controller.deleteMessages(context);
                   },
-                  icon: SvgPicture.asset(deleteIcon,package: package,colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
+                  icon: SvgPicture.asset(deleteIcon,
+                      package: package,
+                      colorFilter: ColorFilter.mode(
+                          MirrorflyUikit.getTheme!.colorOnAppbar,
+                          BlendMode.srcIn)),
                   tooltip: AppConstants.delete,
                 ),
-                overflowWidget: Text(AppConstants.delete,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
-                showAsAction: controller.availableFeatures.value.isDeleteMessageAvailable.checkNull() ? ShowAsAction.always : ShowAsAction.gone,
+                overflowWidget: Text(AppConstants.delete,
+                    style: TextStyle(
+                        color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                showAsAction: controller
+                        .availableFeatures.value.isDeleteMessageAvailable
+                        .checkNull()
+                    ? ShowAsAction.always
+                    : ShowAsAction.gone,
                 keyValue: AppConstants.delete,
                 onItemClick: () {
                   controller.closeKeyBoard();
@@ -687,7 +806,9 @@ class _ChatViewState extends State<ChatView> {
                       controller.reportChatOrUser(context);
                     },
                     icon: const Icon(Icons.report_problem_rounded)),
-                overflowWidget: Text(AppConstants.report,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                overflowWidget: Text(AppConstants.report,
+                    style: TextStyle(
+                        color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: controller.canShowReport.value
                     ? ShowAsAction.never
                     : ShowAsAction.gone,
@@ -711,11 +832,16 @@ class _ChatViewState extends State<ChatView> {
                   icon: SvgPicture.asset(
                     copyIcon,
                     fit: BoxFit.contain,
-                    package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn),
+                    package: package,
+                    colorFilter: ColorFilter.mode(
+                        MirrorflyUikit.getTheme!.colorOnAppbar,
+                        BlendMode.srcIn),
                   ),
                   tooltip: 'Copy',
                 ),
-                overflowWidget: Text(AppConstants.copy,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                overflowWidget: Text(AppConstants.copy,
+                    style: TextStyle(
+                        color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: controller.canBeCopied.value
                     ? ShowAsAction.never
                     : ShowAsAction.gone,
@@ -734,14 +860,17 @@ class _ChatViewState extends State<ChatView> {
                     // Get.back();
                     controller.messageInfo();
                   },
-                  icon: SvgPicture.asset(
-                    infoIcon,
-                    fit: BoxFit.contain,
-                    package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)
-                  ),
+                  icon: SvgPicture.asset(infoIcon,
+                      fit: BoxFit.contain,
+                      package: package,
+                      colorFilter: ColorFilter.mode(
+                          MirrorflyUikit.getTheme!.colorOnAppbar,
+                          BlendMode.srcIn)),
                   tooltip: AppConstants.messageInfo,
                 ),
-                overflowWidget: Text(AppConstants.messageInfo,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                overflowWidget: Text(AppConstants.messageInfo,
+                    style: TextStyle(
+                        color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: controller.canShowInfo.value
                     ? ShowAsAction.never
                     : ShowAsAction.gone,
@@ -757,10 +886,16 @@ class _ChatViewState extends State<ChatView> {
               CustomAction(
                 visibleWidget: IconButton(
                   onPressed: () {},
-                  icon: SvgPicture.asset(shareIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
+                  icon: SvgPicture.asset(shareIcon,
+                      package: package,
+                      colorFilter: ColorFilter.mode(
+                          MirrorflyUikit.getTheme!.colorOnAppbar,
+                          BlendMode.srcIn)),
                   tooltip: AppConstants.share,
                 ),
-                overflowWidget: Text(AppConstants.share,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                overflowWidget: Text(AppConstants.share,
+                    style: TextStyle(
+                        color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: controller.canBeShared.value
                     ? ShowAsAction.never
                     : ShowAsAction.gone,
@@ -777,7 +912,8 @@ class _ChatViewState extends State<ChatView> {
                   tooltip: 'Edit Message',
                 ),
                 overflowWidget: const Text("Edit Message"),
-                showAsAction: ShowAsAction.gone,//controller.canEditMessage.value ? ShowAsAction.never : ShowAsAction.gone,
+                showAsAction: ShowAsAction
+                    .gone, //controller.canEditMessage.value ? ShowAsAction.never : ShowAsAction.gone,
                 keyValue: 'Edit Message',
                 onItemClick: () {
                   controller.closeKeyBoard();
@@ -794,11 +930,9 @@ class _ChatViewState extends State<ChatView> {
       return AppBar(
         backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
         actionsIconTheme: IconThemeData(
-            color: MirrorflyUikit.getTheme?.colorOnAppbar ??
-                iconColor),
+            color: MirrorflyUikit.getTheme?.colorOnAppbar ?? iconColor),
         iconTheme: IconThemeData(
-            color: MirrorflyUikit.getTheme?.colorOnAppbar ??
-                iconColor),
+            color: MirrorflyUikit.getTheme?.colorOnAppbar ?? iconColor),
         automaticallyImplyLeading: false,
         leadingWidth: 80,
         leading: InkWell(
@@ -832,7 +966,8 @@ class _ChatViewState extends State<ChatView> {
                 errorWidget: controller.profile.isGroupProfile ?? false
                     ? ClipOval(
                         child: Image.asset(
-                          groupImg,package: package,
+                          groupImg,
+                          package: package,
                           height: 35,
                           width: 35,
                           fit: BoxFit.cover,
@@ -869,7 +1004,8 @@ class _ChatViewState extends State<ChatView> {
                       ? controller.profile.nickName.checkNull()
                       : controller.profile.name.checkNull(),*/
                   overflow: TextOverflow.fade,
-                  style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+                  style:
+                      TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
                 ),
                 Obx(() {
                   return controller.groupParticipantsName.isNotEmpty
@@ -879,11 +1015,17 @@ class _ChatViewState extends State<ChatView> {
                           child: Marquee(
                               text:
                                   "${controller.groupParticipantsName}       ",
-                              style: TextStyle(fontSize: 12,color: MirrorflyUikit.getTheme?.colorOnAppbar)))
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color:
+                                      MirrorflyUikit.getTheme?.colorOnAppbar)))
                       : controller.subtitle.isNotEmpty
                           ? Text(
                               controller.subtitle,
-                              style: TextStyle(fontSize: 12,color: MirrorflyUikit.getTheme?.colorOnAppbar),
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color:
+                                      MirrorflyUikit.getTheme?.colorOnAppbar),
                               overflow: TextOverflow.fade,
                             )
                           : const SizedBox();
@@ -899,7 +1041,8 @@ class _ChatViewState extends State<ChatView> {
         ),
         actions: [
           CustomActionBarIcons(
-            availableWidth: MediaQuery.of(context).size.width / 2, // half the screen width
+            availableWidth:
+                MediaQuery.of(context).size.width / 2, // half the screen width
             actionWidth: 48, // default for IconButtons
             actions: [
               CustomAction(
@@ -909,8 +1052,14 @@ class _ChatViewState extends State<ChatView> {
                   },
                   icon: const Icon(Icons.cancel),
                 ),
-                overflowWidget: Text(AppConstants.clearChat,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
-                showAsAction: controller.availableFeatures.value.isClearChatAvailable.checkNull() ? ShowAsAction.never : ShowAsAction.gone,
+                overflowWidget: Text(AppConstants.clearChat,
+                    style: TextStyle(
+                        color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                showAsAction: controller
+                        .availableFeatures.value.isClearChatAvailable
+                        .checkNull()
+                    ? ShowAsAction.never
+                    : ShowAsAction.gone,
                 keyValue: AppConstants.clearChat,
                 onItemClick: () {
                   controller.closeKeyBoard();
@@ -925,7 +1074,9 @@ class _ChatViewState extends State<ChatView> {
                   },
                   icon: const Icon(Icons.report_problem_rounded),
                 ),
-                overflowWidget: Text(AppConstants.report,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                overflowWidget: Text(AppConstants.report,
+                    style: TextStyle(
+                        color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: ShowAsAction.never,
                 keyValue: AppConstants.report,
                 onItemClick: () {
@@ -942,7 +1093,10 @@ class _ChatViewState extends State<ChatView> {
                         },
                         icon: const Icon(Icons.block),
                       ),
-                      overflowWidget: Text(AppConstants.unblock,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                      overflowWidget: Text(AppConstants.unblock,
+                          style: TextStyle(
+                              color:
+                                  MirrorflyUikit.getTheme?.textPrimaryColor)),
                       showAsAction: ShowAsAction.never,
                       keyValue: AppConstants.unblock,
                       onItemClick: () {
@@ -958,7 +1112,10 @@ class _ChatViewState extends State<ChatView> {
                         },
                         icon: const Icon(Icons.block),
                       ),
-                      overflowWidget: Text(AppConstants.block,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                      overflowWidget: Text(AppConstants.block,
+                          style: TextStyle(
+                              color:
+                                  MirrorflyUikit.getTheme?.textPrimaryColor)),
                       showAsAction: controller.profile.isGroupProfile ?? false
                           ? ShowAsAction.gone
                           : ShowAsAction.never,
@@ -973,7 +1130,9 @@ class _ChatViewState extends State<ChatView> {
                   onPressed: () {},
                   icon: const Icon(Icons.search),
                 ),
-                overflowWidget: Text(AppConstants.search,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                overflowWidget: Text(AppConstants.search,
+                    style: TextStyle(
+                        color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: ShowAsAction.never,
                 keyValue: AppConstants.search,
                 onItemClick: () {
@@ -1005,7 +1164,9 @@ class _ChatViewState extends State<ChatView> {
                   onPressed: () {},
                   icon: const Icon(Icons.shortcut),
                 ),
-                overflowWidget: Text(AppConstants.addChatShortcut,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+                overflowWidget: Text(AppConstants.addChatShortcut,
+                    style: TextStyle(
+                        color: MirrorflyUikit.getTheme?.textPrimaryColor)),
                 showAsAction: ShowAsAction.gone,
                 keyValue: AppConstants.addChatShortcut,
                 onItemClick: () {
@@ -1017,10 +1178,17 @@ class _ChatViewState extends State<ChatView> {
                   onPressed: () {
                     controller.makeVideoCall();
                   },
-                  icon: SvgPicture.asset(videoCallIcon,package: package,fit: BoxFit.contain, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
+                  icon: SvgPicture.asset(videoCallIcon,
+                      package: package,
+                      fit: BoxFit.contain,
+                      colorFilter: ColorFilter.mode(
+                          MirrorflyUikit.getTheme!.colorOnAppbar,
+                          BlendMode.srcIn)),
                 ),
-                overflowWidget: const  Text("Video Call"),
-                showAsAction: controller.isVideoCallAvailable ? ShowAsAction.always : ShowAsAction.gone,
+                overflowWidget: const Text("Video Call"),
+                showAsAction: controller.isVideoCallAvailable
+                    ? ShowAsAction.always
+                    : ShowAsAction.gone,
                 keyValue: 'Video Call',
                 onItemClick: () {
                   controller.makeVideoCall();
@@ -1031,10 +1199,17 @@ class _ChatViewState extends State<ChatView> {
                   onPressed: () {
                     controller.makeVoiceCall();
                   },
-                  icon: SvgPicture.asset(audioCallIcon,package: package,fit: BoxFit.contain, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
+                  icon: SvgPicture.asset(audioCallIcon,
+                      package: package,
+                      fit: BoxFit.contain,
+                      colorFilter: ColorFilter.mode(
+                          MirrorflyUikit.getTheme!.colorOnAppbar,
+                          BlendMode.srcIn)),
                 ),
                 overflowWidget: const Text("Call"),
-                showAsAction: controller.isAudioCallAvailable ? ShowAsAction.always : ShowAsAction.gone,
+                showAsAction: controller.isAudioCallAvailable
+                    ? ShowAsAction.always
+                    : ShowAsAction.gone,
                 keyValue: 'Audio Call',
                 onItemClick: () {
                   controller.makeVoiceCall();

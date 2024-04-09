@@ -42,7 +42,7 @@ const Color previewTextColor = Color(0xff7f7f7f);
 const Color dummy = Color(0xffe5c8c8);
 const Color darkPopupColor = Color(0xff262626);
 
-class AppColors{
+class AppColors {
   static const Color callerBackground = Color(0xff152134);
   static const Color bottomCallOptionBackground = Color(0xff162337);
   static const Color callOptionBackground = Color(0xff10294d);
@@ -62,6 +62,7 @@ class AppColors{
   static const Color transBlack75 = Color(0xBF000000);
   static const Color participantUnMuteColor = Color(0xffe3e2e2);
 }
+
 //call Assets
 const String plusIcon = 'assets/calls/plus_icon.svg';
 const String audioCallSmallIcon = 'assets/calls/audio_call_small_icon.svg';
@@ -97,8 +98,10 @@ const String callOptionsToolbarBg = 'assets/calls/ic_call_header_overlay.png';
 //Call Participant assets
 const String participantMute = 'assets/calls/participant_mute.svg';
 const String participantUnMute = 'assets/calls/participant_unmute.svg';
-const String participantVideoEnabled = 'assets/calls/participant_video_enabled.svg';
-const String participantVideoDisabled = 'assets/calls/participant_video_disabled.svg';
+const String participantVideoEnabled =
+    'assets/calls/participant_video_enabled.svg';
+const String participantVideoDisabled =
+    'assets/calls/participant_video_disabled.svg';
 const String addParticipantsInCall = 'assets/calls/add_user_in_call.svg';
 
 //Assets
@@ -264,7 +267,8 @@ const String filePermission = "assets/logos/file_permission.svg";
 const String audioPermission = "assets/logos/audio_permission.svg";
 const String cameraPermission = "assets/logos/camera_permission.svg";
 const String contactPermission = "assets/logos/contact_permission.svg";
-const String contactSyncPermission = "assets/logos/contact_media_permission.svg";
+const String contactSyncPermission =
+    "assets/logos/contact_media_permission.svg";
 const String settingsPermission = "assets/logos/settings_permission.svg";
 const String locationPinPermission = "assets/logos/location_pin_permission.svg";
 const String recordAudioVideoPermission =
@@ -290,7 +294,6 @@ const String emailContactIcon = "assets/logos/emailcontact_icon.svg";
 const String icBioBackground = "assets/logos/ic_bio_background.png";
 const String icDeleteIcon = "assets/logos/ic_delete_icon.svg";
 
-
 //About us
 const String titleContactMsg =
     "Mirror Fly is a ready-to-go messaging solution for building enterprise-grade real-time chat IM applications that meet various degrees of requirements like team discussion, data sharing, task delegation and information handling on the go.";
@@ -306,7 +309,7 @@ const String notificationNotWorkingURL =
     "https://app.mirrorfly.com/notifications/";
 
 toToast(String text) {
-  if(Platform.isIOS) {
+  if (Platform.isIOS) {
     FocusManager.instance.primaryFocus?.unfocus();
   }
   Fluttertoast.showToast(
@@ -341,12 +344,15 @@ mirrorFlyLog(String tag, String msg) {
 class Constants {
   static const bool enableContactSync = false;
   static const bool enableTopic = false;
-  static const String topicId = enableTopic ? "5d3788c1-78ef-4158-a92b-a48f092da0b9" : "";//Mirrorfly Topic id
+  static const String topicId = enableTopic
+      ? "5d3788c1-78ef-4158-a92b-a48f092da0b9"
+      : ""; //Mirrorfly Topic id
   static const String package = 'com.mirrorfly.uikit_flutter';
   static const String webChatLogin = 'https://webchat-uikit-qa.contus.us/';
   static const String tag = 'Contus Fly';
   static const String googleMapPackageName = "com.google.android.apps.maps";
-  static const String googleMapQuery = "https://www.google.com/maps/search/?api=1&query=";
+  static const String googleMapQuery =
+      "https://www.google.com/maps/search/?api=1&query=";
   static const String packageName = "com.contus.flycommons.";
 
 /*static const String applicationLink = "https://app.contusfly.contus.com";
@@ -499,7 +505,8 @@ class Constants {
   // static const String websitePattern =
   //     r'(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+';
   // final RegExp websitePattern = RegExp(r"^(?:http|https):\/\/[\w\-_]+(?:\.[\w\-_]+)+[\w\-.,@?^=%&:/~\\+#]*$");
-  static const String websitePattern = r'(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})';
+  static const String websitePattern =
+      r'(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})';
   // static const String websitePattern = r'(http|https)://[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:/~+#-]*[\w@?^=%&amp;/~+#-])?';
   // static const String websitePattern = r"((https?:www\.)|(https?:\/\/)|(www\.))[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9]{1,6}(\/[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)?";
   // static const String websitePattern = ("^((http?|https?)://)?[-a-zA-Z0-9@:%._\\+~#?&//=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%._\\+~#?&//=]*)\$");
@@ -541,10 +548,10 @@ class Constants {
   static const String privacyPolicy =
       "https://www.mirrorfly.com/privacy-policy.php";
 
-  static const maxAudioFileSize = 2 * 1024;//30;
-  static const maxVideoFileSize = 2 * 1024;//30;
-  static const maxImageFileSize = 2 * 1024;//10;
-  static const maxDocFileSize = 2 * 1024;//20;
+  static const maxAudioFileSize = 2 * 1024; //30;
+  static const maxVideoFileSize = 2 * 1024; //30;
+  static const maxImageFileSize = 2 * 1024; //10;
+  static const maxDocFileSize = 2 * 1024; //20;
 
   static const mobileImageMaxWidth = 250;
   static const mobileImageMinWidth = 210;
@@ -553,8 +560,10 @@ class Constants {
 
   static const editMessageTimeLimit = 15; // in Minutes
 
-  static const mediaMaxLimitRestriction =  'File size is too large. Try uploading file size below %d MB';
-  static const mediaSizeError = 'File size is too large. Try uploading file size below';
+  static const mediaMaxLimitRestriction =
+      'File size is too large. Try uploading file size below %d MB';
+  static const mediaSizeError =
+      'File size is too large. Try uploading file size below';
   static const supportedFormats = [
     "jpg",
     "jpeg",
@@ -647,11 +656,14 @@ class Constants {
   static const double borderRadius = 27;
   static const double defaultPadding = 8;
 
-  static const String mediaDoesNotExist = "Sorry. Media file isn't available in your internal storage";
+  static const String mediaDoesNotExist =
+      "Sorry. Media file isn't available in your internal storage";
   static const String mediaNotExist = "Sorry, media isn't available";
-  static const String insufficientMemoryError = "Not enough storage space on your device. Please free up space in your phone's memory.";
+  static const String insufficientMemoryError =
+      "Not enough storage space on your device. Please free up space in your phone's memory.";
   static const String errorTryAgain = "Error Occurred, Please try again";
-  static const String errorVideoInitialize = "Error Occurred during video initialize";
+  static const String errorVideoInitialize =
+      "Error Occurred during video initialize";
 
   // static GlobalKey<AnimatedListState> audioListKey =
   // GlobalKey<AnimatedListState>();
@@ -771,20 +783,25 @@ class Constants {
   static const changedPinAt = 'pin_changed_at';
   static const alertDate = 'alertDate';
   static const expiryDate = 'expiryDate';
-  static const sessionLockTime = 32;//in Seconds
-  static const pinExpiry = 31;//in Days
-  static const pinAlert = pinExpiry-5;//in Days
-  static const forgetPinOTPText ='Generate OTP to your registered mobile number';
-  static const invalidPinOTPText ='Invalid PIN, Generate OTP to your registered mobile number';
+  static const sessionLockTime = 32; //in Seconds
+  static const pinExpiry = 31; //in Days
+  static const pinAlert = pinExpiry - 5; //in Days
+  static const forgetPinOTPText =
+      'Generate OTP to your registered mobile number';
+  static const invalidPinOTPText =
+      'Invalid PIN, Generate OTP to your registered mobile number';
 
   //asked permission
   static const locationPermissionAsked = "location_permission_asked_before";
   static const contactPermissionAsked = "contact_permission_asked_before";
-  static const contactSavePermissionAsked = "contact_save_permission_asked_before";
+  static const contactSavePermissionAsked =
+      "contact_save_permission_asked_before";
   static const storagePermissionAsked = "storage_permission_asked_before";
-  static const notificationPermissionAsked = "notification_permission_asked_before";
+  static const notificationPermissionAsked =
+      "notification_permission_asked_before";
 
-  static const audioRecordPermissionAsked = "audio_record_permission_asked_before";
+  static const audioRecordPermissionAsked =
+      "audio_record_permission_asked_before";
   static const cameraPermissionAsked = "camera_permission_asked_before";
   static const readPhoneStatePermissionAsked = "read_phone_state_asked_before";
   static const bluetoothPermissionAsked = "bluetooth_permission_asked_before";
@@ -810,9 +827,11 @@ class Constants {
   static const audioCall = "audio";
   static const videoCall = "video";
 
-  static const videoSwitchMessage = "Are you sure you want to switch to Video Call?";
+  static const videoSwitchMessage =
+      "Are you sure you want to switch to Video Call?";
   static const videoSwitchRequestMessage = "Requesting to switch to Video Call";
-  static const videoSwitchRequestedMessage = "requesting to switch to video call";
+  static const videoSwitchRequestedMessage =
+      "requesting to switch to video call";
   static const callMembersLimit = "Maximum %d members allowed in a call";
   static const callMembersLimit6 = "You can only select %d participants";
   static const maxNameLength = 26;
@@ -822,25 +841,28 @@ class Constants {
   //Call Log
   static const String noCallLog = "No Call Log";
   static const String noCallLogHistoryFound = "No Call log history found";
-  static const String anyNewCallsWillAppearHere = "Any new Calls will appear here";
-
+  static const String anyNewCallsWillAppearHere =
+      "Any new Calls will appear here";
 
   static const String cameraPermissionName = "Camera";
   static const String microphonePermissionName = "Microphone";
   static const String bluetoothPermissionName = "Nearby devices";
   static const String notificationPermissionName = "Notifications";
   static const String phonePermissionName = "Phone";
-  static const String notificationPermissionTitle = "Turn on notification for MirrorFly";
-  static const String notificationPermissionMessage = "Allow MirrorFly to send you notifications to stay \nconnected with friends and family.\n\n Please continue to app Settings > select Permission > enable Notification.\n";
+  static const String notificationPermissionTitle =
+      "Turn on notification for MirrorFly";
+  static const String notificationPermissionMessage =
+      "Allow MirrorFly to send you notifications to stay \nconnected with friends and family.\n\n Please continue to app Settings > select Permission > enable Notification.\n";
   static const String callPermission =
       "MirrorFly need the %d Permissions in order to call Family";
   static const String callPermissionDenied =
       "MirrorFly need the %d Permissions in order to call Family, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable %d.";
 
-
   static const String deleteCallLog = "Do you want to delete a call log?";
-  static const String deleteSelectedCallLog = "Do you want to delete the selected call logs?";
-  static const String deleteAllCallLog = "Do you want to clear your entire call log?";
+  static const String deleteSelectedCallLog =
+      "Do you want to delete the selected call logs?";
+  static const String deleteAllCallLog =
+      "Do you want to clear your entire call log?";
   static const String noCallLogs = "No Call log history found";
   static const String noCallLogsMessage = "Any new Calls will appear here";
   static const String noChats = "No new messages";
@@ -849,49 +871,61 @@ class Constants {
   static const String removeFromCallLog = "Remove from call log";
   static const String callInfo = "Call Info";
 
-  static const String profileImageRemoveFailed = "Error while removing profile image";
-  static const String profileImageUpdateFailed = "Error while updating profile image";
-
-
+  static const String profileImageRemoveFailed =
+      "Error while removing profile image";
+  static const String profileImageUpdateFailed =
+      "Error while updating profile image";
 }
 
-Widget forMessageTypeIcon(String messageType,[MediaChatMessage? mediaChatMessage]) {
+Widget forMessageTypeIcon(String messageType,
+    [MediaChatMessage? mediaChatMessage]) {
   // debugPrint("messagetype $messageType");
   switch (messageType.toUpperCase()) {
     case Constants.mImage:
       return SvgPicture.asset(
-        mImageIcon,package: package,
+        mImageIcon,
+        package: package,
         fit: BoxFit.contain,
       );
     case Constants.mAudio:
       return SvgPicture.asset(
-        mediaChatMessage != null ? mediaChatMessage.isAudioRecorded ? mAudioRecordIcon : mAudioIcon : mAudioIcon,package: package,
+        mediaChatMessage != null
+            ? mediaChatMessage.isAudioRecorded
+                ? mAudioRecordIcon
+                : mAudioIcon
+            : mAudioIcon,
+        package: package,
         fit: BoxFit.contain,
         colorFilter: const ColorFilter.mode(textColor, BlendMode.srcIn),
       );
     case Constants.mVideo:
       return SvgPicture.asset(
-        mVideoIcon,package: package,
+        mVideoIcon,
+        package: package,
         fit: BoxFit.contain,
       );
     case Constants.mDocument:
       return SvgPicture.asset(
-        mDocumentIcon,package: package,
+        mDocumentIcon,
+        package: package,
         fit: BoxFit.contain,
       );
     case Constants.mFile:
       return SvgPicture.asset(
-        mDocumentIcon,package: package,
+        mDocumentIcon,
+        package: package,
         fit: BoxFit.contain,
       );
     case Constants.mContact:
       return SvgPicture.asset(
-        mContactIcon,package: package,
+        mContactIcon,
+        package: package,
         fit: BoxFit.contain,
       );
     case Constants.mLocation:
       return SvgPicture.asset(
-        mLocationIcon,package: package,
+        mLocationIcon,
+        package: package,
         fit: BoxFit.contain,
       );
     default:

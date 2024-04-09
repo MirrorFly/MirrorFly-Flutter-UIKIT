@@ -118,7 +118,8 @@ class GalleryMediaPicker extends StatefulWidget {
       this.selectedCheckBackgroundColor = Colors.white,
       this.onlyImages = false,
       this.onlyVideos = false,
-      this.thumbnailQuality, required this.provider});
+      this.thumbnailQuality,
+      required this.provider});
 
   @override
   State<GalleryMediaPicker> createState() => _GalleryMediaPickerState();
@@ -147,7 +148,9 @@ class _GalleryMediaPickerState extends State<GalleryMediaPicker> {
       widget.provider.pickedFile.clear();
       widget.provider.picked.clear();
       widget.provider.pathList.clear();
-      widget.provider.onPickMax.removeListener(() { GalleryFunctions.onPickMax(widget.provider);});
+      widget.provider.onPickMax.removeListener(() {
+        GalleryFunctions.onPickMax(widget.provider);
+      });
       PhotoManager.stopChangeNotify();
       super.dispose();
     }
@@ -219,15 +222,18 @@ class _GalleryMediaPickerState extends State<GalleryMediaPicker> {
                                 widget.selectedCheckBackgroundColor,
                             onAssetItemClick: (asset, index) async {
                               File? file = await asset.file;
-                              if(checkFileUploadSize(file!.path, asset.typeInt == 1 ? Constants.mImage : Constants.mVideo)) {
-                                debugPrint("item processed1 ${DateTime.now()} ${file.lengthSync()}");
+                              if (checkFileUploadSize(
+                                  file!.path,
+                                  asset.typeInt == 1
+                                      ? Constants.mImage
+                                      : Constants.mVideo)) {
+                                debugPrint(
+                                    "item processed1 ${DateTime.now()} ${file.lengthSync()}");
                                 widget.provider.pickEntity(asset);
                                 widget.provider.pickPath(PickedAssetModel(
                                   id: asset.id,
                                   path: file.path,
-                                  type: asset.typeInt == 1
-                                      ? 'image'
-                                      : 'video',
+                                  type: asset.typeInt == 1 ? 'image' : 'video',
                                   videoDuration: asset.videoDuration,
                                   createDateTime: asset.createDateTime,
                                   latitude: asset.latitude,
@@ -244,8 +250,10 @@ class _GalleryMediaPickerState extends State<GalleryMediaPicker> {
                                   size: asset.size,
                                 ));
                                 widget.pathList!(widget.provider.pickedFile);
-                              }else{
-                                toToast(Constants.mediaMaxLimitRestriction.replaceAll("%d", "${asset.typeInt == 1 ? Constants.maxImageFileSize : Constants.maxVideoFileSize}"));
+                              } else {
+                                toToast(Constants.mediaMaxLimitRestriction
+                                    .replaceAll("%d",
+                                        "${asset.typeInt == 1 ? Constants.maxImageFileSize : Constants.maxVideoFileSize}"));
                               }
                             },
                           ),

@@ -45,7 +45,11 @@ class ChatSearchView extends StatelessWidget {
             cursorColor: MirrorflyUikit.getTheme?.colorOnAppbar,
             style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
             decoration: InputDecoration(
-                hintText: AppConstants.searchPlaceHolder, border: InputBorder.none,hintStyle: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar.withOpacity(0.5))),
+                hintText: AppConstants.searchPlaceHolder,
+                border: InputBorder.none,
+                hintStyle: TextStyle(
+                    color: MirrorflyUikit.getTheme?.colorOnAppbar
+                        .withOpacity(0.5))),
             onSubmitted: (str) {
               if (controller.filteredPosition.isNotEmpty) {
                 controller.scrollUp();
@@ -129,10 +133,14 @@ class ChatSearchView extends StatelessWidget {
                                         controller.profile.isGroupProfile,
                                     chatList: chatList,
                                     index: index),
-                                chatList[index].isThisAReplyMessage ? chatList[index].replyParentChatMessage == null
-                                    ? messageNotAvailableWidget(chatList[index])
-                                    : ReplyMessageHeader(
-                                        chatMessage: chatList[index]) : const SizedBox.shrink(),
+                                chatList[index].isThisAReplyMessage
+                                    ? chatList[index].replyParentChatMessage ==
+                                            null
+                                        ? messageNotAvailableWidget(
+                                            chatList[index])
+                                        : ReplyMessageHeader(
+                                            chatMessage: chatList[index])
+                                    : const SizedBox.shrink(),
                                 MessageContent(
                                   chatList: chatList,
                                   index: index,
@@ -141,7 +149,8 @@ class ChatSearchView extends StatelessWidget {
                                     controller.playAudio(chatList[index]);
                                   },
                                   onSeekbarChange: (value) {},
-                                  showChatDeliveryIndicator: showChatDeliveryIndicator,
+                                  showChatDeliveryIndicator:
+                                      showChatDeliveryIndicator,
                                 ),
                               ],
                             ),

@@ -25,6 +25,7 @@ class _CallInfoViewState extends State<CallInfoView> {
     super.initState();
     controller.initInfoController(buildContext: context);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,48 +51,52 @@ class _CallInfoViewState extends State<CallInfoView> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Obx(() => ListTile(
-                      leading: controller.callLogData.groupId!.checkNull().isEmpty
-                          ? ClipOval(
-                              child: Image.asset(
-                                groupImg,
-                                height: 48,
-                                width: 48,
-                                fit: BoxFit.cover,
-                              ),
-                            )
-                          : FutureBuilder(
-                              future: getProfileDetails(controller.callLogData.groupId!),
-                              builder: (context, snap) {
-                                return snap.hasData && snap.data != null
-                                    ? ImageNetwork(
-                                        url: snap.data!.image!,
-                                        width: 48,
-                                        height: 48,
-                                        clipOval: true,
-                                        errorWidget: ClipOval(
-                                          child: Image.asset(
-                                            groupImg,
-                                            height: 48,
+                      leading:
+                          controller.callLogData.groupId!.checkNull().isEmpty
+                              ? ClipOval(
+                                  child: Image.asset(
+                                    groupImg,
+                                    height: 48,
+                                    width: 48,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              : FutureBuilder(
+                                  future: getProfileDetails(
+                                      controller.callLogData.groupId!),
+                                  builder: (context, snap) {
+                                    return snap.hasData && snap.data != null
+                                        ? ImageNetwork(
+                                            url: snap.data!.image!,
                                             width: 48,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        isGroup: false,
-                                        blocked: false,
-                                        unknown: false,
-                                      )
-                                    : ClipOval(
-                                        child: Image.asset(
-                                          groupImg,
-                                          height: 48,
-                                          width: 48,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      );
-                              }),
+                                            height: 48,
+                                            clipOval: true,
+                                            errorWidget: ClipOval(
+                                              child: Image.asset(
+                                                groupImg,
+                                                height: 48,
+                                                width: 48,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                            isGroup: false,
+                                            blocked: false,
+                                            unknown: false,
+                                          )
+                                        : ClipOval(
+                                            child: Image.asset(
+                                              groupImg,
+                                              height: 48,
+                                              width: 48,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          );
+                                  }),
                       title: controller.callLogData.groupId!.checkNull().isEmpty
                           ? FutureBuilder(
-                              future: CallUtils.getCallLogUserNames(controller.callLogData.userList!, controller.callLogData),
+                              future: CallUtils.getCallLogUserNames(
+                                  controller.callLogData.userList!,
+                                  controller.callLogData),
                               builder: (context, snap) {
                                 if (snap.hasData) {
                                   return Text(
@@ -103,7 +108,8 @@ class _CallInfoViewState extends State<CallInfoView> {
                                 }
                               })
                           : FutureBuilder(
-                              future: getProfileDetails(controller.callLogData.groupId!),
+                              future: getProfileDetails(
+                                  controller.callLogData.groupId!),
                               builder: (context, snap) {
                                 if (snap.hasData) {
                                   return Text(
@@ -125,13 +131,18 @@ class _CallInfoViewState extends State<CallInfoView> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              getCallLogDuration(controller.callLogData.startTime!, controller.callLogData.endTime!),
+                              getCallLogDuration(
+                                  controller.callLogData.startTime!,
+                                  controller.callLogData.endTime!),
                               style: const TextStyle(color: Colors.black),
                             ),
                             const SizedBox(
                               width: 8,
                             ),
-                            groupCallIcon(controller.callLogData.callType, controller.callLogData, controller.callLogData.callMode,
+                            groupCallIcon(
+                                controller.callLogData.callType,
+                                controller.callLogData,
+                                controller.callLogData.callMode,
                                 controller.callLogData.userList),
                           ],
                         ),
@@ -160,8 +171,11 @@ class _CallInfoViewState extends State<CallInfoView> {
                                       width: 48,
                                       height: 48,
                                       clipOval: true,
-                                      errorWidget: getName(snap.data!).checkNull().isNotEmpty
-                                          ? ProfileTextImage(text: getName(snap.data!))
+                                      errorWidget: getName(snap.data!)
+                                              .checkNull()
+                                              .isNotEmpty
+                                          ? ProfileTextImage(
+                                              text: getName(snap.data!))
                                           : const Icon(
                                               Icons.person,
                                               color: Colors.white,
@@ -178,7 +192,8 @@ class _CallInfoViewState extends State<CallInfoView> {
                               return snap.hasData && snap.data != null
                                   ? Text(
                                       snap.data!.name!,
-                                      style: const TextStyle(color: Colors.black),
+                                      style:
+                                          const TextStyle(color: Colors.black),
                                     )
                                   : const SizedBox.shrink();
                             }),
@@ -192,9 +207,11 @@ class _CallInfoViewState extends State<CallInfoView> {
     );
   }
 
-  Widget groupCallIcon(String? callType, CallLogData item, String? callMode, List<String>? userList) {
+  Widget groupCallIcon(String? callType, CallLogData item, String? callMode,
+      List<String>? userList) {
     List<String>? localUserList = [];
-    if (item.callState == CallState.missedCall || item.callState == CallState.incomingCall) {
+    if (item.callState == CallState.missedCall ||
+        item.callState == CallState.incomingCall) {
       localUserList.addAll(item.userList!);
       if (!item.userList!.contains(item.fromUser)) {
         localUserList.add(item.fromUser!);
@@ -223,13 +240,15 @@ class _CallInfoViewState extends State<CallInfoView> {
   }
 
   void showPopupMenu(BuildContext context, CallLogData callLogData) {
-    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
     showMenu(
       context: context,
       position: RelativeRect.fromRect(
         Rect.fromPoints(
           overlay.localToGlobal(overlay.size.topRight(Offset.zero)),
-          overlay.localToGlobal(overlay.size.topRight(Offset.zero)) + const Offset(50.0, 0.0),
+          overlay.localToGlobal(overlay.size.topRight(Offset.zero)) +
+              const Offset(50.0, 0.0),
         ),
         Offset.zero & overlay.size,
       ),

@@ -7,21 +7,18 @@ import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 
 import '../model/received_notification.dart';
 
-
-
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-FlutterLocalNotificationsPlugin();
+    FlutterLocalNotificationsPlugin();
 
 /// Streams are created so that app can respond to notification-related events
 /// since the plugin is initialised in the `main` function
 final StreamController<ReceivedNotification> didReceiveLocalNotificationStream =
-StreamController<ReceivedNotification>.broadcast();
+    StreamController<ReceivedNotification>.broadcast();
 
 final StreamController<String?> selectNotificationStream =
-StreamController<String?>.broadcast();
+    StreamController<String?>.broadcast();
 
 String? selectedNotificationPayload;
-
 
 /// A notification action which triggers a App navigation event
 const String navigationActionId = 'id_3';
@@ -45,17 +42,15 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
   }
 }
 
-
 class NotificationService {
-
   Future<void> init() async {
-
     // await _configureLocalTimeZone();
 
-    final NotificationAppLaunchDetails? notificationAppLaunchDetails = !kIsWeb &&
-        Platform.isLinux
-        ? null
-        : await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+    final NotificationAppLaunchDetails? notificationAppLaunchDetails =
+        !kIsWeb && Platform.isLinux
+            ? null
+            : await flutterLocalNotificationsPlugin
+                .getNotificationAppLaunchDetails();
     // String initialRoute = HomePage.routeName;
     if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
       selectedNotificationPayload =
@@ -64,12 +59,12 @@ class NotificationService {
     }
 
     AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings(AppConstants.notificationIcon);
+        AndroidInitializationSettings(AppConstants.notificationIcon);
 
     /// Note: permissions aren't requested here just to demonstrate that can be
     /// done later
     final DarwinInitializationSettings initializationSettingsDarwin =
-    DarwinInitializationSettings(
+        DarwinInitializationSettings(
       requestAlertPermission: false,
       requestBadgePermission: false,
       requestSoundPermission: false,
@@ -87,7 +82,8 @@ class NotificationService {
       // notificationCategories: darwinNotificationCategories,
     );
 
-    final InitializationSettings initializationSettings = InitializationSettings(
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsDarwin,
     );
@@ -98,7 +94,8 @@ class NotificationService {
         switch (notificationResponse.notificationResponseType) {
           case NotificationResponseType.selectedNotification:
             debugPrint("NotificationResponseType.selectedNotification");
-            debugPrint("NotificationResponseType.payload-->${notificationResponse.payload}");
+            debugPrint(
+                "NotificationResponseType.payload-->${notificationResponse.payload}");
             selectNotificationStream.add(notificationResponse.payload);
             break;
           case NotificationResponseType.selectedNotificationAction:
@@ -111,8 +108,5 @@ class NotificationService {
       },
       onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
     );
-
   }
-
-
 }

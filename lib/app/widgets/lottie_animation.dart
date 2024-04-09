@@ -4,7 +4,12 @@ import 'package:lottie/lottie.dart';
 import '../common/constants.dart';
 
 class LottieAnimation extends StatefulWidget {
-  const LottieAnimation({super.key, required this.lottieJson, required this.showRepeat, required this.width, required this.height});
+  const LottieAnimation(
+      {super.key,
+      required this.lottieJson,
+      required this.showRepeat,
+      required this.width,
+      required this.height});
 
   final String lottieJson;
   final bool showRepeat;

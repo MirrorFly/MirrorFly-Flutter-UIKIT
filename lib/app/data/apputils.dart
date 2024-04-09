@@ -10,7 +10,7 @@ import '../common/constants.dart';
 import '../model/chat_message_model.dart';
 import 'helper.dart';
 
-class AppUtils{
+class AppUtils {
   AppUtils._();
   static Future<bool> isNetConnected() async {
     final bool isConnected = await InternetConnectionChecker().hasConnection;
@@ -20,7 +20,7 @@ class AppUtils{
   /// * Build initials with given name.
   /// * @parameter Name instance of Profile name
   /// * return initials of the name.
-  static String getInitials(String name){
+  static String getInitials(String name) {
     String string = "";
     // debugPrint("str.characters.length ${str}");
     if (name.characters.length >= 2) {
@@ -37,27 +37,27 @@ class AppUtils{
     return string;
   }
 
-  static Tuple2<StringBuffer,bool> getActualMemberName(StringBuffer string){
+  static Tuple2<StringBuffer, bool> getActualMemberName(StringBuffer string) {
     // LogMessage.d("getActualMemberName","${string} string length ${string.length} characters ${string.toString().characters.length}");
-    return (string.toString().characters.length > Constants.maxNameLength) ?
-    Tuple2(
-        StringBuffer("${string.toString().characters.take(Constants.maxNameLength)}..."),
-        false
-    )
-        :
-    Tuple2(string, true);
+    return (string.toString().characters.length > Constants.maxNameLength)
+        ? Tuple2(
+            StringBuffer(
+                "${string.toString().characters.take(Constants.maxNameLength)}..."),
+            false)
+        : Tuple2(string, true);
   }
 
-  static Future<Tuple2<String, ProfileDetails>> getNameAndProfileDetails(String jid) async {
+  static Future<Tuple2<String, ProfileDetails>> getNameAndProfileDetails(
+      String jid) async {
     var profileDetails = await getProfileDetails(jid);
     var name = profileDetails.getName();
     return Tuple2(name, profileDetails);
   }
 
-  static Map getExceptionMap(String code,String message){
+  static Map getExceptionMap(String code, String message) {
     var map = {};
-    map["code"]=code;
-    map["message"]=message;
+    map["code"] = code;
+    map["message"] = message;
     return map;
   }
 
@@ -65,7 +65,8 @@ class AppUtils{
     return value ?? '';
   }
 
-  static bool isMediaFileAvailable(MessageType msgType, ChatMessageModel message) {
+  static bool isMediaFileAvailable(
+      MessageType msgType, ChatMessageModel message) {
     bool mediaExist = false;
     if (msgType == MessageType.audio ||
         msgType == MessageType.video ||
@@ -73,22 +74,25 @@ class AppUtils{
         msgType == MessageType.document) {
       final downloadedMediaValue = returnEmptyStringIfNull(
           message.mediaChatMessage?.mediaDownloadStatus);
-      final uploadedMediaValue = returnEmptyStringIfNull(
-          message.mediaChatMessage?.mediaUploadStatus);
-      if (MediaDownloadStatus.mediaDownloaded.value.toString() == downloadedMediaValue ||
-          MediaUploadStatus.mediaUploaded.value.toString() == uploadedMediaValue) {
+      final uploadedMediaValue =
+          returnEmptyStringIfNull(message.mediaChatMessage?.mediaUploadStatus);
+      if (MediaDownloadStatus.mediaDownloaded.value.toString() ==
+              downloadedMediaValue ||
+          MediaUploadStatus.mediaUploaded.value.toString() ==
+              uploadedMediaValue) {
         mediaExist = true;
       }
     }
     return mediaExist;
   }
 
-  static bool isMediaFileNotAvailable(bool isMediaFileAvailable, ChatMessageModel message) {
+  static bool isMediaFileNotAvailable(
+      bool isMediaFileAvailable, ChatMessageModel message) {
     return !isMediaFileAvailable && message.isMediaMessage();
   }
 
   static bool isMediaExists(String? filePath) {
-    if(filePath == null || filePath.isEmpty) {
+    if (filePath == null || filePath.isEmpty) {
       return false;
     }
     File file = File(filePath);
@@ -103,7 +107,8 @@ class AppUtils{
       // Open the file
       File file = File(filePath);
       if (!file.existsSync()) {
-        return const Tuple2(Constants.mobileImageMaxWidth, Constants.mobileImageMaxHeight);
+        return const Tuple2(
+            Constants.mobileImageMaxWidth, Constants.mobileImageMaxHeight);
       }
 
       // Read metadata
@@ -114,10 +119,11 @@ class AppUtils{
       final int width = image.width;
       final int height = image.height;
       // debugPrint('Image dimensions: $width x $height');
-      return Tuple2(width,height);
+      return Tuple2(width, height);
     } catch (e) {
       debugPrint('Error: $e');
-      return const Tuple2(Constants.mobileImageMaxWidth, Constants.mobileImageMaxHeight);
+      return const Tuple2(
+          Constants.mobileImageMaxWidth, Constants.mobileImageMaxHeight);
     }
   }
 
@@ -125,9 +131,11 @@ class AppUtils{
   ///
   /// @param originalWidth original width of media
   /// @param originalHeight original height of media
-  static Tuple2<int, int> getMobileWidthAndHeight(int? originalWidth, int? originalHeight) {
+  static Tuple2<int, int> getMobileWidthAndHeight(
+      int? originalWidth, int? originalHeight) {
     if (originalWidth == null || originalHeight == null) {
-      return const Tuple2(Constants.mobileImageMaxWidth, Constants.mobileImageMaxHeight);
+      return const Tuple2(
+          Constants.mobileImageMaxWidth, Constants.mobileImageMaxHeight);
     }
 
     var newWidth = originalWidth;
@@ -150,8 +158,12 @@ class AppUtils{
     }
 
     return Tuple2(
-      newWidth > Constants.mobileImageMinWidth ? newWidth : Constants.mobileImageMinWidth,
-      newHeight > Constants.mobileImageMinHeight ? newHeight : Constants.mobileImageMinHeight,
+      newWidth > Constants.mobileImageMinWidth
+          ? newWidth
+          : Constants.mobileImageMinWidth,
+      newHeight > Constants.mobileImageMinHeight
+          ? newHeight
+          : Constants.mobileImageMinHeight,
     );
   }
 }

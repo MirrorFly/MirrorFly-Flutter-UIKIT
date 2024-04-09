@@ -3,15 +3,16 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/notification_service.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
+
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 var isOnGoingCall = false;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MirrorflyUikit.instance.initUIKIT(
-    navigatorKey:navigatorKey,
-  licenseKey: 'ckIjaccWBoMNvxdbql8LJ2dmKqT5bp',
-  googleMapKey: 'AIzaSyBaKkrQnLT4nacpKblIE5d4QK6GpaX5luQ',
-  iOSContainerID: 'group.com.mirrorfly.flutter');
+      navigatorKey: navigatorKey,
+      licenseKey: 'ckIjaccWBoMNvxdbql8LJ2dmKqT5bp',
+      googleMapKey: 'AIzaSyBaKkrQnLT4nacpKblIE5d4QK6GpaX5luQ',
+      iOSContainerID: 'group.com.mirrorfly.flutter');
   isOnGoingCall = (await MirrorflyUikit.isOnGoingCall()) ?? false;
   //if isOnGoingCall is returns True then Navigate to OnGoingCallView() this will only for app killed state, call received via FCM
 
@@ -32,6 +33,7 @@ class _MyAppState extends State<MyApp> {
     _configureSelectNotificationSubject();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -48,8 +50,6 @@ class _MyAppState extends State<MyApp> {
       debugPrint("payload $payload");
     });
   }
-
-
 }
 
 class Dashboard extends StatefulWidget {
@@ -106,8 +106,8 @@ class _DashboardState extends State<Dashboard> {
                         onPressed: () async {
                           if (uniqueId.isNotEmpty) {
                             try {
-                              var response =
-                                  await MirrorflyUikit.login(userIdentifier: uniqueId);
+                              var response = await MirrorflyUikit.login(
+                                  userIdentifier: uniqueId);
                               debugPrint("register user $response");
                               showSnack(response['message']);
                             } catch (e) {
@@ -129,8 +129,8 @@ class _DashboardState extends State<Dashboard> {
                         MaterialPageRoute(
                             builder: (con) => const DashboardView(
                                   title: "Chats",
-                              enableAppBar: true,
-                              showChatDeliveryIndicator: true,
+                                  enableAppBar: true,
+                                  showChatDeliveryIndicator: true,
                                 )));
                   },
                   text: 'chat page',

@@ -7,8 +7,6 @@ import 'dart:io';
 
 import 'package:mirrorfly_uikit_plugin/app/common/extensions.dart';
 
-
-
 NotificationMessageModel notificationModelFromJson(String str) =>
     NotificationMessageModel.fromJson(json.decode(str));
 
@@ -210,12 +208,9 @@ class ChatMessage {
         "senderNickName": senderNickName,
         "senderUserJid": senderUserJid,
         "senderUserName": senderUserName,
-        "contactChatMessage":
-            contactChatMessage?.toJson(),
-        "mediaChatMessage":
-            mediaChatMessage?.toJson(),
-        "locationChatMessage":
-            locationChatMessage?.toJson(),
+        "contactChatMessage": contactChatMessage?.toJson(),
+        "mediaChatMessage": mediaChatMessage?.toJson(),
+        "locationChatMessage": locationChatMessage?.toJson(),
       };
 }
 

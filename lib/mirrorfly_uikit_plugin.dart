@@ -74,7 +74,9 @@ class MirrorflyUikit {
             this.googleMapKey = googleMapKey ?? '';
             globalNavigatorKey = navigatorKey;
             ReplyHashMap.init();
-            rootBundle.loadString('assets/mirrorfly_config.json').then((configFile) {
+            rootBundle
+                .loadString('assets/mirrorfly_config.json')
+                .then((configFile) {
               var config = AppConfig.fromJson(json.decode(configFile));
               theme = config.appTheme.theme!;
               getTheme = MirrorFlyTheme.customTheme(
@@ -82,10 +84,14 @@ class MirrorflyUikit {
                   secondaryColor: config.appTheme.customTheme!.secondaryColor,
                   scaffoldColor: config.appTheme.customTheme!.scaffoldColor,
                   colorOnPrimary: config.appTheme.customTheme!.colorOnPrimary,
-                  textPrimaryColor: config.appTheme.customTheme!.textPrimaryColor,
-                  textSecondaryColor: config.appTheme.customTheme!.textSecondaryColor,
-                  chatBubblePrimaryColor: config.appTheme.customTheme!.chatBubblePrimaryColor,
-                  chatBubbleSecondaryColor: config.appTheme.customTheme!.chatBubbleSecondaryColor,
+                  textPrimaryColor:
+                      config.appTheme.customTheme!.textPrimaryColor,
+                  textSecondaryColor:
+                      config.appTheme.customTheme!.textSecondaryColor,
+                  chatBubblePrimaryColor:
+                      config.appTheme.customTheme!.chatBubblePrimaryColor,
+                  chatBubbleSecondaryColor:
+                      config.appTheme.customTheme!.chatBubbleSecondaryColor,
                   appBarColor: config.appTheme.customTheme!.appBarColor,
                   colorOnAppbar: config.appTheme.customTheme!.colorOnAppbar);
             }).catchError((e) {
@@ -93,10 +99,12 @@ class MirrorflyUikit {
             });
             SessionManagement.onInit().then((value) {
               Get.put<MainController>(MainController());
-              SessionManagement.setBool(AppConstants.enableLocalNotification, enableLocalNotification);
+              SessionManagement.setBool(AppConstants.enableLocalNotification,
+                  enableLocalNotification);
             });
           } else {
-            LogMessage.d("initUIKIT onFailure", response.errorMessage.toString());
+            LogMessage.d(
+                "initUIKIT onFailure", response.errorMessage.toString());
           }
         });
   }
@@ -107,7 +115,8 @@ class MirrorflyUikit {
   ///* [fcmToken] provide the FCM token this is an optional
   ///sample response {'status': true, 'message': 'Register Success};
   @Deprecated('Instead of use login() method')
-  static Future<Map> registerUser({required String userIdentifier, String fcmToken = ""}) async {
+  static Future<Map> registerUser(
+      {required String userIdentifier, String fcmToken = ""}) async {
     if (!isSDKInitialized) {
       return setResponse(false, 'SDK Not Initialized');
     }
@@ -124,7 +133,8 @@ class MirrorflyUikit {
         if (userData.data != null) {
           SessionManagement.setLogin(userData.data!.username!.isNotEmpty);
           SessionManagement.setUser(userData.data!);
-          Mirrorfly.enableDisableArchivedSettings(enable: true, flyCallBack: (_) {});
+          Mirrorfly.enableDisableArchivedSettings(
+              enable: true, flyCallBack: (_) {});
           SessionManagement.setUserIdentifier(userIdentifier);
           await _setUserJID(userData.data!.username!);
           return setResponse(true, 'Register Success');
@@ -135,7 +145,8 @@ class MirrorflyUikit {
         return setResponse(false, '$e');
       }
     } else {
-      return Future.value(setResponse(false, 'Check your internet connection and try again'));
+      return Future.value(
+          setResponse(false, 'Check your internet connection and try again'));
     }
   }
 
@@ -146,7 +157,8 @@ class MirrorflyUikit {
   ///* [userIdentifier] provide the Unique Id to Register the User
   ///* [fcmToken] provide the FCM token this is an optional
   ///sample response {'status': true, 'message': 'Login Success};
-  static Future<Map> login({required String userIdentifier, String fcmToken = ""}) async {
+  static Future<Map> login(
+      {required String userIdentifier, String fcmToken = ""}) async {
     Completer<Map<String, dynamic>> completer = Completer();
     if (!isSDKInitialized) {
       completer.complete(setResponse(false, 'SDK Not Initialized'));
@@ -161,12 +173,14 @@ class MirrorflyUikit {
               if (userData.data != null) {
                 SessionManagement.setLogin(userData.data!.username!.isNotEmpty);
                 SessionManagement.setUser(userData.data!);
-                Mirrorfly.enableDisableArchivedSettings(enable: true, flyCallBack: (_) {});
+                Mirrorfly.enableDisableArchivedSettings(
+                    enable: true, flyCallBack: (_) {});
                 SessionManagement.setUserIdentifier(userIdentifier);
                 await _setUserJID(userData.data!.username!);
                 completer.complete(setResponse(true, 'Login Success'));
               } else {
-                completer.complete(setResponse(false, userData.message.toString()));
+                completer
+                    .complete(setResponse(false, userData.message.toString()));
               }
             }
           } else {

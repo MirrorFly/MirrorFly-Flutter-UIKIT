@@ -16,8 +16,8 @@ extension RecentChatParsing on RecentChatData {
     return (isGroup.checkNull())
         ? Constants.typeGroupChat
         : (isBroadCast.checkNull())
-        ? Constants.typeBroadcastChat
-        : Constants.typeChat;
+            ? Constants.typeBroadcastChat
+            : Constants.typeChat;
   }
 
   bool isDeletedContact() {
@@ -32,7 +32,10 @@ extension RecentChatParsing on RecentChatData {
     return !isDeletedContact() && !isItSavedContact() && !isGroup.checkNull();
   }
 
-  bool isEmailContact() => !isGroup.checkNull() && isGroupInOfflineMode.checkNull(); // for email contact isGroupInOfflineMode will be true
+  bool isEmailContact() =>
+      !isGroup.checkNull() &&
+      isGroupInOfflineMode
+          .checkNull(); // for email contact isGroupInOfflineMode will be true
 
   String getName() {
     if (!Constants.enableContactSync) {
@@ -41,8 +44,8 @@ extension RecentChatParsing on RecentChatData {
         : item.name.toString();*/
       return profileName.checkNull().isEmpty
           ? nickName.checkNull().isNotEmpty
-          ? nickName.checkNull()
-          : getMobileNumberFromJid(jid.checkNull())
+              ? nickName.checkNull()
+              : getMobileNumberFromJid(jid.checkNull())
           : profileName.checkNull();
     } else {
       if (jid.checkNull() == SessionManagement.getUserJID()) {
@@ -60,7 +63,6 @@ extension RecentChatParsing on RecentChatData {
     }
   }
 }
-
 
 extension ProfileParesing on ProfileDetails {
   String getUsername() {
@@ -80,7 +82,9 @@ extension ProfileParesing on ProfileDetails {
   }
 
   String getChatType() {
-    return (isGroupProfile ?? false) ? Constants.typeGroupChat : Constants.typeChat;
+    return (isGroupProfile ?? false)
+        ? Constants.typeGroupChat
+        : Constants.typeChat;
   }
 
   bool isItSavedContact() {
@@ -88,10 +92,15 @@ extension ProfileParesing on ProfileDetails {
   }
 
   bool isUnknownContact() {
-    return !isDeletedContact() && !isItSavedContact() && !isGroupProfile.checkNull();
+    return !isDeletedContact() &&
+        !isItSavedContact() &&
+        !isGroupProfile.checkNull();
   }
 
-  bool isEmailContact() => !isGroupProfile.checkNull() && isGroupInOfflineMode.checkNull(); // for email contact isGroupInOfflineMode will be true
+  bool isEmailContact() =>
+      !isGroupProfile.checkNull() &&
+      isGroupInOfflineMode
+          .checkNull(); // for email contact isGroupInOfflineMode will be true
 
   String getName() {
     if (!Constants.enableContactSync) {
@@ -102,7 +111,9 @@ extension ProfileParesing on ProfileDetails {
         ? item.nickName.toString()
         : item.name.toString();*/
       return name.checkNull().isEmpty
-          ? (nickName.checkNull().isEmpty ? getMobileNumberFromJid(jid.checkNull()) : nickName.checkNull())
+          ? (nickName.checkNull().isEmpty
+              ? getMobileNumberFromJid(jid.checkNull())
+              : nickName.checkNull())
           : name.checkNull();
     } else {
       if (jid.checkNull() == SessionManagement.getUserJID()) {
@@ -116,8 +127,10 @@ extension ProfileParesing on ProfileDetails {
       } else {
         mirrorFlyLog('nickName', nickName.toString());
         return nickName.checkNull().isEmpty
-            ? (name.checkNull().isEmpty ? getMobileNumberFromJid(jid.checkNull()) : name.checkNull())
-            : nickName.checkNull();//#FLUTTER-1300
+            ? (name.checkNull().isEmpty
+                ? getMobileNumberFromJid(jid.checkNull())
+                : name.checkNull())
+            : nickName.checkNull(); //#FLUTTER-1300
       }
     }
   }
@@ -125,25 +138,37 @@ extension ProfileParesing on ProfileDetails {
 
 extension ChatmessageParsing on ChatMessageModel {
   bool isMediaDownloaded() {
-    return isMediaMessage() && (mediaChatMessage?.mediaDownloadStatus.value == Constants.mediaDownloaded);
+    return isMediaMessage() &&
+        (mediaChatMessage?.mediaDownloadStatus.value ==
+            Constants.mediaDownloaded);
   }
 
   bool isMediaUploaded() {
-    return isMediaMessage() && (mediaChatMessage?.mediaUploadStatus.value == Constants.mediaUploaded);
+    return isMediaMessage() &&
+        (mediaChatMessage?.mediaUploadStatus.value == Constants.mediaUploaded);
   }
 
   bool isMediaDownloading() {
-    return isMediaMessage() && (mediaChatMessage?.mediaDownloadStatus.value == Constants.mediaDownloading);
+    return isMediaMessage() &&
+        (mediaChatMessage?.mediaDownloadStatus.value ==
+            Constants.mediaDownloading);
   }
 
   bool isMediaUploading() {
-    return isMediaMessage() && (mediaChatMessage?.mediaUploadStatus.value == Constants.mediaUploading);
-  }
-  bool isUploadFailed() {
-    return isMediaMessage() && (mediaChatMessage?.mediaUploadStatus.value == Constants.mediaNotUploaded);
+    return isMediaMessage() &&
+        (mediaChatMessage?.mediaUploadStatus.value == Constants.mediaUploading);
   }
 
-  bool isMediaMessage() => (isAudioMessage() || isVideoMessage() || isImageMessage() || isFileMessage());
+  bool isUploadFailed() {
+    return isMediaMessage() &&
+        (mediaChatMessage?.mediaUploadStatus.value ==
+            Constants.mediaNotUploaded);
+  }
+
+  bool isMediaMessage() => (isAudioMessage() ||
+      isVideoMessage() ||
+      isImageMessage() ||
+      isFileMessage());
 
   bool isTextMessage() => messageType == Constants.mText;
 
@@ -155,9 +180,9 @@ extension ChatmessageParsing on ChatMessageModel {
 
   bool isFileMessage() => messageType == Constants.mDocument;
 
-  bool isNotificationMessage() => messageType.toUpperCase() == Constants.mNotification;
+  bool isNotificationMessage() =>
+      messageType.toUpperCase() == Constants.mNotification;
 }
-
 
 extension FileFormatter on num {
   String readableFileSize({bool base1024 = true}) {
@@ -185,7 +210,10 @@ extension StringParsing on String? {
       while (this!.contains(searchedKey, i + 1)) {
         i = this!.indexOf(searchedKey, i + 1);
 
-        if (i == 0 || (i > 0 && (RegExp("[^A-Za-z0-9 ]").hasMatch(this!.split("")[i]) || this!.split("")[i] == " "))) {
+        if (i == 0 ||
+            (i > 0 &&
+                (RegExp("[^A-Za-z0-9 ]").hasMatch(this!.split("")[i]) ||
+                    this!.split("")[i] == " "))) {
           return i;
         }
         i++;
@@ -195,7 +223,9 @@ extension StringParsing on String? {
   }
 
   bool startsWithTextInWords(String text) {
-    return !this!.toLowerCase().contains(text.toLowerCase()) ? false : this!.toLowerCase().startsWith(text.toLowerCase());
+    return !this!.toLowerCase().contains(text.toLowerCase())
+        ? false
+        : this!.toLowerCase().startsWith(text.toLowerCase());
     //checkIndexes(text)>-1;
     /*return when {
       this.indexOf(text, ignoreCase = true) <= -1 -> false
@@ -212,7 +242,8 @@ extension BooleanParsing on bool? {
 }
 
 extension ScrollControllerExtension on ScrollController {
-  void scrollTo({required int index, required Duration duration, Curve? curve}) {
+  void scrollTo(
+      {required int index, required Duration duration, Curve? curve}) {
     var offset = getOffset(GlobalKey(debugLabel: "CHATITEM_$index"));
     LogMessage.d("ScrollTo", offset);
     animateTo(
@@ -222,11 +253,11 @@ extension ScrollControllerExtension on ScrollController {
     );
   }
 
-  void jumpsTo({required double index}){
+  void jumpsTo({required double index}) {
     jumpTo(index);
   }
 
-  double getOffset(GlobalKey key){
+  double getOffset(GlobalKey key) {
     final box = key.currentContext?.findRenderObject() as RenderBox;
     final boxHeight = box.size.height;
     Offset boxPosition = box.localToGlobal(Offset.zero);
@@ -238,10 +269,10 @@ extension ScrollControllerExtension on ScrollController {
 }
 
 /// this an extension of List of [Permission]
-extension PermissionExtension on List<Permission>{
+extension PermissionExtension on List<Permission> {
   /// This [status] is used to Check and returns Map of [PermissionStatus].
-  Future<Map<String,PermissionStatus>> status() async {
-    var permissionStatusList = <String,PermissionStatus>{};
+  Future<Map<String, PermissionStatus>> status() async {
+    var permissionStatusList = <String, PermissionStatus>{};
     await Future.forEach(this, (Permission permission) async {
       var status = await permission.status;
       permissionStatusList.putIfAbsent(permission.toString(), () => status);
@@ -250,11 +281,11 @@ extension PermissionExtension on List<Permission>{
   }
 
   /// This [permanentlyDeniedPermissions] is used to Check and returns Map of [PermissionStatus.permanentlyDenied].
-  Future<Map<String,PermissionStatus>> permanentlyDeniedPermissions() async {
-    var permissionStatusList = <String,PermissionStatus>{};
+  Future<Map<String, PermissionStatus>> permanentlyDeniedPermissions() async {
+    var permissionStatusList = <String, PermissionStatus>{};
     await Future.forEach(this, (Permission permission) async {
       var status = await permission.status;
-      if(status == PermissionStatus.permanentlyDenied) {
+      if (status == PermissionStatus.permanentlyDenied) {
         permissionStatusList.putIfAbsent(permission.toString(), () => status);
       }
     });
@@ -262,11 +293,11 @@ extension PermissionExtension on List<Permission>{
   }
 
   /// This [deniedPermissions] is used to Check and returns Map of [PermissionStatus.denied].
-  Future<Map<String,PermissionStatus>> deniedPermissions() async {
-    var permissionStatusList = <String,PermissionStatus>{};
+  Future<Map<String, PermissionStatus>> deniedPermissions() async {
+    var permissionStatusList = <String, PermissionStatus>{};
     await Future.forEach(this, (Permission permission) async {
       var status = await permission.status;
-      if(status == PermissionStatus.denied) {
+      if (status == PermissionStatus.denied) {
         permissionStatusList.putIfAbsent(permission.toString(), () => status);
       }
     });
@@ -274,11 +305,11 @@ extension PermissionExtension on List<Permission>{
   }
 
   /// This [grantedPermissions] is used to Check and returns Map of [PermissionStatus.granted].
-  Future<Map<String,PermissionStatus>> grantedPermissions() async {
-    var permissionStatusList = <String,PermissionStatus>{};
+  Future<Map<String, PermissionStatus>> grantedPermissions() async {
+    var permissionStatusList = <String, PermissionStatus>{};
     await Future.forEach(this, (Permission permission) async {
       var status = await permission.status;
-      if(status == PermissionStatus.granted) {
+      if (status == PermissionStatus.granted) {
         permissionStatusList.putIfAbsent(permission.toString(), () => status);
       }
     });
@@ -295,5 +326,4 @@ extension PermissionExtension on List<Permission>{
     });
     return permissionStatusList;
   }
-
 }

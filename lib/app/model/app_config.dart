@@ -20,14 +20,14 @@ class AppConfig {
   });
 
   factory AppConfig.fromJson(Map<String, dynamic> json) => AppConfig(
-    // projectInfo: ProjectInfo.fromJson(json["projectInfo"]),
-    appTheme: AppTheme.fromJson(json["AppTheme"]),
-  );
+        // projectInfo: ProjectInfo.fromJson(json["projectInfo"]),
+        appTheme: AppTheme.fromJson(json["AppTheme"]),
+      );
 
   Map<String, dynamic> toJson() => {
-    // "projectInfo": projectInfo.toJson(),
-    "AppTheme": appTheme.toJson(),
-  };
+        // "projectInfo": projectInfo.toJson(),
+        "AppTheme": appTheme.toJson(),
+      };
 }
 
 class AppTheme {
@@ -40,14 +40,16 @@ class AppTheme {
   });
 
   factory AppTheme.fromJson(Map<String, dynamic> json) => AppTheme(
-    theme: json["theme"] ?? "light" ,
-    customTheme: json["customTheme"] == null ? null : MirrorFlyAppTheme.fromJson(json["customTheme"]),
-  );
+        theme: json["theme"] ?? "light",
+        customTheme: json["customTheme"] == null
+            ? null
+            : MirrorFlyAppTheme.fromJson(json["customTheme"]),
+      );
 
   Map<String, dynamic> toJson() => {
-    "theme": theme,
-    "customTheme": customTheme?.toJson(),
-  };
+        "theme": theme,
+        "customTheme": customTheme?.toJson(),
+      };
 }
 
 class MirrorFlyAppTheme {
@@ -75,31 +77,34 @@ class MirrorFlyAppTheme {
     required this.chatBubbleSecondaryColor,
   });
 
-  factory MirrorFlyAppTheme.fromJson(Map<String, dynamic> json) => MirrorFlyAppTheme(
-    primaryColor: json["primaryColor"].toString().toColor(),
-    secondaryColor: json["secondaryColor"].toString().toColor(),
-    appBarColor: json["appBarColor"].toString().toColor(),
-    colorOnAppbar: json["colorOnAppbar"].toString().toColor(),
-    scaffoldColor: json["scaffoldColor"].toString().toColor(),
-    colorOnPrimary: json["colorOnPrimary"].toString().toColor(),
-    textPrimaryColor: json["textPrimaryColor"].toString().toColor(),
-    textSecondaryColor: json["textSecondaryColor"].toString().toColor(),
-    chatBubblePrimaryColor: ChatBubbleColor.fromJson(json["chatBubblePrimaryColor"]),
-    chatBubbleSecondaryColor: ChatBubbleColor.fromJson(json["chatBubbleSecondaryColor"]),
-  );
+  factory MirrorFlyAppTheme.fromJson(Map<String, dynamic> json) =>
+      MirrorFlyAppTheme(
+        primaryColor: json["primaryColor"].toString().toColor(),
+        secondaryColor: json["secondaryColor"].toString().toColor(),
+        appBarColor: json["appBarColor"].toString().toColor(),
+        colorOnAppbar: json["colorOnAppbar"].toString().toColor(),
+        scaffoldColor: json["scaffoldColor"].toString().toColor(),
+        colorOnPrimary: json["colorOnPrimary"].toString().toColor(),
+        textPrimaryColor: json["textPrimaryColor"].toString().toColor(),
+        textSecondaryColor: json["textSecondaryColor"].toString().toColor(),
+        chatBubblePrimaryColor:
+            ChatBubbleColor.fromJson(json["chatBubblePrimaryColor"]),
+        chatBubbleSecondaryColor:
+            ChatBubbleColor.fromJson(json["chatBubbleSecondaryColor"]),
+      );
 
   Map<String, dynamic> toJson() => {
-    "primaryColor": primaryColor,
-    "secondaryColor": secondaryColor,
-    "appBarColor": appBarColor,
-    "colorOnAppbar": colorOnAppbar,
-    "scaffoldColor": scaffoldColor,
-    "colorOnPrimary": colorOnPrimary,
-    "textPrimaryColor": textPrimaryColor,
-    "textSecondaryColor": textSecondaryColor,
-    "chatBubblePrimaryColor": chatBubblePrimaryColor.toJson(),
-    "chatBubbleSecondaryColor": chatBubbleSecondaryColor.toJson(),
-  };
+        "primaryColor": primaryColor,
+        "secondaryColor": secondaryColor,
+        "appBarColor": appBarColor,
+        "colorOnAppbar": colorOnAppbar,
+        "scaffoldColor": scaffoldColor,
+        "colorOnPrimary": colorOnPrimary,
+        "textPrimaryColor": textPrimaryColor,
+        "textSecondaryColor": textSecondaryColor,
+        "chatBubblePrimaryColor": chatBubblePrimaryColor.toJson(),
+        "chatBubbleSecondaryColor": chatBubbleSecondaryColor.toJson(),
+      };
 }
 
 class ChatBubbleColor {
@@ -113,21 +118,22 @@ class ChatBubbleColor {
     required this.textSecondaryColor,
   });
 
-  factory ChatBubbleColor.fromJson(Map<String, dynamic> json) => ChatBubbleColor(
-    color: json["color"].toString().toColor(),
-    textPrimaryColor: json["textPrimaryColor"].toString().toColor(),
-    textSecondaryColor: json["textSecondaryColor"].toString().toColor(),
-  );
+  factory ChatBubbleColor.fromJson(Map<String, dynamic> json) =>
+      ChatBubbleColor(
+        color: json["color"].toString().toColor(),
+        textPrimaryColor: json["textPrimaryColor"].toString().toColor(),
+        textSecondaryColor: json["textSecondaryColor"].toString().toColor(),
+      );
 
   Map<String, dynamic> toJson() => {
-    "color": color,
-    "textPrimaryColor": textPrimaryColor,
-    "textSecondaryColor": textSecondaryColor,
-  };
+        "color": color,
+        "textPrimaryColor": textPrimaryColor,
+        "textSecondaryColor": textSecondaryColor,
+      };
 }
 
-extension AppColor on String{
-  Color toColor(){
+extension AppColor on String {
+  Color toColor() {
     return Color(int.parse(this));
   }
 }
@@ -148,30 +154,30 @@ class ProjectInfo {
     required this.licenseKey,
     required this.googleMapKey,
     required this.iOSContainerId,
-    this.storageFolderName="",
-    this.isTrialLicenceKey=true,
-    this.enableMobileNumberLogin=true,
+    this.storageFolderName = "",
+    this.isTrialLicenceKey = true,
+    this.enableMobileNumberLogin = true,
   });
 
   factory ProjectInfo.fromJson(Map<String, dynamic> json) => ProjectInfo(
-    projectId: json["projectId"],
-    serverAddress: json["serverAddress"],
-    licenseKey: json["licenseKey"],
-    googleMapKey: json["googleMapKey"],
-    iOSContainerId: json["iOSContainerId"],
-    storageFolderName: json["storageFolderName"] ?? "",
-    isTrialLicenceKey: json["isTrialLicenceKey"] ?? true,
-    enableMobileNumberLogin: json["enableMobileNumberLogin"] ?? true,
-  );
+        projectId: json["projectId"],
+        serverAddress: json["serverAddress"],
+        licenseKey: json["licenseKey"],
+        googleMapKey: json["googleMapKey"],
+        iOSContainerId: json["iOSContainerId"],
+        storageFolderName: json["storageFolderName"] ?? "",
+        isTrialLicenceKey: json["isTrialLicenceKey"] ?? true,
+        enableMobileNumberLogin: json["enableMobileNumberLogin"] ?? true,
+      );
 
   Map<String, dynamic> toJson() => {
-    "projectId": projectId,
-    "serverAddress": serverAddress,
-    "licenseKey": licenseKey,
-    "googleMapKey": googleMapKey,
-    "iOSContainerId": iOSContainerId,
-    "storageFolderName": storageFolderName,
-    "isTrialLicenceKey": isTrialLicenceKey,
-    "enableMobileNumberLogin": enableMobileNumberLogin,
-  };
+        "projectId": projectId,
+        "serverAddress": serverAddress,
+        "licenseKey": licenseKey,
+        "googleMapKey": googleMapKey,
+        "iOSContainerId": iOSContainerId,
+        "storageFolderName": storageFolderName,
+        "isTrialLicenceKey": isTrialLicenceKey,
+        "enableMobileNumberLogin": enableMobileNumberLogin,
+      };
 }

@@ -1,22 +1,27 @@
 import 'package:flutter/material.dart';
 
 import '../../../../common/constants.dart';
+
 class NotificationNotWorkingView extends StatefulWidget {
-  const NotificationNotWorkingView({super.key,this.enableAppBar=true});
+  const NotificationNotWorkingView({super.key, this.enableAppBar = true});
   final bool enableAppBar;
   @override
-  State<NotificationNotWorkingView> createState() => _NotificationNotWorkingViewState();
+  State<NotificationNotWorkingView> createState() =>
+      _NotificationNotWorkingViewState();
 }
 
-class _NotificationNotWorkingViewState extends State<NotificationNotWorkingView> {
+class _NotificationNotWorkingViewState
+    extends State<NotificationNotWorkingView> {
   double progress = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: widget.enableAppBar ? AppBar(
-          title: const Text('Notification Not Working?'),
-          automaticallyImplyLeading: true,
-        ) : null,
+        appBar: widget.enableAppBar
+            ? AppBar(
+                title: const Text('Notification Not Working?'),
+                automaticallyImplyLeading: true,
+              )
+            : null,
         body: SafeArea(
           child: Expanded(
             child: Stack(
@@ -36,12 +41,16 @@ class _NotificationNotWorkingViewState extends State<NotificationNotWorkingView>
                   },
                 ),*/
                 progress < 1.0
-                    ? LinearProgressIndicator(value: progress,valueColor: const AlwaysStoppedAnimation<Color>(buttonBgColor),backgroundColor: Colors.white,)
+                    ? LinearProgressIndicator(
+                        value: progress,
+                        valueColor:
+                            const AlwaysStoppedAnimation<Color>(buttonBgColor),
+                        backgroundColor: Colors.white,
+                      )
                     : Container(),
               ],
             ),
           ),
-        )
-    );
+        ));
   }
 }

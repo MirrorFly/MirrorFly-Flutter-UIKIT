@@ -34,7 +34,7 @@ class DecodeImage extends ImageProvider<DecodeImage> {
     assert(key == this);
 
     final coverEntity =
-    (await key.entity.getAssetListRange(start: index, end: index + 1))[0];
+        (await key.entity.getAssetListRange(start: index, end: index + 1))[0];
 
     final bytes = await coverEntity
         .thumbnailDataWithSize(ThumbnailSize(thumbSize, thumbSize));
@@ -48,7 +48,6 @@ class DecodeImage extends ImageProvider<DecodeImage> {
 
     return codec;
   }
-
 
   @override
   Future<DecodeImage> obtainKey(ImageConfiguration configuration) async {

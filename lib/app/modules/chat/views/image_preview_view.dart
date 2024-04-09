@@ -10,20 +10,18 @@ import 'package:photo_view/photo_view.dart';
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
 
-
 class ImagePreviewView extends GetView<ImagePreviewController> {
-  const ImagePreviewView({super.key,this.enableAppBar=true});
+  const ImagePreviewView({super.key, this.enableAppBar = true});
   final bool enableAppBar;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: enableAppBar ? AppBar(
-        backgroundColor: Colors.black,
-        iconTheme: const IconThemeData(
-            color: Colors.white
-        ),
-        /*actions: [
+      appBar: enableAppBar
+          ? AppBar(
+              backgroundColor: Colors.black,
+              iconTheme: const IconThemeData(color: Colors.white),
+              /*actions: [
           IconButton(
               icon: const Icon(
                 Icons.delete_outline_outlined,
@@ -55,57 +53,49 @@ class ImagePreviewView extends GetView<ImagePreviewController> {
               ),
               onPressed: () {}),
         ],*/
-      ) : null,
+            )
+          : null,
       body: SafeArea(
         child: SizedBox(
-          width: MediaQuery
-              .of(context)
-              .size
-              .width,
-          height: MediaQuery
-              .of(context)
-              .size
-              .height,
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
           child: Stack(
             children: [
               Obx(() {
-                return controller.filePath.value.isNotEmpty ? SizedBox(
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width,
-                  height: MediaQuery
-                      .of(context)
-                      .size
-                      .height - 150,
-                  child: PhotoView(
-                    imageProvider: FileImage(File(controller.filePath.value)),
-                    // Contained = the smallest possible size to fit one dimension of the screen
-                    minScale: PhotoViewComputedScale.contained * 0.8,
-                    // Covered = the smallest possible size to fit the whole screen
-                    maxScale: PhotoViewComputedScale.covered * 2,
-                    enableRotation: true,
-                    // Set the background color to the "classic white"
-                    backgroundDecoration: const BoxDecoration(
-                      color: Colors.transparent
-                    ),
-                    loadingBuilder: (context, event) =>
-                        Center(
-                          child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
+                return controller.filePath.value.isNotEmpty
+                    ? SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height - 150,
+                        child: PhotoView(
+                          imageProvider:
+                              FileImage(File(controller.filePath.value)),
+                          // Contained = the smallest possible size to fit one dimension of the screen
+                          minScale: PhotoViewComputedScale.contained * 0.8,
+                          // Covered = the smallest possible size to fit the whole screen
+                          maxScale: PhotoViewComputedScale.covered * 2,
+                          enableRotation: true,
+                          // Set the background color to the "classic white"
+                          backgroundDecoration:
+                              const BoxDecoration(color: Colors.transparent),
+                          loadingBuilder: (context, event) => Center(
+                            child: CircularProgressIndicator(
+                              color: MirrorflyUikit.getTheme?.primaryColor,
+                            ),
+                          ),
                         ),
-                  ),
-                ) : Center(child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,));
+                      )
+                    : Center(
+                        child: CircularProgressIndicator(
+                        color: MirrorflyUikit.getTheme?.primaryColor,
+                      ));
               }),
               Positioned(
                 bottom: 0,
                 child: Container(
                   color: Colors.black38,
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width,
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 5, horizontal: 15),
+                  width: MediaQuery.of(context).size.width,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                   child: IntrinsicHeight(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,7 +107,9 @@ class ImagePreviewView extends GetView<ImagePreviewController> {
                               color: Colors.white,
                               size: 27,
                             ),
-                            const SizedBox(width: 5,),
+                            const SizedBox(
+                              width: 5,
+                            ),
                             const Padding(
                               padding: EdgeInsets.only(top: 12.0, bottom: 12.0),
                               child: VerticalDivider(
@@ -125,7 +117,9 @@ class ImagePreviewView extends GetView<ImagePreviewController> {
                                 thickness: 1,
                               ),
                             ),
-                            const SizedBox(width: 5,),
+                            const SizedBox(
+                              width: 5,
+                            ),
                             Expanded(
                               child: TextFormField(
                                 controller: controller.caption,
@@ -139,7 +133,8 @@ class ImagePreviewView extends GetView<ImagePreviewController> {
                                   hintText: AppConstants.addCaption,
                                   hintStyle: const TextStyle(
                                     color: Colors.white,
-                                  ),),
+                                  ),
+                                ),
                               ),
                             ),
                             InkWell(
@@ -148,7 +143,9 @@ class ImagePreviewView extends GetView<ImagePreviewController> {
                                   // controller.sendMessage(controller.profile);
                                 },
                                 child: SvgPicture.asset(
-                                    imgSendIcon,package: package,)),
+                                  imgSendIcon,
+                                  package: package,
+                                )),
                           ],
                         ),
                         // SvgPicture.asset(
@@ -165,8 +162,10 @@ class ImagePreviewView extends GetView<ImagePreviewController> {
                               color: Colors.white,
                               size: 27,
                             ),
-                            Text(controller.userName, style: const TextStyle(
-                                color: Colors.white),),
+                            Text(
+                              controller.userName,
+                              style: const TextStyle(color: Colors.white),
+                            ),
                           ],
                         ),
                       ],

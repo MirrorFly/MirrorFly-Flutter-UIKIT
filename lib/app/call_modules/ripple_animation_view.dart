@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-
 class RipplesAnimation extends StatefulWidget {
-  const RipplesAnimation({super.key, this.size = 50.0, this.color = Colors.red,
-    required this.onPressed, required this.child,});
+  const RipplesAnimation({
+    super.key,
+    this.size = 50.0,
+    this.color = Colors.red,
+    required this.onPressed,
+    required this.child,
+  });
   final double size;
   final Color color;
   final Widget child;
@@ -13,7 +17,8 @@ class RipplesAnimation extends StatefulWidget {
   RipplesAnimationState createState() => RipplesAnimationState();
 }
 
-class RipplesAnimationState extends State<RipplesAnimation> with TickerProviderStateMixin {
+class RipplesAnimationState extends State<RipplesAnimation>
+    with TickerProviderStateMixin {
   late AnimationController _controller;
   @override
   void initState() {
@@ -23,11 +28,13 @@ class RipplesAnimationState extends State<RipplesAnimation> with TickerProviderS
       vsync: this,
     )..repeat();
   }
+
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
+
   Widget _button() {
     return Center(
       child: ClipRRect(
@@ -39,8 +46,8 @@ class RipplesAnimationState extends State<RipplesAnimation> with TickerProviderS
                 curve: CurveWave(),
               ),
             ),
-            child: widget.child//Icon(Icons.speaker_phone, size: 44,)
-        ),
+            child: widget.child //Icon(Icons.speaker_phone, size: 44,)
+            ),
       ),
     );
   }
@@ -48,18 +55,18 @@ class RipplesAnimationState extends State<RipplesAnimation> with TickerProviderS
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: CustomPaint(
-          painter: CirclePainter(
-            _controller,
-            color: widget.color,
-          ),
-          child: SizedBox(
-            width: widget.size * 4.125,
-            height: widget.size * 4.125,
-            child: _button(),
-          ),
+      child: CustomPaint(
+        painter: CirclePainter(
+          _controller,
+          color: widget.color,
         ),
-      );
+        child: SizedBox(
+          width: widget.size * 4.125,
+          height: widget.size * 4.125,
+          child: _button(),
+        ),
+      ),
+    );
   }
 }
 
@@ -72,11 +79,12 @@ class CurveWave extends Curve {
     return math.sin(t * math.pi);
   }
 }
+
 class CirclePainter extends CustomPainter {
   CirclePainter(
-      this._animation, {
-        required this.color,
-      }) : super(repaint: _animation);
+    this._animation, {
+    required this.color,
+  }) : super(repaint: _animation);
   final Color color;
   final Animation<double> _animation;
   void circle(Canvas canvas, Rect rect, double value) {
@@ -87,19 +95,22 @@ class CirclePainter extends CustomPainter {
     final double size = rect.width / 2;
     final double area = size * size;
     final double radius = math.sqrt(area * value / 4);
-    final Paint paint = Paint();//..color = _color;
+    final Paint paint = Paint(); //..color = _color;
     paint.color = color;
     paint.strokeWidth = 1.0;
     paint.style = PaintingStyle.stroke;
     final dashPath = Path();
-    final dashCount = (rect.width/2).round();//(2 * math.pi * radius / (dashWidth + dashSpace)).ceil();
+    final dashCount = (rect.width / 2)
+        .round(); //(2 * math.pi * radius / (dashWidth + dashSpace)).ceil();
     final center = Offset(rect.width / 2, rect.height / 2);
     for (int i = 0; i < dashCount; i++) {
       final angle = 2 * math.pi * i / dashCount;
       final startX = center.dx + math.cos(angle) * radius;
       final startY = center.dy + math.sin(angle) * radius;
-      final endX = center.dx + math.cos(angle + math.pi / 180 * dashWidth) * radius;
-      final endY = center.dy + math.sin(angle + math.pi / 180 * dashWidth) * radius;
+      final endX =
+          center.dx + math.cos(angle + math.pi / 180 * dashWidth) * radius;
+      final endY =
+          center.dy + math.sin(angle + math.pi / 180 * dashWidth) * radius;
 
       dashPath.moveTo(startX, startY);
       dashPath.lineTo(endX, endY);
@@ -107,13 +118,15 @@ class CirclePainter extends CustomPainter {
 
     canvas.drawPath(dashPath, paint);
   }
+
   @override
   void paint(Canvas canvas, Size size) {
-    final Rect rect = Rect.fromLTRB(0.0, 0.0, size.width,size.height);
+    final Rect rect = Rect.fromLTRB(0.0, 0.0, size.width, size.height);
     for (int wave = 2; wave >= 0; wave--) {
       circle(canvas, rect, wave + _animation.value);
     }
   }
+
   @override
   bool shouldRepaint(CirclePainter oldDelegate) => true;
 }

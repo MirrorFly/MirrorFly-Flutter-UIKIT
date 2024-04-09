@@ -15,7 +15,7 @@ import '../../../data/apputils.dart';
 import '../../../data/helper.dart';
 import '../../settings/views/chat_settings/chat_settings_controller.dart';
 
-class BusyStatusController extends GetxController with WidgetsBindingObserver{
+class BusyStatusController extends GetxController with WidgetsBindingObserver {
   final busyStatus = Constants.emptyString.obs;
   var busyStatusList = List<StatusData>.empty(growable: true).obs;
   var selectedStatus = Constants.emptyString.obs;
@@ -30,8 +30,7 @@ class BusyStatusController extends GetxController with WidgetsBindingObserver{
     count(139 - addStatusController.text.characters.length);
   }
 
-
-  onEmojiBackPressed(){
+  onEmojiBackPressed() {
     var text = addStatusController.text;
     var cursorPosition = addStatusController.selection.base.offset;
 
@@ -47,7 +46,7 @@ class BusyStatusController extends GetxController with WidgetsBindingObserver{
     if (cursorPosition >= 0) {
       final selection = addStatusController.value.selection;
       final newTextBeforeCursor =
-      selection.textBefore(text).characters.skipLast(1).toString();
+          selection.textBefore(text).characters.skipLast(1).toString();
       LogMessage.d("newTextBeforeCursor", newTextBeforeCursor);
       addStatusController
         ..text = newTextBeforeCursor + selection.textAfter(text)
@@ -57,8 +56,8 @@ class BusyStatusController extends GetxController with WidgetsBindingObserver{
     count((139 - addStatusController.text.characters.length));
   }
 
-  onEmojiSelected(Emoji emoji){
-    if(addStatusController.text.characters.length < 139){
+  onEmojiSelected(Emoji emoji) {
+    if (addStatusController.text.characters.length < 139) {
       final controller = addStatusController;
       final text = controller.text;
       final selection = controller.selection;
@@ -71,7 +70,7 @@ class BusyStatusController extends GetxController with WidgetsBindingObserver{
       }
 
       final newText =
-      text.replaceRange(selection.start, selection.end, emoji.emoji);
+          text.replaceRange(selection.start, selection.end, emoji.emoji);
       final emojiLength = emoji.emoji.length;
       controller
         ..text = newText
@@ -85,7 +84,7 @@ class BusyStatusController extends GetxController with WidgetsBindingObserver{
 
   void init(String? status) {
     WidgetsBinding.instance.addObserver(this);
-    if(status != null) {
+    if (status != null) {
       selectedStatus.value = status;
       addStatusController.text = selectedStatus.value;
     }
@@ -93,7 +92,6 @@ class BusyStatusController extends GetxController with WidgetsBindingObserver{
     getMyBusyStatus();
     getMyBusyStatusList();
   }
-
 
   void getMyBusyStatus() {
     Mirrorfly.getMyBusyStatus().then((value) {
@@ -132,16 +130,13 @@ class BusyStatusController extends GetxController with WidgetsBindingObserver{
   }
 
   void deleteBusyStatus(StatusData item, BuildContext context) {
-
-    if(!item.isCurrentStatus!){
+    if (!item.isCurrentStatus!) {
       Helper.showButtonAlert(actions: [
         ListTile(
           contentPadding: const EdgeInsets.only(left: 10),
           title: Text(AppConstants.delete,
-              style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.normal)),
-
+              style:
+                  const TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
           onTap: () {
             // Get.back();
             Navigator.pop(context);
@@ -171,52 +166,64 @@ class BusyStatusController extends GetxController with WidgetsBindingObserver{
 
   validateAndFinish(BuildContext context) async {
     if (addStatusController.text.trim().isNotEmpty) {
-
-        Navigator.pop(context, addStatusController.text.trim().toString());
-
+      Navigator.pop(context, addStatusController.text.trim().toString());
     } else {
       toToast(AppConstants.statusCantEmpty);
     }
   }
 
   void setCurrentStatus(String status) {
-    Mirrorfly.setMyBusyStatus(busyStatus: status, flyCallBack: (FlyResponse response) {
-      debugPrint("status value $response");
-      var settingController = Get.find<ChatSettingsController>();
-      settingController.busyStatus(status);
-      getMyBusyStatusList();
-    });
+    Mirrorfly.setMyBusyStatus(
+        busyStatus: status,
+        flyCallBack: (FlyResponse response) {
+          debugPrint("status value $response");
+          var settingController = Get.find<ChatSettingsController>();
+          settingController.busyStatus(status);
+          getMyBusyStatusList();
+        });
   }
 
   void busyDeleteConfirmation(StatusData item, BuildContext context) {
-    Helper.showAlert(message: AppConstants.youWantDeleteStatus, actions: [
-      TextButton(
-          onPressed: () {
-            // Get.back();
-            Navigator.pop(context);
-          },
-          child: Text(AppConstants.no, style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
-      TextButton(
-          onPressed: () async {
-            if (await AppUtils.isNetConnected()) {
-              // Get.back();
-              if(context.mounted)Navigator.pop(context);
-              if(context.mounted)Helper.showLoading(message: AppConstants.deletingBusyStatus, buildContext: context);
-              Mirrorfly.deleteBusyStatus(id:
-                  item.id!, status: item.status!, isCurrentStatus: item.isCurrentStatus!)
-                  .then((value) {
+    Helper.showAlert(
+        message: AppConstants.youWantDeleteStatus,
+        actions: [
+          TextButton(
+              onPressed: () {
+                // Get.back();
+                Navigator.pop(context);
+              },
+              child: Text(AppConstants.no,
+                  style:
+                      TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
+          TextButton(
+              onPressed: () async {
+                if (await AppUtils.isNetConnected()) {
+                  // Get.back();
+                  if (context.mounted) Navigator.pop(context);
+                  if (context.mounted)
+                    Helper.showLoading(
+                        message: AppConstants.deletingBusyStatus,
+                        buildContext: context);
+                  Mirrorfly.deleteBusyStatus(
+                          id: item.id!,
+                          status: item.status!,
+                          isCurrentStatus: item.isCurrentStatus!)
+                      .then((value) {
                     busyStatusList.remove(item);
-                Helper.hideLoading(context: context);
-              }).catchError((error) {
-                Helper.hideLoading(context: context);
-                toToast(AppConstants.unableDeleteBusyStatus);
-              });
-            } else {
-              toToast(AppConstants.noInternetConnection);
-            }
-          },
-          child: Text(AppConstants.yes, style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
-    ], context: context);
+                    Helper.hideLoading(context: context);
+                  }).catchError((error) {
+                    Helper.hideLoading(context: context);
+                    toToast(AppConstants.unableDeleteBusyStatus);
+                  });
+                } else {
+                  toToast(AppConstants.noInternetConnection);
+                }
+              },
+              child: Text(AppConstants.yes,
+                  style:
+                      TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
+        ],
+        context: context);
   }
 
   // @override
@@ -246,7 +253,7 @@ class BusyStatusController extends GetxController with WidgetsBindingObserver{
   void showHideEmoji(BuildContext context) {
     if (!showEmoji.value) {
       focusNode.unfocus();
-    }else{
+    } else {
       focusNode.requestFocus();
       return;
     }
@@ -266,5 +273,4 @@ class BusyStatusController extends GetxController with WidgetsBindingObserver{
   void close() {
     WidgetsBinding.instance.removeObserver(this);
   }
-
 }

@@ -2,7 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit_plugin_method_channel.dart';
 
 void main() {
-  MethodChannelMirrorflyUikitPlugin platform = MethodChannelMirrorflyUikitPlugin();
+  MethodChannelMirrorflyUikitPlugin platform =
+      MethodChannelMirrorflyUikitPlugin();
   // const MethodChannel channel = MethodChannel('mirrorfly_uikit_plugin');
 
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -11,7 +12,6 @@ void main() {
     // channel.setMockMethodCallHandler((MethodCall methodCall) async {
     //   return '42';
     // });
-
   });
 
   tearDown(() {

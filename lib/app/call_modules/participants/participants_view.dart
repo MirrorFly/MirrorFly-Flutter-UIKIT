@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -22,8 +20,6 @@ class ParticipantsView extends StatefulWidget {
 }
 
 class _ParticipantsViewState extends State<ParticipantsView> {
-
-
   final controller = Get.put(AddParticipantsController());
 
   @override
@@ -34,37 +30,41 @@ class _ParticipantsViewState extends State<ParticipantsView> {
 
   @override
   Widget build(BuildContext context) {
-
     return CustomSafeArea(
       child: DefaultTabController(
         length: 2,
         child: Builder(builder: (ctx) {
           return Scaffold(
               body: NestedScrollView(
-                  headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+                  headerSliverBuilder:
+                      (BuildContext context, bool innerBoxIsScrolled) {
                     return [
                       Obx(() {
                         return SliverAppBar(
                           snap: false,
                           pinned: true,
-                          leading:IconButton(
-                            icon: const Icon(Icons.arrow_back, color: iconColor),
+                          leading: IconButton(
+                            icon:
+                                const Icon(Icons.arrow_back, color: iconColor),
                             onPressed: () {
-                              if(controller.isSearching.value) {
+                              if (controller.isSearching.value) {
                                 controller.getBackFromSearch();
-                              }else{
+                              } else {
                                 Get.back();
                               }
                             },
                           ),
                           title: controller.isSearching.value
                               ? TextField(
-                            focusNode: controller.searchFocusNode,
-                            onChanged: (text) => controller.searchListener(text),
-                            controller: controller.searchQuery,
-                            autofocus: true,
-                            decoration: const InputDecoration(hintText: "Search...", border: InputBorder.none),
-                          )
+                                  focusNode: controller.searchFocusNode,
+                                  onChanged: (text) =>
+                                      controller.searchListener(text),
+                                  controller: controller.searchQuery,
+                                  autofocus: true,
+                                  decoration: const InputDecoration(
+                                      hintText: "Search...",
+                                      border: InputBorder.none),
+                                )
                               : null,
                           bottom: TabBar(
                               controller: controller.tabController,
@@ -77,21 +77,23 @@ class _ParticipantsViewState extends State<ParticipantsView> {
                               ]),
                           actions: [
                             Visibility(
-                              visible:controller.currentTab.value==1,
+                              visible: controller.currentTab.value == 1,
                               child: IconButton(
                                 onPressed: () {
-                                  if(controller.isSearching.value){
+                                  if (controller.isSearching.value) {
                                     controller.clearSearch();
-                                  }else {
+                                  } else {
                                     controller.onSearchPressed();
                                   }
                                 },
-                                icon: !controller.isSearching.value ? SvgPicture.asset(
-                                  searchIcon,
-                                  width: 18,
-                                  height: 18,
-                                  fit: BoxFit.contain,
-                                ) : const Icon(Icons.clear),
+                                icon: !controller.isSearching.value
+                                    ? SvgPicture.asset(
+                                        searchIcon,
+                                        width: 18,
+                                        height: 18,
+                                        fit: BoxFit.contain,
+                                      )
+                                    : const Icon(Icons.clear),
                                 tooltip: 'Search',
                               ),
                             ),
@@ -100,8 +102,12 @@ class _ParticipantsViewState extends State<ParticipantsView> {
                       }),
                     ];
                   },
-                  body: TabBarView(controller: controller.tabController,
-                      children: [callParticipantsView(context), addParticipants(context)])));
+                  body: TabBarView(
+                      controller: controller.tabController,
+                      children: [
+                        callParticipantsView(context),
+                        addParticipants(context)
+                      ])));
         }),
       ),
     );
@@ -124,7 +130,10 @@ class _ParticipantsViewState extends State<ParticipantsView> {
                     radius: 9,
                     child: Text(
                       count.toString(),
-                      style: const TextStyle(fontSize: 12, color: Colors.white, fontFamily: 'sf_ui'),
+                      style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
+                          fontFamily: 'sf_ui'),
                     ),
                   ),
                 )
@@ -142,18 +151,21 @@ class _ParticipantsViewState extends State<ParticipantsView> {
           physics: const AlwaysScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             debugPrint("call list length ${controller.callList.length}");
-            return SessionManagement.getUserJID() == controller.callList[index].userJid!.value.checkNull()
+            return SessionManagement.getUserJID() ==
+                    controller.callList[index].userJid!.value.checkNull()
                 ? const SizedBox.shrink()
                 : Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Row(
                       children: [
                         FutureBuilder(
-                            future: getProfileDetails(controller.callList[index].userJid!.value.checkNull()),
+                            future: getProfileDetails(controller
+                                .callList[index].userJid!.value
+                                .checkNull()),
                             builder: (ctx, snap) {
-                        return snap.hasData && snap.data != null
-                            ? buildProfileImage(snap.data!, size: 48)
-                            : const SizedBox.shrink();
+                              return snap.hasData && snap.data != null
+                                  ? buildProfileImage(snap.data!, size: 48)
+                                  : const SizedBox.shrink();
                             }),
                         const SizedBox(
                           width: 10,
@@ -163,13 +175,17 @@ class _ParticipantsViewState extends State<ParticipantsView> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               FutureBuilder(
-                                  future: CallUtils.getNameOfJid(controller.callList[index].userJid!.value.checkNull()),
+                                  future: CallUtils.getNameOfJid(controller
+                                      .callList[index].userJid!.value
+                                      .checkNull()),
                                   builder: (ctx, snap) {
                                     return snap.hasData && snap.data != null
                                         ? Text(
                                             snap.data!,
                                             maxLines: 1,
-                                            style: Theme.of(context).textTheme.titleMedium,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium,
                                             overflow: TextOverflow.ellipsis,
                                           )
                                         : const SizedBox.shrink();
@@ -181,20 +197,27 @@ class _ParticipantsViewState extends State<ParticipantsView> {
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Obx(() {
                             return controller.callList[index].isAudioMuted.value
-                                ? CircleAvatar(backgroundColor: AppColors.participantUnMuteColor, child: SvgPicture.asset(participantMute))
-                                : CircleAvatar(backgroundColor: Colors.transparent, child: SvgPicture.asset(participantUnMute));
+                                ? CircleAvatar(
+                                    backgroundColor:
+                                        AppColors.participantUnMuteColor,
+                                    child: SvgPicture.asset(participantMute))
+                                : CircleAvatar(
+                                    backgroundColor: Colors.transparent,
+                                    child: SvgPicture.asset(participantUnMute));
                           }),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: Obx(() {
                             return CircleAvatar(
-                          backgroundColor: controller.callList[index].isVideoMuted.value ? AppColors
-                              .participantUnMuteColor : Colors.transparent,
-                                child: SvgPicture.asset(
-                              controller.callList[index].isVideoMuted.value
-                                  ? participantVideoDisabled
-                                  : participantVideoEnabled));
+                                backgroundColor: controller
+                                        .callList[index].isVideoMuted.value
+                                    ? AppColors.participantUnMuteColor
+                                    : Colors.transparent,
+                                child: SvgPicture.asset(controller
+                                        .callList[index].isVideoMuted.value
+                                    ? participantVideoDisabled
+                                    : participantVideoEnabled));
                           }),
                         ),
                       ],
@@ -209,79 +232,98 @@ class _ParticipantsViewState extends State<ParticipantsView> {
       return Stack(
         children: [
           Visibility(
-              visible: !controller.isPageLoading.value && controller.usersList.isEmpty,
-              child: const Center(child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 20.0),
-                child: Text("No Contacts found"),
-              ),)),
+              visible: !controller.isPageLoading.value &&
+                  controller.usersList.isEmpty,
+              child: const Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20.0),
+                  child: Text("No Contacts found"),
+                ),
+              )),
           controller.isPageLoading.value
               ? const Center(
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: CircularProgressIndicator(),
-              )) : const SizedBox.shrink(),
+                  child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: CircularProgressIndicator(),
+                ))
+              : const SizedBox.shrink(),
           Column(
             children: [
-              controller.isPageLoading.value ? Expanded(child: Container()) : Expanded(
-                child: ListView.builder(
-                    itemCount: controller.scrollable.value
-                        ? controller.usersList.length + 1
-                        : controller.usersList.length,
-                    controller: controller.scrollController,
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    itemBuilder: (BuildContext context, int index) {
-                      if (index >= controller.usersList.length &&
-                          controller.usersList.isNotEmpty) {
-                        return const Center(
-                            child: CircularProgressIndicator());
-                      } else if (controller.usersList.isNotEmpty) {
-                        var item = controller.usersList[index];
-                        return ContactItem(item: item,onAvatarClick: (){
-                          // controller.showProfilePopup(item.obs);
-                        },
-                          spanTxt: controller.searchQuery.text,
-                          isCheckBoxVisible: controller.isCheckBoxVisible,
-                          checkValue: controller.selectedUsersJIDList.contains(item.jid),
-                          onCheckBoxChange: (value){
-                            controller.onListItemPressed(item);
-                          },onListItemPressed: (){
-                            controller.onListItemPressed(item);
-                          },);
-                      } else {
-                        return const SizedBox();
-                      }
-                    }),
-              ),
+              controller.isPageLoading.value
+                  ? Expanded(child: Container())
+                  : Expanded(
+                      child: ListView.builder(
+                          itemCount: controller.scrollable.value
+                              ? controller.usersList.length + 1
+                              : controller.usersList.length,
+                          controller: controller.scrollController,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          itemBuilder: (BuildContext context, int index) {
+                            if (index >= controller.usersList.length &&
+                                controller.usersList.isNotEmpty) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            } else if (controller.usersList.isNotEmpty) {
+                              var item = controller.usersList[index];
+                              return ContactItem(
+                                item: item,
+                                onAvatarClick: () {
+                                  // controller.showProfilePopup(item.obs);
+                                },
+                                spanTxt: controller.searchQuery.text,
+                                isCheckBoxVisible: controller.isCheckBoxVisible,
+                                checkValue: controller.selectedUsersJIDList
+                                    .contains(item.jid),
+                                onCheckBoxChange: (value) {
+                                  controller.onListItemPressed(item);
+                                },
+                                onListItemPressed: () {
+                                  controller.onListItemPressed(item);
+                                },
+                              );
+                            } else {
+                              return const SizedBox();
+                            }
+                          }),
+                    ),
               Obx(() {
-                return controller.groupCallMembersCount.value > 0 ? InkWell(
-                  onTap: () {
-                    controller.makeCall();
-                  },
-                  child: Container(
-                      height: 50,
-                      decoration: const BoxDecoration(
-                          color: buttonBgColor,
-                          shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(2), topRight: Radius.circular(2))
-                      ),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              addParticipantsInCall,
-                            ),
-                            const SizedBox(width: 8,),
-                            Text("${Constants.addParticipantsToCall} ( ${(controller.groupCallMembersCount.value)} )",
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500,
-                                  fontFamily: 'sf_ui'),)
-                          ],
-                        ),
-                      )),
-                ) : const SizedBox.shrink();
+                return controller.groupCallMembersCount.value > 0
+                    ? InkWell(
+                        onTap: () {
+                          controller.makeCall();
+                        },
+                        child: Container(
+                            height: 50,
+                            decoration: const BoxDecoration(
+                                color: buttonBgColor,
+                                shape: BoxShape.rectangle,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(2),
+                                    topRight: Radius.circular(2))),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(
+                                    addParticipantsInCall,
+                                  ),
+                                  const SizedBox(
+                                    width: 8,
+                                  ),
+                                  Text(
+                                    "${Constants.addParticipantsToCall} ( ${(controller.groupCallMembersCount.value)} )",
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        fontFamily: 'sf_ui'),
+                                  )
+                                ],
+                              ),
+                            )),
+                      )
+                    : const SizedBox.shrink();
               })
             ],
           )

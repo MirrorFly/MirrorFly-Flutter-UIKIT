@@ -17,7 +17,12 @@ class ImageMessageView extends StatefulWidget {
   final bool isSelected;
   final bool showChatDeliveryIndicator;
 
-  const ImageMessageView({super.key, required this.chatMessage, this.search = "", required this.isSelected, required this.showChatDeliveryIndicator});
+  const ImageMessageView(
+      {super.key,
+      required this.chatMessage,
+      this.search = "",
+      required this.isSelected,
+      required this.showChatDeliveryIndicator});
 
   @override
   State<ImageMessageView> createState() => _ImageMessageViewState();
@@ -42,7 +47,11 @@ class _ImageMessageViewState extends State<ImageMessageView> {
                 borderRadius: BorderRadius.circular(15),
                 child: Obx(() {
                   return getImage(
-                      mediaMessage.mediaLocalStoragePath, mediaMessage.mediaThumbImage, context, mediaMessage.mediaFileName, widget.isSelected);
+                      mediaMessage.mediaLocalStoragePath,
+                      mediaMessage.mediaThumbImage,
+                      context,
+                      mediaMessage.mediaFileName,
+                      widget.isSelected);
                 }),
               ),
               Obx(() {
@@ -56,12 +65,17 @@ class _ImageMessageViewState extends State<ImageMessageView> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          widget.chatMessage.isMessageStarred.value ? SvgPicture.asset(starSmallIcon) : const SizedBox.shrink(),
+                          widget.chatMessage.isMessageStarred.value
+                              ? SvgPicture.asset(starSmallIcon)
+                              : const SizedBox.shrink(),
                           const SizedBox(
                             width: 5,
                           ),
-                          getMessageIndicator(widget.chatMessage.messageStatus.value, widget.chatMessage.isMessageSentByMe,
-                              widget.chatMessage.messageType, widget.chatMessage.isMessageRecalled.value),
+                          getMessageIndicator(
+                              widget.chatMessage.messageStatus.value,
+                              widget.chatMessage.isMessageSentByMe,
+                              widget.chatMessage.messageType,
+                              widget.chatMessage.isMessageRecalled.value),
                           const SizedBox(
                             width: 4,
                           ),
@@ -69,8 +83,13 @@ class _ImageMessageViewState extends State<ImageMessageView> {
                             children: [
                               // Image.asset(cornerShadow,width: 40,height: 20,fit: BoxFit.fitHeight,),
                               Text(
-                                getChatTime(context, widget.chatMessage.messageSentTime.toInt()),
-                                style: TextStyle(fontSize: 11, color: widget.chatMessage.isMessageSentByMe ? durationTextColor : textButtonColor),
+                                getChatTime(context,
+                                    widget.chatMessage.messageSentTime.toInt()),
+                                style: TextStyle(
+                                    fontSize: 11,
+                                    color: widget.chatMessage.isMessageSentByMe
+                                        ? durationTextColor
+                                        : textButtonColor),
                               ),
                             ],
                           ),
@@ -81,7 +100,9 @@ class _ImageMessageViewState extends State<ImageMessageView> {
             ],
           ),
           mediaMessage.mediaCaptionText.checkNull().isNotEmpty
-              ? setCaptionMessage(mediaMessage, widget.chatMessage, context, widget.showChatDeliveryIndicator, search: widget.search)
+              ? setCaptionMessage(mediaMessage, widget.chatMessage, context,
+                  widget.showChatDeliveryIndicator,
+                  search: widget.search)
               : const Offstage(),
         ],
       ),
@@ -92,17 +113,24 @@ class _ImageMessageViewState extends State<ImageMessageView> {
   bool get wantKeepAlive => true;*/
 }
 
-getImage(RxString mediaLocalStoragePath, String mediaThumbImage, BuildContext context, String mediaFileName, bool isSelected) {
-  debugPrint("getImage mediaLocalStoragePath : $mediaLocalStoragePath -- $mediaFileName");
+getImage(RxString mediaLocalStoragePath, String mediaThumbImage,
+    BuildContext context, String mediaFileName, bool isSelected) {
+  debugPrint(
+      "getImage mediaLocalStoragePath : $mediaLocalStoragePath -- $mediaFileName");
   if (checkFile(mediaLocalStoragePath.value)) {
     return InkWell(
         onTap: isSelected
             ? null
             : () {
                 // Get.toNamed(Routes.imageView, arguments: {'imageName': mediaFileName, 'imagePath': mediaLocalStoragePath.value});
-          Navigator.push(context, MaterialPageRoute(builder: (con) => ImageViewView(imageName: mediaFileName, imagePath: mediaLocalStoragePath.value,)));
-
-        },
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (con) => ImageViewView(
+                              imageName: mediaFileName,
+                              imagePath: mediaLocalStoragePath.value,
+                            )));
+              },
         child: Obx(() {
           return Image(
             image: FileImage(File(mediaLocalStoragePath.value)),
@@ -117,7 +145,8 @@ getImage(RxString mediaLocalStoragePath, String mediaThumbImage, BuildContext co
               return const Center(child: CircularProgressIndicator());
             },
             frameBuilder: (cxt, child, frame, wasSynchronouslyLoaded) {
-              debugPrint("getImage frameBuilder : frame : $frame ,wasSynchronouslyLoaded :$wasSynchronouslyLoaded");
+              debugPrint(
+                  "getImage frameBuilder : frame : $frame ,wasSynchronouslyLoaded :$wasSynchronouslyLoaded");
               return child;
             },
             errorBuilder: (cxt, obj, strace) {

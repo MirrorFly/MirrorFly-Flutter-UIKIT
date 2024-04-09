@@ -14,7 +14,11 @@ class CallHighlightedText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final matches = searchString.isEmpty ? <RegExpMatch>[] : RegExp(searchString, caseSensitive: false).allMatches(content).toList();
+    final matches = searchString.isEmpty
+        ? <RegExpMatch>[]
+        : RegExp(searchString, caseSensitive: false)
+            .allMatches(content)
+            .toList();
     final parts = <InlineSpan>[];
     if (matches.isEmpty) {
       parts.add(TextSpan(text: content));
@@ -39,7 +43,8 @@ class CallHighlightedText extends StatelessWidget {
         final slice = content.substring(match.start, match.end);
         parts.add(TextSpan(
           text: slice,
-          style: const TextStyle(fontWeight: FontWeight.bold, color: buttonBgColor),
+          style: const TextStyle(
+              fontWeight: FontWeight.bold, color: buttonBgColor),
         ));
         matchIndex += 1;
         i = match.end;

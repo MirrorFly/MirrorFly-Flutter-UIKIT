@@ -578,7 +578,9 @@ class _GroupInfoViewState extends State<GroupInfoView> {
             visualDensity: const VisualDensity(horizontal: 0, vertical: -3)),
         Obx(() {
           return Visibility(
-              visible: controller.isAdmin && controller.availableFeatures.value.isGroupChatAvailable.checkNull(),
+              visible: controller.isAdmin &&
+                  controller.availableFeatures.value.isGroupChatAvailable
+                      .checkNull(),
               child: ListTile(
                   title: Text(
                     AppConstants.removeFromGroup,
@@ -588,7 +590,8 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                   onTap: () {
                     Navigator.pop(context);
                     // Get.back();
-                    if (!controller.availableFeatures.value.isGroupChatAvailable.checkNull()) {
+                    if (!controller.availableFeatures.value.isGroupChatAvailable
+                        .checkNull()) {
                       Helper.showFeatureUnavailable(context);
                       return;
                     }
@@ -618,7 +621,10 @@ class _GroupInfoViewState extends State<GroupInfoView> {
         }),
         Obx(() {
           return Visibility(
-              visible: (controller.isAdmin && controller.availableFeatures.value.isGroupChatAvailable.checkNull() && !item.isGroupAdmin!),
+              visible: (controller.isAdmin &&
+                  controller.availableFeatures.value.isGroupChatAvailable
+                      .checkNull() &&
+                  !item.isGroupAdmin!),
               child: ListTile(
                   title: Text(
                     AppConstants.makeAdmin,
@@ -627,14 +633,15 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                   ),
                   onTap: () {
                     Navigator.pop(context);
-                    if (!controller.availableFeatures.value.isGroupChatAvailable.checkNull()) {
+                    if (!controller.availableFeatures.value.isGroupChatAvailable
+                        .checkNull()) {
                       Helper.showFeatureUnavailable(context);
                       return;
                     }
                     // Get.back();
                     Helper.showAlert(
                         message:
-                        "${AppConstants.areYouSureMakeAdmin} ${getName(item)} ${AppConstants.theAdmin}",
+                            "${AppConstants.areYouSureMakeAdmin} ${getName(item)} ${AppConstants.theAdmin}",
                         actions: [
                           TextButton(
                               onPressed: () {
@@ -654,9 +661,8 @@ class _GroupInfoViewState extends State<GroupInfoView> {
                         context: context);
                   },
                   visualDensity:
-                  const VisualDensity(horizontal: 0, vertical: -3)));
+                      const VisualDensity(horizontal: 0, vertical: -3)));
         }),
-
       ],
       context: context,
     );

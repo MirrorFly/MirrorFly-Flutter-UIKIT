@@ -61,11 +61,11 @@ class _ViewAllMediaPreviewViewState extends State<ViewAllMediaPreviewView> {
                     onPressed: () {
                       controller.shareMedia();
                     },
-                    icon: SvgPicture.asset(
-                      shareIcon,
-                      package: package,
-                      colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)
-                    ))
+                    icon: SvgPicture.asset(shareIcon,
+                        package: package,
+                        colorFilter: ColorFilter.mode(
+                            MirrorflyUikit.getTheme!.colorOnAppbar,
+                            BlendMode.srcIn)))
               ],
             )
           : null,
@@ -74,13 +74,18 @@ class _ViewAllMediaPreviewViewState extends State<ViewAllMediaPreviewView> {
           controller: controller.pageViewController,
           onPageChanged: controller.onMediaPreviewPageChanged,
           children: [
-            ...controller.previewMediaList.where((p0) => p0.isMediaMessage() && checkFile(p0.mediaChatMessage!.mediaLocalStoragePath.value.checkNull())).map((data) {
+            ...controller.previewMediaList
+                .where((p0) =>
+                    p0.isMediaMessage() &&
+                    checkFile(p0.mediaChatMessage!.mediaLocalStoragePath.value
+                        .checkNull()))
+                .map((data) {
               /// show image
               if (data.messageType.toLowerCase() == 'image') {
                 return Center(
                   child: PhotoView(
-                    imageProvider: FileImage(
-                        File(data.mediaChatMessage!.mediaLocalStoragePath.value)),
+                    imageProvider: FileImage(File(
+                        data.mediaChatMessage!.mediaLocalStoragePath.value)),
                     // Contained = the smallest possible size to fit one dimension of the screen
                     minScale: PhotoViewComputedScale.contained * 1,
                     // Covered = the smallest possible size to fit the whole screen
@@ -98,10 +103,13 @@ class _ViewAllMediaPreviewViewState extends State<ViewAllMediaPreviewView> {
                   ),
                 );
               }
+
               /// show video
-              else if(data.messageType == MessageType.video.value){
+              else if (data.messageType == MessageType.video.value) {
                 return VideoPlayerWidget(
-                  videoPath: data.mediaChatMessage?.mediaLocalStoragePath.value ?? "", videoTitle: data.mediaChatMessage?.mediaFileName ?? "Video",
+                  videoPath:
+                      data.mediaChatMessage?.mediaLocalStoragePath.value ?? "",
+                  videoTitle: data.mediaChatMessage?.mediaFileName ?? "Video",
                 );
               } else {
                 return Container(
@@ -109,12 +117,21 @@ class _ViewAllMediaPreviewViewState extends State<ViewAllMediaPreviewView> {
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      SvgPicture.asset(data.mediaChatMessage!.isAudioRecorded.checkNull() ? audioMic1 : headsetImg,height: 150,width: 150,
-                        package: package,colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)
-                      ),
+                      SvgPicture.asset(
+                          data.mediaChatMessage!.isAudioRecorded.checkNull()
+                              ? audioMic1
+                              : headsetImg,
+                          height: 150,
+                          width: 150,
+                          package: package,
+                          colorFilter: ColorFilter.mode(
+                              MirrorflyUikit.getTheme!.colorOnAppbar,
+                              BlendMode.srcIn)),
                       FloatingActionButton.small(
-                        onPressed: (){
-                          openDocument(data.mediaChatMessage!.mediaLocalStoragePath.value.checkNull());
+                        onPressed: () {
+                          openDocument(data
+                              .mediaChatMessage!.mediaLocalStoragePath.value
+                              .checkNull());
                         },
                         backgroundColor: Colors.white,
                         child: const Icon(

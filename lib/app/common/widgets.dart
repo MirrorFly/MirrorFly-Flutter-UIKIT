@@ -26,7 +26,8 @@ class AppDivider extends StatelessWidget {
     return Container(
       margin: padding,
       height: 0.29,
-      color: MirrorflyUikit.getTheme?.textPrimaryColor.withOpacity(0.5) ?? dividerColor,
+      color: MirrorflyUikit.getTheme?.textPrimaryColor.withOpacity(0.5) ??
+          dividerColor,
     );
   }
 }
@@ -38,18 +39,30 @@ class ProfileTextImage extends StatelessWidget {
   final double radius;
   final Color fontColor;
 
-  const ProfileTextImage({super.key, required this.text, this.fontSize = 15, this.bgColor, this.radius = 25, this.fontColor = Colors.white});
+  const ProfileTextImage(
+      {super.key,
+      required this.text,
+      this.fontSize = 15,
+      this.bgColor,
+      this.radius = 25,
+      this.fontColor = Colors.white});
 
   @override
   Widget build(BuildContext context) {
     return radius == 0
         ? Container(
-            decoration:
-                BoxDecoration(color: bgColor ?? (text.isNotEmpty ? Color(Helper.getColourCode(text)) : MirrorflyUikit.getTheme?.primaryColor)),
+            decoration: BoxDecoration(
+                color: bgColor ??
+                    (text.isNotEmpty
+                        ? Color(Helper.getColourCode(text))
+                        : MirrorflyUikit.getTheme?.primaryColor)),
             child: Center(
               child: Text(
                 getString(text),
-                style: TextStyle(fontSize: fontSize, color: fontColor, fontWeight: FontWeight.w800),
+                style: TextStyle(
+                    fontSize: fontSize,
+                    color: fontColor,
+                    fontWeight: FontWeight.w800),
               ),
             ),
           )
@@ -59,7 +72,9 @@ class ProfileTextImage extends StatelessWidget {
             child: Center(
                 child: Text(
               getString(text),
-              style: TextStyle(fontSize: radius != 0 ? radius / 1.5 : fontSize, color: fontColor),
+              style: TextStyle(
+                  fontSize: radius != 0 ? radius / 1.5 : fontSize,
+                  color: fontColor),
             )),
           );
   }
@@ -70,7 +85,8 @@ class ProfileTextImage extends StatelessWidget {
     if (str.characters.length >= 2) {
       if (str.trim().contains(" ")) {
         var st = str.trim().split(" ");
-        string = st[0].characters.take(1).toUpperCase().toString() + st[1].characters.take(1).toUpperCase().toString();
+        string = st[0].characters.take(1).toUpperCase().toString() +
+            st[1].characters.take(1).toUpperCase().toString();
       } else {
         string = str.characters.take(2).toUpperCase().toString();
       }
@@ -146,7 +162,8 @@ class ImageNetwork extends GetView<MainController> {
             if (error.toString().contains("401") && url.isNotEmpty) {
               // controller.getAuthToken();
               // _deleteImageFromCache(url);
-              CachedNetworkImage.evictFromCache(url, cacheKey: url).then((value) {
+              CachedNetworkImage.evictFromCache(url, cacheKey: url)
+                  .then((value) {
                 refreshHeaders();
               });
             }
@@ -227,9 +244,11 @@ class ImageNetwork extends GetView<MainController> {
   Future<bool> isTokenExpired(String token) async {
     // logic to check if the token is expired
     // Return true if the token is expired, otherwise return false
-    final http.Response response = await http.get(Uri.parse(getImageUrl()), headers: {"Authorization": token});
+    final http.Response response = await http
+        .get(Uri.parse(getImageUrl()), headers: {"Authorization": token});
     var code = response.statusCode;
-    LogMessage.d("ImageNetwork", "isTokenExpired url ${getImageUrl()} token: $token statusCode : ${response.statusCode}");
+    LogMessage.d("ImageNetwork",
+        "isTokenExpired url ${getImageUrl()} token: $token statusCode : ${response.statusCode}");
     return code == 401;
   }
 
@@ -245,18 +264,22 @@ class ImageNetwork extends GetView<MainController> {
     while ((await isTokenExpired(token))) {
       if (count <= 1) {
         count++;
-        if (SessionManagement.getUsername().checkNull().isNotEmpty && SessionManagement.getPassword().checkNull().isNotEmpty) {
+        if (SessionManagement.getUsername().checkNull().isNotEmpty &&
+            SessionManagement.getPassword().checkNull().isNotEmpty) {
           await Mirrorfly.refreshAndGetAuthToken(flyCallBack: (response) {
             token = response.data;
           });
         }
-        LogMessage.d("ImageNetwork", "refreshAndGetAuthToken retryCount $count");
+        LogMessage.d(
+            "ImageNetwork", "refreshAndGetAuthToken retryCount $count");
       } else {
-        LogMessage.d("ImageNetwork", "refreshHeaders $count retryCount exceed retrying stopped...");
+        LogMessage.d("ImageNetwork",
+            "refreshHeaders $count retryCount exceed retrying stopped...");
         break;
       }
     }
-    LogMessage.d("ImageNetwork", "refreshHeaders url ${getImageUrl()} token: $token statusCode : ${200} retryCount : $count");
+    LogMessage.d("ImageNetwork",
+        "refreshHeaders url ${getImageUrl()} token: $token statusCode : ${200} retryCount : $count");
     // Adding the token in headers
     controller.currentAuthToken(token);
     return {
@@ -269,15 +292,15 @@ class ImageNetwork extends GetView<MainController> {
   }
 
   /*void _deleteImageFromCache(String url) {
-    *//*cache.DefaultCacheManager manager = cache.DefaultCacheManager();
-    manager.emptyCache();*//*
+    */ /*cache.DefaultCacheManager manager = cache.DefaultCacheManager();
+    manager.emptyCache();*/ /*
     CachedNetworkImage.evictFromCache(url, cacheKey: url).then((value) => controller.getAuthToken());
-    *//*cache.DefaultCacheManager().removeFile(url).then((value) {
+    */ /*cache.DefaultCacheManager().removeFile(url).then((value) {
       mirrorFlyLog('File removed', "");
       controller.getAuthToken();
     }).onError((error, stackTrace) {
       mirrorFlyLog("", error.toString());
-    });*//*
+    });*/ /*
     //await CachedNetworkImage.evictFromCache(url);
   }*/
 }
@@ -289,7 +312,13 @@ class ListItem extends StatelessWidget {
   final Function()? onTap;
   final EdgeInsetsGeometry? dividerPadding;
 
-  const ListItem({super.key, this.leading, required this.title, this.trailing, this.onTap, this.dividerPadding});
+  const ListItem(
+      {super.key,
+      this.leading,
+      required this.title,
+      this.trailing,
+      this.onTap,
+      this.dividerPadding});
 
   @override
   Widget build(BuildContext context) {
@@ -301,7 +330,11 @@ class ListItem extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Row(
               children: [
-                leading != null ? Padding(padding: const EdgeInsets.only(right: 16.0), child: leading) : const SizedBox(),
+                leading != null
+                    ? Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: leading)
+                    : const SizedBox(),
                 Expanded(
                   child: title,
                 ),
@@ -312,7 +345,9 @@ class ListItem extends StatelessWidget {
               ],
             ),
           ),
-          dividerPadding != null ? AppDivider(padding: dividerPadding) : const SizedBox()
+          dividerPadding != null
+              ? AppDivider(padding: dividerPadding)
+              : const SizedBox()
         ],
       ),
     );
@@ -332,7 +367,10 @@ Widget memberItem(
     bool isGroup = false,
     required bool blocked,
     required bool unknown}) {
-  var titlestyle = TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor ?? Colors.black, fontSize: 14.0, fontWeight: FontWeight.w700);
+  var titlestyle = TextStyle(
+      color: MirrorflyUikit.getTheme?.textPrimaryColor ?? Colors.black,
+      fontSize: 14.0,
+      fontWeight: FontWeight.w700);
   return Container(
     padding: const EdgeInsets.symmetric(vertical: 4.0),
     child: InkWell(
@@ -340,7 +378,8 @@ Widget memberItem(
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(right: 16.0, left: 16.0, top: 4, bottom: 4),
+            padding: const EdgeInsets.only(
+                right: 16.0, left: 16.0, top: 4, bottom: 4),
             child: Row(
               children: [
                 ImageNetwork(
@@ -381,7 +420,9 @@ Widget memberItem(
                         Text(
                           status.checkNull(),
                           style: TextStyle(
-                            color: MirrorflyUikit.getTheme?.textSecondaryColor ?? Colors.black,
+                            color:
+                                MirrorflyUikit.getTheme?.textSecondaryColor ??
+                                    Colors.black,
                             fontSize: 12.0,
                           ),
                           maxLines: 1,
@@ -394,7 +435,8 @@ Widget memberItem(
                 (isAdmin != null && isAdmin)
                     ? Text("Admin",
                         style: TextStyle(
-                          color: MirrorflyUikit.getTheme?.primaryColor ?? buttonBgColor,
+                          color: MirrorflyUikit.getTheme?.primaryColor ??
+                              buttonBgColor,
                           fontSize: 12.0,
                         ))
                     : const SizedBox(),
@@ -405,7 +447,8 @@ Widget memberItem(
                       unselectedWidgetColor: Colors.grey,
                     ),
                     child: Checkbox(
-                      activeColor: MirrorflyUikit.getTheme!.primaryColor, //Colors.white,
+                      activeColor:
+                          MirrorflyUikit.getTheme!.primaryColor, //Colors.white,
                       checkColor: MirrorflyUikit.getTheme?.colorOnPrimary,
                       value: isChecked,
                       onChanged: onchange,
@@ -415,7 +458,8 @@ Widget memberItem(
               ],
             ),
           ),
-          const AppDivider(padding: EdgeInsets.only(right: 16, left: 75, top: 4))
+          const AppDivider(
+              padding: EdgeInsets.only(right: 16, left: 75, top: 4))
         ],
       ),
     ),
@@ -423,7 +467,11 @@ Widget memberItem(
 }
 
 class EmojiLayout extends StatelessWidget {
-  const EmojiLayout({super.key, required this.textController, this.onEmojiSelected, this.onBackspacePressed});
+  const EmojiLayout(
+      {super.key,
+      required this.textController,
+      this.onEmojiSelected,
+      this.onBackspacePressed});
   final TextEditingController textController;
   final Function(emoji.Category?, emoji.Emoji)? onEmojiSelected;
   final Function()? onBackspacePressed;
@@ -442,7 +490,10 @@ class EmojiLayout extends StatelessWidget {
           checkPlatformCompatibility: true,
           emojiViewConfig: emoji.EmojiViewConfig(
             // Issue: https://github.com/flutter/flutter/issues/28894
-            emojiSizeMax: 28 * (foundation.defaultTargetPlatform == TargetPlatform.iOS ? 1.20 : 1.0),
+            emojiSizeMax: 28 *
+                (foundation.defaultTargetPlatform == TargetPlatform.iOS
+                    ? 1.20
+                    : 1.0),
           ),
           swapCategoryAndBottomBar: false,
           skinToneConfig: const emoji.SkinToneConfig(),

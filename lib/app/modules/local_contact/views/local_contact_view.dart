@@ -11,7 +11,7 @@ import '../../../common/widgets.dart';
 import '../controllers/local_contact_controller.dart';
 
 class LocalContactView extends StatefulWidget {
-  const LocalContactView({super.key,this.enableAppBar=true});
+  const LocalContactView({super.key, this.enableAppBar = true});
   final bool enableAppBar;
   @override
   State<LocalContactView> createState() => _LocalContactViewState();
@@ -25,64 +25,80 @@ class _LocalContactViewState extends State<LocalContactView> {
     Get.delete<LocalContactController>();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
       return Scaffold(
         backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-        appBar: widget.enableAppBar ? AppBar(
-          centerTitle: false,
-          titleSpacing: 0.0,
-          iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
-          backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-          title: controller.search.value
-              ? TextField(
-                  controller: controller.searchTextController,
-                  onChanged: (text) => controller.onSearchTextChanged(text),
-                  autofocus: true,
-                  cursorColor: MirrorflyUikit.getTheme?.colorOnAppbar,
-                  keyboardAppearance: MirrorflyUikit.theme == "dark" ? Brightness.dark : Brightness.light,
-                  style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
-                  decoration: InputDecoration(
-                      hintText: AppConstants.searchPlaceHolder,
-                      border: InputBorder.none,
-                      hintStyle: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar.withOpacity(0.6))),
-                )
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      AppConstants.contactToSend,
-                      style: TextStyle(fontSize: 15, color: MirrorflyUikit.getTheme?.colorOnAppbar),
-                    ),
-                    Text(
-                      '${controller.contactsSelected.length} ${AppConstants.selected}',
-                      style: TextStyle(fontSize: 12, color: MirrorflyUikit.getTheme?.colorOnAppbar),
-                    ),
-                  ],
-                ),
-          actions: [
-            controller.search.value
-                ? const SizedBox()
-                : IconButton(
-                    icon: SvgPicture.asset(
-                      searchIcon,
-                      package: package,
-                      width: 18,
-                      height: 18,
-                      colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn),
-                      fit: BoxFit.contain,
-                    ),
-                    onPressed: () {
-                      if (controller.search.value) {
-                        controller.search.value = false;
-                      } else {
-                        controller.search.value = true;
-                      }
-                    },
-                  ),
-          ],
-        ) : null,
+        appBar: widget.enableAppBar
+            ? AppBar(
+                centerTitle: false,
+                titleSpacing: 0.0,
+                iconTheme: IconThemeData(
+                    color: MirrorflyUikit.getTheme?.colorOnAppbar),
+                backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
+                title: controller.search.value
+                    ? TextField(
+                        controller: controller.searchTextController,
+                        onChanged: (text) =>
+                            controller.onSearchTextChanged(text),
+                        autofocus: true,
+                        cursorColor: MirrorflyUikit.getTheme?.colorOnAppbar,
+                        keyboardAppearance: MirrorflyUikit.theme == "dark"
+                            ? Brightness.dark
+                            : Brightness.light,
+                        style: TextStyle(
+                            color: MirrorflyUikit.getTheme?.colorOnAppbar),
+                        decoration: InputDecoration(
+                            hintText: AppConstants.searchPlaceHolder,
+                            border: InputBorder.none,
+                            hintStyle: TextStyle(
+                                color: MirrorflyUikit.getTheme?.colorOnAppbar
+                                    .withOpacity(0.6))),
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            AppConstants.contactToSend,
+                            style: TextStyle(
+                                fontSize: 15,
+                                color: MirrorflyUikit.getTheme?.colorOnAppbar),
+                          ),
+                          Text(
+                            '${controller.contactsSelected.length} ${AppConstants.selected}',
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: MirrorflyUikit.getTheme?.colorOnAppbar),
+                          ),
+                        ],
+                      ),
+                actions: [
+                  controller.search.value
+                      ? const SizedBox()
+                      : IconButton(
+                          icon: SvgPicture.asset(
+                            searchIcon,
+                            package: package,
+                            width: 18,
+                            height: 18,
+                            colorFilter: ColorFilter.mode(
+                                MirrorflyUikit.getTheme!.colorOnAppbar,
+                                BlendMode.srcIn),
+                            fit: BoxFit.contain,
+                          ),
+                          onPressed: () {
+                            if (controller.search.value) {
+                              controller.search.value = false;
+                            } else {
+                              controller.search.value = true;
+                            }
+                          },
+                        ),
+                ],
+              )
+            : null,
         body: PopScope(
           canPop: false,
           onPopInvoked: (didPop) {
@@ -117,7 +133,8 @@ class _LocalContactViewState extends State<LocalContactView> {
             child: SvgPicture.asset(
               rightArrowProceed,
               package: package,
-              colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnPrimary, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(
+                  MirrorflyUikit.getTheme!.colorOnPrimary, BlendMode.srcIn),
               width: 18,
             ),
           ),
@@ -154,14 +171,17 @@ class _LocalContactViewState extends State<LocalContactView> {
                                   bottom: 0,
                                   child: CircleAvatar(
                                       radius: 9,
-                                      backgroundColor: MirrorflyUikit.getTheme?.colorOnPrimary,
+                                      backgroundColor: MirrorflyUikit
+                                          .getTheme?.colorOnPrimary,
                                       child: CircleAvatar(
                                           radius: 8,
-                                          backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
+                                          backgroundColor: MirrorflyUikit
+                                              .getTheme?.primaryColor,
                                           child: Icon(
                                             Icons.close,
                                             size: 10,
-                                            color: MirrorflyUikit.getTheme?.colorOnPrimary,
+                                            color: MirrorflyUikit
+                                                .getTheme?.colorOnPrimary,
                                           )))),
                             ],
                           ),
@@ -179,12 +199,14 @@ class _LocalContactViewState extends State<LocalContactView> {
       return Column(
         children: [
           selectedListView(controller.contactsSelected),
-          controller.searchList.isEmpty && controller.searchTextController.text.isNotEmpty
+          controller.searchList.isEmpty &&
+                  controller.searchTextController.text.isNotEmpty
               ? Expanded(
                   child: Center(
                       child: Text(
                   AppConstants.noResultsFound,
-                  style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                  style: TextStyle(
+                      color: MirrorflyUikit.getTheme?.textPrimaryColor),
                 )))
               : Expanded(
                   child: ListView.builder(
@@ -193,10 +215,12 @@ class _LocalContactViewState extends State<LocalContactView> {
                         var item = controller.searchList.elementAt(index);
                         return InkWell(
                           onTap: () {
-                            controller.contactSelected(controller.searchList.elementAt(index));
+                            controller.contactSelected(
+                                controller.searchList.elementAt(index));
                           },
                           child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 15, horizontal: 15),
                             child: Row(
                               children: [
                                 Stack(
@@ -212,14 +236,19 @@ class _LocalContactViewState extends State<LocalContactView> {
                                           bottom: 0,
                                           child: CircleAvatar(
                                               radius: 8,
-                                              backgroundColor: MirrorflyUikit.getTheme?.colorOnPrimary,
+                                              backgroundColor: MirrorflyUikit
+                                                  .getTheme?.colorOnPrimary,
                                               child: CircleAvatar(
                                                   radius: 7,
-                                                  backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
+                                                  backgroundColor:
+                                                      MirrorflyUikit.getTheme
+                                                          ?.primaryColor,
                                                   child: Icon(
                                                     Icons.check,
                                                     size: 9,
-                                                    color: MirrorflyUikit.getTheme?.colorOnPrimary,
+                                                    color: MirrorflyUikit
+                                                        .getTheme
+                                                        ?.colorOnPrimary,
                                                   )))),
                                     ),
                                   ],
@@ -231,7 +260,9 @@ class _LocalContactViewState extends State<LocalContactView> {
                                     child: Text(
                                   controller.name(item.contact),
                                   maxLines: 1,
-                                  style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                                  style: TextStyle(
+                                      color: MirrorflyUikit
+                                          .getTheme?.textPrimaryColor),
                                   overflow: TextOverflow.ellipsis,
                                 )),
                               ],

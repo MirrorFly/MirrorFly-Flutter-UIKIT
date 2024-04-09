@@ -11,7 +11,8 @@ import '../../../common/constants.dart';
 import 'add_status_view.dart';
 
 class StatusListView extends StatefulWidget {
-  const StatusListView({super.key, required this.status,this.enableAppBar=true});
+  const StatusListView(
+      {super.key, required this.status, this.enableAppBar = true});
   final bool enableAppBar;
   final String status;
 
@@ -32,16 +33,22 @@ class _StatusListViewState extends State<StatusListView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-      appBar: widget.enableAppBar ? AppBar(
-        automaticallyImplyLeading: true,
-        title: Text(AppConstants.status, style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
-        iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
-        backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-      ):null,
-        // Navigator.pop(context, controller.selectedStatus.value);
+      appBar: widget.enableAppBar
+          ? AppBar(
+              automaticallyImplyLeading: true,
+              title: Text(
+                AppConstants.status,
+                style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+              ),
+              iconTheme:
+                  IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+              backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
+            )
+          : null,
+      // Navigator.pop(context, controller.selectedStatus.value);
       body: PopScope(
         canPop: false,
-        onPopInvoked: (didPop){
+        onPopInvoked: (didPop) {
           if (didPop) {
             return;
           }
@@ -56,7 +63,11 @@ class _StatusListViewState extends State<StatusListView> {
             children: [
               Text(
                 AppConstants.yourCurrentStatus,
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: MirrorflyUikit.getTheme?.textPrimaryColor,),
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: MirrorflyUikit.getTheme?.textPrimaryColor,
+                ),
               ),
               Obx(
                 () => ListTile(
@@ -67,15 +78,20 @@ class _StatusListViewState extends State<StatusListView> {
                           color: MirrorflyUikit.getTheme?.textSecondaryColor,
                           fontSize: 14,
                           fontWeight: FontWeight.normal)),
-                  trailing: SvgPicture.asset(
-                    pencilEditIcon,package: package,
-                    fit: BoxFit.contain,
-                    colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn)
-                  ),
+                  trailing: SvgPicture.asset(pencilEditIcon,
+                      package: package,
+                      fit: BoxFit.contain,
+                      colorFilter: ColorFilter.mode(
+                          MirrorflyUikit.getTheme!.textSecondaryColor,
+                          BlendMode.srcIn)),
                   onTap: () async {
-                    final result = await Navigator.push(context, MaterialPageRoute(builder: (con)=> AddStatusView(status: controller.selectedStatus.value)));
+                    final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (con) => AddStatusView(
+                                status: controller.selectedStatus.value)));
                     if (result != null) {
-                      if(context.mounted)controller.insertStatus(context);
+                      if (context.mounted) controller.insertStatus(context);
                     }
                   },
                 ),
@@ -86,7 +102,10 @@ class _StatusListViewState extends State<StatusListView> {
               ),
               Text(
                 AppConstants.selectNewStatus,
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: MirrorflyUikit.getTheme?.textPrimaryColor),
               ),
               Obx(() => controller.statusList.isNotEmpty
                   ? Expanded(
@@ -104,22 +123,27 @@ class _StatusListViewState extends State<StatusListView> {
                                   style: TextStyle(
                                       color: item.status ==
                                               controller.selectedStatus.value
-                                          ? MirrorflyUikit.getTheme?.textPrimaryColor
-                                          : MirrorflyUikit.getTheme?.textSecondaryColor,
+                                          ? MirrorflyUikit
+                                              .getTheme?.textPrimaryColor
+                                          : MirrorflyUikit
+                                              .getTheme?.textSecondaryColor,
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500)),
                               trailing:
                                   item.status == controller.selectedStatus.value
                                       ? SvgPicture.asset(
-                                          tickIcon,package: package,
+                                          tickIcon,
+                                          package: package,
                                           fit: BoxFit.contain,
                                         )
                                       : const SizedBox(),
                               onTap: () {
-                                controller.updateStatus(context, item.status.checkNull(),
+                                controller.updateStatus(
+                                    context,
+                                    item.status.checkNull(),
                                     item.id.checkNull());
                               },
-                              onLongPress: (){
+                              onLongPress: () {
                                 debugPrint("Status list long press");
                                 controller.deleteStatus(item, context);
                               },

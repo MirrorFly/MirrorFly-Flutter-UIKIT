@@ -9,7 +9,13 @@ import '../../../common/widgets.dart';
 import '../controllers/preview_contact_controller.dart';
 
 class PreviewContactView extends StatefulWidget {
-  const PreviewContactView({super.key, this.contactList, this.previewContactList, required this.from, this.contactName,this.enableAppBar=true});
+  const PreviewContactView(
+      {super.key,
+      this.contactList,
+      this.previewContactList,
+      required this.from,
+      this.contactName,
+      this.enableAppBar = true});
 
   final List<LocalContact>? contactList;
   final List<String>? previewContactList;
@@ -26,7 +32,8 @@ class _PreviewContactViewState extends State<PreviewContactView> {
 
   @override
   void initState() {
-    controller.init(widget.contactList, widget.previewContactList, widget.from, widget.contactName);
+    controller.init(widget.contactList, widget.previewContactList, widget.from,
+        widget.contactName);
     super.initState();
   }
 
@@ -40,13 +47,24 @@ class _PreviewContactViewState extends State<PreviewContactView> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-        appBar: widget.enableAppBar ? AppBar(
-          iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
-          backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-          title: controller.from == "contact_pick"
-              ? Text(AppConstants.sendContacts, style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),)
-              : Text(AppConstants.contactDetails, style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
-        ):null,
+        appBar: widget.enableAppBar
+            ? AppBar(
+                iconTheme: IconThemeData(
+                    color: MirrorflyUikit.getTheme?.colorOnAppbar),
+                backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
+                title: controller.from == "contact_pick"
+                    ? Text(
+                        AppConstants.sendContacts,
+                        style: TextStyle(
+                            color: MirrorflyUikit.getTheme?.colorOnAppbar),
+                      )
+                    : Text(
+                        AppConstants.contactDetails,
+                        style: TextStyle(
+                            color: MirrorflyUikit.getTheme?.colorOnAppbar),
+                      ),
+              )
+            : null,
         body: SafeArea(
           child: Stack(
             children: [
@@ -77,14 +95,18 @@ class _PreviewContactViewState extends State<PreviewContactView> {
                                     child: Text(
                                       contactItem.userName,
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold, color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                                          fontWeight: FontWeight.bold,
+                                          color: MirrorflyUikit
+                                              .getTheme?.textPrimaryColor),
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            const AppDivider(padding: EdgeInsets.symmetric(vertical: 10),),
+                            const AppDivider(
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                            ),
                             ListView.builder(
                                 itemCount: contactItem.contactNo.length,
                                 physics: const ClampingScrollPhysics(),
@@ -99,15 +121,22 @@ class _PreviewContactViewState extends State<PreviewContactView> {
                                     },
                                     title: Text(
                                       phoneItem.mobNo,
-                                      style: TextStyle(fontSize: 13, color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          color: MirrorflyUikit
+                                              .getTheme?.textPrimaryColor),
                                     ),
                                     subtitle: Text(
                                       phoneItem.mobNoType,
-                                      style: TextStyle(fontSize: 12, color: MirrorflyUikit.getTheme?.textSecondaryColor),
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: MirrorflyUikit
+                                              .getTheme?.textSecondaryColor),
                                     ),
                                     leading: Icon(
                                       Icons.phone,
-                                      color: MirrorflyUikit.getTheme?.primaryColor,
+                                      color:
+                                          MirrorflyUikit.getTheme?.primaryColor,
                                       size: 20,
                                     ),
                                     trailing: Visibility(
@@ -119,8 +148,10 @@ class _PreviewContactViewState extends State<PreviewContactView> {
                                           unselectedWidgetColor: Colors.grey,
                                         ),
                                         child: Checkbox(
-                                          activeColor: MirrorflyUikit.getTheme!.primaryColor,//Colors.white,
-                                          checkColor: MirrorflyUikit.getTheme?.colorOnPrimary,
+                                          activeColor: MirrorflyUikit.getTheme!
+                                              .primaryColor, //Colors.white,
+                                          checkColor: MirrorflyUikit
+                                              .getTheme?.colorOnPrimary,
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(4)),
@@ -133,7 +164,9 @@ class _PreviewContactViewState extends State<PreviewContactView> {
                                     ),
                                   );
                                 }),
-                            const AppDivider(padding: EdgeInsets.symmetric(vertical: 5),),
+                            const AppDivider(
+                              padding: EdgeInsets.symmetric(vertical: 5),
+                            ),
                           ],
                         );
                       }),
@@ -148,7 +181,8 @@ class _PreviewContactViewState extends State<PreviewContactView> {
                           controller.shareContact(context);
                         },
                         child: CircleAvatar(
-                            backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
+                            backgroundColor:
+                                MirrorflyUikit.getTheme?.primaryColor,
                             radius: 25,
                             child: Icon(
                               Icons.send,

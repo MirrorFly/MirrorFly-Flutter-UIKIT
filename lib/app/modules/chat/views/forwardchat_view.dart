@@ -12,7 +12,8 @@ import '../../../common/widgets.dart';
 import '../../dashboard/widgets.dart';
 
 class ForwardChatView extends StatefulWidget {
-  const ForwardChatView({super.key, required this.forwardMessageIds, this.enableAppBar=true});
+  const ForwardChatView(
+      {super.key, required this.forwardMessageIds, this.enableAppBar = true});
   final List<String> forwardMessageIds;
   final bool enableAppBar;
   @override
@@ -39,50 +40,60 @@ class _ForwardChatViewState extends State<ForwardChatView> {
     return Obx(() {
       return Scaffold(
         backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-        appBar: widget.enableAppBar ? AppBar(
-          iconTheme:
-              IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
-          backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-          leading: IconButton(
-            icon: const Icon(Icons.close),
-            onPressed: () {
-              !controller.isSearchVisible
-                  ? controller.backFromSearch()
-                  : Navigator.pop(context);
-            },
-          ),
-          title: !controller.isSearchVisible
-              ? TextField(
-                  onChanged: (text) {
-                    mirrorFlyLog("text", text);
-                    controller.onSearch(text);
+        appBar: widget.enableAppBar
+            ? AppBar(
+                iconTheme: IconThemeData(
+                    color: MirrorflyUikit.getTheme?.colorOnAppbar),
+                backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
+                leading: IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () {
+                    !controller.isSearchVisible
+                        ? controller.backFromSearch()
+                        : Navigator.pop(context);
                   },
-                  style: TextStyle(fontSize: 16,color: MirrorflyUikit.getTheme?.colorOnAppbar),
-                  controller: controller.searchQuery,
-                  autofocus: true,
-                  cursorColor: MirrorflyUikit.getTheme?.colorOnAppbar,
-                  keyboardAppearance: MirrorflyUikit.theme == "dark"
-                      ? Brightness.dark
-                      : Brightness.light,
-                  decoration: InputDecoration(
-                    hintStyle: TextStyle(color: MirrorflyUikit
-                        .getTheme?.colorOnAppbar.withOpacity(0.5)),
-                      hintText: AppConstants.searchPlaceHolder, border: InputBorder.none),
-                )
-              : Text(AppConstants.forwardTo,style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
-          actions: [
-            Visibility(
-              visible: controller.isSearchVisible,
-              child: IconButton(
-                  onPressed: () => controller.onSearchPressed(),
-                  icon: SvgPicture.asset(
-                    searchIcon,
-                    package: package,
-                    colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)
-                  )),
-            )
-          ],
-        ) : null,
+                ),
+                title: !controller.isSearchVisible
+                    ? TextField(
+                        onChanged: (text) {
+                          mirrorFlyLog("text", text);
+                          controller.onSearch(text);
+                        },
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: MirrorflyUikit.getTheme?.colorOnAppbar),
+                        controller: controller.searchQuery,
+                        autofocus: true,
+                        cursorColor: MirrorflyUikit.getTheme?.colorOnAppbar,
+                        keyboardAppearance: MirrorflyUikit.theme == "dark"
+                            ? Brightness.dark
+                            : Brightness.light,
+                        decoration: InputDecoration(
+                            hintStyle: TextStyle(
+                                color: MirrorflyUikit.getTheme?.colorOnAppbar
+                                    .withOpacity(0.5)),
+                            hintText: AppConstants.searchPlaceHolder,
+                            border: InputBorder.none),
+                      )
+                    : Text(
+                        AppConstants.forwardTo,
+                        style: TextStyle(
+                            color: MirrorflyUikit.getTheme?.colorOnAppbar),
+                      ),
+                actions: [
+                  Visibility(
+                    visible: controller.isSearchVisible,
+                    child: IconButton(
+                        onPressed: () => controller.onSearchPressed(),
+                        icon: SvgPicture.asset(searchIcon,
+                            package: package,
+                            colorFilter: ColorFilter.mode(
+                                MirrorflyUikit.getTheme!.colorOnAppbar,
+                                BlendMode.srcIn))),
+                  )
+                ],
+              )
+            : null,
         body: SafeArea(
           child: Column(
             children: [
@@ -100,14 +111,21 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                               controller.userList.isEmpty,
                           child: Center(
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 20.0),
-                              child: Text(AppConstants.noResultsFound,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 20.0),
+                              child: Text(
+                                AppConstants.noResultsFound,
+                                style: TextStyle(
+                                    color: MirrorflyUikit
+                                        .getTheme?.textPrimaryColor),
+                              ),
                             ),
                           ),
                         ),
                         Visibility(
                           visible: controller.recentChats.isNotEmpty,
-                          child: searchHeader(AppConstants.recentChat, Constants.emptyString, context),
+                          child: searchHeader(AppConstants.recentChat,
+                              Constants.emptyString, context),
                         ),
                         ListView.builder(
                             itemCount: controller.recentChats.length,
@@ -125,7 +143,8 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                                           item.jid.checkNull(),
                                           getRecentName(
                                               item) /*item.profileName.checkNull()*/,
-                                          item.isBlocked.checkNull(),item.isGroup.checkNull(),
+                                          item.isBlocked.checkNull(),
+                                          item.isGroup.checkNull(),
                                           context);
                                     },
                                     spanTxt:
@@ -139,14 +158,16 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                                           item.jid.checkNull(),
                                           getRecentName(
                                               item) /*item.profileName.checkNull()*/,
-                                          item.isBlocked.checkNull(),item.isGroup.checkNull(),
+                                          item.isBlocked.checkNull(),
+                                          item.isGroup.checkNull(),
                                           context);
                                     }),
                               );
                             }),
                         Visibility(
                           visible: controller.groupList.isNotEmpty,
-                          child: searchHeader(AppConstants.groups, Constants.emptyString, context),
+                          child: searchHeader(AppConstants.groups,
+                              Constants.emptyString, context),
                         ),
                         ListView.builder(
                             itemCount: controller.groupList.length,
@@ -179,7 +200,9 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                                                   item.jid.checkNull(),
                                                   getName(
                                                       item) /*item.name.checkNull()*/,
-                                                  item.isBlocked.checkNull(),item.isGroupProfile.checkNull(),
+                                                  item.isBlocked.checkNull(),
+                                                  item.isGroupProfile
+                                                      .checkNull(),
                                                   context);
                                             },
                                             isCheckBoxVisible: true,
@@ -190,7 +213,9 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                                                   item.jid.checkNull(),
                                                   getName(
                                                       item) /*item.name.checkNull()*/,
-                                                  item.isBlocked.checkNull(),item.isGroupProfile.checkNull(),
+                                                  item.isBlocked.checkNull(),
+                                                  item.isGroupProfile
+                                                      .checkNull(),
                                                   context);
                                             },
                                             blocked: item.isBlockedMe
@@ -209,7 +234,8 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                             }),
                         Visibility(
                           visible: controller.userList.isNotEmpty,
-                          child: searchHeader(AppConstants.contacts, Constants.emptyString, context),
+                          child: searchHeader(AppConstants.contacts,
+                              Constants.emptyString, context),
                         ),
                         Visibility(
                           visible: controller.searchLoading.value ||
@@ -257,7 +283,10 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                                         child: memberItem(
                                           name: getName(item),
                                           image: item.image.checkNull(),
-                                          status: MirrorflyUikit.instance.showMobileNumberOnList ? item.mobileNumber.checkNull() : item.status.checkNull(),
+                                          status: MirrorflyUikit.instance
+                                                  .showMobileNumberOnList
+                                              ? item.mobileNumber.checkNull()
+                                              : item.status.checkNull(),
                                           spantext: controller.searchQuery.text
                                               .toString(),
                                           onTap: () {
@@ -265,7 +294,8 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                                                 item.jid.checkNull(),
                                                 getName(
                                                     item) /*item.name.checkNull()*/,
-                                                item.isBlocked.checkNull(),item.isGroupProfile.checkNull(),
+                                                item.isBlocked.checkNull(),
+                                                item.isGroupProfile.checkNull(),
                                                 context);
                                           },
                                           isCheckBoxVisible: true,
@@ -276,7 +306,8 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                                                 item.jid.checkNull(),
                                                 getName(
                                                     item) /*item.name.checkNull()*/,
-                                                item.isBlocked.checkNull(),item.isGroupProfile.checkNull(),
+                                                item.isBlocked.checkNull(),
+                                                item.isGroupProfile.checkNull(),
                                                 context);
                                           },
                                           blocked: item.isBlockedMe
@@ -302,12 +333,16 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                     Expanded(
                       child: controller.selectedNames.isEmpty
                           ? Text(AppConstants.noUsersSelected,
-                              style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor))
+                              style: TextStyle(
+                                  color: MirrorflyUikit
+                                      .getTheme?.textPrimaryColor))
                           : Text(
                               controller.selectedNames.join(","),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                              style: TextStyle(
+                                  color: MirrorflyUikit
+                                      .getTheme?.textPrimaryColor),
                             ),
                     ),
                     Visibility(
@@ -321,7 +356,9 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                           child: Text(
                             AppConstants.next.toUpperCase(),
                             style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w500,color: MirrorflyUikit.getTheme?.primaryColor),
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                color: MirrorflyUikit.getTheme?.primaryColor),
                           ),
                         ),
                       ),

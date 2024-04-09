@@ -20,7 +20,7 @@ class GroupCreationController extends GetxController {
   var name = "".obs;
   var loading = false.obs;
 
-  final _count= 25.obs;
+  final _count = 25.obs;
   set count(value) => _count.value = value;
   get count => _count.value.toString();
 
@@ -30,7 +30,7 @@ class GroupCreationController extends GetxController {
   var showEmoji = false.obs;
 
   @override
-  void onInit(){
+  void onInit() {
     super.onInit();
     focusNode.addListener(() {
       if (focusNode.hasFocus) {
@@ -39,13 +39,13 @@ class GroupCreationController extends GetxController {
     });
   }
 
-  onGroupNameChanged(){
+  onGroupNameChanged() {
     debugPrint("text changing");
     debugPrint("length--> ${groupName.text.length}");
     _count((25 - groupName.text.characters.length));
   }
 
-  onEmojiBackPressed(){
+  onEmojiBackPressed() {
     var text = groupName.text;
     var cursorPosition = groupName.selection.base.offset;
 
@@ -61,7 +61,7 @@ class GroupCreationController extends GetxController {
     if (cursorPosition >= 0) {
       final selection = groupName.value.selection;
       final newTextBeforeCursor =
-      selection.textBefore(text).characters.skipLast(1).toString();
+          selection.textBefore(text).characters.skipLast(1).toString();
       LogMessage.d("newTextBeforeCursor", newTextBeforeCursor);
       groupName
         ..text = newTextBeforeCursor + selection.textAfter(text)
@@ -71,8 +71,8 @@ class GroupCreationController extends GetxController {
     _count((25 - groupName.text.characters.length));
   }
 
-  onEmojiSelected(Emoji emoji){
-    if(groupName.text.characters.length < 25){
+  onEmojiSelected(Emoji emoji) {
+    if (groupName.text.characters.length < 25) {
       final controller = groupName;
       final text = controller.text;
       final selection = controller.selection;
@@ -85,7 +85,7 @@ class GroupCreationController extends GetxController {
       }
 
       final newText =
-      text.replaceRange(selection.start, selection.end, emoji.emoji);
+          text.replaceRange(selection.start, selection.end, emoji.emoji);
       final emojiLength = emoji.emoji.length;
       controller
         ..text = newText
@@ -97,29 +97,33 @@ class GroupCreationController extends GetxController {
     _count((25 - groupName.text.characters.length));
   }
 
-  goToAddParticipantsPage(BuildContext context){
-    if(groupName.text.trim().isNotEmpty) {
+  goToAddParticipantsPage(BuildContext context) {
+    if (groupName.text.trim().isNotEmpty) {
       //Get.toNamed(Routes.ADD_PARTICIPANTS);
       // Get.toNamed(Routes.contacts, arguments: {"forward" : false,"group":true,"groupJid":"" })?.then((value){
       //   if(value!=null){
       //     createGroup(value as List<String>, context);
       //   }
       // });
-      Navigator.push(context, MaterialPageRoute(builder: (con) => const ContactListView(group : true, groupJid:""))).then((value){
-        if(value!=null){
+      Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (con) =>
+                      const ContactListView(group: true, groupJid: "")))
+          .then((value) {
+        if (value != null) {
           createGroup(value as List<String>, context);
         }
       });
-
-    }else{
+    } else {
       toToast(AppConstants.pleaseProvideGroupName);
     }
   }
 
-  showHideEmoji(BuildContext context){
+  showHideEmoji(BuildContext context) {
     if (!showEmoji.value) {
       focusNode.unfocus();
-    }else{
+    } else {
       focusNode.requestFocus();
       return;
     }
@@ -127,7 +131,6 @@ class GroupCreationController extends GetxController {
       showEmoji(!showEmoji.value);
     });
   }
-
 
   Future imagePick(BuildContext context) async {
     FilePickerResult? result = await FilePicker.platform
@@ -145,22 +148,21 @@ class GroupCreationController extends GetxController {
       //   });
       // });
 
-      if(context.mounted) {
-        Navigator.push(context, MaterialPageRoute(builder: (con) =>
-            CropImage(
-              imageFile: File(result.files.single.path!),
-            ))).then((value) {
+      if (context.mounted) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (con) => CropImage(
+                      imageFile: File(result.files.single.path!),
+                    ))).then((value) {
           value as MemoryImage;
           // imageBytes = value.bytes;
-          var name = "${DateTime
-              .now()
-              .millisecondsSinceEpoch}.jpg";
+          var name = "${DateTime.now().millisecondsSinceEpoch}.jpg";
           writeImageTemp(value.bytes, name).then((value) {
             imagePath(value.path);
           });
         });
       }
-
     } else {
       // User canceled the picker
       // isImageSelected.value = false;
@@ -169,8 +171,7 @@ class GroupCreationController extends GetxController {
 
   final ImagePicker _picker = ImagePicker();
   camera(BuildContext context) async {
-    final XFile? photo = await _picker.pickImage(
-        source: ImageSource.camera);
+    final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
     if (photo != null) {
       // isImageSelected.value = true;
       // Get.to(CropImage(
@@ -184,59 +185,71 @@ class GroupCreationController extends GetxController {
       //   });
       // });
 
-      if(context.mounted) {
-        Navigator.push(context, MaterialPageRoute(builder: (con) =>
-            CropImage(
-              imageFile: File(photo.path),
-            ))).then((value) {
+      if (context.mounted) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (con) => CropImage(
+                      imageFile: File(photo.path),
+                    ))).then((value) {
           value as MemoryImage;
           // imageBytes = value.bytes;
-          var name ="${DateTime.now().millisecondsSinceEpoch}.jpg";
+          var name = "${DateTime.now().millisecondsSinceEpoch}.jpg";
           writeImageTemp(value.bytes, name).then((value) {
             imagePath(value.path);
           });
         });
       }
-
     } else {
       // User canceled the Camera
       // isImageSelected.value = false;
     }
   }
 
-  createGroup(List<String> users, BuildContext context){
+  createGroup(List<String> users, BuildContext context) {
     mirrorFlyLog("group name", groupName.text);
     mirrorFlyLog("users", users.toString());
     mirrorFlyLog("group image", imagePath.value);
     Helper.showLoading(buildContext: context);
-    Mirrorfly.createGroup(groupName: groupName.text.toString(),userList: users,image: imagePath.value, flyCallBack: (FlyResponse response) {
-      Helper.hideLoading(context: context);
-      if(response.isSuccess) {
-        // Get.back();
-        Navigator.pop(context);
-        toToast(AppConstants.groupCreatedSuccessfully);
-      }
-    });
+    Mirrorfly.createGroup(
+        groupName: groupName.text.toString(),
+        userList: users,
+        image: imagePath.value,
+        flyCallBack: (FlyResponse response) {
+          Helper.hideLoading(context: context);
+          if (response.isSuccess) {
+            // Get.back();
+            Navigator.pop(context);
+            toToast(AppConstants.groupCreatedSuccessfully);
+          }
+        });
   }
 
   void choosePhoto(BuildContext context) {
     Helper.showVerticalButtonAlert(context, [
       ListTile(
           dense: true,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
           onTap: () {
             Navigator.pop(context);
             imagePick(context);
           },
-          title: Text(AppConstants.chooseFromGallery,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),)),
+          title: Text(
+            AppConstants.chooseFromGallery,
+            style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),
+          )),
       ListTile(
           dense: true,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-          onTap: () async{
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+          onTap: () async {
             Navigator.pop(context);
             camera(context);
           },
-          title: Text(AppConstants.takePhoto,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor))),
+          title: Text(AppConstants.takePhoto,
+              style:
+                  TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor))),
     ]);
   }
 }

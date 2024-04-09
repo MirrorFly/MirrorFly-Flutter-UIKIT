@@ -14,7 +14,12 @@ import '../controllers/view_all_media_controller.dart';
 import '../../../models.dart';
 
 class ViewAllMediaView extends StatefulWidget {
-  const ViewAllMediaView({super.key, required this.name, required this.jid, required this.isGroup,this.enableAppBar=true});
+  const ViewAllMediaView(
+      {super.key,
+      required this.name,
+      required this.jid,
+      required this.isGroup,
+      this.enableAppBar = true});
   final String name;
   final String jid;
   final bool isGroup;
@@ -27,66 +32,79 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
   var controller = Get.put(ViewAllMediaController());
   @override
   void initState() {
-    controller.init(widget.name,widget.jid,widget.isGroup);
+    controller.init(widget.name, widget.jid, widget.isGroup);
     super.initState();
   }
+
   @override
   void dispose() {
     Get.delete<ViewAllMediaController>();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-        appBar: widget.enableAppBar ? AppBar(
-          backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-          actionsIconTheme: IconThemeData(
-              color: MirrorflyUikit.getTheme?.colorOnAppbar ??
-                  iconColor),
-          iconTheme: IconThemeData(
-              color: MirrorflyUikit.getTheme?.colorOnAppbar ??
-                  iconColor),
-          automaticallyImplyLeading: true,
-          title: Text(widget.name,style: TextStyle(color: MirrorflyUikit
-              .getTheme?.colorOnAppbar ),),
-          centerTitle: false,
-          bottom: TabBar(
-              indicatorColor: MirrorflyUikit.getTheme?.primaryColor,//buttonBgColor,
-              labelColor: MirrorflyUikit.getTheme?.primaryColor,//buttonBgColor,
-              unselectedLabelColor: MirrorflyUikit.getTheme?.colorOnAppbar,//appbarTextColor,
-              indicatorWeight: 2,
-              indicatorSize: TabBarIndicatorSize.tab,
-              indicatorPadding: const EdgeInsets.symmetric(horizontal: 16),
-              tabs: [
-                Center(
-                  child: Container(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        AppConstants.media,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 16),
-                      )),
+        appBar: widget.enableAppBar
+            ? AppBar(
+                backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
+                actionsIconTheme: IconThemeData(
+                    color: MirrorflyUikit.getTheme?.colorOnAppbar ?? iconColor),
+                iconTheme: IconThemeData(
+                    color: MirrorflyUikit.getTheme?.colorOnAppbar ?? iconColor),
+                automaticallyImplyLeading: true,
+                title: Text(
+                  widget.name,
+                  style:
+                      TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
                 ),
-                Center(
-                  child: Container(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(AppConstants.docs,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 16))),
-                ),
-                Center(
-                  child: Container(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(AppConstants.links,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 16))),
-                ),
-              ]),
-        ) : null,
-        body: SafeArea(child: TabBarView(children: [mediaView(), docsView(), linksView()])),
+                centerTitle: false,
+                bottom: TabBar(
+                    indicatorColor:
+                        MirrorflyUikit.getTheme?.primaryColor, //buttonBgColor,
+                    labelColor:
+                        MirrorflyUikit.getTheme?.primaryColor, //buttonBgColor,
+                    unselectedLabelColor: MirrorflyUikit
+                        .getTheme?.colorOnAppbar, //appbarTextColor,
+                    indicatorWeight: 2,
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    indicatorPadding:
+                        const EdgeInsets.symmetric(horizontal: 16),
+                    tabs: [
+                      Center(
+                        child: Container(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              AppConstants.media,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 16),
+                            )),
+                      ),
+                      Center(
+                        child: Container(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(AppConstants.docs,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16))),
+                      ),
+                      Center(
+                        child: Container(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(AppConstants.links,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16))),
+                      ),
+                    ]),
+              )
+            : null,
+        body: SafeArea(
+            child:
+                TabBarView(children: [mediaView(), docsView(), linksView()])),
       ),
     );
   }
@@ -95,26 +113,36 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
     return Obx(() {
       return controller.medialistdata.isNotEmpty
           ? SingleChildScrollView(
-            child: Column(
-              children: [
-                ListView.builder(
-                  shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: controller.medialistdata.length,
-                    itemBuilder: (context, index) {
-                      var header = controller.medialistdata.keys.toList()[index];
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [headerItem(header), gridView(header)],
-                      );
-                    }),
-                const SizedBox(height: 10,),
-                Text("${controller.imageCount} ${AppConstants.sPhotos}, ${controller.videoCount} ${AppConstants.sVideos}, ${controller.audioCount} ${AppConstants.sAudios}",style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor),),
-              ],
-            ),
-          )
-          : Center(child: Text(AppConstants.noMediaFound,style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)));
+              child: Column(
+                children: [
+                  ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: controller.medialistdata.length,
+                      itemBuilder: (context, index) {
+                        var header =
+                            controller.medialistdata.keys.toList()[index];
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [headerItem(header), gridView(header)],
+                        );
+                      }),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "${controller.imageCount} ${AppConstants.sPhotos}, ${controller.videoCount} ${AppConstants.sVideos}, ${controller.audioCount} ${AppConstants.sAudios}",
+                    style: TextStyle(
+                        color: MirrorflyUikit.getTheme?.textSecondaryColor),
+                  ),
+                ],
+              ),
+            )
+          : Center(
+              child: Text(AppConstants.noMediaFound,
+                  style: TextStyle(
+                      color: MirrorflyUikit.getTheme?.textSecondaryColor)));
     });
   }
 
@@ -151,7 +179,8 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
       child: Container(
           margin: const EdgeInsets.only(right: 3),
           color: item.isAudioMessage()
-              ? darken(MirrorflyUikit.getTheme!.primaryColor,0.3)//const Color(0xff97A5C7)
+              ? darken(MirrorflyUikit.getTheme!.primaryColor,
+                  0.3) //const Color(0xff97A5C7)
               : Colors.transparent,
           child: item.isAudioMessage()
               ? audioItem(item)
@@ -159,15 +188,17 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
                   ? videoItem(item)
                   : item.isImageMessage()
                       ? Image.file(
-                          File(item.mediaChatMessage!.mediaLocalStoragePath.value),
+                          File(item
+                              .mediaChatMessage!.mediaLocalStoragePath.value),
                           fit: BoxFit.cover,
                         )
                       : const SizedBox()),
       onTap: () {
         if (item.isImageMessage() || item.isVideoMessage()) {
-          controller.openImage(context,gridIndex);
+          controller.openImage(context, gridIndex);
         } else if (item.isAudioMessage()) {
-          controller.openFile(item.mediaChatMessage!.mediaLocalStoragePath.value);
+          controller
+              .openFile(item.mediaChatMessage!.mediaLocalStoragePath.value);
           // controller.openImage(context,gridIndex);
         }
       },
@@ -180,10 +211,14 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
         controller.imageFromBase64String(
             item.mediaChatMessage!.mediaThumbImage, null, null),
         Center(
-          child: CircleAvatar(
-            radius: 8,
-              backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
-              child: Icon(Icons.play_arrow,color: MirrorflyUikit.getTheme?.colorOnPrimary,size: 12,)))
+            child: CircleAvatar(
+                radius: 8,
+                backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
+                child: Icon(
+                  Icons.play_arrow,
+                  color: MirrorflyUikit.getTheme?.colorOnPrimary,
+                  size: 12,
+                )))
       ],
     );
   }
@@ -191,7 +226,11 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
   Widget audioItem(ChatMessageModel item) {
     return Center(
       child: SvgPicture.asset(
-          item.mediaChatMessage!.isAudioRecorded ? audioMic1 : audioWhite,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnPrimary, BlendMode.srcIn),),
+        item.mediaChatMessage!.isAudioRecorded ? audioMic1 : audioWhite,
+        package: package,
+        colorFilter: ColorFilter.mode(
+            MirrorflyUikit.getTheme!.colorOnPrimary, BlendMode.srcIn),
+      ),
     );
   }
 
@@ -199,7 +238,10 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
     return Obx(() {
       return controller.docslistdata.isNotEmpty
           ? listView(controller.docslistdata, true)
-          : Center(child: Text(AppConstants.noDocsFound,style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)));
+          : Center(
+              child: Text(AppConstants.noDocsFound,
+                  style: TextStyle(
+                      color: MirrorflyUikit.getTheme?.textSecondaryColor)));
     });
   }
 
@@ -208,7 +250,7 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
       child: Column(
         children: [
           ListView.builder(
-            shrinkWrap: true,
+              shrinkWrap: true,
               itemCount: list.length,
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
@@ -235,14 +277,21 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
                                   //item.mediaChatMessage!.mediaFileSize.readableFileSize(base1024: false),
                                   date: getDateFromTimestamp(
                                       item.messageSentTime.toInt(), "d/MM/yy"),
-                                  path: item.mediaChatMessage!.mediaLocalStoragePath.value)
+                                  path: item.mediaChatMessage!
+                                      .mediaLocalStoragePath.value)
                               : linkTile(list[header]![listIndex]);
                         }),
                   ],
                 );
               }),
-          const SizedBox(height: 10,),
-          doc ? Text("${controller.documentCount} ${AppConstants.sDocuments}") : Text("${controller.linkCount} ${AppConstants.sLinks}",style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor))
+          const SizedBox(
+            height: 10,
+          ),
+          doc
+              ? Text("${controller.documentCount} ${AppConstants.sDocuments}")
+              : Text("${controller.linkCount} ${AppConstants.sLinks}",
+                  style: TextStyle(
+                      color: MirrorflyUikit.getTheme?.textSecondaryColor))
         ],
       ),
     );
@@ -264,26 +313,32 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: SvgPicture.asset(
-                  assetName,package: package,
+                  assetName,
+                  package: package,
                   width: 20,
                   height: 20,
                 ),
               ),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 8.0, vertical: 8.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         title,
-                        style: TextStyle(fontSize: 13,color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                        style: TextStyle(
+                            fontSize: 13,
+                            color: MirrorflyUikit.getTheme?.textPrimaryColor),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                       ),
                       Text(
                         subtitle,
-                        style: TextStyle(fontSize: 11,color: MirrorflyUikit.getTheme?.textSecondaryColor),
+                        style: TextStyle(
+                            fontSize: 11,
+                            color: MirrorflyUikit.getTheme?.textSecondaryColor),
                       ),
                     ],
                   ),
@@ -292,7 +347,10 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
               Center(
                   child: Padding(
                 padding: const EdgeInsets.only(right: 20.0),
-                child: Text(date, style: TextStyle(fontSize: 11,color: MirrorflyUikit.getTheme?.textSecondaryColor)),
+                child: Text(date,
+                    style: TextStyle(
+                        fontSize: 11,
+                        color: MirrorflyUikit.getTheme?.textSecondaryColor)),
               )),
             ],
           ),
@@ -311,8 +369,7 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
     return Column(
       children: [
         Container(
-          margin:
-              const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+          margin: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
           decoration: BoxDecoration(
               color: MirrorflyUikit.getTheme!.primaryColor.withAlpha(60),
               borderRadius: const BorderRadius.all(Radius.circular(8))),
@@ -320,12 +377,13 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               InkWell(
-                onTap: (){
+                onTap: () {
                   launchInBrowser(item.linkMap!["url"]);
                 },
                 child: Container(
                   decoration: BoxDecoration(
-                      color: MirrorflyUikit.getTheme!.primaryColor.withAlpha(50),
+                      color:
+                          MirrorflyUikit.getTheme!.primaryColor.withAlpha(50),
                       borderRadius: const BorderRadius.all(Radius.circular(8))),
                   child: IntrinsicHeight(
                     child: Row(
@@ -344,14 +402,21 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
                                     70),
                               )
                             : Container(
-                                constraints: const BoxConstraints(minHeight: 70,minWidth: 70),
+                                constraints: const BoxConstraints(
+                                    minHeight: 70, minWidth: 70),
                                 decoration: BoxDecoration(
-                                    color: MirrorflyUikit.getTheme!.primaryColor,//Color(0xff97A5C7),
+                                    color: MirrorflyUikit.getTheme!
+                                        .primaryColor, //Color(0xff97A5C7),
                                     borderRadius: const BorderRadius.only(
                                         topLeft: Radius.circular(8),
                                         bottomLeft: Radius.circular(8))),
                                 child: Center(
-                                  child: SvgPicture.asset(linkImage,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnPrimary, BlendMode.srcIn)),
+                                  child: SvgPicture.asset(linkImage,
+                                      package: package,
+                                      colorFilter: ColorFilter.mode(
+                                          MirrorflyUikit
+                                              .getTheme!.colorOnPrimary,
+                                          BlendMode.srcIn)),
                                 ),
                               ),
                         Expanded(
@@ -362,11 +427,17 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
                             children: [
                               Text(
                                 item.linkMap!["url"],
-                                style: TextStyle(fontSize: 14,color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: MirrorflyUikit
+                                        .getTheme?.textPrimaryColor),
                               ),
                               Text(
                                 item.linkMap!["host"],
-                                style: TextStyle(fontSize: 10,color: MirrorflyUikit.getTheme?.textSecondaryColor),
+                                style: TextStyle(
+                                    fontSize: 10,
+                                    color: MirrorflyUikit
+                                        .getTheme?.textSecondaryColor),
                               ),
                             ],
                           ),
@@ -377,8 +448,8 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
                 ),
               ),
               InkWell(
-                onTap: (){
-                  controller.navigateMessage(item.chatMessage,context);
+                onTap: () {
+                  controller.navigateMessage(item.chatMessage, context);
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
@@ -396,15 +467,16 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
                                       .mediaCaptionText
                                   : Constants.emptyString,
                           style: const TextStyle(
-                              fontSize: 13, color: Colors.blue),//Color(0xff7889B3)),
+                              fontSize: 13,
+                              color: Colors.blue), //Color(0xff7889B3)),
                           // overflow: TextOverflow.clip,
                           maxLines: 1,
                         ),
                       ),
-                      Icon(
-                        Icons.keyboard_arrow_right,
-                        color: MirrorflyUikit.getTheme?.primaryColor//Color(0xff7185b5),
-                      )
+                      Icon(Icons.keyboard_arrow_right,
+                          color: MirrorflyUikit
+                              .getTheme?.primaryColor //Color(0xff7185b5),
+                          )
                     ],
                   ),
                 ),
@@ -423,7 +495,10 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
     return Obx(() {
       return controller.linklistdata.isNotEmpty
           ? listView(controller.linklistdata, false)
-          : Center(child: Text(AppConstants.noLinksFound,style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)));
+          : Center(
+              child: Text(AppConstants.noLinksFound,
+                  style: TextStyle(
+                      color: MirrorflyUikit.getTheme?.textSecondaryColor)));
     });
   }
 }

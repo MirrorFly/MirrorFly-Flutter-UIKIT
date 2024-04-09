@@ -38,8 +38,9 @@ class Helper {
       context: buildContext,
       builder: (BuildContext context) {
         return Dialog(
-          backgroundColor: MirrorflyUikit.theme == "dark" ? darkPopupColor : Colors.white,
-          child:  PopScope(
+          backgroundColor:
+              MirrorflyUikit.theme == "dark" ? darkPopupColor : Colors.white,
+          child: PopScope(
             canPop: dismiss,
             onPopInvoked: (didPop) {
               if (didPop) {
@@ -51,9 +52,15 @@ class Helper {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
+                  CircularProgressIndicator(
+                    color: MirrorflyUikit.getTheme?.primaryColor,
+                  ),
                   const SizedBox(width: 16),
-                  Text(message ?? 'Loading...', style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),),
+                  Text(
+                    message ?? 'Loading...',
+                    style: TextStyle(
+                        color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                  ),
                 ],
               ),
             ),
@@ -63,29 +70,35 @@ class Helper {
     );
   }
 
-  static void progressLoading({bool dismiss = false, required BuildContext context}) {
+  static void progressLoading(
+      {bool dismiss = false, required BuildContext context}) {
     showDialog(
-
         barrierDismissible: dismiss,
-        barrierColor: Colors.transparent, context: context, builder: (BuildContext context) { return AlertDialog(
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      content: PopScope(
-        canPop: dismiss,
-        onPopInvoked: (didPop) {
-          if (didPop) {
-            return;
-          }
-        },
-        child: SizedBox(
-          width: 60,
-          height: 60,
-          child: Center(
-            child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
-          ),
-        ),
-      ),
-    ); });
+        barrierColor: Colors.transparent,
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            content: PopScope(
+              canPop: dismiss,
+              onPopInvoked: (didPop) {
+                if (didPop) {
+                  return;
+                }
+              },
+              child: SizedBox(
+                width: 60,
+                height: 60,
+                child: Center(
+                  child: CircularProgressIndicator(
+                    color: MirrorflyUikit.getTheme?.primaryColor,
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
   }
 
   static void showAlert(
@@ -93,17 +106,21 @@ class Helper {
       required String message,
       List<Widget>? actions,
       Widget? content,
-      required BuildContext context, bool? barrierDismissible}) {
+      required BuildContext context,
+      bool? barrierDismissible}) {
     showDialog(
       context: context,
       barrierDismissible: barrierDismissible ?? true,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: MirrorflyUikit.theme == "dark" ? darkPopupColor : Colors.white,
+          backgroundColor:
+              MirrorflyUikit.theme == "dark" ? darkPopupColor : Colors.white,
           title: title != null
               ? Text(
                   title,
-                  style: TextStyle(fontSize: 17, color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                  style: TextStyle(
+                      fontSize: 17,
+                      color: MirrorflyUikit.getTheme?.textPrimaryColor),
                 )
               : const SizedBox.shrink(),
           contentPadding: title != null
@@ -113,28 +130,33 @@ class Helper {
               Text(
                 message,
                 style: TextStyle(
-                    color: MirrorflyUikit.getTheme?.textSecondaryColor, fontWeight: FontWeight.normal),
+                    color: MirrorflyUikit.getTheme?.textSecondaryColor,
+                    fontWeight: FontWeight.normal),
               ),
           contentTextStyle: TextStyle(
-              color: MirrorflyUikit.getTheme?.textSecondaryColor, fontWeight: FontWeight.w500),
+              color: MirrorflyUikit.getTheme?.textSecondaryColor,
+              fontWeight: FontWeight.w500),
           actions: actions,
         );
       },
     );
   }
 
-  static void showVerticalButtonAlert(BuildContext context, List<Widget> actions) {
+  static void showVerticalButtonAlert(
+      BuildContext context, List<Widget> actions) {
     showDialog(
-      context: context, builder: (BuildContext context) {
-      return Dialog(
-        backgroundColor: MirrorflyUikit.theme == "dark" ? darkPopupColor : Colors.white,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: actions,
-        ),
-      );
-    },
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor:
+              MirrorflyUikit.theme == "dark" ? darkPopupColor : Colors.white,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: actions,
+          ),
+        );
+      },
     );
   }
 
@@ -161,13 +183,16 @@ class Helper {
   }
 
   static void showFeatureUnavailable(BuildContext context) {
-    Helper.showAlert(message: "Feature unavailable for your plan", actions: [
-      TextButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text("Ok")),
-    ], context: context);
+    Helper.showAlert(
+        message: "Feature unavailable for your plan",
+        actions: [
+          TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("Ok")),
+        ],
+        context: context);
   }
 
   static String formatBytes(int bytes, int decimals) {
@@ -179,14 +204,17 @@ class Helper {
 
   static String durationToString(Duration duration) {
     debugPrint("duration conversion $duration");
-    String hours = (duration.inHours == 00) ? "" : "${duration.inHours.toStringAsFixed(0).padLeft(2, '0')}:"; // Get hours
+    String hours = (duration.inHours == 00)
+        ? ""
+        : "${duration.inHours.toStringAsFixed(0).padLeft(2, '0')}:"; // Get hours
     int minutes = duration.inMinutes % 60; // Get minutes
-    var seconds = ((duration.inSeconds % 60)).toStringAsFixed(0).padLeft(2, '0');
+    var seconds =
+        ((duration.inSeconds % 60)).toStringAsFixed(0).padLeft(2, '0');
     return '$hours${minutes.toStringAsFixed(0).padLeft(2, '0')}:$seconds';
   }
 
   static String getMapImageUri(double latitude, double longitude) {
-    var key = MirrorflyUikit.instance.googleMapKey;//Constants.googleMapKey;
+    var key = MirrorflyUikit.instance.googleMapKey; //Constants.googleMapKey;
     return ("https://maps.googleapis.com/maps/api/staticmap?center=$latitude,$longitude&zoom=13&size=300x200&markers=color:red|$latitude,$longitude&key=$key");
   }
 
@@ -292,11 +320,14 @@ bool checkFileUploadSize(String path, String mediaType) {
 
   if (mediaType == Constants.mImage && sizeInMb <= Constants.maxImageFileSize) {
     return true;
-  } else if (mediaType == Constants.mAudio && sizeInMb <= Constants.maxAudioFileSize) {
+  } else if (mediaType == Constants.mAudio &&
+      sizeInMb <= Constants.maxAudioFileSize) {
     return true;
-  } else if (mediaType == Constants.mVideo && sizeInMb <= Constants.maxVideoFileSize) {
+  } else if (mediaType == Constants.mVideo &&
+      sizeInMb <= Constants.maxVideoFileSize) {
     return true;
-  } else if (mediaType == Constants.mDocument && sizeInMb <= Constants.maxDocFileSize) {
+  } else if (mediaType == Constants.mDocument &&
+      sizeInMb <= Constants.maxDocFileSize) {
     return true;
   } else {
     return false;
@@ -341,8 +372,6 @@ String getDateFromTimestamp(int convertedTime, String format) {
   return DateFormat(format).format(calendar);
 }
 
-
-
 Future<ProfileDetails> getProfileDetails(String jid) async {
   // debugPrint("getProfileDetails jid $jid");
   var value = await Mirrorfly.getProfileDetails(jid: jid.checkNull());
@@ -352,7 +381,6 @@ Future<ProfileDetails> getProfileDetails(String jid) async {
   var profile = ProfileDetails.fromJson(json.decode(value.toString()));
   return profile;
 }
-
 
 Future<ChatMessageModel> getMessageOfId(String mid) async {
   var value = await Mirrorfly.getMessageOfId(messageId: mid.checkNull());
@@ -691,11 +719,11 @@ String getMobileNumberFromJid(String jid) {
 }
 
 String convertSecondToLastSeen(String seconds) {
-  if(seconds.isNotEmpty) {
-    if(seconds=="0") return AppConstants.online;
+  if (seconds.isNotEmpty) {
+    if (seconds == "0") return AppConstants.online;
     // var userLastSeenDate = DateTime.now().subtract(Duration(milliseconds: double.parse(seconds).toInt()));
-    DateTime lastSeen = DateTime.fromMillisecondsSinceEpoch(
-        double.parse(seconds).toInt());
+    DateTime lastSeen =
+        DateTime.fromMillisecondsSinceEpoch(double.parse(seconds).toInt());
     Duration diff = DateTime.now().difference(lastSeen);
 
     if (int.parse(DateFormat('yyyy').format(lastSeen)) <
@@ -705,13 +733,14 @@ String convertSecondToLastSeen(String seconds) {
       return '${AppConstants.lastSeenOn} ${DateFormat('dd MMM').format(lastSeen)}';
     } else if (diff.inDays == 1) {
       return AppConstants.lastSeenYesterday;
-    } else
-    if (diff.inHours >= 1 || diff.inMinutes >= 1 || diff.inSeconds >= 1) {
+    } else if (diff.inHours >= 1 ||
+        diff.inMinutes >= 1 ||
+        diff.inSeconds >= 1) {
       return '${AppConstants.lastSeenAt} ${DateFormat('hh:mm a').format(lastSeen)}';
     } else {
       return AppConstants.online;
     }
-  }else{
+  } else {
     return Constants.emptyString;
   }
 }
@@ -733,165 +762,178 @@ String getDisplayImage(RecentChatData recentChat) {
 void showQuickProfilePopup(
     {required context,
     required Function() chatTap,
-      Function()? callTap,
-      Function()? videoTap,
+    Function()? callTap,
+    Function()? videoTap,
     required Function() infoTap,
     required Rx<ProfileDetails> profile,
-      required Rx<AvailableFeatures> availableFeatures}) {
-  var isAudioCallAvailable =
-  profile.value.isGroupProfile.checkNull() ? false : availableFeatures.value.isOneToOneCallAvailable.checkNull();
-  var isVideoCallAvailable =
-  profile.value.isGroupProfile.checkNull() ? false : availableFeatures.value.isOneToOneCallAvailable.checkNull();
+    required Rx<AvailableFeatures> availableFeatures}) {
+  var isAudioCallAvailable = profile.value.isGroupProfile.checkNull()
+      ? false
+      : availableFeatures.value.isOneToOneCallAvailable.checkNull();
+  var isVideoCallAvailable = profile.value.isGroupProfile.checkNull()
+      ? false
+      : availableFeatures.value.isOneToOneCallAvailable.checkNull();
 
-  showDialog(context: context, builder: (BuildContext context) {
-    return Obx(() {
-      return Dialog(
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(20.0))),
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width * 0.7,
-          height: 300,
-          child: Column(
-            children: [
-              Expanded(
-                child: InkWell(
-                  onTap: () {
-                    mirrorFlyLog('image click', 'true');
-                    // debugPrint(
-                    //     "quick profile click--> ${profile.toJson().toString()}");
-                    if (profile.value.image!.isNotEmpty &&
-                        !(profile.value.isBlockedMe.checkNull() ||
-                            profile.value.isAdminBlocked.checkNull()) &&
-                        !( //!profile.value.isItSavedContact.checkNull() || //This is commented because Android side received as true and iOS side false
-                            profile.value.isDeletedContact())) {
-                      Navigator.pop(context);
-                      Navigator.push(context, MaterialPageRoute(builder: (con)=>ImageViewView(imageName: getName(profile.value),imageUrl: profile.value.image,)));
-                      /*Get.back();
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Obx(() {
+        return Dialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.7,
+            height: 300,
+            child: Column(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      mirrorFlyLog('image click', 'true');
+                      // debugPrint(
+                      //     "quick profile click--> ${profile.toJson().toString()}");
+                      if (profile.value.image!.isNotEmpty &&
+                          !(profile.value.isBlockedMe.checkNull() ||
+                              profile.value.isAdminBlocked.checkNull()) &&
+                          !( //!profile.value.isItSavedContact.checkNull() || //This is commented because Android side received as true and iOS side false
+                              profile.value.isDeletedContact())) {
+                        Navigator.pop(context);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (con) => ImageViewView(
+                                      imageName: getName(profile.value),
+                                      imageUrl: profile.value.image,
+                                    )));
+                        /*Get.back();
                       Get.toNamed(Routes.imageView, arguments: {
                         'imageName': getName(profile.value),
                         'imageUrl': profile.value.image.checkNull()
                       });*/
-                    }
-                  },
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              topRight: Radius.circular(20)),
-                          child: ImageNetwork(
-                            url: profile.value.image.toString(),
-                            width: MediaQuery.of(context).size.width * 0.7,
-                            height: 250,
-                            clipOval: false,
-                            errorWidget: profile.value.isGroupProfile!
-                                ? Image.asset(
-                              groupImg,
-                              package: package,
+                      }
+                    },
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                topRight: Radius.circular(20)),
+                            child: ImageNetwork(
+                              url: profile.value.image.toString(),
+                              width: MediaQuery.of(context).size.width * 0.7,
                               height: 250,
-                              width: MediaQuery.of(context).size.width *
-                                  0.72,
-                              fit: BoxFit.cover,
+                              clipOval: false,
+                              errorWidget: profile.value.isGroupProfile!
+                                  ? Image.asset(
+                                      groupImg,
+                                      package: package,
+                                      height: 250,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.72,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : ProfileTextImage(
+                                      text: getName(profile.value),
+                                      fontSize: 75,
+                                      radius: 0,
+                                    ),
+                              isGroup: profile.value.isGroupProfile.checkNull(),
+                              blocked: profile.value.isBlockedMe.checkNull() ||
+                                  profile.value.isAdminBlocked.checkNull(),
+                              unknown: (!profile.value.isItSavedContact
+                                      .checkNull() ||
+                                  profile.value.isDeletedContact()),
+                            )),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 20),
+                          child: Text(
+                            profile.value.isGroupProfile!
+                                ? profile.value.name.checkNull()
+                                : !Constants.enableContactSync
+                                    ? profile.value.mobileNumber.checkNull()
+                                    : profile.value.nickName.checkNull(),
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 50,
+                  child: Row(
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: InkWell(
+                          onTap: chatTap,
+                          child: SvgPicture.asset(
+                            quickMessage,
+                            package: package,
+                            fit: BoxFit.contain,
+                            width: 30,
+                            height: 30,
+                          ),
+                        ),
+                      ),
+                      isAudioCallAvailable
+                          ? Expanded(
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  makeVoiceCall(profile.value.jid.checkNull(),
+                                      availableFeatures, context);
+                                },
+                                child: SvgPicture.asset(
+                                  quickCall,
+                                  package: package,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
                             )
-                                : ProfileTextImage(
-                              text: getName(profile.value),
-                              fontSize: 75,
-                              radius: 0,
-                            ),
-                            isGroup: profile.value.isGroupProfile.checkNull(),
-                            blocked: profile.value.isBlockedMe.checkNull() ||
-                                profile.value.isAdminBlocked.checkNull(),
-                            unknown:
-                            (!profile.value.isItSavedContact.checkNull() ||
-                                profile.value.isDeletedContact()),
-                          )),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 20),
-                        child: Text(
-                          profile.value.isGroupProfile!
-                              ? profile.value.name.checkNull()
-                              : !Constants.enableContactSync
-                              ? profile.value.mobileNumber.checkNull()
-                              : profile.value.nickName.checkNull(),
-                          style: const TextStyle(color: Colors.white),
+                          : const SizedBox.shrink(),
+                      isVideoCallAvailable
+                          ? Expanded(
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  makeVideoCall(profile.value.jid.checkNull(),
+                                      availableFeatures, context);
+                                },
+                                child: SvgPicture.asset(
+                                  quickVideo,
+                                  package: package,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            )
+                          : const SizedBox.shrink(),
+                      Expanded(
+                        child: InkWell(
+                          onTap: infoTap,
+                          child: SvgPicture.asset(
+                            quickInfo,
+                            package: package,
+                            fit: BoxFit.contain,
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 50,
-                child: Row(
-                  // mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        onTap: chatTap,
-                        child: SvgPicture.asset(
-                          quickMessage,
-                          package: package,
-                          fit: BoxFit.contain,
-                          width: 30,
-                          height: 30,
-                        ),
-                      ),
-                    ),
-                    isAudioCallAvailable
-                        ? Expanded(
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                          makeVoiceCall(profile.value.jid.checkNull(), availableFeatures, context);
-                        },
-                        child: SvgPicture.asset(
-                          quickCall,
-                          package: package,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    )
-                        : const SizedBox.shrink(),
-                    isVideoCallAvailable
-                        ? Expanded(
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                          makeVideoCall(profile.value.jid.checkNull(), availableFeatures, context);
-                        },
-                        child: SvgPicture.asset(
-                          quickVideo,
-                          package: package,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    )
-                        : const SizedBox.shrink(),
-                    Expanded(
-                      child: InkWell(
-                        onTap: infoTap,
-                        child: SvgPicture.asset(
-                          quickInfo,
-                          package: package,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      );
-    });
-  },
+        );
+      });
+    },
   );
 }
 
-makeVoiceCall(String toUser, Rx<AvailableFeatures> availableFeatures, BuildContext context) async {
+makeVoiceCall(String toUser, Rx<AvailableFeatures> availableFeatures,
+    BuildContext context) async {
   if (!availableFeatures.value.isOneToOneCallAvailable.checkNull()) {
     Helper.showFeatureUnavailable(context);
     return;
@@ -906,44 +948,49 @@ makeVoiceCall(String toUser, Rx<AvailableFeatures> availableFeatures, BuildConte
     return;
   }
   if (await AppPermission.askAudioCallPermissions(context)) {
-    Mirrorfly.makeVoiceCall(toUserJid: toUser.checkNull(), flyCallBack: (FlyResponse response) {
-      if (response.isSuccess) {
-        /*Get.toNamed(Routes.outGoingCallView, arguments: {
+    Mirrorfly.makeVoiceCall(
+        toUserJid: toUser.checkNull(),
+        flyCallBack: (FlyResponse response) {
+          if (response.isSuccess) {
+            /*Get.toNamed(Routes.outGoingCallView, arguments: {
           "userJid": [toUser],
           "callType": CallType.audio
         });*/
-        MirrorflyUikit.instance.navigationManager.navigateTo(context: context,
-            pageToNavigate: OutGoingCallView(userJid: [toUser]), routeName: 'outgoing_call_view',
-            onNavigateComplete: (){
-
-            });
-      }
-    });
+            MirrorflyUikit.instance.navigationManager.navigateTo(
+                context: context,
+                pageToNavigate: OutGoingCallView(userJid: [toUser]),
+                routeName: 'outgoing_call_view',
+                onNavigateComplete: () {});
+          }
+        });
   } else {
     debugPrint("permission not given");
   }
 }
 
-makeVideoCall(String toUser, Rx<AvailableFeatures> availableFeatures, BuildContext context) async {
+makeVideoCall(String toUser, Rx<AvailableFeatures> availableFeatures,
+    BuildContext context) async {
   if (await AppUtils.isNetConnected()) {
     if (await AppPermission.askVideoCallPermissions(context)) {
       if ((await Mirrorfly.isOnGoingCall()).checkNull()) {
         debugPrint("#Mirrorfly Call You are on another call");
         toToast(Constants.msgOngoingCallAlert);
       } else {
-        Mirrorfly.makeVideoCall(toUserJid: toUser.checkNull(), flyCallBack: (FlyResponse response) {
-          if (response.isSuccess) {
-            /*Get.toNamed(Routes.outGoingCallView, arguments: {
+        Mirrorfly.makeVideoCall(
+            toUserJid: toUser.checkNull(),
+            flyCallBack: (FlyResponse response) {
+              if (response.isSuccess) {
+                /*Get.toNamed(Routes.outGoingCallView, arguments: {
               "userJid": [toUser],
               "callType": CallType.video// removed
             });*/
-            MirrorflyUikit.instance.navigationManager.navigateTo(context: context,
-                pageToNavigate: OutGoingCallView(userJid: [toUser]), routeName: 'outgoing_call_view',
-                onNavigateComplete: (){
-
-                });
-          }
-        });
+                MirrorflyUikit.instance.navigationManager.navigateTo(
+                    context: context,
+                    pageToNavigate: OutGoingCallView(userJid: [toUser]),
+                    routeName: 'outgoing_call_view',
+                    onNavigateComplete: () {});
+              }
+            });
       }
     } else {
       LogMessage.d("askVideoCallPermissions", "false");
@@ -1003,13 +1050,17 @@ String getCallLogDateFromTimestamp(int convertedTime, String format) {
 bool isToday(int convertedTime) {
   var calendar = DateTime.fromMicrosecondsSinceEpoch(convertedTime);
   final now = DateTime.now();
-  return now.day == calendar.day && now.month == calendar.month && now.year == calendar.year;
+  return now.day == calendar.day &&
+      now.month == calendar.month &&
+      now.year == calendar.year;
 }
 
 bool isYesterday(int convertedTime) {
   var calendar = DateTime.fromMicrosecondsSinceEpoch(convertedTime);
   final yesterday = DateTime.now().subtract(const Duration(days: 1));
-  return yesterday.day == calendar.day && yesterday.month == calendar.month && yesterday.year == calendar.year;
+  return yesterday.day == calendar.day &&
+      yesterday.month == calendar.month &&
+      yesterday.year == calendar.year;
 }
 
 String getCallLogDuration(int startTime, int endTime) {
@@ -1019,11 +1070,11 @@ String getCallLogDuration(int startTime, int endTime) {
   if (startTime == 0 || endTime == 0 || millis == 0) {
     return "";
   } else {
-    var seconds = ((duration.inSeconds % 60)).toStringAsFixed(0).padLeft(2, '0');
+    var seconds =
+        ((duration.inSeconds % 60)).toStringAsFixed(0).padLeft(2, '0');
     return '${(duration.inMinutes).toStringAsFixed(0).padLeft(2, '0')}:$seconds';
   }
 }
-
 
 // ranges from 0.0 to 1.0
 

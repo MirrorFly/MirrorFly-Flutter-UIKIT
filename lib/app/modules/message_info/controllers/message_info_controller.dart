@@ -20,9 +20,10 @@ class MessageInfoController extends GetxController {
   var chatController = Get.find<ChatController>();
 
   // var messageID = Get.arguments["messageID"];
-  var jid = "";//Get.arguments["jid"];
-  var isGroupProfile = false.obs;//Get.arguments["isGroupProfile"];
-  var chatMessage = <ChatMessageModel>[].obs;//[Get.arguments["chatMessage"] as ChatMessageModel].obs;
+  var jid = ""; //Get.arguments["jid"];
+  var isGroupProfile = false.obs; //Get.arguments["isGroupProfile"];
+  var chatMessage = <ChatMessageModel>[]
+      .obs; //[Get.arguments["chatMessage"] as ChatMessageModel].obs;
   var readTime = ''.obs;
   var deliveredTime = ''.obs;
 
@@ -81,7 +82,10 @@ class MessageInfoController extends GetxController {
   }
 
   downloadMedia(BuildContext context, String messageId) async {
-    var permission = await AppPermission.getStoragePermission(permissionContent: Constants.writeStoragePermission, deniedContent: Constants.writeStoragePermissionDenied, context: context);
+    var permission = await AppPermission.getStoragePermission(
+        permissionContent: Constants.writeStoragePermission,
+        deniedContent: Constants.writeStoragePermissionDenied,
+        context: context);
     if (permission) {
       Mirrorfly.downloadMedia(messageId: messageId);
     }
@@ -162,22 +166,28 @@ class MessageInfoController extends GetxController {
 
   getMessageStatus(String messageId) async {
     // statusCount(await Mirrorfly.getGroupMessageStatusCount(messageId));
-    Mirrorfly.getGroupMessageDeliveredRecipients(messageId: messageId, groupJid: jid, flyCallBack: (FlyResponse response) {
-    mirrorFlyLog("deliveredResp", response.data);
-    if(response.hasData) {
-      var item = messageStatusDetailFromJson(response.data);
-      statusCount(item.totalParticipantCount!);
-      messageDeliveredList(item.participantList);
-    }
+    Mirrorfly.getGroupMessageDeliveredRecipients(
+        messageId: messageId,
+        groupJid: jid,
+        flyCallBack: (FlyResponse response) {
+          mirrorFlyLog("deliveredResp", response.data);
+          if (response.hasData) {
+            var item = messageStatusDetailFromJson(response.data);
+            statusCount(item.totalParticipantCount!);
+            messageDeliveredList(item.participantList);
+          }
         });
 
-    Mirrorfly.getGroupMessageSeenRecipients(messageId: messageId, groupJid: jid, flyCallBack: (FlyResponse response) {
-      LogMessage.d("readResp", response.data);
-      if(response.hasData) {
-        var readItem = messageStatusDetailFromJson(response.data);
-        messageReadList(readItem.participantList);
-      }
-    });
+    Mirrorfly.getGroupMessageSeenRecipients(
+        messageId: messageId,
+        groupJid: jid,
+        flyCallBack: (FlyResponse response) {
+          LogMessage.d("readResp", response.data);
+          if (response.hasData) {
+            var readItem = messageStatusDetailFromJson(response.data);
+            messageReadList(readItem.participantList);
+          }
+        });
   }
 
   var visibleDeliveredList = false.obs;

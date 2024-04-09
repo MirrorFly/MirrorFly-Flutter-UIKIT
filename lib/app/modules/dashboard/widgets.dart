@@ -24,30 +24,36 @@ Widget searchHeader(String? type, String count, BuildContext context) {
     width: MediaQuery.of(context).size.width,
     padding: const EdgeInsets.all(8),
     color: MirrorflyUikit.getTheme?.scaffoldColor ?? dividerColor,
-    child: Text.rich(TextSpan(text: type, children: [
-      TextSpan(
-          text: count.isNotEmpty ? " ($count)" : Constants.emptyString,)
-    ]),style: TextStyle(fontWeight: FontWeight.bold, color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+    child: Text.rich(
+        TextSpan(text: type, children: [
+          TextSpan(
+            text: count.isNotEmpty ? " ($count)" : Constants.emptyString,
+          )
+        ]),
+        style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: MirrorflyUikit.getTheme?.textPrimaryColor)),
   );
 }
 
 class RecentChatItem extends StatelessWidget {
-  RecentChatItem(
-      {super.key,
-      required this.item,
-      required this.onTap,
-      this.onLongPress,
-      this.onAvatarClick,
-      this.onchange,
-      this.spanTxt = Constants.emptyString,
-      this.isSelected = false,
-      this.isCheckBoxVisible = false,
-      this.isChecked = false,
-      this.isForwardMessage = false,
-      this.typingUserid = Constants.emptyString,
-      this.archiveVisible = true,
-      this.archiveEnabled = false,
-      this.showChatDeliveryIndicator = true,});
+  RecentChatItem({
+    super.key,
+    required this.item,
+    required this.onTap,
+    this.onLongPress,
+    this.onAvatarClick,
+    this.onchange,
+    this.spanTxt = Constants.emptyString,
+    this.isSelected = false,
+    this.isCheckBoxVisible = false,
+    this.isChecked = false,
+    this.isForwardMessage = false,
+    this.typingUserid = Constants.emptyString,
+    this.archiveVisible = true,
+    this.archiveEnabled = false,
+    this.showChatDeliveryIndicator = true,
+  });
   final RecentChatData item;
   final Function() onTap;
   final Function()? onLongPress;
@@ -67,7 +73,7 @@ class RecentChatItem extends StatelessWidget {
       fontWeight: FontWeight.w700,
       fontFamily: 'sf_ui',
       color: MirrorflyUikit.getTheme?.textPrimaryColor ?? textHintColor);
-  final typingStyle =  TextStyle(
+  final typingStyle = TextStyle(
       fontSize: 14.0,
       fontWeight: FontWeight.w600,
       fontFamily: 'sf_ui',
@@ -78,7 +84,9 @@ class RecentChatItem extends StatelessWidget {
   Widget build(BuildContext context) {
     // debugPrint("showChatDeliveryIndicator $showChatDeliveryIndicator");
     return Container(
-      color: isSelected ? MirrorflyUikit.getTheme?.textPrimaryColor.withAlpha(50) : Colors.transparent,
+      color: isSelected
+          ? MirrorflyUikit.getTheme?.textPrimaryColor.withAlpha(50)
+          : Colors.transparent,
       child: Row(
         children: [
           buildProfileImage(),
@@ -130,10 +138,18 @@ class RecentChatItem extends StatelessWidget {
                   titleStyle),
           Row(
             children: [
-              item.isLastMessageSentByMe.checkNull() && !isForwardMessage && !item.isLastMessageRecalledByUser.checkNull() && showChatDeliveryIndicator
-                  ? (item.lastMessageType ==  Constants.msgTypeText && item.lastMessageContent.checkNull().isNotEmpty || item.lastMessageType != Constants.msgTypeText) &&
-                  typingUserid.isEmpty ? buildMessageIndicator()
-                  : const SizedBox()
+              item.isLastMessageSentByMe.checkNull() &&
+                      !isForwardMessage &&
+                      !item.isLastMessageRecalledByUser.checkNull() &&
+                      showChatDeliveryIndicator
+                  ? (item.lastMessageType == Constants.msgTypeText &&
+                                  item.lastMessageContent
+                                      .checkNull()
+                                      .isNotEmpty ||
+                              item.lastMessageType != Constants.msgTypeText) &&
+                          typingUserid.isEmpty
+                      ? buildMessageIndicator()
+                      : const SizedBox()
                   : const SizedBox(),
               isForwardMessage
                   ? item.isGroup!
@@ -141,7 +157,11 @@ class RecentChatItem extends StatelessWidget {
                       : buildProfileStatus()
                   : Expanded(
                       child: typingUserid.isEmpty
-                          ? item.lastMessageType != null ? buildLastMessageItem() : const SizedBox(height: 15,)
+                          ? item.lastMessageType != null
+                              ? buildLastMessageItem()
+                              : const SizedBox(
+                                  height: 15,
+                                )
                           : buildTypingUser(),
                     ),
             ],
@@ -165,7 +185,8 @@ class RecentChatItem extends StatelessWidget {
                 unselectedWidgetColor: Colors.grey,
               ),
               child: Checkbox(
-                activeColor: MirrorflyUikit.getTheme!.primaryColor,//Colors.white,
+                activeColor:
+                    MirrorflyUikit.getTheme!.primaryColor, //Colors.white,
                 checkColor: MirrorflyUikit.getTheme?.colorOnPrimary,
                 value: isChecked,
                 onChanged: onchange,
@@ -209,7 +230,8 @@ class RecentChatItem extends StatelessWidget {
       child: getMessageIndicator(
           item.lastMessageStatus.checkNull(),
           item.isLastMessageSentByMe.checkNull(),
-          item.lastMessageType.checkNull(),item.isLastMessageRecalledByUser.checkNull()),
+          item.lastMessageType.checkNull(),
+          item.isLastMessageRecalledByUser.checkNull()),
     );
   }
 
@@ -242,15 +264,15 @@ class RecentChatItem extends StatelessWidget {
       errorWidget: item.isGroup!
           ? ClipOval(
               child: Image.asset(
-                groupImg,package: package,
+                groupImg,
+                package: package,
                 height: 48,
                 width: 48,
                 fit: BoxFit.cover,
               ),
             )
           : ProfileTextImage(
-              text: getRecentName(
-                  item),
+              text: getRecentName(item),
             ),
       isGroup: item.isGroup.checkNull(),
       blocked: item.isBlockedMe.checkNull() || item.isAdminBlocked.checkNull(),
@@ -270,7 +292,9 @@ class RecentChatItem extends StatelessWidget {
                   ? returnFormattedCount(item.unreadMessageCount!)
                   : Constants.emptyString,
               style: TextStyle(
-                  fontSize: 8, color: MirrorflyUikit.getTheme?.colorOnPrimary, fontFamily: 'sf_ui'),
+                  fontSize: 8,
+                  color: MirrorflyUikit.getTheme?.colorOnPrimary,
+                  fontFamily: 'sf_ui'),
             ),
           ),
         ));
@@ -278,7 +302,12 @@ class RecentChatItem extends StatelessWidget {
 
   Positioned buildEmailIcon() {
     return Positioned(
-        right: 0, bottom: 0, child: SvgPicture.asset(emailContactIcon,package: package,));
+        right: 0,
+        bottom: 0,
+        child: SvgPicture.asset(
+          emailContactIcon,
+          package: package,
+        ));
   }
 
   Visibility buildArchivedTextVisibility() {
@@ -288,21 +317,25 @@ class RecentChatItem extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 2.0),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4.0),
-              border: Border.all(color: MirrorflyUikit.getTheme?.primaryColor ?? buttonBgColor, width: 0.8)),
+              border: Border.all(
+                  color: MirrorflyUikit.getTheme?.primaryColor ?? buttonBgColor,
+                  width: 0.8)),
           child: Text(
             AppConstants.archived,
-            style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor ?? buttonBgColor),
+            style: TextStyle(
+                color: MirrorflyUikit.getTheme?.primaryColor ?? buttonBgColor),
           ),
-        )
-        );
+        ));
   }
 
   Visibility buildMuteIconVisibility() {
     return Visibility(
         visible: !archiveEnabled && item.isMuted! && !isForwardMessage,
         child: SvgPicture.asset(
-          mute,package: package,
-          colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),
+          mute,
+          package: package,
+          colorFilter: ColorFilter.mode(
+              MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),
           width: 13,
           height: 13,
         ));
@@ -310,39 +343,41 @@ class RecentChatItem extends StatelessWidget {
 
   Visibility buildPinIconVisibility() {
     return Visibility(
-        visible: !item.isChatArchived! && item.isChatPinned! && !isForwardMessage,
+        visible:
+            !item.isChatArchived! && item.isChatPinned! && !isForwardMessage,
         child: SvgPicture.asset(
-          pin, package: package,
+          pin,
+          package: package,
           width: 18,
           height: 18,
-        colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),
-
-    ));
+          colorFilter: ColorFilter.mode(
+              MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),
+        ));
   }
 
   Widget buildTypingUser() {
     return typingUserid.checkNull().isEmpty
         ? const SizedBox(
-      height: 15,
-    )
+            height: 15,
+          )
         : FutureBuilder(
-        future: getProfileDetails(typingUserid.checkNull()),
-        builder: (context, data) {
-          if (data.hasData && data.data != null) {
-            return Text(
-              getTypingUser(data.data!, item.isGroup),
-              //"${data.data!.name.checkNull()} typing...",
-              style: typingStyle,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            );
-          } else {
-            mirrorFlyLog("hasError", data.error.toString());
-            return const SizedBox(
-              height: 15,
-            );
-          }
-        });
+            future: getProfileDetails(typingUserid.checkNull()),
+            builder: (context, data) {
+              if (data.hasData && data.data != null) {
+                return Text(
+                  getTypingUser(data.data!, item.isGroup),
+                  //"${data.data!.name.checkNull()} typing...",
+                  style: typingStyle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                );
+              } else {
+                mirrorFlyLog("hasError", data.error.toString());
+                return const SizedBox(
+                  height: 15,
+                );
+              }
+            });
   }
 
   String getTypingUser(ProfileDetails profile, bool? isGroup) {
@@ -356,8 +391,12 @@ class RecentChatItem extends StatelessWidget {
   checkSenderShouldShow(ChatMessageModel chat) {
     if (item.isGroup.checkNull()) {
       if (!chat.isMessageSentByMe.checkNull()) {
-        return (chat.messageType != Constants.mNotification || chat.messageTextContent == " added you") ||
-            (forMessageTypeString(chat.messageType, content: chat.messageTextContent.checkNull()).checkNull().isNotEmpty);
+        return (chat.messageType != Constants.mNotification ||
+                chat.messageTextContent == " added you") ||
+            (forMessageTypeString(chat.messageType,
+                    content: chat.messageTextContent.checkNull())
+                .checkNull()
+                .isNotEmpty);
       }
     }
     return false;
@@ -376,40 +415,53 @@ class RecentChatItem extends StatelessWidget {
               children: [
                 checkSenderShouldShow(chat)
                     ? Flexible(
-                  child: Text(
-                    "${chat.senderUserName.checkNull()}:",
-                    style: Theme.of(context).textTheme.titleSmall,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                )
+                        child: Text(
+                          "${chat.senderUserName.checkNull()}:",
+                          style: Theme.of(context).textTheme.titleSmall,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      )
                     : const SizedBox.shrink(),
-                chat.isMessageRecalled.value ? const SizedBox.shrink() : forMessageTypeIcon(chat.messageType, chat.mediaChatMessage),
+                chat.isMessageRecalled.value
+                    ? const SizedBox.shrink()
+                    : forMessageTypeIcon(
+                        chat.messageType, chat.mediaChatMessage),
                 SizedBox(
                   width: chat.isMessageRecalled.value
                       ? 0.0
-                      : forMessageTypeString(chat.messageType, content: chat.messageTextContent.checkNull()) != null
-                      ? 3.0
-                      : 0.0,
+                      : forMessageTypeString(chat.messageType,
+                                  content:
+                                      chat.messageTextContent.checkNull()) !=
+                              null
+                          ? 3.0
+                          : 0.0,
                 ),
                 Expanded(
                   child: spanTxt.isEmpty
                       ? Text(
-                    chat.isMessageRecalled.value
-                        ? setRecalledMessageText(chat.isMessageSentByMe)
-                        : forMessageTypeString(chat.messageType, content: chat.mediaChatMessage?.mediaCaptionText.checkNull()) ??
-                        chat.messageTextContent.checkNull(),
-                    style: Theme.of(context).textTheme.titleSmall,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  )
+                          chat.isMessageRecalled.value
+                              ? setRecalledMessageText(chat.isMessageSentByMe)
+                              : forMessageTypeString(chat.messageType,
+                                      content: chat
+                                          .mediaChatMessage?.mediaCaptionText
+                                          .checkNull()) ??
+                                  chat.messageTextContent.checkNull(),
+                          style: Theme.of(context).textTheme.titleSmall,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        )
                       : spannableText(
-                      chat.isMessageRecalled.value
-                          ? setRecalledMessageText(chat.isMessageSentByMe)
-                          : forMessageTypeString(chat.messageType.checkNull(), content: chat.mediaChatMessage?.mediaCaptionText.checkNull()) ??
-                          chat.messageTextContent.checkNull(),
-                      spanTxt,
-                      Theme.of(context).textTheme.titleSmall),
+                          chat.isMessageRecalled.value
+                              ? setRecalledMessageText(chat.isMessageSentByMe)
+                              : forMessageTypeString(
+                                      chat.messageType.checkNull(),
+                                      content: chat
+                                          .mediaChatMessage?.mediaCaptionText
+                                          .checkNull()) ??
+                                  chat.messageTextContent.checkNull(),
+                          spanTxt,
+                          Theme.of(context).textTheme.titleSmall),
                 ),
               ],
             );
@@ -426,7 +478,11 @@ class RecentChatItem extends StatelessWidget {
             future: getProfileDetails(item.jid!),
             builder: (context, profileData) {
               if (profileData.hasData) {
-                return Text(profileData.data?.status ?? Constants.emptyString,style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor),);
+                return Text(
+                  profileData.data?.status ?? Constants.emptyString,
+                  style: TextStyle(
+                      color: MirrorflyUikit.getTheme?.textSecondaryColor),
+                );
               }
               return const Text(Constants.emptyString);
             }));
@@ -442,7 +498,8 @@ class RecentChatItem extends StatelessWidget {
                 data.data ?? Constants.emptyString,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor),
+                style: TextStyle(
+                    color: MirrorflyUikit.getTheme?.textSecondaryColor),
               );
             }
             return const Text(Constants.emptyString);
@@ -460,7 +517,8 @@ class RecentChatItem extends StatelessWidget {
             var str = <String>[];
             var groupsMembersProfileList = memberFromJson(response.data);
             for (var it in groupsMembersProfileList) {
-              if (it.jid.checkNull() != SessionManagement.getUserJID().checkNull()) {
+              if (it.jid.checkNull() !=
+                  SessionManagement.getUserJID().checkNull()) {
                 str.add(it.name.checkNull());
               }
             }
@@ -514,10 +572,10 @@ String spannableTextType(String text) {
   //     !RegExp(Constants.textPattern).hasMatch(text)) {
   //   return "mobile";
   // }
-  if(isValidPhoneNumber(text)){
+  if (isValidPhoneNumber(text)) {
     return "mobile";
   }
-  if(text.isURL){
+  if (text.isURL) {
     return "website";
   }
   // if (RegExp(Constants.websitePattern).hasMatch(text)) {
@@ -537,16 +595,22 @@ bool isCountryCode(String text) {
   return false;
 }
 
-Widget textMessageSpannableText(String message,bool isSentByMe, {int? maxLines, bool isClickable = true}) {
+Widget textMessageSpannableText(String message, bool isSentByMe,
+    {int? maxLines, bool isClickable = true}) {
   //final GlobalKey textKey = GlobalKey();
   TextStyle underlineStyle = const TextStyle(
       decoration: TextDecoration.underline,
       fontSize: 14,
       color: Colors.blueAccent);
-  TextStyle normalStyle = TextStyle(fontSize: 14, color: isSentByMe ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textPrimaryColor : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textPrimaryColor);
+  TextStyle normalStyle = TextStyle(
+      fontSize: 14,
+      color: isSentByMe
+          ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textPrimaryColor
+          : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textPrimaryColor);
   var prevValue = Constants.emptyString;
   return Text.rich(
-    customTextSpan(message, prevValue, normalStyle, underlineStyle, isClickable),
+    customTextSpan(
+        message, prevValue, normalStyle, underlineStyle, isClickable),
     maxLines: maxLines,
     overflow: maxLines == null ? null : TextOverflow.ellipsis,
   );
@@ -558,17 +622,20 @@ TextSpan customTextSpan(String message, String prevValue,
     children: message.split(" ").map((e) {
       if (isCountryCode(e)) {
         prevValue = e;
-      } else if (prevValue != Constants.emptyString && spannableTextType(e) == "mobile") {
+      } else if (prevValue != Constants.emptyString &&
+          spannableTextType(e) == "mobile") {
         e = "$prevValue $e";
         prevValue = Constants.emptyString;
       }
       return TextSpan(
           text: "$e ",
           style: spannableTextType(e) == "text" ? normalStyle : underlineStyle,
-          recognizer:TapGestureRecognizer()
-            ..onTap = isClickable ? () {
-              onTapForSpanText(e);
-            } : null) ;
+          recognizer: TapGestureRecognizer()
+            ..onTap = isClickable
+                ? () {
+                    onTapForSpanText(e);
+                  }
+                : null);
     }).toList(),
   );
 }
@@ -592,23 +659,26 @@ onTapForSpanText(String e) {
   }
   // return;
 }
+
 Widget callLogTime(String time, int? callState) {
   return Row(
     children: [
       callState == 0
           ? SvgPicture.asset(
-        "assets/calls/ic_arrow_down_red.svg",
-        colorFilter: const ColorFilter.mode(Colors.red, BlendMode.srcIn),
-      )
+              "assets/calls/ic_arrow_down_red.svg",
+              colorFilter: const ColorFilter.mode(Colors.red, BlendMode.srcIn),
+            )
           : callState == 1
-          ? SvgPicture.asset(
-        "assets/calls/ic_arrow_up_green.svg",
-        colorFilter: const ColorFilter.mode(Colors.green, BlendMode.srcIn),
-      )
-          : SvgPicture.asset(
-        "assets/calls/ic_arrow_down_green.svg",
-        colorFilter: const ColorFilter.mode(Colors.green, BlendMode.srcIn),
-      ),
+              ? SvgPicture.asset(
+                  "assets/calls/ic_arrow_up_green.svg",
+                  colorFilter:
+                      const ColorFilter.mode(Colors.green, BlendMode.srcIn),
+                )
+              : SvgPicture.asset(
+                  "assets/calls/ic_arrow_down_green.svg",
+                  colorFilter:
+                      const ColorFilter.mode(Colors.green, BlendMode.srcIn),
+                ),
       const SizedBox(
         width: 5,
       ),
@@ -651,11 +721,14 @@ class ContactItem extends StatelessWidget {
             InkWell(
               onTap: onAvatarClick,
               child: Container(
-                  margin: const EdgeInsets.only(left: 19.0, top: 10, bottom: 10, right: 10),
+                  margin: const EdgeInsets.only(
+                      left: 19.0, top: 10, bottom: 10, right: 10),
                   width: 50,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: item.image.checkNull().isEmpty ? iconBgColor : buttonBgColor,
+                    color: item.image.checkNull().isEmpty
+                        ? iconBgColor
+                        : buttonBgColor,
                     shape: BoxShape.circle,
                   ),
                   child: ImageNetwork(
@@ -664,15 +737,17 @@ class ContactItem extends StatelessWidget {
                     height: 48,
                     clipOval: true,
                     errorWidget: getName(item) //item.nickName
-                        .checkNull()
-                        .isNotEmpty
+                            .checkNull()
+                            .isNotEmpty
                         ? ProfileTextImage(text: getName(item))
                         : const Icon(
-                      Icons.person,
-                      color: Colors.white,
-                    ),
-                    blocked: item.isBlockedMe.checkNull() || item.isAdminBlocked.checkNull(),
-                    unknown: (!item.isItSavedContact.checkNull() || item.isDeletedContact()),
+                            Icons.person,
+                            color: Colors.white,
+                          ),
+                    blocked: item.isBlockedMe.checkNull() ||
+                        item.isAdminBlocked.checkNull(),
+                    unknown: (!item.isItSavedContact.checkNull() ||
+                        item.isDeletedContact()),
                     isGroup: item.isGroupProfile.checkNull(),
                   )), //controller.showProfilePopup(item.obs);
             ),
@@ -682,16 +757,20 @@ class ContactItem extends StatelessWidget {
                 children: [
                   spanTxt.isEmpty
                       ? Text(
-                    getName(item),
-                    style: Theme.of(context).textTheme.titleMedium,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  )
+                          getName(item),
+                          style: Theme.of(context).textTheme.titleMedium,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        )
                       : spannableText(
-                      getName(item),
-                      //item.profileName.checkNull(),
-                      spanTxt.trim(),
-                      const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700, fontFamily: 'sf_ui', color: textHintColor)),
+                          getName(item),
+                          //item.profileName.checkNull(),
+                          spanTxt.trim(),
+                          const TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w700,
+                              fontFamily: 'sf_ui',
+                              color: textHintColor)),
                   Text(
                     item.status.toString(),
                     style: Theme.of(context).textTheme.titleSmall,
@@ -704,13 +783,16 @@ class ContactItem extends StatelessWidget {
             Visibility(
               visible: isCheckBoxVisible,
               child: Checkbox(
-                value: checkValue, //controller.selectedUsersJIDList.contains(item.jid),
+                value:
+                    checkValue, //controller.selectedUsersJIDList.contains(item.jid),
                 onChanged: (value) {
                   onCheckBoxChange(value);
                   //controller.onListItemPressed(item);
                 },
                 activeColor: AppColors.checkBoxChecked,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2), side: const BorderSide(color: AppColors.checkBoxBorder)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(2),
+                    side: const BorderSide(color: AppColors.checkBoxBorder)),
               ),
             ),
           ],
@@ -722,4 +804,3 @@ class ContactItem extends StatelessWidget {
     );
   }
 }
-

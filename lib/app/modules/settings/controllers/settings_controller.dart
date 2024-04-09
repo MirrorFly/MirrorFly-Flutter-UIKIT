@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
@@ -40,8 +39,8 @@ class SettingsController extends GetxController {
 
   logoutFromSDK(BuildContext context) async {
     if (await AppUtils.isNetConnected()) {
-      if(context.mounted)Helper.progressLoading(context: context);
-      Mirrorfly.logoutOfChatSDK(flyCallBack: (response){
+      if (context.mounted) Helper.progressLoading(context: context);
+      Mirrorfly.logoutOfChatSDK(flyCallBack: (response) {
         Helper.hideLoading(context: context);
         if (response.isSuccess) {
           clearAllPreferences();
@@ -60,19 +59,26 @@ class SettingsController extends GetxController {
     }
   }
 
-  void clearAllPreferences(){
+  void clearAllPreferences() {
     var token = SessionManagement.getToken().checkNull();
-    var cameraPermissionAsked = SessionManagement.getBool(Constants.cameraPermissionAsked);
-    var audioRecordPermissionAsked = SessionManagement.getBool(Constants.audioRecordPermissionAsked);
-    var readPhoneStatePermissionAsked = SessionManagement.getBool(Constants.readPhoneStatePermissionAsked);
-    var bluetoothPermissionAsked = SessionManagement.getBool(Constants.bluetoothPermissionAsked);
+    var cameraPermissionAsked =
+        SessionManagement.getBool(Constants.cameraPermissionAsked);
+    var audioRecordPermissionAsked =
+        SessionManagement.getBool(Constants.audioRecordPermissionAsked);
+    var readPhoneStatePermissionAsked =
+        SessionManagement.getBool(Constants.readPhoneStatePermissionAsked);
+    var bluetoothPermissionAsked =
+        SessionManagement.getBool(Constants.bluetoothPermissionAsked);
     SessionManagement.clear().then((value) {
       SessionManagement.setToken(token);
-      SessionManagement.setBool(Constants.cameraPermissionAsked, cameraPermissionAsked);
-      SessionManagement.setBool(Constants.audioRecordPermissionAsked, audioRecordPermissionAsked);
-      SessionManagement.setBool(Constants.readPhoneStatePermissionAsked, readPhoneStatePermissionAsked);
-      SessionManagement.setBool(Constants.bluetoothPermissionAsked, bluetoothPermissionAsked);
-
+      SessionManagement.setBool(
+          Constants.cameraPermissionAsked, cameraPermissionAsked);
+      SessionManagement.setBool(
+          Constants.audioRecordPermissionAsked, audioRecordPermissionAsked);
+      SessionManagement.setBool(Constants.readPhoneStatePermissionAsked,
+          readPhoneStatePermissionAsked);
+      SessionManagement.setBool(
+          Constants.bluetoothPermissionAsked, bluetoothPermissionAsked);
     });
   }
 

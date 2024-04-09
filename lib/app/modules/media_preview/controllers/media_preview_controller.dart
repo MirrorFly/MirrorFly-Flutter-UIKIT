@@ -19,15 +19,16 @@ import '../../gallery_picker/src/data/models/picked_asset_model.dart';
 
 class MediaPreviewController extends FullLifeCycleController
     with FullLifeCycleMixin {
-  var userName = Constants.emptyString;//Get.arguments['userName'];
-  Rx<ProfileDetails> profile = ProfileDetails().obs;//Get.arguments['profile'] as Profile;
+  var userName = Constants.emptyString; //Get.arguments['userName'];
+  Rx<ProfileDetails> profile =
+      ProfileDetails().obs; //Get.arguments['profile'] as Profile;
 
   TextEditingController caption = TextEditingController();
 
   var filePath = <PickedAssetModel>[].obs;
 
   var captionMessage = <String>[].obs;
-  var textMessage = Constants.emptyString;//Get.arguments['caption'];
+  var textMessage = Constants.emptyString; //Get.arguments['caption'];
   var showAdd = true;
   var currentPageIndex = 0.obs;
   var isFocused = false.obs;
@@ -49,13 +50,18 @@ class MediaPreviewController extends FullLifeCycleController
     // Your implementation here
   }
 
-  void init(List<PickedAssetModel> filePath, String userName, ProfileDetails profile,
-      String textMessage, bool showAdd, bool isFromGalleryPicker) {
-    this.userName= userName;
+  void init(
+      List<PickedAssetModel> filePath,
+      String userName,
+      ProfileDetails profile,
+      String textMessage,
+      bool showAdd,
+      bool isFromGalleryPicker) {
+    this.userName = userName;
     this.profile(profile);
     this.filePath(filePath);
-    this.textMessage= textMessage;
-    this.showAdd= showAdd;
+    this.textMessage = textMessage;
+    this.showAdd = showAdd;
     this.isFromGalleryPicker = isFromGalleryPicker;
     SchedulerBinding.instance.addPostFrameCallback((_) {
       // filePath(Get.arguments['filePath']);
@@ -88,7 +94,7 @@ class MediaPreviewController extends FullLifeCycleController
     // if (await AppUtils.isNetConnected()) {
     Platform.isIOS
         ? Helper.showLoading(
-        message: AppConstants.compressingFiles, buildContext: context)
+            message: AppConstants.compressingFiles, buildContext: context)
         : Helper.progressLoading(context: context);
     var featureNotAvailable = false;
     try {
@@ -101,8 +107,8 @@ class MediaPreviewController extends FullLifeCycleController
             return false;
           }
           debugPrint("sending image");
-          var response = await Get.find<ChatController>()
-              .sendImageMessage(data.path, captionMessage[i], Constants.emptyString, context);
+          var response = await Get.find<ChatController>().sendImageMessage(
+              data.path, captionMessage[i], Constants.emptyString, context);
           debugPrint("Preview View ==> $response");
           if (response != null) {
             debugPrint("Image send Success");
@@ -113,8 +119,8 @@ class MediaPreviewController extends FullLifeCycleController
             return false;
           }
           debugPrint("sending video");
-          var response = await Get.find<ChatController>()
-              .sendVideoMessage(data.path!, captionMessage[i], Constants.emptyString, context);
+          var response = await Get.find<ChatController>().sendVideoMessage(
+              data.path!, captionMessage[i], Constants.emptyString, context);
           debugPrint("Preview View ==> $response");
           if (response != null) {
             debugPrint("Video send Success");
@@ -138,23 +144,25 @@ class MediaPreviewController extends FullLifeCycleController
   }
 
   void deleteMedia() {
-    LogMessage.d("currentPageIndex : ",currentPageIndex);
+    LogMessage.d("currentPageIndex : ", currentPageIndex);
     var provider = Get.find<GalleryPickerController>().provider;
     provider.unPick(currentPageIndex.value);
     filePath.removeAt(currentPageIndex.value);
     captionMessage.removeAt(currentPageIndex.value);
-    if(currentPageIndex.value > 0) {
+    if (currentPageIndex.value > 0) {
       currentPageIndex(currentPageIndex.value - 1);
-      LogMessage.d("currentPageIndex.value.toDouble()", currentPageIndex.value.toDouble());
-      pageViewController.animateToPage(currentPageIndex.value, duration: const Duration(milliseconds: 5), curve: Curves.easeInOut);
+      LogMessage.d("currentPageIndex.value.toDouble()",
+          currentPageIndex.value.toDouble());
+      pageViewController.animateToPage(currentPageIndex.value,
+          duration: const Duration(milliseconds: 5), curve: Curves.easeInOut);
       caption.text = captionMessage[currentPageIndex.value];
-    }else if (currentPageIndex.value == 0){
+    } else if (currentPageIndex.value == 0) {
       caption.text = captionMessage[currentPageIndex.value];
     }
   }
 
   void onMediaPreviewPageChanged(int value) {
-    LogMessage.d("onMediaPreviewPageChanged ",value.toString());
+    LogMessage.d("onMediaPreviewPageChanged ", value.toString());
     currentPageIndex(value);
     caption.text = captionMessage[value];
     captionFocusNode.unfocus();
@@ -189,7 +197,8 @@ class MediaPreviewController extends FullLifeCycleController
 
   var availableFeatures = Get.find<MainController>().availableFeature;
   void onAvailableFeaturesUpdated(AvailableFeatures features) {
-    LogMessage.d("MediaPreview", "onAvailableFeaturesUpdated ${features.toJson()}");
+    LogMessage.d(
+        "MediaPreview", "onAvailableFeaturesUpdated ${features.toJson()}");
     availableFeatures(features);
   }
 }

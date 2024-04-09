@@ -26,7 +26,8 @@ import 'notification_service.dart';
 import 'app_constants.dart';
 import 'extensions.dart';
 
-class MainController extends FullLifeCycleController with BaseController, FullLifeCycleMixin /*with FullLifeCycleMixin */ {
+class MainController extends FullLifeCycleController
+    with BaseController, FullLifeCycleMixin /*with FullLifeCycleMixin */ {
   // var authToken = "".obs;
   var currentAuthToken = "".obs;
   var googleMapKey = "";
@@ -50,7 +51,10 @@ class MainController extends FullLifeCycleController with BaseController, FullLi
   Future<void> onInit() async {
     super.onInit();
     //presentPinPage();
-    Mirrorfly.getValueFromManifestOrInfoPlist(androidManifestKey: "com.google.android.geo.API_THUMP_KEY", iOSPlistKey: "API_THUMP_KEY").then((value) {
+    Mirrorfly.getValueFromManifestOrInfoPlist(
+            androidManifestKey: "com.google.android.geo.API_THUMP_KEY",
+            iOSPlistKey: "API_THUMP_KEY")
+        .then((value) {
       googleMapKey = value;
       mirrorFlyLog("com.google.android.geo.API_THUMP_KEY", googleMapKey);
     });
@@ -79,7 +83,8 @@ class MainController extends FullLifeCycleController with BaseController, FullLi
   Future<void> _isAndroidPermissionGranted() async {
     if (Platform.isAndroid) {
       final bool granted = await flutterLocalNotificationsPlugin
-              .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+              .resolvePlatformSpecificImplementation<
+                  AndroidFlutterLocalNotificationsPlugin>()
               ?.areNotificationsEnabled() ??
           false;
 
@@ -92,21 +97,29 @@ class MainController extends FullLifeCycleController with BaseController, FullLi
 
   Future<void> _requestPermissions() async {
     if (Platform.isIOS || Platform.isMacOS) {
-      await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()?.requestPermissions(
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              IOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
             alert: true,
             badge: true,
             sound: true,
           );
-      await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<MacOSFlutterLocalNotificationsPlugin>()?.requestPermissions(
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              MacOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
             alert: true,
             badge: true,
             sound: true,
           );
     } else if (Platform.isAndroid) {
       final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
-          flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+          flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>();
 
-      final bool? granted = await androidImplementation?.requestNotificationsPermission();
+      final bool? granted =
+          await androidImplementation?.requestNotificationsPermission();
       // setState(() {
       _notificationsEnabled = granted ?? false;
       // });
@@ -224,7 +237,8 @@ class MainController extends FullLifeCycleController with BaseController, FullLi
   handleAdminBlockedUserFromRegister() {}
 
   void startNetworkListen() {
-    final InternetConnectionChecker customInstance = InternetConnectionChecker.createInstance(
+    final InternetConnectionChecker customInstance =
+        InternetConnectionChecker.createInstance(
       checkTimeout: const Duration(seconds: 1),
       checkInterval: const Duration(seconds: 1),
     );
@@ -283,8 +297,10 @@ class MainController extends FullLifeCycleController with BaseController, FullLi
   @override
   void onPaused() async {
     mirrorFlyLog('mainController', 'onPaused');
-    var unReadMessageCount = await Mirrorfly.getUnreadMessageCountExceptMutedChat();
-    debugPrint('mainController unReadMessageCount onPaused ${unReadMessageCount.toString()}');
+    var unReadMessageCount =
+        await Mirrorfly.getUnreadMessageCountExceptMutedChat();
+    debugPrint(
+        'mainController unReadMessageCount onPaused ${unReadMessageCount.toString()}');
     _setBadgeCount(unReadMessageCount ?? 0);
     // fromLockScreen = await isLockScreen() ?? false;
     mirrorFlyLog('isLockScreen', '$fromLockScreen');
@@ -305,11 +321,14 @@ class MainController extends FullLifeCycleController with BaseController, FullLi
 
   void syncContacts() async {
     if (await Permission.contacts.isGranted) {
-      if (await AppUtils.isNetConnected() && !await Mirrorfly.contactSyncStateValue()) {
+      if (await AppUtils.isNetConnected() &&
+          !await Mirrorfly.contactSyncStateValue()) {
         final permission = await Permission.contacts.status;
         if (permission == PermissionStatus.granted) {
           if (SessionManagement.getLogin()) {
-            Mirrorfly.syncContacts(isFirstTime: !SessionManagement.isInitialContactSyncDone(), flyCallBack: (_) {});
+            Mirrorfly.syncContacts(
+                isFirstTime: !SessionManagement.isInitialContactSyncDone(),
+                flyCallBack: (_) {});
           }
         }
       }
@@ -317,7 +336,8 @@ class MainController extends FullLifeCycleController with BaseController, FullLi
       if (SessionManagement.isInitialContactSyncDone()) {
         Mirrorfly.revokeContactSync(flyCallBack: (FlyResponse response) {
           onContactSyncComplete(true);
-          mirrorFlyLog("checkContactPermission isSuccess", response.isSuccess.toString());
+          mirrorFlyLog("checkContactPermission isSuccess",
+              response.isSuccess.toString());
         });
       }
     }
@@ -337,11 +357,14 @@ class MainController extends FullLifeCycleController with BaseController, FullLi
   void checkShouldShowPin() {
     var lastSession = SessionManagement.appLastSession();
     var lastPinChangedAt = SessionManagement.lastPinChangedAt();
-    var sessionDifference = DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(lastSession, isUtc: true));
-    var lockSessionDifference = DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(lastPinChangedAt, isUtc: true));
+    var sessionDifference = DateTime.now().difference(
+        DateTime.fromMillisecondsSinceEpoch(lastSession, isUtc: true));
+    var lockSessionDifference = DateTime.now().difference(
+        DateTime.fromMillisecondsSinceEpoch(lastPinChangedAt, isUtc: true));
     debugPrint('sessionDifference seconds ${sessionDifference.inSeconds}');
     debugPrint('lockSessionDifference days ${lockSessionDifference.inDays}');
-    if (Constants.pinAlert <= lockSessionDifference.inDays && Constants.pinExpiry >= lockSessionDifference.inDays) {
+    if (Constants.pinAlert <= lockSessionDifference.inDays &&
+        Constants.pinExpiry >= lockSessionDifference.inDays) {
       //Alert Day
       debugPrint('Alert Day');
     } else if (Constants.pinExpiry < lockSessionDifference.inDays) {
@@ -351,7 +374,8 @@ class MainController extends FullLifeCycleController with BaseController, FullLi
     } else {
       //if 30 days not completed
       debugPrint('Not Expired');
-      if (Constants.sessionLockTime <= sessionDifference.inSeconds || fromLockScreen) {
+      if (Constants.sessionLockTime <= sessionDifference.inSeconds ||
+          fromLockScreen) {
         //Show Pin if App Lock Enabled
         debugPrint('Show Pin');
         presentPinPage();

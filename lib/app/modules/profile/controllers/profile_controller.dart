@@ -3,7 +3,8 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_libphonenumber/flutter_libphonenumber.dart' as lib_phone_number;
+import 'package:flutter_libphonenumber/flutter_libphonenumber.dart'
+    as lib_phone_number;
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mirrorfly_plugin/model/callback.dart';
@@ -26,30 +27,31 @@ class ProfileController extends GetxController {
   TextEditingController profileName = TextEditingController();
   TextEditingController profileEmail = TextEditingController();
   TextEditingController profileMobile = TextEditingController();
-  var profileStatus = Constants.emptyString.obs;//I am in Mirror Fly
+  var profileStatus = Constants.emptyString.obs; //I am in Mirror Fly
   var isImageSelected = false.obs;
   var isUserProfileRemoved = false.obs;
   var imagePath = Constants.emptyString.obs;
   var userImgUrl = Constants.emptyString.obs;
-  var emailPatternMatch = RegExp(Constants.emailPattern,multiLine: false);
+  var emailPatternMatch = RegExp(Constants.emailPattern, multiLine: false);
   var loading = false.obs;
   var changed = false.obs;
 
   dynamic imageBytes;
-  var from = Constants.emptyString.obs;//Routes.settings.obs;
+  var from = Constants.emptyString.obs; //Routes.settings.obs;
 
   var name = Constants.emptyString.obs;
   var nameOnImage = Constants.emptyString.obs;
 
-  bool get emailEditAccess => true;//Get.previousRoute!=Routes.settings;
-  RxBool mobileEditAccess = false.obs;//Get.previousRoute!=Routes.settings;
+  bool get emailEditAccess => true; //Get.previousRoute!=Routes.settings;
+  RxBool mobileEditAccess = false.obs; //Get.previousRoute!=Routes.settings;
 
-  var userNameFocus= FocusNode();
-  var emailFocus= FocusNode();
+  var userNameFocus = FocusNode();
+  var emailFocus = FocusNode();
   @override
   Future<void> onInit() async {
     super.onInit();
-    userImgUrl.value = SessionManagement.getUserImage() ?? Constants.emptyString;
+    userImgUrl.value =
+        SessionManagement.getUserImage() ?? Constants.emptyString;
     mirrorFlyLog("auth : ", SessionManagement.getAuthToken().toString());
 
     //Compared with sample app, generally we are getting the profile details based on the condition so getProfile is left alone
@@ -69,129 +71,136 @@ class ProfileController extends GetxController {
       }
       checkAndEnableNotificationSound();
     }else{*/
-      getProfile();
+    getProfile();
     // }
     //profileStatus.value="I'm Mirror fly user";
     // await askStoragePermission(context);
   }
 
   Future<bool> validation() async {
-    if (profileName.text
-        .trim()
-        .isEmpty) {
+    if (profileName.text.trim().isEmpty) {
       toToast(AppConstants.pleaseEnterUserName);
       return false;
-    } else if (profileName.text
-        .trim()
-        .length < 3) {
+    } else if (profileName.text.trim().length < 3) {
       toToast(AppConstants.userNameTooShort);
       return false;
-    } else if (profileEmail.text
-        .trim()
-        .isEmpty) {
+    } else if (profileEmail.text.trim().isEmpty) {
       toToast(AppConstants.emailNotEmpty);
       return false;
     } else if (!emailPatternMatch.hasMatch(profileEmail.text.toString())) {
       toToast(AppConstants.pleaseEnterValidMail);
       return false;
-    } else if(!(await validMobileNumber(profileMobile.text.replaceAll("+", Constants.emptyString)))){
+    } else if (!(await validMobileNumber(
+        profileMobile.text.replaceAll("+", Constants.emptyString)))) {
       toToast(AppConstants.pleaseEnterValidMobileWithCode);
       return false;
     } /*else if (profileStatus.value.isEmpty) {
       toToast("Enter Profile Status");
       return false;
-    }*/else{
+    }*/
+    else {
       return true;
     }
   }
 
-  Future<void> save({bool frmImage = false, required BuildContext context}) async {
+  Future<void> save(
+      {bool frmImage = false, required BuildContext context}) async {
     // if (await askStoragePermission(context)) {
-      if (await validation()){
-        loading.value = true;
-        if(context.mounted)showLoader(context);
-        if (imagePath.value.isNotEmpty) {
-          debugPrint("profile image update");
-          if(context.mounted)updateProfileImage(path: imagePath.value, update: true, context: context);
-        } else {
-          if (await AppUtils.isNetConnected()) {
-            debugPrint("profile update");
-            var formattedNumber = await lib_phone_number.parse(profileMobile.text);
-            debugPrint("parse-----> $formattedNumber");
-            var unformatted = formattedNumber['national_number'];//profileMobile.text.replaceAll(" ", Constants.emptyString).replaceAll("+", Constants.emptyString);
-            // var unformatted = profileMobile.text;
-            debugPrint('unformatted : $unformatted');
-            Mirrorfly
-                .updateMyProfile(name:
-                profileName.text.toString(),
-                email: profileEmail.text.toString(),
-                mobile: unformatted,
-                status: profileStatus.value.toString(),
-                image: userImgUrl.value.isEmpty ? null : userImgUrl.value,
-                flyCallback: (FlyResponse response){
-              loading.value = false;
-              hideLoader(context);
-              if (response.isSuccess) {
-                var data = profileUpdateFromJson(response.data);
-                if (data.status != null) {
-                  toToast(frmImage ? AppConstants.removedProfileImage : data.message.toString());
-                  if (data.status!) {
-                    changed(false);
-                    var userProfileData = ProData(
-                        email: profileEmail.text.toString(),
-                        image: userImgUrl.value,
-                        mobileNumber: unformatted,
-                        nickName: profileName.text,
-                        name: profileName.text,
-                        status: profileStatus.value);
-                    SessionManagement.setCurrentUser(userProfileData);
+    if (await validation()) {
+      loading.value = true;
+      if (context.mounted) showLoader(context);
+      if (imagePath.value.isNotEmpty) {
+        debugPrint("profile image update");
+        if (context.mounted)
+          updateProfileImage(
+              path: imagePath.value, update: true, context: context);
+      } else {
+        if (await AppUtils.isNetConnected()) {
+          debugPrint("profile update");
+          var formattedNumber =
+              await lib_phone_number.parse(profileMobile.text);
+          debugPrint("parse-----> $formattedNumber");
+          var unformatted = formattedNumber[
+              'national_number']; //profileMobile.text.replaceAll(" ", Constants.emptyString).replaceAll("+", Constants.emptyString);
+          // var unformatted = profileMobile.text;
+          debugPrint('unformatted : $unformatted');
+          Mirrorfly.updateMyProfile(
+              name: profileName.text.toString(),
+              email: profileEmail.text.toString(),
+              mobile: unformatted,
+              status: profileStatus.value.toString(),
+              image: userImgUrl.value.isEmpty ? null : userImgUrl.value,
+              flyCallback: (FlyResponse response) {
+                loading.value = false;
+                hideLoader(context);
+                if (response.isSuccess) {
+                  var data = profileUpdateFromJson(response.data);
+                  if (data.status != null) {
+                    toToast(frmImage
+                        ? AppConstants.removedProfileImage
+                        : data.message.toString());
+                    if (data.status!) {
+                      changed(false);
+                      var userProfileData = ProData(
+                          email: profileEmail.text.toString(),
+                          image: userImgUrl.value,
+                          mobileNumber: unformatted,
+                          nickName: profileName.text,
+                          name: profileName.text,
+                          status: profileStatus.value);
+                      SessionManagement.setCurrentUser(userProfileData);
+                    }
                   }
+                } else {
+                  toToast(AppConstants.unableToUpdateProfile);
                 }
-              } else {
-                toToast(AppConstants.unableToUpdateProfile);
-              }
-            });
-          } else {
-            loading(false);
-            if(context.mounted)hideLoader(context);
-            toToast(AppConstants.noInternetConnection);
-          }
+              });
+        } else {
+          loading(false);
+          if (context.mounted) hideLoader(context);
+          toToast(AppConstants.noInternetConnection);
         }
       }
+    }
     // }
   }
 
-  updateProfileImage({required String path, bool update = false, required BuildContext context}) async {
-    if(await AppUtils.isNetConnected()) {
+  updateProfileImage(
+      {required String path,
+      bool update = false,
+      required BuildContext context}) async {
+    if (await AppUtils.isNetConnected()) {
       loading.value = true;
 
       // if(checkFileUploadSize(path, Constants.mImage)) {
-      if(context.mounted)showLoader(context);
-        Mirrorfly.updateMyProfileImage(image: path,flyCallback: (FlyResponse response){
-          if(response.isSuccess) {
-          loading.value = false;
-          var data = json.decode(response.data);
-          imagePath.value = Constants.emptyString;
-          userImgUrl.value = data['data']['image'];
-          SessionManagement.setUserImage(data['data']['image'].toString());
-          hideLoader(context);
-          if (update) {
-            save(context: context);
-          }
-          }else{
-            toToast(Constants.profileImageUpdateFailed);
-            debugPrint("Profile Update on error--> ${response.exception.toString()}");
-            loading.value = false;
-            hideLoader(context);
-          }
-        });
+      if (context.mounted) showLoader(context);
+      Mirrorfly.updateMyProfileImage(
+          image: path,
+          flyCallback: (FlyResponse response) {
+            if (response.isSuccess) {
+              loading.value = false;
+              var data = json.decode(response.data);
+              imagePath.value = Constants.emptyString;
+              userImgUrl.value = data['data']['image'];
+              SessionManagement.setUserImage(data['data']['image'].toString());
+              hideLoader(context);
+              if (update) {
+                save(context: context);
+              }
+            } else {
+              toToast(Constants.profileImageUpdateFailed);
+              debugPrint(
+                  "Profile Update on error--> ${response.exception.toString()}");
+              loading.value = false;
+              hideLoader(context);
+            }
+          });
       // }else{
       //   toToast("Image Size exceeds 10MB");
       // }
-    }else{
+    } else {
       toToast(AppConstants.noInternetConnection);
     }
-
   }
 
   removeProfileImage(BuildContext context) async {
@@ -220,73 +229,82 @@ class ProfileController extends GetxController {
       } else {
         toToast(AppConstants.noInternetConnection);
       }
-    }else{
+    } else {
       imagePath("");
     }
   }
 
   getProfile() async {
     //if(await AppUtils.isNetConnected()) {
-      var jid = SessionManagement.getUserJID().checkNull();
-      mirrorFlyLog("jid", jid);
-      if (jid.isNotEmpty) {
-        mirrorFlyLog("jid.isNotEmpty", jid.isNotEmpty.toString());
-        loading.value = true;
-        Mirrorfly.getUserProfile(jid: jid,fetchFromServer : await AppUtils.isNetConnected(),flyCallback:(FlyResponse response){
-          if(response.isSuccess) {
-          insertDefaultStatusToUser();
-          loading.value = false;
-          var data = profileDataFromJson(response.data);
-          if (data.status != null && data.status!) {
-            if (data.data != null) {
-              profileName.text = data.data!.name ?? Constants.emptyString;
-              if (data.data!.mobileNumber.checkNull().isNotEmpty) {
-              //if (from.value != Routes.login) {
-                validMobileNumber(data.data!.mobileNumber.checkNull()).then((valid) {
-                  // if(valid) profileMobile.text = data.data!.mobileNumber.checkNull();
-                  mobileEditAccess(!valid);
-                });
-              }else {
-                var userIdentifier = SessionManagement.getUserIdentifier();
-                debugPrint("userIdentifier : $userIdentifier");
-                validMobileNumber(userIdentifier).then((value) => mobileEditAccess(!value));
-                // mobileEditAccess(true);
+    var jid = SessionManagement.getUserJID().checkNull();
+    mirrorFlyLog("jid", jid);
+    if (jid.isNotEmpty) {
+      mirrorFlyLog("jid.isNotEmpty", jid.isNotEmpty.toString());
+      loading.value = true;
+      Mirrorfly.getUserProfile(
+          jid: jid,
+          fetchFromServer: await AppUtils.isNetConnected(),
+          flyCallback: (FlyResponse response) {
+            if (response.isSuccess) {
+              insertDefaultStatusToUser();
+              loading.value = false;
+              var data = profileDataFromJson(response.data);
+              if (data.status != null && data.status!) {
+                if (data.data != null) {
+                  profileName.text = data.data!.name ?? Constants.emptyString;
+                  if (data.data!.mobileNumber.checkNull().isNotEmpty) {
+                    //if (from.value != Routes.login) {
+                    validMobileNumber(data.data!.mobileNumber.checkNull())
+                        .then((valid) {
+                      // if(valid) profileMobile.text = data.data!.mobileNumber.checkNull();
+                      mobileEditAccess(!valid);
+                    });
+                  } else {
+                    var userIdentifier = SessionManagement.getUserIdentifier();
+                    debugPrint("userIdentifier : $userIdentifier");
+                    validMobileNumber(userIdentifier)
+                        .then((value) => mobileEditAccess(!value));
+                    // mobileEditAccess(true);
+                  }
+                  profileEmail.text = data.data!.email ?? Constants.emptyString;
+                  profileStatus.value = data.data!.status.checkNull().isNotEmpty
+                      ? data.data!.status.checkNull()
+                      : AppConstants.defaultStatus;
+                  userImgUrl.value = data.data!.image ??
+                      Constants
+                          .emptyString; //SessionManagement.getUserImage() ?? Constants.emptyString;
+                  SessionManagement.setUserImage(Constants.emptyString);
+                  // changed((from.value == Routes.login));
+                  changed(false);
+                  name(data.data!.name.toString());
+                  nameOnImage(data.data!.name.toString());
+                  var userProfileData = ProData(
+                      email: profileEmail.text.toString(),
+                      image: userImgUrl.value,
+                      mobileNumber: data.data!.mobileNumber.checkNull(),
+                      nickName: profileName.text,
+                      name: profileName.text,
+                      status: profileStatus.value);
+                  SessionManagement.setCurrentUser(userProfileData);
+                  update();
+                }
+              } else {
+                debugPrint("Unable to load Profile data");
+                toToast(AppConstants.unableConnectServer);
               }
-              profileEmail.text = data.data!.email ?? Constants.emptyString;
-              profileStatus.value = data.data!.status.checkNull().isNotEmpty ? data.data!.status.checkNull() : AppConstants.defaultStatus;
-              userImgUrl.value = data.data!.image ?? Constants.emptyString;//SessionManagement.getUserImage() ?? Constants.emptyString;
-              SessionManagement.setUserImage(Constants.emptyString);
-              // changed((from.value == Routes.login));
-              changed(false);
-              name(data.data!.name.toString());
-              nameOnImage(data.data!.name.toString());
-              var userProfileData = ProData(
-                  email: profileEmail.text.toString(),
-                  image: userImgUrl.value,
-                  mobileNumber: data.data!.mobileNumber.checkNull(),
-                  nickName: profileName.text,
-                  name: profileName.text,
-                  status: profileStatus.value);
-              SessionManagement.setCurrentUser(userProfileData);
-              update();
+            } else {
+              loading.value = false;
+              toToast(AppConstants.unableToLoadProfileData);
             }
-          } else {
-            debugPrint("Unable to load Profile data");
-            toToast(AppConstants.unableConnectServer);
-          }}else{
-            loading.value = false;
-            toToast(AppConstants.unableToLoadProfileData);
-          }
-        });
-      }
-   /* }else{
+          });
+    }
+    /* }else{
       toToast(AppConstants.noInternetConnection);
       Get.back();
     }*/
-
   }
 
-  static void insertDefaultStatusToUser() async{
+  static void insertDefaultStatusToUser() async {
     try {
       await Mirrorfly.getProfileStatusList().then((value) {
         mirrorFlyLog("status list", "$value");
@@ -307,16 +325,15 @@ class ProfileController extends GetxController {
                 Mirrorfly.insertDefaultStatus(status: statusValue);
               }
             }
-          }else{
+          } else {
             insertStatus();
           }
-        }else{
+        } else {
           debugPrint("status list is empty");
           insertStatus();
-
         }
       });
-    } on Exception catch(er){
+    } on Exception catch (er) {
       debugPrint("Exception ==> $er");
     }
   }
@@ -327,18 +344,19 @@ class ProfileController extends GetxController {
         FilePickerResult? result = await FilePicker.platform
             .pickFiles(allowMultiple: false, type: FileType.image);
         if (result != null) {
-          if (checkFileUploadSize(result.files.single.path!, Constants.mImage)) {
+          if (checkFileUploadSize(
+              result.files.single.path!, Constants.mImage)) {
             isImageSelected.value = true;
             if (context.mounted) {
-              Navigator.push(context, MaterialPageRoute(builder: (con) =>
-                  CropImage(
-                    imageFile: File(result.files.single.path!),
-                  ))).then((value) {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (con) => CropImage(
+                            imageFile: File(result.files.single.path!),
+                          ))).then((value) {
                 value as MemoryImage;
                 imageBytes = value.bytes;
-                var name = "${DateTime
-                    .now()
-                    .millisecondsSinceEpoch}.jpg";
+                var name = "${DateTime.now().millisecondsSinceEpoch}.jpg";
                 writeImageTemp(value.bytes, name).then((value) {
                   /* if (from.value == Routes.login) {
                   imagePath(value.path);
@@ -368,31 +386,30 @@ class ProfileController extends GetxController {
 
   final ImagePicker _picker = ImagePicker();
   camera(BuildContext context) async {
-    if(await AppUtils.isNetConnected()) {
-      final XFile? photo = await _picker.pickImage(
-          source: ImageSource.camera);
+    if (await AppUtils.isNetConnected()) {
+      final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
       if (photo != null) {
         isImageSelected.value = true;
-        if(context.mounted) {
-          Navigator.push(context, MaterialPageRoute(builder: (con) =>
-              CropImage(
-                imageFile: File(photo.path),
-              ))).then((value) {
+        if (context.mounted) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (con) => CropImage(
+                        imageFile: File(photo.path),
+                      ))).then((value) {
             value as MemoryImage;
             imageBytes = value.bytes;
-            var name = "${DateTime
-                .now()
-                .millisecondsSinceEpoch}.jpg";
+            var name = "${DateTime.now().millisecondsSinceEpoch}.jpg";
             writeImageTemp(value.bytes, name).then((value) {
               /*if (from.value == Routes.login) {
                 imagePath(value.path);
                 changed(true);
                 update();
               } else {*/
-                imagePath(value.path);
-                changed(true);
-                updateProfileImage(
-                    path: value.path, update: false, context: context);
+              imagePath(value.path);
+              changed(true);
+              updateProfileImage(
+                  path: value.path, update: false, context: context);
               // }
             });
           });
@@ -401,7 +418,7 @@ class ProfileController extends GetxController {
         // User canceled the Camera
         isImageSelected.value = false;
       }
-    }else{
+    } else {
       toToast(AppConstants.noInternetConnection);
     }
   }
@@ -427,17 +444,21 @@ class ProfileController extends GetxController {
     update();
   }
 
-  onMobileChange(String text){
+  onMobileChange(String text) {
     changed(true);
     validMobileNumber(text.replaceAll("+", Constants.emptyString));
     update();
   }
 
-  Future<bool> validMobileNumber(String text)async{
+  Future<bool> validMobileNumber(String text) async {
     var coded = text;
-    if(!text.startsWith(SessionManagement.getCountryCode().checkNull().replaceAll("+", Constants.emptyString).toString())){
-      mirrorFlyLog("SessionManagement.getCountryCode()", SessionManagement.getCountryCode().toString());
-      coded = SessionManagement.getCountryCode().checkNull()+text;
+    if (!text.startsWith(SessionManagement.getCountryCode()
+        .checkNull()
+        .replaceAll("+", Constants.emptyString)
+        .toString())) {
+      mirrorFlyLog("SessionManagement.getCountryCode()",
+          SessionManagement.getCountryCode().toString());
+      coded = SessionManagement.getCountryCode().checkNull() + text;
     }
     var m = coded.contains("+") ? coded : "+$coded";
     lib_phone_number.init();
@@ -447,13 +468,13 @@ class ProfileController extends GetxController {
       debugPrint("parse-----> $parse");
       //{country_code: 91, e164: +91xxxxxxxxxx, national: 0xxxxx xxxxx, type: mobile, international: +91 xxxxx xxxxx, national_number: xxxxxxxxxx, region_code: IN}
       if (parse.isNotEmpty) {
-        var formatted = parse['international'];//.replaceAll("+", '');
+        var formatted = parse['international']; //.replaceAll("+", '');
         profileMobile.text = (formatted.toString());
         return true;
       } else {
         return false;
       }
-    }catch(e){
+    } catch (e) {
       debugPrint('validMobileNumber $e');
       return false;
     }
@@ -465,7 +486,6 @@ class ProfileController extends GetxController {
 
     for (var statusValue in defaultStatus) {
       Mirrorfly.insertDefaultStatus(status: statusValue);
-
     }
     // Mirrorfly.getDefaultNotificationUri().then((value) {
     //   if (value != null) {
@@ -474,13 +494,13 @@ class ProfileController extends GetxController {
     //   }
     // });
   }
-  static void checkAndEnableNotificationSound() {
 
+  static void checkAndEnableNotificationSound() {
     SessionManagement.vibrationType("0");
     SessionManagement.convSound(true);
     SessionManagement.muteAll(false);
 
-   /* Mirrorfly.getDefaultNotificationUri().then((value) {
+    /* Mirrorfly.getDefaultNotificationUri().then((value) {
       debugPrint("getDefaultNotificationUri--> $value");
       if (value != null) {
         // Mirrorfly.setNotificationUri(value);

@@ -7,7 +7,7 @@ class ParticipantsBinding extends Bindings {
   void dependencies() {
     // Get.lazyPut(() => CallController());
     Get.lazyPut<AddParticipantsController>(
-          () => AddParticipantsController(),
+      () => AddParticipantsController(),
     );
   }
 }

@@ -7,7 +7,8 @@ class VideoPlayerWidget extends StatefulWidget {
   final String videoPath;
   final String videoTitle;
 
-  const VideoPlayerWidget({super.key, required this.videoPath, required this.videoTitle});
+  const VideoPlayerWidget(
+      {super.key, required this.videoPath, required this.videoTitle});
 
   @override
   State<VideoPlayerWidget> createState() => _VideoPlayerWidgetState();
@@ -25,8 +26,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     _controller = VideoPlayerController.file(File(widget.videoPath))
       ..addListener(() {
         setState(() {
-          _sliderValue =
-              _controller.value.position.inSeconds.toDouble();
+          _sliderValue = _controller.value.position.inSeconds.toDouble();
         });
       });
     _initializeVideoPlayerFuture = _controller.initialize().then((_) {
@@ -35,7 +35,6 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
         _controller.setLooping(false);
         _controller.setVolume(1.0);
         _controller.setPlaybackSpeed(1.0);
-
       });
     });
   }
@@ -122,13 +121,15 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         const Spacer(),
-
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
               onPressed: _rewind,
-              icon: const Icon(Icons.fast_rewind, color: Colors.blue,),
+              icon: const Icon(
+                Icons.fast_rewind,
+                color: Colors.blue,
+              ),
             ),
             const SizedBox(width: 16),
             FloatingActionButton(
@@ -140,7 +141,10 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
             const SizedBox(width: 16),
             IconButton(
               onPressed: _forward,
-              icon: const Icon(Icons.fast_forward, color: Colors.blue,),
+              icon: const Icon(
+                Icons.fast_forward,
+                color: Colors.blue,
+              ),
             ),
           ],
         ),
@@ -169,4 +173,3 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     );
   }
 }
-

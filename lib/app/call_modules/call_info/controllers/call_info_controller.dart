@@ -11,9 +11,7 @@ import '../../../data/permissions.dart';
 import '../../../common/extensions.dart';
 import '../../outgoing_call/outgoing_call_view.dart';
 
-
-class CallInfoController extends GetxController{
-
+class CallInfoController extends GetxController {
   var callLogData_ = CallLogData().obs;
   CallLogData get callLogData => callLogData_.value;
 
@@ -25,12 +23,14 @@ class CallInfoController extends GetxController{
     super.onInit();
   }*/
 
-  Future<void> initInfoController({required BuildContext buildContext, }) async {
+  Future<void> initInfoController({
+    required BuildContext buildContext,
+  }) async {
     context = buildContext;
     // callLogData_();
   }
 
-    makeCall(List<String>? userList, String callType, CallLogData item) async {
+  makeCall(List<String>? userList, String callType, CallLogData item) async {
     if (userList!.isNotEmpty) {
       if (await AppUtils.isNetConnected()) {
         if (callType == CallType.video) {
@@ -40,17 +40,21 @@ class CallInfoController extends GetxController{
               debugPrint("#Mirrorfly Call You are on another call");
               toToast(Constants.msgOngoingCallAlert);
             } else {
-              Mirrorfly.makeGroupVideoCall(groupJid: item.groupId.checkNull().isNotEmpty ? item.groupId! : "", toUserJidList: userList, flyCallBack: (FlyResponse response) {
-                if (response.isSuccess) {
-                  // Get.toNamed(Routes.outGoingCallView, arguments: {"userJid": userList, "callType": CallType.video});
+              Mirrorfly.makeGroupVideoCall(
+                  groupJid:
+                      item.groupId.checkNull().isNotEmpty ? item.groupId! : "",
+                  toUserJidList: userList,
+                  flyCallBack: (FlyResponse response) {
+                    if (response.isSuccess) {
+                      // Get.toNamed(Routes.outGoingCallView, arguments: {"userJid": userList, "callType": CallType.video});
 
-                  MirrorflyUikit.instance.navigationManager.navigateTo(context: context,
-                      pageToNavigate: OutGoingCallView(userJid: userList), routeName: 'outgoing_call_view',
-                      onNavigateComplete: (){
-
-                      });
-                }
-              });
+                      MirrorflyUikit.instance.navigationManager.navigateTo(
+                          context: context,
+                          pageToNavigate: OutGoingCallView(userJid: userList),
+                          routeName: 'outgoing_call_view',
+                          onNavigateComplete: () {});
+                    }
+                  });
             }
           }
         } else {
@@ -60,16 +64,20 @@ class CallInfoController extends GetxController{
               debugPrint("#Mirrorfly Call You are on another call");
               toToast(Constants.msgOngoingCallAlert);
             } else {
-              Mirrorfly.makeGroupVoiceCall(groupJid: item.groupId.checkNull().isNotEmpty ? item.groupId! : "", toUserJidList: userList, flyCallBack: (FlyResponse response) {
-                if (response.isSuccess) {
-                  // Get.toNamed(Routes.outGoingCallView, arguments: {"userJid": userList, "callType": CallType.audio});
-                  MirrorflyUikit.instance.navigationManager.navigateTo(context: context,
-                      pageToNavigate: OutGoingCallView(userJid: userList), routeName: 'outgoing_call_view',
-                      onNavigateComplete: (){
-
-                      });
-                }
-              });
+              Mirrorfly.makeGroupVoiceCall(
+                  groupJid:
+                      item.groupId.checkNull().isNotEmpty ? item.groupId! : "",
+                  toUserJidList: userList,
+                  flyCallBack: (FlyResponse response) {
+                    if (response.isSuccess) {
+                      // Get.toNamed(Routes.outGoingCallView, arguments: {"userJid": userList, "callType": CallType.audio});
+                      MirrorflyUikit.instance.navigationManager.navigateTo(
+                          context: context,
+                          pageToNavigate: OutGoingCallView(userJid: userList),
+                          routeName: 'outgoing_call_view',
+                          onNavigateComplete: () {});
+                    }
+                  });
             }
           }
         }
@@ -87,21 +95,26 @@ class CallInfoController extends GetxController{
               onPressed: () {
                 Get.back();
               },
-              child: Text(Constants.cancel.toUpperCase(),style: const TextStyle(color: buttonBgColor))),
+              child: Text(Constants.cancel.toUpperCase(),
+                  style: const TextStyle(color: buttonBgColor))),
           TextButton(
               onPressed: () {
                 Get.back();
-                Mirrorfly.deleteCallLog(jidList: selectedCallLogs, isClearAll: false, flyCallBack: (FlyResponse response) {
-                  if (response.isSuccess) {
-                    Get.back(result: true);
-                  } else {
-                    toToast("Error in call log delete");
-                  }
-                });
+                Mirrorfly.deleteCallLog(
+                    jidList: selectedCallLogs,
+                    isClearAll: false,
+                    flyCallBack: (FlyResponse response) {
+                      if (response.isSuccess) {
+                        Get.back(result: true);
+                      } else {
+                        toToast("Error in call log delete");
+                      }
+                    });
               },
-              child: const Text(Constants.ok,style: TextStyle(color: buttonBgColor))),
+              child: const Text(Constants.ok,
+                  style: TextStyle(color: buttonBgColor))),
         ],
-        barrierDismissible: true, context: Get.context!);
+        barrierDismissible: true,
+        context: Get.context!);
   }
-
 }

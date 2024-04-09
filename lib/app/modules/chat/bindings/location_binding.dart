@@ -5,7 +5,7 @@ class LocationBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<LocationController>(
-          () => LocationController(),
+      () => LocationController(),
     );
   }
 }

@@ -4,7 +4,11 @@ class NavigationManager {
   final List<String> routeHistory = [];
   String? currentRoute;
 
-  void navigateTo({required BuildContext context, required Widget pageToNavigate, required String routeName, Function()? onNavigateComplete}) {
+  void navigateTo(
+      {required BuildContext context,
+      required Widget pageToNavigate,
+      required String routeName,
+      Function()? onNavigateComplete}) {
     // Navigate to the new route (simulated navigation)
     currentRoute = routeName;
     debugPrint("Navigating to $routeName");
@@ -12,18 +16,24 @@ class NavigationManager {
     if (currentRoute != null) {
       debugPrint("Adding the current route");
       routeHistory.add(currentRoute!);
-    }else{
+    } else {
       debugPrint("current route is null not adding the history");
     }
-    Navigator.of(context).push(MaterialPageRoute(
+    Navigator.of(context)
+        .push(MaterialPageRoute(
       builder: (context) => pageToNavigate,
-    )).then((_) {
+    ))
+        .then((_) {
       // Execute the callback when navigation is complete if provided
       onNavigateComplete?.call();
     });
   }
 
-  void navigatePushReplacement({required BuildContext context, required Widget pageToNavigate, required String routeName, Function()? onNavigateComplete}) {
+  void navigatePushReplacement(
+      {required BuildContext context,
+      required Widget pageToNavigate,
+      required String routeName,
+      Function()? onNavigateComplete}) {
     // Navigate to the new route (simulated navigation)
     currentRoute = routeName;
     debugPrint("Navigating to $routeName");
@@ -35,13 +45,20 @@ class NavigationManager {
     } else {
       debugPrint("current route is null not adding the history");
     }
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => pageToNavigate,
-      ),
-    ).then((value) => onNavigateComplete?.call());
+    Navigator.of(context)
+        .pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => pageToNavigate,
+          ),
+        )
+        .then((value) => onNavigateComplete?.call());
   }
-  void navigatePushRemoveUntil({required BuildContext context, required Widget pageToNavigate, required String routeName, Function()? onNavigateComplete}) {
+
+  void navigatePushRemoveUntil(
+      {required BuildContext context,
+      required Widget pageToNavigate,
+      required String routeName,
+      Function()? onNavigateComplete}) {
     // Navigate to the new route (simulated navigation)
     currentRoute = routeName;
     debugPrint("Navigating to $routeName");
@@ -52,13 +69,15 @@ class NavigationManager {
     } else {
       debugPrint("current route is null not adding the history");
     }
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(
-        builder: (context) => pageToNavigate,
-      ), (route) => false,
-    ).then((value) => onNavigateComplete?.call());
+    Navigator.of(context)
+        .pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => pageToNavigate,
+          ),
+          (route) => false,
+        )
+        .then((value) => onNavigateComplete?.call());
   }
-
 
   void navigateBack({required BuildContext context}) {
     if (routeHistory.isNotEmpty) {
@@ -70,7 +89,7 @@ class NavigationManager {
     }
   }
 
-  String getCurrentRoute(){
+  String getCurrentRoute() {
     if (routeHistory.isNotEmpty) {
       String lastContent = routeHistory.last;
       debugPrint("Last Content: $lastContent");
@@ -82,11 +101,10 @@ class NavigationManager {
     }
   }
 
-  bool hasPrevRoute(){
-    if(routeHistory.isNotEmpty){
+  bool hasPrevRoute() {
+    if (routeHistory.isNotEmpty) {
       return true;
     }
     return false;
   }
 }
-

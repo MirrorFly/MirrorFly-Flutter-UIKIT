@@ -20,16 +20,16 @@ class OnGoingCallView extends StatefulWidget {
   State<OnGoingCallView> createState() => _OnGoingCallViewState();
 }
 
-
 class _OnGoingCallViewState extends State<OnGoingCallView> {
-
   final controller = Get.put(CallController());
 
   @override
   void initState() {
     super.initState();
-    controller.initCallController(buildContext: context, userJid: widget.userJid);
+    controller.initCallController(
+        buildContext: context, userJid: widget.userJid);
   }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -51,21 +51,26 @@ class _OnGoingCallViewState extends State<OnGoingCallView> {
                   child: Stack(
                     children: [
                       Obx(() {
-                        debugPrint("controller.pinnedUserJid ${controller.pinnedUserJid}");
-                        return controller.pinnedUserJid.value.isNotEmpty && controller.layoutSwitch.value
+                        debugPrint(
+                            "controller.pinnedUserJid ${controller.pinnedUserJid}");
+                        return controller.pinnedUserJid.value.isNotEmpty &&
+                                controller.layoutSwitch.value
                             ? MirrorFlyView(
-                          key: UniqueKey(),
-                          userJid: controller.pinnedUserJid.value,
-                          alignProfilePictureCenter: false,
-                          showSpeakingRipple: controller.callType.value == CallType.audio,
-                          viewBgColor: AppColors.audioCallerBackground,
-                          profileSize: 100,
-                          onClick: () {
-                            // if(controller.callType.value==CallType.video) {
-                            controller.isVisible(!controller.isVisible.value);
-                            // }
-                          },
-                        ).setBorderRadius(const BorderRadius.all(Radius.circular(10)))
+                                key: UniqueKey(),
+                                userJid: controller.pinnedUserJid.value,
+                                alignProfilePictureCenter: false,
+                                showSpeakingRipple:
+                                    controller.callType.value == CallType.audio,
+                                viewBgColor: AppColors.audioCallerBackground,
+                                profileSize: 100,
+                                onClick: () {
+                                  // if(controller.callType.value==CallType.video) {
+                                  controller
+                                      .isVisible(!controller.isVisible.value);
+                                  // }
+                                },
+                              ).setBorderRadius(
+                                const BorderRadius.all(Radius.circular(10)))
                             : const SizedBox.shrink();
                       }),
                       Obx(() {
@@ -86,21 +91,28 @@ class _OnGoingCallViewState extends State<OnGoingCallView> {
                                           ):  const SizedBox.shrink(),*/
                                 if (controller.callList.length > 1 &&
                                     getTileCallStatus(
-                                        controller.callList
-                                            .firstWhere((y) => y.userJid!.value == controller.pinnedUserJid.value)
-                                            .callStatus
-                                            ?.value,
-                                        controller.pinnedUserJid.value.checkNull(),
-                                        controller.isOneToOneCall)
+                                            controller.callList
+                                                .firstWhere((y) =>
+                                                    y.userJid!.value ==
+                                                    controller
+                                                        .pinnedUserJid.value)
+                                                .callStatus
+                                                ?.value,
+                                            controller.pinnedUserJid.value
+                                                .checkNull(),
+                                            controller.isOneToOneCall)
                                         .isNotEmpty &&
                                     controller.layoutSwitch.value) ...[
                                   Text(
                                     getTileCallStatus(
                                         controller.callList
-                                            .firstWhere((y) => y.userJid!.value == controller.pinnedUserJid.value)
+                                            .firstWhere((y) =>
+                                                y.userJid!.value ==
+                                                controller.pinnedUserJid.value)
                                             .callStatus
                                             ?.value,
-                                        controller.pinnedUserJid.value.checkNull(),
+                                        controller.pinnedUserJid.value
+                                            .checkNull(),
                                         controller.isOneToOneCall),
                                     style: const TextStyle(color: Colors.white),
                                   ),
@@ -110,12 +122,15 @@ class _OnGoingCallViewState extends State<OnGoingCallView> {
                                 ],
                                 if (controller.callList.length > 1 &&
                                     controller.callList
-                                        .firstWhere((y) => y.userJid!.value == controller.pinnedUserJid.value)
+                                        .firstWhere((y) =>
+                                            y.userJid!.value ==
+                                            controller.pinnedUserJid.value)
                                         .isAudioMuted
                                         .value &&
                                     controller.layoutSwitch.value) ...[
                                   CircleAvatar(
-                                    backgroundColor: AppColors.audioMutedIconBgColor,
+                                    backgroundColor:
+                                        AppColors.audioMutedIconBgColor,
                                     child: SvgPicture.asset(callMutedIcon),
                                   )
                                 ],
@@ -149,9 +164,11 @@ class _OnGoingCallViewState extends State<OnGoingCallView> {
                   Obx(() {
                     return (controller.callList.length >= 2)
                         ? Align(
-                      alignment: Alignment.bottomRight,
-                      child: controller.layoutSwitch.value ? buildListItem(controller) : const SizedBox.shrink(),
-                    )
+                            alignment: Alignment.bottomRight,
+                            child: controller.layoutSwitch.value
+                                ? buildListItem(controller)
+                                : const SizedBox.shrink(),
+                          )
                         : const SizedBox.shrink();
                   }),
                   const SizedBox(
@@ -218,25 +235,30 @@ class _OnGoingCallViewState extends State<OnGoingCallView> {
               FutureBuilder(
                   future: controller.groupId.isEmpty
                       ? CallUtils.getCallersName(
-                      List<String>.from(controller.callList
-                          .where((p0) => p0.userJid != null && SessionManagement.getUserJID() != p0.userJid!.value)
-                          .map((e) => e.userJid!.value)),
-                      true)
+                          List<String>.from(controller.callList
+                              .where((p0) =>
+                                  p0.userJid != null &&
+                                  SessionManagement.getUserJID() !=
+                                      p0.userJid!.value)
+                              .map((e) => e.userJid!.value)),
+                          true)
                       : CallUtils.getNameOfJid(controller.groupId.value),
                   builder: (ctx, data) {
-                    return data.data.checkNull().isEmpty ? const SizedBox.shrink() : SizedBox(
-                      width: 200,
-                      child: Text(
-                        data.data.checkNull(),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12.0,
-                        ),
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    );
+                    return data.data.checkNull().isEmpty
+                        ? const SizedBox.shrink()
+                        : SizedBox(
+                            width: 200,
+                            child: Text(
+                              data.data.checkNull(),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12.0,
+                              ),
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          );
                   }),
               const SizedBox(
                 height: 8,
@@ -272,7 +294,8 @@ class _OnGoingCallViewState extends State<OnGoingCallView> {
               },
               icon: SvgPicture.asset(
                 gridIcon,
-                colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                colorFilter:
+                    const ColorFilter.mode(Colors.white, BlendMode.srcIn),
               ),
             )
           ],
@@ -283,7 +306,9 @@ class _OnGoingCallViewState extends State<OnGoingCallView> {
 
   Widget buildCallOptions() {
     double rightSideWidth = 15;
-    controller.callType.value == CallType.video ? rightSideWidth = 20 : rightSideWidth = 30;
+    controller.callType.value == CallType.video
+        ? rightSideWidth = 20
+        : rightSideWidth = 30;
     return Obx(() {
       return Column(
         children: [
@@ -308,22 +333,28 @@ class _OnGoingCallViewState extends State<OnGoingCallView> {
               FloatingActionButton(
                 heroTag: "mute",
                 elevation: 0,
-                backgroundColor: controller.muted.value ? Colors.white : Colors.white.withOpacity(0.3),
+                backgroundColor: controller.muted.value
+                    ? Colors.white
+                    : Colors.white.withOpacity(0.3),
                 onPressed: () => controller.muteAudio(),
                 child: controller.muted.value
                     ? SvgPicture.asset(
-                  muteActive,
-                )
+                        muteActive,
+                      )
                     : SvgPicture.asset(
-                  muteInactive,
-                ),
+                        muteInactive,
+                      ),
               ),
               SizedBox(width: rightSideWidth),
-              if((controller.callType.value == CallType.video || controller.isGroupCall) && !controller.videoMuted.value)...[
+              if ((controller.callType.value == CallType.video ||
+                      controller.isGroupCall) &&
+                  !controller.videoMuted.value) ...[
                 FloatingActionButton(
                   heroTag: "switchCamera",
                   elevation: 0,
-                  backgroundColor: controller.cameraSwitch.value ? Colors.white : Colors.white.withOpacity(0.3),
+                  backgroundColor: controller.cameraSwitch.value
+                      ? Colors.white
+                      : Colors.white.withOpacity(0.3),
                   onPressed: () => controller.switchCamera(),
                   child: controller.cameraSwitch.value
                       ? SvgPicture.asset(cameraSwitchActive)
@@ -334,9 +365,13 @@ class _OnGoingCallViewState extends State<OnGoingCallView> {
               FloatingActionButton(
                 heroTag: "videoMute",
                 elevation: 0,
-                backgroundColor: controller.videoMuted.value ? Colors.white : Colors.white.withOpacity(0.3),
+                backgroundColor: controller.videoMuted.value
+                    ? Colors.white
+                    : Colors.white.withOpacity(0.3),
                 onPressed: () => controller.videoMute(),
-                child: controller.videoMuted.value ? SvgPicture.asset(videoInactive) : SvgPicture.asset(videoActive),
+                child: controller.videoMuted.value
+                    ? SvgPicture.asset(videoInactive)
+                    : SvgPicture.asset(videoActive),
               ),
               SizedBox(
                 width: rightSideWidth,
@@ -344,19 +379,24 @@ class _OnGoingCallViewState extends State<OnGoingCallView> {
               FloatingActionButton(
                 heroTag: "speaker",
                 elevation: 0,
-                backgroundColor: controller.audioOutputType.value == AudioDeviceType.receiver
-                    ? Colors.white.withOpacity(0.3)
-                    : Colors.white,
+                backgroundColor:
+                    controller.audioOutputType.value == AudioDeviceType.receiver
+                        ? Colors.white.withOpacity(0.3)
+                        : Colors.white,
                 onPressed: () => controller.changeSpeaker(context),
-                child: controller.audioOutputType.value == AudioDeviceType.receiver
-                    ? SvgPicture.asset(speakerInactive)
-                    : controller.audioOutputType.value == AudioDeviceType.speaker
-                    ? SvgPicture.asset(speakerActive)
-                    : controller.audioOutputType.value == AudioDeviceType.bluetooth
-                    ? SvgPicture.asset(speakerBluetooth)
-                    : controller.audioOutputType.value == AudioDeviceType.headset
-                    ? SvgPicture.asset(speakerHeadset)
-                    : SvgPicture.asset(speakerActive),
+                child:
+                    controller.audioOutputType.value == AudioDeviceType.receiver
+                        ? SvgPicture.asset(speakerInactive)
+                        : controller.audioOutputType.value ==
+                                AudioDeviceType.speaker
+                            ? SvgPicture.asset(speakerActive)
+                            : controller.audioOutputType.value ==
+                                    AudioDeviceType.bluetooth
+                                ? SvgPicture.asset(speakerBluetooth)
+                                : controller.audioOutputType.value ==
+                                        AudioDeviceType.headset
+                                    ? SvgPicture.asset(speakerHeadset)
+                                    : SvgPicture.asset(speakerActive),
               ),
             ],
           ),

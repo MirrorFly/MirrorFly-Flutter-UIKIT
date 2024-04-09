@@ -11,7 +11,7 @@ enum MessageEnum {
 
 extension MessageType on String {
   MessageEnum toEnum() {
-    switch(this){
+    switch (this) {
       case 'TEXT':
         return MessageEnum.text;
       case 'IMAGE':
@@ -22,9 +22,8 @@ extension MessageType on String {
         return MessageEnum.video;
       case 'LOCATION':
         return MessageEnum.location;
-        default:
-          return MessageEnum.text;
+      default:
+        return MessageEnum.text;
     }
   }
 }
-

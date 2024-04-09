@@ -1,12 +1,8 @@
-
-
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 // import 'package:video_player/video_player.dart';
 
-class VideoPlayController extends GetxController{
-
+class VideoPlayController extends GetxController {
   var videoPath = "".obs;
   // late VideoPlayerController videoPlayerController;
   var isInitialized = false.obs;
