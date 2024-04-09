@@ -198,6 +198,7 @@ class AppConstants{
   static var no = "No";
   static var yes = "Yes";
   static var ok = "Ok";
+  static var done = "Done";
   static var makeAdmin = "Make Admin";
   static var areYouSureMakeAdmin = "Are you sure you want to make";
   static var theAdmin = "the Admin?";

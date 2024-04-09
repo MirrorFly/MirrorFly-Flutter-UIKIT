@@ -21,6 +21,9 @@ class GalleryMediaPicker extends StatefulWidget {
   /// picker mode
   final bool singlePick;
 
+  /// picker provider
+  final GalleryMediaPickerController provider;
+
   /// return all selected paths
   final Function(List<PickedAssetModel> path)? pathList;
 
@@ -90,7 +93,7 @@ class GalleryMediaPicker extends StatefulWidget {
   /// image quality thumbnail
   final int? thumbnailQuality;
   const GalleryMediaPicker(
-      {Key? key,
+      {super.key,
       this.maxPickImages = 2,
       this.singlePick = true,
       this.appBarColor = Colors.white,
@@ -115,8 +118,7 @@ class GalleryMediaPicker extends StatefulWidget {
       this.selectedCheckBackgroundColor = Colors.white,
       this.onlyImages = false,
       this.onlyVideos = false,
-      this.thumbnailQuality})
-      : super(key: key);
+      this.thumbnailQuality, required this.provider});
 
   @override
   State<GalleryMediaPicker> createState() => _GalleryMediaPickerState();
@@ -134,18 +136,18 @@ class _GalleryMediaPickerState extends State<GalleryMediaPicker> {
 
   /// get photo manager permission
   _getPermission() {
-    GalleryFunctions.getPermission(setState, provider);
-    GalleryFunctions.onPickMax(provider);
+    GalleryFunctions.getPermission(setState, widget.provider);
+    GalleryFunctions.onPickMax(widget.provider);
   }
 
   @override
   void dispose() {
     if (mounted) {
       /// clear all controller list
-      provider.pickedFile.clear();
-      provider.picked.clear();
-      provider.pathList.clear();
-      provider.onPickMax.removeListener(() { GalleryFunctions.onPickMax(provider);});
+      widget.provider.pickedFile.clear();
+      widget.provider.picked.clear();
+      widget.provider.pathList.clear();
+      widget.provider.onPickMax.removeListener(() { GalleryFunctions.onPickMax(widget.provider);});
       PhotoManager.stopChangeNotify();
       super.dispose();
     }
@@ -153,8 +155,8 @@ class _GalleryMediaPickerState extends State<GalleryMediaPicker> {
 
   @override
   Widget build(BuildContext context) {
-    provider.max = widget.maxPickImages;
-    provider.singlePickMode = widget.singlePick;
+    widget.provider.max = widget.maxPickImages;
+    widget.provider.singlePickMode = widget.singlePick;
 
     return OKToast(
       child: NotificationListener<OverscrollIndicatorNotification>(
@@ -173,7 +175,7 @@ class _GalleryMediaPickerState extends State<GalleryMediaPicker> {
                   padding: const EdgeInsets.only(left: 10),
                   child: SelectedPathDropdownButton(
                     dropdownRelativeKey: GlobalKey(),
-                    provider: provider,
+                    provider: widget.provider,
                     appBarColor: widget.appBarColor,
                     appBarIconColor:
                         widget.appBarIconColor ?? const Color(0xFFB2B2B2),
@@ -193,14 +195,14 @@ class _GalleryMediaPickerState extends State<GalleryMediaPicker> {
                 child: SizedBox(
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
-                  child: provider != null
+                  child: widget.provider != null
                       ? AnimatedBuilder(
-                          animation: provider.currentAlbumNotifier,
+                          animation: widget.provider.currentAlbumNotifier,
                           builder: (BuildContext context, child) =>
                               GalleryGridView(
-                            path: provider.currentAlbum,
+                            path: widget.provider.currentAlbum,
                             thumbnailQuality: widget.thumbnailQuality ?? 200,
-                            provider: provider,
+                            provider: widget.provider,
                             padding: widget.gridPadding,
                             childAspectRatio: widget.childAspectRatio ?? 0.5,
                             crossAxisCount: widget.crossAxisCount ?? 3,
@@ -218,35 +220,32 @@ class _GalleryMediaPickerState extends State<GalleryMediaPicker> {
                             onAssetItemClick: (asset, index) async {
                               File? file = await asset.file;
                               if(checkFileUploadSize(file!.path, asset.typeInt == 1 ? Constants.mImage : Constants.mVideo)) {
-                                provider.pickEntity(asset);
-                                GalleryFunctions.getFile(asset)
-                                    .then((value) async {
-                                  /// add metadata to map list
-                                  provider.pickPath(PickedAssetModel(
-                                    id: asset.id,
-                                    path: value,
-                                    type: asset.typeInt == 1
-                                        ? 'image'
-                                        : 'video',
-                                    videoDuration: asset.videoDuration,
-                                    createDateTime: asset.createDateTime,
-                                    latitude: asset.latitude,
-                                    longitude: asset.longitude,
-                                    thumbnail: await asset.thumbnailData,
-                                    height: asset.height,
-                                    width: asset.width,
-                                    orientationHeight: asset.orientatedHeight,
-                                    orientationWidth: asset.orientatedWidth,
-                                    orientationSize: asset.orientatedSize,
-                                    file: await asset.file,
-                                    modifiedDateTime: asset.modifiedDateTime,
-                                    title: asset.title,
-                                    size: asset.size,
-                                  ));
-                                  widget.pathList!(provider.pickedFile);
-                                });
+                                debugPrint("item processed1 ${DateTime.now()} ${file.lengthSync()}");
+                                widget.provider.pickEntity(asset);
+                                widget.provider.pickPath(PickedAssetModel(
+                                  id: asset.id,
+                                  path: file.path,
+                                  type: asset.typeInt == 1
+                                      ? 'image'
+                                      : 'video',
+                                  videoDuration: asset.videoDuration,
+                                  createDateTime: asset.createDateTime,
+                                  latitude: asset.latitude,
+                                  longitude: asset.longitude,
+                                  thumbnail: await asset.thumbnailData,
+                                  height: asset.height,
+                                  width: asset.width,
+                                  orientationHeight: asset.orientatedHeight,
+                                  orientationWidth: asset.orientatedWidth,
+                                  orientationSize: asset.orientatedSize,
+                                  file: await asset.file,
+                                  modifiedDateTime: asset.modifiedDateTime,
+                                  title: asset.title,
+                                  size: asset.size,
+                                ));
+                                widget.pathList!(widget.provider.pickedFile);
                               }else{
-                                toToast("File Size should not exceed ${asset.typeInt == 1 ? Constants.maxImageFileSize : Constants.maxVideoFileSize} MB");
+                                toToast(Constants.mediaMaxLimitRestriction.replaceAll("%d", "${asset.typeInt == 1 ? Constants.maxImageFileSize : Constants.maxVideoFileSize}"));
                               }
                             },
                           ),

@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
@@ -19,24 +20,35 @@ class DecodeImage extends ImageProvider<DecodeImage> {
   });
 
   @override
-  ImageStreamCompleter load(DecodeImage key, DecoderCallback decode) {
+  ImageStreamCompleter loadImage(DecodeImage key, ImageDecoderCallback decode) {
     return MultiFrameImageStreamCompleter(
-      codec: _loadAsync(key, decode),
+      codec: _loadAsync(key),
       scale: key.scale,
+      informationCollector: () sync* {
+        yield ErrorDescription('Image provider: $this');
+      },
     );
   }
 
-  Future<ui.Codec> _loadAsync(DecodeImage key, DecoderCallback decode) async {
+  Future<Uint8List> _getImage(DecodeImage key) async {
     assert(key == this);
 
     final coverEntity =
-        (await key.entity.getAssetListRange(start: index, end: index + 1))[0];
+    (await key.entity.getAssetListRange(start: index, end: index + 1))[0];
 
     final bytes = await coverEntity
         .thumbnailDataWithSize(ThumbnailSize(thumbSize, thumbSize));
 
-    return decode(bytes!);
+    return bytes!;
   }
+
+  Future<ui.Codec> _loadAsync(DecodeImage key) async {
+    final Uint8List bytes = await _getImage(key);
+    final ui.Codec codec = await ui.instantiateImageCodec(bytes);
+
+    return codec;
+  }
+
 
   @override
   Future<DecodeImage> obtainKey(ImageConfiguration configuration) async {
