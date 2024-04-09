@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/extensions.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/settings/views/blocked/blocked_list_controller.dart';
 
@@ -8,7 +9,7 @@ import '../../../../../mirrorfly_uikit_plugin.dart';
 import '../../../../common/widgets.dart';
 
 class BlockedListView extends StatefulWidget {
-  const BlockedListView({Key? key,this.enableAppBar=true}) : super(key: key);
+  const BlockedListView({super.key,this.enableAppBar=true});
   final bool enableAppBar;
 
   @override

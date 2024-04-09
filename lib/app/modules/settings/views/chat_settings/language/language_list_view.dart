@@ -6,7 +6,7 @@ import 'package:mirrorfly_uikit_plugin/app/modules/settings/views/chat_settings/
 
 
 class LanguageListView extends GetView<LanguageController> {
-  const LanguageListView({Key? key}) : super(key: key);
+  const LanguageListView({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -5,7 +5,7 @@ import '../settings_widgets.dart';
 import 'notification_alert_controller.dart';
 
 class NotificationAlertView extends GetView<NotificationAlertController> {
-  const NotificationAlertView({Key? key,this.enableAppBar=true}) : super(key: key);
+  const NotificationAlertView({super.key,this.enableAppBar=true});
   final bool enableAppBar;
   @override
   Widget build(BuildContext context) {

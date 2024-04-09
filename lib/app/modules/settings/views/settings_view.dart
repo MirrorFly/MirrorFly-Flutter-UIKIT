@@ -10,7 +10,7 @@ import 'blocked/blocked_list_view.dart';
 import 'chat_settings/chat_settings_view.dart';
 
 class SettingsView extends StatefulWidget {
-  const SettingsView({Key? key, this.enableAppBar=true}) : super(key: key);
+  const SettingsView({super.key, this.enableAppBar=true});
   final bool enableAppBar;
   @override
   State<SettingsView> createState() => _SettingsViewState();
