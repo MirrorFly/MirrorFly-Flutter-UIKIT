@@ -102,7 +102,7 @@ class NotificationBuilder {
     var channel =
     buildNotificationChannel(notificationId.toString(), null, false);
 
-    var notificationSounUri = SessionManagement.getNotificationUri();
+    // var notificationSounUri = SessionManagement.getNotificationUri();
     // var isVibrate = SessionManagement.getVibration();
     // var isRing = SessionManagement.getNotificationSound();
 
