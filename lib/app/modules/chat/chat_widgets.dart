@@ -27,7 +27,7 @@ import '../../data/permissions.dart';
 import '../../data/session_management.dart';
 import '../dashboard/widgets.dart';
 import '../preview_contact/views/preview_contact_view.dart';
-import '../video_preview/video_player_view.dart';
+import '../video_preview/views/video_player_view.dart';
 
 class ReplyingMessageHeader extends StatelessWidget {
   const ReplyingMessageHeader({super.key,
