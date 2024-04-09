@@ -426,4 +426,6 @@ class AppConstants{
 
   static var notificationIcon = "notification_icon";
   static var remoteEngagedToast = "is on another call";
+
+  static var featureNotAvailable = "You can't send messages to this group because Feature unavailable for your plan.";
 }

@@ -1,18 +1,14 @@
-import 'dart:io';
-
-import 'package:emoji_picker_flutter/emoji_picker_flutter.dart' as emoji;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
-// import 'package:grouped_list/grouped_list.dart';
 import 'package:marquee/marquee.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/extensions.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/widgets.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_list_view.dart';
 
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:swipe_to/swipe_to.dart';
 
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
@@ -20,10 +16,9 @@ import '../../../widgets/custom_action_bar_icons.dart';
 import '../../../widgets/lottie_animation.dart';
 import '../chat_widgets.dart';
 import '../controllers/chat_controller.dart';
-import '../../../models.dart';
 
 class ChatView extends StatefulWidget {
-  const ChatView({Key? key, required this.jid, this.isUser=false, this.messageId, this.isFromStarred = false, this.enableAppBar=true, this.showChatDeliveryIndicator = true}) : super(key: key);
+  const ChatView({super.key, required this.jid, this.isUser=false, this.messageId, this.isFromStarred = false, this.enableAppBar=true, this.showChatDeliveryIndicator = true});
   final String jid;
   final bool isUser;
   final bool isFromStarred;
@@ -75,21 +70,24 @@ class _ChatViewState extends State<ChatView> {
                   fit: BoxFit.cover,
                 ),*/
               ),
-              child: WillPopScope(
-                onWillPop: () {
+              child: PopScope(
+                canPop: false,
+                onPopInvoked: (didPop) {
+                  if (didPop) {
+                    return;
+                  }
+                  mirrorFlyLog("viewInsets", MediaQuery.of(context).viewInsets.bottom.toString());
                   if (controller.showEmoji.value) {
                     controller.showEmoji(false);
                   } else if (MediaQuery.of(context).viewInsets.bottom > 0.0) {
                     controller.focusNode.unfocus();
                   } else if (controller.nJid != null) {
-                    // Get.offAllNamed(Routes.dashboard);
-                    return Future.value(true);
+                    Navigator.pop(context);
                   } else if (controller.isSelected.value) {
                     controller.clearAllChatSelection();
                   } else {
-                    return Future.value(true);
+                    Navigator.pop(context);
                   }
-                  return Future.value(false);
                 },
                 child: Stack(
                   children: [
@@ -100,7 +98,7 @@ class _ChatViewState extends State<ChatView> {
                               ? Center(
                                   child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
                                 )
-                              : chatListView(controller.chatList);
+                              : ChatListView(chatController: controller, chatList: controller.chatList);
                         })),
                         Align(
                           alignment: Alignment.bottomCenter,
@@ -229,10 +227,12 @@ class _ChatViewState extends State<ChatView> {
                                       ],
                                     ),
                                   ),
-                                  emojiLayout(),
+                                  controller.emojiLayout(textEditingController: controller.messageController, sendTypingStatus: true),
                                 ],
                               )
-                                      : userNoLonger(),
+                                  : !controller.availableFeatures.value.isGroupChatAvailable.checkNull()
+                                  ? featureNotAvailable()
+                                  : userNoLonger(),
                             );
                           }),
                         ),
@@ -266,11 +266,6 @@ class _ChatViewState extends State<ChatView> {
                                 child: FloatingActionButton.small(
                                   backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
                                   child: Icon(Icons.keyboard_double_arrow_down_rounded,color: MirrorflyUikit.getTheme?.colorOnPrimary,),
-                                  /*icon: Image.asset(
-                                    redirectLastMessage,package: package,
-                                    width: 32,
-                                    height: 32,
-                                  ),*/
                                   onPressed: () {
                                     //scroll to end
                                     controller.scrollToEnd();
@@ -456,7 +451,7 @@ class _ChatViewState extends State<ChatView> {
                 ),
               )
             : const SizedBox.shrink(),
-        controller.isAudioRecording.value == Constants.audioRecordInitial
+        (controller.isAudioRecording.value == Constants.audioRecordInitial && controller.availableFeatures.value.isAttachmentAvailable.checkNull())
             ? IconButton(
                 onPressed: () {
                   controller.showAttachmentsView(context);
@@ -464,7 +459,8 @@ class _ChatViewState extends State<ChatView> {
                 icon: SvgPicture.asset(attachIcon,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn)),
               )
             : const SizedBox.shrink(),
-        controller.isAudioRecording.value == Constants.audioRecordInitial
+        (controller.isAudioRecording.value == Constants.audioRecordInitial &&
+            controller.availableFeatures.value.isAudioAttachmentAvailable.checkNull())
             ? IconButton(
                 onPressed: () {
                   controller.startRecording(context);
@@ -542,290 +538,24 @@ class _ChatViewState extends State<ChatView> {
     );
   }
 
-  Widget emojiLayout() {
-    return Obx(() {
-      if (controller.showEmoji.value) {
-        return SizedBox(
-          height: 250,
-          child: emoji.EmojiPicker(
-            onBackspacePressed: () {
-              controller.isTyping();
-              // Do something when the user taps the backspace button (optional)
-            },
-            onEmojiSelected: (cat, emoji) {
-              controller.isTyping();
-            },
-            textEditingController: controller.messageController,
-            config: emoji.Config(
-              columns: 7,
-              emojiSizeMax: 32 * (Platform.isIOS ? 1.30 : 1.0),
-              verticalSpacing: 0,
-              horizontalSpacing: 0,
-              gridPadding: EdgeInsets.zero,
-              initCategory: emoji.Category.RECENT,
-              bgColor: MirrorflyUikit.getTheme!.scaffoldColor,
-              indicatorColor: MirrorflyUikit.getTheme!.primaryColor,
-              iconColor: MirrorflyUikit.getTheme!.textPrimaryColor,
-              iconColorSelected: MirrorflyUikit.getTheme!.primaryColor,
-              backspaceColor: MirrorflyUikit.getTheme!.primaryColor,
-              skinToneDialogBgColor: MirrorflyUikit.getTheme!.textPrimaryColor,
-              skinToneIndicatorColor: MirrorflyUikit.getTheme!.textPrimaryColor,
-              enableSkinTones: true,
-              // showRecentsTab: true,
-              recentsLimit: 28,
-              tabIndicatorAnimDuration: kTabScrollDuration,
-              categoryIcons: const emoji.CategoryIcons(),
-              buttonMode: emoji.ButtonMode.CUPERTINO,
+  Widget featureNotAvailable() {
+    return Column(
+      children: [
+        const AppDivider(),
+        Padding(
+          padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+          child: Text(
+            AppConstants.featureNotAvailable,
+            style: const TextStyle(
+              fontSize: 15,
             ),
+            textAlign: TextAlign.center,
           ),
-        );
-      } else {
-        return const SizedBox.shrink();
-      }
-    });
-  }
-
-  Widget chatListView(List<ChatMessageModel> chatList) {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: ScrollablePositionedList.builder(
-        itemScrollController: controller.newScrollController,
-        itemPositionsListener: controller.newitemPositionsListener,
-        itemCount: chatList.length,
-        shrinkWrap: true,
-        reverse: true,
-        itemBuilder: (context, index) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              groupedDateMessage(index, chatList) != null
-                  ? NotificationMessageView(
-                      chatMessage: groupedDateMessage(index, chatList))
-                  : const SizedBox.shrink(),
-              (chatList[index].messageType.toUpperCase() !=
-                      Constants.mNotification)
-                  ? SwipeTo(
-                      key: ValueKey(chatList[index].messageId),
-                      onRightSwipe: () {
-                        if (!chatList[index].isMessageRecalled.value &&
-                            !chatList[index].isMessageDeleted &&
-                            chatList[index]
-                                    .messageStatus.value
-                                    .checkNull()
-                                    .toString() !=
-                                "N") {
-                          controller.handleReplyChatMessage(chatList[index]);
-                        }
-                      },
-                      animationDuration: const Duration(milliseconds: 300),
-                      offsetDx: 0.2,
-                      child: GestureDetector(
-                        onLongPress: widget.enableAppBar ? () {
-                          debugPrint("LongPressed");
-                          FocusManager.instance.primaryFocus?.unfocus();
-                          if (!controller.isSelected.value) {
-                            controller.isSelected(true);
-                            controller.addChatSelection(chatList[index]);
-                          }
-                        } : null,
-                        onTap: () {
-                          debugPrint("On Tap");
-                          if(controller.isKeyboardVisible.value){
-                            FocusScope.of(context).unfocus();
-                          }
-                          if (controller.isSelected.value) {
-                            if(controller.isSelected.value) {
-                              controller.selectedChatList
-                                  .contains(chatList[index])
-                                  ? controller
-                                  .clearChatSelection(chatList[index])
-                                  : controller
-                                  .addChatSelection(chatList[index]);
-                            }
-                            controller.getMessageActions();
-                          } else {
-                            var replyChat =
-                                chatList[index].replyParentChatMessage;
-                            if (replyChat != null) {
-                              debugPrint("reply tap ");
-                              var chat = chatList.indexWhere((element) =>
-                                  element.messageId == replyChat.messageId);
-                              if (!chat.isNegative) {
-                                controller.navigateToMessage(chatList[chat],
-                                    index: chat);
-                              }
-                            }
-                          }
-                        },
-                        onDoubleTap: () {
-                          controller.translateMessage(index);
-                        },
-                        child: Obx(() {
-                          return Container(
-                            key: Key(chatList[index].messageId),
-                            color: chatList[index].isSelected.value
-                                ? MirrorflyUikit.getTheme?.primaryColor.withAlpha(60)
-                                : Colors.transparent,
-                            margin: const EdgeInsets.only(
-                                left: 14, right: 14, top: 5, bottom: 10),
-                            child: Align(
-                              alignment: (chatList[index].isMessageSentByMe
-                                  ? Alignment.bottomRight
-                                  : Alignment.bottomLeft),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Visibility(
-                                    visible:
-                                        chatList[index].isMessageSentByMe &&
-                                            controller.forwardMessageVisibility(
-                                                chatList[index]),
-                                    child: IconButton(
-                                        onPressed: () {
-                                          controller.forwardSingleMessage(
-                                              chatList[index].messageId);
-                                        },
-                                        icon: SvgPicture.asset(forwardMedia,package: package,colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),)),
-                                  ),
-                                  ChatContainer(
-                                    chatMessage: chatList[index],
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        SenderHeader(
-                                            isGroupProfile: controller
-                                                .profile.isGroupProfile,
-                                            chatList: chatList,
-                                            index: index),
-                                        (chatList[index]
-                                                    .replyParentChatMessage ==
-                                                null)
-                                            ? const SizedBox.shrink()
-                                            : ReplyMessageHeader(
-                                                chatMessage: chatList[index]),
-
-                                        Obx(() {
-                                          return MessageContent(
-                                              chatList: chatList,
-                                              index: index,
-                                              onPlayAudio: () {
-                                                if (controller.isAudioRecording
-                                                        .value ==
-                                                    Constants.audioRecording) {
-                                                  controller.stopRecording();
-                                                }
-                                                controller
-                                                    .playAudio(chatList[index]);
-                                              },
-                                              onSeekbarChange: (double value) {
-                                                controller.onSeekbarChange(
-                                                    value, chatList[index]);
-                                              },
-                                              isSelected:
-                                                  controller.isSelected.value, showChatDeliveryIndicator: widget.showChatDeliveryIndicator,);
-                                        })
-                                      ],
-                                    ),
-                                  ),
-                                  Visibility(
-                                    visible:
-                                        !chatList[index].isMessageSentByMe &&
-                                            controller.forwardMessageVisibility(
-                                                chatList[index]),
-                                    child: IconButton(
-                                        onPressed: () {
-                                          controller.forwardSingleMessage(
-                                              chatList[index].messageId);
-                                        },
-                                        icon: SvgPicture.asset(forwardMedia,package: package,)),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
-                    )
-                  : NotificationMessageView(
-                      chatMessage: chatList[index].messageTextContent)
-            ],
-          );
-        },
-      ),
+        ),
+      ],
     );
   }
 
- /* Widget chatGroupedListView(List<ChatMessageModel> chatList) {
-    return GroupedListView<dynamic, String>(
-      elements: chatList,
-      groupBy: (element) => element['group'],
-      groupSeparatorBuilder: (String groupByValue) => Text(groupByValue),
-      itemBuilder: (context, dynamic element) => Text(element['name']),
-      // itemComparator: (item1, item2) => item1['name'].compareTo(item2['name']), // optional
-      useStickyGroupSeparators: true,
-      // optional
-      floatingHeader: true,
-      // optional
-      order: GroupedListOrder.ASC, // optional
-    );
-  }*/
-
-  /*handleMediaUploadDownload(
-      int mediaDownloadStatus, ChatMessageModel chatList) {
-    switch (chatList.isMessageSentByMe
-        ? chatList.mediaChatMessage?.mediaUploadStatus
-        : mediaDownloadStatus) {
-      case Constants.mediaDownloaded:
-      case Constants.mediaUploaded:
-        if (chatList.messageType.toUpperCase() == 'VIDEO') {
-          if (controller.checkFile(
-                  chatList.mediaChatMessage!.mediaLocalStoragePath) &&
-              (chatList.mediaChatMessage!.mediaDownloadStatus ==
-                      Constants.mediaDownloaded ||
-                  chatList.mediaChatMessage!.mediaDownloadStatus ==
-                      Constants.mediaUploaded ||
-                  chatList.isMessageSentByMe)) {
-            Get.toNamed(Routes.videoPlay, arguments: {
-              "filePath": chatList.mediaChatMessage!.mediaLocalStoragePath,
-            });
-          }
-        }
-        if (chatList.messageType.toUpperCase() == 'AUDIO') {
-          if (controller.checkFile(
-                  chatList.mediaChatMessage!.mediaLocalStoragePath) &&
-              (chatList.mediaChatMessage!.mediaDownloadStatus ==
-                      Constants.mediaDownloaded ||
-                  chatList.mediaChatMessage!.mediaDownloadStatus ==
-                      Constants.mediaUploaded ||
-                  chatList.isMessageSentByMe)) {
-            debugPrint("audio click1");
-            controller.playAudio(chatList, chatList.mediaChatMessage!.mediaLocalStoragePath);
-          } else {
-            debugPrint("condition failed");
-          }
-        }
-        break;
-      case Constants.mediaDownloadedNotAvailable:
-      case Constants.mediaNotDownloaded:
-        //download
-        debugPrint("Download");
-        debugPrint(chatList.messageId);
-        chatList.mediaChatMessage!.mediaDownloadStatus =
-            Constants.mediaDownloading;
-        controller.downloadMedia(chatList.messageId);
-        break;
-      case Constants.mediaUploadedNotAvailable:
-        //upload
-        break;
-      case Constants.mediaNotUploaded:
-      case Constants.mediaDownloading:
-      case Constants.mediaUploading:
-        //return uploadingView(chatList.messageType);
-      // break;
-    }
-  }*/
   selectedAppBar() {
     return AppBar(
       backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
@@ -860,7 +590,7 @@ class _ChatViewState extends State<ChatView> {
                   tooltip: AppConstants.reply,
                 ),
                 overflowWidget: Text(AppConstants.reply,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
-                showAsAction: controller.canBeReplied.value
+                showAsAction: (controller.canBeReplied.value && controller.availableFeatures.value.isClearChatAvailable.checkNull())
                     ? ShowAsAction.always
                     : ShowAsAction.gone,
                 keyValue: AppConstants.reply,
@@ -941,7 +671,7 @@ class _ChatViewState extends State<ChatView> {
                   tooltip: AppConstants.delete,
                 ),
                 overflowWidget: Text(AppConstants.delete,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
-                showAsAction: ShowAsAction.always,
+                showAsAction: controller.availableFeatures.value.isDeleteMessageAvailable.checkNull() ? ShowAsAction.always : ShowAsAction.gone,
                 keyValue: AppConstants.delete,
                 onItemClick: () {
                   controller.closeKeyBoard();
@@ -1038,6 +768,20 @@ class _ChatViewState extends State<ChatView> {
                 onItemClick: () {
                   controller.closeKeyBoard();
                   controller.share();
+                },
+              ),
+              CustomAction(
+                visibleWidget: IconButton(
+                  onPressed: () {},
+                  icon: SvgPicture.asset(shareIcon),
+                  tooltip: 'Edit Message',
+                ),
+                overflowWidget: const Text("Edit Message"),
+                showAsAction: ShowAsAction.gone,//controller.canEditMessage.value ? ShowAsAction.never : ShowAsAction.gone,
+                keyValue: 'Edit Message',
+                onItemClick: () {
+                  controller.closeKeyBoard();
+                  controller.editMessage(context);
                 },
               ),
             ]),
@@ -1166,7 +910,7 @@ class _ChatViewState extends State<ChatView> {
                   icon: const Icon(Icons.cancel),
                 ),
                 overflowWidget: Text(AppConstants.clearChat,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
-                showAsAction: ShowAsAction.never,
+                showAsAction: controller.availableFeatures.value.isClearChatAvailable.checkNull() ? ShowAsAction.never : ShowAsAction.gone,
                 keyValue: AppConstants.clearChat,
                 onItemClick: () {
                   controller.closeKeyBoard();
@@ -1262,7 +1006,7 @@ class _ChatViewState extends State<ChatView> {
                   icon: const Icon(Icons.shortcut),
                 ),
                 overflowWidget: Text(AppConstants.addChatShortcut,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
-                showAsAction: ShowAsAction.never,
+                showAsAction: ShowAsAction.gone,
                 keyValue: AppConstants.addChatShortcut,
                 onItemClick: () {
                   controller.closeKeyBoard();
@@ -1276,7 +1020,7 @@ class _ChatViewState extends State<ChatView> {
                   icon: SvgPicture.asset(videoCallIcon,package: package,fit: BoxFit.contain, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
                 ),
                 overflowWidget: const  Text("Video Call"),
-                showAsAction: controller.profile.isGroupProfile.checkNull() ? ShowAsAction.gone : ShowAsAction.always,
+                showAsAction: controller.isVideoCallAvailable ? ShowAsAction.always : ShowAsAction.gone,
                 keyValue: 'Video Call',
                 onItemClick: () {
                   controller.makeVideoCall();
@@ -1290,7 +1034,7 @@ class _ChatViewState extends State<ChatView> {
                   icon: SvgPicture.asset(audioCallIcon,package: package,fit: BoxFit.contain, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
                 ),
                 overflowWidget: const Text("Call"),
-                showAsAction: controller.profile.isGroupProfile.checkNull() ? ShowAsAction.gone : ShowAsAction.always,
+                showAsAction: controller.isAudioCallAvailable ? ShowAsAction.always : ShowAsAction.gone,
                 keyValue: 'Audio Call',
                 onItemClick: () {
                   controller.makeVoiceCall();
