@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/extensions.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/widgets.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 
@@ -13,7 +14,7 @@ import '../controllers/view_all_media_controller.dart';
 import '../../../models.dart';
 
 class ViewAllMediaView extends StatefulWidget {
-  const ViewAllMediaView({Key? key, required this.name, required this.jid, required this.isGroup,this.enableAppBar=true}) : super(key: key);
+  const ViewAllMediaView({super.key, required this.name, required this.jid, required this.isGroup,this.enableAppBar=true});
   final String name;
   final String jid;
   final bool isGroup;
@@ -158,7 +159,7 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
                   ? videoItem(item)
                   : item.isImageMessage()
                       ? Image.file(
-                          File(item.mediaChatMessage!.mediaLocalStoragePath),
+                          File(item.mediaChatMessage!.mediaLocalStoragePath.value),
                           fit: BoxFit.cover,
                         )
                       : const SizedBox()),
@@ -166,8 +167,8 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
         if (item.isImageMessage() || item.isVideoMessage()) {
           controller.openImage(context,gridIndex);
         } else if (item.isAudioMessage()) {
-          // controller.openFile(item.mediaChatMessage!.mediaLocalStoragePath);
-          controller.openImage(context,gridIndex);
+          controller.openFile(item.mediaChatMessage!.mediaLocalStoragePath.value);
+          // controller.openImage(context,gridIndex);
         }
       },
     );
@@ -234,7 +235,7 @@ class _ViewAllMediaViewState extends State<ViewAllMediaView> {
                                   //item.mediaChatMessage!.mediaFileSize.readableFileSize(base1024: false),
                                   date: getDateFromTimestamp(
                                       item.messageSentTime.toInt(), "d/MM/yy"),
-                                  path: item.mediaChatMessage!.mediaLocalStoragePath)
+                                  path: item.mediaChatMessage!.mediaLocalStoragePath.value)
                               : linkTile(list[header]![listIndex]);
                         }),
                   ],
