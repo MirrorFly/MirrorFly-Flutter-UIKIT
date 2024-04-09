@@ -1,6 +1,7 @@
 class AppConstants{
   static var appName = "Mirrorfly";
   static var noInternetConnection = "Please check your internet connection";
+  static var errorTryAgain = "Error Occurred, Please try again";
   static var holdToRecord = "Hold for Video, tap for photo";
   static var addBusyStatus = "Add Busy Status";
   static var youWantDeleteStatus = "Do you want to delete the status?";

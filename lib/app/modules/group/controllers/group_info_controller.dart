@@ -1,16 +1,17 @@
 import 'dart:io';
 
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mirrorfly_plugin/logmessage.dart';
-import 'package:mirrorfly_plugin/model/available_features.dart';
-import 'package:mirrorfly_plugin/model/user_list_model.dart';
+import 'package:mirrorfly_plugin/mirrorflychat.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/extensions.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
-import 'package:mirrorfly_plugin/flychat.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/dashboard/controllers/dashboard_controller.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/dashboard/views/dashboard_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/view_all_media/views/view_all_media_view.dart';
 import '../../../../mirrorfly_uikit_plugin.dart';
 
@@ -61,7 +62,6 @@ class GroupInfoController extends GetxController {
         _mute(profile.isMuted!);
         scrollController.addListener(_scrollListener);
         getGroupMembers(false);
-        getGroupMembers(null);
         groupAdmin();
         memberOfGroup();
         muteAble();
@@ -70,7 +70,7 @@ class GroupInfoController extends GetxController {
     });
   }
   muteAble() async {
-    muteable(await Mirrorfly.isUserUnArchived(profile.jid.checkNull()));
+    muteable(await Mirrorfly.isChatUnArchived(jid: profile.jid.checkNull()));
   }
 
   void onGroupProfileUpdated(String groupJid) {
@@ -178,32 +178,39 @@ class GroupInfoController extends GetxController {
     }
   }
   groupAdmin(){
-    Mirrorfly.isAdmin(SessionManagement.getUserJID()! ,profile.jid.checkNull()).then((bool? value){
+    Mirrorfly.isGroupAdmin(userJid: SessionManagement.getUserJID()! ,groupJid: profile.jid.checkNull()).then((bool? value){
       if(value!=null){
         _isAdmin(value);
       }
     });
   }
   memberOfGroup(){
-    Mirrorfly.isMemberOfGroup(profile.jid.checkNull(),null).then((bool? value){
+    Mirrorfly.isMemberOfGroup(groupJid:profile.jid.checkNull(),userJid: SessionManagement.getUserJID().checkNull()).then((bool? value){
       if(value!=null){
         _isMemberOfGroup(value);
       }
     });
   }
   onToggleChange(bool value){
-    if(muteable.value) {
-      mirrorFlyLog("change", value.toString());
-      _mute(value);
-      Mirrorfly.updateChatMuteStatus(profile.jid.checkNull(), value);
+    if (isMemberOfGroup) {
+      if (muteable.value) {
+        mirrorFlyLog("change", value.toString());
+        _mute(value);
+        Mirrorfly.updateChatMuteStatus(
+            jid: profile.jid.checkNull(), muteStatus: value);
+        notifyDashboardUI();
+      }
+    }else{
+      toToast(AppConstants.youAreNoLonger);
     }
   }
 
   getGroupMembers(bool? server){
-    Mirrorfly.getGroupMembersList(profile.jid.checkNull(),server).then((value) {
-      mirrorFlyLog("getGroupMembersList", value);
-      if(value!=null){
-        var list = profileFromJson(value);
+    Mirrorfly.getGroupMembersList(jid: profile.jid.checkNull(),fetchFromServer: server, flyCallBack: (FlyResponse response) {
+      mirrorFlyLog("getGroupMembersList", response.data);
+      if(response.isSuccess && response.hasData){
+        var list = profileFromJson(response.data);
+        list.sort((a, b) => (a.jid==SessionManagement.getUserJID()) ? 1 : (b.jid==SessionManagement.getUserJID()) ? -1 : 0);
         groupMembers.value=(list);
         groupMembers.refresh();
       }
@@ -211,6 +218,10 @@ class GroupInfoController extends GetxController {
   }
 
   reportGroup(BuildContext context){
+    if(!availableFeatures.value.isGroupChatAvailable.checkNull()){
+      Helper.showFeatureUnavailable(context);
+      return;
+    }
     Helper.showAlert(title: AppConstants.reportThisGroup,message: AppConstants.reportThisGroupContent,actions: [
       TextButton(
           onPressed: () {
@@ -223,17 +234,13 @@ class GroupInfoController extends GetxController {
             // Get.back();
             Navigator.pop(context);
             Helper.progressLoading(context: context);
-            Mirrorfly.reportUserOrMessages(profile.jid.checkNull(),Constants.typeGroupChat, "").then((value) {
+            Mirrorfly.reportUserOrMessages(jid: profile.jid.checkNull(),type: Constants.typeGroupChat, messageId: "", flyCallBack: (FlyResponse response) {
               Helper.hideLoading(context: context);
-              if(value!=null){
-                if(value){
-                  toToast(AppConstants.reportSent);
-                }else{
-                  toToast(AppConstants.thereNoMessagesAvailable);
-                }
+              if(response.isSuccess){
+                toToast(AppConstants.reportSent);
+              }else{
+                toToast(AppConstants.thereNoMessagesAvailable);
               }
-            }).catchError((error) {
-              Helper.hideLoading(context: context);
             });
           },
           child: Text(AppConstants.report.toUpperCase(),style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
@@ -249,6 +256,10 @@ class GroupInfoController extends GetxController {
     }
   }
   leaveGroup(BuildContext context){
+    if(!availableFeatures.value.isGroupChatAvailable.checkNull()){
+      Helper.showFeatureUnavailable(context);
+      return;
+    }
     Helper.showAlert(message: AppConstants.areYouLeave,actions: [
       TextButton(
           onPressed: () {
@@ -265,24 +276,30 @@ class GroupInfoController extends GetxController {
           child: Text(AppConstants.leave.toUpperCase(),style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
     ], context: context);
   }
+  var leavedGroup = false.obs;
   exitFromGroup(BuildContext context)async{
+    if(!availableFeatures.value.isGroupChatAvailable.checkNull()){
+      Helper.showFeatureUnavailable(context);
+      return;
+    }
     if(await AppUtils.isNetConnected()) {
       if(context.mounted) Helper.progressLoading(context: context);
-      Mirrorfly.leaveFromGroup(SessionManagement.getUserJID() ,profile.jid.checkNull()).then((value) {
+      Mirrorfly.leaveFromGroup(userJid: SessionManagement.getUserJID().checkNull() ,groupJid: profile.jid.checkNull(), flyCallBack: (FlyResponse response) {
         Helper.hideLoading(context: context);
-        if(value!=null){
-          if(value){
-            _isMemberOfGroup(!value);
-          }
+        if(response.isSuccess){
+          _isMemberOfGroup(!response.isSuccess);
+          leavedGroup(response.isSuccess);
         }
-      }).catchError((error) {
-        Helper.hideLoading(context: context);
       });
     }else{
       toToast(AppConstants.noInternetConnection);
     }
   }
   deleteGroup(BuildContext context){
+    if(!availableFeatures.value.isGroupChatAvailable.checkNull() || !availableFeatures.value.isDeleteChatAvailable.checkNull()){
+      Helper.showFeatureUnavailable(context);
+      return;
+    }
     Helper.showAlert(message: AppConstants.areYouDelete,actions: [
       TextButton(
           onPressed: () {
@@ -295,24 +312,22 @@ class GroupInfoController extends GetxController {
             if(await AppUtils.isNetConnected()) {
               // Get.back();
               if(context.mounted) Navigator.pop(context);
+              if(!availableFeatures.value.isGroupChatAvailable.checkNull() || !availableFeatures.value.isDeleteChatAvailable.checkNull()){
+                if(context.mounted) Helper.showFeatureUnavailable(context);
+                return;
+              }
               if(context.mounted) Helper.progressLoading(context: context);
-              Mirrorfly.deleteGroup(profile.jid.checkNull()).then((value) {
+              Mirrorfly.deleteGroup(jid: profile.jid.checkNull(), flyCallBack: (FlyResponse response) {
                 Helper.hideLoading(context: context);
-                if(value!=null){
-                  if(value){
-                    // Get.offAllNamed(Routes.dashboard);
-                    // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (con)=>DashboardView()), (route) => false);
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  }
+                if(response.isSuccess){
+                  Navigator.popUntil(context, (route) => route is DashboardView);
+                }else{
+                  toToast(AppConstants.errorTryAgain);
                 }
-              }).catchError((error) {
-                Helper.hideLoading(context: context);
               });
             }else{
               toToast(AppConstants.noInternetConnection);
             }
-
           },
           child: Text(AppConstants.delete.toUpperCase(),style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
     ], context: context);
@@ -352,6 +367,10 @@ class GroupInfoController extends GetxController {
 
   final ImagePicker _picker = ImagePicker();
   camera(BuildContext context) async {
+    if(!availableFeatures.value.isGroupChatAvailable.checkNull()){
+      Helper.showFeatureUnavailable(context);
+      return;
+    }
     if(await AppUtils.isNetConnected()) {
       final XFile? photo = await _picker.pickImage(
           source: ImageSource.camera);
@@ -383,28 +402,32 @@ class GroupInfoController extends GetxController {
   }
 
   updateGroupProfileImage(String path, BuildContext context){
+    if(!availableFeatures.value.isGroupChatAvailable.checkNull()){
+      Helper.showFeatureUnavailable(context);
+      return;
+    }
     showLoader(context);
-    Mirrorfly.updateGroupProfileImage(profile.jid.checkNull(),path).then((bool? value){
+    Mirrorfly.updateGroupProfileImage(jid:profile.jid.checkNull(),file: path, flyCallBack: (FlyResponse response) {
       hideLoader(context);
-      if(value!=null){
-        if(value){
-          profile_.value.image=path;
-          profile_.refresh();
-        }
+      if(response.isSuccess){
+        profile_.value.image=path;
+        profile_.refresh();
       }
     });
   }
 
   updateGroupName(String name, BuildContext context){
+    if(!availableFeatures.value.isGroupChatAvailable.checkNull()){
+      Helper.showFeatureUnavailable(context);
+      return;
+    }
     showLoader(context);
-    Mirrorfly.updateGroupName(profile.jid.checkNull(),name).then((bool? value){
+    Mirrorfly.updateGroupName(jid: profile.jid.checkNull(),name: name, flyCallBack: (FlyResponse response) {
       hideLoader(context);
-      if(value!=null){
-        if(value){
-          profile_.value.name = name;
-          profile_.value.nickName = name;
-          profile_.refresh();
-        }
+      if(response.isSuccess){
+        profile_.value.name = name;
+        profile_.value.nickName = name;
+        profile_.refresh();
       }
     });
   }
@@ -428,18 +451,18 @@ class GroupInfoController extends GetxController {
   }
 
   revokeAccessForProfileImage(BuildContext context)async{
+    if(!availableFeatures.value.isGroupChatAvailable.checkNull()){
+      Helper.showFeatureUnavailable(context);
+      return;
+    }
     if(await AppUtils.isNetConnected()) {
       if(context.mounted) showLoader(context);
-      Mirrorfly.removeGroupProfileImage(profile.jid.checkNull()).then((bool? value) {
+      Mirrorfly.removeGroupProfileImage(jid: profile.jid.checkNull(), flyCallBack: (FlyResponse response) {
         hideLoader(context);
-        if (value != null) {
-          if(value){
-            profile_.value.image=Constants.emptyString;
-            profile_.refresh();
-          }
+        if (response.isSuccess) {
+          profile_.value.image=Constants.emptyString;
+          profile_.refresh();
         }
-      }).catchError((onError) {
-        hideLoader(context);
       });
     }else{
       toToast(AppConstants.noInternetConnection);
@@ -455,24 +478,23 @@ class GroupInfoController extends GetxController {
   }
 
   gotoAddParticipants(BuildContext context){
+    if(!availableFeatures.value.isGroupChatAvailable.checkNull()){
+      Helper.showFeatureUnavailable(context);
+      return;
+    }
     Navigator.push(context, MaterialPageRoute(builder: (con) => ContactListView(group : true, groupJid: profile.jid.checkNull().toString()))).then((value){
       if(value!=null){
         addUsers(value, context);
       }
     });
-    /*Get.toNamed(Routes.contacts, arguments: {"forward" : false,"group":true,"groupJid":profile.jid })?.then((value){
-      if(value!=null){
-        addUsers(value, context);
-      }
-    });*/
   }
 
   addUsers(dynamic value, BuildContext context)async{
     if(await AppUtils.isNetConnected()) {
       if(context.mounted)showLoader(context);
-      Mirrorfly.addUsersToGroup(profile.jid.checkNull(),value as List<String>).then((value){
+      Mirrorfly.addUsersToGroup(jid: profile.jid.checkNull(),userList: value as List<String>, flyCallBack: (FlyResponse response) {
         hideLoader(context);
-        if(value!=null && value){
+        if(response.isSuccess){
           //getGroupMembers(false);
         }else{
           toToast(AppConstants.errorWhileAddingMember);
@@ -489,12 +511,16 @@ class GroupInfoController extends GetxController {
   }
 
   removeUser(String userJid, BuildContext context) async {
+    if(!availableFeatures.value.isGroupChatAvailable.checkNull()){
+      Helper.showFeatureUnavailable(context);
+      return;
+    }
     if(isMemberOfGroup){
       if(await AppUtils.isNetConnected()) {
         if(context.mounted)showLoader(context);
-        Mirrorfly.removeMemberFromGroup(profile.jid.checkNull(), userJid).then((value){
+        Mirrorfly.removeMemberFromGroup(groupJid: profile.jid.checkNull(), userJid: userJid, flyCallBack: (FlyResponse response) {
           hideLoader(context);
-          if(value!=null && value){
+          if(response.isSuccess){
             //getGroupMembers(false);
           }else{
             toToast(AppConstants.errorWhileRemovingMember);
@@ -507,12 +533,16 @@ class GroupInfoController extends GetxController {
   }
 
   makeAdmin(String userJid, BuildContext context) async {
+    if(!availableFeatures.value.isGroupChatAvailable.checkNull()){
+      Helper.showFeatureUnavailable(context);
+      return;
+    }
     if(isMemberOfGroup){
       if(await AppUtils.isNetConnected()) {
         if(context.mounted)showLoader(context);
-        Mirrorfly.makeAdmin(profile.jid.checkNull(), userJid).then((value){
+        Mirrorfly.makeAdmin(groupJid: profile.jid.checkNull(),userJid: userJid, flyCallBack: (FlyResponse response) {
           hideLoader(context);
-          if(value!=null && value){
+          if(response.isSuccess){
             //getGroupMembers(false);
           }else{
             toToast(AppConstants.errorWhileMakeAdmin);
@@ -526,12 +556,11 @@ class GroupInfoController extends GetxController {
 
   //New Name Change
   gotoNameEdit(BuildContext context){
+    if(!availableFeatures.value.isGroupChatAvailable.checkNull()){
+      Helper.showFeatureUnavailable(context);
+      return;
+    }
     if(isMemberOfGroup) {
-      // Get.to(const NameChangeView())?.then((value) {
-      //   if (value != null) {
-      //     updateGroupName(nameController.text, context);
-      //   }
-      // });
       Navigator.push(context, MaterialPageRoute(builder: (con) => const NameChangeView())).then((value) {
         if (value != null) {
           updateGroupName(nameController.text, context);
@@ -548,6 +577,70 @@ class GroupInfoController extends GetxController {
 
   onChanged(){
     count.value = (25 - nameController.text.length);
+  }
+
+  onEmojiBackPressed(){
+    var text = nameController.text;
+    var cursorPosition = nameController.selection.base.offset;
+
+    // If cursor is not set, then place it at the end of the textfield
+    if (cursorPosition < 0) {
+      nameController.selection = TextSelection(
+        baseOffset: nameController.text.length,
+        extentOffset: nameController.text.length,
+      );
+      cursorPosition = nameController.selection.base.offset;
+    }
+
+    if (cursorPosition >= 0) {
+      final selection = nameController.value.selection;
+      final newTextBeforeCursor =
+      selection.textBefore(text).characters.skipLast(1).toString();
+      LogMessage.d("newTextBeforeCursor", newTextBeforeCursor);
+      nameController
+        ..text = newTextBeforeCursor + selection.textAfter(text)
+        ..selection = TextSelection.fromPosition(
+            TextPosition(offset: newTextBeforeCursor.length));
+    }
+    count((25 - nameController.text.characters.length));
+  }
+
+  onEmojiSelected(Emoji emoji){
+    if(nameController.text.characters.length < 25){
+      final controller = nameController;
+      final text = controller.text;
+      final selection = controller.selection;
+      final cursorPosition = controller.selection.base.offset;
+
+      if (cursorPosition < 0) {
+        controller.text += emoji.emoji;
+        // widget.onEmojiSelected?.call(category, emoji);
+        return;
+      }
+
+      final newText =
+      text.replaceRange(selection.start, selection.end, emoji.emoji);
+      final emojiLength = emoji.emoji.length;
+      controller
+        ..text = newText
+        ..selection = selection.copyWith(
+          baseOffset: selection.start + emojiLength,
+          extentOffset: selection.start + emojiLength,
+        );
+    }
+    count((25 - nameController.text.characters.length));
+  }
+
+  void showHideEmoji(BuildContext context) {
+    if (!showEmoji.value) {
+      focusNode.unfocus();
+    }else{
+      focusNode.requestFocus();
+      return;
+    }
+    Future.delayed(const Duration(milliseconds: 100), () {
+      showEmoji(!showEmoji.value);
+    });
   }
 
   void userDeletedHisProfile(String jid) {
@@ -572,16 +665,18 @@ class GroupInfoController extends GetxController {
     _isMemberOfGroup.refresh();
     // loadGroupExistence();
   }
-
-  void showHideEmoji(BuildContext context) {
-    if (!showEmoji.value) {
-      focusNode.unfocus();
-    }else{
-      focusNode.requestFocus();
-      return;
+  void notifyDashboardUI(){
+    if(Get.isRegistered<DashboardController>()){
+      Get.find<DashboardController>().chatMuteChangesNotifyUI(profile.jid.checkNull());
     }
-    Future.delayed(const Duration(milliseconds: 100), () {
-      showEmoji(!showEmoji.value);
-    });
+  }
+
+  onBackPressed() {
+    if (showEmoji.value) {
+      showEmoji(false);
+    } else {
+      nameController.text = profile.nickName.checkNull();
+      Get.back();
+    }
   }
 }

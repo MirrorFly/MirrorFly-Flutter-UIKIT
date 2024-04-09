@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
-import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/extensions.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/group/controllers/group_creation_controller.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/image_view/views/image_view_view.dart';
 
@@ -13,7 +13,7 @@ import '../../../common/constants.dart';
 import '../../../common/widgets.dart';
 
 class GroupCreationView extends StatefulWidget {
-  const GroupCreationView({Key? key,this.enableAppBar=true}) : super(key: key);
+  const GroupCreationView({super.key,this.enableAppBar=true});
   final bool enableAppBar;
   @override
   State<GroupCreationView> createState() => _GroupCreationViewState();
@@ -52,15 +52,17 @@ class _GroupCreationViewState extends State<GroupCreationView> {
                 AppConstants.next.toUpperCase(), style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),)),
         ],
       ):null,
-      body: WillPopScope(
-        onWillPop: () {
+      body: PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) {
+          if (didPop) {
+            return;
+          }
           if (controller.showEmoji.value) {
             controller.showEmoji(false);
           } else {
-            // Get.back();
             Navigator.pop(context);
           }
-          return Future.value(false);
         },
         child: SafeArea(
           child: Column(
@@ -213,13 +215,12 @@ class _GroupCreationViewState extends State<GroupCreationView> {
                 child: Obx(() {
                   if (controller.showEmoji.value) {
                     return EmojiLayout(
-                      textController: controller.groupName,
-                      onBackspacePressed: () => controller.onGroupNameChanged(),
-                      onEmojiSelected: (cat, emoji) =>
-                          controller.onGroupNameChanged(),
+                      textController: TextEditingController(),
+                      onBackspacePressed: () => controller.onEmojiBackPressed(),
+                      onEmojiSelected: (cat, emoji) => controller.onEmojiSelected(emoji),
                     );
                   } else {
-                    return const SizedBox.shrink();
+                    return const Offstage();
                   }
                 }),
               )
