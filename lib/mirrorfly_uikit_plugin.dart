@@ -139,6 +139,13 @@ class MirrorflyUikit {
     }
   }
 
+  ///Used as a login class for [MirrorflyUikit]
+  ///If the [userIdentifier] is new, the same method will register and login into Mirrorfly
+  ///else it will act as a login method
+  ///
+  ///* [userIdentifier] provide the Unique Id to Register the User
+  ///* [fcmToken] provide the FCM token this is an optional
+  ///sample response {'status': true, 'message': 'Login Success};
   static Future<Map> login({required String userIdentifier, String fcmToken = ""}) async {
     Completer<Map<String, dynamic>> completer = Completer();
     if (!isSDKInitialized) {
@@ -157,7 +164,7 @@ class MirrorflyUikit {
                 Mirrorfly.enableDisableArchivedSettings(enable: true, flyCallBack: (_) {});
                 SessionManagement.setUserIdentifier(userIdentifier);
                 await _setUserJID(userData.data!.username!);
-                completer.complete(setResponse(true, 'Register Success'));
+                completer.complete(setResponse(true, 'Login Success'));
               } else {
                 completer.complete(setResponse(false, userData.message.toString()));
               }
