@@ -237,7 +237,8 @@ class ImageNetwork extends GetView<MainController> {
       return url;
     } else {
       if (url.contains("/")) return "";
-      return controller.mediaEndpoint + url;
+      // return controller.mediaEndpoint + url;
+      return SessionManagement.getMediaEndPoint().checkNull() + url;
     }
   }
 

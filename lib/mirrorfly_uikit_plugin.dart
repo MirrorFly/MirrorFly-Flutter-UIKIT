@@ -13,6 +13,7 @@ import 'package:mirrorfly_uikit_plugin/app/model/app_config.dart';
 import 'package:mirrorfly_uikit_plugin/app/model/reply_hash_map.dart';
 
 import 'app/common/app_theme.dart';
+import 'app/common/constants.dart';
 import 'app/common/main_controller.dart';
 import 'app/common/navigation_manager.dart';
 import 'app/data/apputils.dart';
@@ -74,9 +75,11 @@ class MirrorflyUikit {
           if (response.isSuccess) {
             LogMessage.d("initUIKIT onSuccess", response.message);
             isSDKInitialized = true;
+            _getMediaEndpoint();
             completer.complete(setResponse(true, 'SDK Initialized Successfully'));
           } else {
             isSDKInitialized = false;
+            _getMediaEndpoint();
             LogMessage.d(
                 "initUIKIT onFailure", response.errorMessage.toString());
             completer.complete(setResponse(false, 'SDK Initialization Failed'));
@@ -168,14 +171,14 @@ class MirrorflyUikit {
   ///* [userIdentifier] provide the Unique Id to Register the User
   ///* [fcmToken] provide the FCM token this is an optional
   ///sample response {'status': true, 'message': 'Login Success};
-  static Future<Map> login(
+  Future<Map> login(
       {required String userIdentifier, String fcmToken = ""}) async {
     Completer<Map<String, dynamic>> completer = Completer();
     if (!isSDKInitialized) {
       completer.complete(setResponse(false, 'SDK Not Initialized'));
     }
     Mirrorfly.login(
-        userIdentifier: userIdentifier,
+        userIdentifier: userIdentifier.removeAllWhitespace,
         fcmToken: fcmToken,
         flyCallback: (FlyResponse response) async {
           if (response.isSuccess) {
@@ -216,7 +219,7 @@ class MirrorflyUikit {
   ///Use this Method to logout from our UIkit
   ///this will clear all the chat data.
   ///sample response {'status': true, 'message': 'Logout successfully};
-  static Future<Map<String, dynamic>> logoutFromUIKIT() async {
+  Future<Map<String, dynamic>> logoutFromUIKIT() async {
     Completer<Map<String, dynamic>> completer = Completer();
 
     Mirrorfly.logoutOfChatSDK(flyCallBack: (response) {
@@ -239,7 +242,7 @@ class MirrorflyUikit {
   ///used to check if there is an ongoing call
   ///this method works in [Android], in [iOS] returns always false
   ///returns the bool value
-  static Future<bool?> isOnGoingCall() async {
+  Future<bool?> isOnGoingCall() async {
     return await Mirrorfly.isOnGoingCall();
   }
 
@@ -256,11 +259,24 @@ class MirrorflyUikit {
     }).catchError((error) {});
   }
 
-  static ChatView chatPage() {
+  _getMediaEndpoint() async {
+    Mirrorfly.mediaEndPoint().then((value) {
+      mirrorFlyLog("media_endpoint", value.toString());
+      if (value != null) {
+        if (value.isNotEmpty) {
+          SessionManagement.setMediaEndPoint(value);
+        } else {
+          mirrorFlyLog("failed to get media_endpoint", value.toString());
+        }
+      }
+    });
+  }
+
+/*  static ChatView chatPage() {
     Get.put<ChatController>(ChatController());
     return const ChatView(
       jid: "",
       showChatDeliveryIndicator: false,
     );
-  }
+  }*/
 }

@@ -273,7 +273,7 @@ class Helper {
           colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
         );
       case Constants.mLocation:
-        return SvgPicture.asset(
+        return SvgPicture.asset(package: package,
           mLocationIcon,
           fit: BoxFit.contain,
           colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),

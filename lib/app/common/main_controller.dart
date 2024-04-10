@@ -20,6 +20,7 @@ import 'package:mirrorfly_uikit_plugin/app/modules/chat/controllers/chat_control
 import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../mirrorfly_uikit_plugin.dart';
 import '../modules/chatInfo/controllers/chat_info_controller.dart';
 import '../modules/notification/notification_builder.dart';
 import 'notification_service.dart';
@@ -51,13 +52,14 @@ class MainController extends FullLifeCycleController
   Future<void> onInit() async {
     super.onInit();
     //presentPinPage();
-    Mirrorfly.getValueFromManifestOrInfoPlist(
+    /*Mirrorfly.getValueFromManifestOrInfoPlist(
             androidManifestKey: "com.google.android.geo.API_THUMP_KEY",
             iOSPlistKey: "API_THUMP_KEY")
         .then((value) {
       googleMapKey = value;
       mirrorFlyLog("com.google.android.geo.API_THUMP_KEY", googleMapKey);
-    });
+    });*/
+    googleMapKey = MirrorflyUikit.instance.googleMapKey;
     // PushNotifications.init();
     initListeners();
     mediaEndpoint(SessionManagement.getMediaEndPoint().checkNull());

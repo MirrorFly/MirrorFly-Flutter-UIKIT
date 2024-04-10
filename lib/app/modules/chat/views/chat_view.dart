@@ -908,7 +908,7 @@ class _ChatViewState extends State<ChatView> {
               CustomAction(
                 visibleWidget: IconButton(
                   onPressed: () {},
-                  icon: SvgPicture.asset(shareIcon),
+                  icon: SvgPicture.asset(shareIcon, package: package,),
                   tooltip: 'Edit Message',
                 ),
                 overflowWidget: const Text("Edit Message"),

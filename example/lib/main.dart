@@ -13,7 +13,7 @@ Future<void> main() async {
       licenseKey: 'ckIjaccWBoMNvxdbql8LJ2dmKqT5bp',
       googleMapKey: 'AIzaSyBaKkrQnLT4nacpKblIE5d4QK6GpaX5luQ',
       iOSContainerID: 'group.com.mirrorfly.flutter');
-  isOnGoingCall = (await MirrorflyUikit.isOnGoingCall()) ?? false;
+  isOnGoingCall = (await MirrorflyUikit.instance.isOnGoingCall()) ?? false;
   //if isOnGoingCall is returns True then Navigate to OnGoingCallView() this will only for app killed state, call received via FCM
 
   // AppConstants.newGroup = "New Group Create";
@@ -106,7 +106,7 @@ class _DashboardState extends State<Dashboard> {
                         onPressed: () async {
                           if (uniqueId.isNotEmpty) {
                             try {
-                              var response = await MirrorflyUikit.login(
+                              var response = await MirrorflyUikit.instance.login(
                                   userIdentifier: uniqueId);
                               debugPrint("register user $response");
                               showSnack(response['message']);
@@ -178,7 +178,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   logoutFromSDK() async {
-    MirrorflyUikit.logoutFromUIKIT().then((value) {
+    MirrorflyUikit.instance.logoutFromUIKIT().then((value) {
       debugPrint("logout user $value");
       showSnack(value['message']);
     }).catchError((er) {});
