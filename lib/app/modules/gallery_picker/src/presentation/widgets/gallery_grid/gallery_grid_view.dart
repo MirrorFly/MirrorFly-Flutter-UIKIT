@@ -6,6 +6,7 @@ import 'package:photo_manager/photo_manager.dart';
 import '../../pages/gallery_media_picker_controller.dart';
 
 typedef OnAssetItemClick = void Function(AssetEntity entity, int index);
+typedef RemoveAssetItem = void Function(AssetEntity entity, int index);
 
 class GalleryGridView extends StatefulWidget {
   /// asset album
@@ -16,6 +17,9 @@ class GalleryGridView extends StatefulWidget {
 
   /// on tap thumbnail
   final OnAssetItemClick? onAssetItemClick;
+
+  /// remove if size exceeds the limit
+  final RemoveAssetItem? onAssetRemove;
 
   /// picker data provider
   final GalleryMediaPickerController provider;
@@ -57,10 +61,11 @@ class GalleryGridView extends StatefulWidget {
   final int? thumbnailQuality;
 
   const GalleryGridView(
-      {Key? key,
+      {super.key,
       required this.path,
       required this.provider,
       this.onAssetItemClick,
+      this.onAssetRemove,
       this.loadWhenScrolling = false,
       this.childAspectRatio = 0.5,
       this.gridViewBackgroundColor = Colors.white,
@@ -73,8 +78,7 @@ class GalleryGridView extends StatefulWidget {
       this.imageBackgroundColor = Colors.white,
       this.thumbnailBoxFix = BoxFit.cover,
       this.selectedCheckBackgroundColor = Colors.white,
-      this.thumbnailQuality = 200})
-      : super(key: key);
+      this.thumbnailQuality = 200});
 
   @override
   GalleryGridViewState createState() => GalleryGridViewState();
@@ -132,7 +136,9 @@ class GalleryGridViewState extends State<GalleryGridView> {
                         addRepaintBoundaries: true,
                       )
                     : Center(
-                        child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
+                        child: CircularProgressIndicator(
+                          color: MirrorflyUikit.getTheme?.primaryColor,
+                        ),
                       ),
               ),
             ),
@@ -198,16 +204,21 @@ class GalleryGridViewState extends State<GalleryGridView> {
           cacheMap[index] = asset;
 
           /// thumbnail widget
-          return ThumbnailWidget(
-            asset: asset,
-            index: index,
-            provider: provider,
-            thumbnailQuality: widget.thumbnailQuality!,
-            selectedBackgroundColor: widget.selectedBackgroundColor,
-            selectedCheckColor: widget.selectedCheckColor,
-            imageBackgroundColor: widget.imageBackgroundColor,
-            thumbnailBoxFix: widget.thumbnailBoxFix,
-            selectedCheckBackgroundColor: widget.selectedCheckBackgroundColor,
+          return GestureDetector(
+            onTap: () async {
+              widget.onAssetItemClick?.call(asset, index);
+            },
+            child: ThumbnailWidget(
+              asset: asset,
+              index: index,
+              provider: provider,
+              thumbnailQuality: widget.thumbnailQuality!,
+              selectedBackgroundColor: widget.selectedBackgroundColor,
+              selectedCheckColor: widget.selectedCheckColor,
+              imageBackgroundColor: widget.imageBackgroundColor,
+              thumbnailBoxFix: widget.thumbnailBoxFix,
+              selectedCheckBackgroundColor: widget.selectedCheckBackgroundColor,
+            ),
           );
         },
       );

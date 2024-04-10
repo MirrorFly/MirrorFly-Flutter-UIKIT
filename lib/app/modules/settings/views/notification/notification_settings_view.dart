@@ -9,15 +9,17 @@ import '../../../../common/widgets.dart';
 import 'notification_not_working_view.dart';
 
 class NotificationSettingsView extends GetView<NotificationAlertController> {
-  const NotificationSettingsView({Key? key,this.enableAppBar=true}) : super(key: key);
+  const NotificationSettingsView({super.key, this.enableAppBar = true});
   final bool enableAppBar;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: enableAppBar ? AppBar(
-        title: const Text('Notifications'),
-        automaticallyImplyLeading: true,
-      ) : null,
+      appBar: enableAppBar
+          ? AppBar(
+              title: const Text('Notifications'),
+              automaticallyImplyLeading: true,
+            )
+          : null,
       body: Column(
         children: [
           notificationSettingsItem(
@@ -66,7 +68,10 @@ class NotificationSettingsView extends GetView<NotificationAlertController> {
           ],
         ),
         dividerPadding: const EdgeInsets.symmetric(horizontal: 16),
-        trailing: SvgPicture.asset(rightArrowIcon,package: package,),
+        trailing: SvgPicture.asset(
+          rightArrowIcon,
+          package: package,
+        ),
         onTap: onTap);
   }
 }

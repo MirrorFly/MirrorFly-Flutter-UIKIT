@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/notification/notification_service.dart';
-// import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/notification_service.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 
-void main() {
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+var isOnGoingCall = false;
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MirrorflyUikit.instance.initUIKIT(
-      baseUrl: 'YOUR_BASE_URL',
-      licenseKey: 'Your_Mirrorfly_Licence_Key',
-      googleMapKey: 'Your_Google_Map_Key_for_location_messages',
-      iOSContainerID: 'Your_iOS_app_Container_id');
+      navigatorKey: navigatorKey,
+      licenseKey: 'xxx',
+      googleMapKey: 'xxx',
+      enableMobileNumberLogin: true,
+      iOSContainerID: 'xxx');
+  isOnGoingCall = (await MirrorflyUikit.instance.isOnGoingCall()) ?? false;
+  //if isOnGoingCall is returns True then Navigate to OnGoingCallView() this will only for app killed state, call received via FCM
+
   // AppConstants.newGroup = "New Group Create";
   runApp(const MyApp());
 }
@@ -29,9 +34,11 @@ class _MyAppState extends State<MyApp> {
     _configureSelectNotificationSubject();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        navigatorKey: navigatorKey,
         themeMode: ThemeMode.dark,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(textTheme: GoogleFonts.latoTextTheme()),
@@ -44,8 +51,6 @@ class _MyAppState extends State<MyApp> {
       debugPrint("payload $payload");
     });
   }
-
-
 }
 
 class Dashboard extends StatefulWidget {
@@ -102,8 +107,8 @@ class _DashboardState extends State<Dashboard> {
                         onPressed: () async {
                           if (uniqueId.isNotEmpty) {
                             try {
-                              var response =
-                                  await MirrorflyUikit.registerUser(userIdentifier: uniqueId);
+                              var response = await MirrorflyUikit.instance
+                                  .login(userIdentifier: uniqueId);
                               debugPrint("register user $response");
                               showSnack(response['message']);
                             } catch (e) {
@@ -125,8 +130,8 @@ class _DashboardState extends State<Dashboard> {
                         MaterialPageRoute(
                             builder: (con) => const DashboardView(
                                   title: "Chats",
-                              enableAppBar: true,
-                              showChatDeliveryIndicator: true,
+                                  enableAppBar: true,
+                                  showChatDeliveryIndicator: true,
                                 )));
                   },
                   text: 'chat page',
@@ -174,7 +179,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   logoutFromSDK() async {
-    MirrorflyUikit.logoutFromUIKIT().then((value) {
+    MirrorflyUikit.instance.logoutFromUIKIT().then((value) {
       debugPrint("logout user $value");
       showSnack(value['message']);
     }).catchError((er) {});

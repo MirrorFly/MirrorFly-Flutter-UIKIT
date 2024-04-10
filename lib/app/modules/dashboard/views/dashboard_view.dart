@@ -4,6 +4,7 @@ import 'package:focus_detector/focus_detector.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/extensions.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/dashboard/widgets.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
@@ -12,7 +13,9 @@ import '../../../common/widgets.dart';
 import '../../../widgets/custom_action_bar_icons.dart';
 import '../../chat/chat_widgets.dart';
 import '../../dashboard/controllers/dashboard_controller.dart';
+
 typedef ResumeCallback = void Function();
+
 ///* @property [title] indicates the appbar title
 ///* @property [enableAppBar] enable the appbar and its functions
 ///* @property [showBackIcon] show or hide the back icon on appbar
@@ -21,10 +24,18 @@ typedef ResumeCallback = void Function();
 ///* @property [showSettings] show or hide the settings option
 ///* @property [showNewChat] show or hide the New Chat option
 class DashboardView extends StatefulWidget {
-  const DashboardView({Key? key, this.title,this.enableAppBar=true,
-    this.showBackIcon=true, this.showSearchMenu = true,
-    this.showCreateGroup = true, this.showSettings = true,
-    this.showNewChat = true, this.showChatDeliveryIndicator = true, this.onFocusGain}) : super(key: key);
+  const DashboardView(
+      {super.key,
+      this.title,
+      this.enableAppBar = true,
+      this.showBackIcon = true,
+      this.showSearchMenu = true,
+      this.showCreateGroup = true,
+      this.showSettings = true,
+      this.showNewChat = true,
+      this.showChatDeliveryIndicator = true,
+      this.chatLimit = 20,
+      this.onFocusGain});
   final String? title;
   final bool enableAppBar;
   final bool showBackIcon;
@@ -34,12 +45,13 @@ class DashboardView extends StatefulWidget {
   final bool showNewChat;
   final bool showChatDeliveryIndicator;
   final ResumeCallback? onFocusGain;
+  final int chatLimit;
 
   @override
   State<DashboardView> createState() => _DashboardViewState();
 }
 
-class _DashboardViewState extends State<DashboardView>{
+class _DashboardViewState extends State<DashboardView> {
   final controller = Get.put(DashboardController());
 
   @override
@@ -49,10 +61,13 @@ class _DashboardViewState extends State<DashboardView>{
   }
 
   @override
+  void initState() {
+    super.initState();
+    controller.initRecentChat(context, widget.chatLimit);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // var isDark = MirrorflyUikit.getTheme == MirrorFlyTheme.mirrorFlyDarkTheme;
-    // var isLight = MirrorflyUikit.getTheme == MirrorFlyTheme.mirrorFlyDarkTheme;
-    // debugPrint("isDark : $isDark");
     return FocusDetector(
       onFocusGained: () {
         controller.showChatDeliveryIndicator = widget.showChatDeliveryIndicator;
@@ -60,95 +75,123 @@ class _DashboardViewState extends State<DashboardView>{
         controller.checkArchiveSetting();
         controller.getRecentChatList();
         controller.getArchivedChatsList();
+        controller.getAvailableFeatures();
         debugPrint("showBackIcon ${widget.showBackIcon}");
         widget.onFocusGain?.call();
       },
-      child: WillPopScope(
-        onWillPop: () {
+      child: PopScope(
+        canPop: !(controller.selected.value || controller.isSearching.value),
+        onPopInvoked: (didPop) {
+          if (didPop) {
+            return;
+          }
           if (controller.selected.value) {
             controller.clearAllChatSelection();
-            return Future.value(false);
+            return;
           } else if (controller.isSearching.value) {
             controller.getBackFromSearch();
-            return Future.value(false);
+            return;
           }
-          return Future.value(true);
         },
         child: Obx(() {
           return Scaffold(
               backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-              appBar: widget.enableAppBar ? AppBar(
-                backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-                centerTitle: false,
-                automaticallyImplyLeading: true,
-                actionsIconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar ?? iconColor),
-                iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar ?? iconColor),
-                leading: controller.selected.value
-                    ? IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          controller.clearAllChatSelection();
-                        },
-                      )
-                    : controller.isSearching.value
-                        ? IconButton(
-                            icon: const Icon(Icons.arrow_back),
-                            onPressed: () {
-                              controller.getBackFromSearch();
-                            },
-                          )
-                        : widget.showBackIcon ? IconButton(
-                            icon: const Icon(Icons.arrow_back),
-                            onPressed: () {
-                              // Get.back();
-                              Navigator.pop(context);
-                            }) : const SizedBox(),
-                title: controller.selected.value
-                    ? Text((controller.selectedChats.length).toString(),
-                        style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar ?? Colors.black))
-                    : controller.isSearching.value
-                        ? TextField(
-                            focusNode: controller.searchFocusNode,
-                            onChanged: (text) => controller.onChange(text),
-                            controller: controller.search,
-                            autofocus: true,
-                            style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
-                            cursorColor: MirrorflyUikit.getTheme?.colorOnAppbar,
-                            decoration: InputDecoration(
-                                hintText: AppConstants.searchPlaceHolder,
-                                hintStyle: TextStyle(color: MirrorflyUikit
-                                    .getTheme?.colorOnAppbar.withOpacity(0.5)),
-                                border: InputBorder.none),
-                          )
-                        : Text(
-                                widget.title ?? AppConstants.dashboardTitle,
-                                style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar ?? Colors.black),
-                              ),
-                actions: [
-                  buildRecentChatActionBarIcons(context),
-                ],
-              ) : null,
-              floatingActionButton: widget.showNewChat ? controller.isSearching.value
-                  ? null
-                  : FloatingActionButton(
-                      tooltip: AppConstants.newChat,
-                      elevation: 8,
-                      backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
-                      onPressed: () {
-                        controller.gotoContacts(context);
-                      },
-                      /*backgroundColor:
+              appBar: widget.enableAppBar
+                  ? AppBar(
+                      backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
+                      centerTitle: false,
+                      automaticallyImplyLeading: true,
+                      actionsIconTheme: IconThemeData(
+                          color: MirrorflyUikit.getTheme?.colorOnAppbar ??
+                              iconColor),
+                      iconTheme: IconThemeData(
+                          color: MirrorflyUikit.getTheme?.colorOnAppbar ??
+                              iconColor),
+                      leading: controller.selected.value
+                          ? IconButton(
+                              icon: const Icon(Icons.clear),
+                              onPressed: () {
+                                controller.clearAllChatSelection();
+                              },
+                            )
+                          : controller.isSearching.value
+                              ? IconButton(
+                                  icon: const Icon(Icons.arrow_back),
+                                  onPressed: () {
+                                    controller.getBackFromSearch();
+                                  },
+                                )
+                              : widget.showBackIcon
+                                  ? IconButton(
+                                      icon: const Icon(Icons.arrow_back),
+                                      onPressed: () {
+                                        // Get.back();
+                                        Navigator.pop(context);
+                                      })
+                                  : const SizedBox(),
+                      title: controller.selected.value
+                          ? Text((controller.selectedChats.length).toString(),
+                              style: TextStyle(
+                                  color:
+                                      MirrorflyUikit.getTheme?.colorOnAppbar ??
+                                          Colors.black))
+                          : controller.isSearching.value
+                              ? TextField(
+                                  focusNode: controller.searchFocusNode,
+                                  onChanged: (text) =>
+                                      controller.onChange(text),
+                                  controller: controller.search,
+                                  autofocus: true,
+                                  style: TextStyle(
+                                      color: MirrorflyUikit
+                                          .getTheme?.colorOnAppbar),
+                                  cursorColor:
+                                      MirrorflyUikit.getTheme?.colorOnAppbar,
+                                  decoration: InputDecoration(
+                                      hintText: AppConstants.searchPlaceHolder,
+                                      hintStyle: TextStyle(
+                                          color: MirrorflyUikit
+                                              .getTheme?.colorOnAppbar
+                                              .withOpacity(0.5)),
+                                      border: InputBorder.none),
+                                )
+                              : Text(
+                                  widget.title ?? AppConstants.dashboardTitle,
+                                  style: TextStyle(
+                                      color: MirrorflyUikit
+                                              .getTheme?.colorOnAppbar ??
+                                          Colors.black),
+                                ),
+                      actions: [
+                        buildRecentChatActionBarIcons(context),
+                      ],
+                    )
+                  : null,
+              floatingActionButton: widget.showNewChat
+                  ? controller.isSearching.value
+                      ? null
+                      : FloatingActionButton(
+                          tooltip: AppConstants.newChat,
+                          elevation: 8,
+                          backgroundColor:
+                              MirrorflyUikit.getTheme?.primaryColor,
+                          onPressed: () {
+                            controller.gotoContacts(context);
+                          },
+                          /*backgroundColor:
                           MirrorflyUikit.getTheme?.primaryColor ??
                               buttonBgColor,*/
-                      child: SvgPicture.asset(
-                        chatFabIcon,
-                        package: package,
-                        width: 18,
-                        height: 18,
-                        fit: BoxFit.contain,
-                        colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme?.colorOnPrimary ?? Colors.white, BlendMode.srcIn)
-                      ),
-                    ) : null,
+                          child: SvgPicture.asset(chatFabIcon,
+                              package: package,
+                              width: 18,
+                              height: 18,
+                              fit: BoxFit.contain,
+                              colorFilter: ColorFilter.mode(
+                                  MirrorflyUikit.getTheme?.colorOnPrimary ??
+                                      Colors.white,
+                                  BlendMode.srcIn)),
+                        )
+                  : null,
               body: SafeArea(
                 child: Obx(() {
                   return recentChatView(context);
@@ -171,14 +214,19 @@ class _DashboardViewState extends State<DashboardView>{
               onPressed: () {
                 controller.chatInfo(context);
               },
-              icon: SvgPicture.asset(infoIcon, package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
+              icon: SvgPicture.asset(infoIcon,
+                  package: package,
+                  colorFilter: ColorFilter.mode(
+                      MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
               tooltip: AppConstants.info,
             ),
             overflowWidget: Text(
               AppConstants.info,
-              style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),
+              style:
+                  TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),
             ),
-            showAsAction: controller.info.value ? ShowAsAction.always : ShowAsAction.gone,
+            showAsAction:
+                controller.info.value ? ShowAsAction.always : ShowAsAction.gone,
             keyValue: AppConstants.info,
             onItemClick: () {
               controller.chatInfo(context);
@@ -189,11 +237,22 @@ class _DashboardViewState extends State<DashboardView>{
               onPressed: () {
                 controller.deleteChats(context);
               },
-              icon: SvgPicture.asset(delete, package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
+              icon: SvgPicture.asset(delete,
+                  package: package,
+                  colorFilter: ColorFilter.mode(
+                      MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
               tooltip: AppConstants.delete,
             ),
-            overflowWidget: Text(AppConstants.delete, style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
-            showAsAction: controller.delete.value ? ShowAsAction.always : ShowAsAction.gone,
+            overflowWidget: Text(AppConstants.delete,
+                style: TextStyle(
+                    color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+            showAsAction: controller
+                    .availableFeatures.value.isDeleteChatAvailable
+                    .checkNull()
+                ? controller.delete.value
+                    ? ShowAsAction.always
+                    : ShowAsAction.gone
+                : ShowAsAction.gone,
             keyValue: AppConstants.delete,
             onItemClick: () {
               controller.deleteChats(context);
@@ -204,11 +263,19 @@ class _DashboardViewState extends State<DashboardView>{
               onPressed: () {
                 controller.pinChats();
               },
-              icon: SvgPicture.asset(pin, package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn),),
+              icon: SvgPicture.asset(
+                pin,
+                package: package,
+                colorFilter: ColorFilter.mode(
+                    MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn),
+              ),
               tooltip: AppConstants.pin,
             ),
-            overflowWidget: Text(AppConstants.pin, style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
-            showAsAction: controller.pin.value ? ShowAsAction.always : ShowAsAction.gone,
+            overflowWidget: Text(AppConstants.pin,
+                style: TextStyle(
+                    color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+            showAsAction:
+                controller.pin.value ? ShowAsAction.always : ShowAsAction.gone,
             keyValue: AppConstants.pin,
             onItemClick: () {
               controller.pinChats();
@@ -219,11 +286,18 @@ class _DashboardViewState extends State<DashboardView>{
               onPressed: () {
                 controller.unPinChats();
               },
-              icon: SvgPicture.asset(unpin, package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
+              icon: SvgPicture.asset(unpin,
+                  package: package,
+                  colorFilter: ColorFilter.mode(
+                      MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
               tooltip: AppConstants.unPin,
             ),
-            overflowWidget: Text(AppConstants.unPin, style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
-            showAsAction: controller.unpin.value ? ShowAsAction.always : ShowAsAction.gone,
+            overflowWidget: Text(AppConstants.unPin,
+                style: TextStyle(
+                    color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+            showAsAction: controller.unpin.value
+                ? ShowAsAction.always
+                : ShowAsAction.gone,
             keyValue: AppConstants.unPin,
             onItemClick: () {
               controller.unPinChats();
@@ -234,11 +308,17 @@ class _DashboardViewState extends State<DashboardView>{
               onPressed: () {
                 controller.muteChats();
               },
-              icon: SvgPicture.asset(mute, package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
+              icon: SvgPicture.asset(mute,
+                  package: package,
+                  colorFilter: ColorFilter.mode(
+                      MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
               tooltip: AppConstants.mute,
             ),
-            overflowWidget: Text(AppConstants.mute, style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
-            showAsAction: controller.mute.value ? ShowAsAction.always : ShowAsAction.gone,
+            overflowWidget: Text(AppConstants.mute,
+                style: TextStyle(
+                    color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+            showAsAction:
+                controller.mute.value ? ShowAsAction.always : ShowAsAction.gone,
             keyValue: AppConstants.mute,
             onItemClick: () {
               controller.muteChats();
@@ -249,11 +329,18 @@ class _DashboardViewState extends State<DashboardView>{
               onPressed: () {
                 controller.unMuteChats();
               },
-              icon: SvgPicture.asset(unMute, package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
+              icon: SvgPicture.asset(unMute,
+                  package: package,
+                  colorFilter: ColorFilter.mode(
+                      MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
               tooltip: AppConstants.unMute,
             ),
-            overflowWidget: Text(AppConstants.unMute, style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
-            showAsAction: controller.unmute.value ? ShowAsAction.always : ShowAsAction.gone,
+            overflowWidget: Text(AppConstants.unMute,
+                style: TextStyle(
+                    color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+            showAsAction: controller.unmute.value
+                ? ShowAsAction.always
+                : ShowAsAction.gone,
             keyValue: AppConstants.unMute,
             onItemClick: () {
               controller.unMuteChats();
@@ -264,11 +351,18 @@ class _DashboardViewState extends State<DashboardView>{
               onPressed: () {
                 controller.archiveChats();
               },
-              icon: SvgPicture.asset(archive, package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
+              icon: SvgPicture.asset(archive,
+                  package: package,
+                  colorFilter: ColorFilter.mode(
+                      MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),
               tooltip: AppConstants.archived,
             ),
-            overflowWidget: Text(AppConstants.archived, style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
-            showAsAction: controller.archive.value ? ShowAsAction.always : ShowAsAction.gone,
+            overflowWidget: Text(AppConstants.archived,
+                style: TextStyle(
+                    color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+            showAsAction: controller.archive.value
+                ? ShowAsAction.always
+                : ShowAsAction.gone,
             keyValue: AppConstants.archived,
             onItemClick: () {
               controller.archiveChats();
@@ -276,8 +370,11 @@ class _DashboardViewState extends State<DashboardView>{
           ),
           CustomAction(
             visibleWidget: const Icon(Icons.mark_chat_read),
-            overflowWidget: Text(AppConstants.markAsRead,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
-            showAsAction: controller.read.value ? ShowAsAction.never : ShowAsAction.gone,
+            overflowWidget: Text(AppConstants.markAsRead,
+                style: TextStyle(
+                    color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+            showAsAction:
+                controller.read.value ? ShowAsAction.never : ShowAsAction.gone,
             keyValue: AppConstants.markAsRead,
             onItemClick: () {
               controller.itemsRead();
@@ -285,8 +382,12 @@ class _DashboardViewState extends State<DashboardView>{
           ),
           CustomAction(
             visibleWidget: const Icon(Icons.mark_chat_unread),
-            overflowWidget: Text(AppConstants.markAsUnread,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
-            showAsAction: controller.unread.value ? ShowAsAction.never : ShowAsAction.gone,
+            overflowWidget: Text(AppConstants.markAsUnread,
+                style: TextStyle(
+                    color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+            showAsAction: controller.unread.value
+                ? ShowAsAction.never
+                : ShowAsAction.gone,
             keyValue: AppConstants.markAsUnread,
             onItemClick: () {
               controller.itemsUnRead();
@@ -300,25 +401,41 @@ class _DashboardViewState extends State<DashboardView>{
               icon: SvgPicture.asset(
                 searchIcon,
                 package: package,
-                colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn),
+                colorFilter: ColorFilter.mode(
+                    MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn),
                 width: 18,
                 height: 18,
                 fit: BoxFit.contain,
               ),
               tooltip: AppConstants.search,
             ),
-            overflowWidget: Text(AppConstants.search, style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
-            showAsAction:
-                controller.selected.value || controller.isSearching.value ? ShowAsAction.gone : widget.showSearchMenu ? ShowAsAction.always : ShowAsAction.gone,
+            overflowWidget: Text(AppConstants.search,
+                style: TextStyle(
+                    color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+            showAsAction: controller
+                    .availableFeatures.value.isRecentChatSearchAvailable
+                    .checkNull()
+                ? controller.selected.value || controller.isSearching.value
+                    ? ShowAsAction.gone
+                    : widget.showSearchMenu
+                        ? ShowAsAction.always
+                        : ShowAsAction.gone
+                : ShowAsAction.gone,
             keyValue: AppConstants.search,
             onItemClick: () {
               controller.gotoSearch();
             },
           ),
           CustomAction(
-            visibleWidget: IconButton(onPressed: () => controller.onClearPressed(), icon: const Icon(Icons.close)),
-            overflowWidget: Text(AppConstants.clear, style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
-            showAsAction: controller.clearVisible.value ? ShowAsAction.always : ShowAsAction.gone,
+            visibleWidget: IconButton(
+                onPressed: () => controller.onClearPressed(),
+                icon: const Icon(Icons.close)),
+            overflowWidget: Text(AppConstants.clear,
+                style: TextStyle(
+                    color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+            showAsAction: controller.clearVisible.value
+                ? ShowAsAction.always
+                : ShowAsAction.gone,
             keyValue: AppConstants.clear,
             onItemClick: () {
               controller.onClearPressed();
@@ -326,9 +443,18 @@ class _DashboardViewState extends State<DashboardView>{
           ),
           CustomAction(
             visibleWidget: const Icon(Icons.group_add),
-            overflowWidget: Text(AppConstants.newGroup, style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
-            showAsAction:
-                controller.selected.value || controller.isSearching.value ? ShowAsAction.gone : widget.showCreateGroup ? ShowAsAction.never : ShowAsAction.gone,
+            overflowWidget: Text(AppConstants.newGroup,
+                style: TextStyle(
+                    color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+            showAsAction: controller
+                    .availableFeatures.value.isGroupChatAvailable
+                    .checkNull()
+                ? controller.selected.value || controller.isSearching.value
+                    ? ShowAsAction.gone
+                    : widget.showCreateGroup
+                        ? ShowAsAction.never
+                        : ShowAsAction.gone
+                : ShowAsAction.gone,
             keyValue: AppConstants.newGroup,
             onItemClick: () {
               controller.gotoCreateGroup(context);
@@ -336,9 +462,15 @@ class _DashboardViewState extends State<DashboardView>{
           ),
           CustomAction(
             visibleWidget: const Icon(Icons.settings),
-            overflowWidget: Text(AppConstants.settings, style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+            overflowWidget: Text(AppConstants.settings,
+                style: TextStyle(
+                    color: MirrorflyUikit.getTheme?.textPrimaryColor)),
             showAsAction:
-                controller.selected.value || controller.isSearching.value ? ShowAsAction.gone : widget.showSettings ? ShowAsAction.never : ShowAsAction.gone,
+                controller.selected.value || controller.isSearching.value
+                    ? ShowAsAction.gone
+                    : widget.showSettings
+                        ? ShowAsAction.never
+                        : ShowAsAction.gone,
             keyValue: AppConstants.settings,
             onItemClick: () {
               controller.gotoSettings(context);
@@ -365,14 +497,17 @@ class _DashboardViewState extends State<DashboardView>{
             title,
             style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
           ),
-          count != "0"
+          int.parse(count) > 0
               ? Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4.0),
                   child: CircleAvatar(
                     radius: 9,
                     child: Text(
                       count.toString(),
-                      style: const TextStyle(fontSize: 12, color: Colors.white, fontFamily: 'sf_ui'),
+                      style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
+                          fontFamily: 'sf_ui'),
                     ),
                   ),
                 )
@@ -385,7 +520,9 @@ class _DashboardViewState extends State<DashboardView>{
   Widget recentChatView(BuildContext context) {
     return controller.clearVisible.value
         ? recentSearchView(context)
-        : (!controller.recentChatLoading.value && controller.recentChats.isEmpty && controller.archivedChats.isEmpty)
+        : (!controller.recentChatLoading.value &&
+                controller.recentChats.isEmpty &&
+                controller.archivedChats.isEmpty)
             ? emptyChat(context)
             : controller.recentChatLoading.value
                 ? Center(
@@ -395,17 +532,22 @@ class _DashboardViewState extends State<DashboardView>{
                   )
                 : SingleChildScrollView(
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Visibility(
                           visible: controller.archivedChats.isNotEmpty &&
-                              controller.archiveSettingEnabled.value /*&& controller.archivedCount.isNotEmpty*/,
+                              controller.archiveSettingEnabled
+                                  .value /*&& controller.archivedCount.isNotEmpty*/,
                           child: ListItem(
                             leading: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
                               child: SvgPicture.asset(
                                 archive,
                                 package: package,
-                                colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),
+                                colorFilter: ColorFilter.mode(
+                                    MirrorflyUikit.getTheme!.textPrimaryColor,
+                                    BlendMode.srcIn),
                               ),
                             ),
                             title: Text(
@@ -413,92 +555,157 @@ class _DashboardViewState extends State<DashboardView>{
                               style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 16,
-                                  color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                                  color: MirrorflyUikit
+                                      .getTheme?.textPrimaryColor),
                             ),
                             trailing: controller.archivedCount != "0"
                                 ? Text(
                                     controller.archivedCount,
-                                    style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor ?? buttonBgColor),
+                                    style: TextStyle(
+                                        color: MirrorflyUikit
+                                                .getTheme?.primaryColor ??
+                                            buttonBgColor),
                                   )
                                 : null,
                             dividerPadding: EdgeInsets.zero,
                             onTap: () {
                               // Get.toNamed(Routes.archivedChats);
-                              Navigator.push(context, MaterialPageRoute(builder: (con) => ArchivedChatListView(showChatDeliveryIndicator: widget.showChatDeliveryIndicator,)));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (con) => ArchivedChatListView(
+                                            showChatDeliveryIndicator: widget
+                                                .showChatDeliveryIndicator,
+                                          )));
                             },
                           ),
                         ),
-                        ListView.builder(
-                            padding: EdgeInsets.zero,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: controller.recentChats.length + 1,
-                            shrinkWrap: true,
-                            itemBuilder: (BuildContext context, int index) {
-                              if (index < controller.recentChats.length) {
-                                var item = controller.recentChats[index];
-                                return Obx(() {
-                                  return RecentChatItem(
-                                    item: item,
-                                    isSelected: controller.isSelected(index),
-                                    typingUserid: controller.typingUser(item.jid.checkNull()),
-                                    showChatDeliveryIndicator: widget.showChatDeliveryIndicator,
-                                    onTap: () {
-                                      if (controller.selected.value) {
-                                        controller.selectOrRemoveChatfromList(index);
-                                      } else {
-                                        controller.toChatPage(context, item.jid.checkNull());
-                                      }
-                                    },
-                                    onLongPress: widget.enableAppBar ? () {
-                                      controller.selected(true);
-                                      controller.selectOrRemoveChatfromList(index);
-                                    } : null,
-                                    onAvatarClick: () {
-                                      controller.getProfileDetail(context, item, index);
-                                    },
-
-                                  );
-                                });
-                              } else {
-                                return Obx(() {
-                                  return Visibility(
-                                    visible: controller.archivedChats.isNotEmpty &&
-                                        !controller
-                                            .archiveSettingEnabled.value /*&& controller.archivedCount.isNotEmpty*/,
-                                    child: ListItem(
-                                      leading: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                        child: SvgPicture.asset(
-                                          archive,
-                                          package: package,
-                                          colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),
-                                        ),
-                                      ),
-                                      title: Text(
-                                        AppConstants.archived,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 16,
-                                            color: MirrorflyUikit.getTheme?.textPrimaryColor),
-                                      ),
-                                      trailing: controller.archivedChats.isNotEmpty
-                                          ? Text(
-                                              controller.archivedChats.length.toString(),
+                        Obx(() {
+                          return controller.recentChatLoading.value
+                              ? const Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: controller.recentChats.length + 2,
+                                  shrinkWrap: true,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    if (index < controller.recentChats.length) {
+                                      var item = controller.recentChats[index];
+                                      return Obx(() {
+                                        return RecentChatItem(
+                                          item: item,
+                                          isSelected:
+                                              controller.isSelected(index),
+                                          typingUserid: controller
+                                              .typingUser(item.jid.checkNull()),
+                                          showChatDeliveryIndicator:
+                                              widget.showChatDeliveryIndicator,
+                                          onTap: () {
+                                            if (controller.selected.value) {
+                                              controller
+                                                  .selectOrRemoveChatfromList(
+                                                      index);
+                                            } else {
+                                              controller.toChatPage(context,
+                                                  item.jid.checkNull());
+                                            }
+                                          },
+                                          onLongPress: widget.enableAppBar
+                                              ? () {
+                                                  controller.selected(true);
+                                                  controller
+                                                      .selectOrRemoveChatfromList(
+                                                          index);
+                                                }
+                                              : null,
+                                          onAvatarClick: () {
+                                            controller.getProfileDetail(
+                                                context, item, index);
+                                          },
+                                        );
+                                      });
+                                    } else if (index ==
+                                        controller.recentChats.length) {
+                                      // Display loading indicator
+                                      return Obx(() {
+                                        return controller
+                                                .isRecentHistoryLoading.value
+                                            ? const Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: Center(
+                                                  child: SizedBox(
+                                                      width: 24,
+                                                      height: 24,
+                                                      child:
+                                                          CircularProgressIndicator()),
+                                                ),
+                                              )
+                                            : const SizedBox.shrink();
+                                      });
+                                    } else {
+                                      return Obx(() {
+                                        return Visibility(
+                                          visible: controller
+                                                  .archivedChats.isNotEmpty &&
+                                              !controller.archiveSettingEnabled
+                                                  .value /*&& controller.archivedCount.isNotEmpty*/,
+                                          child: ListItem(
+                                            leading: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 16.0),
+                                              child: SvgPicture.asset(
+                                                archive,
+                                                package: package,
+                                                colorFilter: ColorFilter.mode(
+                                                    MirrorflyUikit.getTheme!
+                                                        .textPrimaryColor,
+                                                    BlendMode.srcIn),
+                                              ),
+                                            ),
+                                            title: Text(
+                                              AppConstants.archived,
                                               style: TextStyle(
-                                                  color: MirrorflyUikit.getTheme?.primaryColor ?? buttonBgColor),
-                                            )
-                                          : null,
-                                      dividerPadding: EdgeInsets.zero,
-                                      onTap: () {
-                                        // Get.toNamed(Routes.archivedChats);
-                                        Navigator.push(
-                                            context, MaterialPageRoute(builder: (con) => ArchivedChatListView(showChatDeliveryIndicator: widget.showChatDeliveryIndicator,)));
-                                      },
-                                    ),
-                                  );
-                                });
-                              }
-                            }),
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 16,
+                                                  color: MirrorflyUikit.getTheme
+                                                      ?.textPrimaryColor),
+                                            ),
+                                            trailing: controller
+                                                    .archivedChats.isNotEmpty
+                                                ? Text(
+                                                    controller
+                                                        .archivedChats.length
+                                                        .toString(),
+                                                    style: TextStyle(
+                                                        color: MirrorflyUikit
+                                                                .getTheme
+                                                                ?.primaryColor ??
+                                                            buttonBgColor),
+                                                  )
+                                                : null,
+                                            dividerPadding: EdgeInsets.zero,
+                                            onTap: () {
+                                              // Get.toNamed(Routes.archivedChats);
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (con) =>
+                                                          ArchivedChatListView(
+                                                            showChatDeliveryIndicator:
+                                                                widget
+                                                                    .showChatDeliveryIndicator,
+                                                          )));
+                                            },
+                                          ),
+                                        );
+                                      });
+                                    }
+                                  });
+                        }),
                       ],
                     ),
                   );
@@ -515,17 +722,23 @@ class _DashboardViewState extends State<DashboardView>{
               Visibility(
                 visible: controller.filteredRecentChatList.isNotEmpty,
                 child: searchHeader(
-                    AppConstants.typeSearchRecent, controller.filteredRecentChatList.length.toString(), context),
+                    AppConstants.typeSearchRecent,
+                    controller.filteredRecentChatList.length.toString(),
+                    context),
               ),
               recentChatListView(),
               Visibility(
                 visible: controller.chatMessages.isNotEmpty,
-                child: searchHeader(AppConstants.typeSearchMessage, controller.chatMessages.length.toString(), context),
+                child: searchHeader(AppConstants.typeSearchMessage,
+                    controller.chatMessages.length.toString(), context),
               ),
-              filteredMessageListView(showChatDeliveryIndicator:widget.showChatDeliveryIndicator),
+              filteredMessageListView(
+                  showChatDeliveryIndicator: widget.showChatDeliveryIndicator),
               Visibility(
-                visible: controller.userList.isNotEmpty && !controller.searchLoading.value,
-                child: searchHeader(AppConstants.typeSearchContact, controller.userList.length.toString(), context),
+                visible: controller.userList.isNotEmpty &&
+                    !controller.searchLoading.value,
+                child: searchHeader(AppConstants.typeSearchContact,
+                    controller.userList.length.toString(), context),
               ),
               Visibility(
                   visible: controller.searchLoading.value,
@@ -535,7 +748,8 @@ class _DashboardViewState extends State<DashboardView>{
                     ),
                   )),
               Visibility(
-                visible: controller.userList.isNotEmpty && !controller.searchLoading.value,
+                visible: controller.userList.isNotEmpty &&
+                    !controller.searchLoading.value,
                 child: filteredUsersListView(),
               ),
               Visibility(
@@ -548,7 +762,8 @@ class _DashboardViewState extends State<DashboardView>{
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
                         AppConstants.noDataFound,
-                        style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                        style: TextStyle(
+                            color: MirrorflyUikit.getTheme?.textPrimaryColor),
                       ),
                     ),
                   ))
@@ -561,11 +776,14 @@ class _DashboardViewState extends State<DashboardView>{
 
   ListView filteredUsersListView() {
     return ListView.builder(
-        itemCount: controller.scrollable.value ? controller.userList.length + 1 : controller.userList.length,
+        itemCount: controller.scrollable.value
+            ? controller.userList.length + 1
+            : controller.userList.length,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
-          if (index >= controller.userList.length && controller.scrollable.value) {
+          if (index >= controller.userList.length &&
+              controller.scrollable.value) {
             return Center(
                 child: CircularProgressIndicator(
               color: MirrorflyUikit.getTheme?.primaryColor,
@@ -575,15 +793,19 @@ class _DashboardViewState extends State<DashboardView>{
             return memberItem(
               name: getName(item),
               image: item.image.checkNull(),
-              status: MirrorflyUikit.instance.showMobileNumberOnList ? item.mobileNumber.checkNull() : item.status.checkNull(),
+              status: MirrorflyUikit.instance.showMobileNumberOnList
+                  ? item.mobileNumber.checkNull()
+                  : item.status.checkNull(),
               spantext: controller.search.text.toString(),
               onTap: () {
                 controller.toChatPage(context, item.jid.checkNull());
               },
               isCheckBoxVisible: false,
               isGroup: item.isGroupProfile.checkNull(),
-              blocked: item.isBlockedMe.checkNull() || item.isAdminBlocked.checkNull(),
-              unknown: (!item.isItSavedContact.checkNull() || item.isDeletedContact()),
+              blocked: item.isBlockedMe.checkNull() ||
+                  item.isAdminBlocked.checkNull(),
+              unknown: (!item.isItSavedContact.checkNull() ||
+                  item.isDeletedContact()),
             );
           }
         });
@@ -597,7 +819,8 @@ class _DashboardViewState extends State<DashboardView>{
         itemBuilder: (context, index) {
           var items = controller.chatMessages[index];
           return FutureBuilder(
-              future: controller.getProfileAndMessage(items.chatUserJid.checkNull(), items.messageId.checkNull()),
+              future: controller.getProfileAndMessage(
+                  items.chatUserJid.checkNull(), items.messageId.checkNull()),
               builder: (context, snap) {
                 if (snap.hasData) {
                   var profile = snap.data!.entries.first.key!;
@@ -607,7 +830,8 @@ class _DashboardViewState extends State<DashboardView>{
                     child: Row(
                       children: [
                         Container(
-                            margin: const EdgeInsets.only(left: 19.0, top: 10, bottom: 10, right: 10),
+                            margin: const EdgeInsets.only(
+                                left: 19.0, top: 10, bottom: 10, right: 10),
                             child: Stack(
                               children: [
                                 ImageNetwork(
@@ -624,8 +848,11 @@ class _DashboardViewState extends State<DashboardView>{
                                         : profile.name.checkNull(),*/
                                       ),
                                   isGroup: profile.isGroupProfile.checkNull(),
-                                  blocked: profile.isBlockedMe.checkNull() || profile.isAdminBlocked.checkNull(),
-                                  unknown: (!profile.isItSavedContact.checkNull() || profile.isDeletedContact()),
+                                  blocked: profile.isBlockedMe.checkNull() ||
+                                      profile.isAdminBlocked.checkNull(),
+                                  unknown:
+                                      (!profile.isItSavedContact.checkNull() ||
+                                          profile.isDeletedContact()),
                                 ),
                                 unreadMessageCount.toString() != "0"
                                     ? Positioned(
@@ -634,8 +861,10 @@ class _DashboardViewState extends State<DashboardView>{
                                           radius: 8,
                                           child: Text(
                                             unreadMessageCount.toString(),
-                                            style:
-                                                const TextStyle(fontSize: 9, color: Colors.white, fontFamily: 'sf_ui'),
+                                            style: const TextStyle(
+                                                fontSize: 9,
+                                                color: Colors.white,
+                                                fontFamily: 'sf_ui'),
                                           ),
                                         ))
                                     : const SizedBox(),
@@ -656,21 +885,31 @@ class _DashboardViewState extends State<DashboardView>{
                                           fontSize: 16.0,
                                           fontWeight: FontWeight.w700,
                                           fontFamily: 'sf_ui',
-                                          color: MirrorflyUikit.getTheme?.textPrimaryColor ?? textHintColor),
+                                          color: MirrorflyUikit
+                                                  .getTheme?.textPrimaryColor ??
+                                              textHintColor),
                                     ),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(right: 16.0, left: 8),
+                                    padding: const EdgeInsets.only(
+                                        right: 16.0, left: 8),
                                     child: Text(
-                                      getRecentChatTime(context, item.messageSentTime.toInt()),
+                                      getRecentChatTime(context,
+                                          item.messageSentTime.toInt()),
                                       textAlign: TextAlign.end,
                                       style: TextStyle(
                                           fontSize: 12.0,
                                           fontWeight: FontWeight.w600,
                                           fontFamily: 'sf_ui',
-                                          color: unreadMessageCount.toString() != "0"
-                                              ? MirrorflyUikit.getTheme?.primaryColor ?? buttonBgColor
-                                              : MirrorflyUikit.getTheme?.textSecondaryColor ?? textColor),
+                                          color: unreadMessageCount
+                                                      .toString() !=
+                                                  "0"
+                                              ? MirrorflyUikit
+                                                      .getTheme?.primaryColor ??
+                                                  buttonBgColor
+                                              : MirrorflyUikit.getTheme
+                                                      ?.textSecondaryColor ??
+                                                  textColor),
                                     ),
                                   ),
                                 ],
@@ -690,43 +929,70 @@ class _DashboardViewState extends State<DashboardView>{
                                     child: Row(
                                       children: [
                                         Padding(
-                                          padding: const EdgeInsets.only(right: 8.0),
+                                          padding:
+                                              const EdgeInsets.only(right: 8.0),
                                           child: getMessageIndicator(
-                                              item.messageStatus.value.checkNull(),
-                                              item.isMessageSentByMe.checkNull(),
+                                              item.messageStatus.value
+                                                  .checkNull(),
+                                              item.isMessageSentByMe
+                                                  .checkNull(),
                                               item.messageType.checkNull(),
-                                              item.isMessageRecalled.value,showChatDeliveryIndicator:showChatDeliveryIndicator),
+                                              item.isMessageRecalled.value,
+                                              showChatDeliveryIndicator:
+                                                  showChatDeliveryIndicator),
                                         ),
                                         item.isMessageRecalled.value
                                             ? const SizedBox.shrink()
-                                            : forMessageTypeIcon(item.messageType, item.mediaChatMessage),
+                                            : forMessageTypeIcon(
+                                                item.messageType,
+                                                item.mediaChatMessage),
                                         SizedBox(
-                                          width: forMessageTypeString(item.messageType,
-                                                      content: item.mediaChatMessage?.mediaCaptionText.checkNull()) !=
+                                          width: forMessageTypeString(
+                                                      item.messageType,
+                                                      content: item
+                                                          .mediaChatMessage
+                                                          ?.mediaCaptionText
+                                                          .checkNull()) !=
                                                   null
                                               ? 3.0
                                               : 0.0,
                                         ),
                                         Expanded(
-                                          child: forMessageTypeString(item.messageType,
-                                                      content: item.mediaChatMessage?.mediaCaptionText.checkNull()) ==
+                                          child: forMessageTypeString(
+                                                      item.messageType,
+                                                      content: item
+                                                          .mediaChatMessage
+                                                          ?.mediaCaptionText
+                                                          .checkNull()) ==
                                                   null
                                               ? spannableText(
-                                                  item.messageTextContent.toString(),
+                                                  item.messageTextContent
+                                                      .toString(),
                                                   controller.search.text,
                                                   TextStyle(
                                                       fontSize: 14.0,
-                                                      fontWeight: FontWeight.w600,
-                                                      color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: MirrorflyUikit
+                                                          .getTheme
+                                                          ?.textPrimaryColor),
                                                 )
                                               : Text(
-                                                  forMessageTypeString(item.messageType,
-                                                          content:
-                                                              item.mediaChatMessage?.mediaCaptionText.checkNull()) ??
-                                                      item.messageTextContent.toString(),
-                                                  style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                                                  forMessageTypeString(
+                                                          item.messageType,
+                                                          content: item
+                                                              .mediaChatMessage
+                                                              ?.mediaCaptionText
+                                                              .checkNull()) ??
+                                                      item.messageTextContent
+                                                          .toString(),
+                                                  style: TextStyle(
+                                                      color: MirrorflyUikit
+                                                          .getTheme
+                                                          ?.textPrimaryColor),
                                                   maxLines: 1,
-                                                  overflow: TextOverflow.ellipsis,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
                                         ),
                                       ],
@@ -741,7 +1007,8 @@ class _DashboardViewState extends State<DashboardView>{
                       ],
                     ),
                     onTap: () {
-                      controller.toChatPage(context, items.chatUserJid.checkNull());
+                      controller.toChatPage(
+                          context, items.chatUserJid.checkNull());
                     },
                   );
                 } else if (snap.hasError) {
@@ -767,7 +1034,8 @@ class _DashboardViewState extends State<DashboardView>{
                     ? RecentChatItem(
                         item: item,
                         spanTxt: controller.search.text,
-                        showChatDeliveryIndicator: widget.showChatDeliveryIndicator,
+                        showChatDeliveryIndicator:
+                            widget.showChatDeliveryIndicator,
                         onTap: () {
                           controller.toChatPage(context, item.jid.checkNull());
                         },

@@ -5,6 +5,7 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/extensions.dart';
 
 import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
@@ -13,8 +14,7 @@ import '../../image_view/views/image_view_view.dart';
 import '../controllers/chat_info_controller.dart';
 
 class ChatInfoView extends StatefulWidget {
-  const ChatInfoView({Key? key, required this.jid, this.enableAppBar = true})
-      : super(key: key);
+  const ChatInfoView({super.key, required this.jid, this.enableAppBar = true});
   final String jid;
   final bool enableAppBar;
 
@@ -41,138 +41,148 @@ class _ChatInfoViewState extends State<ChatInfoView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-      body: widget.enableAppBar ? NestedScrollView(
-        controller: controller.scrollController,
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          controller.silverBarHeight = Get.height * 0.45;
-          return <Widget>[
-            Obx(() {
-              return SliverAppBar(
-                backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-                actionsIconTheme: IconThemeData(
-                    color: MirrorflyUikit.getTheme?.colorOnAppbar ?? iconColor),
-                iconTheme: IconThemeData(
-                    color: MirrorflyUikit.getTheme?.colorOnAppbar ?? iconColor),
-                centerTitle: false,
-                titleSpacing: 0.0,
-                expandedHeight: MediaQuery.of(context).size.height * 0.45,
-                snap: false,
-                pinned: true,
-                floating: false,
-                leading: IconButton(
-                  icon: Icon(
-                    Icons.arrow_back,
-                    color: controller.isSliverAppBarExpanded
-                        ? Colors.white
-                        : MirrorflyUikit.getTheme?.colorOnAppbar ??
-                            Colors.black,
-                  ),
-                  onPressed: () {
-                    // Get.back();
-                    Navigator.pop(context);
-                  },
-                ),
-                title: Visibility(
-                  visible: !controller.isSliverAppBarExpanded,
-                  child: Text(controller.profile.getName(),
-                      style: TextStyle(
-                        color: MirrorflyUikit.getTheme?.colorOnAppbar ??
-                            Colors.black,
-                        fontSize: 18.0,
-                      )),
-                ),
-                flexibleSpace: FlexibleSpaceBar(
-                  centerTitle: false,
-                  background: ImageNetwork(
-                    url: controller.profile.image.checkNull(),
-                    width: Get.width,
-                    height: Get.height * 0.45,
-                    clipOval: false,
-                    errorWidget: ProfileTextImage(
-                      text: controller.profile.getName(),
-                      radius: 0,
-                      fontSize: 120,
-                    ),
-                    onTap: () {
-                      if (controller.profile.image!.isNotEmpty &&
-                          !(controller.profile.isBlockedMe.checkNull() ||
-                              controller.profile.isAdminBlocked.checkNull()) &&
-                          !(!controller.profile.isItSavedContact.checkNull() ||
-                              controller.profile.isDeletedContact())) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (con) => ImageViewView(
-                                      imageName: controller.profile.getName(),
-                                      imageUrl:
-                                          controller.profile.image.checkNull(),
-                                    )));
-                        /*Get.toNamed(Routes.imageView, arguments: {
+      body: widget.enableAppBar
+          ? NestedScrollView(
+              controller: controller.scrollController,
+              headerSliverBuilder:
+                  (BuildContext context, bool innerBoxIsScrolled) {
+                controller.silverBarHeight =
+                    MediaQuery.of(context).size.height * 0.45;
+                return <Widget>[
+                  Obx(() {
+                    return SliverAppBar(
+                      backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
+                      actionsIconTheme: IconThemeData(
+                          color: MirrorflyUikit.getTheme?.colorOnAppbar ??
+                              iconColor),
+                      iconTheme: IconThemeData(
+                          color: MirrorflyUikit.getTheme?.colorOnAppbar ??
+                              iconColor),
+                      centerTitle: false,
+                      titleSpacing: 0.0,
+                      expandedHeight: MediaQuery.of(context).size.height * 0.45,
+                      snap: false,
+                      pinned: true,
+                      floating: false,
+                      leading: IconButton(
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: controller.isSliverAppBarExpanded
+                              ? Colors.white
+                              : MirrorflyUikit.getTheme?.colorOnAppbar ??
+                                  Colors.black,
+                        ),
+                        onPressed: () {
+                          // Get.back();
+                          Navigator.pop(context);
+                        },
+                      ),
+                      title: Visibility(
+                        visible: !controller.isSliverAppBarExpanded,
+                        child: Text(controller.profile.getName(),
+                            style: TextStyle(
+                              color: MirrorflyUikit.getTheme?.colorOnAppbar ??
+                                  Colors.black,
+                              fontSize: 18.0,
+                            )),
+                      ),
+                      flexibleSpace: FlexibleSpaceBar(
+                        centerTitle: false,
+                        background: ImageNetwork(
+                          url: controller.profile.image.checkNull(),
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * 0.45,
+                          clipOval: false,
+                          errorWidget: ProfileTextImage(
+                            text: controller.profile.getName(),
+                            radius: 0,
+                            fontSize: 120,
+                          ),
+                          onTap: () {
+                            if (controller.profile.image!.isNotEmpty &&
+                                !(controller.profile.isBlockedMe.checkNull() ||
+                                    controller.profile.isAdminBlocked
+                                        .checkNull()) &&
+                                !(!controller.profile.isItSavedContact
+                                        .checkNull() ||
+                                    controller.profile.isDeletedContact())) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (con) => ImageViewView(
+                                            imageName:
+                                                controller.profile.getName(),
+                                            imageUrl: controller.profile.image
+                                                .checkNull(),
+                                          )));
+                              /*Get.toNamed(Routes.imageView, arguments: {
                           'imageName': getName(controller.profile),
                           'imageUrl': controller.profile.image.checkNull()
                         });*/
-                      }
-                    },
-                    isGroup: controller.profile.isGroupProfile.checkNull(),
-                    blocked: controller.profile.isBlockedMe.checkNull() ||
-                        controller.profile.isAdminBlocked.checkNull(),
-                    unknown:
-                        (!controller.profile.isItSavedContact.checkNull() ||
-                            controller.profile.isDeletedContact()),
-                  ),
-                  // titlePadding: controller.isSliverAppBarExpanded
-                  //     ? const EdgeInsets.symmetric(vertical: 16, horizontal: 20)
-                  //     : const EdgeInsets.symmetric(
-                  //     vertical: 19, horizontal: 50),
-                  titlePadding: const EdgeInsets.only(left: 16),
+                            }
+                          },
+                          isGroup:
+                              controller.profile.isGroupProfile.checkNull(),
+                          blocked: controller.profile.isBlockedMe.checkNull() ||
+                              controller.profile.isAdminBlocked.checkNull(),
+                          unknown: (!controller.profile.isItSavedContact
+                                  .checkNull() ||
+                              controller.profile.isDeletedContact()),
+                        ),
+                        // titlePadding: controller.isSliverAppBarExpanded
+                        //     ? const EdgeInsets.symmetric(vertical: 16, horizontal: 20)
+                        //     : const EdgeInsets.symmetric(
+                        //     vertical: 19, horizontal: 50),
+                        titlePadding: const EdgeInsets.only(left: 16),
 
-                  title: Visibility(
-                    visible: controller.isSliverAppBarExpanded,
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(controller.profile.getName(),
-                              style: TextStyle(
-                                color: controller.isSliverAppBarExpanded
-                                    ? Colors.white
-                                    : MirrorflyUikit.getTheme?.colorOnAppbar ??
-                                        Colors.black,
-                                fontSize: 12.0,
-                              )),
-                          Obx(() {
-                            return Text(controller.userPresenceStatus.value,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 8.0,
-                                ) //TextStyle
-                                );
-                          }),
+                        title: Visibility(
+                          visible: controller.isSliverAppBarExpanded,
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(controller.profile.getName(),
+                                    style: TextStyle(
+                                      color: controller.isSliverAppBarExpanded
+                                          ? Colors.white
+                                          : MirrorflyUikit
+                                                  .getTheme?.colorOnAppbar ??
+                                              Colors.black,
+                                      fontSize: 12.0,
+                                    )),
+                                Obx(() {
+                                  return Text(
+                                      controller.userPresenceStatus.value,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 8.0,
+                                      ) //TextStyle
+                                      );
+                                }),
+                              ],
+                            ),
+                          ),
+                        ),
+                        stretchModes: const [
+                          StretchMode.zoomBackground,
+                          StretchMode.blurBackground,
+                          StretchMode.fadeTitle
                         ],
                       ),
-                    ),
-                  ),
-                  stretchModes: const [
-                    StretchMode.zoomBackground,
-                    StretchMode.blurBackground,
-                    StretchMode.fadeTitle
-                  ],
-                ),
-              );
-            }),
-          ];
-        },
-        body: items(),
-      ) : SafeArea(
-        child: items()
-      ),
+                    );
+                  }),
+                ];
+              },
+              body: items(),
+            )
+          : SafeArea(child: items()),
     );
   }
 
-  Widget items (){
+  Widget items() {
     return ListView(
       children: [
         Obx(() {
@@ -225,11 +235,11 @@ class _ChatInfoViewState extends State<ChatInfoView> {
               padding: const EdgeInsets.only(left: 15.0, bottom: 16),
               child: Row(
                 children: [
-                  SvgPicture.asset(
-                      emailIcon,
+                  SvgPicture.asset(emailIcon,
                       package: package,
-                      colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn)
-                  ),
+                      colorFilter: ColorFilter.mode(
+                          MirrorflyUikit.getTheme!.textSecondaryColor,
+                          BlendMode.srcIn)),
                   const SizedBox(
                     width: 10,
                   ),
@@ -262,11 +272,11 @@ class _ChatInfoViewState extends State<ChatInfoView> {
               padding: const EdgeInsets.only(left: 15.0, bottom: 16),
               child: Row(
                 children: [
-                  SvgPicture.asset(
-                      phoneIcon,
+                  SvgPicture.asset(phoneIcon,
                       package: package,
-                      colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn)
-                  ),
+                      colorFilter: ColorFilter.mode(
+                          MirrorflyUikit.getTheme!.textSecondaryColor,
+                          BlendMode.srcIn)),
                   const SizedBox(
                     width: 10,
                   ),
@@ -301,11 +311,11 @@ class _ChatInfoViewState extends State<ChatInfoView> {
                 padding: const EdgeInsets.only(left: 15.0, bottom: 16),
                 child: Row(
                   children: [
-                    SvgPicture.asset(
-                        statusIcon,
+                    SvgPicture.asset(statusIcon,
                         package: package,
-                        colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn)
-                    ),
+                        colorFilter: ColorFilter.mode(
+                            MirrorflyUikit.getTheme!.textSecondaryColor,
+                            BlendMode.srcIn)),
                     const SizedBox(
                       width: 10,
                     ),
@@ -324,11 +334,11 @@ class _ChatInfoViewState extends State<ChatInfoView> {
           ),
         ),
         listItem(
-            leading: SvgPicture.asset(
-                imageOutline,
+            leading: SvgPicture.asset(imageOutline,
                 package: package,
-                colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn)
-            ),
+                colorFilter: ColorFilter.mode(
+                    MirrorflyUikit.getTheme!.textPrimaryColor,
+                    BlendMode.srcIn)),
             title: Text(AppConstants.viewAllMedia,
                 style: TextStyle(
                     color: MirrorflyUikit.getTheme?.textPrimaryColor,
@@ -340,15 +350,14 @@ class _ChatInfoViewState extends State<ChatInfoView> {
               color: MirrorflyUikit.getTheme?.textPrimaryColor,
             ),
             onTap: () => {
-              controller.gotoViewAllMedia(context)
-            } //controller.gotoViewAllMedia(),
-        ),
-        listItem(
-            leading: SvgPicture.asset(
-                reportUser,
-                package: package,
-                colorFilter: const ColorFilter.mode(Colors.red, BlendMode.srcIn)
+                  controller.gotoViewAllMedia(context)
+                } //controller.gotoViewAllMedia(),
             ),
+        listItem(
+            leading: SvgPicture.asset(reportUser,
+                package: package,
+                colorFilter:
+                    const ColorFilter.mode(Colors.red, BlendMode.srcIn)),
             title: Text(AppConstants.report,
                 style: const TextStyle(
                     color: Colors.red,

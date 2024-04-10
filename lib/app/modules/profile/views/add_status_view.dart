@@ -9,7 +9,8 @@ import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
 
 class AddStatusView extends StatefulWidget {
-  const AddStatusView({Key? key, required this.status,this.enableAppBar=true}) : super(key: key);
+  const AddStatusView(
+      {super.key, required this.status, this.enableAppBar = true});
   final bool enableAppBar;
   final String status;
   @override
@@ -30,21 +31,29 @@ class _AddStatusViewState extends State<AddStatusView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-      appBar: widget.enableAppBar ? AppBar(
-        automaticallyImplyLeading: true,
-        title: Text(AppConstants.addNewStatus, style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
-        iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
-        backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-      ) : null,
-      body: WillPopScope(
-        onWillPop: () {
+      appBar: widget.enableAppBar
+          ? AppBar(
+              automaticallyImplyLeading: true,
+              title: Text(
+                AppConstants.addNewStatus,
+                style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+              ),
+              iconTheme:
+                  IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+              backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
+            )
+          : null,
+      body: PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) {
+          if (didPop) {
+            return;
+          }
           if (controller.showEmoji.value) {
             controller.showEmoji(false);
           } else {
-            // Get.back();
-            Navigator.pop(context);
+            controller.onBackPressed(context);
           }
-          return Future.value(false);
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,10 +78,13 @@ class _AddStatusViewState extends State<AddStatusView> {
                         maxLength: 139,
                         maxLines: 1,
                         cursorColor: MirrorflyUikit.getTheme?.primaryColor,
-                        keyboardAppearance: MirrorflyUikit.theme == "dark" ? Brightness.dark : Brightness.light,
+                        keyboardAppearance: MirrorflyUikit.theme == "dark"
+                            ? Brightness.dark
+                            : Brightness.light,
                         controller: controller.addStatusController,
                         decoration: const InputDecoration(
-                            border: InputBorder.none, counterText: Constants.emptyString),
+                            border: InputBorder.none,
+                            counterText: Constants.emptyString),
                         onTap: () {
                           if (controller.showEmoji.value) {
                             controller.showEmoji(false);
@@ -85,14 +97,14 @@ class _AddStatusViewState extends State<AddStatusView> {
                         padding: const EdgeInsets.all(4.0),
                         child: Center(
                           child: Obx(
-                                () =>
-                                Text(
-                                  controller.count.toString(),
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: MirrorflyUikit.getTheme?.textSecondaryColor,
-                                      fontWeight: FontWeight.normal),
-                                ),
+                            () => Text(
+                              controller.count.toString(),
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: MirrorflyUikit
+                                      .getTheme?.textSecondaryColor,
+                                  fontWeight: FontWeight.normal),
+                            ),
                           ),
                         )),
                     Obx(() {
@@ -106,12 +118,25 @@ class _AddStatusViewState extends State<AddStatusView> {
                             if (!controller.showEmoji.value) {
                               controller.focusNode.unfocus();
                             }
-                            Future.delayed(
-                                const Duration(milliseconds: 500), () {
+                            Future.delayed(const Duration(milliseconds: 500),
+                                () {
                               controller.showEmoji(!controller.showEmoji.value);
                             });
                           },
-                          icon: controller.showEmoji.value ? Icon(Icons.keyboard, color: MirrorflyUikit.getTheme?.textSecondaryColor, ) : SvgPicture.asset(smileIcon,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn),));
+                          icon: controller.showEmoji.value
+                              ? Icon(
+                                  Icons.keyboard,
+                                  color: MirrorflyUikit
+                                      .getTheme?.textSecondaryColor,
+                                )
+                              : SvgPicture.asset(
+                                  smileIcon,
+                                  package: package,
+                                  colorFilter: ColorFilter.mode(
+                                      MirrorflyUikit
+                                          .getTheme!.textSecondaryColor,
+                                      BlendMode.srcIn),
+                                ));
                     })
                   ],
                 ),
@@ -120,14 +145,16 @@ class _AddStatusViewState extends State<AddStatusView> {
             Row(children: [
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () =>  Navigator.pop(context),
+                  onPressed: () => controller.onBackPressed(context),
                   style: ElevatedButton.styleFrom(
                       backgroundColor: MirrorflyUikit.getTheme?.secondaryColor,
                       shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.zero)),
                   child: Text(
                     AppConstants.cancel.toUpperCase(),
-                    style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor, fontSize: 16.0),
+                    style: TextStyle(
+                        color: MirrorflyUikit.getTheme?.textPrimaryColor,
+                        fontSize: 16.0),
                   ),
                 ),
               ),
@@ -138,12 +165,14 @@ class _AddStatusViewState extends State<AddStatusView> {
                     controller.validateAndFinish(context);
                   },
                   style: ElevatedButton.styleFrom(
-                      backgroundColor:  MirrorflyUikit.getTheme?.secondaryColor,
+                      backgroundColor: MirrorflyUikit.getTheme?.secondaryColor,
                       shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.zero)),
                   child: Text(
                     AppConstants.ok.toUpperCase(),
-                    style: TextStyle(color:  MirrorflyUikit.getTheme?.textPrimaryColor, fontSize: 16.0),
+                    style: TextStyle(
+                        color: MirrorflyUikit.getTheme?.textPrimaryColor,
+                        fontSize: 16.0),
                   ),
                 ),
               ),
@@ -159,9 +188,9 @@ class _AddStatusViewState extends State<AddStatusView> {
     return Obx(() {
       if (controller.showEmoji.value) {
         return EmojiLayout(
-            textController: controller.addStatusController,
-            onBackspacePressed: () => controller.onChanged(),
-            onEmojiSelected: (cat, emoji) => controller.onChanged());
+            textController: TextEditingController(),
+            onBackspacePressed: () => controller.onEmojiBackPressed(),
+            onEmojiSelected: (cat, emoji) => controller.onEmojiSelected(emoji));
       } else {
         return const SizedBox.shrink();
       }

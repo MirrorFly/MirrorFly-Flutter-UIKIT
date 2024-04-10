@@ -8,6 +8,7 @@ import 'package:focus_detector/focus_detector.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/extensions.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/image_view/views/image_view_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/profile/views/status_list_view.dart';
@@ -17,7 +18,8 @@ import '../../../common/widgets.dart';
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends StatefulWidget {
-  const ProfileView({Key? key, this.enableAppBar=true, this.showBackIcon=true,}) : super(key: key);
+  const ProfileView(
+      {super.key, this.enableAppBar = true, this.showBackIcon = true});
   final bool enableAppBar;
   final bool showBackIcon;
   @override
@@ -53,19 +55,21 @@ class _ProfileViewState extends State<ProfileView> {
       },
       child: Scaffold(
           backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-          appBar: widget.enableAppBar ? AppBar(
-            title: Text(
-                AppConstants.profileTitle,
-                style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar)
-            ),
-            centerTitle: true,
-            iconTheme: IconThemeData(
-                color: MirrorflyUikit.getTheme?.colorOnAppbar),
-            backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-            automaticallyImplyLeading: /*controller.from.value == Routes.login
+          appBar: widget.enableAppBar
+              ? AppBar(
+                  title: Text(AppConstants.profileTitle,
+                      style: TextStyle(
+                          color: MirrorflyUikit.getTheme?.colorOnAppbar)),
+                  centerTitle: true,
+                  iconTheme: IconThemeData(
+                      color: MirrorflyUikit.getTheme?.colorOnAppbar),
+                  backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
+                  automaticallyImplyLeading: /*controller.from.value == Routes.login
                 ? false
-                : */widget.showBackIcon ? true : false,
-          ) : null,
+                : */
+                      widget.showBackIcon ? true : false,
+                )
+              : null,
           body: SafeArea(
             child: SingleChildScrollView(
               child: Padding(
@@ -80,19 +84,14 @@ class _ProfileViewState extends State<ProfileView> {
                       child: Stack(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(18.0, 0, 18.0,
-                                0),
+                            padding:
+                                const EdgeInsets.fromLTRB(18.0, 0, 18.0, 0),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8.0),
-                              child: Obx(
-                                      () {
-                                    debugPrint(
-                                        "controller.userImgUrl.value ${controller
-                                            .userImgUrl.value}");
-                                    return InkWell(
-                                      child: controller.imagePath.value
-                                          .isNotEmpty
-                                          ? SizedBox(
+                              child: Obx(() {
+                                return InkWell(
+                                  child: controller.imagePath.value.isNotEmpty
+                                      ? SizedBox(
                                           width: 150,
                                           height: 150,
                                           child: ClipOval(
@@ -101,81 +100,96 @@ class _ProfileViewState extends State<ProfileView> {
                                               fit: BoxFit.fill,
                                             ),
                                           ))
+                                      : controller.userImgUrl.value.isEmpty &&
+                                              controller.name.value.isNotEmpty
+                                          ? ProfileTextImage(
+                                              fontSize: 40,
+                                              bgColor: buttonBgColor,
+                                              text: controller.name.value
+                                                  .checkNull(),
+                                              radius: 75,
+                                            )
                                           : ImageNetwork(
-                                        url: controller.userImgUrl.value
-                                            .checkNull(),
-                                        width: 150,
-                                        height: 150,
-                                        clipOval: true,
-                                        errorWidget: controller.nameOnImage
-                                            .isNotEmpty
-                                            ? ProfileTextImage(
-                                          fontSize: 40,
-                                          bgColor: MirrorflyUikit.getTheme?.primaryColor,//buttonBgColor,
-                                          text: controller.nameOnImage.value,
-                                          radius: 75,
-                                        )
-                                            : null,
-                                        isGroup: false,
-                                        blocked: false,
-                                        unknown: false,
-                                      ),
-                                      onTap: () {
-                                        if (controller.imagePath.value
-                                            .checkNull()
-                                            .isNotEmpty) {
-                                          // Get.toNamed(Routes.imageView, arguments: {
-                                          //   'imageName': controller.profileName.text,
-                                          //   'imagePath': controller.imagePath.value.checkNull()
-                                          // });
-                                          Navigator.push(context,
-                                              MaterialPageRoute(
-                                                  builder: (con) =>
-                                                      ImageViewView(
-                                                          imageName: controller
-                                                              .profileName.text,
-                                                          imagePath: controller
-                                                              .imagePath.value
-                                                              .checkNull())));
-                                        } else if (controller.userImgUrl.value
-                                            .checkNull()
-                                            .isNotEmpty) {
-                                          // Get.toNamed(Routes.imageView, arguments: {
-                                          //   'imageName': controller.profileName.text,
-                                          //   'imageUrl': controller.userImgUrl.value.checkNull()
-                                          // });
-                                          Navigator.push(context,
-                                              MaterialPageRoute(
-                                                  builder: (con) =>
-                                                      ImageViewView(
-                                                          imageName: controller
-                                                              .profileName.text,
-                                                          imageUrl: controller
-                                                              .userImgUrl.value
-                                                              .checkNull())));
-                                        }
-                                      },
-                                    );
-                                  }),
+                                              url: controller.userImgUrl.value
+                                                  .checkNull(),
+                                              width: 150,
+                                              height: 150,
+                                              clipOval: true,
+                                              errorWidget: controller
+                                                      .profileName.text
+                                                      .checkNull()
+                                                      .isNotEmpty
+                                                  ? ProfileTextImage(
+                                                      fontSize: 40,
+                                                      bgColor: MirrorflyUikit
+                                                          .getTheme
+                                                          ?.primaryColor, //buttonBgColor,
+                                                      text: controller
+                                                          .profileName.text
+                                                          .checkNull(),
+                                                      radius: 75,
+                                                    )
+                                                  : null,
+                                              isGroup: false,
+                                              blocked: false,
+                                              unknown: false,
+                                            ),
+                                  onTap: () {
+                                    if (controller.imagePath.value
+                                        .checkNull()
+                                        .isNotEmpty) {
+                                      // Get.toNamed(Routes.imageView, arguments: {
+                                      //   'imageName': controller.profileName.text,
+                                      //   'imagePath': controller.imagePath.value.checkNull()
+                                      // });
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (con) => ImageViewView(
+                                                  imageName: controller
+                                                      .profileName.text,
+                                                  imagePath: controller
+                                                      .imagePath.value
+                                                      .checkNull())));
+                                    } else if (controller.userImgUrl.value
+                                        .checkNull()
+                                        .isNotEmpty) {
+                                      // Get.toNamed(Routes.imageView, arguments: {
+                                      //   'imageName': controller.profileName.text,
+                                      //   'imageUrl': controller.userImgUrl.value.checkNull()
+                                      // });
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (con) => ImageViewView(
+                                                  imageName: controller
+                                                      .profileName.text,
+                                                  imageUrl: controller
+                                                      .userImgUrl.value
+                                                      .checkNull())));
+                                    }
+                                  },
+                                );
+                              }),
                             ),
                           ),
                           Obx(
-                                () =>
-                                Positioned(
-                                  right: 10,
-                                  bottom: 10,
-                                  child: InkWell(
-                                    onTap: controller.loading.value
-                                        ? null
-                                        : () {
-                                      bottomSheetView(context);
-                                    },
-                                    child: Image.asset(
-                                      cameraProfileChange, package: package,
-                                      height: 40,
-                                    ),
-                                  ),
+                            () => Positioned(
+                              right: 10,
+                              bottom: 10,
+                              child: InkWell(
+                                onTap: controller.loading.value
+                                    ? null
+                                    : () {
+                                        bottomSheetView(context);
+                                      },
+                                child: Image.asset(
+                                  cameraProfileChange,
+                                  package: package,
+                                  height: 40,
                                 ),
+                              ),
+                            ),
                           )
                         ],
                       ),
@@ -199,14 +213,17 @@ class _ProfileViewState extends State<ProfileView> {
                             controller: controller.profileName,
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintStyle: TextStyle(color: MirrorflyUikit
-                                  .getTheme?.textSecondaryColor.withOpacity(0.7)),
+                              hintStyle: TextStyle(
+                                  color: MirrorflyUikit
+                                      .getTheme?.textSecondaryColor
+                                      .withOpacity(0.7)),
                               hintText: AppConstants.userName,
                               counterText: Constants.emptyString,
                             ),
-                            style: TextStyle(fontWeight: FontWeight.bold,
-                                color: MirrorflyUikit.getTheme
-                                    ?.textPrimaryColor),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color:
+                                    MirrorflyUikit.getTheme?.textPrimaryColor),
                           ),
                         );
                       }),
@@ -216,7 +233,8 @@ class _ProfileViewState extends State<ProfileView> {
                     ),
                     Text(
                       AppConstants.email,
-                      style: TextStyle(fontWeight: FontWeight.w600,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
                           fontSize: 14,
                           color: MirrorflyUikit.getTheme?.textPrimaryColor),
                     ),
@@ -230,12 +248,19 @@ class _ProfileViewState extends State<ProfileView> {
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: AppConstants.enterEmailID,
-                        hintStyle: TextStyle(color: MirrorflyUikit
-                            .getTheme?.textSecondaryColor.withOpacity(0.7)),
-                        icon: SvgPicture.asset(emailIcon, package: package,
-                          colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn),),
+                        hintStyle: TextStyle(
+                            color: MirrorflyUikit.getTheme?.textSecondaryColor
+                                .withOpacity(0.7)),
+                        icon: SvgPicture.asset(
+                          emailIcon,
+                          package: package,
+                          colorFilter: ColorFilter.mode(
+                              MirrorflyUikit.getTheme!.textSecondaryColor,
+                              BlendMode.srcIn),
+                        ),
                       ),
-                      style: TextStyle(fontWeight: FontWeight.normal,
+                      style: TextStyle(
+                          fontWeight: FontWeight.normal,
                           color: MirrorflyUikit.getTheme?.textSecondaryColor),
                     ),
                     const AppDivider(),
@@ -244,7 +269,8 @@ class _ProfileViewState extends State<ProfileView> {
                     ),
                     Text(
                       AppConstants.mobileNumber,
-                      style: TextStyle(fontWeight: FontWeight.w600,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
                           fontSize: 14,
                           color: MirrorflyUikit.getTheme?.textPrimaryColor),
                     ),
@@ -258,12 +284,19 @@ class _ProfileViewState extends State<ProfileView> {
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: AppConstants.enterMobileNumber,
-                          hintStyle: TextStyle(color: MirrorflyUikit
-                              .getTheme?.textSecondaryColor.withOpacity(0.7)),
-                          icon: SvgPicture.asset(phoneIcon, package: package,
-                              colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn),),
+                          hintStyle: TextStyle(
+                              color: MirrorflyUikit.getTheme?.textSecondaryColor
+                                  .withOpacity(0.7)),
+                          icon: SvgPicture.asset(
+                            phoneIcon,
+                            package: package,
+                            colorFilter: ColorFilter.mode(
+                                MirrorflyUikit.getTheme!.textSecondaryColor,
+                                BlendMode.srcIn),
+                          ),
                         ),
-                        style: TextStyle(fontWeight: FontWeight.normal,
+                        style: TextStyle(
+                            fontWeight: FontWeight.normal,
                             color: MirrorflyUikit.getTheme?.textSecondaryColor),
                       );
                     }),
@@ -271,36 +304,43 @@ class _ProfileViewState extends State<ProfileView> {
                     const SizedBox(
                       height: 20,
                     ),
-                   Visibility(
-                     visible: MirrorflyUikit.instance.showStatusOption,
-                     child: Column(
+                    Visibility(
+                      visible: MirrorflyUikit.instance.showStatusOption,
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
                             AppConstants.status,
-                            style: TextStyle(fontWeight: FontWeight.w600,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
                                 fontSize: 14,
-                                color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                                color:
+                                    MirrorflyUikit.getTheme?.textPrimaryColor),
                           ),
-                          Obx(() =>
-                              ListTile(
+                          Obx(() => ListTile(
                                 contentPadding: EdgeInsets.zero,
                                 title: Text(
                                   controller.profileStatus.value.isNotEmpty
                                       ? controller.profileStatus.value
                                       : AppConstants.defaultStatus,
                                   style: TextStyle(
-                                      color: controller.profileStatus.value.isNotEmpty
-                                          ? MirrorflyUikit.getTheme
-                                          ?.textSecondaryColor
+                                      color: controller
+                                              .profileStatus.value.isNotEmpty
+                                          ? MirrorflyUikit
+                                              .getTheme?.textSecondaryColor
                                           : Colors.black38,
                                       fontWeight: FontWeight.normal),
                                 ),
                                 minLeadingWidth: 10,
                                 leading: SvgPicture.asset(
-                                    statusIcon, package: package,
-                                    colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn),),
+                                  statusIcon,
+                                  package: package,
+                                  colorFilter: ColorFilter.mode(
+                                      MirrorflyUikit
+                                          .getTheme!.textSecondaryColor,
+                                      BlendMode.srcIn),
+                                ),
                                 onTap: () async {
                                   // Get.toNamed(Routes.statusList, arguments: {'status': controller.profileStatus.value})
                                   //     ?.then((value) {
@@ -308,11 +348,12 @@ class _ProfileViewState extends State<ProfileView> {
                                   //     controller.profileStatus.value = value;
                                   //   }
                                   // });
-                                  final result = await Navigator.push(context,
-                                      MaterialPageRoute(builder: (con) =>
-                                          StatusListView(
-                                              status: controller.profileStatus
-                                                  .value)));
+                                  final result = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (con) => StatusListView(
+                                              status: controller
+                                                  .profileStatus.value)));
                                   if (result != null) {
                                     controller.profileStatus.value = result;
                                   }
@@ -323,40 +364,39 @@ class _ProfileViewState extends State<ProfileView> {
                           ),
                         ],
                       ),
-                   ),
-
+                    ),
                     Center(
                       child: Obx(
-                            () =>
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 40, vertical: 15),
-                                  textStyle: const TextStyle(fontSize: 14),
-                                  backgroundColor: MirrorflyUikit.getTheme
-                                      ?.primaryColor,
-                                  shape: const StadiumBorder()),
-                              onPressed: controller.loading.value
-                                  ? null
-                                  : controller.changed.value
+                        () => ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 55, vertical: 15),
+                              textStyle: const TextStyle(fontSize: 14),
+                              backgroundColor:
+                                  MirrorflyUikit.getTheme?.primaryColor,
+                              shape: const StadiumBorder()),
+                          onPressed: controller.loading.value
+                              ? null
+                              : controller.changed.value
                                   ? () {
-                                FocusScope.of(context).unfocus();
-                                if (!controller.loading.value) {
-                                  controller.save(context: context);
-                                }
-                              }
+                                      FocusScope.of(context).unfocus();
+                                      if (!controller.loading.value) {
+                                        controller.save(context: context);
+                                      }
+                                    }
                                   : null,
-                              child: Text(
-                                /*controller.from.value == Routes.login
+                          child: Text(
+                            /*controller.from.value == Routes.login
                                     ? 'Save'
-                                    : */controller.changed.value
-                                    ? AppConstants.updateAndContinue
-                                    : AppConstants.save,
-                                style: TextStyle(fontWeight: FontWeight.w600,
-                                    color: MirrorflyUikit.getTheme
-                                        ?.colorOnPrimary),
-                              ),
-                            ),
+                                    : */
+                            controller.changed.value
+                                ? AppConstants.updateAndContinue
+                                : AppConstants.save,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: MirrorflyUikit.getTheme?.colorOnPrimary),
+                          ),
+                        ),
                       ),
                     ),
                   ],
@@ -375,6 +415,7 @@ class _ProfileViewState extends State<ProfileView> {
         builder: (builder) {
           return SafeArea(
             child: SizedBox(
+              width: MediaQuery.of(context).size.width,
               child: Card(
                 color: MirrorflyUikit.getTheme?.scaffoldColor,
                 shape: RoundedRectangleBorder(
@@ -382,10 +423,11 @@ class _ProfileViewState extends State<ProfileView> {
                       color: MirrorflyUikit.getTheme!.textSecondaryColor),
                   borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30)),),
+                      topRight: Radius.circular(30)),
+                ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
@@ -393,8 +435,11 @@ class _ProfileViewState extends State<ProfileView> {
                       const SizedBox(
                         height: 10,
                       ),
-                      Text(AppConstants.options, style: TextStyle(
-                          color: MirrorflyUikit.getTheme?.textPrimaryColor),),
+                      Text(
+                        AppConstants.options,
+                        style: TextStyle(
+                            color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                      ),
                       const SizedBox(
                         height: 10,
                       ),
@@ -408,9 +453,10 @@ class _ProfileViewState extends State<ProfileView> {
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               alignment: Alignment.centerLeft),
                           child: Text(AppConstants.takePhoto,
-                              style: TextStyle(color: MirrorflyUikit.getTheme
-                                  ?.textPrimaryColor, fontWeight: FontWeight
-                                  .bold))),
+                              style: TextStyle(
+                                  color:
+                                      MirrorflyUikit.getTheme?.textPrimaryColor,
+                                  fontWeight: FontWeight.bold))),
                       TextButton(
                           onPressed: () {
                             Navigator.pop(context);
@@ -421,45 +467,55 @@ class _ProfileViewState extends State<ProfileView> {
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               alignment: Alignment.centerLeft),
                           child: Text(AppConstants.chooseFromGallery,
-                              style: TextStyle(color: MirrorflyUikit.getTheme
-                                  ?.textPrimaryColor, fontWeight: FontWeight
-                                  .bold))),
-                      controller.userImgUrl.value.isNotEmpty
+                              style: TextStyle(
+                                  color:
+                                      MirrorflyUikit.getTheme?.textPrimaryColor,
+                                  fontWeight: FontWeight.bold))),
+                      controller.userImgUrl.value.isNotEmpty ||
+                              controller.imagePath.value.isNotEmpty
                           ? TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            Helper.showAlert(
-                                message: AppConstants.areYouSureToRemovePhoto,
-                                actions: [
-                                  TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text(AppConstants.cancel.toUpperCase(), style: TextStyle(
-                                          color: MirrorflyUikit.getTheme
-                                              ?.primaryColor),)),
-                                  TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                        controller.removeProfileImage(context);
-                                      },
-                                      child: Text(AppConstants.remove.toUpperCase(), style: TextStyle(
-                                          color: MirrorflyUikit.getTheme
-                                              ?.primaryColor)))
-
-                                ],
-                                context: context);
-                          },
-                          style: TextButton.styleFrom(
-                              padding: EdgeInsets.zero,
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              alignment: Alignment.centerLeft),
-                          child: Text(
-                            AppConstants.removePhoto,
-                            style: TextStyle(color: MirrorflyUikit.getTheme
-                                ?.textPrimaryColor, fontWeight: FontWeight
-                                .bold),
-                          ))
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Helper.showAlert(
+                                    message:
+                                        AppConstants.areYouSureToRemovePhoto,
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text(
+                                            AppConstants.cancel.toUpperCase(),
+                                            style: TextStyle(
+                                                color: MirrorflyUikit
+                                                    .getTheme?.primaryColor),
+                                          )),
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                            controller
+                                                .removeProfileImage(context);
+                                          },
+                                          child: Text(
+                                              AppConstants.remove.toUpperCase(),
+                                              style: TextStyle(
+                                                  color: MirrorflyUikit
+                                                      .getTheme?.primaryColor)))
+                                    ],
+                                    context: context);
+                              },
+                              style: TextButton.styleFrom(
+                                  padding: EdgeInsets.zero,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  alignment: Alignment.centerLeft),
+                              child: Text(
+                                AppConstants.removePhoto,
+                                style: TextStyle(
+                                    color: MirrorflyUikit
+                                        .getTheme?.textPrimaryColor,
+                                    fontWeight: FontWeight.bold),
+                              ))
                           : const SizedBox(),
                     ],
                   ),

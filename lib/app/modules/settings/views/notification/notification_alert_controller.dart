@@ -1,12 +1,8 @@
-import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
-import 'package:mirrorfly_plugin/flychat.dart';
 
 class NotificationAlertController extends FullLifeCycleController
-with FullLifeCycleMixin {
+    with FullLifeCycleMixin {
   final _defaultTone = ''.obs;
 
   set defaultTone(value) => _defaultTone.value = value;
@@ -56,23 +52,22 @@ with FullLifeCycleMixin {
     displayMutePreference();
   }
 
-
   showCustomTones() {
     // var uri = SessionManagement.getNotificationUri();
-    Mirrorfly.showCustomTones().then((value) {
+    /*Mirrorfly.showCustomTones().then((value) {
       if (value != null) {
         debugPrint("Custom tone set --> $value");
         // Mirrorfly.setNotificationUri(value);
         SessionManagement.setNotificationUri(value)
             .then((value) => getRingtoneName());
       }
-    });
+    });*/
   }
 
   getRingtoneName() {
     // var uri = SessionManagement.getNotificationUri();
     // mirrorFlyLog("uri", uri.toString());
-    Mirrorfly.getRingtoneName().then((value) {
+    /* Mirrorfly.getRingtoneName().then((value) {
       var jsonNotification = json.decode(value!);
       if (jsonNotification != null) {
         var notificationName = jsonNotification["name"];
@@ -82,7 +77,7 @@ with FullLifeCycleMixin {
         _defaultTone(notificationName);
         SessionManagement.setNotificationUri(notificationURI);
       }
-    });
+    });*/
   }
 
   displayMutePreference() {
@@ -94,50 +89,55 @@ with FullLifeCycleMixin {
     }
   }
 
-  notificationSound(){
+  notificationSound() {
     SessionManagement.setNotificationSound(!displayNotificationSoundPreference);
-    Mirrorfly.setNotificationSound(!displayNotificationSoundPreference);
+    // Mirrorfly.setNotificationSound(!displayNotificationSoundPreference);
     SessionManagement.setKeyChangeFlag(true);
     _displayNotificationSoundPreference(!displayNotificationSoundPreference);
     checkWhetherMuteEnabled();
   }
-  notificationPopup(){
+
+  notificationPopup() {
     checkWhetherMuteEnabled();
     SessionManagement.setNotificationPopup(!displayNotificationPopupPreference);
     _displayNotificationPopupPreference(!displayNotificationPopupPreference);
   }
-  vibration(){
+
+  vibration() {
     checkWhetherMuteEnabled();
     SessionManagement.setNotificationVibration(!displayVibrationPreference);
-    Mirrorfly.setNotificationVibration(!displayVibrationPreference);
+    // Mirrorfly.setNotificationVibration(!displayVibrationPreference);
     SessionManagement.setKeyChangeFlag(true);
     _displayVibrationPreference(!displayVibrationPreference);
   }
-  mute(){
-    if(!SessionManagement.getMuteNotification()){
+
+  mute() {
+    if (!SessionManagement.getMuteNotification()) {
       unSetAlerts();
-    }else{
+    } else {
       enableNotification();
     }
     SessionManagement.setMuteNotification(!displayMuteNotificationPreference);
-    Mirrorfly.setMuteNotification(!displayMuteNotificationPreference);
+    // Mirrorfly.setMuteNotification(!displayMuteNotificationPreference);
     SessionManagement.setKeyChangeFlag(true);
     _displayMuteNotificationPreference(!displayMuteNotificationPreference);
   }
-  unSetAlerts(){
+
+  unSetAlerts() {
     SessionManagement.setNotificationSound(false);
-    Mirrorfly.setNotificationSound(false);
+    // Mirrorfly.setNotificationSound(false);
     SessionManagement.setNotificationPopup(false);
     SessionManagement.setNotificationPopup(false);
     SessionManagement.setNotificationVibration(false);
-    Mirrorfly.setNotificationVibration(false);
+    // Mirrorfly.setNotificationVibration(false);
     _displayNotificationSoundPreference(false);
     _displayNotificationPopupPreference(false);
     _displayVibrationPreference(false);
   }
-  enableNotification(){
+
+  enableNotification() {
     SessionManagement.setNotificationSound(true);
-    Mirrorfly.setNotificationSound(true);
+    // Mirrorfly.setNotificationSound(true);
     SessionManagement.setNotificationPopup(true);
     _displayNotificationSoundPreference(true);
     _displayNotificationPopupPreference(true);
@@ -146,28 +146,22 @@ with FullLifeCycleMixin {
   checkWhetherMuteEnabled() {
     if (SessionManagement.getMuteNotification()) {
       SessionManagement.setNotificationSound(true);
-      Mirrorfly.setNotificationSound(true);
+      // Mirrorfly.setNotificationSound(true);
       SessionManagement.setMuteNotification(false);
-      Mirrorfly.setMuteNotification(false);
+      // Mirrorfly.setMuteNotification(false);
       _displayMuteNotificationPreference(false);
       _displayNotificationSoundPreference(true);
     }
   }
 
   @override
-  void onDetached() {
-
-  }
+  void onDetached() {}
 
   @override
-  void onInactive() {
-
-  }
+  void onInactive() {}
 
   @override
-  void onPaused() {
-
-  }
+  void onPaused() {}
 
   @override
   void onResumed() {
@@ -175,5 +169,10 @@ with FullLifeCycleMixin {
     // Mirrorfly.setNotificationUri(value);
     // SessionManagement.setNotificationUri(value)
     //     .then((value) => getRingtoneName());
+  }
+
+  @override
+  void onHidden() {
+    // TODO: implement onHidden
   }
 }

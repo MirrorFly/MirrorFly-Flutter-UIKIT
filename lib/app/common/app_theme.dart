@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../model/app_config.dart';
 import 'constants.dart';
 
-
 class MirrorFlyTheme {
   static MirrorFlyAppTheme get mirrorFlyLightTheme => MirrorFlyAppTheme(
       primaryColor: buttonBgColor,
@@ -13,8 +12,14 @@ class MirrorFlyTheme {
       colorOnPrimary: Colors.white,
       textPrimaryColor: Colors.black,
       textSecondaryColor: Colors.black45,
-      chatBubblePrimaryColor: ChatBubbleColor(color: const Color(0xffe2e8f7), textPrimaryColor: Colors.black, textSecondaryColor: durationTextColor),
-      chatBubbleSecondaryColor: ChatBubbleColor(color: const Color(0xffffffff), textPrimaryColor: const Color(0xff313131), textSecondaryColor: const Color(0xff959595)));
+      chatBubblePrimaryColor: ChatBubbleColor(
+          color: const Color(0xffe2e8f7),
+          textPrimaryColor: Colors.black,
+          textSecondaryColor: durationTextColor),
+      chatBubbleSecondaryColor: ChatBubbleColor(
+          color: const Color(0xffffffff),
+          textPrimaryColor: const Color(0xff313131),
+          textSecondaryColor: const Color(0xff959595)));
 
   static MirrorFlyAppTheme get mirrorFlyDarkTheme => MirrorFlyAppTheme(
       primaryColor: buttonBgColor,
@@ -25,8 +30,14 @@ class MirrorFlyTheme {
       colorOnPrimary: Colors.white,
       textPrimaryColor: Colors.white,
       textSecondaryColor: const Color(0xff767676),
-      chatBubblePrimaryColor: ChatBubbleColor(color: const Color(0xff2f55c7), textPrimaryColor: Colors.white, textSecondaryColor: const Color(0xffB6CAFF)),
-      chatBubbleSecondaryColor: ChatBubbleColor(color: const Color(0xff26262a), textPrimaryColor: const Color(0xfffafafa), textSecondaryColor: const Color(0xff959595)));
+      chatBubblePrimaryColor: ChatBubbleColor(
+          color: const Color(0xff2f55c7),
+          textPrimaryColor: Colors.white,
+          textSecondaryColor: const Color(0xffB6CAFF)),
+      chatBubbleSecondaryColor: ChatBubbleColor(
+          color: const Color(0xff26262a),
+          textPrimaryColor: const Color(0xfffafafa),
+          textSecondaryColor: const Color(0xff959595)));
 
   // static late var mirrorflyTheme;
 
@@ -71,20 +82,16 @@ class MirrorFlyTheme {
   }
 }
 
-/*class CustomSafeArea extends StatelessWidget {
+class CustomSafeArea extends StatelessWidget {
   final Widget child;
   final Color? color;
 
-  const CustomSafeArea({Key? key, required this.child, this.color})
-      : super(key: key);
+  const CustomSafeArea({super.key, required this.child, this.color});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // color: color ?? appBarColor,
-      child: SafeArea(
-        child: child,
-      ),
+    return SafeArea(
+      child: child,
     );
   }
-}*/
+}

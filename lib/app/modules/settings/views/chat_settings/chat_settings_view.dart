@@ -11,7 +11,7 @@ import '../settings_widgets.dart';
 import 'datausage/datausage_list_view.dart';
 
 class ChatSettingsView extends StatelessWidget {
-  ChatSettingsView({Key? key,this.enableAppBar=true}) : super(key: key);
+  ChatSettingsView({super.key, this.enableAppBar = true});
   final bool enableAppBar;
   final controller = Get.put(ChatSettingsController());
 
@@ -19,15 +19,18 @@ class ChatSettingsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-      appBar: enableAppBar ? AppBar(
-        title: Text(
-          AppConstants.chatsSettings,
-          style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
-        ),
-        automaticallyImplyLeading: true,
-        iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
-        backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-      ) : null,
+      appBar: enableAppBar
+          ? AppBar(
+              title: Text(
+                AppConstants.chatsSettings,
+                style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+              ),
+              automaticallyImplyLeading: true,
+              iconTheme:
+                  IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+              backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
+            )
+          : null,
       body: Obx(() {
         return SafeArea(
           child: Column(
@@ -57,14 +60,16 @@ class ChatSettingsView extends StatelessWidget {
                           Text(AppConstants.editBusyMessage,
                               style: TextStyle(
                                   fontSize: 14,
-                                  color: MirrorflyUikit.getTheme?.textPrimaryColor,
+                                  color:
+                                      MirrorflyUikit.getTheme?.textPrimaryColor,
                                   fontWeight: FontWeight.w400)),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 4.0),
                             child: Text(controller.busyStatus.value,
                                 maxLines: null,
                                 style: TextStyle(
-                                    color: MirrorflyUikit.getTheme?.primaryColor,
+                                    color:
+                                        MirrorflyUikit.getTheme?.primaryColor,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w400)),
                           ),
@@ -73,13 +78,16 @@ class ChatSettingsView extends StatelessWidget {
                       rightArrowIcon,
                       () => {
                             // Get.toNamed(Routes.busyStatus)},
-                            Navigator.push(context, MaterialPageRoute(builder: (con) => const BusyStatusView()))
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (con) => const BusyStatusView()))
                           })),
               notificationItem(
                   title: AppConstants.autoDownload,
                   subtitle: AppConstants.autoDownloadLabel,
                   on: controller.autoDownloadEnabled,
-                  onTap: ()=>controller.enableDisableAutoDownload(context)),
+                  onTap: () => controller.enableDisableAutoDownload(context)),
               Visibility(
                   visible: controller.autoDownloadEnabled,
                   child: chatListItem(
@@ -89,13 +97,15 @@ class ChatSettingsView extends StatelessWidget {
                         Text(AppConstants.dataUsageSettings,
                             style: TextStyle(
                                 fontSize: 14,
-                                color: MirrorflyUikit.getTheme?.textPrimaryColor,
+                                color:
+                                    MirrorflyUikit.getTheme?.textPrimaryColor,
                                 fontWeight: FontWeight.w400)),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 4.0),
                           child: Text(AppConstants.dataUsageSettingsLabel,
                               style: TextStyle(
-                                  color: MirrorflyUikit.getTheme?.textSecondaryColor,
+                                  color: MirrorflyUikit
+                                      .getTheme?.textSecondaryColor,
                                   fontSize: 14,
                                   fontWeight: FontWeight.w400)),
                         ),
@@ -104,7 +114,10 @@ class ChatSettingsView extends StatelessWidget {
                     rightArrowIcon,
                     () => {
                       // Get.toNamed(Routes.dataUsageSetting)
-                      Navigator.push(context, MaterialPageRoute(builder: (con) => const DataUsageListView()))
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (con) => const DataUsageListView()))
                     },
                   )),
               /* notificationItem(title: Constants.googleTranslationLabel, subtitle: Constants.googleTranslationMessage,on: controller.translationEnabled, onTap: controller.enableDisableTranslate),
@@ -135,7 +148,10 @@ class ChatSettingsView extends StatelessWidget {
                   ), rightArrowIcon, () => controller.chooseLanguage())),*/
               ListItem(
                   title: Text(AppConstants.clearAllConversation,
-                      style: const TextStyle(color: Colors.red, fontSize: 14, fontWeight: FontWeight.w400)),
+                      style: const TextStyle(
+                          color: Colors.red,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400)),
                   dividerPadding: const EdgeInsets.symmetric(horizontal: 16),
                   onTap: () {
                     controller.clearAllConversation(context);

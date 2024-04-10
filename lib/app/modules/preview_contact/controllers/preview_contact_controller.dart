@@ -15,18 +15,19 @@ class PreviewContactController extends GetxController {
   var previewContactName = Constants.emptyString;
   var from = Constants.emptyString;
 
-
-  void init(List<LocalContact>? contactList, List<String>? previewContactList, String from, String? contactName) {
+  void init(List<LocalContact>? contactList, List<String>? previewContactList,
+      String from, String? contactName) {
     this.from = from;
-    if(from == "chat" && previewContactList != null && contactName != null) {
+    if (from == "chat" && previewContactList != null && contactName != null) {
       this.previewContactList = previewContactList;
       previewContactName = contactName;
-    }else if(contactList != null){
+    } else if (contactList != null) {
       argContactList = contactList;
-    }else{
+    } else {
       debugPrint("Contact list is Empty");
     }
   }
+
   @override
   void onReady() {
     super.onReady();
@@ -36,8 +37,8 @@ class PreviewContactController extends GetxController {
 
       var newContactList = <ContactDetail>[];
       for (var phone in previewContactList) {
-        ContactDetail contactDetail =
-            ContactDetail(mobNo: phone, isSelected: true, mobNoType: Constants.emptyString);
+        ContactDetail contactDetail = ContactDetail(
+            mobNo: phone, isSelected: true, mobNoType: Constants.emptyString);
         newContactList.add(contactDetail);
       }
       LocalContactPhone localContactPhone = LocalContactPhone(
@@ -71,42 +72,41 @@ class PreviewContactController extends GetxController {
   }
 
   shareContact(BuildContext context) async {
-
     Helper.showLoading(
         message: AppConstants.sharingContact, buildContext: context);
     var contactServerSharing = <ShareContactDetails>[];
-      for (var item in contactList) {
-        var contactSharing = <String>[];
-        for (var contactItem in item.contactNo) {
-          if (contactItem.isSelected) {
-            debugPrint("adding--> ${contactItem.mobNo}");
-            contactSharing.add(contactItem.mobNo);
-          } else {
-            debugPrint("skipping--> ${contactItem.mobNo}");
-          }
+    for (var item in contactList) {
+      var contactSharing = <String>[];
+      for (var contactItem in item.contactNo) {
+        if (contactItem.isSelected) {
+          debugPrint("adding--> ${contactItem.mobNo}");
+          contactSharing.add(contactItem.mobNo);
+        } else {
+          debugPrint("skipping--> ${contactItem.mobNo}");
         }
-        if (contactSharing.isEmpty) {
-          toToast(AppConstants.selectLeastOne);
-          return;
-        }
-        debugPrint("adding contact list--> ${contactSharing.toString()}");
-        contactServerSharing.add(ShareContactDetails(
-            contactNo: contactSharing, userName: item.userName));
-        // contactSharing.clear();
       }
-
-      debugPrint("sharing contact length--> ${contactServerSharing.length}");
-
-      for (var contactItem in contactServerSharing) {
-        debugPrint("sending contact--> ${contactItem.userName}");
-        debugPrint("sending contact--> ${contactItem.contactNo}");
-
-        var response = await Get.find<ChatController>()
-            .sendContactMessage(contactItem.contactNo, contactItem.userName, context);
-        debugPrint("ContactResponse ==> $response");
+      if (contactSharing.isEmpty) {
+        toToast(AppConstants.selectLeastOne);
+        return;
       }
+      debugPrint("adding contact list--> ${contactSharing.toString()}");
+      contactServerSharing.add(ShareContactDetails(
+          contactNo: contactSharing, userName: item.userName));
+      // contactSharing.clear();
+    }
 
-    if(context.mounted) {
+    debugPrint("sharing contact length--> ${contactServerSharing.length}");
+
+    for (var contactItem in contactServerSharing) {
+      debugPrint("sending contact--> ${contactItem.userName}");
+      debugPrint("sending contact--> ${contactItem.contactNo}");
+
+      var response = await Get.find<ChatController>().sendContactMessage(
+          contactItem.contactNo, contactItem.userName, context);
+      debugPrint("ContactResponse ==> $response");
+    }
+
+    if (context.mounted) {
       Helper.hideLoading(context: context);
       Navigator.pop(context);
       Navigator.pop(context);
@@ -117,5 +117,4 @@ class PreviewContactController extends GetxController {
     phoneItem.isSelected = !phoneItem.isSelected;
     contactList.refresh();
   }
-
 }

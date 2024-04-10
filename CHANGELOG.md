@@ -1,3 +1,14 @@
+## 1.0.0
+* Plugin Updates
+* Dependency updates
+
+## 0.0.14
+* Plugin Updates
+
+## 0.0.13
+* Added One to One Call Feature
+* iOS SDK Optimisation
+
 ## 0.0.12
 * Added Notification Feature.
 * Modified the Audio Picker behavior for Android.

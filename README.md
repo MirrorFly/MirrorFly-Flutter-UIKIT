@@ -6,9 +6,10 @@
 ## Table of contents
 
 1. [Introduction](#Introduction)
-1. [Requirements](#requirements)
-1. [Integration](#Integration)
-1. [Getting help](#getting-help)
+2. [Requirements](#requirements)
+3. [Integration](#Integration)
+4. [Call Feature](#call-feature)
+5. [Getting help](#getting-help)
 
 ## Introduction
 
@@ -21,9 +22,10 @@ The minimum requirements for Flutter are:
 - Visual Studio Code or Android Studio
 - Dart 2.19.1 or above
 - Flutter 2.0.0 or higher
+- targetSdkVersion,compileSdk 34 or above.
 
 The requirements for Android are:
-- Android Lollipop 5.0 (API Level 21) or above
+- Android Lollipop 5.1 (API Level 22) or above
 - Java 7 or higher
 - Gradle 4.1.0 or higher
 
@@ -67,8 +69,15 @@ Installing the Mirrorfly UIKit Plugin is a simple process. Follow the steps ment
 ### Create iOS dependency
  - Check and Add the following code at end of your `ios/Podfile`
 
-```dart
+```gradle
 post_install do |installer|
+  installer.aggregate_targets.each do |target|
+           target.xcconfigs.each do |variant, xcconfig|
+           xcconfig_path = target.client_root + target.xcconfig_relative_path(variant)
+           IO.write(xcconfig_path, IO.read(xcconfig_path).gsub("DT_TOOLCHAIN_DIR", "TOOLCHAIN_DIR"))
+           end
+       end
+  
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
     target.build_configurations.each do |config|
@@ -76,7 +85,18 @@ post_install do |installer|
       config.build_settings['ENABLE_BITCODE'] = 'NO'
       config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'No'
       config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
-      config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"      
+      config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = 'arm64'
+      
+      shell_script_path = "Pods/Target Support Files/#{target.name}/#{target.name}-frameworks.sh"
+            if File::exist?(shell_script_path)
+              shell_script_input_lines = File.readlines(shell_script_path)
+              shell_script_output_lines = shell_script_input_lines.map { |line| line.sub("source=\"$(readlink \"${source}\")\"", "source=\"$(readlink -f \"${source}\")\"") }
+              File.open(shell_script_path, 'w') do |f|
+                shell_script_output_lines.each do |line|
+                  f.write line
+                end
+              end
+            end
      end
   end
 end
@@ -96,7 +116,7 @@ Goto Project -> Target -> Signing & Capabilities -> Click `+ Capability` at the 
 
 ```yaml
 dependencies:
-  mirrorfly_uikit_plugin: ^0.0.12
+  mirrorfly_uikit_plugin: ^1.0.0
 ```
 
 - Run `flutter pub get` command in your project directory.
@@ -122,11 +142,11 @@ To initialize the plugin, place the below code in your `main.dart` file inside `
 ```dart
  void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  MirrorflyUikit.instance.initUIKIT(  baseUrl: 'YOUR_BASE_URL',
-      licenseKey: 'Your_Mirrorfly_Licence_Key',
-      googleMapKey: 'Your_Google_Map_Key_for_location_messages',
-      iOSContainerID: 'Your_iOS_app_Container_id',
-      enableLocalNotification: true);
+  MirrorflyUikit.instance.initUIKIT(
+      navigatorKey: NAVIGATOR_KEY,
+      licenseKey: LICENSE_KEY,
+      iOSContainerID: iOS_APP_GROUP_ID,
+      chatHistoryEnable: ENABLE_CHAT_HISTORY);
   runApp(const MyApp());
 }
 ```
@@ -135,20 +155,20 @@ To initialize the plugin, place the below code in your `main.dart` file inside `
 
 create `mirrorfly_config.json` json file with configuration details then add the json file into under your `assets` folder(`assets/mirrorfly_config.json`).
 
-> **Info** Download config json file from [Flutter UIKit docs](https://www.mirrorfly.com/docs/UIKit/flutter/quick-start/)
+> **Info** Download config json file from [Flutter UIKit docs](https://www.mirrorfly.com/docs/uikit/flutter/customization/)
 
-### Step 3: Registration
+### Step 3: Login
 
-Use the below method to register a user in sandbox Live mode.
+Use the below method to login a user in sandbox Live mode.
 
 > **Info** Unless you log out the session, make a note that should never call the registration method more than once in an application
 
-> **Note**: While registration, the below `registerUser` method will accept the `fcmToken` as an optional param and pass it across. `The connection will be established automatically upon completion of registration and not required for seperate login`.
+> **Note**: While registration, the below `login` method will accept the `fcmToken` as an optional param and pass it across. `The connection will be established automatically upon completion of login`.
 
 ```dart
 try {
-    var response = await MirrorflyUikit.registerUser(userIdentifier: uniqueId, fcmToken: "Your Google FCM Token");
-    debugPrint("register user $response");
+    var response = await MirrorflyUikit.instance.login(userIdentifier: userIdentifier, fcmToken: FCM_TOKEN);
+    debugPrint("login user $response");
     //{'status': true, 'message': 'Register Success};
 } catch (e) {
   debugPrint(e.toString());
@@ -197,8 +217,17 @@ import mirrorfly_plugin
     }
 ```
 
+## Call Feature
+
+> **Note**: To enable the Call Feature in iOS, need to enable VOIP as shown below.
+
+
+![Screenshot](https://www.mirrorfly.com/docs/assets/images/capabilities-voip2-1760b4b8264b2f928df4d6fb5d933b62.png)
+
+
+
 ## Getting Help
 
-Check out the Official Mirrorfly UIKit [Flutter UIKit docs](https://www.mirrorfly.com/docs/UIKit/flutter/quick-start/)
+Check out the Official Mirrorfly UIKit [Flutter UIKit docs](https://www.mirrorfly.com/docs/uikit/flutter/quick-start/)
 
 <br />

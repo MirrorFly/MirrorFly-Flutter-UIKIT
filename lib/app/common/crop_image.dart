@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 
 import '../../mirrorfly_uikit_plugin.dart';
+
 class CropImage extends StatefulWidget {
-  const CropImage({Key? key, required this.imageFile}) : super(key: key);
+  const CropImage({super.key, required this.imageFile});
   final File imageFile;
 
   // File? _file;
@@ -59,33 +60,73 @@ class _CropImageState extends State<CropImage> {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: ()=>Navigator.pop(context),
-                    style: ElevatedButton.styleFrom(backgroundColor: MirrorflyUikit.getTheme?.secondaryColor, shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
-                    child: Text("CANCEL",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor,fontSize:16.0),),
+                    onPressed: () => Navigator.pop(context),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            MirrorflyUikit.getTheme?.secondaryColor,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero)),
+                    child: Text(
+                      "CANCEL",
+                      style: TextStyle(
+                          color: MirrorflyUikit.getTheme?.textPrimaryColor,
+                          fontSize: 16.0),
+                    ),
                   ),
                 ),
                 /*SizedBox(width: 1.0,),
                 Material(child: IconButton(icon: const Icon(Icons.zoom_in), onPressed: () => controller.addTransition(CropImageData(scale: 1.33))),),
                 SizedBox(width: 1.0,),
                 Material(child: IconButton(icon: const Icon(Icons.zoom_out), onPressed: () => controller.addTransition(CropImageData(scale: 0.75))),),*/
-                const SizedBox(width: 1.0,),
-                Material(color: MirrorflyUikit.getTheme?.secondaryColor,child: IconButton(onPressed: ()=>controller.addTransition(CropImageData(angle: -pi / 4)), icon: Icon(Icons.rotate_left, color: MirrorflyUikit.getTheme?.textPrimaryColor,))),
-                const SizedBox(width: 1.0,),
-                Material(color: MirrorflyUikit.getTheme?.secondaryColor,child: IconButton(onPressed: ()=>controller.addTransition(CropImageData(angle: pi / 4)), icon: Icon(Icons.rotate_right, color: MirrorflyUikit.getTheme?.textPrimaryColor,))),
-                const SizedBox(width: 1.0,),
+                const SizedBox(
+                  width: 1.0,
+                ),
+                Material(
+                    color: MirrorflyUikit.getTheme?.secondaryColor,
+                    child: IconButton(
+                        onPressed: () => controller
+                            .addTransition(CropImageData(angle: -pi / 4)),
+                        icon: Icon(
+                          Icons.rotate_left,
+                          color: MirrorflyUikit.getTheme?.textPrimaryColor,
+                        ))),
+                const SizedBox(
+                  width: 1.0,
+                ),
+                Material(
+                    color: MirrorflyUikit.getTheme?.secondaryColor,
+                    child: IconButton(
+                        onPressed: () => controller
+                            .addTransition(CropImageData(angle: pi / 4)),
+                        icon: Icon(
+                          Icons.rotate_right,
+                          color: MirrorflyUikit.getTheme?.textPrimaryColor,
+                        ))),
+                const SizedBox(
+                  width: 1.0,
+                ),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () async {
-                      Helper.showLoading(message: "Image Cropping...", buildContext: context);
-                      await controller.onCropImage().then((image){
+                      Helper.showLoading(
+                          message: "Image Cropping...", buildContext: context);
+                      await controller.onCropImage().then((image) {
                         Helper.hideLoading(context: context);
                         // Get.back(result: image);
                         Navigator.pop(context, image);
                       });
-
                     },
-                    style: ElevatedButton.styleFrom(backgroundColor: MirrorflyUikit.getTheme?.secondaryColor, shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
-                    child: Text("SAVE",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor,fontSize:16.0),),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            MirrorflyUikit.getTheme?.secondaryColor,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero)),
+                    child: Text(
+                      "SAVE",
+                      style: TextStyle(
+                          color: MirrorflyUikit.getTheme?.textPrimaryColor,
+                          fontSize: 16.0),
+                    ),
                   ),
                 ),
               ],
@@ -96,7 +137,7 @@ class _CropImageState extends State<CropImage> {
     );
   }
   // Future<void> _cropImage() async {
-    /*final scale = cropKey.currentState!.scale;
+  /*final scale = cropKey.currentState!.scale;
     final area = cropKey.currentState!.area;
     if (area == null) {
       // cannot crop, widget is not setup

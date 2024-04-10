@@ -47,7 +47,7 @@ android {
         applicationId "com.mirrorfly.uikit_plugin.mirrorfly_uikit_plugin_example"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 21
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -55,9 +55,9 @@ android {
 
     buildTypes {
         release {
-            shrinkResources false
+            shrinkResources true
             debuggable false
-            minifyEnabled false
+            minifyEnabled true
             signingConfig signingConfigs.debug
         }
     }

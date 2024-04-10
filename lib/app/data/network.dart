@@ -3,22 +3,21 @@ import 'package:get/get.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 
-class NetworkManager extends GetxController{
-
-  static RxBool isConnected =false.obs;
+class NetworkManager extends GetxController {
+  static RxBool isConnected = false.obs;
   static StreamSubscription<InternetConnectionStatus>? listener;
 
   @override
   Future<void> onInit() async {
     // Check internet connection with singleton (no custom values allowed)
     listener = InternetConnectionChecker().onStatusChange.listen(
-          (InternetConnectionStatus status) {
+      (InternetConnectionStatus status) {
         switch (status) {
           case InternetConnectionStatus.connected:
-            mirrorFlyLog("network",'Data connection is available.');
+            mirrorFlyLog("network", 'Data connection is available.');
             break;
           case InternetConnectionStatus.disconnected:
-            mirrorFlyLog("network",'You are disconnected from the internet.');
+            mirrorFlyLog("network", 'You are disconnected from the internet.');
             break;
         }
       },
@@ -38,7 +37,7 @@ class NetworkManager extends GetxController{
 
   @override
   void onClose() {
-   listener?.cancel();
+    listener?.cancel();
     super.onClose();
   }
 

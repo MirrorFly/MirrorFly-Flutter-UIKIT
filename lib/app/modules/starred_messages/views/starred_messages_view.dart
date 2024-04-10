@@ -15,7 +15,7 @@ import '../controllers/starred_messages_controller.dart';
 import '../../../models.dart';
 
 class StarredMessagesView extends StatefulWidget {
-  const StarredMessagesView({Key? key,this.enableAppBar=true}) : super(key: key);
+  const StarredMessagesView({super.key, this.enableAppBar = true});
   final bool enableAppBar;
 
   @override
@@ -30,6 +30,7 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
     super.dispose();
     Get.delete<StarredMessagesController>();
   }
+
   @override
   Widget build(BuildContext context) {
     controller.height = MediaQuery.of(context).size.height;
@@ -38,29 +39,48 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
       onFocusGained: () {
         controller.getFavouriteMessages();
       },
-      child: WillPopScope(
-        onWillPop: () {
+      child: PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) {
+          if (didPop) {
+            return;
+          }
           if (controller.isSelected.value) {
             controller.clearAllChatSelection();
-            return Future.value(false);
-          }else if(controller.isSearch.value){
+            return;
+          } else if (controller.isSearch.value) {
             controller.clearSearch();
-            return Future.value(false);
+            return;
           }
-          return Future.value(true);
+          Navigator.pop(context);
         },
         child: Scaffold(
             backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-          appBar: widget.enableAppBar ? getAppBar(context) : null,
-          body: Obx(() {
-            return controller.starredChatList.isNotEmpty ?
-            SingleChildScrollView(child: favouriteChatListView(controller.starredChatList)) :
-            controller.isListLoading.value ? Center(child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),) : Center(child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 30),
-              child: Text(controller.isSearch.value ? AppConstants.noResultsFound : AppConstants.noStarredMessages, style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),),
-            ));
-          })
-        ),
+            appBar: widget.enableAppBar ? getAppBar(context) : null,
+            body: Obx(() {
+              return controller.starredChatList.isNotEmpty
+                  ? SingleChildScrollView(
+                      child: favouriteChatListView(controller.starredChatList))
+                  : controller.isListLoading.value
+                      ? Center(
+                          child: CircularProgressIndicator(
+                            color: MirrorflyUikit.getTheme?.primaryColor,
+                          ),
+                        )
+                      : Center(
+                          child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10.0, vertical: 30),
+                          child: Text(
+                            controller.isSearch.value
+                                ? AppConstants.noResultsFound
+                                : AppConstants.noStarredMessages,
+                            style: TextStyle(
+                                color:
+                                    MirrorflyUikit.getTheme?.textPrimaryColor),
+                          ),
+                        ));
+            })),
       ),
     );
   }
@@ -76,73 +96,115 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
         reverse: false,
         itemBuilder: (context, index) {
           // int reversedIndex = chatList.length - 1 - index;
-            return GestureDetector(
-              onLongPress: widget.enableAppBar ? () {
-                if (!controller.isSelected.value) {
-                  controller.isSelected(true);
-                  controller.addChatSelection(starredChatList[index]);
-                }
-              } : null,
-              onTap: () {
-                debugPrint("On Tap");
-                controller.isSelected.value
-                    ? controller.selectedChatList.contains(starredChatList[index])
-                    ? controller.clearChatSelection(starredChatList[index])
-                    : controller.addChatSelection(starredChatList[index])
-                    : controller.navigateMessage(starredChatList[index], context);
-              },
-              child: Obx(() {
-                return Column(
-                  children: [
-                    Container(
-                      key: Key(starredChatList[index].messageId),
-                      color: controller.isSelected.value &&
-                          (starredChatList[index].isSelected.value) &&
-                          controller.starredChatList.isNotEmpty
-                          ? MirrorflyUikit.getTheme?.primaryColor.withAlpha(60)
-                          : Colors.transparent,
-                      padding: const EdgeInsets.only(
-                          left: 14, right: 14, top: 5, bottom: 10),
-                      margin: const EdgeInsets.all(2),
-                      child: Column(
-                        children: [
-                          const AppDivider(),
-                          const SizedBox(height: 10,),
-                          StarredMessageHeader(chatList: starredChatList[index], isTapEnabled: false,),
-                          const SizedBox(height: 10,),
-                          Align(
-                            alignment: (starredChatList[index].isMessageSentByMe
-                                ? Alignment.bottomRight
-                                : Alignment.bottomLeft),
-                            child: ChatContainer(
-                              chatMessage: starredChatList[index],
-                              child: Column(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
-                                children: [
-                                  (starredChatList[index]
-                                      .replyParentChatMessage ==
-                                      null)
-                                      ? const SizedBox.shrink()
-                                      : ReplyMessageHeader(
-                                      chatMessage: starredChatList[index]),
-                                  MessageContent(chatList: starredChatList,search: controller.searchedText.text.trim(),index:index, onPlayAudio: (){
-                                    controller.playAudio(starredChatList[index]);
-                                  },onSeekbarChange:(value){
-
+          return GestureDetector(
+            onLongPress: widget.enableAppBar
+                ? () {
+                    if (!controller.isSelected.value) {
+                      controller.isSelected(true);
+                      controller.addChatSelection(starredChatList[index]);
+                    }
+                  }
+                : null,
+            onTap: () {
+              debugPrint("On Tap");
+              controller.isSelected.value
+                  ? controller.selectedChatList.contains(starredChatList[index])
+                      ? controller.clearChatSelection(starredChatList[index])
+                      : controller.addChatSelection(starredChatList[index])
+                  : controller.navigateMessage(starredChatList[index], context);
+            },
+            child: Obx(() {
+              return Column(
+                children: [
+                  Container(
+                    key: Key(starredChatList[index].messageId),
+                    color: controller.isSelected.value &&
+                            (starredChatList[index].isSelected.value) &&
+                            controller.starredChatList.isNotEmpty
+                        ? MirrorflyUikit.getTheme?.primaryColor.withAlpha(60)
+                        : Colors.transparent,
+                    padding: const EdgeInsets.only(
+                        left: 14, right: 14, top: 5, bottom: 10),
+                    margin: const EdgeInsets.all(2),
+                    child: Column(
+                      children: [
+                        const AppDivider(),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        StarredMessageHeader(
+                          chatList: starredChatList[index],
+                          isTapEnabled: false,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Align(
+                          alignment: (starredChatList[index].isMessageSentByMe
+                              ? Alignment.bottomRight
+                              : Alignment.bottomLeft),
+                          child: Container(
+                            constraints: BoxConstraints(
+                                maxWidth: controller.width * 0.75),
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    starredChatList[index].isMessageSentByMe
+                                        ? const BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10),
+                                            bottomLeft: Radius.circular(10))
+                                        : const BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10),
+                                            bottomRight: Radius.circular(10)),
+                                color: (starredChatList[index].isMessageSentByMe
+                                    ? MirrorflyUikit
+                                        .getTheme?.chatBubblePrimaryColor.color
+                                    : Colors.white),
+                                border: starredChatList[index].isMessageSentByMe
+                                    ? Border.all(
+                                        color: MirrorflyUikit.getTheme!
+                                            .chatBubblePrimaryColor.color)
+                                    : Border.all(
+                                        color: MirrorflyUikit
+                                            .getTheme!
+                                            .chatBubblePrimaryColor
+                                            .textSecondaryColor
+                                            .withOpacity(
+                                                0.2) /*chatBorderColor*/)),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                starredChatList[index].isThisAReplyMessage
+                                    ? starredChatList[index]
+                                                .replyParentChatMessage ==
+                                            null
+                                        ? messageNotAvailableWidget(
+                                            starredChatList[index])
+                                        : ReplyMessageHeader(
+                                            chatMessage: starredChatList[index])
+                                    : const SizedBox.shrink(),
+                                MessageContent(
+                                  chatList: starredChatList,
+                                  search: controller.searchedText.text.trim(),
+                                  index: index,
+                                  onPlayAudio: () {
+                                    controller
+                                        .playAudio(starredChatList[index]);
                                   },
-                                  ),
-                                ],
-                              ),
+                                  onSeekbarChange: (value) {},
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
-                );
-              }),
-            );
+                  ),
+                ],
+              );
+            }),
+          );
         },
       ),
     );
@@ -153,31 +215,43 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
       preferredSize: const Size.fromHeight(55.0),
       child: Obx(() {
         return Container(
-          child: controller.isSelected.value ? selectedAppBar(context) : controller.isSearch.value ? searchBar() : AppBar(
-            title: Text(AppConstants.starredMessages, style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
-            iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
-            backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-            actions: [
-              IconButton(
-                icon: SvgPicture.asset(
-                  searchIcon,package: package,
-                  width: 18,
-                  height: 18,
-                  fit: BoxFit.contain,
-                  colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn),
-                ),
-                onPressed: () {
-                  controller.onSearchClick();
-                },
-              ),
-            ],
-          ),
+          child: controller.isSelected.value
+              ? selectedAppBar(context)
+              : controller.isSearch.value
+                  ? searchBar()
+                  : AppBar(
+                      title: Text(
+                        AppConstants.starredMessages,
+                        style: TextStyle(
+                            color: MirrorflyUikit.getTheme?.colorOnAppbar),
+                      ),
+                      iconTheme: IconThemeData(
+                          color: MirrorflyUikit.getTheme?.colorOnAppbar),
+                      backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
+                      actions: [
+                        IconButton(
+                          icon: SvgPicture.asset(
+                            searchIcon,
+                            package: package,
+                            width: 18,
+                            height: 18,
+                            fit: BoxFit.contain,
+                            colorFilter: ColorFilter.mode(
+                                MirrorflyUikit.getTheme!.colorOnAppbar,
+                                BlendMode.srcIn),
+                          ),
+                          onPressed: () {
+                            controller.onSearchClick();
+                          },
+                        ),
+                      ],
+                    ),
         );
       }),
     );
   }
 
-  searchBar(){
+  searchBar() {
     return AppBar(
       automaticallyImplyLeading: true,
       iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
@@ -190,9 +264,11 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
         cursorColor: MirrorflyUikit.getTheme?.colorOnAppbar,
         autofocus: true,
         decoration: InputDecoration(
-            hintText: AppConstants.searchPlaceHolder, border: InputBorder.none, hintStyle: TextStyle(
-            color: MirrorflyUikit
-                .getTheme?.colorOnAppbar.withOpacity(0.5)),),
+          hintText: AppConstants.searchPlaceHolder,
+          border: InputBorder.none,
+          hintStyle: TextStyle(
+              color: MirrorflyUikit.getTheme?.colorOnAppbar.withOpacity(0.5)),
+        ),
       ),
       actions: [
         Visibility(
@@ -227,12 +303,20 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
             actions: [
               CustomAction(
                 visibleWidget: IconButton(
-                    onPressed: () {
-                      controller.checkBusyStatusForForward(context);
-                    },
-                    icon: SvgPicture.asset(forwardIcon,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),tooltip: AppConstants.forward,),
+                  onPressed: () {
+                    controller.checkBusyStatusForForward(context);
+                  },
+                  icon: SvgPicture.asset(forwardIcon,
+                      package: package,
+                      colorFilter: ColorFilter.mode(
+                          MirrorflyUikit.getTheme!.colorOnAppbar,
+                          BlendMode.srcIn)),
+                  tooltip: AppConstants.forward,
+                ),
                 overflowWidget: Text(AppConstants.forward),
-                showAsAction: controller.canBeForward.value ? ShowAsAction.always : ShowAsAction.gone,
+                showAsAction: controller.canBeForward.value
+                    ? ShowAsAction.always
+                    : ShowAsAction.gone,
                 keyValue: AppConstants.forward,
                 onItemClick: () {
                   controller.checkBusyStatusForForward(context);
@@ -240,10 +324,16 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
               ),
               CustomAction(
                 visibleWidget: IconButton(
-                    onPressed: () {
-                      controller.favouriteMessage();
-                    },
-                    icon: SvgPicture.asset(unFavouriteIcon,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),tooltip: AppConstants.unFavourite,),
+                  onPressed: () {
+                    controller.favouriteMessage();
+                  },
+                  icon: SvgPicture.asset(unFavouriteIcon,
+                      package: package,
+                      colorFilter: ColorFilter.mode(
+                          MirrorflyUikit.getTheme!.colorOnAppbar,
+                          BlendMode.srcIn)),
+                  tooltip: AppConstants.unFavourite,
+                ),
                 overflowWidget: Text(AppConstants.unFavourite),
                 showAsAction: ShowAsAction.always,
                 keyValue: AppConstants.unFavourite,
@@ -253,43 +343,63 @@ class _StarredMessagesViewState extends State<StarredMessagesView> {
               ),
               CustomAction(
                 visibleWidget: IconButton(
-                    onPressed: () {
-                      controller.share();
-                    },
-                    icon: SvgPicture.asset(shareIcon,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),tooltip: AppConstants.share,),
+                  onPressed: () {
+                    controller.share();
+                  },
+                  icon: SvgPicture.asset(shareIcon,
+                      package: package,
+                      colorFilter: ColorFilter.mode(
+                          MirrorflyUikit.getTheme!.colorOnAppbar,
+                          BlendMode.srcIn)),
+                  tooltip: AppConstants.share,
+                ),
                 overflowWidget: Text(AppConstants.share),
-                showAsAction: controller.canBeShare.value ? ShowAsAction.always : ShowAsAction.gone,
+                showAsAction: controller.canBeShare.value
+                    ? ShowAsAction.always
+                    : ShowAsAction.gone,
                 keyValue: AppConstants.share,
                 onItemClick: () {},
               ),
               controller.selectedChatList.length > 1 ||
-                  controller.selectedChatList[0].messageType !=
-                      Constants.mText
+                      controller.selectedChatList[0].messageType !=
+                          Constants.mText
                   ? customEmptyAction()
                   : CustomAction(
-                visibleWidget: IconButton(
-                  onPressed: () {
-                    controller.copyTextMessages();
-                  },
-                  icon: SvgPicture.asset(
-                    copyIcon,package: package,
-                    fit: BoxFit.contain, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn),
-                  ),
-                  tooltip: AppConstants.copy,
-                ),
-                overflowWidget: Text(AppConstants.copy),
-                showAsAction: ShowAsAction.always,
-                keyValue: AppConstants.copy,
-                onItemClick: () {
-                  controller.copyTextMessages();
-                },
-              ),
+                      visibleWidget: IconButton(
+                        onPressed: () {
+                          controller.copyTextMessages();
+                        },
+                        icon: SvgPicture.asset(
+                          copyIcon,
+                          package: package,
+                          fit: BoxFit.contain,
+                          colorFilter: ColorFilter.mode(
+                              MirrorflyUikit.getTheme!.colorOnAppbar,
+                              BlendMode.srcIn),
+                        ),
+                        tooltip: AppConstants.copy,
+                      ),
+                      overflowWidget: Text(AppConstants.copy),
+                      showAsAction: ShowAsAction.always,
+                      keyValue: AppConstants.copy,
+                      onItemClick: () {
+                        controller.copyTextMessages();
+                      },
+                    ),
               CustomAction(
                 visibleWidget: IconButton(
-                    onPressed: () {
-                      controller.deleteMessages(context);
-                    },
-                    icon: SvgPicture.asset(deleteIcon,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn),),tooltip: AppConstants.delete,),
+                  onPressed: () {
+                    controller.deleteMessages(context);
+                  },
+                  icon: SvgPicture.asset(
+                    deleteIcon,
+                    package: package,
+                    colorFilter: ColorFilter.mode(
+                        MirrorflyUikit.getTheme!.colorOnAppbar,
+                        BlendMode.srcIn),
+                  ),
+                  tooltip: AppConstants.delete,
+                ),
                 overflowWidget: Text(AppConstants.delete),
                 showAsAction: ShowAsAction.always,
                 keyValue: AppConstants.delete,

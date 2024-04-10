@@ -1,18 +1,23 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart' as emoji;
+
+import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'package:mirrorfly_plugin/flychat.dart';
+import 'package:mirrorfly_plugin/logmessage.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 
 import 'package:mirrorfly_uikit_plugin/app/modules/dashboard/widgets.dart';
 import '../../mirrorfly_uikit_plugin.dart';
+import '../data/session_management.dart';
 import 'constants.dart';
+import 'extensions.dart';
 import 'main_controller.dart';
 
 class AppDivider extends StatelessWidget {
-  const AppDivider({Key? key, this.padding}) : super(key: key);
+  const AppDivider({super.key, this.padding});
 
   final EdgeInsetsGeometry? padding;
 
@@ -21,7 +26,8 @@ class AppDivider extends StatelessWidget {
     return Container(
       margin: padding,
       height: 0.29,
-      color: MirrorflyUikit.getTheme?.textPrimaryColor.withOpacity(0.5) ?? dividerColor,
+      color: MirrorflyUikit.getTheme?.textPrimaryColor.withOpacity(0.5) ??
+          dividerColor,
     );
   }
 }
@@ -34,20 +40,22 @@ class ProfileTextImage extends StatelessWidget {
   final Color fontColor;
 
   const ProfileTextImage(
-      {Key? key,
+      {super.key,
       required this.text,
       this.fontSize = 15,
       this.bgColor,
       this.radius = 25,
-      this.fontColor = Colors.white})
-      : super(key: key);
+      this.fontColor = Colors.white});
 
   @override
   Widget build(BuildContext context) {
     return radius == 0
         ? Container(
             decoration: BoxDecoration(
-                color: bgColor ?? (text.isNotEmpty ? Color(Helper.getColourCode(text)) : MirrorflyUikit.getTheme?.primaryColor)),
+                color: bgColor ??
+                    (text.isNotEmpty
+                        ? Color(Helper.getColourCode(text))
+                        : MirrorflyUikit.getTheme?.primaryColor)),
             child: Center(
               child: Text(
                 getString(text),
@@ -101,7 +109,7 @@ class ImageNetwork extends GetView<MainController> {
   final bool unknown;
 
   const ImageNetwork({
-    Key? key,
+    super.key,
     required this.url,
     required this.width,
     required this.height,
@@ -111,122 +119,109 @@ class ImageNetwork extends GetView<MainController> {
     required this.isGroup,
     required this.blocked,
     required this.unknown,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    //var authToken = controller.authToken;
-    // mirrorFlyLog("MirrorFly Auth", authToken.value);
-    // mirrorFlyLog("Image URL", url);
-    /*if (url.isEmpty) {
-      return errorWidget != null
-          ? errorWidget!
-          : clipOval
-              ? ClipOval(
-                  child: Image.asset(
-                    profileImg,
-                    height: height,
-                    width: width,
-                  ),
-                )
-              : Image.asset(
-                  profileImg,
-                  height: height,
-                  width: width,
-                );
-    } else {*/
     return Obx(
       () => CachedNetworkImage(
-        imageUrl: controller.uploadEndpoint + url,
+        key: UniqueKey(),
+        imageUrl: getImageUrl(),
         fit: BoxFit.fill,
         width: width,
         height: height,
-        cacheKey: controller.uploadEndpoint + url,
-        httpHeaders: {"Authorization": controller.authToken.value},
-        /*progressIndicatorBuilder: (context, link, progress) {
-            return SizedBox(
-              height: height,
-              width: width,
-              child: const Center(child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,)),
-            );
-          },*/
+        cacheKey: getImageUrl(),
+        httpHeaders: {"Authorization": controller.currentAuthToken.value},
         placeholder: (context, string) {
-          if(!(blocked || (unknown && !MirrorflyUikit.instance.isTrialLicenceKey))){
-            if(errorWidget !=null){
-              return errorWidget!;
-            }
-          }
-          return clipOval
-                  ? ClipOval(
-                      child: Image.asset(
-                        getSingleOrGroup(isGroup),package: package,
-                        height: height,
-                        width: width,
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                  : Image.asset(
-            getSingleOrGroup(isGroup),package: package,
-                      height: height,
-                      width: width,
-            fit: BoxFit.cover,
-                    );
-        },
-        errorWidget: (context, link, error) {
-          if(url.isNotEmpty) {
-            // mirrorFlyLog("image error", "$error link : $link token : ${controller.authToken.value}");
-            if (error.toString().contains("401") && url.isNotEmpty) {
-              // controller.getAuthToken();
-              _deleteImageFromCache(url);
-            }
-          }
-          // debugPrint("image blocked--> $blocked");
-          // debugPrint("image unknown--> $unknown");
-
-          if(!(blocked || (unknown && !MirrorflyUikit.instance.isTrialLicenceKey))){
-            if(errorWidget !=null){
+          if (!(blocked || (unknown && Constants.enableContactSync))) {
+            if (errorWidget != null) {
               return errorWidget!;
             }
           }
           return clipOval
               ? ClipOval(
-            child: Image.asset(
-              getSingleOrGroup(isGroup),package: package,
-              height: height,
-              width: width,
-              fit: BoxFit.cover,
-            ),
-          )
+                  child: Image.asset(
+                    getSingleOrGroup(isGroup),
+                    package: package,
+                    height: height,
+                    width: width,
+                    fit: BoxFit.cover,
+                  ),
+                )
               : Image.asset(
-            getSingleOrGroup(isGroup),package: package,
-            height: height,
-            width: width,
-            fit: isGroup ? BoxFit.cover : BoxFit.contain,
-          );
+                  getSingleOrGroup(isGroup),
+                  package: package,
+                  height: height,
+                  width: width,
+                  fit: BoxFit.cover,
+                );
+        },
+        errorWidget: (context, link, error) {
+          if (getImageUrl().isNotEmpty) {
+            // mirrorFlyLog("image error", "$error link : $link token : ${controller.authToken.value}");
+            if (error.toString().contains("401") && url.isNotEmpty) {
+              // controller.getAuthToken();
+              // _deleteImageFromCache(url);
+              CachedNetworkImage.evictFromCache(url, cacheKey: url)
+                  .then((value) {
+                refreshHeaders();
+              });
+            }
+          }
+
+          if (!(blocked || (unknown && Constants.enableContactSync))) {
+            if (errorWidget != null) {
+              return errorWidget!;
+            }
+          }
+          return clipOval
+              ? ClipOval(
+                  child: Image.asset(
+                    getSingleOrGroup(isGroup),
+                    package: package,
+                    height: height,
+                    width: width,
+                    fit: BoxFit.cover,
+                  ),
+                )
+              : Image.asset(
+                  getSingleOrGroup(isGroup),
+                  package: package,
+                  height: height,
+                  width: width,
+                  fit: isGroup ? BoxFit.cover : BoxFit.contain,
+                );
         },
         imageBuilder: (context, provider) {
           return clipOval
               ? ClipOval(
-                  child: !(blocked || (unknown && !MirrorflyUikit.instance.isTrialLicenceKey)) ? Image(
-                  image: provider,
-                  fit: BoxFit.fill,
-                ) : Image.asset(
-                    getSingleOrGroup(isGroup),package: package,
-                    height: height,
-                    width: width,
-                    fit: BoxFit.cover,
-                  ),)
+                  child: !(blocked || (unknown && Constants.enableContactSync))
+                      ? Image(
+                          image: provider,
+                          fit: BoxFit.fill,
+                        )
+                      : Image.asset(
+                          getSingleOrGroup(isGroup),
+                          package: package,
+                          height: height,
+                          width: width,
+                          fit: BoxFit.cover,
+                        ),
+                )
               : InkWell(
                   onTap: onTap,
-                  child: !(blocked || (unknown && !MirrorflyUikit.instance.isTrialLicenceKey)) ? Image(
-                    image: provider,
-                    fit: BoxFit.fill,
-                  ) : Image.asset(
-                    getSingleOrGroup(isGroup),package: package,
-                    height: height,
-                    width: width,
-                    fit: BoxFit.cover,
-                  ),
+                  child: !(blocked || (unknown && Constants.enableContactSync))
+                      ? Image(
+                          image: provider,
+                          fit: BoxFit.fill,
+                        )
+                      : Image.asset(
+                          getSingleOrGroup(isGroup),
+                          package: package,
+                          height: height,
+                          width: width,
+                          fit: BoxFit.cover,
+                        ),
                 );
         },
       ),
@@ -234,23 +229,81 @@ class ImageNetwork extends GetView<MainController> {
     // }
   }
 
-  String getSingleOrGroup(bool isGroup){
+  String getImageUrl() {
+    if (url.isEmpty) {
+      return "";
+    }
+    if (url.startsWith("http")) {
+      return url;
+    } else {
+      if (url.contains("/")) return "";
+      // return controller.mediaEndpoint + url;
+      return SessionManagement.getMediaEndPoint().checkNull() + url;
+    }
+  }
+
+  Future<bool> isTokenExpired(String token) async {
+    // logic to check if the token is expired
+    // Return true if the token is expired, otherwise return false
+    final http.Response response = await http
+        .get(Uri.parse(getImageUrl()), headers: {"Authorization": token});
+    var code = response.statusCode;
+    LogMessage.d("ImageNetwork",
+        "isTokenExpired url ${getImageUrl()} token: $token statusCode : ${response.statusCode}");
+    return code == 401;
+  }
+
+  Future<Map<String, String>> refreshHeaders() async {
+    if (getImageUrl().isEmpty) {
+      return {};
+    }
+    var count = 0;
+    // logic to get refreshed headers
+    // get the available current Token
+    var token = await Mirrorfly.getCurrentAuthToken();
+    // This might involve checking the token expiration, refreshing the token if needed, and returning the headers
+    while ((await isTokenExpired(token))) {
+      if (count <= 1) {
+        count++;
+        if (SessionManagement.getUsername().checkNull().isNotEmpty &&
+            SessionManagement.getPassword().checkNull().isNotEmpty) {
+          await Mirrorfly.refreshAndGetAuthToken(flyCallBack: (response) {
+            token = response.data;
+          });
+        }
+        LogMessage.d(
+            "ImageNetwork", "refreshAndGetAuthToken retryCount $count");
+      } else {
+        LogMessage.d("ImageNetwork",
+            "refreshHeaders $count retryCount exceed retrying stopped...");
+        break;
+      }
+    }
+    LogMessage.d("ImageNetwork",
+        "refreshHeaders url ${getImageUrl()} token: $token statusCode : ${200} retryCount : $count");
+    // Adding the token in headers
+    controller.currentAuthToken(token);
+    return {
+      'Authorization': token,
+    };
+  }
+
+  String getSingleOrGroup(bool isGroup) {
     return isGroup ? groupImg : profileImg;
   }
 
-  void _deleteImageFromCache(String url) {
-    /*cache.DefaultCacheManager manager = cache.DefaultCacheManager();
-    manager.emptyCache();*/
-    CachedNetworkImage.evictFromCache(url, cacheKey: url)
-        .then((value) => controller.getAuthToken());
-    /*cache.DefaultCacheManager().removeFile(url).then((value) {
+  /*void _deleteImageFromCache(String url) {
+    */ /*cache.DefaultCacheManager manager = cache.DefaultCacheManager();
+    manager.emptyCache();*/ /*
+    CachedNetworkImage.evictFromCache(url, cacheKey: url).then((value) => controller.getAuthToken());
+    */ /*cache.DefaultCacheManager().removeFile(url).then((value) {
       mirrorFlyLog('File removed', "");
       controller.getAuthToken();
     }).onError((error, stackTrace) {
       mirrorFlyLog("", error.toString());
-    });*/
+    });*/ /*
     //await CachedNetworkImage.evictFromCache(url);
-  }
+  }*/
 }
 
 class ListItem extends StatelessWidget {
@@ -261,13 +314,12 @@ class ListItem extends StatelessWidget {
   final EdgeInsetsGeometry? dividerPadding;
 
   const ListItem(
-      {Key? key,
+      {super.key,
       this.leading,
       required this.title,
       this.trailing,
       this.onTap,
-      this.dividerPadding})
-      : super(key: key);
+      this.dividerPadding});
 
   @override
   Widget build(BuildContext context) {
@@ -287,7 +339,9 @@ class ListItem extends StatelessWidget {
                 Expanded(
                   child: title,
                 ),
-                const SizedBox(width: 2,),
+                const SizedBox(
+                  width: 2,
+                ),
                 trailing ?? const SizedBox()
               ],
             ),
@@ -311,11 +365,13 @@ Widget memberItem(
     bool isCheckBoxVisible = false,
     bool isChecked = false,
     Function(bool? value)? onchange,
-      bool isGroup = false,
-      required bool blocked,
-      required bool unknown}) {
+    bool isGroup = false,
+    required bool blocked,
+    required bool unknown}) {
   var titlestyle = TextStyle(
-      color: MirrorflyUikit.getTheme?.textPrimaryColor ?? Colors.black, fontSize: 14.0, fontWeight: FontWeight.w700);
+      color: MirrorflyUikit.getTheme?.textPrimaryColor ?? Colors.black,
+      fontSize: 14.0,
+      fontWeight: FontWeight.w700);
   return Container(
     padding: const EdgeInsets.symmetric(vertical: 4.0),
     child: InkWell(
@@ -337,7 +393,9 @@ Widget memberItem(
                           fontSize: 20,
                           text: name.checkNull(),
                         )
-                      : null, blocked: blocked, unknown: unknown,
+                      : null,
+                  blocked: blocked,
+                  unknown: unknown,
                   isGroup: isGroup,
                 ),
                 Expanded(
@@ -363,11 +421,13 @@ Widget memberItem(
                         Text(
                           status.checkNull(),
                           style: TextStyle(
-                            color: MirrorflyUikit.getTheme?.textSecondaryColor ?? Colors.black,
+                            color:
+                                MirrorflyUikit.getTheme?.textSecondaryColor ??
+                                    Colors.black,
                             fontSize: 12.0,
                           ),
                           maxLines: 1,
-                          overflow: TextOverflow.ellipsis, //T
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),
@@ -376,7 +436,8 @@ Widget memberItem(
                 (isAdmin != null && isAdmin)
                     ? Text("Admin",
                         style: TextStyle(
-                          color: MirrorflyUikit.getTheme?.primaryColor ?? buttonBgColor,
+                          color: MirrorflyUikit.getTheme?.primaryColor ??
+                              buttonBgColor,
                           fontSize: 12.0,
                         ))
                     : const SizedBox(),
@@ -387,7 +448,8 @@ Widget memberItem(
                       unselectedWidgetColor: Colors.grey,
                     ),
                     child: Checkbox(
-                      activeColor: MirrorflyUikit.getTheme!.primaryColor,//Colors.white,
+                      activeColor:
+                          MirrorflyUikit.getTheme!.primaryColor, //Colors.white,
                       checkColor: MirrorflyUikit.getTheme?.colorOnPrimary,
                       value: isChecked,
                       onChanged: onchange,
@@ -407,43 +469,38 @@ Widget memberItem(
 
 class EmojiLayout extends StatelessWidget {
   const EmojiLayout(
-      {Key? key,
+      {super.key,
       required this.textController,
       this.onEmojiSelected,
-      this.onBackspacePressed})
-      : super(key: key);
+      this.onBackspacePressed});
   final TextEditingController textController;
-  final Function(Category?, Emoji)? onEmojiSelected;
+  final Function(emoji.Category?, emoji.Emoji)? onEmojiSelected;
   final Function()? onBackspacePressed;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 250,
-      child: EmojiPicker(
+      child: emoji.EmojiPicker(
         onBackspacePressed: onBackspacePressed,
         onEmojiSelected: onEmojiSelected,
         textEditingController: textController,
-        config: Config(
-          columns: 7,
-          emojiSizeMax: 32 * (Platform.isIOS ? 1.30 : 1.0),
-          verticalSpacing: 0,
-          horizontalSpacing: 0,
-          gridPadding: EdgeInsets.zero,
-          initCategory: Category.RECENT,
-          bgColor: MirrorflyUikit.getTheme!.scaffoldColor,
-          indicatorColor: MirrorflyUikit.getTheme!.primaryColor,
-          iconColor: MirrorflyUikit.getTheme!.textPrimaryColor,
-          iconColorSelected: MirrorflyUikit.getTheme!.primaryColor,
-          backspaceColor: MirrorflyUikit.getTheme!.primaryColor,
-          skinToneDialogBgColor: MirrorflyUikit.getTheme!.textPrimaryColor,
-          skinToneIndicatorColor: MirrorflyUikit.getTheme!.textPrimaryColor,
-          enableSkinTones: true,
-          // showRecentsTab: true,
-          recentsLimit: 28,
-          tabIndicatorAnimDuration: kTabScrollDuration,
-          categoryIcons: const CategoryIcons(),
-          buttonMode: ButtonMode.CUPERTINO,
+        config: emoji.Config(
+          height: 256,
+          // bgColor: const Color(0xFFF2F2F2),
+          checkPlatformCompatibility: true,
+          emojiViewConfig: emoji.EmojiViewConfig(
+            // Issue: https://github.com/flutter/flutter/issues/28894
+            emojiSizeMax: 28 *
+                (foundation.defaultTargetPlatform == TargetPlatform.iOS
+                    ? 1.20
+                    : 1.0),
+          ),
+          swapCategoryAndBottomBar: false,
+          skinToneConfig: const emoji.SkinToneConfig(),
+          categoryViewConfig: const emoji.CategoryViewConfig(),
+          bottomActionBarConfig: const emoji.BottomActionBarConfig(),
+          searchViewConfig: const emoji.SearchViewConfig(),
         ),
       ),
     );

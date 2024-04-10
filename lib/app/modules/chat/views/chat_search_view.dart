@@ -20,10 +20,13 @@ class ChatSearchView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
         controller.searchInit();
-        return Future.value(true);
+        if (didPop) {
+          return;
+        }
       },
       child: Scaffold(
         backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
@@ -42,7 +45,11 @@ class ChatSearchView extends StatelessWidget {
             cursorColor: MirrorflyUikit.getTheme?.colorOnAppbar,
             style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
             decoration: InputDecoration(
-                hintText: AppConstants.searchPlaceHolder, border: InputBorder.none,hintStyle: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar.withOpacity(0.5))),
+                hintText: AppConstants.searchPlaceHolder,
+                border: InputBorder.none,
+                hintStyle: TextStyle(
+                    color: MirrorflyUikit.getTheme?.colorOnAppbar
+                        .withOpacity(0.5))),
             onSubmitted: (str) {
               if (controller.filteredPosition.isNotEmpty) {
                 controller.scrollUp();
@@ -126,10 +133,14 @@ class ChatSearchView extends StatelessWidget {
                                         controller.profile.isGroupProfile,
                                     chatList: chatList,
                                     index: index),
-                                (chatList[index].replyParentChatMessage == null)
-                                    ? const SizedBox.shrink()
-                                    : ReplyMessageHeader(
-                                        chatMessage: chatList[index]),
+                                chatList[index].isThisAReplyMessage
+                                    ? chatList[index].replyParentChatMessage ==
+                                            null
+                                        ? messageNotAvailableWidget(
+                                            chatList[index])
+                                        : ReplyMessageHeader(
+                                            chatMessage: chatList[index])
+                                    : const SizedBox.shrink(),
                                 MessageContent(
                                   chatList: chatList,
                                   index: index,
@@ -138,7 +149,8 @@ class ChatSearchView extends StatelessWidget {
                                     controller.playAudio(chatList[index]);
                                   },
                                   onSeekbarChange: (value) {},
-                                  showChatDeliveryIndicator: showChatDeliveryIndicator,
+                                  showChatDeliveryIndicator:
+                                      showChatDeliveryIndicator,
                                 ),
                               ],
                             ),

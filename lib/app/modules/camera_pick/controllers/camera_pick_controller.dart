@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
 
-class CameraPickController extends GetxController with WidgetsBindingObserver  {
+class CameraPickController extends GetxController with WidgetsBindingObserver {
   RxDouble scale = 1.0.obs;
   CameraController? cameraController;
   var cameraInitialized = false.obs;
@@ -43,27 +43,28 @@ class CameraPickController extends GetxController with WidgetsBindingObserver  {
     cameraController?.dispose();
     super.dispose();
   }
+
   var min = 1.0;
   var max = 8.0;
-  var pointers =0;
+  var pointers = 0;
   Future<void> initCamera() async {
     cameras = await availableCameras();
     cameraController = CameraController(cameras[0], ResolutionPreset.high);
-    cameraController?.initialize().then((value)async {
+    cameraController?.initialize().then((value) async {
       cameraInitialized(true);
       min = (await cameraController?.getMinZoomLevel())!;
       max = (await cameraController?.getMaxZoomLevel())!;
       debugPrint("min : $min");
       debugPrint("max : $max");
     });
-
   }
 
-   toggleFlash() {
-     flash.value = !flash.value;
-     flash.value ? cameraController?.setFlashMode(FlashMode.torch) : cameraController?.setFlashMode(FlashMode.off);
-
-   }
+  toggleFlash() {
+    flash.value = !flash.value;
+    flash.value
+        ? cameraController?.setFlashMode(FlashMode.torch)
+        : cameraController?.setFlashMode(FlashMode.off);
+  }
 
   double _currentScale = 1.0;
   double _baseScale = 1.0;
@@ -77,8 +78,7 @@ class CameraPickController extends GetxController with WidgetsBindingObserver  {
       return;
     }
 
-    _currentScale = (_baseScale * details.scale)
-        .clamp(min, max);
+    _currentScale = (_baseScale * details.scale).clamp(min, max);
 
     await cameraController!.setZoomLevel(_currentScale);
   }
@@ -102,12 +102,13 @@ class CameraPickController extends GetxController with WidgetsBindingObserver  {
   Duration myDuration = const Duration(seconds: 300);
   int maxVideoDuration = 300;
   void startTimer(BuildContext context) {
-    countdownTimer =
-        Timer.periodic(const Duration(seconds: 1), (_) => setCountDown(context));
+    countdownTimer = Timer.periodic(
+        const Duration(seconds: 1), (_) => setCountDown(context));
   }
+
   var minutesStr = '00'.obs;
   var secondsStr = '00'.obs;
-  var counter =0;
+  var counter = 0;
   var timeStr = "".obs;
   var progress = 0.obs;
   get timeString => timeStr("${minutesStr.value}:${secondsStr.value}");
@@ -118,7 +119,7 @@ class CameraPickController extends GetxController with WidgetsBindingObserver  {
     secondsStr((counter % 60).floor().toString().padLeft(2, '0'));
     progress(counter);
     debugPrint(counter.toString());
-    if(counter==maxVideoDuration){
+    if (counter == maxVideoDuration) {
       // stopVideoRecording();
       stopRecord(context);
     }
@@ -128,7 +129,7 @@ class CameraPickController extends GetxController with WidgetsBindingObserver  {
     //final CameraController? cameraController = controller;
 
     if (cameraController == null || !cameraController!.value.isInitialized) {
-      showInSnackBar(context,'Error: camera not Initialized.');
+      showInSnackBar(context, 'Error: camera not Initialized.');
       return;
     }
 
@@ -139,23 +140,25 @@ class CameraPickController extends GetxController with WidgetsBindingObserver  {
 
     try {
       await cameraController?.startVideoRecording();
-      if(context.mounted) startTimer(context);
+      if (context.mounted) startTimer(context);
       isRecording(true);
     } on CameraException catch (e) {
-      _showCameraException(context,e);
+      _showCameraException(context, e);
       return;
     }
   }
-  void _showCameraException(BuildContext context,CameraException e) {
+
+  void _showCameraException(BuildContext context, CameraException e) {
     _logError(e.code, e.description);
-    showInSnackBar(context,'Error: ${e.code}\n${e.description}');
+    showInSnackBar(context, 'Error: ${e.code}\n${e.description}');
   }
+
   void _logError(String code, String? message) {
     // ignore: avoid_print
     print('Error: $code${message == null ? '' : '\nError Message: $message'}');
   }
 
-  void showInSnackBar(BuildContext context,String message) {
+  void showInSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)));
   }
@@ -170,30 +173,30 @@ class CameraPickController extends GetxController with WidgetsBindingObserver  {
     try {
       return cameraController?.stopVideoRecording();
     } on CameraException catch (e) {
-      _showCameraException(context,e);
+      _showCameraException(context, e);
       return null;
     }
   }
 
   Future<void> takePhoto(BuildContext context) async {
-    if(cameraInitialized.value) {
+    if (cameraInitialized.value) {
       Helper.showLoading(buildContext: context);
       XFile? file = await cameraController?.takePicture();
       debugPrint("file : ${file?.path}");
-      if(context.mounted)Helper.hideLoading(context: context);
+      if (context.mounted) Helper.hideLoading(context: context);
       // Get.back(result: file);
-      if(context.mounted)Navigator.pop(context,file);
+      if (context.mounted) Navigator.pop(context, file);
     }
   }
 
-  stopRecord(BuildContext context)async{
-    if(cameraInitialized.value) {
+  stopRecord(BuildContext context) async {
+    if (cameraInitialized.value) {
       //Helper.showLoading();
       XFile? file = await stopVideoRecording(context);
       debugPrint("file : ${file?.path}");
       //Helper.hideLoading();
       // Get.back(result: file);
-      if(context.mounted)Navigator.pop(context,file);
+      if (context.mounted) Navigator.pop(context, file);
       isRecording(false);
     }
   }
@@ -203,10 +206,8 @@ class CameraPickController extends GetxController with WidgetsBindingObserver  {
     isFrontCamera.value = !isFrontCamera.value;
     transform = transform * pi;
     int cameraPos = isFrontCamera.value ? 0 : 1;
-    cameraController = CameraController(cameras[cameraPos], ResolutionPreset.high);
+    cameraController =
+        CameraController(cameras[cameraPos], ResolutionPreset.high);
     cameraController?.initialize().then((value) => cameraInitialized(true));
   }
-
-
-
 }

@@ -5,8 +5,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
-
+import 'package:mirrorfly_uikit_plugin/app/common/extensions.dart';
 
 NotificationMessageModel notificationModelFromJson(String str) =>
     NotificationMessageModel.fromJson(json.decode(str));
@@ -209,12 +208,9 @@ class ChatMessage {
         "senderNickName": senderNickName,
         "senderUserJid": senderUserJid,
         "senderUserName": senderUserName,
-        "contactChatMessage":
-            contactChatMessage == null ? null : contactChatMessage!.toJson(),
-        "mediaChatMessage":
-            mediaChatMessage == null ? null : mediaChatMessage!.toJson(),
-        "locationChatMessage":
-            locationChatMessage == null ? null : locationChatMessage!.toJson(),
+        "contactChatMessage": contactChatMessage?.toJson(),
+        "mediaChatMessage": mediaChatMessage?.toJson(),
+        "locationChatMessage": locationChatMessage?.toJson(),
       };
 }
 

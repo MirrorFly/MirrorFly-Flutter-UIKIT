@@ -10,21 +10,22 @@ class NotificationModel {
       {this.messagingStyle, this.messages, this.unReadMessageCount});
 }
 
-extension NotificatioModelMapper on NotificationModel{
+extension NotificatioModelMapper on NotificationModel {
   Map<String, Object?> toMap() => <String, Object?>{
-    'messagingStyle': messagingStyle?.toMap(),
-    'messages': List<dynamic>.from(messages!.map((x) => x.toJson())),
-    'unReadMessageCount': unReadMessageCount
-  };
+        'messagingStyle': messagingStyle?.toMap(),
+        'messages': List<dynamic>.from(messages!.map((x) => x.toJson())),
+        'unReadMessageCount': unReadMessageCount
+      };
 }
+
 extension PersonMapper on Person {
   Map<String, Object?> toMap() => <String, Object?>{
-    'bot': bot,
-    'important': important,
-    'key': key,
-    'name': name,
-    'uri': uri
-  }..addAll(_convertIconToMap());
+        'bot': bot,
+        'important': important,
+        'key': key,
+        'name': name,
+        'uri': uri
+      }..addAll(_convertIconToMap());
 
   Map<String, Object> _convertIconToMap() {
     if (icon == null) {
@@ -37,24 +38,23 @@ extension PersonMapper on Person {
   }
 }
 
-
 extension MessageMapper on Message {
   Map<String, Object?> toMap() => <String, Object?>{
-    'text': text,
-    'timestamp': timestamp.millisecondsSinceEpoch,
-    'person': person?.toMap(),
-    'dataMimeType': dataMimeType,
-    'dataUri': dataUri
-  };
+        'text': text,
+        'timestamp': timestamp.millisecondsSinceEpoch,
+        'person': person?.toMap(),
+        'dataMimeType': dataMimeType,
+        'dataUri': dataUri
+      };
 }
 
 extension MessagingStyleInformationMapper on MessagingStyleInformation {
   Map<String, Object?> toMap() => <String, Object?>{
-      'person': person.toMap(),
-      'conversationTitle': conversationTitle,
-      'groupConversation': groupConversation,
-      'messages': messages
-          ?.map((m) => m.toMap()) // ignore: always_specify_types
-          .toList()
-    };
+        'person': person.toMap(),
+        'conversationTitle': conversationTitle,
+        'groupConversation': groupConversation,
+        'messages': messages
+            ?.map((m) => m.toMap()) // ignore: always_specify_types
+            .toList()
+      };
 }

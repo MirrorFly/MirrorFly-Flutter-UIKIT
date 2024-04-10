@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -10,7 +9,7 @@ import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
 
 class NameChangeView extends StatefulWidget {
-  const NameChangeView({Key? key,this.enableAppBar=true}) : super(key: key);
+  const NameChangeView({super.key, this.enableAppBar = true});
   final bool enableAppBar;
   @override
   State<NameChangeView> createState() => _NameChangeViewState();
@@ -22,21 +21,25 @@ class _NameChangeViewState extends State<NameChangeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-      appBar: widget.enableAppBar ? AppBar(
-        automaticallyImplyLeading: true,
-        title: Text(AppConstants.enterNewName, style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
-        iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
-        backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-      ) : null,
-      body: WillPopScope(
-        onWillPop: () {
-          if (controller.showEmoji.value) {
-            controller.showEmoji(false);
-          } else {
-            // Get.back();
-            Navigator.pop(context);
+      appBar: widget.enableAppBar
+          ? AppBar(
+              automaticallyImplyLeading: true,
+              title: Text(
+                AppConstants.enterNewName,
+                style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+              ),
+              iconTheme:
+                  IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
+              backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
+            )
+          : null,
+      body: PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) {
+          if (didPop) {
+            return;
           }
-          return Future.value(false);
+          controller.onBackPressed(context);
         },
         child: SafeArea(
           child: Column(
@@ -53,26 +56,39 @@ class _NameChangeViewState extends State<NameChangeView> {
                         children: [
                           Expanded(
                             child: TextField(
-                              style:
-                                  TextStyle(fontSize: 20, fontWeight: FontWeight.normal,overflow: TextOverflow.visible,color: MirrorflyUikit.getTheme?.textPrimaryColor,),
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.normal,
+                                overflow: TextOverflow.visible,
+                                color:
+                                    MirrorflyUikit.getTheme?.textPrimaryColor,
+                              ),
                               onChanged: (_) => controller.onChanged(),
-                              maxLength: 121,
+                              maxLength: 25,
                               maxLines: 1,
                               focusNode: controller.focusNode,
                               controller: controller.nameController,
-                              cursorColor: MirrorflyUikit.getTheme?.primaryColor,
-                              decoration: const InputDecoration(border: InputBorder.none,counterText:Constants.emptyString ),
+                              cursorColor:
+                                  MirrorflyUikit.getTheme?.primaryColor,
+                              decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  counterText: Constants.emptyString),
                             ),
                           ),
                           Container(
-                            height: 50,
-                            padding: const EdgeInsets.all(4.0),
+                              height: 50,
+                              padding: const EdgeInsets.all(4.0),
                               child: Center(
                                 child: Obx(
-                                  ()=> Text(
-                            controller.count.toString(),
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal,color: MirrorflyUikit.getTheme?.textSecondaryColor,),
-                          ),
+                                  () => Text(
+                                    controller.count.toString(),
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.normal,
+                                      color: MirrorflyUikit
+                                          .getTheme?.textSecondaryColor,
+                                    ),
+                                  ),
                                 ),
                               )),
                           /*IconButton(
@@ -91,61 +107,86 @@ class _NameChangeViewState extends State<NameChangeView> {
                                 onPressed: () {
                                   controller.showHideEmoji(context);
                                 },
-                                icon: controller.showEmoji.value ? Icon(
-                                  Icons.keyboard, color: MirrorflyUikit.getTheme?.textPrimaryColor,) : SvgPicture
-                                    .asset(smileIcon, package: package,  colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn)));
+                                icon: controller.showEmoji.value
+                                    ? Icon(
+                                        Icons.keyboard,
+                                        color: MirrorflyUikit
+                                            .getTheme?.textPrimaryColor,
+                                      )
+                                    : SvgPicture.asset(smileIcon,
+                                        package: package,
+                                        colorFilter: ColorFilter.mode(
+                                            MirrorflyUikit
+                                                .getTheme!.textPrimaryColor,
+                                            BlendMode.srcIn)));
                           })
                         ],
                       ),
-                      const Divider(height: 1, color: dividerColor, thickness: 1,),
+                      const Divider(
+                        height: 1,
+                        color: dividerColor,
+                        thickness: 1,
+                      ),
                     ],
                   ),
                 ),
-
               ),
-              Row(children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => Navigator.pop(context),
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: MaterialStateColor.resolveWith(
-                                (states) => MirrorflyUikit.getTheme!.secondaryColor),
-                        shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.zero)),
-                    child: Text(
-                      AppConstants.cancel.toUpperCase(),
-                      style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor, fontSize: 16.0),
+              const Divider(
+                thickness: 1,
+                color: Colors.grey,
+                height: 1,
+              ),
+              IntrinsicHeight(
+                child: Row(children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: MaterialStateColor.resolveWith(
+                              (states) =>
+                                  MirrorflyUikit.getTheme!.secondaryColor),
+                          shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.zero)),
+                      child: Text(
+                        AppConstants.cancel.toUpperCase(),
+                        style: TextStyle(
+                            color: MirrorflyUikit.getTheme?.textPrimaryColor,
+                            fontSize: 16.0),
+                      ),
                     ),
                   ),
-                ),
-                const Divider(
-                  color: Colors.grey,
-                  thickness: 0.2,
-                ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if(controller.nameController.text.trim().isNotEmpty) {
-                        // Get.back(result: controller.nameController.text
-                        //     .trim().toString());
-                        Navigator.pop(context, controller.nameController.text
-                            .trim().toString());
-                      }else{
-                        toToast(AppConstants.nameCantEmpty);
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: MaterialStateColor.resolveWith(
-                                (states) => MirrorflyUikit.getTheme!.secondaryColor),
-                        shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.zero)),
-                    child: Text(
-                      AppConstants.ok.toUpperCase(),
-                      style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor, fontSize: 16.0),
+                  const Divider(
+                    color: Colors.grey,
+                    thickness: 0.2,
+                  ),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (controller.nameController.text.trim().isNotEmpty) {
+                          // Get.back(result: controller.nameController.text
+                          //     .trim().toString());
+                          Navigator.pop(context,
+                              controller.nameController.text.trim().toString());
+                        } else {
+                          toToast(AppConstants.nameCantEmpty);
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: MaterialStateColor.resolveWith(
+                              (states) =>
+                                  MirrorflyUikit.getTheme!.secondaryColor),
+                          shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.zero)),
+                      child: Text(
+                        AppConstants.ok.toUpperCase(),
+                        style: TextStyle(
+                            color: MirrorflyUikit.getTheme?.textPrimaryColor,
+                            fontSize: 16.0),
+                      ),
                     ),
                   ),
-                ),
-              ]),
+                ]),
+              ),
               emojiLayout(),
             ],
           ),
@@ -158,8 +199,9 @@ class _NameChangeViewState extends State<NameChangeView> {
     return Obx(() {
       if (controller.showEmoji.value) {
         return EmojiLayout(
-          textController: controller.nameController,
-            onEmojiSelected : (cat, emoji)=>controller.onChanged()
+          textController: TextEditingController(),
+          onEmojiSelected: (cat, emoji) => controller.onEmojiSelected(emoji),
+          onBackspacePressed: () => controller.onEmojiBackPressed(),
         );
       } else {
         return const SizedBox.shrink();
