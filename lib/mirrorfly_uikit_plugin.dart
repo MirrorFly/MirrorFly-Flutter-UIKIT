@@ -18,8 +18,6 @@ import 'app/common/main_controller.dart';
 import 'app/common/navigation_manager.dart';
 import 'app/data/apputils.dart';
 import 'app/data/session_management.dart';
-import 'app/modules/chat/controllers/chat_controller.dart';
-import 'app/modules/chat/views/chat_view.dart';
 import 'mirrorfly_uikit_plugin_platform_interface.dart';
 import 'app/common/extensions.dart';
 
