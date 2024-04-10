@@ -10,9 +10,10 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MirrorflyUikit.instance.initUIKIT(
       navigatorKey: navigatorKey,
-      licenseKey: 'ckIjaccWBoMNvxdbql8LJ2dmKqT5bp',
-      googleMapKey: 'AIzaSyBaKkrQnLT4nacpKblIE5d4QK6GpaX5luQ',
-      iOSContainerID: 'group.com.mirrorfly.flutter');
+      licenseKey: 'xxx',
+      googleMapKey: 'xxx',
+      enableMobileNumberLogin: true,
+      iOSContainerID: 'xxx');
   isOnGoingCall = (await MirrorflyUikit.instance.isOnGoingCall()) ?? false;
   //if isOnGoingCall is returns True then Navigate to OnGoingCallView() this will only for app killed state, call received via FCM
 
@@ -106,8 +107,8 @@ class _DashboardState extends State<Dashboard> {
                         onPressed: () async {
                           if (uniqueId.isNotEmpty) {
                             try {
-                              var response = await MirrorflyUikit.instance.login(
-                                  userIdentifier: uniqueId);
+                              var response = await MirrorflyUikit.instance
+                                  .login(userIdentifier: uniqueId);
                               debugPrint("register user $response");
                               showSnack(response['message']);
                             } catch (e) {

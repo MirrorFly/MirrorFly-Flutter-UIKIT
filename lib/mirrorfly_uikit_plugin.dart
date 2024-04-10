@@ -74,7 +74,8 @@ class MirrorflyUikit {
             LogMessage.d("initUIKIT onSuccess", response.message);
             isSDKInitialized = true;
             _getMediaEndpoint();
-            completer.complete(setResponse(true, 'SDK Initialized Successfully'));
+            completer
+                .complete(setResponse(true, 'SDK Initialized Successfully'));
           } else {
             isSDKInitialized = false;
             _getMediaEndpoint();
@@ -90,9 +91,7 @@ class MirrorflyUikit {
     googleMapKey = googleMapKey ?? '';
     globalNavigatorKey = navigatorKey;
     ReplyHashMap.init();
-    rootBundle
-        .loadString('assets/mirrorfly_config.json')
-        .then((configFile) {
+    rootBundle.loadString('assets/mirrorfly_config.json').then((configFile) {
       var config = AppConfig.fromJson(json.decode(configFile));
       theme = config.appTheme.theme!;
       getTheme = MirrorFlyTheme.customTheme(
@@ -100,14 +99,12 @@ class MirrorflyUikit {
           secondaryColor: config.appTheme.customTheme!.secondaryColor,
           scaffoldColor: config.appTheme.customTheme!.scaffoldColor,
           colorOnPrimary: config.appTheme.customTheme!.colorOnPrimary,
-          textPrimaryColor:
-          config.appTheme.customTheme!.textPrimaryColor,
-          textSecondaryColor:
-          config.appTheme.customTheme!.textSecondaryColor,
+          textPrimaryColor: config.appTheme.customTheme!.textPrimaryColor,
+          textSecondaryColor: config.appTheme.customTheme!.textSecondaryColor,
           chatBubblePrimaryColor:
-          config.appTheme.customTheme!.chatBubblePrimaryColor,
+              config.appTheme.customTheme!.chatBubblePrimaryColor,
           chatBubbleSecondaryColor:
-          config.appTheme.customTheme!.chatBubbleSecondaryColor,
+              config.appTheme.customTheme!.chatBubbleSecondaryColor,
           appBarColor: config.appTheme.customTheme!.appBarColor,
           colorOnAppbar: config.appTheme.customTheme!.colorOnAppbar);
     }).catchError((e) {
@@ -115,8 +112,8 @@ class MirrorflyUikit {
     });
     SessionManagement.onInit().then((value) {
       Get.put<MainController>(MainController());
-      SessionManagement.setBool(AppConstants.enableLocalNotification,
-          enableLocalNotification);
+      SessionManagement.setBool(
+          AppConstants.enableLocalNotification, enableLocalNotification);
     });
     return completer.future;
   }
@@ -249,7 +246,7 @@ class MirrorflyUikit {
   }
 
   static _setUserJID(String username) async {
-    Mirrorfly.getAllGroups(fetchFromServer: true, flyCallBack: (_) {});
+    // Mirrorfly.getAllGroups(fetchFromServer: true, flyCallBack: (_) {});
     await Mirrorfly.getJid(username: username).then((value) {
       if (value != null) {
         SessionManagement.setUserJID(value);

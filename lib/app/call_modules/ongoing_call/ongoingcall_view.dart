@@ -131,7 +131,10 @@ class _OnGoingCallViewState extends State<OnGoingCallView> {
                                   CircleAvatar(
                                     backgroundColor:
                                         AppColors.audioMutedIconBgColor,
-                                    child: SvgPicture.asset(callMutedIcon, package: package,),
+                                    child: SvgPicture.asset(
+                                      callMutedIcon,
+                                      package: package,
+                                    ),
                                   )
                                 ],
                               ],
@@ -285,7 +288,10 @@ class _OnGoingCallViewState extends State<OnGoingCallView> {
               onPressed: () {
                 controller.openParticipantScreen();
               },
-              icon: SvgPicture.asset(addUserCall, package: package,),
+              icon: SvgPicture.asset(
+                addUserCall,
+                package: package,
+              ),
             ),
             IconButton(
               splashRadius: 24,
@@ -293,7 +299,8 @@ class _OnGoingCallViewState extends State<OnGoingCallView> {
                 controller.changeLayout();
               },
               icon: SvgPicture.asset(
-                gridIcon, package: package,
+                gridIcon,
+                package: package,
                 colorFilter:
                     const ColorFilter.mode(Colors.white, BlendMode.srcIn),
               ),
@@ -339,10 +346,12 @@ class _OnGoingCallViewState extends State<OnGoingCallView> {
                 onPressed: () => controller.muteAudio(),
                 child: controller.muted.value
                     ? SvgPicture.asset(
-                        muteActive, package: package,
+                        muteActive,
+                        package: package,
                       )
                     : SvgPicture.asset(
-                        muteInactive, package: package,
+                        muteInactive,
+                        package: package,
                       ),
               ),
               SizedBox(width: rightSideWidth),
@@ -357,8 +366,14 @@ class _OnGoingCallViewState extends State<OnGoingCallView> {
                       : Colors.white.withOpacity(0.3),
                   onPressed: () => controller.switchCamera(),
                   child: controller.cameraSwitch.value
-                      ? SvgPicture.asset(cameraSwitchActive, package: package,)
-                      : SvgPicture.asset(cameraSwitchInactive, package: package,),
+                      ? SvgPicture.asset(
+                          cameraSwitchActive,
+                          package: package,
+                        )
+                      : SvgPicture.asset(
+                          cameraSwitchInactive,
+                          package: package,
+                        ),
                 ),
                 SizedBox(width: rightSideWidth)
               ],
@@ -370,8 +385,14 @@ class _OnGoingCallViewState extends State<OnGoingCallView> {
                     : Colors.white.withOpacity(0.3),
                 onPressed: () => controller.videoMute(),
                 child: controller.videoMuted.value
-                    ? SvgPicture.asset(videoInactive, package: package,)
-                    : SvgPicture.asset(videoActive, package: package,),
+                    ? SvgPicture.asset(
+                        videoInactive,
+                        package: package,
+                      )
+                    : SvgPicture.asset(
+                        videoActive,
+                        package: package,
+                      ),
               ),
               SizedBox(
                 width: rightSideWidth,
@@ -386,17 +407,32 @@ class _OnGoingCallViewState extends State<OnGoingCallView> {
                 onPressed: () => controller.changeSpeaker(context),
                 child:
                     controller.audioOutputType.value == AudioDeviceType.receiver
-                        ? SvgPicture.asset(speakerInactive, package: package,)
+                        ? SvgPicture.asset(
+                            speakerInactive,
+                            package: package,
+                          )
                         : controller.audioOutputType.value ==
                                 AudioDeviceType.speaker
-                            ? SvgPicture.asset(speakerActive, package: package,)
+                            ? SvgPicture.asset(
+                                speakerActive,
+                                package: package,
+                              )
                             : controller.audioOutputType.value ==
                                     AudioDeviceType.bluetooth
-                                ? SvgPicture.asset(speakerBluetooth, package: package,)
+                                ? SvgPicture.asset(
+                                    speakerBluetooth,
+                                    package: package,
+                                  )
                                 : controller.audioOutputType.value ==
                                         AudioDeviceType.headset
-                                    ? SvgPicture.asset(speakerHeadset, package: package,)
-                                    : SvgPicture.asset(speakerActive, package: package,),
+                                    ? SvgPicture.asset(
+                                        speakerHeadset,
+                                        package: package,
+                                      )
+                                    : SvgPicture.asset(
+                                        speakerActive,
+                                        package: package,
+                                      ),
               ),
             ],
           ),
@@ -412,7 +448,8 @@ class _OnGoingCallViewState extends State<OnGoingCallView> {
                   controller.disconnectCall();
                 },
                 child: SvgPicture.asset(
-                  callEndButton, package: package,
+                  callEndButton,
+                  package: package,
                 )),
           ),
           // )

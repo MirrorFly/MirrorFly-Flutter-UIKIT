@@ -273,7 +273,8 @@ class Helper {
           colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
         );
       case Constants.mLocation:
-        return SvgPicture.asset(package: package,
+        return SvgPicture.asset(
+          package: package,
           mLocationIcon,
           fit: BoxFit.contain,
           colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
@@ -764,16 +765,18 @@ void showQuickProfilePopup(
     required Function() chatTap,
     Function()? callTap,
     Function()? videoTap,
-      bool callEnable = false,
+    bool callEnable = false,
     required Function() infoTap,
     required Rx<ProfileDetails> profile,
     required Rx<AvailableFeatures> availableFeatures}) {
-  var isAudioCallAvailable = profile.value.isGroupProfile.checkNull() || !callEnable
-      ? false
-      : availableFeatures.value.isOneToOneCallAvailable.checkNull();
-  var isVideoCallAvailable = profile.value.isGroupProfile.checkNull() || !callEnable
-      ? false
-      : availableFeatures.value.isOneToOneCallAvailable.checkNull();
+  var isAudioCallAvailable =
+      profile.value.isGroupProfile.checkNull() || !callEnable
+          ? false
+          : availableFeatures.value.isOneToOneCallAvailable.checkNull();
+  var isVideoCallAvailable =
+      profile.value.isGroupProfile.checkNull() || !callEnable
+          ? false
+          : availableFeatures.value.isOneToOneCallAvailable.checkNull();
 
   showDialog(
     context: context,

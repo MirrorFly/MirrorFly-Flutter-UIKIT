@@ -1,3 +1,7 @@
+## 1.0.0
+* Plugin Updates
+* Dependency updates
+
 ## 0.0.14
 * Plugin Updates
 
