@@ -274,7 +274,7 @@ class GroupParticipantsController extends GetxController {
                     context: context,
                     pageToNavigate:
                         OutGoingCallView(userJid: selectedUsersJIDList),
-                    routeName: 'outgoing_call_view',
+                    routeName: Constants.outGoingCallView,
                     onNavigateComplete: () {});
               }
             });
@@ -292,7 +292,7 @@ class GroupParticipantsController extends GetxController {
                     context: context,
                     pageToNavigate:
                         OutGoingCallView(userJid: selectedUsersJIDList),
-                    routeName: 'outgoing_call_view',
+                    routeName: Constants.outGoingCallView,
                     onNavigateComplete: () {});
               }
             });

@@ -959,7 +959,7 @@ makeVoiceCall(String toUser, Rx<AvailableFeatures> availableFeatures,
             MirrorflyUikit.instance.navigationManager.navigateTo(
                 context: context,
                 pageToNavigate: OutGoingCallView(userJid: [toUser]),
-                routeName: 'outgoing_call_view',
+                routeName: Constants.outGoingCallView,
                 onNavigateComplete: () {});
           }
         });
@@ -987,7 +987,7 @@ makeVideoCall(String toUser, Rx<AvailableFeatures> availableFeatures,
                 MirrorflyUikit.instance.navigationManager.navigateTo(
                     context: context,
                     pageToNavigate: OutGoingCallView(userJid: [toUser]),
-                    routeName: 'outgoing_call_view',
+                    routeName: Constants.outGoingCallView,
                     onNavigateComplete: () {});
               }
             });

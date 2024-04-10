@@ -247,7 +247,7 @@ abstract class BaseController {
                 context: MirrorflyUikit
                     .instance.globalNavigatorKey!.currentState!.context,
                 pageToNavigate: OnGoingCallView(userJid: [userJid]),
-                routeName: 'ongoing_call_view');
+                routeName: Constants.onGoingCallView);
           }
           break;
 

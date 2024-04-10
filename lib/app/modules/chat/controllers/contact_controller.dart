@@ -671,7 +671,7 @@ class ContactController extends FullLifeCycleController
                         pageToNavigate: OutGoingCallView(
                           userJid: [selectedUsersJIDList[0]],
                         ),
-                        routeName: 'outgoing_call_view',
+                        routeName: Constants.outGoingCallView,
                         onNavigateComplete: () {});
                     // Get.offNamed(Routes.outGoingCallView, arguments: {
                     //   "userJid": [selectedUsersJIDList[0]],
@@ -689,7 +689,7 @@ class ContactController extends FullLifeCycleController
                         pageToNavigate: OutGoingCallView(
                           userJid: selectedUsersJIDList,
                         ),
-                        routeName: 'outgoing_call_view',
+                        routeName: Constants.outGoingCallView,
                         onNavigateComplete: () {});
                     // Get.offNamed(Routes.outGoingCallView,
                     //     arguments: {"userJid": selectedUsersJIDList, "callType": CallType.audio});
@@ -710,7 +710,7 @@ class ContactController extends FullLifeCycleController
                           pageToNavigate: OutGoingCallView(
                             userJid: [selectedUsersJIDList[0]],
                           ),
-                          routeName: 'outgoing_call_view',
+                          routeName: Constants.outGoingCallView,
                           onNavigateComplete: () {});
                       // Get.offNamed(Routes.outGoingCallView, arguments: {
                       //   "userJid": [selectedUsersJIDList[0]],
@@ -728,7 +728,7 @@ class ContactController extends FullLifeCycleController
                           pageToNavigate: OutGoingCallView(
                             userJid: selectedUsersJIDList,
                           ),
-                          routeName: 'outgoing_call_view',
+                          routeName: Constants.outGoingCallView,
                           onNavigateComplete: () {});
                       // Get.offNamed(Routes.outGoingCallView,
                       //     arguments: {

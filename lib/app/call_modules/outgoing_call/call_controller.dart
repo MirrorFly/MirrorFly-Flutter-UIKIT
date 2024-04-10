@@ -579,7 +579,7 @@ class CallController extends GetxController {
         MirrorflyUikit.instance.navigationManager.navigatePushReplacement(
             context: context,
             pageToNavigate: OnGoingCallView(userJid: [userJid]),
-            routeName: 'ongoing_call_view');
+            routeName: Constants.onGoingCallView);
       });
     } else if (MirrorflyUikit.instance.navigationManager.getCurrentRoute() ==
         Constants.participantView) {
@@ -634,7 +634,7 @@ class CallController extends GetxController {
               callMode: callMode,
               userJid: users,
               calleeName: calleeName.value),
-          routeName: 'ongoing_call_view');
+          routeName: Constants.callTimeOutView);
     } else {
       var userJids = userJid.split(",");
       debugPrint("#Mirrorfly Call timeout userJids $userJids");

@@ -67,7 +67,7 @@ class CallTimeoutController extends GetxController {
                   MirrorflyUikit.instance.navigationManager.navigateTo(
                       context: context,
                       pageToNavigate: OutGoingCallView(userJid: users),
-                      routeName: 'outgoing_call_view',
+                      routeName: Constants.outGoingCallView,
                       onNavigateComplete: () {});
                 });
           } else {
@@ -86,7 +86,7 @@ class CallTimeoutController extends GetxController {
                   MirrorflyUikit.instance.navigationManager.navigateTo(
                       context: context,
                       pageToNavigate: OutGoingCallView(userJid: users),
-                      routeName: 'outgoing_call_view',
+                      routeName: Constants.outGoingCallView,
                       onNavigateComplete: () {});
                 });
           }
@@ -105,7 +105,7 @@ class CallTimeoutController extends GetxController {
                     MirrorflyUikit.instance.navigationManager.navigateTo(
                         context: context,
                         pageToNavigate: OutGoingCallView(userJid: users),
-                        routeName: 'outgoing_call_view',
+                        routeName: Constants.outGoingCallView,
                         onNavigateComplete: () {});
                   }
                 });
@@ -124,7 +124,7 @@ class CallTimeoutController extends GetxController {
                   MirrorflyUikit.instance.navigationManager.navigateTo(
                       context: context,
                       pageToNavigate: OutGoingCallView(userJid: users),
-                      routeName: 'outgoing_call_view',
+                      routeName: Constants.outGoingCallView,
                       onNavigateComplete: () {});
                 });
           }

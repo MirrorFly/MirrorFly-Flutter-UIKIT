@@ -51,7 +51,7 @@ class CallInfoController extends GetxController {
                       MirrorflyUikit.instance.navigationManager.navigateTo(
                           context: context,
                           pageToNavigate: OutGoingCallView(userJid: userList),
-                          routeName: 'outgoing_call_view',
+                          routeName: Constants.outGoingCallView,
                           onNavigateComplete: () {});
                     }
                   });
@@ -74,7 +74,7 @@ class CallInfoController extends GetxController {
                       MirrorflyUikit.instance.navigationManager.navigateTo(
                           context: context,
                           pageToNavigate: OutGoingCallView(userJid: userList),
-                          routeName: 'outgoing_call_view',
+                          routeName: Constants.outGoingCallView,
                           onNavigateComplete: () {});
                     }
                   });

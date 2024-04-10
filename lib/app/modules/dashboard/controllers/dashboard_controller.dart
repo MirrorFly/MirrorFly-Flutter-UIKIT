@@ -1437,9 +1437,10 @@ class DashboardController extends FullLifeCycleController
           contactPermission,
           AppConstants.contactSyncPermission);
       if (contactPermissionHandle) {
-        if (context.mounted)
+        if (context.mounted) {
           Navigator.push(context,
               MaterialPageRoute(builder: (con) => const ContactListView()));
+        }
         /*Get.toNamed(Routes.contacts,
             arguments: {"forward": false, "group": false, "groupJid": Constants.emptyString});*/
       }

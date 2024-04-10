@@ -3171,7 +3171,7 @@ class ChatController extends FullLifeCycleController
                   groupId: profile.jid!,
                   callType: CallType.audio,
                 ),
-                routeName: 'group_participants_view',
+                routeName: Constants.groupParticipantView,
               );
             } else {
               Mirrorfly.makeVoiceCall(
@@ -3184,7 +3184,7 @@ class ChatController extends FullLifeCycleController
                           context: context,
                           pageToNavigate: OutGoingCallView(
                               userJid: [profile.jid.checkNull()]),
-                          routeName: 'outgoing_call_view',
+                          routeName: Constants.outGoingCallView,
                           onNavigateComplete: () {
                             setOnGoingUserAvail();
                           });
@@ -3214,7 +3214,7 @@ class ChatController extends FullLifeCycleController
                   groupId: profile.jid!,
                   callType: CallType.video,
                 ),
-                routeName: 'group_participants_view',
+                routeName: Constants.groupParticipantView,
               );
             } else {
               Mirrorfly.makeVideoCall(
@@ -3226,7 +3226,7 @@ class ChatController extends FullLifeCycleController
                           context: context,
                           pageToNavigate:
                               OutGoingCallView(userJid: [profile.jid!]),
-                          routeName: 'outgoing_call_view',
+                          routeName: Constants.outGoingCallView,
                           onNavigateComplete: () {
                             setOnGoingUserAvail();
                           });
