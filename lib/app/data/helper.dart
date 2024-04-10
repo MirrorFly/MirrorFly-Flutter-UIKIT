@@ -764,13 +764,14 @@ void showQuickProfilePopup(
     required Function() chatTap,
     Function()? callTap,
     Function()? videoTap,
+      bool callEnable = false,
     required Function() infoTap,
     required Rx<ProfileDetails> profile,
     required Rx<AvailableFeatures> availableFeatures}) {
-  var isAudioCallAvailable = profile.value.isGroupProfile.checkNull()
+  var isAudioCallAvailable = profile.value.isGroupProfile.checkNull() || !callEnable
       ? false
       : availableFeatures.value.isOneToOneCallAvailable.checkNull();
-  var isVideoCallAvailable = profile.value.isGroupProfile.checkNull()
+  var isVideoCallAvailable = profile.value.isGroupProfile.checkNull() || !callEnable
       ? false
       : availableFeatures.value.isOneToOneCallAvailable.checkNull();
 
