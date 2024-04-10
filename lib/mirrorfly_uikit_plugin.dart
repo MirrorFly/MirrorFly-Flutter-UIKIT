@@ -48,7 +48,8 @@ class MirrorflyUikit {
   /// * [iOSContainerID] provide the App Group of the iOS Project
   /// * [showMobileNumberOnList] to show mobile on contact list
   /// * [storageFolderName] provide the Local Storage Folder Name
-  initUIKIT(
+  /// * [NavigatorState] provide GlobalKey for NavigatorState ex: GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  Future<Map> initUIKIT(
       {required GlobalKey<NavigatorState> navigatorKey,
       required String licenseKey,
       String? googleMapKey,
@@ -56,57 +57,67 @@ class MirrorflyUikit {
       String? storageFolderName,
       bool showMobileNumberOnList = true,
       bool showStatusOption = true,
+      bool enableDebugLog = true,
+      bool chatHistoryEnable = true,
+      bool enableMobileNumberLogin = false,
       bool enableLocalNotification = true}) async {
+    Completer<Map<String, dynamic>> completer = Completer();
+
     Mirrorfly.initializeSDK(
         licenseKey: licenseKey,
         iOSContainerID: iOSContainerID,
         storageFolderName: storageFolderName,
-        enableMobileNumberLogin: true,
-        chatHistoryEnable: false,
-        enableDebugLog: true,
+        chatHistoryEnable: chatHistoryEnable,
+        enableDebugLog: enableDebugLog,
+        enableMobileNumberLogin: enableMobileNumberLogin,
         flyCallback: (response) async {
           if (response.isSuccess) {
             LogMessage.d("initUIKIT onSuccess", response.message);
             isSDKInitialized = true;
-            this.showMobileNumberOnList = showMobileNumberOnList;
-            this.showStatusOption = showStatusOption;
-            this.enableLocalNotification = enableLocalNotification;
-            this.googleMapKey = googleMapKey ?? '';
-            globalNavigatorKey = navigatorKey;
-            ReplyHashMap.init();
-            rootBundle
-                .loadString('assets/mirrorfly_config.json')
-                .then((configFile) {
-              var config = AppConfig.fromJson(json.decode(configFile));
-              theme = config.appTheme.theme!;
-              getTheme = MirrorFlyTheme.customTheme(
-                  primaryColor: config.appTheme.customTheme!.primaryColor,
-                  secondaryColor: config.appTheme.customTheme!.secondaryColor,
-                  scaffoldColor: config.appTheme.customTheme!.scaffoldColor,
-                  colorOnPrimary: config.appTheme.customTheme!.colorOnPrimary,
-                  textPrimaryColor:
-                      config.appTheme.customTheme!.textPrimaryColor,
-                  textSecondaryColor:
-                      config.appTheme.customTheme!.textSecondaryColor,
-                  chatBubblePrimaryColor:
-                      config.appTheme.customTheme!.chatBubblePrimaryColor,
-                  chatBubbleSecondaryColor:
-                      config.appTheme.customTheme!.chatBubbleSecondaryColor,
-                  appBarColor: config.appTheme.customTheme!.appBarColor,
-                  colorOnAppbar: config.appTheme.customTheme!.colorOnAppbar);
-            }).catchError((e) {
-              debugPrint("Mirrorfly config file not found in assets $e");
-            });
-            SessionManagement.onInit().then((value) {
-              Get.put<MainController>(MainController());
-              SessionManagement.setBool(AppConstants.enableLocalNotification,
-                  enableLocalNotification);
-            });
+            completer.complete(setResponse(true, 'SDK Initialized Successfully'));
           } else {
+            isSDKInitialized = false;
             LogMessage.d(
                 "initUIKIT onFailure", response.errorMessage.toString());
+            completer.complete(setResponse(false, 'SDK Initialization Failed'));
           }
         });
+
+    showMobileNumberOnList = showMobileNumberOnList;
+    showStatusOption = showStatusOption;
+    enableLocalNotification = enableLocalNotification;
+    googleMapKey = googleMapKey ?? '';
+    globalNavigatorKey = navigatorKey;
+    ReplyHashMap.init();
+    rootBundle
+        .loadString('assets/mirrorfly_config.json')
+        .then((configFile) {
+      var config = AppConfig.fromJson(json.decode(configFile));
+      theme = config.appTheme.theme!;
+      getTheme = MirrorFlyTheme.customTheme(
+          primaryColor: config.appTheme.customTheme!.primaryColor,
+          secondaryColor: config.appTheme.customTheme!.secondaryColor,
+          scaffoldColor: config.appTheme.customTheme!.scaffoldColor,
+          colorOnPrimary: config.appTheme.customTheme!.colorOnPrimary,
+          textPrimaryColor:
+          config.appTheme.customTheme!.textPrimaryColor,
+          textSecondaryColor:
+          config.appTheme.customTheme!.textSecondaryColor,
+          chatBubblePrimaryColor:
+          config.appTheme.customTheme!.chatBubblePrimaryColor,
+          chatBubbleSecondaryColor:
+          config.appTheme.customTheme!.chatBubbleSecondaryColor,
+          appBarColor: config.appTheme.customTheme!.appBarColor,
+          colorOnAppbar: config.appTheme.customTheme!.colorOnAppbar);
+    }).catchError((e) {
+      debugPrint("MirrorFly config file not found in assets $e");
+    });
+    SessionManagement.onInit().then((value) {
+      Get.put<MainController>(MainController());
+      SessionManagement.setBool(AppConstants.enableLocalNotification,
+          enableLocalNotification);
+    });
+    return completer.future;
   }
 
   ///Used as a register class for [MirrorflyUikit]
