@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mirrorfly_uikit_plugin/app/extensions/extensions.dart';
+import 'package:tuple/tuple.dart';
 import '../common/app_localizations.dart';
 import '../model/chat_message_model.dart';
 import '../routes/mirrorfly_navigation_observer.dart';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/extensions/extensions.dart';
 import '../../../common/app_localizations.dart';
 import '../../../modules/chat/controllers/chat_controller.dart';
 

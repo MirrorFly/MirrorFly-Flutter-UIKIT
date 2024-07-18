@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:is_lock_screen/is_lock_screen.dart';
 
 import '../base_controller.dart';
 import '../common/constants.dart';

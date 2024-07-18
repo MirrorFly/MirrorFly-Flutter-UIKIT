@@ -8,7 +8,6 @@ import 'package:get/get.dart';
 import '../../../../common/constants.dart';
 import '../../../../data/session_management.dart';
 import '../../../../extensions/extensions.dart';
-import 'package:mirror_fly_demo/main.dart';
 import 'package:mirrorfly_plugin/logmessage.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/otp_field_style.dart';
