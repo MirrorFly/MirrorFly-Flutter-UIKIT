@@ -10,60 +10,60 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  get: ^4.6.5
-#  mirrorfly_plugin: ^0.0.11
-  http: ^1.1.0
+  get: ^4.6.6
+  http: ^1.2.2
   plugin_platform_interface: ^2.0.2
-  flutter_svg: ^2.0.7
-  cached_network_image: ^3.2.3
-  file_picker: ^5.3.3 #file picker
-  fluttertoast: ^8.2.2 #toast
-  intl: ^0.18.1 #datetime
-  package_info_plus: ^4.1.0 #package info
-  image_picker: ^1.0.2
-  flutter_profile_picture: ^2.0.0
-  permission_handler: ^10.4.3
-  emoji_picker_flutter: ^1.6.1
-  #image_cropping: ^0.0.13 #crop image
-  path_provider: ^2.1.0 #path provider
-  video_player: ^2.7.0
-  lottie: ^2.6.0
-  url_launcher: ^6.1.12 #url Launcher
-  custom_image_crop: ^0.0.10 #crop image
-  photo_view: ^0.14.0
-  fluttercontactpicker: ^4.7.0
-  audioplayers: ^5.1.0
+  flutter_svg: ^2.0.10+1
+  cached_network_image: ^3.3.1
+  file_picker: ^8.0.6
+  fluttertoast: ^8.2.6
+  intl: ^0.19.0
+  package_info_plus: ^8.0.0
+  image_picker: ^1.1.2
+#  flutter_profile_picture: ^2.0.0
+  permission_handler: ^11.3.1
+  emoji_picker_flutter: ^2.2.0
+  path_provider: ^2.1.3
+  video_player: ^2.9.1
+  lottie: ^3.1.2
+  url_launcher: ^6.3.0
+  custom_image_crop: ^0.0.13
+  photo_view: ^0.15.0
+#  fluttercontactpicker: ^4.7.0
+  flutter_native_contact_picker: ^0.0.6
+  audioplayers: ^6.0.0
   contacts_service: ^0.6.3
-  google_maps_flutter: ^2.4.0 #google map
-  geolocator: ^10.0.0 #geolocator
-  geocoding: ^2.1.0 #geocoder for address
+  google_maps_flutter: ^2.7.0
+  geolocator: ^12.0.0
+  geocoding: ^3.0.0
   focus_detector: ^2.0.1 #focus detector
-  record: ^4.4.4
-  swipe_to: ^1.0.2
-  flutter_keyboard_visibility: ^5.4.1
-  keyboard_dismisser: ^3.0.0
+  record: ^5.1.2
+  swipe_to: ^1.0.6
+  flutter_keyboard_visibility: ^6.0.0
+  keyboard_dismisser: ^3.0.0 #check and remove
   scrollable_positioned_list: ^0.3.8 #scrollable position
-  marquee: ^2.2.3 # marquee text
-  path: ^1.8.3
-  camera: ^0.10.5+3
+#  marquee: ^2.2.3 # marquee text
+  path: ^1.9.0
+  camera: ^0.11.0+1
   internet_connection_checker: ^1.0.0+1 # connectivity check
-  provider: ^6.0.5
-  photo_manager: ^2.7.1
-  oktoast: ^3.3.1
-  grouped_list: ^5.1.2
-  share_plus: ^7.1.0
-  flutter_libphonenumber: ^2.1.5
-  open_file_plus: ^3.4.1
-  device_info_plus: ^9.0.3
+  provider: ^6.1.2
+  photo_manager: ^3.2.1
+  oktoast: ^3.4.0
+  share_plus: ^9.0.0
+  flutter_libphonenumber: ^2.2.2 # This depends on js lib 0.6.3, the same needed for qr code scanner, inApp web view
+  open_file_plus: ^3.4.1+1
+  device_info_plus: ^10.1.0
   flutter_switch: ^0.3.2 #switchbox
   qr_code_scanner: ^1.0.1 #qr scanner
   yaml: ^3.1.2
-  shared_preferences: ^2.2.0
-  flutter_local_notifications: ^15.1.0+1
+  shared_preferences: ^2.2.3
+  flutter_local_notifications: ^17.2.1+2
   tuple: ^2.0.2
   is_lock_screen: ^2.0.0
   otp_text_field: ^1.1.3
-  flutter_inappwebview: ^5.7.2+3
+  flutter_inappwebview: ^6.0.0
+  flutter_app_badger: ^1.5.0
+  fading_edge_scrollview: ^4.1.1
   mirrorfly_plugin: ^1.0.5
 #  mirrorfly_plugin:
 #    path: ../p078-mirrorfly-flutter-plugin
