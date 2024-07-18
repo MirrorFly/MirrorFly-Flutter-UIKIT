@@ -1,5 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:mirrorfly_uikit_plugin/app/model/notification_message_model.dart';
+import '../../model/notification_message_model.dart';
 
 class NotificationModel {
   MessagingStyleInformation? messagingStyle;

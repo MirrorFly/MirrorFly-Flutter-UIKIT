@@ -2,11 +2,13 @@
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
+import '../../../common/app_localizations.dart';
+
+import '../../../data/utils.dart';
+import '../../../routes/route_settings.dart';
 
 import '../../../common/constants.dart';
 import '../../../model/local_contact_model.dart';
-import '../../preview_contact/views/preview_contact_view.dart';
 
 
 class LocalContactController extends GetxController {
@@ -17,6 +19,8 @@ class LocalContactController extends GetxController {
   var searchList = List<LocalContact>.empty(growable: true).obs;
   var contactsSelected = List<LocalContact>.empty(growable: true).obs;
   TextEditingController searchTextController = TextEditingController();
+
+  var userJid = NavUtils.arguments['userJid'];
 
   @override
   void onInit() {
@@ -55,15 +59,15 @@ class LocalContactController extends GetxController {
     }
   }
 
-  shareContact(BuildContext context) async {
+  shareContact() async {
     // var contactList = List<LocalContact>.empty(growable: true);
     // for (var mobileNumber in contactsSelected) {
     //   final number = mobileNumber.value;
     //   contactList.add(number!.replaceAll(RegExp('[+() -]'), ''));
     // }
 
-    // Get.toNamed(Routes.previewContact, arguments: {"contactList" : contactsSelected,"shareContactList" : contactsSelected, "from": "contact_pick"});
-    Navigator.push(context, MaterialPageRoute(builder: (con) => PreviewContactView(contactList : contactsSelected, from: "contact_pick")));
+    NavUtils.toNamed(Routes.previewContact, arguments: {"contactList" : contactsSelected,"shareContactList" : contactsSelected, "from": "contact_pick", "userJid" : userJid});
+
   }
 
   name(Contact item) {
@@ -81,7 +85,7 @@ class LocalContactController extends GetxController {
       contactsSelected.remove(localContact);
     }else {
       if(contactsSelected.length == 5){
-        toToast(AppConstants.cantShare5More);
+        toToast(getTranslated("cantShare5More"));
         return;
       }
       localContact.isSelected = true;

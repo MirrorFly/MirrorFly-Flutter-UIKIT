@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../extensions/extensions.dart';
 import '../settings_widgets.dart';
 import 'notification_alert_controller.dart';
 
-class NotificationAlertView extends GetView<NotificationAlertController> {
-  const NotificationAlertView({Key? key,this.enableAppBar=true}) : super(key: key);
-  final bool enableAppBar;
+class NotificationAlertView extends NavViewStateful<NotificationAlertController> {
+  const NotificationAlertView({Key? key}) : super(key: key);
+
+  @override
+NotificationAlertController createController({String? tag}) => Get.put(NotificationAlertController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: enableAppBar ? AppBar(
+      appBar: AppBar(
         title: const Text('Notifications Alert'),
         automaticallyImplyLeading: true,
-      ) : null,
+      ),
       body: Obx(() {
         return Column(
           children: [

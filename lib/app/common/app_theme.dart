@@ -1,77 +1,104 @@
 import 'package:flutter/material.dart';
-import '../model/app_config.dart';
 import 'constants.dart';
 
+class MirrorFlyAppTheme {
+  static ThemeData theme = ThemeData(
+    colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xff3276E2)),
+    scaffoldBackgroundColor: Colors.white,
+    brightness: Brightness.light,
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(shape: CircleBorder(),),
+    appBarTheme: const AppBarTheme(
+        backgroundColor: Color(0xffF2F2F2),
+        shadowColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        iconTheme: IconThemeData(color: Color(0xff181818)),
+        titleTextStyle: TextStyle(
+            color: Color(0xff181818),
+            fontSize: 20,
+            fontWeight: FontWeight.bold)),
+    hintColor: Colors.black26,
+    fontFamily: 'sf_ui',
+    progressIndicatorTheme: const ProgressIndicatorThemeData(color: buttonBgColor),
+    dialogTheme: const DialogTheme(shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(5.0)),
+    ),),
+    elevatedButtonTheme: ElevatedButtonThemeData(style: ButtonStyle(
+      backgroundColor: WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
+        if (states.contains(WidgetState.disabled)) {
+          return Colors.grey; // Color when the button is disabled
+        }
+        return const Color(0xff3276E2); // Default color
+      }),
+      foregroundColor: WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
+        if (states.contains(WidgetState.disabled)) {
+          return Colors.white.withOpacity(0.5); // Text color when the button is disabled
+        }
+        return Colors.white; // Default text color
+      }),
+      textStyle: WidgetStateProperty.resolveWith<TextStyle>((Set<WidgetState> states) {
+        if (states.contains(WidgetState.disabled)) {
+          return TextStyle(color: Colors.white.withOpacity(0.5)); // Text color when the button is disabled
+        }
+        return const TextStyle(color: Colors.white); // Default text color
+      }),
+      padding: WidgetStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 55, vertical: 15)),
+      shape: WidgetStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0))),
+    ),
+      /*ElevatedButton.styleFrom(
+        backgroundColor: const Color(0xff3276E2),
+        disabledBackgroundColor: Colors.grey,
+        textStyle: const TextStyle(color: Colors.white, fontSize: 14,fontWeight: FontWeight.w600),
+        shape: const StadiumBorder())*/
+    ),
+    /*textTheme: const TextTheme(
+      labelLarge: TextStyle(color: Colors.white),
+      titleLarge: TextStyle(
+          fontSize: 14.0, fontWeight: FontWeight.bold, fontFamily: 'sf_ui'),
+      titleMedium: TextStyle(
+        fontSize: 14.0,
+        fontWeight: FontWeight.w700,
+        fontFamily: 'sf_ui',
+        // color: textHintColor
+      ),
+      titleSmall: TextStyle(
+          fontSize: 14.0,
+          fontWeight: FontWeight.w600,
+          fontFamily: 'sf_ui',
+          color: textColor
+      ),
+    ),*/
+  );
 
-class MirrorFlyTheme {
-  static MirrorFlyAppTheme get mirrorFlyLightTheme => MirrorFlyAppTheme(
-      primaryColor: buttonBgColor,
-      appBarColor: Colors.white,
-      colorOnAppbar: Colors.black,
-      secondaryColor: notificationTextBgColor,
-      scaffoldColor: Colors.white,
-      colorOnPrimary: Colors.white,
-      textPrimaryColor: Colors.black,
-      textSecondaryColor: Colors.black45,
-      chatBubblePrimaryColor: ChatBubbleColor(color: const Color(0xffe2e8f7), textPrimaryColor: Colors.black, textSecondaryColor: durationTextColor),
-      chatBubbleSecondaryColor: ChatBubbleColor(color: const Color(0xffffffff), textPrimaryColor: const Color(0xff313131), textSecondaryColor: const Color(0xff959595)));
-
-  static MirrorFlyAppTheme get mirrorFlyDarkTheme => MirrorFlyAppTheme(
-      primaryColor: buttonBgColor,
-      secondaryColor: const Color(0xff676767),
-      appBarColor: const Color(0xff2A2A2A),
-      colorOnAppbar: Colors.white,
-      scaffoldColor: Colors.black,
-      colorOnPrimary: Colors.white,
-      textPrimaryColor: Colors.white,
-      textSecondaryColor: const Color(0xff767676),
-      chatBubblePrimaryColor: ChatBubbleColor(color: const Color(0xff2f55c7), textPrimaryColor: Colors.white, textSecondaryColor: const Color(0xffB6CAFF)),
-      chatBubbleSecondaryColor: ChatBubbleColor(color: const Color(0xff26262a), textPrimaryColor: const Color(0xfffafafa), textSecondaryColor: const Color(0xff959595)));
-
-  // static late var mirrorflyTheme;
-
-  static customTheme(
-      {required Color primaryColor,
-      required Color secondaryColor,
-      required Color appBarColor,
-      required Color colorOnAppbar,
-      required Color scaffoldColor,
-      required Color colorOnPrimary,
-      required Color textPrimaryColor,
-      required Color textSecondaryColor,
-      required ChatBubbleColor chatBubblePrimaryColor,
-      required ChatBubbleColor chatBubbleSecondaryColor}) {
-    return MirrorFlyAppTheme(
-        primaryColor: primaryColor,
-        secondaryColor: secondaryColor,
-        appBarColor: appBarColor,
-        colorOnAppbar: colorOnAppbar,
-        scaffoldColor: scaffoldColor,
-        colorOnPrimary: colorOnPrimary,
-        textPrimaryColor: textPrimaryColor,
-        textSecondaryColor: textSecondaryColor,
-        chatBubblePrimaryColor: chatBubblePrimaryColor,
-        chatBubbleSecondaryColor: chatBubbleSecondaryColor);
-  }
-
-  static MaterialColor getMaterialColor(Color color) {
-    final Map<int, Color> shades = {
-      50: const Color.fromRGBO(136, 14, 79, .1),
-      100: const Color.fromRGBO(136, 14, 79, .2),
-      200: const Color.fromRGBO(136, 14, 79, .3),
-      300: const Color.fromRGBO(136, 14, 79, .4),
-      400: const Color.fromRGBO(136, 14, 79, .5),
-      500: const Color.fromRGBO(136, 14, 79, .6),
-      600: const Color.fromRGBO(136, 14, 79, .7),
-      700: const Color.fromRGBO(136, 14, 79, .8),
-      800: const Color.fromRGBO(136, 14, 79, .9),
-      900: const Color.fromRGBO(136, 14, 79, 1),
-    };
-    return MaterialColor(color.value, shades);
-  }
+  static ThemeData light = ThemeData(
+      brightness: Brightness.light,
+      fontFamily: 'sf_ui',
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(shape: CircleBorder(),),
+      appBarTheme: const AppBarTheme(
+          color: appBarColor,
+          iconTheme: IconThemeData(color: iconColor),
+          titleTextStyle: TextStyle(
+              color: appbarTextColor,
+              fontSize: 20,
+              fontWeight: FontWeight.w700)),
+      textTheme: const TextTheme(
+        displayLarge: TextStyle(fontSize: 20,color: Color(0xff181818)),
+        displayMedium: TextStyle(fontSize: 19,color: Color(0xff181818)),
+        displaySmall: TextStyle(fontSize: 18,color: Color(0xff181818)),
+        headlineLarge: TextStyle(fontSize: 17,color: Color(0xff181818)),
+        headlineMedium: TextStyle(fontSize: 16,color: Color(0xff181818)),
+        headlineSmall: TextStyle(fontSize: 15,color: Color(0xff181818)),
+        titleLarge: TextStyle(fontSize: 14,color: Color(0xff181818)),//black
+        titleMedium: TextStyle(fontSize: 13,color: Color(0xff181818)),
+        titleSmall: TextStyle(fontSize: 12,color: Color(0xff181818)),//gray
+        bodyLarge: TextStyle(fontSize: 11,color: Color(0xff181818)),
+        bodyMedium: TextStyle(fontSize: 10,color: Color(0xff181818)),
+        bodySmall: TextStyle(fontSize: 9,color: Color(0xff181818)),
+        labelMedium: TextStyle(fontSize: 8,color: Color(0xff181818)),
+        labelSmall: TextStyle(fontSize: 7,color: Color(0xff181818)),
+      )
+  );
 }
-
-/*class CustomSafeArea extends StatelessWidget {
+class CustomSafeArea extends StatelessWidget {
   final Widget child;
   final Color? color;
 
@@ -81,10 +108,10 @@ class MirrorFlyTheme {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // color: color ?? appBarColor,
+      color: color ?? appBarColor,
       child: SafeArea(
         child: child,
       ),
     );
   }
-}*/
+}

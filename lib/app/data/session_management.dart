@@ -1,5 +1,5 @@
-import '../models.dart';
-import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
+import 'package:mirrorfly_plugin/mirrorfly.dart';
+import '../extensions/extensions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/constants.dart';
@@ -8,15 +8,20 @@ import '../common/constants.dart';
 class SessionManagement {
   static late SharedPreferences _preferences;
   static const prefix = "mirrorFly_plugin_";
-
-  setDefaultValues(){
-    if(_preferences.containsKey("${Constants.package}notification_sound")){
-
-    }
-  }
+  ///Commenting as this is not used anywhere
+  // setDefaultValues(){
+  //   if(_preferences.containsKey("${Constants.package}notification_sound")){
+  //
+  //   }
+  // }
   static Future onInit() async {
-    // SharedPreferences.setMockInitialValues({});
     _preferences = await SharedPreferences.getInstance();
+    /*try {
+      _preferences = await SharedPreferences.getInstance();
+    }catch(e){
+      SharedPreferences.setMockInitialValues({});
+      _preferences = await SharedPreferences.getInstance();
+    }*/
     SessionManagement.setCurrentChatJID("");
   }
 
@@ -44,6 +49,10 @@ class SessionManagement {
   static Future setToken(String firebaseToken) async {
     await _preferences.setString("${prefix}firebase_token", firebaseToken);
   }
+  ///Commenting as this is not used anywhere
+  // static Future setMobile(String mobile) async {
+  //   await _preferences.setString("${prefix}mobile", mobile);
+  // }
   static Future setCountryCode(String countryCode) async {
     await _preferences.setString("${prefix}country_code", countryCode);
   }
@@ -102,9 +111,7 @@ class SessionManagement {
   static Future setWebChatLogin(bool webChatLogin) async {
     await _preferences.setBool("${prefix}web_chat_login", webChatLogin);
   }
-  static Future setChatJid(String setChatJid) async {
-    await _preferences.setString("${prefix}chatJid", setChatJid);
-  }
+
   static void setAdminBlocked(bool status) async {
     await _preferences.setBool("${prefix}admin_blocked", status);
   }
@@ -174,7 +181,7 @@ class SessionManagement {
   static bool getLogin() => _preferences.getBool("${prefix}login") ?? false;
 
   static String getUserIdentifier() => _preferences.getString("${prefix}userIdentifier") ?? "";
-  static String? getChatJid() => _preferences.getString("${prefix}chatJid");
+
   static String getCurrentChatJID() => _preferences.getString("${prefix}CurrentChatJID") ?? "";
   static String? getName() => _preferences.getString("${prefix}name");
   static String? getMobileNumber() => _preferences.getString("${prefix}mobileNumber");
@@ -209,4 +216,5 @@ class SessionManagement {
   static int appLastSession() => _preferences.getInt("$prefix${Constants.appSession}") ?? DateTime.now().millisecondsSinceEpoch;
   static int lastPinChangedAt() => _preferences.getInt("$prefix${Constants.changedPinAt}") ?? DateTime.now().millisecondsSinceEpoch;
   static bool showAlert() => _preferences.getBool('${prefix}show_alert') ?? true;
+  // static String getTopicId() =>  Constants.enableTopic ? Constants.topicId/*_preferences.getString('${prefix}topicId')*/ ?? ("5d3788c1-78ef-4158-a92b-a48f092da0b9") : "";//Mirrorfly Topic
 }

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -6,14 +5,18 @@ import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:mirrorfly_plugin/flychat.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
-import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
-import '../../../models.dart';
-import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
+import '../../../common/app_localizations.dart';
+import '../../../extensions/extensions.dart';
+import 'package:mirrorfly_plugin/mirrorflychat.dart';
+import '../../../data/helper.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../../app_style_config.dart';
 import '../../../common/constants.dart';
+import '../../../data/utils.dart';
+import '../../../model/arguments.dart';
+import '../../../model/chat_message_model.dart';
+import '../../../routes/route_settings.dart';
 
 class StarredMessagesController extends FullLifeCycleController with FullLifeCycleMixin {
   var starredChatList = List<ChatMessageModel>.empty(growable: true).obs;
@@ -52,19 +55,18 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
     if(!isSelected.value) {
       isListLoading(true);
       Mirrorfly.getFavouriteMessages().then((value) {
-        if(value.toString().isNotEmpty) {
-          List<ChatMessageModel> chatMessageModel = chatMessageModelFromJson(
-              value);
-          if(Platform.isAndroid){
-            starredChatList(chatMessageModel.toList());
-          }else{
-            var list = chatMessageModel.toList().reversed.toList();
-            starredChatList(list);
-          }
+        List<ChatMessageModel> chatMessageModel = chatMessageModelFromJson(
+            value);
+        // starredChatList(chatMessageModel.toList());
+        if(Platform.isAndroid){
+          starredChatList(chatMessageModel.toList());
+        }else{
+          var list = chatMessageModel.toList().reversed.toList();
+          starredChatList(list);
         }
         isListLoading(false);
         if(isSearch.value){
-          lastInputValue=Constants.emptyString;
+          lastInputValue="";
           startSearch(searchedText.text.toString());
         }
       });
@@ -83,10 +85,19 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
   void onMessageStatusUpdated(chatMessageModel) {
     final index = starredChatList.indexWhere(
             (message) => message.messageId == chatMessageModel.messageId);
-    debugPrint("Message Status Update index of search $index");
+    debugPrint("Message Status Update index of $index");
     if (!index.isNegative) {
       starredChatList[index].messageStatus = chatMessageModel.messageStatus;
       starredChatList.refresh();
+    }
+  }
+
+  void onMessageEdited(ChatMessageModel editedChatMessage) {
+    final index = starredChatList.indexWhere(
+            (message) => message.messageId == editedChatMessage.messageId);
+    debugPrint("Message Edit Update index of $index");
+    if (!index.isNegative) {
+      starredChatList[index] = editedChatMessage;
     }
   }
 
@@ -94,8 +105,9 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
     final index = starredChatList.indexWhere(
             (message) => message.messageId == chatMessageModel.messageId);
     if (!index.isNegative) {
-      starredChatList[index] = chatMessageModel;
-      starredChatList.refresh();
+      starredChatList[index].mediaChatMessage?.mediaLocalStoragePath(chatMessageModel.mediaChatMessage!.mediaLocalStoragePath.value);
+      starredChatList[index].mediaChatMessage?.mediaDownloadStatus(chatMessageModel.mediaChatMessage!.mediaDownloadStatus.value);
+      starredChatList[index].mediaChatMessage?.mediaUploadStatus(chatMessageModel.mediaChatMessage!.mediaUploadStatus.value);
     }
 
     if (isSelected.value) {
@@ -139,9 +151,9 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
     }
   }
 
-  String getChatTime(int? epochTime) {
-    if (epochTime == null) return Constants.emptyString;
-    if (epochTime == 0) return Constants.emptyString;
+  String getChatTime(context, int? epochTime) {
+    if (epochTime == null) return "";
+    if (epochTime == 0) return "";
     var convertedTime = epochTime; // / 1000;
     //messageDate.time = convertedTime
     // var hourTime = manipulateMessageTime(
@@ -207,39 +219,83 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
     selectedChatList.clear();
   }
 
-  checkBusyStatusForForward(BuildContext context) async {
-    var busyStatus = await Mirrorfly.isBusyStatusEnabled();
-    if (!busyStatus.checkNull()) {
-      if(context.mounted)forwardMessage(context);
-    } else {
-      if(context.mounted)showBusyStatusAlert(forwardMessage, context);
+  bool getOptionStatus(String optionName) {
+    switch (optionName) {
+      case 'Reply':
+        return selectedChatList.length > 1 ? false : true;
+
+      case 'Report':
+        return selectedChatList.length > 1
+            ? false
+            : selectedChatList[0].isMessageSentByMe
+                ? false
+                : true;
+
+      case 'Message Info':
+        return selectedChatList.length > 1
+            ? false
+            : selectedChatList[0].isMessageSentByMe
+                ? true
+                : false;
+
+      case 'Share':
+        for (var chatList in selectedChatList) {
+          if (chatList.messageType == Constants.mText ||
+              chatList.messageType == Constants.mLocation ||
+              chatList.messageType == Constants.mContact) {
+            return false;
+          }
+        }
+        return true;
+
+      case 'Favourite':
+        // for (var chatList in selectedChatList) {
+        //   if (chatList.isMessageStarred) {
+        //     return true;
+        //   }
+        // }
+        // return false;
+        return selectedChatList.length > 1 ? false : true;
+
+      default:
+        return false;
     }
   }
 
-  showBusyStatusAlert(Function? function, BuildContext context) {
-    Helper.showAlert(
-        message: AppConstants.disableBusy,
-        actions: [
-          TextButton(
-              onPressed: () {
-                // Get.back();
-                Navigator.pop(context);
-              },
-              child: Text(AppConstants.no,style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
-          TextButton(
-              onPressed: () async {
-                // Get.back();
-                Navigator.pop(context);
-                await Mirrorfly.enableDisableBusyStatus(false);
-                if (function != null) {
-                  function();
-                }
-              },
-              child: Text(AppConstants.yes,style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
-        ], context: context);
+  checkBusyStatusForForward() async {
+    var busyStatus = await Mirrorfly.isBusyStatusEnabled();
+    if (!busyStatus.checkNull()) {
+      forwardMessage();
+    } else {
+      showBusyStatusAlert(forwardMessage);
+    }
   }
 
-  forwardMessage(BuildContext context) {
+  showBusyStatusAlert(Function? function) {
+    DialogUtils.showAlert(dialogStyle: AppStyleConfig.dialogStyle,
+        message: getTranslated("disableBusy"),
+        actions: [
+          TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
+              onPressed: () {
+                NavUtils.back();
+              },
+              child: Text(getTranslated("no"), )),
+          TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
+              onPressed: () async {
+                NavUtils.back();
+                await Mirrorfly.enableDisableBusyStatus(enable: false, flyCallBack: (FlyResponse response) {
+                  if(response.isSuccess) {
+                    if (function != null) {
+                      function();
+                    }
+                  }
+                });
+              },
+              child: Text(getTranslated("yes"), )),
+        ]);
+  }
+
+  forwardMessage() {
     var messageIds = List<String>.empty(growable: true);
     for (var chatItem in selectedChatList) {
       messageIds.add(chatItem.messageId);
@@ -249,39 +305,27 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
     if (messageIds.length == selectedChatList.length) {
       isSelected(false);
       selectedChatList.clear();
-      // Get.toNamed(Routes.forwardChat, arguments: {
-      //   "forward": true,
-      //   "group": false,
-      //   "groupJid": "",
-      //   "messageIds": messageIds
-      // })?.then((value) {
-      //   if (value != null) {
-      //     debugPrint(
-      //         "result of forward ==> ${(value as Profile).toJson().toString()}");
-      //
-      //     Get.toNamed(Routes.chat, arguments: value);
-      //   }
-      // });
-
-      Navigator.push(context, MaterialPageRoute(builder: (con) => ForwardChatView(forwardMessageIds: messageIds))).then((value) {
+      NavUtils.toNamed(Routes.forwardChat, arguments: {
+        "forward": true,
+        "group": false,
+        "groupJid": "",
+        "messageIds": messageIds
+      })?.then((value) {
         if (value != null) {
-          debugPrint("result of forward ==> ${(value as Profile).toJson().toString()}");
-          Navigator.push(context, MaterialPageRoute(builder: (con) => ChatView(jid: value.jid!)));
+          debugPrint(
+              "result of forward ==> ${(value as ProfileDetails).toJson().toString()}");
+          // NavUtils.toNamed(Routes.chat, arguments: ChatViewArguments(chatJid: value.jid.checkNull()));
         }
-
-        });
+      });
     }
   }
 
   favouriteMessage() {
     for (var item in selectedChatList) {
-      Mirrorfly.updateFavouriteStatus(
-          item.messageId, item.chatUserJid, !item.isMessageStarred.value, item.messageChatType);
-      starredChatList
-          .removeWhere((element) => item.messageId == element.messageId);
+      Mirrorfly.updateFavouriteStatus(messageId: item.messageId,chatUserJid: item.chatUserJid,isFavourite: !item.isMessageStarred.value,chatType: item.messageChatType, flyCallBack: (FlyResponse response) {});
+      starredChatList.removeWhere((element) => item.messageId == element.messageId);
       if(isSearch.value){
-        searchedStarredMessageList
-            .removeWhere((element) => item.messageId == element.messageId);
+        searchedStarredMessageList.removeWhere((element) => item.messageId == element.messageId);
       }
     }
     selectedChatList.clear();
@@ -290,9 +334,9 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
 
   copyTextMessages() {
     Clipboard.setData(
-        ClipboardData(text: selectedChatList[0].messageTextContent.toString()));
+        ClipboardData(text: selectedChatList[0].messageTextContent ?? ""));
     clearChatSelection(selectedChatList[0]);
-    toToast(AppConstants.textCopied);
+    toToast(getTranslated("textCopiedSuccess"));
   }
 
   Map<bool, bool> isMessageCanbeRecalled() {
@@ -306,13 +350,13 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
           selectedChatList.any((element) =>
               !element.isMessageRecalled.value &&
               (element.isMediaMessage() &&
-                  element.mediaChatMessage!.mediaLocalStoragePath
+                  element.mediaChatMessage!.mediaLocalStoragePath.value
                       .checkNull()
                       .isNotEmpty))
     };
   }
 
-  void deleteMessages(BuildContext context) {
+  void deleteMessages() {
     //var isRecallAvailable = isMessageCanbeRecalled().keys.first;
     var isCheckBoxShown = isMessageCanbeRecalled().values.first;
     /*var deleteChatListID = List<String>.empty(growable: true);
@@ -324,14 +368,13 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
     }*/
     var isMediaDelete = false.obs;
     //var chatType =  profile.isGroupProfile ?? false ? "groupchat" : "chat";
-    Helper.showAlert(
+    DialogUtils.showAlert(dialogStyle: AppStyleConfig.dialogStyle,
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-        selectedChatList.length > 1 ? AppConstants.deleteSelectedMessages : AppConstants.deleteSelectedMessage,
-                // "Are you sure you want to delete selected Message${selectedChatList.length > 1 ? "s" : ""}?"
-          style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor),),
+              selectedChatList.length > 1 ? getTranslated("deleteSelectedMessages") : getTranslated("deleteSelectedMessage"),
+            style: AppStyleConfig.dialogStyle.contentTextStyle,),
             isCheckBoxShown
                 ? Column(
                     mainAxisSize: MainAxisSize.min,
@@ -339,93 +382,58 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
                       InkWell(
                         onTap: () {
                           isMediaDelete(!isMediaDelete.value);
-                          mirrorFlyLog(
+                          LogMessage.d(
                               "isMediaDelete", isMediaDelete.value.toString());
                         },
                         child: Row(
                           children: [
                             Obx(() {
-                              return Theme(
-                                data: ThemeData(
-                                  unselectedWidgetColor: Colors.grey,
-                                ),
-                                child: Checkbox(
-                                    value: isMediaDelete.value,
-                                    activeColor: MirrorflyUikit.getTheme!.primaryColor,//Colors.white,
-                                    checkColor: MirrorflyUikit.getTheme?.colorOnPrimary,
-                                    onChanged: (value) {
-                                      isMediaDelete(!isMediaDelete.value);
-                                      mirrorFlyLog(
-                                          "isMediaDelete", value.toString());
-                                    }),
-                              );
+                              return Checkbox(
+                                  value: isMediaDelete.value,
+                                  onChanged: (value) {
+                                    isMediaDelete(!isMediaDelete.value);
+                                    LogMessage.d(
+                                        "isMediaDelete", value.toString());
+                                  });
                             }),
                             Expanded(
-                              child: Text(AppConstants.deleteMediaFromPhone, style: TextStyle(color: MirrorflyUikit.getTheme?.textSecondaryColor)),
+                              child: Text(getTranslated("deleteMediaFromPhone")),
                             ),
                           ],
                         ),
                       )
                     ],
                   )
-                : const SizedBox(),
+                : const Offstage(),
           ],
         ),
-        message: Constants.emptyString,
+        message: "",
         actions: [
-          TextButton(
+          TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
               onPressed: () {
-                // Get.back();
-                Navigator.pop(context);
+                NavUtils.back();
               },
-              child: Text(AppConstants.cancel.toUpperCase(), style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
-          TextButton(
+              child: Text(getTranslated("cancel").toUpperCase(), )),
+          TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
               onPressed: () {
-                // Get.back();
-                Navigator.pop(context);
-                for (var item in selectedChatList) {
-                  Mirrorfly.deleteMessagesForMe(
-                      item.chatUserJid,
-                      item.messageChatType,
-                      [item.messageId],
-                      isMediaDelete.value);
-                  starredChatList.removeWhere(
-                      (element) => item.messageId == element.messageId);
-                  if(isSearch.value){
-                    searchedStarredMessageList
-                        .removeWhere((element) => item.messageId == element.messageId);
-                  }
-                }
-                isSelected(false);
-                selectedChatList.clear();
+                NavUtils.back();
+                var messageIds = selectedChatList.map((item) => item.messageId).toList();
+                Mirrorfly.deleteMessagesForMe(jid: selectedChatList[0].chatUserJid,
+                    chatType: selectedChatList[0].messageChatType, messageIds: messageIds,
+                      isMediaDelete: isMediaDelete.value, flyCallBack: (FlyResponse response) {
+                      for (var item in messageIds) {
+                        starredChatList.removeWhere((element) => item == element.messageId);
+                        if(isSearch.value){
+                          searchedStarredMessageList
+                              .removeWhere((element) => item == element.messageId);
+                        }
+                      }
+                      isSelected(false);
+                      selectedChatList.clear();
+                    });
               },
-              child: Text(AppConstants.deleteForMe.toUpperCase(), style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
-          /*isRecallAvailable
-              ? TextButton(
-              onPressed: () {
-                Get.back();
-                Helper.showLoading(
-                    message: 'Deleting Message for Everyone');
-                */ /*Mirrorfly.deleteMessagesForEveryone(
-                    profile.jid!,chatType, deleteChatListID, isMediaDelete.value)
-                    .then((value) {
-                  debugPrint(value.toString());
-                  Helper.hideLoading();
-                  if (value!=null && value) {
-                    // removeChatList(selectedChatList);//
-                    for (var chatList in selectedChatList) {
-                      chatList.isMessageRecalled = true;
-                      chatList.isSelected=false;
-                      this.chatList.refresh();
-                    }
-                  }
-                  isSelected(false);
-                  selectedChatList.clear();
-                });*/ /*
-              },
-              child: const Text("DELETE FOR EVERYONE"))
-              : const SizedBox.shrink(),*/
-        ], context: context);
+              child: Text(getTranslated("deleteForMe").toUpperCase(), )),
+        ]);
   }
 
   // AudioPlayer player = AudioPlayer();
@@ -437,7 +445,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
       if (result == 1) {
         playingChat!.mediaChatMessage!.isPlaying=true;
       } else {
-        mirrorFlyLog("", "Error while playing audio.");
+        LogMessage.d("", "Error while playing audio.");
       }
     } else if (!playingChat!.mediaChatMessage!.isPlaying) {
       int result = await player.resume();
@@ -445,7 +453,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
         playingChat!.mediaChatMessage!.isPlaying=true;
         starredChatList.refresh();
       } else {
-        mirrorFlyLog("", "Error on resume audio.");
+        LogMessage.d("", "Error on resume audio.");
       }
     } else {
       int result = await player.pause();
@@ -453,7 +461,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
         playingChat!.mediaChatMessage!.isPlaying=false;
         starredChatList.refresh();
       } else {
-        mirrorFlyLog("", "Error on pause audio.");
+        LogMessage.d("", "Error on pause audio.");
       }
     }*/
   }
@@ -484,7 +492,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
   validateForForwardMessage(){
     for (var value in selectedChatList) {
       if(value.isMediaMessage()) {
-        if ((value.isMediaDownloaded() || value.isMediaUploaded()) && value.mediaChatMessage!.mediaLocalStoragePath.checkNull().isNotEmpty) {
+        if ((value.isMediaDownloaded() || value.isMediaUploaded()) && value.mediaChatMessage!.mediaLocalStoragePath.value.checkNull().isNotEmpty) {
           canBeForward(true);
         } else {
           canBeForward(false);
@@ -500,7 +508,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
   validateForShareMessage(){
     for (var value in selectedChatList) {
       if(value.isMediaMessage()) {
-        if ((value.isMediaDownloaded() || value.isMediaUploaded()) && checkFile(value.mediaChatMessage!.mediaLocalStoragePath.checkNull())) {
+        if ((value.isMediaDownloaded() || value.isMediaUploaded()) && MediaUtils.isMediaExists(value.mediaChatMessage!.mediaLocalStoragePath.value.checkNull())) {
           canBeShare(true);
         } else {
           canBeShare(false);
@@ -516,7 +524,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
   var isSearch = false.obs;
   var clear = false.obs;
   var searchedText = TextEditingController();
-  String lastInputValue = Constants.emptyString;
+  String lastInputValue = "";
   void startSearch(String str){
     if(str.isNotEmpty) {
       clear(true);
@@ -526,7 +534,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
         addSearchedMessagesToList(str.trim());
       }
     }else{
-      lastInputValue=Constants.emptyString;
+      lastInputValue='';
       clear(false);
       starredChatList.clear();
       starredChatList.addAll(searchedStarredMessageList);
@@ -545,7 +553,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
   }
 
   clearSearch(){
-    lastInputValue=Constants.emptyString;
+    lastInputValue='';
     isSearch(false);
     clear(false);
     searchedText.clear();
@@ -562,17 +570,17 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
         if (isTextMessageContainsFilterKey(message, filterKey)) {
           if(starredChatList.indexWhere((element) => element.messageId==message.messageId).isNegative) {
             starredChatList.add(message);
-            // debugPrint('starredChatList ${message.messageId}text');
+            debugPrint('starredChatList ${message.messageId}text');
           }
         } else if (isImageCaptionContainsFilterKey(message, filterKey)) {
           if(starredChatList.indexWhere((element) => element.messageId==message.messageId).isNegative) {
             starredChatList.add(message);
-            // debugPrint('starredChatList ${message.messageId}image');
+            debugPrint('starredChatList ${message.messageId}image');
           }
         } else if (isVideoCaptionContainsFilterKey(message, filterKey)) {
           if(starredChatList.indexWhere((element) => element.messageId==message.messageId).isNegative) {
             starredChatList.add(message);
-            // debugPrint('starredChatList ${message.messageId}video');
+            debugPrint('starredChatList ${message.messageId}video');
           }
         } else if (Constants.mDocument == message.messageType &&
             message.mediaChatMessage!
@@ -584,7 +592,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
                 .contains(filterKey.toLowerCase())) {
           if(starredChatList.indexWhere((element) => element.messageId==message.messageId).isNegative) {
             starredChatList.add(message);
-            // debugPrint('starredChatList ${message.messageId}doc');
+            debugPrint('starredChatList ${message.messageId}doc');
           }
         } else if (Constants.mContact == message.messageType &&
             message.contactChatMessage!
@@ -596,7 +604,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
                 .contains(filterKey.toLowerCase())) {
           if(starredChatList.indexWhere((element) => element.messageId==message.messageId).isNegative) {
             starredChatList.add(message);
-            // debugPrint('starredChatList ${message.messageId}contact');
+            debugPrint('starredChatList ${message.messageId}contact');
           }
         } else if (message.senderUserName
             .checkNull()
@@ -606,22 +614,22 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
                 .contains(filterKey.toLowerCase())) {
           if(starredChatList.indexWhere((element) => element.messageId==message.messageId).isNegative) {
             starredChatList.add(message);
-            // debugPrint('starredChatList ${message.messageId}sender');
+            debugPrint('starredChatList ${message.messageId}sender');
           }
         } else if (message.isMessageSentByMe &&
-            AppConstants.you.toLowerCase().contains(filterKey.toLowerCase())) {
+            "You".toLowerCase().contains(filterKey.toLowerCase())) {
           if(starredChatList.indexWhere((element) => element.messageId==message.messageId).isNegative) {
             starredChatList.add(message);
-            // debugPrint('starredChatList ${message.messageId}you');
+            debugPrint('starredChatList ${message.messageId}you');
           }
-        } else if ((message.messageChatType == Constants.typeGroupChat)){
+        } else if ((message.messageChatType == ChatType.groupChat)){
           var name = await getProfileDetails(message.chatUserJid.checkNull());
-          if(name.name.checkNull().contains(filterKey.toLowerCase())) {
-            if(starredChatList.indexWhere((element) => element.messageId==message.messageId).isNegative) {
-              starredChatList.add(message);
-              // debugPrint('starredChatList ${message.messageId} : group');
+            if(name.name.checkNull().contains(filterKey.toLowerCase())) {
+              if(starredChatList.indexWhere((element) => element.messageId==message.messageId).isNegative) {
+                starredChatList.add(message);
+                debugPrint('starredChatList ${message.messageId} : group');
+              }
             }
-          }
         }
         starredChatList.refresh();
       }
@@ -663,22 +671,17 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
             .toLowerCase()
             .contains(filterKey.toLowerCase());
   }
-  Future<Profile> getProfile(String jid) async {
-    var value = await Mirrorfly.getProfileDetails(jid);
-    return Profile.fromJson(json.decode(value.toString()));
-  }
 
-  navigateMessage(ChatMessageModel starredChat, BuildContext context) {
-    Navigator.push(context, MaterialPageRoute(builder: (con) => ChatView(jid: starredChat.chatUserJid, isFromStarred: true, messageId: starredChat.messageId,)));
-    // Get.toNamed(Routes.chat,parameters: {'isFromStarred':'true',"userJid":starredChat.chatUserJid,"messageId":starredChat.messageId});
+  navigateMessage(ChatMessageModel starredChat) {
+    NavUtils.toNamed(Routes.chat,arguments: ChatViewArguments(chatJid: starredChat.chatUserJid,messageId: starredChat.messageId,topicId: starredChat.topicId,));//{'isFromStarred':'true',"chatJid":starredChat.chatUserJid,"messageId":starredChat.messageId,"topicId":starredChat.topicId.checkNull()});
   }
 
   void share() {
     var mediaPaths = <XFile>[];
     for(var item in selectedChatList){
       if(item.isMediaMessage()){
-        if((item.isMediaDownloaded() || item.isMediaUploaded()) && item.mediaChatMessage!.mediaLocalStoragePath.checkNull().isNotEmpty){
-          mediaPaths.add(XFile(item.mediaChatMessage!.mediaLocalStoragePath.checkNull()));
+        if((item.isMediaDownloaded() || item.isMediaUploaded()) && item.mediaChatMessage!.mediaLocalStoragePath.value.checkNull().isNotEmpty){
+          mediaPaths.add(XFile(item.mediaChatMessage!.mediaLocalStoragePath.value.checkNull()));
         }
       }
     }
@@ -712,6 +715,11 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
         }
       }
     }
+  }
+
+  @override
+  void onHidden() {
+
   }
 
 

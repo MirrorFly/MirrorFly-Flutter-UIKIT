@@ -1,11 +1,13 @@
+
 import 'package:flutter/material.dart';
-import '../../../../../../../mirrorfly_uikit_plugin.dart';
+import '../../../../../../common/de_bouncer.dart';
 import 'thumbnail_widget.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 import '../../pages/gallery_media_picker_controller.dart';
 
 typedef OnAssetItemClick = void Function(AssetEntity entity, int index);
+typedef RemoveAssetItem = void Function(AssetEntity entity, int index);
 
 class GalleryGridView extends StatefulWidget {
   /// asset album
@@ -16,6 +18,9 @@ class GalleryGridView extends StatefulWidget {
 
   /// on tap thumbnail
   final OnAssetItemClick? onAssetItemClick;
+
+  /// remove if size exceeds the limit
+  final RemoveAssetItem? onAssetRemove;
 
   /// picker data provider
   final GalleryMediaPickerController provider;
@@ -61,6 +66,7 @@ class GalleryGridView extends StatefulWidget {
       required this.path,
       required this.provider,
       this.onAssetItemClick,
+      this.onAssetRemove,
       this.loadWhenScrolling = false,
       this.childAspectRatio = 0.5,
       this.gridViewBackgroundColor = Colors.white,
@@ -84,7 +90,7 @@ class GalleryGridViewState extends State<GalleryGridView> {
   static Map<int?, AssetEntity?> _createMap() {
     return {};
   }
-
+  final debouncer = DeBouncer(milliseconds: 300);
   /// create cache for images
   var cacheMap = _createMap();
 
@@ -131,8 +137,8 @@ class GalleryGridViewState extends State<GalleryGridView> {
                         itemCount: widget.provider.assetCount,
                         addRepaintBoundaries: true,
                       )
-                    : Center(
-                        child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
+                    : const Center(
+                        child: CircularProgressIndicator(),
                       ),
               ),
             ),
@@ -152,18 +158,22 @@ class GalleryGridViewState extends State<GalleryGridView> {
     return GestureDetector(
       /// on tap thumbnail
       onTap: () async {
+        // DialogUtils.showLoading(message: "Processing", dismiss: false);
+        debugPrint("item click ${DateTime.now()}");
         var asset = cacheMap[index];
         if (asset == null) {
-          asset = (await widget.path!
+           asset = (await widget.path!
               .getAssetListRange(start: index, end: index + 1))[0];
           cacheMap[index] = asset;
         }
+        debugPrint("item processed ${DateTime.now()}");
         widget.onAssetItemClick?.call(asset, index);
       },
 
       /// render thumbnail
       child: _buildScrollItem(context, index, provider),
     );
+    // return _buildScrollItem(context, index, provider);
   }
 
   Widget _buildScrollItem(
@@ -198,16 +208,34 @@ class GalleryGridViewState extends State<GalleryGridView> {
           cacheMap[index] = asset;
 
           /// thumbnail widget
-          return ThumbnailWidget(
-            asset: asset,
-            index: index,
-            provider: provider,
-            thumbnailQuality: widget.thumbnailQuality!,
-            selectedBackgroundColor: widget.selectedBackgroundColor,
-            selectedCheckColor: widget.selectedCheckColor,
-            imageBackgroundColor: widget.imageBackgroundColor,
-            thumbnailBoxFix: widget.thumbnailBoxFix,
-            selectedCheckBackgroundColor: widget.selectedCheckBackgroundColor,
+          return GestureDetector(
+            onTap: () async {
+
+              widget.onAssetItemClick?.call(asset, index);
+
+              /*debouncer.run(() async {
+                File? file = await asset.file;
+                bool withinLimit = await getFileSizeInMb(file!.path, asset.typeInt == 1 ? Constants.mImage : Constants.mVideo); // Example: 5MB limit
+                if (withinLimit) {
+                  // Proceed with selection
+                  debugPrint('File is below the mentioned size');
+                } else {
+                  widget.onAssetRemove?.call(asset, index);
+                }
+              });*/
+
+            },
+            child: ThumbnailWidget(
+              asset: asset,
+              index: index,
+              provider: provider,
+              thumbnailQuality: widget.thumbnailQuality!,
+              selectedBackgroundColor: widget.selectedBackgroundColor,
+              selectedCheckColor: widget.selectedCheckColor,
+              imageBackgroundColor: widget.imageBackgroundColor,
+              thumbnailBoxFix: widget.thumbnailBoxFix,
+              selectedCheckBackgroundColor: widget.selectedCheckBackgroundColor,
+            ),
           );
         },
       );

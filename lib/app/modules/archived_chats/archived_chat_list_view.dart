@@ -2,164 +2,170 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:get/get.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
-import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
+import '../../app_style_config.dart';
+import '../../common/app_localizations.dart';
+import '../../data/utils.dart';
+import '../../extensions/extensions.dart';
+import 'package:mirrorfly_plugin/model/recent_chat.dart';
 
-import '../../../mirrorfly_uikit_plugin.dart';
 import '../../common/constants.dart';
 import '../../widgets/custom_action_bar_icons.dart';
 import '../dashboard/widgets.dart';
 import 'archived_chat_list_controller.dart';
 
-class ArchivedChatListView extends StatelessWidget {
-  ArchivedChatListView({Key? key, this.enableAppBar=true, this.showChatDeliveryIndicator = true}) : super(key: key);
+class ArchivedChatListView extends NavViewStateful<ArchivedChatListController> {
+  const ArchivedChatListView(
+      {super.key,
+        this.enableAppBar = true,
+        this.showChatDeliveryIndicator = true});
   final bool enableAppBar;
   final bool showChatDeliveryIndicator;
-  final controller = Get.put(ArchivedChatListController());
+
+  @override
+ArchivedChatListController createController({String? tag}) => Get.put(ArchivedChatListController());
+
   @override
   Widget build(BuildContext context) {
-    return FocusDetector(
-      onFocusGained: () {
-        controller.showChatDeliveryIndicator = showChatDeliveryIndicator;
-        controller.getArchivedChatsList();
-      },
-      child: WillPopScope(
-        onWillPop: () {
-          if (controller.selected.value) {
-            controller.clearAllChatSelection();
-            return Future.value(false);
-          }
-          return Future.value(true);
+    return Theme(
+      data: Theme.of(context).copyWith(appBarTheme: AppStyleConfig.archivedChatsPageStyle.appBarTheme),
+      child: FocusDetector(
+        onFocusGained: () {
+          controller.getArchivedChatsList();
         },
-        child: Obx(() {
-          return Scaffold(
-            backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-            appBar: enableAppBar ? AppBar(
-              backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-              iconTheme: IconThemeData(
-                  color: MirrorflyUikit.getTheme?.colorOnAppbar ??
-                      iconColor),
-              leading: controller.selected.value ? IconButton(
-                icon: const Icon(Icons.clear),
-                onPressed: () {
-                  controller.clearAllChatSelection();
-                },
-              ) : null,
-              title: controller.selected.value
-                  ? Text(
-                  (controller.selectedChats.length).toString())
-                  : Text(AppConstants.archivedChats,style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
-              actions: [
-                Visibility(
-                  visible: controller.selected.value,
-                  child: CustomActionBarIcons(
-                      availableWidth: MediaQuery
-                          .of(context)
-                          .size
-                          .width * 0.80,
-                      // 80 percent of the screen width
-                      actionWidth: 48,
-                      // default for IconButtons
-                      actions: [
-                        CustomAction(
-                          visibleWidget: IconButton(
+        child: PopScope(
+          canPop: false,
+          onPopInvoked: (didPop) {
+            if (didPop) {
+              return;
+            }
+            if (controller.selected.value) {
+              controller.clearAllChatSelection();
+              return;
+            }
+            Navigator.pop(context);
+          },
+          child: Obx(() {
+            return Scaffold(
+              appBar: AppBar(
+                leading: controller.selected.value ? IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: () {
+                    controller.clearAllChatSelection();
+                  },
+                ) : null,
+                title: controller.selected.value
+                    ? Text(
+                    (controller.selectedChats.length).toString())
+                    : Text(getTranslated("archivedChats")),
+                actions: [
+                  Visibility(
+                    visible: controller.selected.value,
+                    child: CustomActionBarIcons(
+                        availableWidth: NavUtils.size.width * 0.80,
+                        // 80 percent of the screen width
+                        actionWidth: 48,
+                        // default for IconButtons
+                        actions: [
+                          CustomAction(
+                            visibleWidget: IconButton(
+                                onPressed: () {
+                                  controller.deleteChats();
+                                },
+                                icon: SvgPicture.asset(delete),tooltip: 'Delete',),
+                            overflowWidget: Text(getTranslated("delete")),
+                            showAsAction: controller.delete.value ? ShowAsAction.always : ShowAsAction.gone,
+                            keyValue: 'Delete',
+                            onItemClick: () {
+                              controller.deleteChats();
+                            },
+                          ),
+                          CustomAction(
+                            visibleWidget: IconButton(
                               onPressed: () {
-                                controller.deleteChats(context);
+                                controller.muteChats();
                               },
-                              icon: SvgPicture.asset(delete,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),tooltip: AppConstants.delete,),
-                          overflowWidget: Text(AppConstants.delete,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
-                          showAsAction: controller.delete.value ? ShowAsAction.always : ShowAsAction.gone,
-                          keyValue: AppConstants.delete,
-                          onItemClick: () {
-                            controller.deleteChats(context);
-                          },
-                        ),
-                        CustomAction(
-                          visibleWidget: IconButton(
-                            onPressed: () {
+                              icon: SvgPicture.asset(mute,colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)),tooltip: 'Mute',),
+                            overflowWidget: Text(getTranslated("mute")),
+                            showAsAction: controller.mute.value
+                                ? ShowAsAction.always
+                                : ShowAsAction.gone,
+                            keyValue: 'Mute',
+                            onItemClick: () {
                               controller.muteChats();
                             },
-                            icon: SvgPicture.asset(mute,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),tooltip: AppConstants.mute,),
-                          overflowWidget: Text(AppConstants.mute,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
-                          showAsAction: controller.mute.value
-                              ? ShowAsAction.always
-                              : ShowAsAction.gone,
-                          keyValue: AppConstants.mute,
-                          onItemClick: () {
-                            controller.muteChats();
-                          },
-                        ),
-                        CustomAction(
-                          visibleWidget: IconButton(
-                            onPressed: () {
+                          ),
+                          CustomAction(
+                            visibleWidget: IconButton(
+                              onPressed: () {
+                                controller.unMuteChats();
+                              },
+                              icon: SvgPicture.asset(unMute,colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)),tooltip: 'UnMute',),
+                            overflowWidget: Text(getTranslated("unMute")),
+                            showAsAction: controller.unMute.value
+                                ? ShowAsAction.always
+                                : ShowAsAction.gone,
+                            keyValue: 'UnMute',
+                            onItemClick: () {
                               controller.unMuteChats();
                             },
-                            icon: SvgPicture.asset(unMute,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),tooltip: AppConstants.unMute,),
-                          overflowWidget: Text(AppConstants.unMute,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
-                          showAsAction: controller.unMute.value
-                              ? ShowAsAction.always
-                              : ShowAsAction.gone,
-                          keyValue: AppConstants.unMute,
-                          onItemClick: () {
-                            controller.unMuteChats();
-                          },
-                        ),
-                        CustomAction(
-                          visibleWidget: IconButton(
-                              onPressed: () {
-                                controller.unArchiveSelectedChats();
+                          ),
+                          CustomAction(
+                            visibleWidget: IconButton(
+                                onPressed: () {
+                                  controller.unArchiveSelectedChats();
+                                },
+                                icon: SvgPicture.asset(unarchive,colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)),tooltip: 'UnArchive',),
+                            overflowWidget: Text(getTranslated("unArchive")),
+                            showAsAction: ShowAsAction.always,
+                            keyValue: 'UnArchive',
+                            onItemClick: () {
+                              controller.unArchiveSelectedChats();
+                            },
+                          ),
+                        ]),
+                  )
+                ],
+              ),
+              body: SafeArea(
+                child: Obx(() =>
+                    controller.archivedChats.isNotEmpty ? ListView.builder(
+                        padding: EdgeInsets.zero,
+                        itemCount: controller.archivedChats.length,
+                        shrinkWrap: true,
+                        itemBuilder: (BuildContext context, int index) {
+                          var item = controller.archivedChats[index];
+                          return Obx(() {
+                            return RecentChatItem(
+                              recentChatItemStyle: AppStyleConfig.archivedChatsPageStyle.recentChatItemStyle,
+                              item: item,
+                              onAvatarClick: (RecentChatData chatItem){
+                                controller.getProfileDetail(context, item, index);
                               },
-                              icon: SvgPicture.asset(unarchive,package: package, colorFilter: ColorFilter.mode(MirrorflyUikit.getTheme!.colorOnAppbar, BlendMode.srcIn)),tooltip: AppConstants.unArchived,),
-                          overflowWidget: Text(AppConstants.unArchived,style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor)),
-                          showAsAction: ShowAsAction.always,
-                          keyValue: AppConstants.unArchived,
-                          onItemClick: () {
-                            controller.unArchiveSelectedChats();
-                          },
-                        ),
-                      ]),
-                )
-              ],
-            ) : null,
-            body: SafeArea(
-              child: Obx(() =>
-                  controller.archivedChats.isNotEmpty ? ListView.builder(
-                      padding: EdgeInsets.zero,
-                      itemCount: controller.archivedChats.length,
-                      shrinkWrap: true,
-                      itemBuilder: (BuildContext context, int index) {
-                        var item = controller.archivedChats[index];
-                        return Obx(() {
-                          return RecentChatItem(
-                            item: item,
-                            onAvatarClick: (){
-                              controller.getProfileDetail(context, item, index);
-                            },
-                            isSelected: controller.isSelected(index),
-                            typingUserid: controller.typingUser(
-                                item.jid.checkNull()),
-                            archiveVisible: false,
-                            archiveEnabled: controller.archiveEnabled.value,
-                            showChatDeliveryIndicator: showChatDeliveryIndicator,
-                            onTap: () {
-                              if (controller.selected.value) {
+                              isSelected: controller.isSelected(index),
+                              typingUserid: controller.typingUser(
+                                  item.jid.checkNull()),
+                              archiveVisible: false,
+                              archiveEnabled: controller.archiveEnabled.value,
+                              onTap: (RecentChatData chatItem) {
+                                if (controller.selected.value) {
+                                  controller.selectOrRemoveChatFromList(index);
+                                } else {
+                                  controller.toChatPage(item.jid.checkNull());
+                                }
+                              },
+                              onLongPress: (RecentChatData chatItem) {
+                                controller.selected(true);
                                 controller.selectOrRemoveChatFromList(index);
-                              } else {
-                                controller.toChatPage(item.jid.checkNull(),item.isGroup.checkNull(), context);
-                              }
-                            },
-                            onLongPress: () {
-                              controller.selected(true);
-                              controller.selectOrRemoveChatFromList(index);
-                            },
-                          );
-                        });
-                      }) : Center(
-                    child: Text(AppConstants.noArchivedChats,style: TextStyle( color: MirrorflyUikit.getTheme?.textPrimaryColor),),
-                  )),
-            ),
-          );
-        }),
+                              },
+                            );
+                          });
+                        }) : Center(
+                      child: Text(getTranslated("noArchivedChats"),style: AppStyleConfig.archivedChatsPageStyle.noDataTextStyle,),
+                    )),
+              ),
+            );
+          }),
+        ),
       ),
     );
   }
