@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import '../extensions/extensions.dart';
 
 
@@ -25,7 +26,7 @@ class AppLocalizations {
       _localizedStrings = jsonMap;
     }catch(e){
       String jsonString = await rootBundle.loadString(
-          'assets/locales/en.json');
+          'packages/$package/assets/locales/en.json');
       Map<String, dynamic> jsonMap = json.decode(jsonString);
 
       _localizedStrings = jsonMap;

@@ -87,4 +87,5 @@ flutter:
     - assets/languages.txt
     - assets/logos/register_logo.svg
     - assets/animation/
+    - lib/assets/locales/
     - pubspec.yaml
