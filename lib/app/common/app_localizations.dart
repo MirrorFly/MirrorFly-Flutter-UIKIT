@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 import '../extensions/extensions.dart';
+import 'constants.dart';
 
 
 class AppLocalizations {
