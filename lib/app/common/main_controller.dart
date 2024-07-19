@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:is_lock_screen/is_lock_screen.dart';
 
 import '../base_controller.dart';
 import '../common/constants.dart';
@@ -148,7 +147,7 @@ class MainController extends FullLifeCycleController with BaseController, FullLi
     LogMessage.d('LifeCycle', 'onPaused');
     var unReadMessageCount = await Mirrorfly.getUnreadMessageCountExceptMutedChat();
     debugPrint('mainController unReadMessageCount onPaused ${unReadMessageCount.toString()}');
-    fromLockScreen = await isLockScreen() ?? false;
+    // fromLockScreen = await isLockScreen() ?? false;
     LogMessage.d('isLockScreen', '$fromLockScreen');
     SessionManagement.setAppSessionNow();
   }

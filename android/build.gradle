@@ -1,20 +1,19 @@
-group 'com.mirrorfly.uikit_plugin.mirrorfly_uikit_plugin'
-version '1.0-SNAPSHOT'
+group = "com.mirrorfly.uikit_plugin.mirrorfly_uikit_plugin"
+version = "1.0-SNAPSHOT"
 
 buildscript {
-    ext.kotlin_version = '1.7.10'
+    ext.kotlin_version = "1.7.10"
     repositories {
         google()
         mavenCentral()
-        jcenter()
         maven {
             url "https://repo.mirrorfly.com/release"
         }
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath("com.android.tools.build:gradle:7.3.0")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
     }
 }
 
@@ -22,39 +21,58 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        jcenter()
         maven {
             url "https://repo.mirrorfly.com/release"
         }
     }
 }
 
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+apply plugin: "com.android.library"
+apply plugin: "kotlin-android"
 
 android {
-    compileSdkVersion 31
+    if (project.android.hasProperty("namespace")) {
+        namespace = "com.mirrorfly.uikit_plugin.mirrorfly_uikit_plugin"
+    }
+
+    compileSdk = 34
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = "1.8"
     }
 
     sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
+        main.java.srcDirs += "src/main/kotlin"
+        test.java.srcDirs += "src/test/kotlin"
     }
 
     defaultConfig {
-        minSdkVersion 16
+        minSdk = 23
     }
-}
-dependencies {
-    implementation 'com.squareup.retrofit2:retrofit:2.6.1'
-    implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
-    implementation 'com.squareup.okhttp3:okhttp:4.7.2'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.7.2'
+
+    dependencies {
+        testImplementation("org.jetbrains.kotlin:kotlin-test")
+        testImplementation("org.mockito:mockito-core:5.0.0")
+        implementation 'com.squareup.retrofit2:retrofit:2.6.1'
+        implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
+        implementation 'com.squareup.okhttp3:okhttp:4.7.2'
+        implementation 'com.squareup.okhttp3:logging-interceptor:4.7.2'
+    }
+
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+
+            testLogging {
+               events "passed", "skipped", "failed", "standardOut", "standardError"
+               outputs.upToDateWhen {false}
+               showStandardStreams = true
+            }
+        }
+    }
 }
