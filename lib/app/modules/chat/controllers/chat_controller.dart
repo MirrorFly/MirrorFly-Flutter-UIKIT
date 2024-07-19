@@ -10,6 +10,7 @@ import 'package:flutter_libphonenumber/flutter_libphonenumber.dart' as lib_phone
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:record/record.dart';
 import '../../../common/de_bouncer.dart';
 import '../../../common/main_controller.dart';
 import '../../../data/permissions.dart';
@@ -22,7 +23,6 @@ import 'package:mirrorfly_plugin/edit_message_params.dart';
 import 'package:mirrorfly_plugin/mirrorflychat.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:record/record.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:tuple/tuple.dart';
@@ -65,7 +65,7 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
 
   late String audioSavePath;
   late String recordedAudioPath;
-  late Record record;
+  late AudioRecorder record;
 
   TextEditingController messageController = TextEditingController();
   TextEditingController editMessageController = TextEditingController();
@@ -1735,16 +1735,17 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
       debugPrint("microPhone Permission Status---> $microPhonePermissionStatus");
       if (microPhonePermissionStatus) {
         isUserTyping(false);
-        record = Record();
+        record = AudioRecorder();
         timerInit("00:00");
         isAudioRecording(Constants.audioRecording);
         startTimer();
-        await record.start(
-          path: "$audioSavePath/audio_${DateTime.now().millisecondsSinceEpoch}.m4a",
-          encoder: AudioEncoder.AAC,
-          bitRate: 128000,
-          samplingRate: 44100,
-        );
+        await record.start(const RecordConfig(), path: "$audioSavePath/audio_${DateTime.now().millisecondsSinceEpoch}.m4a");
+        // await record.start(
+        //   path: "$audioSavePath/audio_${DateTime.now().millisecondsSinceEpoch}.m4a",
+        //   encoder: AudioEncoder.AAC,
+        //   bitRate: 128000,
+        //   samplingRate: 44100,
+        // );
         Future.delayed(const Duration(seconds: 300), () {
           if (isAudioRecording.value == Constants.audioRecording) {
             stopRecording();
@@ -1762,7 +1763,7 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     isUserTyping(messageController.text.trim().isNotEmpty);
     _audioTimer?.cancel();
     _audioTimer = null;
-    await Record().stop().then((filePath) async {
+    await AudioRecorder().stop().then((filePath) async {
       if (MediaUtils.isMediaExists(filePath)) {
         recordedAudioPath = filePath.checkNull();
       } else {
