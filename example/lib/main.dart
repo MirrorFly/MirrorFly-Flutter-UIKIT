@@ -120,13 +120,10 @@ class _DashboardState extends State<Dashboard> {
               Center(
                 child: buildTextButton(
                   onPressed: () async {
-                    Future.delayed(const Duration(seconds: 1),(){
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (con) => const DashboardView(),settings: const RouteSettings(name: 'DashboardView',arguments: DashboardViewArguments(didMissedCallNotificationLaunchApp: false))));
-
-                    });
                     },
                   text: 'chat page',
                 ),
