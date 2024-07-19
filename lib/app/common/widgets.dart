@@ -417,103 +417,6 @@ class MemberItem extends StatelessWidget {
   }
 }
 
-
-/*Widget memberItem(
-    {required String name,
-    required String image,
-    required String status,
-    bool? isAdmin,
-    required Function() onTap,
-    String spantext = "",
-    bool isCheckBoxVisible = false,
-    bool isChecked = false,
-    Function(bool? value)? onchange,
-    bool isGroup = false,
-    required bool blocked,
-    required bool unknown}) {
-  var titlestyle = const TextStyle(color: Colors.black, fontSize: 14.0, fontWeight: FontWeight.w700);
-  return Container(
-    padding: const EdgeInsets.symmetric(vertical: 4.0),
-    child: InkWell(
-      onTap: onTap,
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0, left: 16.0, top: 4, bottom: 4),
-            child: Row(
-              children: [
-                ImageNetwork(
-                  url: image.checkNull(),
-                  width: 48,
-                  height: 48,
-                  clipOval: true,
-                  errorWidget: name.checkNull().isNotEmpty
-                      ? ProfileTextImage(
-                          fontSize: 20,
-                          text: name.checkNull(),
-                        )
-                      : null,
-                  blocked: blocked,
-                  unknown: unknown,
-                  isGroup: isGroup,
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        spantext.isEmpty
-                            ? Text(
-                                name.checkNull(),
-                                style: titlestyle,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis, //TextStyle
-                              )
-                            : spannableText(
-                                name.checkNull(),
-                                spantext,
-                                titlestyle,Colors.blue
-                              ),
-                        Text(
-                          status.checkNull(),
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 12.0,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis, //T
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                (isAdmin != null && isAdmin)
-                    ? Text(getTranslated("groupAdmin"),
-                        style: const TextStyle(
-                          color: Colors.blue,
-                          fontSize: 12.0,
-                        ))
-                    : const SizedBox(),
-                Visibility(
-                  visible: isCheckBoxVisible,
-                  child: Checkbox(
-                    value: isChecked,
-                    onChanged: onchange,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const AppDivider(padding: EdgeInsets.only(right: 16, left: 16, top: 4))
-        ],
-      ),
-    ),
-  );
-}*/
-
 class EmojiLayout extends StatelessWidget {
   const EmojiLayout({Key? key, required this.textController, this.onEmojiSelected, this.onBackspacePressed}) : super(key: key);
   final TextEditingController textController;
@@ -529,25 +432,29 @@ class EmojiLayout extends StatelessWidget {
         onEmojiSelected: onEmojiSelected,
         textEditingController: textController,
         config: emoji.Config(
-          columns: 7,
-          emojiSizeMax: 32 * (Platform.isIOS ? 1.30 : 1.0),
-          verticalSpacing: 0,
-          horizontalSpacing: 0,
-          gridPadding: EdgeInsets.zero,
-          initCategory: emoji.Category.RECENT,
-          bgColor: const Color(0xFFF2F2F2),
-          indicatorColor: Colors.blue,
-          iconColor: Colors.grey,
-          iconColorSelected: Colors.blue,
-          backspaceColor: Colors.blue,
-          skinToneDialogBgColor: Colors.white,
-          skinToneIndicatorColor: Colors.grey,
-          enableSkinTones: true,
-          // showRecentsTab: true,
-          recentsLimit: 28,
-          tabIndicatorAnimDuration: kTabScrollDuration,
-          categoryIcons: const emoji.CategoryIcons(),
-          buttonMode: emoji.ButtonMode.CUPERTINO,
+          skinToneConfig: const emoji.SkinToneConfig(
+            enabled: true,
+              indicatorColor: Colors.grey,dialogBackgroundColor: Colors.white,
+          ),
+          emojiViewConfig: emoji.EmojiViewConfig(
+            columns: 7,
+            emojiSizeMax: 32 * (Platform.isIOS ? 1.30 : 1.0),
+            verticalSpacing: 0,
+            horizontalSpacing: 0,
+            gridPadding: EdgeInsets.zero,
+            recentsLimit: 28,
+            buttonMode: emoji.ButtonMode.CUPERTINO,
+          ),
+          categoryViewConfig: const emoji.CategoryViewConfig(
+            initCategory: emoji.Category.RECENT,
+            backgroundColor: Color(0xFFF2F2F2),
+            indicatorColor: Colors.blue,
+            iconColor: Colors.grey,
+            iconColorSelected: Colors.blue,
+            backspaceColor: Colors.blue,
+            tabIndicatorAnimDuration: kTabScrollDuration,
+            categoryIcons: emoji.CategoryIcons(),
+          ),
         ),
       ),
     );

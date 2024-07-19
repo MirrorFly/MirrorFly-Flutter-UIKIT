@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'call_modules/call_timeout/controllers/call_timeout_controller.dart';
 import 'call_modules/group_participants/group_participants_controller.dart';
@@ -26,7 +25,6 @@ import 'routes/route_settings.dart';
 import 'package:mirrorfly_plugin/mirrorflychat.dart';
 
 import 'common/main_controller.dart';
-import 'common/notification_service.dart';
 import 'data/utils.dart';
 import 'model/chat_message_model.dart';
 import 'model/notification_message_model.dart';
@@ -35,7 +33,6 @@ import 'modules/chat/controllers/forwardchat_controller.dart';
 import 'modules/chatInfo/controllers/chat_info_controller.dart';
 import 'modules/dashboard/controllers/dashboard_controller.dart';
 import 'modules/message_info/controllers/message_info_controller.dart';
-import 'modules/notification/notification_builder.dart';
 import 'modules/profile/controllers/profile_controller.dart';
 import 'modules/starred_messages/controllers/starred_messages_controller.dart';
 import 'modules/view_all_media/controllers/view_all_media_controller.dart';
@@ -804,7 +801,7 @@ abstract class BaseController {
       return;
     }
     if(chatMessage.messageId.isNotEmpty) {
-      NotificationBuilder.createNotification(chatMessage);
+      // NotificationBuilder.createNotification(chatMessage);
     }
   }
 
@@ -1081,47 +1078,6 @@ abstract class BaseController {
 
   void onSuccess(result) {}
 
-  Future<void> showLocalNotification(ChatMessageModel chatMessageModel) async {
-    debugPrint("showing local notification");
-    var isUserMuted = await Mirrorfly.isChatMuted(jid: chatMessageModel.chatUserJid);
-    var isUserUnArchived = await Mirrorfly.isChatUnArchived(jid: chatMessageModel.chatUserJid);
-    var isArchivedSettingsEnabled = await Mirrorfly.isArchivedSettingsEnabled();
-
-    var archiveSettings = isArchivedSettingsEnabled.checkNull() ? isUserUnArchived.checkNull() : true;
-
-    if (!chatMessageModel.isMessageSentByMe && !isUserMuted.checkNull() && archiveSettings) {
-      final String? notificationUri = SessionManagement.getNotificationUri();
-      final UriAndroidNotificationSound uriSound = UriAndroidNotificationSound(notificationUri!);
-      debugPrint("notificationUri--> $notificationUri");
-
-      var messageId =
-          chatMessageModel.messageSentTime.toString().substring(chatMessageModel.messageSentTime.toString().length - 5);
-      debugPrint("Mani Message ID $messageId");
-      AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
-          chatMessageModel.messageId, 'MirrorFly',
-          importance: Importance.max,
-          priority: Priority.high,
-          sound: uriSound,
-          styleInformation: const DefaultStyleInformation(true, true));
-      DarwinNotificationDetails iosNotificationDetails = DarwinNotificationDetails(
-          categoryIdentifier: darwinNotificationCategoryPlain,
-          sound: notificationUri,
-          presentSound: true,
-          presentBadge: true,
-          presentAlert: true);
-
-      NotificationDetails notificationDetails =
-          NotificationDetails(android: androidNotificationDetails, iOS: iosNotificationDetails);
-      await flutterLocalNotificationsPlugin.show(
-          12345,
-          chatMessageModel.senderUserName,
-          chatMessageModel.isMessageRecalled.value ? "This message was deleted" : chatMessageModel.messageTextContent,
-          notificationDetails,
-          payload: chatMessageModel.chatUserJid);
-    } else {
-      debugPrint("self sent message don't need notification");
-    }
-  }
 
   Future<void> onMissedCall(
       bool isOneToOneCall, String userJid, String groupId, String callType, List<String> userList) async {
@@ -1132,7 +1088,7 @@ abstract class BaseController {
     var missedCallTitleContent =
         await getMissedCallNotificationContent(isOneToOneCall, userJid, groupId, callType, userList);
     LogMessage.d("onMissedCallContent", "${missedCallTitleContent.first} ${missedCallTitleContent.last}");
-    NotificationBuilder.createCallNotification(missedCallTitleContent.first, missedCallTitleContent.last);
+    // NotificationBuilder.createCallNotification(missedCallTitleContent.first, missedCallTitleContent.last);
   }
 
   Future<List<String>> getMissedCallNotificationContent(

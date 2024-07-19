@@ -1,28 +1,21 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:is_lock_screen/is_lock_screen.dart';
 
 import '../base_controller.dart';
 import '../common/constants.dart';
-import '../data/pushnotification.dart';
 import '../data/session_management.dart';
 import '../extensions/extensions.dart';
-import '../modules/dashboard/controllers/dashboard_controller.dart';
-import '../modules/notification/notification_builder.dart';
 import 'package:mirrorfly_plugin/mirrorfly.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../data/utils.dart';
-import '../model/arguments.dart';
 import '../routes/route_settings.dart';
-import 'notification_service.dart';
 
 class MainController extends FullLifeCycleController with BaseController, FullLifeCycleMixin /*with FullLifeCycleMixin */ {
   var currentAuthToken = "".obs;
@@ -34,7 +27,6 @@ class MainController extends FullLifeCycleController with BaseController, FullLi
   var audioPlayed = false.obs;
   AudioPlayer player = AudioPlayer();
   String currentPostLabel = "00:00";
-  bool _notificationsEnabled = false;
 
   //network listener
   static StreamSubscription<InternetConnectionStatus>? listener;
@@ -57,7 +49,6 @@ class MainController extends FullLifeCycleController with BaseController, FullLi
     });
     //presentPinPage();
     debugPrint("#Mirrorfly Notification -> Main Controller push init");
-    PushNotifications.init();
     initListeners();
     mediaEndpoint(SessionManagement.getMediaEndPoint().checkNull());
     getMediaEndpoint();
@@ -68,113 +59,10 @@ class MainController extends FullLifeCycleController with BaseController, FullLi
 
     getAvailableFeatures();
 
-    NotificationService notificationService = NotificationService();
-    await notificationService.init();
-    _isAndroidPermissionGranted();
-    _requestPermissions();
-    // _configureDidReceiveLocalNotificationSubject();
-    _configureSelectNotificationSubject();
     unreadMissedCallCount();
-    _removeBadge();
   }
 
-  Future<void> _isAndroidPermissionGranted() async {
-    if (Platform.isAndroid) {
-      final bool granted = await flutterLocalNotificationsPlugin
-              .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-              ?.areNotificationsEnabled() ??
-          false;
 
-      // setState(() {
-      _notificationsEnabled = granted;
-      debugPrint("Notification Enabled--> $_notificationsEnabled");
-      // });
-    }
-  }
-
-  Future<void> _requestPermissions() async {
-    if (Platform.isIOS || Platform.isMacOS) {
-      await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()?.requestPermissions(
-            alert: true,
-            badge: true,
-            sound: true,
-          );
-      await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<MacOSFlutterLocalNotificationsPlugin>()?.requestPermissions(
-            alert: true,
-            badge: true,
-            sound: true,
-          );
-    } else if (Platform.isAndroid) {
-      final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
-          flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
-
-      final bool? granted = await androidImplementation?.requestPermission();
-      // setState(() {
-      _notificationsEnabled = granted ?? false;
-      // });
-    }
-  }
-
-  void _configureSelectNotificationSubject() {
-    selectNotificationStream.stream.listen((String? payload) async {
-      // await Navigator.of(context).push(MaterialPageRoute<void>(
-      //   builder: (BuildContext context) => SecondPage(payload),
-      // ));
-      LogMessage.d("#Mirrorfly Notification -> opening chat page--> ","$payload ${NavUtils.currentRoute}");
-      if (payload != null && payload.isNotEmpty && payload.toString() != Constants.callNotificationId.toString()) {
-        var chatJid = payload.checkNull().split(",")[0];
-        var topicId = payload.checkNull().split(",")[1];
-        if(SessionManagement.getCurrentChatJID().checkNull() == chatJid){
-          NotificationBuilder.cancelNotifications();
-         return;
-        }
-        if (NavUtils.isOverlayOpen || NavUtils.currentRoute == Routes.chat) {
-          LogMessage.d("#Mirrorfly Notification ->","already chat page");
-          if (NavUtils.currentRoute == Routes.forwardChat ||
-              NavUtils.currentRoute == Routes.chatInfo ||
-              NavUtils.currentRoute == Routes.groupInfo ||
-              NavUtils.currentRoute == Routes.messageInfo) {
-            NavUtils.back();
-          }
-          if (NavUtils.currentRoute.contains("from_notification=true")) {
-            LogMessage.d("#Mirrorfly Notification -> previously app opened from notification", "so we have to maintain that");
-            NavUtils.offAllNamed(Routes.chat,arguments: ChatViewArguments(chatJid: chatJid,topicId: topicId,didNotificationLaunchApp: true));
-            // NavUtils.offAllNamed("${Routes.chat}?jid=$chatJid&from_notification=true&topicId=$topicId");
-          } else {
-            if(NavUtils.isOverlayOpen){
-              LogMessage.d("#Mirrorfly Notification ->" , "isOverlayOpen dismissing");
-
-              NavUtils.back();
-            }
-            LogMessage.d("#Mirrorfly Notification ->" , "Calling off named");
-
-
-            NavUtils.offNamed(Routes.chat, arguments: ChatViewArguments(chatJid: chatJid,topicId: topicId), preventDuplicates: false);
-            // NavUtils.back();
-            /*Below 400 milliseconds the controller is not deleted and creating the issue in the Scrolled Positioned list issue,
-             so we are waiting for 500 considering Android Platform*/
-           /* Future.delayed(const Duration(milliseconds: 500),(){
-              NavUtils.toNamed(Routes.chat, arguments: ChatViewArguments(chatJid: chatJid,topicId: topicId));
-            });*/
-          }
-        } else {
-          debugPrint("not chat page");
-          NavUtils.toNamed(Routes.chat, arguments: ChatViewArguments(chatJid: chatJid,topicId: topicId));
-        }
-      } else {
-        if (Get.isRegistered<DashboardController>()) {
-          Get.find<DashboardController>().tabController?.animateTo(1);
-        }
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    didReceiveLocalNotificationStream.close();
-    selectNotificationStream.close();
-    super.dispose();
-  }
 
   getMediaEndpoint() async {
     await Mirrorfly.mediaEndPoint().then((value) {
@@ -260,7 +148,6 @@ class MainController extends FullLifeCycleController with BaseController, FullLi
     LogMessage.d('LifeCycle', 'onPaused');
     var unReadMessageCount = await Mirrorfly.getUnreadMessageCountExceptMutedChat();
     debugPrint('mainController unReadMessageCount onPaused ${unReadMessageCount.toString()}');
-    _setBadgeCount(unReadMessageCount ?? 0);
     fromLockScreen = await isLockScreen() ?? false;
     LogMessage.d('isLockScreen', '$fromLockScreen');
     SessionManagement.setAppSessionNow();
@@ -269,7 +156,7 @@ class MainController extends FullLifeCycleController with BaseController, FullLi
   @override
   void onResumed() {
     LogMessage.d('LifeCycle', 'onResumed');
-    NotificationBuilder.cancelNotifications();
+    // NotificationBuilder.cancelNotifications();
     checkShouldShowPin();
     if(hasPaused) {
       hasPaused = false;
@@ -371,13 +258,5 @@ class MainController extends FullLifeCycleController with BaseController, FullLi
     }catch(e){
       debugPrint("unreadMissedCallCount $e");
     }
-  }
-
-  void _setBadgeCount(int count) {
-    FlutterAppBadger.updateBadgeCount(count);
-  }
-
-  void _removeBadge() {
-    FlutterAppBadger.removeBadge();
   }
 }

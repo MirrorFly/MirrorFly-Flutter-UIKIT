@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/notification_service.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 
+final navigatorKey = GlobalKey<NavigatorState>();
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   MirrorflyUikit.instance.initUIKIT(
-      baseUrl: 'YOUR_BASE_URL',
-      licenseKey: 'Your_Mirrorfly_Licence_Key',
-      googleMapKey: 'Your_Google_Map_Key_for_location_messages',
-      iOSContainerID: 'Your_iOS_app_Container_id');
+    navigatorKey: navigatorKey,
+    licenseKey: 'Your_Mirrorfly_Licence_Key',
+    googleMapKey: 'Your_Google_Map_Key_for_location_messages',
+    iOSContainerID: 'Your_iOS_app_Container_id', );
   // AppConstants.newGroup = "New Group Create";
   runApp(const MyApp());
 }
@@ -25,7 +25,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
-    _configureSelectNotificationSubject();
     super.initState();
   }
   @override
@@ -36,15 +35,7 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(textTheme: GoogleFonts.latoTextTheme()),
         home: const Dashboard());
   }
-
-  void _configureSelectNotificationSubject() {
-    ///Used to perform the action when local notification is selected.
-    selectNotificationStream.stream.listen((String? payload) async {
-      debugPrint("payload $payload");
-    });
-  }
-
-
+  
 }
 
 class Dashboard extends StatefulWidget {
@@ -102,7 +93,7 @@ class _DashboardState extends State<Dashboard> {
                           if (uniqueId.isNotEmpty) {
                             try {
                               var response =
-                                  await MirrorflyUikit.registerUser(userIdentifier: uniqueId);
+                                  await MirrorflyUikit.login(userIdentifier: uniqueId);
                               debugPrint("register user $response");
                               showSnack(response['message']);
                             } catch (e) {
@@ -122,11 +113,7 @@ class _DashboardState extends State<Dashboard> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (con) => const DashboardView(
-                                  title: "Chats",
-                              enableAppBar: true,
-                              showChatDeliveryIndicator: true,
-                                )));
+                            builder: (con) => const DashboardView()));
                   },
                   text: 'chat page',
                 ),
@@ -143,10 +130,10 @@ class _DashboardState extends State<Dashboard> {
       onPressed: onPressed,
       style: ButtonStyle(
         backgroundColor:
-            MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
-        padding: MaterialStateProperty.all<EdgeInsets>(
+            WidgetStateProperty.all<Color>(Theme.of(context).primaryColor),
+        padding: WidgetStateProperty.all<EdgeInsets>(
             const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0)),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
           ),

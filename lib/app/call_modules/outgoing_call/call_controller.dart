@@ -307,7 +307,7 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       }
     } else {
       debugPrint("#Disconnect previous route is empty");
-      NavUtils.offNamed(getInitialRoute());
+      NavUtils.offNamed(NavUtils.defaultRouteName);
     }
   }
 
@@ -405,7 +405,7 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
           NavUtils.back();
         }
       } else {
-        NavUtils.offNamed(getInitialRoute());
+        NavUtils.offNamed(NavUtils.defaultRouteName);
       }
     }
   }

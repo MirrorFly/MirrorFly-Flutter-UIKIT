@@ -29,9 +29,6 @@ import '../modules/group/views/group_creation_view.dart';
 import '../modules/group/views/group_info_view.dart';
 import '../modules/image_view/views/image_view_view.dart';
 import '../modules/local_contact/views/local_contact_view.dart';
-import '../modules/login/views/country_list_view.dart';
-import '../modules/login/views/login_view.dart';
-import '../modules/login/views/otp_view.dart';
 import '../modules/media_preview/views/media_preview_view.dart';
 import '../modules/message_info/views/message_info_view.dart';
 import '../modules/preview_contact/views/preview_contact_view.dart';
@@ -40,14 +37,10 @@ import '../modules/profile/views/profile_view.dart';
 import '../modules/profile/views/status_list_view.dart';
 import '../modules/scanner/scanner_view.dart';
 import '../modules/scanner/web_login_result_view.dart';
-import '../modules/settings/views/app_lock/app_lock_settings_view.dart';
-import '../modules/settings/views/app_lock/pin_view.dart';
-import '../modules/settings/views/app_lock/set_pin_view.dart';
 import '../modules/settings/views/blocked/blocked_list_view.dart';
 import '../modules/settings/views/chat_settings/chat_settings_view.dart';
 import '../modules/settings/views/chat_settings/datausage/datausage_list_view.dart';
 import '../modules/settings/views/chat_settings/language/language_list_view.dart';
-import '../modules/settings/views/notification/notification_settings_view.dart';
 import '../modules/settings/views/settings_view.dart';
 import '../modules/starred_messages/views/starred_messages_view.dart';
 import '../modules/video_preview/views/video_player_view.dart';
@@ -62,10 +55,10 @@ Route<dynamic>? mirrorFlyRoute(RouteSettings settings) {
   switch (settings.name) {
     case '/':
       return MaterialPageRoute(builder: (_) => const DashboardView(),settings: settings);
-     case Routes.login:
-      return MaterialPageRoute(builder: (_) => const LoginView(),settings: settings);
-    case Routes.otp:
-      return MaterialPageRoute(builder: (_) => const OtpView(),settings: settings);
+    // case Routes.login:
+    //   return MaterialPageRoute(builder: (_) => const LoginView(),settings: settings);
+    // case Routes.otp:
+    //   return MaterialPageRoute(builder: (_) => const OtpView(),settings: settings);
     case Routes.dashboard:
       return MaterialPageRoute(builder: (_) => const DashboardView(),settings: settings);
     case Routes.scanner:
@@ -79,8 +72,8 @@ Route<dynamic>? mirrorFlyRoute(RouteSettings settings) {
     case Routes.viewMedia:
       return MaterialPageRoute(builder: (_) => const ViewAllMediaView(),settings: settings);
 
-    case Routes.countries:
-      return MaterialPageRoute(builder: (_) => const CountryListView(),settings: settings);
+    // case Routes.countries:
+    //   return MaterialPageRoute(builder: (_) => const CountryListView(),settings: settings);
     case Routes.profile:
       return MaterialPageRoute(builder: (_) => const ProfileView(),settings: settings);
     case Routes.statusList:
@@ -101,14 +94,14 @@ Route<dynamic>? mirrorFlyRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => const SettingsView(),settings: settings);
     case Routes.blockedList:
       return MaterialPageRoute(builder: (_) => const BlockedListView(),settings: settings);
-    case Routes.notification:
-      return MaterialPageRoute(builder: (_) => const NotificationSettingsView(),settings: settings);
-    case Routes.appLock:
-      return MaterialPageRoute(builder: (_) => const AppLockSettingsView(),settings: settings);
-    case Routes.pin:
-      return MaterialPageRoute(builder: (_) => const PinView(),settings: settings);
-    case Routes.setPin:
-      return MaterialPageRoute(builder: (_) => const SetPinView(),settings: settings);
+    // case Routes.notification:
+    //   return MaterialPageRoute(builder: (_) => const NotificationSettingsView(),settings: settings);
+    // case Routes.appLock:
+    //   return MaterialPageRoute(builder: (_) => const AppLockSettingsView(),settings: settings);
+    // case Routes.pin:
+    //   return MaterialPageRoute(builder: (_) => const PinView(),settings: settings);
+    // case Routes.setPin:
+    //   return MaterialPageRoute(builder: (_) => const SetPinView(),settings: settings);
     case Routes.videoPreview:
       return MaterialPageRoute(builder: (_) => const VideoPreviewView(),settings: settings);
     case Routes.videoPlay:

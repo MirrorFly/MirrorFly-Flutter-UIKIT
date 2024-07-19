@@ -5,7 +5,7 @@ part of 'utils.dart';
 class NavUtils{
 
   // Returns the size of the current media query.
-  static Size get size => MediaQuery.of(navigatorKey.currentContext!).size;
+  static Size get size => MediaQuery.of(MirrorflyUikit.globalNavigatorKey!.currentContext!).size;
 
   // Returns the width of the current media query.
   static double get width => size.width;
@@ -14,7 +14,7 @@ class NavUtils{
   static double get height => size.height;
 
   // Returns the current BuildContext using the navigator key.
-  static BuildContext get currentContext => navigatorKey.currentContext!;
+  static BuildContext get currentContext => MirrorflyUikit.globalNavigatorKey!.currentContext!;
 
   // Returns the name of the current route using the MirrorFlyNavigationObserver.
   static String get currentRoute =>
@@ -33,7 +33,12 @@ class NavUtils{
   }
 
   static bool get canPop => Navigator.canPop(currentContext);
-  static String get defaultRouteName => Navigator.defaultRouteName;
+  static String _defaultRouteName = Navigator.defaultRouteName;
+  static String get defaultRouteName => _defaultRouteName;
+
+  static void setDefaultRouteName(String defaultRouteName){
+    _defaultRouteName = defaultRouteName;
+  }
 
   static offNamed(String page, {
     dynamic arguments,

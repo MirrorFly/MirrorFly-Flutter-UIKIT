@@ -18,7 +18,6 @@ import '../../../data/session_management.dart';
 import '../../../extensions/extensions.dart';
 import '../../../model/arguments.dart';
 import '../../../modules/chat/views/edit_window.dart';
-import '../../../modules/notification/notification_builder.dart';
 import 'package:mirrorfly_plugin/edit_message_params.dart';
 import 'package:mirrorfly_plugin/mirrorflychat.dart';
 import 'package:path_provider/path_provider.dart';
@@ -2789,7 +2788,7 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   }
 
   void cancelNotification() {
-    NotificationBuilder.cancelNotifications();
+    // NotificationBuilder.cancelNotifications();
   }
 
   void setOnGoingUserGone() {

@@ -6,7 +6,6 @@ import '../../../call_modules/call_utils.dart';
 import '../../../common/app_localizations.dart';
 import '../../../extensions/extensions.dart';
 import '../../../model/arguments.dart';
-import '../../../modules/notification/notification_builder.dart';
 import '../../../stylesheet/stylesheet.dart';
 import 'package:mirrorfly_plugin/mirrorflychat.dart';
 import 'package:get/get.dart';
@@ -882,8 +881,8 @@ class DashboardController extends FullLifeCycleController with FullLifeCycleMixi
       for (var element in selectedChatsPosition) {
         recentChats[element].isConversationUnRead = false;
         recentChats[element].unreadMessageCount = 0;
-        var jid = recentChats[element].jid;
-        NotificationBuilder.clearConversationOnNotification(jid.checkNull());
+        // var jid = recentChats[element].jid;
+        // NotificationBuilder.clearConversationOnNotification(jid.checkNull());
       }
       clearAllChatSelection();
       updateUnReadChatCount();
