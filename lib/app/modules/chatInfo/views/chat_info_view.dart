@@ -193,7 +193,7 @@ ChatInfoController createController({String? tag}) => Get.put(ChatInfoController
               padding: const EdgeInsets.only(left: 15.0, bottom: 16),
               child: Row(
                 children: [
-                  SvgPicture.asset(emailIcon,colorFilter: ColorFilter.mode(AppStyleConfig.chatInfoPageStyle.optionsViewStyle.leadingIconColor, BlendMode.srcIn),),
+                  SvgPicture.asset(emailIcon,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.chatInfoPageStyle.optionsViewStyle.leadingIconColor, BlendMode.srcIn),),
                   const SizedBox(width: 10,),
                   Obx(() {
                     return Text(controller.profile.email.checkNull(),
@@ -226,7 +226,7 @@ ChatInfoController createController({String? tag}) => Get.put(ChatInfoController
               padding: const EdgeInsets.only(left: 15.0, bottom: 16),
               child: Row(
                 children: [
-                  SvgPicture.asset(phoneIcon,colorFilter: ColorFilter.mode(AppStyleConfig.chatInfoPageStyle.optionsViewStyle.leadingIconColor, BlendMode.srcIn),),
+                  SvgPicture.asset(phoneIcon,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.chatInfoPageStyle.optionsViewStyle.leadingIconColor, BlendMode.srcIn),),
                   const SizedBox(width: 10,),
                   Obx(() {
                     return Text(controller.profile.mobileNumber.checkNull(),
@@ -259,7 +259,7 @@ ChatInfoController createController({String? tag}) => Get.put(ChatInfoController
               padding: const EdgeInsets.only(left: 15.0, bottom: 16),
               child: Row(
                 children: [
-                  SvgPicture.asset(statusIcon,colorFilter: ColorFilter.mode(AppStyleConfig.chatInfoPageStyle.optionsViewStyle.leadingIconColor, BlendMode.srcIn),),
+                  SvgPicture.asset(statusIcon,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.chatInfoPageStyle.optionsViewStyle.leadingIconColor, BlendMode.srcIn),),
                   const SizedBox(width: 10,),
                   Obx(() {
                     return Text(controller.profile.status.checkNull(),
@@ -282,7 +282,7 @@ ChatInfoController createController({String? tag}) => Get.put(ChatInfoController
           controller.reportChatOrUser();
         }, listItemStyle: AppStyleConfig.chatInfoPageStyle.viewAllMediaStyle,),
         /*listItem(
-            leading: SvgPicture.asset(imageOutline,),
+            leading: SvgPicture.asset(imageOutline,package: package,),
             title: Text(getTranslated("viewAllMedia"),
                 style: const TextStyle(
                     color: Colors.black,

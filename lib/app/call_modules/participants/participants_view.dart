@@ -82,7 +82,7 @@ AddParticipantsController createController({String? tag}) => Get.put(AddParticip
                                   },
                                   icon: !controller.isSearching.value ?SvgPicture.asset(
                                     searchIcon,
-                                    width: 18,
+                                    package: package,width: 18,
                                     height: 18,
                                     fit: BoxFit.contain,
                                     colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn),
@@ -182,9 +182,9 @@ AddParticipantsController createController({String? tag}) => Get.put(AddParticip
                           child: Obx(() {
                             return controller.callList[index].isAudioMuted.value
                                 ? CircleAvatar(backgroundColor: style.actionStyle.inactiveBgColor,//AppColors.participantUnMuteColor,
-                                child: SvgPicture.asset(participantMute,colorFilter: ColorFilter.mode(style.actionStyle.inactiveIconColor, BlendMode.srcIn),))
+                                child: SvgPicture.asset(participantMute,package: package,colorFilter: ColorFilter.mode(style.actionStyle.inactiveIconColor, BlendMode.srcIn),))
                                 : CircleAvatar(backgroundColor: style.actionStyle.activeBgColor,//Colors.transparent,
-                                child: SvgPicture.asset(participantUnMute,colorFilter: ColorFilter.mode(style.actionStyle.activeIconColor, BlendMode.srcIn),));
+                                child: SvgPicture.asset(participantUnMute,package: package,colorFilter: ColorFilter.mode(style.actionStyle.activeIconColor, BlendMode.srcIn),));
                           }),
                         ),
                         Padding(
@@ -195,8 +195,8 @@ AddParticipantsController createController({String? tag}) => Get.put(AddParticip
                               ? style.actionStyle.inactiveBgColor//AppColors.participantUnMuteColor
                               : style.actionStyle.activeBgColor,//Colors.transparent,
                                 child: controller.callList[index].isVideoMuted.value
-                                    ? SvgPicture.asset(participantVideoDisabled,colorFilter: ColorFilter.mode(style.actionStyle.inactiveIconColor, BlendMode.srcIn),)
-                                : SvgPicture.asset(participantVideoEnabled,colorFilter: ColorFilter.mode(style.actionStyle.activeIconColor, BlendMode.srcIn),)
+                                    ? SvgPicture.asset(participantVideoDisabled,package: package,colorFilter: ColorFilter.mode(style.actionStyle.inactiveIconColor, BlendMode.srcIn),)
+                                : SvgPicture.asset(participantVideoEnabled,package: package,colorFilter: ColorFilter.mode(style.actionStyle.activeIconColor, BlendMode.srcIn),)
                             );
                           }),
                         ),
@@ -235,7 +235,7 @@ AddParticipantsController createController({String? tag}) => Get.put(AddParticip
                 },
                 icon: SvgPicture.asset(
                     copyIcon,
-                    fit: BoxFit.contain,
+                    package: package,fit: BoxFit.contain,
                     colorFilter: ColorFilter.mode(
                         copyMeetLinkStyle.copyIconColor, BlendMode.srcIn)
                 ),
@@ -311,7 +311,7 @@ AddParticipantsController createController({String? tag}) => Get.put(AddParticip
                                 children: [
                                   SvgPicture.asset(
                                     addParticipantsInCall,
-                                    colorFilter: ColorFilter.mode(AppStyleConfig.addParticipantsPageStyle.buttonIconColor, BlendMode.srcIn),
+                                    package: package,colorFilter: ColorFilter.mode(AppStyleConfig.addParticipantsPageStyle.buttonIconColor, BlendMode.srcIn),
                                   ),
                                   const SizedBox(width: 8,),
                                   Text(getTranslated("selectedParticipantsToCall").replaceFirst("%d", "${(controller.groupCallMembersCount.value)}"),

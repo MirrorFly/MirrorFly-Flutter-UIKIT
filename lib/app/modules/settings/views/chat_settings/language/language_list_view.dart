@@ -41,7 +41,7 @@ class LanguageListView extends NavViewStateful<LanguageController> {
                         ? const Offstage() : IconButton(
                       icon: SvgPicture.asset(
                         searchIcon,
-                        width: 18,
+                        package: package,width: 18,
                         height: 18,
                         fit: BoxFit.contain,
                       ),

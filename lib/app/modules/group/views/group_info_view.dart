@@ -93,7 +93,7 @@ GroupInfoController createController({String? tag}) => Get.put(GroupInfoControll
                               child: IconButton(
                                 icon: SvgPicture.asset(
                                   edit,
-                                  colorFilter: ColorFilter.mode(AppStyleConfig.groupChatInfoPageStyle.silverAppBarIconColor, BlendMode.srcIn),
+                                  package: package,colorFilter: ColorFilter.mode(AppStyleConfig.groupChatInfoPageStyle.silverAppBarIconColor, BlendMode.srcIn),
                                   width: 16.0,
                                   height: 16.0,
                                 ),
@@ -146,7 +146,7 @@ GroupInfoController createController({String? tag}) => Get.put(GroupInfoControll
                       child: IconButton(
                         icon: SvgPicture.asset(
                           imageEdit,
-                          colorFilter: ColorFilter.mode(controller.isSliverAppBarExpanded ? AppStyleConfig.groupChatInfoPageStyle.silverAppBarIconColor : AppBarTheme.of(context).actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn),
+                          package: package,colorFilter: ColorFilter.mode(controller.isSliverAppBarExpanded ? AppStyleConfig.groupChatInfoPageStyle.silverAppBarIconColor : AppBarTheme.of(context).actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn),
                         ),
                         tooltip: 'Image edit',
                         onPressed: () {
@@ -190,7 +190,7 @@ GroupInfoController createController({String? tag}) => Get.put(GroupInfoControll
                 Obx(() => Visibility(
                       visible: controller.isAdmin,
                       child: ListItem(
-                          leading: SvgPicture.asset(addUser,colorFilter: ColorFilter.mode(AppStyleConfig.groupChatInfoPageStyle.addParticipantStyle.leadingIconColor, BlendMode.srcIn),),
+                          leading: SvgPicture.asset(addUser,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.groupChatInfoPageStyle.addParticipantStyle.leadingIconColor, BlendMode.srcIn),),
                           title: Text(getTranslated("addParticipants"),
                               style: AppStyleConfig.groupChatInfoPageStyle.addParticipantStyle.titleTextStyle,
                               // style: const TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500)
@@ -225,7 +225,7 @@ GroupInfoController createController({String? tag}) => Get.put(GroupInfoControll
                   controller.gotoViewAllMedia();
                 }, listItemStyle: AppStyleConfig.groupChatInfoPageStyle.viewAllMediaStyle,),
                 /*ListItem(
-                  leading: SvgPicture.asset(imageOutline,colorFilter: ColorFilter.mode(AppStyleConfig.groupChatInfoPageStyle.viewAllMediaStyle.leadingIconColor, BlendMode.srcIn),),
+                  leading: SvgPicture.asset(imageOutline,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.groupChatInfoPageStyle.viewAllMediaStyle.leadingIconColor, BlendMode.srcIn),),
                   title: Text(getTranslated("viewAllMedia"), style: AppStyleConfig.groupChatInfoPageStyle.viewAllMediaStyle.titleTextStyle),
                   trailing: Icon(Icons.keyboard_arrow_right,color: AppStyleConfig.groupChatInfoPageStyle.viewAllMediaStyle.trailingIconColor,),
                   onTap: () => controller.gotoViewAllMedia(),
@@ -234,7 +234,7 @@ GroupInfoController createController({String? tag}) => Get.put(GroupInfoControll
                   controller.reportGroup();
                 }, listItemStyle: AppStyleConfig.groupChatInfoPageStyle.reportGroupStyle,),
                 /*ListItem(
-                  leading: SvgPicture.asset(reportGroup,colorFilter: ColorFilter.mode(AppStyleConfig.groupChatInfoPageStyle.reportGroupStyle.leadingIconColor, BlendMode.srcIn),),
+                  leading: SvgPicture.asset(reportGroup,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.groupChatInfoPageStyle.reportGroupStyle.leadingIconColor, BlendMode.srcIn),),
                   title: Text(getTranslated("reportGroup"), style: AppStyleConfig.groupChatInfoPageStyle.reportGroupStyle.titleTextStyle),
                   onTap: () => controller.reportGroup(),
                 ),*/
@@ -250,7 +250,7 @@ GroupInfoController createController({String? tag}) => Get.put(GroupInfoControll
                     }, listItemStyle: AppStyleConfig.groupChatInfoPageStyle.leaveGroupStyle,),/*ListItem(
                       leading: SvgPicture.asset(
                         leaveGroup,
-                        width: 18,
+                        package: package,width: 18,
                         colorFilter: ColorFilter.mode(AppStyleConfig.groupChatInfoPageStyle.leaveGroupStyle.leadingIconColor, BlendMode.srcIn),
                       ),
                       title: Text(!controller.isMemberOfGroup ? getTranslated("deleteGroup") : getTranslated("leaveGroup"),

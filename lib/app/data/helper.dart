@@ -434,7 +434,7 @@ void showQuickProfilePopup(
                         onTap: chatTap,
                         child: SvgPicture.asset(
                           quickMessage,
-                          fit: BoxFit.contain,
+                          package: package,fit: BoxFit.contain,
                           width: 30,
                           height: 30,
                         ),
@@ -450,7 +450,7 @@ void showQuickProfilePopup(
                               },
                               child: SvgPicture.asset(
                                 quickCall,
-                                fit: BoxFit.contain,
+                                package: package,fit: BoxFit.contain,
                               ),
                             ),
                           )
@@ -464,7 +464,7 @@ void showQuickProfilePopup(
                               },
                               child: SvgPicture.asset(
                                 quickVideo,
-                                fit: BoxFit.contain,
+                                package: package,fit: BoxFit.contain,
                               ),
                             ),
                           )
@@ -474,7 +474,7 @@ void showQuickProfilePopup(
                         onTap: infoTap,
                         child: SvgPicture.asset(
                           quickInfo,
-                          fit: BoxFit.contain,
+                          package: package,fit: BoxFit.contain,
                         ),
                       ),
                     ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import '../../../common/constants.dart';
 import '../../../stylesheet/stylesheet.dart';
 import 'package:mirrorfly_plugin/mirrorfly.dart';
 
@@ -94,7 +95,7 @@ Widget iconCreation(String iconPath, String text, VoidCallback onTap,IconStyle i
         CircleAvatar(
           radius: (50/2),
           backgroundColor: iconStyle.bgColor,
-            child: SvgPicture.asset(iconPath,colorFilter: ColorFilter.mode(iconStyle.iconColor, BlendMode.srcIn),)
+            child: SvgPicture.asset(iconPath,package: package,colorFilter: ColorFilter.mode(iconStyle.iconColor, BlendMode.srcIn),)
         ),
         const SizedBox(
           height: 7,

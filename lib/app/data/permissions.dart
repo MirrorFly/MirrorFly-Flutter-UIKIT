@@ -926,7 +926,7 @@ class AppPermission {
               padding: const EdgeInsets.symmetric(vertical: 35.0),
               decoration: dialogStyle.headerContainerDecoration,
               // color: buttonBgColor,
-              child: Center(child: SvgPicture.asset(icon,colorFilter: ColorFilter.mode(dialogStyle.iconColor, BlendMode.srcIn),)),
+              child: Center(child: SvgPicture.asset(icon,package: package,colorFilter: ColorFilter.mode(dialogStyle.iconColor, BlendMode.srcIn),)),
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -982,7 +982,7 @@ class AppPermission {
             Container(
               padding: const EdgeInsets.symmetric(vertical: 35.0),
               decoration: dialogStyle.headerContainerDecoration,
-              child: Center(child: SvgPicture.asset(icon,colorFilter: ColorFilter.mode(dialogStyle.iconColor, BlendMode.srcIn),)),
+              child: Center(child: SvgPicture.asset(icon,package: package,colorFilter: ColorFilter.mode(dialogStyle.iconColor, BlendMode.srcIn),)),
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),

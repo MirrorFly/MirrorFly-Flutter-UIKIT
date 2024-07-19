@@ -184,7 +184,7 @@ GroupCreationController createController({String? tag}) => Get.put(GroupCreation
                                         )
                                       : SvgPicture.asset(
                                           smileIcon,
-                                          width: 18,
+                                          package: package,width: 18,
                                           height: 18,
                                     colorFilter: ColorFilter.mode(AppStyleConfig.createGroupPageStyle.emojiColor, BlendMode.srcIn),
                                         ));

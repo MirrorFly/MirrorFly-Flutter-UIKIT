@@ -70,7 +70,7 @@ class _BusyStatusViewState extends State<BusyStatusView> {
                                 fontWeight: FontWeight.normal)),
                         trailing: SvgPicture.asset(
                           pencilEditIcon,
-                          fit: BoxFit.contain,
+                          package: package,fit: BoxFit.contain,
                         ),
                         onTap: () {
                           controller.addStatusController.text = controller.busyStatus.value;
@@ -125,7 +125,7 @@ class _BusyStatusViewState extends State<BusyStatusView> {
                             trailing: item.status == controller.busyStatus.value
                                 ? SvgPicture.asset(
                               tickIcon,
-                              fit: BoxFit.contain,
+                              package: package,fit: BoxFit.contain,
                             ) : const SizedBox(),
                             onTap: () {
                               controller.updateBusyStatus(

@@ -135,7 +135,7 @@ class CallLinkView extends StatelessWidget{
             const SizedBox(width: 8,),
             Expanded(child: Text(getTranslated("joinVideoCall"),style: callLinkViewStyle.textStyle,)),
             const SizedBox(width: 8,),
-            SvgPicture.asset(videoCamera,width: 18,colorFilter: ColorFilter.mode(callLinkViewStyle.iconColor, BlendMode.srcIn),)
+            SvgPicture.asset(videoCamera,package: package,width: 18,colorFilter: ColorFilter.mode(callLinkViewStyle.iconColor, BlendMode.srcIn),)
           ],
         ),
       ),

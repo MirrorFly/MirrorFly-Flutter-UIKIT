@@ -86,7 +86,7 @@ MediaPreviewController createController({String? tag}) => Get.put(MediaPreviewCo
                         onPressed: () {
                           controller.deleteMedia();
                         },
-                        icon: SvgPicture.asset(deleteBinWhite,colorFilter: ColorFilter.mode(AppStyleConfig.mediaSentPreviewPageStyle.appBarTheme.actionsIconTheme?.color ?? Colors.white, BlendMode.srcIn),))
+                        icon: SvgPicture.asset(deleteBinWhite,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.mediaSentPreviewPageStyle.appBarTheme.actionsIconTheme?.color ?? Colors.white, BlendMode.srcIn),))
                     : const Offstage();
               })
             ],
@@ -247,7 +247,7 @@ MediaPreviewController createController({String? tag}) => Get.put(MediaPreviewCo
                                                       NavUtils.back();
                                                     },
                                                     child: SvgPicture.asset(
-                                                        previewAddImg,colorFilter: ColorFilter.mode(AppStyleConfig.mediaSentPreviewPageStyle.iconColor, BlendMode.srcIn),),
+                                                        previewAddImg,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.mediaSentPreviewPageStyle.iconColor, BlendMode.srcIn),),
                                                   )
                                                 : const Offstage();
                                       }),
@@ -373,7 +373,7 @@ MediaPreviewController createController({String? tag}) => Get.put(MediaPreviewCo
                                                       left: 4,
                                                       child: SvgPicture.asset(
                                                         videoCamera,
-                                                        width: 5,
+                                                        package: package,width: 5,
                                                         height: 5,
                                                       )),
                                             ],

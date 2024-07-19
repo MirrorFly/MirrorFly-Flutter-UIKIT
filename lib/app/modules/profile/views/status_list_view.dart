@@ -53,7 +53,7 @@ StatusListController createController({String? tag}) => Get.put(StatusListContro
                           fontWeight: FontWeight.normal)),
                   trailing: SvgPicture.asset(
                     pencilEditIcon,
-                    fit: BoxFit.contain,
+                    package: package,fit: BoxFit.contain,
                   ),
                   onTap: () {
                     NavUtils.toNamed(Routes.addProfileStatus, arguments: {
@@ -98,7 +98,7 @@ StatusListController createController({String? tag}) => Get.put(StatusListContro
                                   item.status == controller.selectedStatus.value
                                       ? SvgPicture.asset(
                                           tickIcon,
-                                          fit: BoxFit.contain,
+                                          package: package,fit: BoxFit.contain,
                                         )
                                       : const SizedBox(),
                               onTap: () {

@@ -80,7 +80,7 @@ class VideoMessageView extends StatelessWidget {
                   children: [
                     SvgPicture.asset(
                       mVideoIcon,
-                      fit: BoxFit.contain,
+                      package: package,fit: BoxFit.contain,
                       colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
                     ),
                     const SizedBox(

@@ -54,8 +54,7 @@ class MessageUtils{
     switch (mediaType.toUpperCase()) {
       case Constants.mImage:
         return SvgPicture.asset(
-          mImageIcon,
-          fit: BoxFit.contain,
+          mImageIcon, package: package,fit: BoxFit.contain,
           colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
         );
       case Constants.mAudio:
@@ -68,7 +67,7 @@ class MessageUtils{
       case Constants.mVideo:
         return SvgPicture.asset(
           mVideoIcon,
-          fit: BoxFit.contain,
+          package: package,fit: BoxFit.contain,
           colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
         );
       case Constants.mDocument:
@@ -76,19 +75,19 @@ class MessageUtils{
       // Displays the same icon for both document and file types.
         return SvgPicture.asset(
           mDocumentIcon,
-          fit: BoxFit.contain,
+          package: package,fit: BoxFit.contain,
           colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
         );
       case Constants.mContact:
         return SvgPicture.asset(
           mContactIcon,
-          fit: BoxFit.contain,
+          package: package,fit: BoxFit.contain,
           colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
         );
       case Constants.mLocation:
         return SvgPicture.asset(
           mLocationIcon,
-          fit: BoxFit.contain,
+          package: package,fit: BoxFit.contain,
           colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
         );
       default:

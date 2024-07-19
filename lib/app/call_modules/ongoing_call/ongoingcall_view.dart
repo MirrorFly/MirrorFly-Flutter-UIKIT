@@ -109,7 +109,7 @@ CallController createController({String? tag}) => Get.put(CallController());
                                       controller.layoutSwitch.value) ...[
                                     CircleAvatar(
                                       backgroundColor: AppStyleConfig.ongoingCallPageStyle.pinnedCallUserTileStyle.muteActionStyle.activeBgColor,//AppColors.audioMutedIconBgColor,
-                                      child: SvgPicture.asset(callMutedIcon,colorFilter: ColorFilter.mode(AppStyleConfig.ongoingCallPageStyle.pinnedCallUserTileStyle.muteActionStyle.activeIconColor, BlendMode.srcIn),),
+                                      child: SvgPicture.asset(callMutedIcon,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.ongoingCallPageStyle.pinnedCallUserTileStyle.muteActionStyle.activeIconColor, BlendMode.srcIn),),
                                     )
                                   ],
                                 ],
@@ -262,7 +262,7 @@ CallController createController({String? tag}) => Get.put(CallController());
               onPressed: () {
                 controller.openParticipantScreen();
               },
-              icon: SvgPicture.asset(addUserCall,colorFilter: ColorFilter.mode(AppStyleConfig.ongoingCallPageStyle.actionIconColor, BlendMode.srcIn),),
+              icon: SvgPicture.asset(addUserCall,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.ongoingCallPageStyle.actionIconColor, BlendMode.srcIn),),
             ),
             IconButton(
               splashRadius: 24,
@@ -271,7 +271,7 @@ CallController createController({String? tag}) => Get.put(CallController());
               },
               icon: SvgPicture.asset(
                 gridIcon,
-                colorFilter: ColorFilter.mode(AppStyleConfig.ongoingCallPageStyle.actionIconColor, BlendMode.srcIn),
+                package: package,colorFilter: ColorFilter.mode(AppStyleConfig.ongoingCallPageStyle.actionIconColor, BlendMode.srcIn),
               ),
             )
           ],
@@ -294,7 +294,7 @@ CallController createController({String? tag}) => Get.put(CallController());
               padding: const EdgeInsets.all(10.0),
               child: SvgPicture.asset(
                 callOptionsUpArrow,
-                width: 30,
+                package: package,width: 30,
               ),
             ),
           ),
@@ -313,11 +313,11 @@ CallController createController({String? tag}) => Get.put(CallController());
                 child: controller.muted.value
                     ? SvgPicture.asset(
                         muteActive,
-                  colorFilter: ColorFilter.mode(style.activeIconColor, BlendMode.srcIn),
+                  package: package,colorFilter: ColorFilter.mode(style.activeIconColor, BlendMode.srcIn),
                       )
                     : SvgPicture.asset(
                         muteInactive,
-                  colorFilter: ColorFilter.mode(style.inactiveIconColor, BlendMode.srcIn),
+                  package: package,colorFilter: ColorFilter.mode(style.inactiveIconColor, BlendMode.srcIn),
                       ),
               ),
               SizedBox(width: rightSideWidth),
@@ -329,8 +329,8 @@ CallController createController({String? tag}) => Get.put(CallController());
                       backgroundColor: controller.cameraSwitch.value ? style.activeBgColor : style.inactiveBgColor,//Colors.white : Colors.white.withOpacity(0.3),
                       onPressed: () => controller.switchCamera(),
                       child: controller.cameraSwitch.value
-                          ? SvgPicture.asset(cameraSwitchActive,colorFilter: ColorFilter.mode(style.activeIconColor, BlendMode.srcIn),)
-                          : SvgPicture.asset(cameraSwitchInactive,colorFilter: ColorFilter.mode(style.inactiveIconColor, BlendMode.srcIn),),
+                          ? SvgPicture.asset(cameraSwitchActive,package: package,colorFilter: ColorFilter.mode(style.activeIconColor, BlendMode.srcIn),)
+                          : SvgPicture.asset(cameraSwitchInactive,package: package,colorFilter: ColorFilter.mode(style.inactiveIconColor, BlendMode.srcIn),),
                     ),
                 SizedBox(width: rightSideWidth)
               ],
@@ -341,8 +341,8 @@ CallController createController({String? tag}) => Get.put(CallController());
                 backgroundColor: controller.videoMuted.value ? style.activeBgColor : style.inactiveBgColor,//Colors.white : Colors.white.withOpacity(0.3),
                 onPressed: () => controller.videoMute(),
                 child: controller.videoMuted.value
-                    ? SvgPicture.asset(videoInactive,colorFilter: ColorFilter.mode(style.activeIconColor, BlendMode.srcIn),)
-                    : SvgPicture.asset(videoActive,colorFilter: ColorFilter.mode(style.inactiveIconColor, BlendMode.srcIn),),
+                    ? SvgPicture.asset(videoInactive,package: package,colorFilter: ColorFilter.mode(style.activeIconColor, BlendMode.srcIn),)
+                    : SvgPicture.asset(videoActive,package: package,colorFilter: ColorFilter.mode(style.inactiveIconColor, BlendMode.srcIn),),
               ),
               SizedBox(
                 width: rightSideWidth,
@@ -356,14 +356,14 @@ CallController createController({String? tag}) => Get.put(CallController());
                     : style.activeBgColor,//Colors.white,
                 onPressed: () => controller.changeSpeaker(),
                 child: controller.audioOutputType.value == AudioDeviceType.receiver
-                    ? SvgPicture.asset(speakerInactive,colorFilter: ColorFilter.mode(style.inactiveIconColor, BlendMode.srcIn),)
+                    ? SvgPicture.asset(speakerInactive,package: package,colorFilter: ColorFilter.mode(style.inactiveIconColor, BlendMode.srcIn),)
                     : controller.audioOutputType.value == AudioDeviceType.speaker
-                        ? SvgPicture.asset(speakerActive,colorFilter: ColorFilter.mode(style.activeIconColor, BlendMode.srcIn))
+                        ? SvgPicture.asset(speakerActive,package: package,colorFilter: ColorFilter.mode(style.activeIconColor, BlendMode.srcIn))
                         : controller.audioOutputType.value == AudioDeviceType.bluetooth
-                            ? SvgPicture.asset(speakerBluetooth,colorFilter: ColorFilter.mode(style.activeIconColor, BlendMode.srcIn))
+                            ? SvgPicture.asset(speakerBluetooth,package: package,colorFilter: ColorFilter.mode(style.activeIconColor, BlendMode.srcIn))
                             : controller.audioOutputType.value == AudioDeviceType.headset
-                                ? SvgPicture.asset(speakerHeadset,colorFilter: ColorFilter.mode(style.activeIconColor, BlendMode.srcIn))
-                                : SvgPicture.asset(speakerActive,colorFilter: ColorFilter.mode(style.activeIconColor, BlendMode.srcIn)),
+                                ? SvgPicture.asset(speakerHeadset,package: package,colorFilter: ColorFilter.mode(style.activeIconColor, BlendMode.srcIn))
+                                : SvgPicture.asset(speakerActive,package: package,colorFilter: ColorFilter.mode(style.activeIconColor, BlendMode.srcIn)),
               ),
             ],
           ),
@@ -376,7 +376,7 @@ CallController createController({String? tag}) => Get.put(CallController());
                 },
                 child: SvgPicture.asset(
                   callEndButton,
-                )),
+                package: package,)),
           ),
           // )
         ],

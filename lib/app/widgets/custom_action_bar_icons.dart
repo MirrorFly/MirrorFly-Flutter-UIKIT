@@ -120,7 +120,7 @@ class _CustomActionBarIconsState extends State<CustomActionBarIcons> with Widget
               data: widget.popupMenuThemeData,
               child: PopupMenuButton(
                 key: _menuKey,
-                icon: SvgPicture.asset(moreIcon, width: 3.66, height: 16.31,colorFilter:ColorFilter.mode(widget.popupMenuThemeData.iconColor ?? Colors.black, BlendMode.srcIn),),
+                icon: SvgPicture.asset(moreIcon, package: package,width: 3.66, height: 16.31,colorFilter:ColorFilter.mode(widget.popupMenuThemeData.iconColor ?? Colors.black, BlendMode.srcIn),),
                 onCanceled: (){
                   _context = null;
                   FocusManager.instance.primaryFocus!.unfocus();

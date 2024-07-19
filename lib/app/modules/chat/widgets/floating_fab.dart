@@ -94,7 +94,7 @@ class _FloatingFabState extends State<FloatingFab> {
         onPressed: widget.onFabTap,
         child: SvgPicture.asset(
           meetSchedule,
-          width: widget.fabTheme.iconSize,
+          package: package,width: widget.fabTheme.iconSize,
           colorFilter: ColorFilter.mode(widget.fabTheme.foregroundColor ?? Colors.white, BlendMode.srcIn),
         ),
       ),

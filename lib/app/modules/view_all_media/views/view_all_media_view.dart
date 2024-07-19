@@ -175,7 +175,7 @@ ViewAllMediaController createController({String? tag}) => Get.put(ViewAllMediaCo
         controller.imageFromBase64String(
             item.mediaChatMessage!.mediaThumbImage, null, null),
         Center(
-          child: SvgPicture.asset(videoWhite,colorFilter: ColorFilter.mode(mediaItemStyle.iconColor, BlendMode.srcIn),),
+          child: SvgPicture.asset(videoWhite,package: package,colorFilter: ColorFilter.mode(mediaItemStyle.iconColor, BlendMode.srcIn),),
         )
       ],
     );
@@ -265,7 +265,7 @@ ViewAllMediaController createController({String? tag}) => Get.put(ViewAllMediaCo
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: SvgPicture.asset(
                   assetName,
-                  width: 20,
+                  package: package,width: 20,
                   height: 20,
                 ),
               ),
@@ -347,7 +347,7 @@ ViewAllMediaController createController({String? tag}) => Get.put(ViewAllMediaCo
                               width: 70,
                               decoration: linkItemStyle.iconDecoration,
                               child: Center(
-                                child: SvgPicture.asset(linkImage,colorFilter: ColorFilter.mode(linkItemStyle.iconColor, BlendMode.srcIn),),
+                                child: SvgPicture.asset(linkImage,package: package,colorFilter: ColorFilter.mode(linkItemStyle.iconColor, BlendMode.srcIn),),
                               ),
                             ),
                       Expanded(

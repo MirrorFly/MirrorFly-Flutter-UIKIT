@@ -35,7 +35,7 @@ DeleteAccountController createController({String? tag}) => Get.put(DeleteAccount
                   children: [
                   SvgPicture.asset(
                     warningIcon,
-                  fit: BoxFit.contain,
+                  package: package,fit: BoxFit.contain,
                 ),
                     const SizedBox(width: 15),
                     Text(

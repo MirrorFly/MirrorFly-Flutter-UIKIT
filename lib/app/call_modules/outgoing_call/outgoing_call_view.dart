@@ -138,7 +138,7 @@ class OutGoingCallView extends NavViewStateful<OutgoingCallController> {
                               onPressed: () => controller.muteAudio(),
                               child: SvgPicture.asset(
                                 muteActive,
-                                colorFilter: ColorFilter.mode(AppStyleConfig.outgoingCallPageStyle.actionButtonsStyle.activeIconColor, BlendMode.srcIn),
+                                package: package,colorFilter: ColorFilter.mode(AppStyleConfig.outgoingCallPageStyle.actionButtonsStyle.activeIconColor, BlendMode.srcIn),
                               ),
                             )
                                 : FloatingActionButton(
@@ -149,7 +149,7 @@ class OutGoingCallView extends NavViewStateful<OutgoingCallController> {
                               onPressed: () => controller.muteAudio(),
                               child: SvgPicture.asset(
                                 muteInactive,
-                                colorFilter: ColorFilter.mode(AppStyleConfig.outgoingCallPageStyle.actionButtonsStyle.inactiveIconColor, BlendMode.srcIn),
+                                package: package,colorFilter: ColorFilter.mode(AppStyleConfig.outgoingCallPageStyle.actionButtonsStyle.inactiveIconColor, BlendMode.srcIn),
                               ),
                             ),
                             if(controller.callType.value == CallType.video && !controller.videoMuted.value)...[
@@ -161,8 +161,8 @@ class OutGoingCallView extends NavViewStateful<OutgoingCallController> {
                                 // backgroundColor: controller.cameraSwitch.value ? Colors.white : Colors.white.withOpacity(0.3),
                                 onPressed: () => controller.switchCamera(),
                                 child: controller.cameraSwitch.value
-                                    ? SvgPicture.asset(cameraSwitchActive,colorFilter: ColorFilter.mode(AppStyleConfig.outgoingCallPageStyle.actionButtonsStyle.activeIconColor, BlendMode.srcIn),)
-                                    : SvgPicture.asset(cameraSwitchInactive,colorFilter: ColorFilter.mode(AppStyleConfig.outgoingCallPageStyle.actionButtonsStyle.inactiveIconColor, BlendMode.srcIn),),
+                                    ? SvgPicture.asset(cameraSwitchActive,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.outgoingCallPageStyle.actionButtonsStyle.activeIconColor, BlendMode.srcIn),)
+                                    : SvgPicture.asset(cameraSwitchInactive,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.outgoingCallPageStyle.actionButtonsStyle.inactiveIconColor, BlendMode.srcIn),),
                               ),
                             ],
                             FloatingActionButton(
@@ -173,9 +173,9 @@ class OutGoingCallView extends NavViewStateful<OutgoingCallController> {
                               // backgroundColor: controller.videoMuted.value ? Colors.white : Colors.white.withOpacity(0.3),
                               onPressed: () => controller.videoMute(),
                               child: controller.videoMuted.value ?
-                              SvgPicture.asset(videoInactive,colorFilter: ColorFilter.mode(AppStyleConfig.outgoingCallPageStyle.actionButtonsStyle.activeIconColor, BlendMode.srcIn),)
+                              SvgPicture.asset(videoInactive,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.outgoingCallPageStyle.actionButtonsStyle.activeIconColor, BlendMode.srcIn),)
                                   : SvgPicture.asset(
-                                  videoActive,colorFilter: ColorFilter.mode(AppStyleConfig.outgoingCallPageStyle.actionButtonsStyle.inactiveIconColor, BlendMode.srcIn),),
+                                  videoActive,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.outgoingCallPageStyle.actionButtonsStyle.inactiveIconColor, BlendMode.srcIn),),
                             ),
                             FloatingActionButton(
                               shape: AppStyleConfig.outgoingCallPageStyle.actionButtonsStyle.shape,
@@ -187,14 +187,14 @@ class OutGoingCallView extends NavViewStateful<OutgoingCallController> {
                                   : AppStyleConfig.outgoingCallPageStyle.actionButtonsStyle.activeBgColor,//Colors.white,
                               onPressed: () => controller.changeSpeaker(),
                               child: controller.audioOutputType.value == AudioDeviceType.receiver
-                                  ? SvgPicture.asset(speakerInactive,colorFilter: ColorFilter.mode(AppStyleConfig.outgoingCallPageStyle.actionButtonsStyle.inactiveIconColor, BlendMode.srcIn),)
+                                  ? SvgPicture.asset(speakerInactive,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.outgoingCallPageStyle.actionButtonsStyle.inactiveIconColor, BlendMode.srcIn),)
                                   : controller.audioOutputType.value == AudioDeviceType.speaker
-                                  ? SvgPicture.asset(speakerActive,colorFilter: ColorFilter.mode(AppStyleConfig.outgoingCallPageStyle.actionButtonsStyle.activeIconColor, BlendMode.srcIn))
+                                  ? SvgPicture.asset(speakerActive,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.outgoingCallPageStyle.actionButtonsStyle.activeIconColor, BlendMode.srcIn))
                                   : controller.audioOutputType.value == AudioDeviceType.bluetooth
-                                  ? SvgPicture.asset(speakerBluetooth,colorFilter: ColorFilter.mode(AppStyleConfig.outgoingCallPageStyle.actionButtonsStyle.activeIconColor, BlendMode.srcIn))
+                                  ? SvgPicture.asset(speakerBluetooth,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.outgoingCallPageStyle.actionButtonsStyle.activeIconColor, BlendMode.srcIn))
                                   : controller.audioOutputType.value == AudioDeviceType.headset
-                                  ? SvgPicture.asset(speakerHeadset,colorFilter: ColorFilter.mode(AppStyleConfig.outgoingCallPageStyle.actionButtonsStyle.activeIconColor, BlendMode.srcIn))
-                                  : SvgPicture.asset(speakerActive,colorFilter: ColorFilter.mode(AppStyleConfig.outgoingCallPageStyle.actionButtonsStyle.activeIconColor, BlendMode.srcIn)),
+                                  ? SvgPicture.asset(speakerHeadset,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.outgoingCallPageStyle.actionButtonsStyle.activeIconColor, BlendMode.srcIn))
+                                  : SvgPicture.asset(speakerActive,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.outgoingCallPageStyle.actionButtonsStyle.activeIconColor, BlendMode.srcIn)),
                             ),
                           ],
                         ),
@@ -220,7 +220,7 @@ class OutGoingCallView extends NavViewStateful<OutgoingCallController> {
                           },
                           child: SvgPicture.asset(
                             callEndButton,
-                          )),*/
+                          package: package,)),*/
                     ),
                   ],
                 ),

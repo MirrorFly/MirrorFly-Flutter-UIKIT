@@ -124,7 +124,7 @@ CallTimeoutController createController({String? tag}) => Get.put(CallTimeoutCont
                                         onPressed: () {
                                           controller.cancelCallTimeout();
                                         },
-                                        child: SvgPicture.asset(callCancel,colorFilter: ColorFilter.mode(AppStyleConfig.callAgainPageStyle.cancelActionStyle.activeIconColor, BlendMode.srcIn),),
+                                        child: SvgPicture.asset(callCancel,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.callAgainPageStyle.cancelActionStyle.activeIconColor, BlendMode.srcIn),),
                                       ),
                                       const SizedBox(height: 13,),
                                       Text(getTranslated("cancel"),
@@ -148,7 +148,7 @@ CallTimeoutController createController({String? tag}) => Get.put(CallTimeoutCont
                                             controller.callAgain();
                                           },
                                           child: controller.callType.value == CallType.audio ?
-                                          SvgPicture.asset(audioCallAgain,colorFilter: ColorFilter.mode(AppStyleConfig.callAgainPageStyle.callAgainActionStyle.activeIconColor, BlendMode.srcIn),) : SvgPicture
+                                          SvgPicture.asset(audioCallAgain,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.callAgainPageStyle.callAgainActionStyle.activeIconColor, BlendMode.srcIn),) : SvgPicture
                                               .asset(videoCallAgain,colorFilter: ColorFilter.mode(AppStyleConfig.callAgainPageStyle.callAgainActionStyle.activeIconColor, BlendMode.srcIn)),
                                         );
                                       }),

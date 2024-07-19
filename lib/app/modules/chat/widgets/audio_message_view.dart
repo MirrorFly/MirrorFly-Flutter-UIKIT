@@ -195,9 +195,9 @@ class _AudioMessageViewState extends State<AudioMessageView>
                   backgroundColor: widget.audioMessageViewStyle.iconStyle.bgColor,
                   child: widget.chatMessage.mediaChatMessage!.isAudioRecorded
                       ? SvgPicture.asset(audioMic,
-                    colorFilter: ColorFilter.mode(widget.audioMessageViewStyle.iconStyle.iconColor, BlendMode.srcIn),height: 13,)
+                    package: package,colorFilter: ColorFilter.mode(widget.audioMessageViewStyle.iconStyle.iconColor, BlendMode.srcIn),height: 13,)
                     : SvgPicture.asset(musicIcon,
-                  colorFilter: ColorFilter.mode(widget.audioMessageViewStyle.iconStyle.iconColor, BlendMode.srcIn),)),
+                  package: package,colorFilter: ColorFilter.mode(widget.audioMessageViewStyle.iconStyle.iconColor, BlendMode.srcIn),)),
                 MediaMessageOverlay(chatMessage: widget.chatMessage, onAudio: () {
                     widget.onPlayAudio();
                     playAudio(widget.chatMessage,);
@@ -346,19 +346,19 @@ class _AudioMessageViewState extends State<AudioMessageView>
                   children: [
                     SvgPicture.asset(
                       audioMicBg,
-                      width: 28,
+                      package: package,width: 28,
                       height: 28,
                       fit: BoxFit.contain,
                     ),
                     SvgPicture.asset(
                       audioMic1,
-                      fit: BoxFit.contain,
+                      package: package,fit: BoxFit.contain,
                     ),
                   ],
                 )
                     : SvgPicture.asset(
                   musicIcon,
-                  fit: BoxFit.contain,
+                  package: package,fit: BoxFit.contain,
                 ),
                 const SizedBox(
                   width: 4,
@@ -398,11 +398,11 @@ class _AudioMessageViewState extends State<AudioMessageView>
                       child: isPlaying.value
                           ? SvgPicture.asset(
                         pauseIcon,
-                        height: 17,
+                        package: package,height: 17,
                       ) //const Icon(Icons.pause)
                           : SvgPicture.asset(
                         playIcon,
-                        height: 17,
+                        package: package,height: 17,
                       ),
                     ),
                   );

@@ -66,7 +66,7 @@ class LocalContactView extends NavViewStateful<LocalContactController> {
                 : IconButton(
               icon: SvgPicture.asset(
                 searchIcon,
-                width: 18,
+                package: package,width: 18,
                 height: 18,
                 fit: BoxFit.contain,
                 colorFilter: ColorFilter.mode(AppStyleConfig.localContactPageStyle.appBarTheme.actionsIconTheme
@@ -155,7 +155,7 @@ class LocalContactView extends NavViewStateful<LocalContactController> {
                             bottom: 2,
                             child: SvgPicture.asset(
                               closeContactIcon,
-                              width: 15,
+                              package: package,width: 15,
                             )),
                       ],
                     ),
@@ -209,7 +209,7 @@ class LocalContactView extends NavViewStateful<LocalContactController> {
                                     bottom: 0,
                                     child: SvgPicture.asset(
                                       contactSelectTick,
-                                      width: 12,
+                                      package: package,width: 12,
                                     )),
                               ),
                             ],

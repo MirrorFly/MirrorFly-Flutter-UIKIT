@@ -278,7 +278,7 @@ Widget buildListItem(CallController controller,CallUserTileStyle style) {
                             CircleAvatar(
                               radius: 10,
                               backgroundColor: style.muteActionStyle.activeBgColor,//AppColors.audioMutedIconBgColor,
-                              child: SvgPicture.asset(callMutedIcon,colorFilter: ColorFilter.mode(style.muteActionStyle.activeIconColor, BlendMode.srcIn),),
+                              child: SvgPicture.asset(callMutedIcon,package: package,colorFilter: ColorFilter.mode(style.muteActionStyle.activeIconColor, BlendMode.srcIn),),
                             ),
                           ],
                           if (controller.speakingUsers.isNotEmpty &&
@@ -408,7 +408,7 @@ Widget buildGridItem(CallController controller,CallUserTileStyle style) {
                       CircleAvatar(
                         radius: 10,
                         backgroundColor: style.muteActionStyle.activeBgColor,//AppColors.audioMutedIconBgColor,
-                        child: SvgPicture.asset(callMutedIcon,colorFilter: ColorFilter.mode(style.muteActionStyle.activeIconColor, BlendMode.srcIn),),
+                        child: SvgPicture.asset(callMutedIcon,package: package,colorFilter: ColorFilter.mode(style.muteActionStyle.activeIconColor, BlendMode.srcIn),),
                       ),
                     ],
                     if (controller.speakingUsers.isNotEmpty &&

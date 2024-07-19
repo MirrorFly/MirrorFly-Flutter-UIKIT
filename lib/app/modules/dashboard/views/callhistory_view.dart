@@ -402,7 +402,7 @@ class CallHistoryView extends StatelessWidget {
       },
       icon: SvgPicture.asset(
         videoCallIcon,
-        colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+        package: package,colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
       ),
     )
         : IconButton(
@@ -417,7 +417,7 @@ class CallHistoryView extends StatelessWidget {
         },
         icon: SvgPicture.asset(
           audioCallIcon,
-          colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+          package: package,colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
         ));
   }
 }

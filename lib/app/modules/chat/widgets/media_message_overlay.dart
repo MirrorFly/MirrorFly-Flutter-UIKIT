@@ -195,7 +195,7 @@ Widget uploadView(String messageType,DownloadUploadViewStyle downloadUploadViewS
         padding: const EdgeInsets.all(7),
         child: SvgPicture.asset(
           uploadIcon,
-          colorFilter: ColorFilter.mode(downloadUploadViewStyle.iconStyle.iconColor, BlendMode.srcIn),
+          package: package,colorFilter: ColorFilter.mode(downloadUploadViewStyle.iconStyle.iconColor, BlendMode.srcIn),
         ))
         : Container(
         height: 35,
@@ -209,7 +209,7 @@ Widget uploadView(String messageType,DownloadUploadViewStyle downloadUploadViewS
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset(uploadIcon,colorFilter: ColorFilter.mode(downloadUploadViewStyle.iconStyle.iconColor, BlendMode.srcIn)),
+            SvgPicture.asset(uploadIcon,package: package,colorFilter: ColorFilter.mode(downloadUploadViewStyle.iconStyle.iconColor, BlendMode.srcIn)),
             const SizedBox(
               width: 5,
             ),
@@ -238,7 +238,7 @@ Widget downloadView(int mediaFileSize, String messageType,DownloadUploadViewStyl
         padding: const EdgeInsets.all(7),
         child: SvgPicture.asset(
           downloadIcon,
-          colorFilter: ColorFilter.mode(downloadUploadViewStyle.iconStyle.iconColor, BlendMode.srcIn)
+          package: package,colorFilter: ColorFilter.mode(downloadUploadViewStyle.iconStyle.iconColor, BlendMode.srcIn)
         ))
         : Container(
         height: 31,
@@ -255,7 +255,7 @@ Widget downloadView(int mediaFileSize, String messageType,DownloadUploadViewStyl
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset(downloadIcon,colorFilter: ColorFilter.mode(downloadUploadViewStyle.iconStyle.iconColor, BlendMode.srcIn)),
+            SvgPicture.asset(downloadIcon,package: package,colorFilter: ColorFilter.mode(downloadUploadViewStyle.iconStyle.iconColor, BlendMode.srcIn)),
             const SizedBox(
               width: 5,
             ),
@@ -302,7 +302,7 @@ downloadingOrUploadingView(String messageType, int progress,DownloadUploadViewSt
               children: [
                 SvgPicture.asset(
                   downloading,
-                  fit: BoxFit.contain,
+                  package: package,fit: BoxFit.contain,
                   colorFilter: ColorFilter.mode(downloadUploadViewStyle.iconStyle.iconColor, BlendMode.srcIn),
                   // colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
                 ),
@@ -341,7 +341,7 @@ downloadingOrUploadingView(String messageType, int progress,DownloadUploadViewSt
             children: [
               SvgPicture.asset(
                 downloading,
-                fit: BoxFit.contain,
+                package: package,fit: BoxFit.contain,
                 colorFilter: ColorFilter.mode(downloadUploadViewStyle.iconStyle.iconColor, BlendMode.srcIn),
               ),
               Align(

@@ -81,7 +81,7 @@ class NameChangeView extends NavView<GroupInfoController> {
                                     ? const Icon(
                                   Icons.keyboard, color: iconColor,)
                                     : SvgPicture.asset(
-                                  smileIcon, width: 18, height: 18,));
+                                  smileIcon, package: package,width: 18, height: 18,));
                           })
                         ],
                       ),

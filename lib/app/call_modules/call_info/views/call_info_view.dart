@@ -233,7 +233,7 @@ CallInfoController createController({String? tag}) => Get.put(CallInfoController
             },
             icon: SvgPicture.asset(
               videoCallIcon,
-              colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+              package: package,colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
             ),
           )
         : IconButton(
@@ -242,7 +242,7 @@ CallInfoController createController({String? tag}) => Get.put(CallInfoController
             },
             icon: SvgPicture.asset(
               audioCallIcon,
-              colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+              package: package,colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
             ));
   }
 

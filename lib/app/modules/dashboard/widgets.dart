@@ -268,7 +268,7 @@ class RecentChatItem extends StatelessWidget {
           ),
         ) /*SvgPicture.asset(
                                       archive,
-                                      width: 18,
+                                      package: package,width: 18,
                                       height: 18,
                                     )*/
         );
@@ -279,7 +279,7 @@ class RecentChatItem extends StatelessWidget {
         visible: !archiveEnabled && item.isMuted! && !isForwardMessage,
         child: SvgPicture.asset(
           mute,
-          width: 13,
+          package: package,width: 13,
           height: 13,
         ));
   }
@@ -289,7 +289,7 @@ class RecentChatItem extends StatelessWidget {
         visible: !item.isChatArchived! && item.isChatPinned! && !isForwardMessage,
         child: SvgPicture.asset(
           pin,
-          width: 18,
+          package: package,width: 18,
           height: 18,
         ));
   }

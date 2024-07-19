@@ -108,6 +108,7 @@ const String addParticipantsInCall = 'assets/calls/add_user_in_call.svg';
 
 
 //Assets
+const String package = 'mirrorfly_uikit_plugin/lib';
 const String mirrorflySmall = 'assets/logos/ic_notification_small.png';
 const String registerIcon = 'assets/logos/register_logo.svg';
 const String statusIcon = 'assets/logos/status.svg';
@@ -869,7 +870,7 @@ Widget forMessageTypeIcon(String messageType,[MediaChatMessage? mediaChatMessage
     case Constants.mImage:
       return SvgPicture.asset(
         mImageIcon,
-        fit: BoxFit.contain,
+        package: package,fit: BoxFit.contain,
       );
     case Constants.mAudio:
       return SvgPicture.asset(
@@ -880,27 +881,27 @@ Widget forMessageTypeIcon(String messageType,[MediaChatMessage? mediaChatMessage
     case Constants.mVideo:
       return SvgPicture.asset(
         mVideoIcon,
-        fit: BoxFit.contain,
+        package: package,fit: BoxFit.contain,
       );
     case Constants.mDocument:
       return SvgPicture.asset(
         mDocumentIcon,
-        fit: BoxFit.contain,
+        package: package,fit: BoxFit.contain,
       );
     case Constants.mFile:
       return SvgPicture.asset(
         mDocumentIcon,
-        fit: BoxFit.contain,
+        package: package,fit: BoxFit.contain,
       );
     case Constants.mContact:
       return SvgPicture.asset(
         mContactIcon,
-        fit: BoxFit.contain,
+        package: package,fit: BoxFit.contain,
       );
     case Constants.mLocation:
       return SvgPicture.asset(
         mLocationIcon,
-        fit: BoxFit.contain,
+        package: package,fit: BoxFit.contain,
       );
     default:
       return const SizedBox();

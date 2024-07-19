@@ -74,7 +74,7 @@ class MeetSheetView extends NavViewStateful<MeetLinkController> {
                   },
                   icon: SvgPicture.asset(
                       copyIcon,
-                      fit: BoxFit.contain,
+                      package: package,fit: BoxFit.contain,
                       colorFilter: ColorFilter.mode(
                           meetBottomSheetStyle.copyIconColor, BlendMode.srcIn)
                   ),

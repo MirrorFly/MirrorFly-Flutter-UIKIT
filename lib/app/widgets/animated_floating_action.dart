@@ -137,7 +137,7 @@ class AnimatedFloatingActionState extends State<AnimatedFloatingAction>
            widget.videoCallOnPressed();
          },backgroundColor:widget.backgroundColor,child: SvgPicture.asset(
            videoCallSmallIcon,
-           width: 18,
+           package: package,width: 18,
            height: 18,
            colorFilter: ColorFilter.mode(widget.foregroundColor ?? Colors.white, BlendMode.srcIn),
            fit: BoxFit.contain,
@@ -154,7 +154,7 @@ class AnimatedFloatingActionState extends State<AnimatedFloatingAction>
            widget.audioCallOnPressed();
          },backgroundColor:widget.backgroundColor,child: SvgPicture.asset(
            audioCallSmallIcon,
-           width: 18,
+           package: package,width: 18,
            height: 18,
            colorFilter: ColorFilter.mode(widget.foregroundColor ?? Colors.white, BlendMode.srcIn),
            fit: BoxFit.contain,
