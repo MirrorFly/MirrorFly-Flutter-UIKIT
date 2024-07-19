@@ -19,7 +19,7 @@ class MirrorflyUikit {
   bool showMobileNumberOnList = true;
   bool showStatusOption = true;
   bool enableLocalNotification = true;
-  String googleMapKey = '';
+  // String googleMapKey = '';
   static bool isSDKInitialized = false;
   static String theme = "light";
 
@@ -36,9 +36,7 @@ class MirrorflyUikit {
 
   ///Used as a initUIKIT class for [MirrorflyUikit]
   /// * [licenseKey] provide the License Key
-  /// * [googleMapKey] provide the googleMap Key for location messages
   /// * [iOSContainerID] provide the App Group of the iOS Project
-  /// * [showMobileNumberOnList] to show mobile on contact list
   /// * [storageFolderName] provide the Local Storage Folder Name
   /// * [chatHistoryEnable]: Flag indicating whether chat history should be enabled. Defaults to true.
   /// * [enableMobileNumberLogin]: Flag indicating whether mobile number login should be enabled. Defaults to false.
@@ -47,7 +45,7 @@ class MirrorflyUikit {
   Future<Map> initUIKIT(
       {required GlobalKey<NavigatorState> navigatorKey,
         required String licenseKey,
-        String? googleMapKey,
+        // String? googleMapKey,
         required String iOSContainerID,
         String storageFolderName = "Mirrorfly",
         // bool showMobileNumberOnList = true,
@@ -61,7 +59,7 @@ class MirrorflyUikit {
     // this.showMobileNumberOnList = showMobileNumberOnList;
     // this.showStatusOption = showStatusOption;
     this.enableLocalNotification = enableLocalNotification;
-    this.googleMapKey = googleMapKey ?? '';
+    // this.googleMapKey = googleMapKey ?? '';
     globalNavigatorKey = navigatorKey;
 
     Mirrorfly.initializeSDK(
