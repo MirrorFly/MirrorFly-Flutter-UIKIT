@@ -24,7 +24,7 @@ Widget buildProfileImage(ProfileDetails item, {double size = 105}) {
         ? ClipOval(
       child: Image.asset(
         groupImg,
-        height: size,
+        package: package,height: size,
         width: size,
         fit: BoxFit.cover,
       ),

@@ -88,7 +88,7 @@ GroupCreationController createController({String? tag}) => Get.put(GroupCreation
                                             height: AppStyleConfig.createGroupPageStyle.profileImageSize.height,
                                             clipOval: true,
                                             errorWidget: ClipOval(
-                                              child: Image.asset(groupImg, width: AppStyleConfig.createGroupPageStyle.profileImageSize.width, height: AppStyleConfig.createGroupPageStyle.profileImageSize.height, fit: BoxFit.cover),
+                                              child: Image.asset(groupImg, package: package,width: AppStyleConfig.createGroupPageStyle.profileImageSize.width, height: AppStyleConfig.createGroupPageStyle.profileImageSize.height, fit: BoxFit.cover),
                                             ),
                                             isGroup: true,
                                             blocked: false,

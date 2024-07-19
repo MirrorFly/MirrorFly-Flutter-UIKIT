@@ -57,7 +57,7 @@ MediaPreviewController createController({String? tag}) => Get.put(MediaPreviewCo
                         ? ClipOval(
                             child: Image.asset(
                               groupImg,
-                              width: AppStyleConfig.mediaSentPreviewPageStyle.chatUserAppBarStyle.profileImageSize.width,
+                              package: package,width: AppStyleConfig.mediaSentPreviewPageStyle.chatUserAppBarStyle.profileImageSize.width,
                               height: AppStyleConfig.mediaSentPreviewPageStyle.chatUserAppBarStyle.profileImageSize.height,
                               fit: BoxFit.cover,
                             ),

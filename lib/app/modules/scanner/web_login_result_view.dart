@@ -25,7 +25,7 @@ ScannerController createController({String? tag}) => Get.put(ScannerController()
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image.asset(icQrScannerWebLogin, fit: BoxFit.cover,),
+            Image.asset(icQrScannerWebLogin, package: package,fit: BoxFit.cover,),
             FutureBuilder(
                 future: controller.getWebLoginDetails(),
                 builder: (c, data) {

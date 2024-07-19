@@ -131,7 +131,7 @@ class CallLinkView extends StatelessWidget{
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Image.asset(mirrorflySmall,width: 24,),
+            Image.asset(mirrorflySmall,package: package,width: 24,),
             const SizedBox(width: 8,),
             Expanded(child: Text(getTranslated("joinVideoCall"),style: callLinkViewStyle.textStyle,)),
             const SizedBox(width: 8,),

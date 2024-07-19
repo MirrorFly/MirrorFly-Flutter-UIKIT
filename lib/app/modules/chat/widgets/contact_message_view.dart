@@ -44,7 +44,7 @@ class ContactMessageView extends StatelessWidget {
               children: [
                 Image.asset(
                   profileImage,
-                  width: contactMessageViewStyle.profileImageSize.width,//35,
+                  package: package,width: contactMessageViewStyle.profileImageSize.width,//35,
                   height: contactMessageViewStyle.profileImageSize.height,//35
                 ),
                 const SizedBox(

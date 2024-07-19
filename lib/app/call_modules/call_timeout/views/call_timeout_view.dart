@@ -83,7 +83,7 @@ CallTimeoutController createController({String? tag}) => Get.put(CallTimeoutCont
                       /*ClipOval(
                         child: Image.asset(
                           groupImg,
-                          height: 100,
+                          package: package,height: 100,
                           width: 100,
                           fit: BoxFit.cover,
                         ),

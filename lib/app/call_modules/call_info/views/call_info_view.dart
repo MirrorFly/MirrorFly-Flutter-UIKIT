@@ -72,7 +72,7 @@ CallInfoController createController({String? tag}) => Get.put(CallInfoController
                             ? ClipOval(
                                 child: Image.asset(
                                   groupImg,
-                                  height: AppStyleConfig.callInfoPageStyle.callHistoryItemStyle.profileImageSize.height,
+                                  package: package,height: AppStyleConfig.callInfoPageStyle.callHistoryItemStyle.profileImageSize.height,
                                   width: AppStyleConfig.callInfoPageStyle.callHistoryItemStyle.profileImageSize.width,
                                   fit: BoxFit.cover,
                                 ),
@@ -89,7 +89,7 @@ CallInfoController createController({String? tag}) => Get.put(CallInfoController
                                           errorWidget: ClipOval(
                                             child: Image.asset(
                                               groupImg,
-                                              height: AppStyleConfig.callInfoPageStyle.callHistoryItemStyle.profileImageSize.height,
+                                              package: package,height: AppStyleConfig.callInfoPageStyle.callHistoryItemStyle.profileImageSize.height,
                                               width: AppStyleConfig.callInfoPageStyle.callHistoryItemStyle.profileImageSize.width,
                                               fit: BoxFit.cover,
                                             ),
@@ -101,7 +101,7 @@ CallInfoController createController({String? tag}) => Get.put(CallInfoController
                                       : ClipOval(
                                           child: Image.asset(
                                             groupImg,
-                                            height: AppStyleConfig.callInfoPageStyle.callHistoryItemStyle.profileImageSize.height,
+                                            package: package,height: AppStyleConfig.callInfoPageStyle.callHistoryItemStyle.profileImageSize.height,
                                             width: AppStyleConfig.callInfoPageStyle.callHistoryItemStyle.profileImageSize.width,
                                             fit: BoxFit.cover,
                                           ),

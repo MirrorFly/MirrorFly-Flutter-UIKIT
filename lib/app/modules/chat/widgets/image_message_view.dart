@@ -67,7 +67,7 @@ class _ImageMessageViewState extends State<ImageMessageView> {
                           ),
                           Stack(
                             children: [
-                              // Image.asset(cornerShadow,width: 40,height: 20,fit: BoxFit.fitHeight,),
+                              // Image.asset(cornerShadow,package: package,width: 40,height: 20,fit: BoxFit.fitHeight,),
                               Text(
                                 getChatTime(context, widget.chatMessage.messageSentTime.toInt()),
                                 style: widget.imageMessageViewStyle.timeTextStyle,

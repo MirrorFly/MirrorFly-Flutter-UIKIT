@@ -460,7 +460,7 @@ class RecentChatView extends StatelessWidget {
         children: [
           Image.asset(
             noChatIcon,
-            width: 200,
+            package: package,width: 200,
           ),
           Text(
             getTranslated("noNewMessages"),

@@ -230,7 +230,7 @@ class CallHistoryView extends StatelessWidget {
                     ? ClipOval(
                   child: Image.asset(
                     groupImg,
-                    width: callHistoryItemStyle.profileImageSize.width,
+                    package: package,width: callHistoryItemStyle.profileImageSize.width,
                     height: callHistoryItemStyle.profileImageSize.height,
                     fit: BoxFit.cover,
                   ),
@@ -247,7 +247,7 @@ class CallHistoryView extends StatelessWidget {
                         errorWidget: ClipOval(
                           child: Image.asset(
                             groupImg,
-                            width: callHistoryItemStyle.profileImageSize.width,
+                            package: package,width: callHistoryItemStyle.profileImageSize.width,
                             height: callHistoryItemStyle.profileImageSize
                                 .height,
                             fit: BoxFit.cover,
@@ -260,7 +260,7 @@ class CallHistoryView extends StatelessWidget {
                           : ClipOval(
                         child: Image.asset(
                           groupImg,
-                          width: callHistoryItemStyle.profileImageSize.width,
+                          package: package,width: callHistoryItemStyle.profileImageSize.width,
                           height: callHistoryItemStyle.profileImageSize.height,
                           fit: BoxFit.cover,
                         ),
@@ -354,7 +354,7 @@ class CallHistoryView extends StatelessWidget {
         children: [
           Image.asset(
             noCallImage,
-            width: 150,
+            package: package,width: 150,
           ),
           Text(
             getTranslated("noCallLogsFound"),

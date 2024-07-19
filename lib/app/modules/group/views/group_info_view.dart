@@ -119,7 +119,7 @@ GroupInfoController createController({String? tag}) => Get.put(GroupInfoControll
                               clipOval: false,
                               errorWidget: Image.asset(
                                 groupImg,
-                                height: NavUtils.height * 0.45,
+                                package: package,height: NavUtils.height * 0.45,
                                 width: NavUtils.size.width,
                                 fit: BoxFit.fill,
                               ),

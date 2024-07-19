@@ -144,7 +144,7 @@ class ChatView extends NavViewStateful<ChatController> {
                                   IconButton(
                                     icon: Image.asset(
                                       redirectLastMessage,
-                                      width: 32,
+                                      package: package,width: 32,
                                       height: 32,
                                     ),
                                     onPressed: () {
@@ -597,7 +597,7 @@ class ChatView extends NavViewStateful<ChatController> {
                     ? ClipOval(
                         child: Image.asset(
                           groupImg,
-                          width: AppStyleConfig.chatPageStyle.chatUserAppBarStyle.profileImageSize.width,//35,
+                          package: package,width: AppStyleConfig.chatPageStyle.chatUserAppBarStyle.profileImageSize.width,//35,
                           height: AppStyleConfig.chatPageStyle.chatUserAppBarStyle.profileImageSize.height,//35,
                           fit: BoxFit.cover,
                         ),

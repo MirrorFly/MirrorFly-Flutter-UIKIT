@@ -220,7 +220,7 @@ class RecentChatItem extends StatelessWidget {
           ? ClipOval(
               child: Image.asset(
                 groupImg,
-                height: profileImageSize.width,
+                package: package,height: profileImageSize.width,
                 width: profileImageSize.height,
                 fit: BoxFit.cover,
               ),

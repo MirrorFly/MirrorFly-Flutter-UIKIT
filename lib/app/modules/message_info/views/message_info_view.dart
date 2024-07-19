@@ -216,7 +216,7 @@ MessageInfoController createController({String? tag}) => Get.put(MessageInfoCont
         children: [
           Image.asset(
             noChatIcon,
-            width: 200,
+            package: package,width: 200,
           ),
           Padding(
             padding: const EdgeInsets.all(10.0),

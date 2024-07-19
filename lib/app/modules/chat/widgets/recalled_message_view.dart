@@ -29,7 +29,7 @@ class RecalledMessageView extends StatelessWidget {
               children: [
                 Image.asset(
                   disabledIcon,
-                  width: 15,
+                  package: package,width: 15,
                   height: 15,
                 ),
                 const SizedBox(width: 10),

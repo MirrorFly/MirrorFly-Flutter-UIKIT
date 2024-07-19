@@ -396,7 +396,7 @@ void showQuickProfilePopup(
                             errorWidget: profile.value.isGroupProfile!
                                 ? Image.asset(
                                     groupImg,
-                                    height: 250,
+                                    package: package,height: 250,
                                     width: NavUtils.width * 0.72,
                                     fit: BoxFit.cover,
                                   )
