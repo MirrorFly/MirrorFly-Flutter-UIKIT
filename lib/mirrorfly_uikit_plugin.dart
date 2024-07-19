@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_plugin/flychat.dart';
 import 'package:mirrorfly_plugin/logmessage.dart';
+import 'package:mirrorfly_plugin/mirrorflychat.dart';
 import 'package:mirrorfly_plugin/model/callback.dart';
 import 'package:mirrorfly_plugin/model/register_model.dart';
 import 'package:mirrorfly_uikit_plugin/app/extensions/extensions.dart';
@@ -144,9 +145,13 @@ class MirrorflyUikit {
   ///
   ///* [userIdentifier] provide the Unique Id to Register the User
   ///* [fcmToken] provide the FCM token this is an optional
+  /// and specify whether to forcefully register the user if not already registered with [isForceRegister].to specify the app user type use [userType].
+  /// The [identifierMetaData] parameter is optional and represents additional metadata associated with the User.
   ///sample response {'status': true, 'message': 'Login Success};
   static Future<Map> login(
-      {required String userIdentifier, String fcmToken = ""}) async {
+      {required String userIdentifier, String fcmToken = "",String userType = "d",
+        bool isForceRegister = true,
+        List<IdentifierMetaData>? identifierMetaData,}) async {
     Completer<Map<String, dynamic>> completer = Completer();
     if (!isSDKInitialized) {
       completer.complete(setResponse(false, 'SDK Not Initialized'));
@@ -154,6 +159,9 @@ class MirrorflyUikit {
     Mirrorfly.login(
         userIdentifier: userIdentifier.removeAllWhitespace,
         fcmToken: fcmToken,
+        userType: userType,
+        isForceRegister: isForceRegister,
+        identifierMetaData: identifierMetaData,
         flyCallback: (FlyResponse response) async {
           if (response.isSuccess) {
             if (response.hasData) {

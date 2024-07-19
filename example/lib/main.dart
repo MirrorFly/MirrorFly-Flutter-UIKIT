@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_localizations.dart';
+import 'package:mirrorfly_uikit_plugin/app/model/arguments.dart';
 import 'package:mirrorfly_uikit_plugin/app/routes/mirrorfly_navigation_observer.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 
@@ -30,6 +31,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        navigatorKey: navigatorKey,
         themeMode: ThemeMode.dark,
         debugShowCheckedModeBanner: false,
         locale: AppLocalizations.defaultLocale,
@@ -118,11 +120,14 @@ class _DashboardState extends State<Dashboard> {
               Center(
                 child: buildTextButton(
                   onPressed: () async {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (con) => const DashboardView()));
-                  },
+                    Future.delayed(const Duration(seconds: 1),(){
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (con) => const DashboardView(),settings: const RouteSettings(name: 'DashboardView',arguments: DashboardViewArguments(didMissedCallNotificationLaunchApp: false))));
+
+                    });
+                    },
                   text: 'chat page',
                 ),
               ),
