@@ -138,7 +138,7 @@ class ProfileController extends GetxController {
                         // Mirrorfly.isTrailLicence().then((trail){
                         if (!Constants.enableContactSync) {
                           NavUtils.offNamed(Routes.dashboard,
-                              arguments: DashboardViewArguments());
+                              arguments: const DashboardViewArguments());
                         } else {
                           NavUtils.offNamed(Routes.contactSync);
                         }
