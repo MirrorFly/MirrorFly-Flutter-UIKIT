@@ -140,7 +140,7 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   Future<void> onInit() async {
     // arguments = NavUtils.arguments as ChatViewArguments;
     // buildContext = context;
-    showChatDeliveryIndicator = arguments!.showChatDeliveryIndicator;
+    showChatDeliveryIndicator = arguments?.showChatDeliveryIndicator ?? true;
 
     getAvailableFeatures();
 
@@ -568,10 +568,10 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     // getChatHistory();
     Mirrorfly.initializeMessageList(
       userJid: profile.jid.checkNull(),
-      limit: 10,
+      limit: 20,
       topicId: topicId,
       messageId: starredChatMessageId,
-      exclude: false/*starredChatMessageId == null*/,
+      exclude: true/*starredChatMessageId == null*/,
       ascendingOrder: starredChatMessageId != null,
     ) //message
         .then((value) {
@@ -2871,6 +2871,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   void loadLastMessages(ChatMessageModel chatMessageModel) async {
     if (await Mirrorfly.hasNextMessages()) {
       _loadNextMessages(showLoading: false);
+    }else{
+      debugPrint("Next message is not found");
     }
   }
 

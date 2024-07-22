@@ -139,7 +139,19 @@ final navigatorKey = GlobalKey<NavigatorState>();
 
 ### New Method:
 
+You can now add inline styles and themes for the UI pages in the UIKIT plugin. The `AppStyleConfig` class is used to set the styles for the UIKIT pages.
 
+### To set the Dashboard page style:
+```dart
+AppStyleConfig.setDashboardStyle(const DashBoardPageStyle(tabItemStyle: TabItemStyle(textStyle: TextStyle(fontStyle: FontStyle.italic))));
+```
+
+### To set the Chat page style:
+```dart
+AppStyleConfig.setChatPageStyle(const ChatPageStyle(messageTypingAreaStyle: MessageTypingAreaStyle(sentIconColor: Colors.blue)));
+```
+
+> **Info** The above code sample sets the style for the Dashboard and Chat pages. You can add more styles and customizations in the same method using different styling parameters
 
 ### Step 3: Registration
 
@@ -199,6 +211,48 @@ import mirrorfly_plugin
         MirrorFlyNotification().handleNotification(notificationRequest: request, contentHandler: contentHandler, containerID: "containerID", licenseKey: "Your License Key")
         
     }
+```
+
+### Step 5: Locale Support
+
+The UIKit Plugin supports multiple languages. You can set the locale for the plugin as shown below:
+
+```dart
+ MaterialApp(
+    navigatorKey: navigatorKey,
+    themeMode: ThemeMode.dark,
+    debugShowCheckedModeBanner: false,
+    /// CHANGE THE LOCALE TO 'en' TO SEE THE LOCALIZATION IN ENGLISH, 'ar' FOR ARABIC, 'hi' FOR HINDI
+    locale: const Locale('en'),
+    /// ADD THE SUPPORTED LOCALES TO THE APP
+    supportedLocales: AppLocalizations.supportedLocales,
+    localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+    ],
+    /// ADD THE NAVIGATION OBSERVER TO THE APP, TO HANDLE THE NAVIGATION EVENTS
+    navigatorObservers: [
+      MirrorFlyNavigationObserver()
+    ],
+    /// ADD THE ROUTE GENERATOR TO THE APP, TO HANDLE THE ROUTES
+    onGenerateRoute: (settings) {
+    switch (settings.name) {
+        default:
+          return mirrorFlyRoute(settings);
+        }
+    },
+    theme: ThemeData(textTheme: GoogleFonts.latoTextTheme()),
+    home: YOUR_HOME_PAGE);
+```
+
+### Step 6: To Add Your Locale Support
+
+To add your locale support, you can add the locale file in the `assets/locale` folder. The locale file should be named as `en.json` for English, `ar.json` for Arabic, and so on and add it to the supported locales in the `AppLocalizations` class.
+
+```dart
+AppLocalizations.addSupportedLocales(const Locale("ar","UAE"));
 ```
 
 ## Getting Help

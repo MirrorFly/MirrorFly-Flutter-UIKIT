@@ -9,7 +9,7 @@ import '../../../common/app_localizations.dart';
 import '../../../common/widgets.dart';
 import '../../../data/helper.dart';
 import '../../../extensions/extensions.dart';
-import '../../../modules/chat/widgets/floating_fab.dart';
+// import '../../../modules/chat/widgets/floating_fab.dart';
 import 'package:mirrorfly_plugin/logmessage.dart';
 
 import '../../../call_modules/ripple_animation_view.dart';
@@ -115,14 +115,14 @@ class ChatView extends NavViewStateful<ChatController> {
                                 }
                               );
                         }),
-                        FloatingFab(
-                          fabTheme: AppStyleConfig.chatPageStyle.instantScheduleMeetStyle.meetFabStyle,
-                          parentWidgetWidth: controller.screenWidth,
-                          parentWidgetHeight: controller.screenHeight,
-                          onFabTap: (){
-                            controller.showMeetBottomSheet(AppStyleConfig.chatPageStyle.instantScheduleMeetStyle.meetBottomSheetStyle);
-                          },
-                        ),
+                        // FloatingFab(
+                        //   fabTheme: AppStyleConfig.chatPageStyle.instantScheduleMeetStyle.meetFabStyle,
+                        //   parentWidgetWidth: controller.screenWidth,
+                        //   parentWidgetHeight: controller.screenHeight,
+                        //   onFabTap: (){
+                        //     controller.showMeetBottomSheet(AppStyleConfig.chatPageStyle.instantScheduleMeetStyle.meetBottomSheetStyle);
+                        //   },
+                        // ),
                         Obx(() {
                           return Visibility(
                             visible: controller.showHideRedirectToLatest.value,

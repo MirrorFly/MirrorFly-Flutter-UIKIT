@@ -212,36 +212,36 @@ AddParticipantsController createController({String? tag}) => Get.put(AddParticip
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0,left: 10.0,bottom: 5.0),
-            child: Text(getTranslated("meetLink"),style: copyMeetLinkStyle.titleTextStyle,),
-          ),
-          Row(
-            children: [
-              Container(
-                width: 50,
-                height: 50,
-                margin: const EdgeInsets.all(10.0),
-                decoration: copyMeetLinkStyle.leadingStyle.iconDecoration,
-                child: Center(child: Icon(Icons.link,color: copyMeetLinkStyle.leadingStyle.iconColor,size: 18,),),
-              ),
-              Expanded(child: Text(controller.meetLink.value,style: copyMeetLinkStyle.linkTextStyle,)),
-              IconButton(
-                onPressed: () {
-                  if (controller.meetLink.value.isEmpty) return;
-                  Clipboard.setData(
-                      ClipboardData(text: Constants.webChatLogin + controller.meetLink.value));
-                  toToast(getTranslated("linkCopied"));
-                },
-                icon: SvgPicture.asset(
-                    copyIcon,
-                    package: package,fit: BoxFit.contain,
-                    colorFilter: ColorFilter.mode(
-                        copyMeetLinkStyle.copyIconColor, BlendMode.srcIn)
-                ),
-              ),
-            ],
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(top: 10.0,left: 10.0,bottom: 5.0),
+          //   child: Text(getTranslated("meetLink"),style: copyMeetLinkStyle.titleTextStyle,),
+          // ),
+          // Row(
+          //   children: [
+          //     Container(
+          //       width: 50,
+          //       height: 50,
+          //       margin: const EdgeInsets.all(10.0),
+          //       decoration: copyMeetLinkStyle.leadingStyle.iconDecoration,
+          //       child: Center(child: Icon(Icons.link,color: copyMeetLinkStyle.leadingStyle.iconColor,size: 18,),),
+          //     ),
+          //     Expanded(child: Text(controller.meetLink.value,style: copyMeetLinkStyle.linkTextStyle,)),
+          //     IconButton(
+          //       onPressed: () {
+          //         if (controller.meetLink.value.isEmpty) return;
+          //         Clipboard.setData(
+          //             ClipboardData(text: Constants.webChatLogin + controller.meetLink.value));
+          //         toToast(getTranslated("linkCopied"));
+          //       },
+          //       icon: SvgPicture.asset(
+          //           copyIcon,
+          //           package: package,fit: BoxFit.contain,
+          //           colorFilter: ColorFilter.mode(
+          //               copyMeetLinkStyle.copyIconColor, BlendMode.srcIn)
+          //       ),
+          //     ),
+          //   ],
+          // ),
           const AppDivider(),
           Expanded(
             child: Stack(

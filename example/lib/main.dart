@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mirrorfly_uikit_plugin/app/app_style_config.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_localizations.dart';
 import 'package:mirrorfly_uikit_plugin/app/model/arguments.dart';
 import 'package:mirrorfly_uikit_plugin/app/routes/mirrorfly_navigation_observer.dart';
 import 'package:mirrorfly_uikit_plugin/app/routes/route_settings.dart';
+import 'package:mirrorfly_uikit_plugin/app/stylesheet/stylesheet.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -13,9 +15,12 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   MirrorflyUikit.instance.initUIKIT(
     navigatorKey: navigatorKey,
-    licenseKey: 'ckIjaccWBoMNvxdbql8LJ2dmKqT5bp',
+    licenseKey: 'LICENSE_KEY',
     iOSContainerID: 'group.com.mirrorfly.flutter', );
+
+  /// Use this method to add the locale you want to support in the UIKIT Plugin.
   AppLocalizations.addSupportedLocales(const Locale("hi","IN"));
+
   runApp(const MyApp());
 }
 
@@ -37,7 +42,9 @@ class _MyAppState extends State<MyApp> {
         navigatorKey: navigatorKey,
         themeMode: ThemeMode.dark,
         debugShowCheckedModeBanner: false,
+        /// CHANGE THE LOCALE TO 'en' TO SEE THE LOCALIZATION IN ENGLISH, 'ar' FOR ARABIC, 'hi' FOR HINDI
         locale: const Locale('en'),
+        /// ADD THE SUPPORTED LOCALES TO THE APP
         supportedLocales: AppLocalizations.supportedLocales,
         localizationsDelegates: const [
           AppLocalizations.delegate,
@@ -45,9 +52,11 @@ class _MyAppState extends State<MyApp> {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
+        /// ADD THE NAVIGATION OBSERVER TO THE APP, TO HANDLE THE NAVIGATION EVENTS
         navigatorObservers: [
           MirrorFlyNavigationObserver()
         ],
+        /// ADD THE ROUTE GENERATOR TO THE APP, TO HANDLE THE ROUTES
         onGenerateRoute: (settings) {
           switch (settings.name) {
             default:

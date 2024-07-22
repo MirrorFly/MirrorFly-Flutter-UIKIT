@@ -58,7 +58,7 @@ dependencies:
   tuple: ^2.0.2
   otp_text_field: ^1.1.3
   fading_edge_scrollview: ^4.1.1
-  mirrorfly_plugin: ^1.0.5
+  mirrorfly_plugin: ^1.0.6
 #  mirrorfly_plugin:
 #    path: ../p078-mirrorfly-flutter-plugin
 

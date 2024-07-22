@@ -35,38 +35,38 @@ class CallHistoryView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          color: Theme
-              .of(context)
-              .scaffoldBackgroundColor,
-          child: InkWell(
-            onTap: () {
-              controller.showMeetBottomSheet(meetBottomSheetStyle);
-            },
-            child: Row(
-              children: [
-                Container(
-                  width: 50,
-                  height: 50,
-                  margin: const EdgeInsets.all(10.0),
-                  decoration: createMeetLinkStyle.iconDecoration,
-                  child: Center(child: Icon(
-                    Icons.link, color: createMeetLinkStyle.iconColor,
-                    size: 18,),),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(getTranslated("createNewMeeting"),
-                      style: createMeetLinkStyle.textStyle,),
-                    Text(getTranslated("createNewMeetingSubtitle"),
-                      style: createMeetLinkStyle.subTitleTextStyle,)
-                  ],
-                )
-              ],
-            ),
-          ),
-        ),
+        // Container(
+        //   color: Theme
+        //       .of(context)
+        //       .scaffoldBackgroundColor,
+        //   child: InkWell(
+        //     onTap: () {
+        //       controller.showMeetBottomSheet(meetBottomSheetStyle);
+        //     },
+        //     child: Row(
+        //       children: [
+        //         Container(
+        //           width: 50,
+        //           height: 50,
+        //           margin: const EdgeInsets.all(10.0),
+        //           decoration: createMeetLinkStyle.iconDecoration,
+        //           child: Center(child: Icon(
+        //             Icons.link, color: createMeetLinkStyle.iconColor,
+        //             size: 18,),),
+        //         ),
+                // Column(
+                //   crossAxisAlignment: CrossAxisAlignment.start,
+                //   children: [
+                //     Text(getTranslated("createNewMeeting"),
+                //       style: createMeetLinkStyle.textStyle,),
+                //     Text(getTranslated("createNewMeetingSubtitle"),
+                //       style: createMeetLinkStyle.subTitleTextStyle,)
+                //   ],
+                // )
+        //       ],
+        //     ),
+        //   ),
+        // ),
         Obx(() {
           return controller.callLogList.isEmpty ? const Offstage() : Container(
               color: Theme
