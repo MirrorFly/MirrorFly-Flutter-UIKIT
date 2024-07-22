@@ -96,7 +96,7 @@ Goto Project -> Target -> Signing & Capabilities -> Click `+ Capability` at the 
 
 ```yaml
 dependencies:
-  mirrorfly_uikit_plugin: ^0.0.12
+  mirrorfly_uikit_plugin: ^2.0.0
 ```
 
 - Run `flutter pub get` command in your project directory.
@@ -120,12 +120,14 @@ Here are the steps to integrate the Mirrorfly UIkit Plugin:
 To initialize the plugin, place the below code in your `main.dart` file inside `main` function before `runApp()`.
 
 ```dart
+final navigatorKey = GlobalKey<NavigatorState>();
  void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  MirrorflyUikit.instance.initUIKIT(  baseUrl: 'YOUR_BASE_URL',
+  MirrorflyUikit.instance.initUIKIT(
       licenseKey: 'Your_Mirrorfly_Licence_Key',
       googleMapKey: 'Your_Google_Map_Key_for_location_messages',
       iOSContainerID: 'Your_iOS_app_Container_id',
+      navigatorKey: navigatorKey,
       enableLocalNotification: true);
   runApp(const MyApp());
 }
@@ -133,9 +135,11 @@ To initialize the plugin, place the below code in your `main.dart` file inside `
 
 ### Step 2: Add Configuration json file
 
-create `mirrorfly_config.json` json file with configuration details then add the json file into under your `assets` folder(`assets/mirrorfly_config.json`).
+**Notice:** The previous method of placing the `mirrorfly_config.json` file under the `assets` folder (`assets/mirrorfly_config.json`) has been removed. The configuration file setup has been moved to a new method.
 
-> **Info** Download config json file from [Flutter UIKit docs](https://www.mirrorfly.com/docs/UIKit/flutter/quick-start/)
+### New Method:
+
+
 
 ### Step 3: Registration
 
