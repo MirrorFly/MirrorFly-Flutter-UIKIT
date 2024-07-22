@@ -69,16 +69,34 @@ Installing the Mirrorfly UIKit Plugin is a simple process. Follow the steps ment
 
 ```dart
 post_install do |installer|
-  installer.pods_project.targets.each do |target|
-    flutter_additional_ios_build_settings(target)
-    target.build_configurations.each do |config|
-      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.1'
-      config.build_settings['ENABLE_BITCODE'] = 'NO'
-      config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'No'
-      config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
-      config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"      
-     end
-  end
+    installer.aggregate_targets.each do |target|
+        target.xcconfigs.each do |variant, xcconfig|
+        xcconfig_path = target.client_root + target.xcconfig_relative_path(variant)
+        IO.write(xcconfig_path, IO.read(xcconfig_path).gsub("DT_TOOLCHAIN_DIR", "TOOLCHAIN_DIR"))
+        end
+    end
+    
+    installer.pods_project.targets.each do |target|
+        flutter_additional_ios_build_settings(target)
+        target.build_configurations.each do |config|
+            config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.1'
+            config.build_settings['ENABLE_BITCODE'] = 'NO'
+            config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'No'
+            config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
+            config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = 'arm64'
+            
+                shell_script_path = "Pods/Target Support Files/#{target.name}/#{target.name}-frameworks.sh"
+                if File::exist?(shell_script_path)
+                    shell_script_input_lines = File.readlines(shell_script_path)
+                    shell_script_output_lines = shell_script_input_lines.map { |line| line.sub("source=\"$(readlink \"${source}\")\"", "source=\"$(readlink -f \"${source}\")\"") }
+                    File.open(shell_script_path, 'w') do |f|
+                        shell_script_output_lines.each do |line|
+                          f.write line
+                        end
+                    end
+                end
+            end
+    end
 end
 ```
  - Now, enable all the below mentioned capabilities into your project from `Xcode`.
