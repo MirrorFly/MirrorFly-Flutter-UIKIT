@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import '../../../common/app_localizations.dart';
 import '../../../data/helper.dart';
@@ -12,11 +11,16 @@ import '../controllers/starred_messages_controller.dart';
 
 class StarredMessageHeader extends StatelessWidget {
   const StarredMessageHeader(
-      {Key? key, required this.chatList, required this.isTapEnabled, required this.controller,this.style = const StarredMessageUserHeaderStyle()})
+      {Key? key,
+      required this.chatList,
+      required this.isTapEnabled,
+      required this.controller,
+      this.style = const StarredMessageUserHeaderStyle()})
       : super(key: key);
   final ChatMessageModel chatList;
   final bool isTapEnabled;
-  final StarredMessagesController controller;// = StarredMessagesController().get();
+  final StarredMessagesController
+      controller; // = StarredMessagesController().get();
   final StarredMessageUserHeaderStyle style;
   @override
   Widget build(BuildContext context) {
@@ -74,9 +78,10 @@ class StarredMessageHeader extends StatelessWidget {
                               color: Colors.black,
                               size: 14,
                             )),
-                        Text(getTranslated("you"),
-                            style: style.profileNameStyle,
-                            // style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)
+                        Text(
+                          getTranslated("you"),
+                          style: style.profileNameStyle,
+                          // style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)
                         ),
                         const SizedBox(
                           width: 10,
@@ -102,7 +107,9 @@ class StarredMessageHeader extends StatelessWidget {
                       children: [
                         Flexible(
                           child: Text(
-                        userProfile.isGroupProfile.checkNull() ? chatList.senderNickName : userProfile.name.checkNull(),
+                            userProfile.isGroupProfile.checkNull()
+                                ? chatList.senderNickName
+                                : userProfile.name.checkNull(),
                             style: style.profileNameStyle,
                             // style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                             maxLines: 1,
@@ -133,10 +140,11 @@ class StarredMessageHeader extends StatelessWidget {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               )
-                            : Text(getTranslated("you"),
+                            : Text(
+                                getTranslated("you"),
                                 style: style.profileNameStyle,
                                 // style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)
-                        ),
+                              ),
                         const SizedBox(
                           width: 10,
                         ),
@@ -172,18 +180,20 @@ class StarredMessageHeader extends StatelessWidget {
           text: userProfile.name.checkNull().isEmpty
               ? userProfile.mobileNumber.checkNull()
               : userProfile.name.checkNull(),
-          radius: style.profileImageSize.width/2,
+          radius: style.profileImageSize.width / 2,
         ),
         isGroup: userProfile.isGroupProfile.checkNull(),
-        blocked: userProfile.isBlockedMe.checkNull() || userProfile.isAdminBlocked.checkNull(),
-        unknown: (!userProfile.isItSavedContact.checkNull() || userProfile.isDeletedContact()),
+        blocked: userProfile.isBlockedMe.checkNull() ||
+            userProfile.isAdminBlocked.checkNull(),
+        unknown: (!userProfile.isItSavedContact.checkNull() ||
+            userProfile.isDeletedContact()),
       );
     } else {
       return ProfileTextImage(
         text: userProfile.name.checkNull().isEmpty
             ? userProfile.mobileNumber.checkNull()
             : userProfile.name.checkNull(),
-        radius: style.profileImageSize.width/2,
+        radius: style.profileImageSize.width / 2,
       );
     }
   }

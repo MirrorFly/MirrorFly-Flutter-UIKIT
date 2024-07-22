@@ -33,8 +33,7 @@ part 'location_sent_page_style.dart';
 part 'media_sent_preview_page_style.dart';
 part 'join_call_preview_page_style.dart';
 
-class AppStyle{
-
+class AppStyle {
   final LoginPageStyle? loginPageStyle;
   final ProfileViewStyle? profileViewStyle;
   final DashBoardPageStyle? dashBoardPageStyle;
@@ -55,8 +54,8 @@ class AppStyle{
   final AddParticipantsPageStyle? addParticipantsPageStyle;
   final DialogStyle? dialogStyle;
 
-  AppStyle({
-      this.loginPageStyle,
+  AppStyle(
+      {this.loginPageStyle,
       this.profileViewStyle,
       this.dashBoardPageStyle,
       this.archivedChatsPageStyle,
@@ -74,10 +73,9 @@ class AppStyle{
       this.callAgainPageStyle,
       this.ongoingCallPageStyle,
       this.addParticipantsPageStyle,
-      this.dialogStyle
-  });
+      this.dialogStyle});
 }
 
-class AppColor{
+class AppColor {
   static const primaryColor = Color(0xff3276E2);
 }

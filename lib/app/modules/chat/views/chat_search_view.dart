@@ -33,7 +33,8 @@ class ChatSearchView extends StatelessWidget {
         }
       },
       child: Theme(
-        data: Theme.of(context).copyWith(appBarTheme: AppStyleConfig.chatPageStyle.appBarTheme),
+        data: Theme.of(context)
+            .copyWith(appBarTheme: AppStyleConfig.chatPageStyle.appBarTheme),
         child: Scaffold(
           appBar: AppBar(
             automaticallyImplyLeading: true,
@@ -42,11 +43,13 @@ class ChatSearchView extends StatelessWidget {
               controller: controller.searchedText,
               focusNode: controller.searchfocusNode,
               autofocus: true,
-              style: AppStyleConfig.chatPageStyle.searchTextFieldStyle.editTextStyle,
+              style: AppStyleConfig
+                  .chatPageStyle.searchTextFieldStyle.editTextStyle,
               decoration: InputDecoration(
-                  hintText: getTranslated("searchPlaceholder"), border: InputBorder.none,
-                hintStyle: AppStyleConfig.chatPageStyle.searchTextFieldStyle.editTextHintStyle
-              ),
+                  hintText: getTranslated("searchPlaceholder"),
+                  border: InputBorder.none,
+                  hintStyle: AppStyleConfig
+                      .chatPageStyle.searchTextFieldStyle.editTextHintStyle),
               onSubmitted: (str) {
                 if (controller.filteredPosition.isNotEmpty) {
                   controller.scrollUp();
@@ -70,17 +73,31 @@ class ChatSearchView extends StatelessWidget {
           ),
           body: Obx(() => controller.chatList.isEmpty
               ? const Offstage()
-              : chatListView(controller.chatList,senderChatStyle: AppStyleConfig.chatPageStyle.senderChatBubbleStyle,receiverChatStyle: AppStyleConfig.chatPageStyle.receiverChatBubbleStyle,chatSelectedColor: AppStyleConfig.chatPageStyle.chatSelectionBgColor,notificationMessageViewStyle: AppStyleConfig.chatPageStyle.notificationMessageViewStyle)),
+              : chatListView(controller.chatList,
+                  senderChatStyle:
+                      AppStyleConfig.chatPageStyle.senderChatBubbleStyle,
+                  receiverChatStyle:
+                      AppStyleConfig.chatPageStyle.receiverChatBubbleStyle,
+                  chatSelectedColor:
+                      AppStyleConfig.chatPageStyle.chatSelectionBgColor,
+                  notificationMessageViewStyle: AppStyleConfig
+                      .chatPageStyle.notificationMessageViewStyle)),
         ),
       ),
     );
   }
 
-  Widget chatListView(List<ChatMessageModel> chatList,{required SenderChatBubbleStyle senderChatStyle,required ReceiverChatBubbleStyle receiverChatStyle, required Color chatSelectedColor,required NotificationMessageViewStyle notificationMessageViewStyle}) {
+  Widget chatListView(List<ChatMessageModel> chatList,
+      {required SenderChatBubbleStyle senderChatStyle,
+      required ReceiverChatBubbleStyle receiverChatStyle,
+      required Color chatSelectedColor,
+      required NotificationMessageViewStyle notificationMessageViewStyle}) {
     return ScrollablePositionedList.separated(
       separatorBuilder: (context, index) {
         var string = AppUtils.groupedDateMessage(index, chatList); //Date Labels
-        return string != null ? NotificationMessageView(chatMessage: string) : const Offstage();
+        return string != null
+            ? NotificationMessageView(chatMessage: string)
+            : const Offstage();
       },
       itemCount: chatList.length,
       itemScrollController: controller.searchScrollController,
@@ -91,46 +108,75 @@ class ChatSearchView extends StatelessWidget {
           children: [
             Obx(() {
               // LogMessage.d("ScrollablePositionedList inside AutomaticKeepAlive", "build $index");
-              return controller.showLoadingPrevious.value && index == chatList.length - 1
+              return controller.showLoadingPrevious.value &&
+                      index == chatList.length - 1
                   ? const Center(child: CircularProgressIndicator())
                   : const Offstage();
             }),
             (chatList[index].messageType.toUpperCase() !=
                     Constants.mNotification)
                 ? Container(
-              key: ValueKey(chatList[index].messageId),
-              color: chatList[index].isSelected.value ? chatSelectedColor : Colors.transparent,
-              margin: const EdgeInsets.only(left: 14, right: 14, top: 5, bottom: 10),
-              child: Align(
-                alignment: (chatList[index].isMessageSentByMe ? Alignment.bottomRight : Alignment.bottomLeft),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Visibility(
-                      visible: chatList[index].isMessageSentByMe && controller.forwardMessageVisibility(chatList[index]),
-                      child: IconButton(
-                          onPressed: () {
-                            controller.forwardSingleMessage(chatList[index].messageId);
-                          },
-                          icon: SvgPicture.asset(forwardMedia, package: package)),
-                    ),
-                    Container(
-                      constraints: BoxConstraints(maxWidth: NavUtils.width * 0.75),
-                      decoration: chatList[index].isMessageSentByMe ? senderChatStyle.decoration : receiverChatStyle.decoration,
+                    key: ValueKey(chatList[index].messageId),
+                    color: chatList[index].isSelected.value
+                        ? chatSelectedColor
+                        : Colors.transparent,
+                    margin: const EdgeInsets.only(
+                        left: 14, right: 14, top: 5, bottom: 10),
+                    child: Align(
+                      alignment: (chatList[index].isMessageSentByMe
+                          ? Alignment.bottomRight
+                          : Alignment.bottomLeft),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Visibility(
+                            visible: chatList[index].isMessageSentByMe &&
+                                controller
+                                    .forwardMessageVisibility(chatList[index]),
+                            child: IconButton(
+                                onPressed: () {
+                                  controller.forwardSingleMessage(
+                                      chatList[index].messageId);
+                                },
+                                icon: SvgPicture.asset(forwardMedia,
+                                    package: package)),
+                          ),
+                          Container(
+                            constraints:
+                                BoxConstraints(maxWidth: NavUtils.width * 0.75),
+                            decoration: chatList[index].isMessageSentByMe
+                                ? senderChatStyle.decoration
+                                : receiverChatStyle.decoration,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                if (controller.profile.isGroupProfile.checkNull()) ...[
+                                if (controller.profile.isGroupProfile
+                                    .checkNull()) ...[
                                   SenderHeader(
-                                    isGroupProfile: controller.profile.isGroupProfile,
+                                    isGroupProfile:
+                                        controller.profile.isGroupProfile,
                                     chatList: chatList,
-                                    index: index,textStyle: receiverChatStyle.participantNameTextStyle,),
+                                    index: index,
+                                    textStyle: receiverChatStyle
+                                        .participantNameTextStyle,
+                                  ),
                                 ],
                                 chatList[index].isThisAReplyMessage
-                                    ? chatList[index].replyParentChatMessage == null
-                                    ? messageNotAvailableWidget(chatList[index])
-                                    : ReplyMessageHeader(chatMessage: chatList[index],replyHeaderMessageViewStyle: chatList[index].isMessageSentByMe ? senderChatStyle.replyHeaderMessageViewStyle : receiverChatStyle.replyHeaderMessageViewStyle,)
+                                    ? chatList[index].replyParentChatMessage ==
+                                            null
+                                        ? messageNotAvailableWidget(
+                                            chatList[index])
+                                        : ReplyMessageHeader(
+                                            chatMessage: chatList[index],
+                                            replyHeaderMessageViewStyle: chatList[
+                                                        index]
+                                                    .isMessageSentByMe
+                                                ? senderChatStyle
+                                                    .replyHeaderMessageViewStyle
+                                                : receiverChatStyle
+                                                    .replyHeaderMessageViewStyle,
+                                          )
                                     : const Offstage(),
                                 MessageContent(
                                   chatList: chatList,
@@ -139,23 +185,25 @@ class ChatSearchView extends StatelessWidget {
                                   onPlayAudio: () {
                                     // controller.playAudio(chatList[index]);
                                   },
-                                  onSeekbarChange:(value){
-
-                                  },
+                                  onSeekbarChange: (value) {},
                                   senderChatBubbleStyle: senderChatStyle,
                                   receiverChatBubbleStyle: receiverChatStyle,
-                                  notificationMessageViewStyle: notificationMessageViewStyle,)
+                                  notificationMessageViewStyle:
+                                      notificationMessageViewStyle,
+                                )
                               ],
                             ),
                           ),
-                    if (!chatList[index].isMessageSentByMe &&
-                        controller.forwardMessageVisibility(chatList[index])) ...[
-                      IconButton(
-                          onPressed: () {
-                            controller.forwardSingleMessage(chatList[index].messageId);
-                          },
-                          icon: SvgPicture.asset(forwardMedia))
-                    ],
+                          if (!chatList[index].isMessageSentByMe &&
+                              controller.forwardMessageVisibility(
+                                  chatList[index])) ...[
+                            IconButton(
+                                onPressed: () {
+                                  controller.forwardSingleMessage(
+                                      chatList[index].messageId);
+                                },
+                                icon: SvgPicture.asset(forwardMedia))
+                          ],
                         ],
                       ),
                     ),
@@ -165,8 +213,8 @@ class ChatSearchView extends StatelessWidget {
             Obx(() {
               return controller.showLoadingNext.value && index == 0
                   ? const Center(
-                child: CircularProgressIndicator(),
-              )
+                      child: CircularProgressIndicator(),
+                    )
                   : const Offstage();
             }),
           ],

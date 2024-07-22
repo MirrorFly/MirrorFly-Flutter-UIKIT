@@ -6,7 +6,11 @@ import '../../../common/constants.dart';
 
 class FloatingFab extends StatefulWidget {
   const FloatingFab(
-      {super.key, required this.parentWidgetHeight, required this.parentWidgetWidth, required this.onFabTap, required this.fabTheme});
+      {super.key,
+      required this.parentWidgetHeight,
+      required this.parentWidgetWidth,
+      required this.onFabTap,
+      required this.fabTheme});
 
   final RxDouble parentWidgetHeight;
   final RxDouble parentWidgetWidth;
@@ -19,8 +23,8 @@ class FloatingFab extends StatefulWidget {
 
 class _FloatingFabState extends State<FloatingFab> {
   Rx<Offset> position = const Offset(10, 15).obs;
-  Rx<Offset> startPosition = const Offset(0, 0)
-      .obs; // Initial position when dragging starts
+  Rx<Offset> startPosition =
+      const Offset(0, 0).obs; // Initial position when dragging starts
   RxBool isDragging = false.obs;
   late double screenHeight;
 
@@ -28,14 +32,15 @@ class _FloatingFabState extends State<FloatingFab> {
   Widget build(BuildContext context) {
     return Obx(() {
       return AnimatedPositioned(
-        duration: isDragging.value ? Duration.zero : const Duration(milliseconds: 250),
+        duration: isDragging.value
+            ? Duration.zero
+            : const Duration(milliseconds: 250),
         right: position.value.dx,
         bottom: position.value.dy,
         child: GestureDetector(
           onPanStart: (details) {
             isDragging(true);
             // startPosition = position;
-
           },
           onPanUpdate: (details) {
             if (!isDragging.value) return;
@@ -64,10 +69,10 @@ class _FloatingFabState extends State<FloatingFab> {
     debugPrint("screenHeight ${widget.parentWidgetHeight}");
 
     // Calculate the new position based on drag offset
-    double newX = newOffset.dx.clamp(
-        0.0, widget.parentWidgetWidth.value - fabWidth);
-    double newY = newOffset.dy.clamp(
-        0.0, widget.parentWidgetHeight.value - fabHeight - 16);
+    double newX =
+        newOffset.dx.clamp(0.0, widget.parentWidgetWidth.value - fabWidth);
+    double newY = newOffset.dy
+        .clamp(0.0, widget.parentWidgetHeight.value - fabHeight - 16);
 
     // Snap to the closest side (left or right)
     if (newX < widget.parentWidgetWidth.value / 2) {
@@ -94,8 +99,10 @@ class _FloatingFabState extends State<FloatingFab> {
         onPressed: widget.onFabTap,
         child: SvgPicture.asset(
           meetSchedule,
-          package: package,width: widget.fabTheme.iconSize,
-          colorFilter: ColorFilter.mode(widget.fabTheme.foregroundColor ?? Colors.white, BlendMode.srcIn),
+          package: package,
+          width: widget.fabTheme.iconSize,
+          colorFilter: ColorFilter.mode(
+              widget.fabTheme.foregroundColor ?? Colors.white, BlendMode.srcIn),
         ),
       ),
     );

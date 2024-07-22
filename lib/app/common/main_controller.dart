@@ -16,7 +16,8 @@ import 'package:permission_handler/permission_handler.dart';
 import '../data/utils.dart';
 import '../routes/route_settings.dart';
 
-class MainController extends FullLifeCycleController with BaseController, FullLifeCycleMixin /*with FullLifeCycleMixin */ {
+class MainController extends FullLifeCycleController
+    with BaseController, FullLifeCycleMixin /*with FullLifeCycleMixin */ {
   var currentAuthToken = "".obs;
   var googleMapKey = "";
   Rx<String> mediaEndpoint = "".obs;
@@ -42,7 +43,10 @@ class MainController extends FullLifeCycleController with BaseController, FullLi
         NavUtils.toNamed(Routes.onGoingCallView);
       }
     });*/
-    Mirrorfly.getValueFromManifestOrInfoPlist(androidManifestKey: "com.google.android.geo.API_THUMP_KEY", iOSPlistKey: "API_THUMP_KEY").then((value) {
+    Mirrorfly.getValueFromManifestOrInfoPlist(
+            androidManifestKey: "com.google.android.geo.API_THUMP_KEY",
+            iOSPlistKey: "API_THUMP_KEY")
+        .then((value) {
       googleMapKey = value;
       LogMessage.d("com.google.android.geo.API_THUMP_KEY", googleMapKey);
     });
@@ -60,8 +64,6 @@ class MainController extends FullLifeCycleController with BaseController, FullLi
 
     unreadMissedCallCount();
   }
-
-
 
   getMediaEndpoint() async {
     await Mirrorfly.mediaEndPoint().then((value) {
@@ -102,7 +104,8 @@ class MainController extends FullLifeCycleController with BaseController, FullLi
   handleAdminBlockedUserFromRegister() {}
 
   void startNetworkListen() {
-    final InternetConnectionChecker customInstance = InternetConnectionChecker.createInstance(
+    final InternetConnectionChecker customInstance =
+        InternetConnectionChecker.createInstance(
       checkTimeout: const Duration(seconds: 1),
       checkInterval: const Duration(seconds: 1),
     );
@@ -145,8 +148,10 @@ class MainController extends FullLifeCycleController with BaseController, FullLi
   void onPaused() async {
     hasPaused = true;
     LogMessage.d('LifeCycle', 'onPaused');
-    var unReadMessageCount = await Mirrorfly.getUnreadMessageCountExceptMutedChat();
-    debugPrint('mainController unReadMessageCount onPaused ${unReadMessageCount.toString()}');
+    var unReadMessageCount =
+        await Mirrorfly.getUnreadMessageCountExceptMutedChat();
+    debugPrint(
+        'mainController unReadMessageCount onPaused ${unReadMessageCount.toString()}');
     // fromLockScreen = await isLockScreen() ?? false;
     LogMessage.d('isLockScreen', '$fromLockScreen');
     SessionManagement.setAppSessionNow();
@@ -157,7 +162,7 @@ class MainController extends FullLifeCycleController with BaseController, FullLi
     LogMessage.d('LifeCycle', 'onResumed');
     // NotificationBuilder.cancelNotifications();
     checkShouldShowPin();
-    if(hasPaused) {
+    if (hasPaused) {
       hasPaused = false;
       if (Constants.enableContactSync) {
         syncContacts();
@@ -167,21 +172,24 @@ class MainController extends FullLifeCycleController with BaseController, FullLi
   }
 
   void syncContacts() async {
-    if(await Permission.contacts.isGranted) {
+    if (await Permission.contacts.isGranted) {
       if (await AppUtils.isNetConnected() &&
           !await Mirrorfly.contactSyncStateValue()) {
         final permission = await Permission.contacts.status;
         if (permission == PermissionStatus.granted) {
-          if(SessionManagement.getLogin()) {
-            Mirrorfly.syncContacts(isFirstTime: !SessionManagement.isInitialContactSyncDone(), flyCallBack: (_) {});
+          if (SessionManagement.getLogin()) {
+            Mirrorfly.syncContacts(
+                isFirstTime: !SessionManagement.isInitialContactSyncDone(),
+                flyCallBack: (_) {});
           }
         }
       }
-    }else{
-      if(SessionManagement.isInitialContactSyncDone()) {
+    } else {
+      if (SessionManagement.isInitialContactSyncDone()) {
         Mirrorfly.revokeContactSync(flyCallBack: (FlyResponse response) {
           onContactSyncComplete(true);
-          LogMessage.d("checkContactPermission isSuccess", response.isSuccess.toString());
+          LogMessage.d("checkContactPermission isSuccess",
+              response.isSuccess.toString());
         });
       }
     }
@@ -201,11 +209,14 @@ class MainController extends FullLifeCycleController with BaseController, FullLi
   void checkShouldShowPin() {
     var lastSession = SessionManagement.appLastSession();
     var lastPinChangedAt = SessionManagement.lastPinChangedAt();
-    var sessionDifference = DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(lastSession,isUtc: true));
-    var lockSessionDifference = DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(lastPinChangedAt,isUtc: true));
+    var sessionDifference = DateTime.now().difference(
+        DateTime.fromMillisecondsSinceEpoch(lastSession, isUtc: true));
+    var lockSessionDifference = DateTime.now().difference(
+        DateTime.fromMillisecondsSinceEpoch(lastPinChangedAt, isUtc: true));
     debugPrint('sessionDifference seconds ${sessionDifference.inSeconds}');
     debugPrint('lockSessionDifference days ${lockSessionDifference.inDays}');
-    if (Constants.pinAlert <= lockSessionDifference.inDays && Constants.pinExpiry >= lockSessionDifference.inDays) {
+    if (Constants.pinAlert <= lockSessionDifference.inDays &&
+        Constants.pinExpiry >= lockSessionDifference.inDays) {
       //Alert Day
       debugPrint('Alert Day');
     } else if (Constants.pinExpiry < lockSessionDifference.inDays) {
@@ -215,7 +226,8 @@ class MainController extends FullLifeCycleController with BaseController, FullLi
     } else {
       //if 30 days not completed
       debugPrint('Not Expired');
-      if (Constants.sessionLockTime <= sessionDifference.inSeconds || fromLockScreen) {
+      if (Constants.sessionLockTime <= sessionDifference.inSeconds ||
+          fromLockScreen) {
         //Show Pin if App Lock Enabled
         debugPrint('Show Pin');
         presentPinPage();
@@ -225,7 +237,9 @@ class MainController extends FullLifeCycleController with BaseController, FullLi
   }
 
   void presentPinPage() {
-    if ((SessionManagement.getEnablePin() || SessionManagement.getEnableBio()) && NavUtils.currentRoute != Routes.pin) {
+    if ((SessionManagement.getEnablePin() ||
+            SessionManagement.getEnableBio()) &&
+        NavUtils.currentRoute != Routes.pin) {
       NavUtils.toNamed(
         Routes.pin,
       );
@@ -254,7 +268,7 @@ class MainController extends FullLifeCycleController with BaseController, FullLi
       var unreadMissedCallCount = await Mirrorfly.getUnreadMissedCallCount();
       unreadCallCount.value = unreadMissedCallCount ?? 0;
       debugPrint("unreadMissedCallCount $unreadMissedCallCount");
-    }catch(e){
+    } catch (e) {
       debugPrint("unreadMissedCallCount $e");
     }
   }

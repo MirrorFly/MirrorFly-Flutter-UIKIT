@@ -1,4 +1,3 @@
-
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_plugin/mirrorfly.dart';
@@ -34,8 +33,8 @@ class SettingsController extends GetxController {
 
   logout() {
     if (SessionManagement.getEnablePin()) {
-      NavUtils.toNamed(Routes.pin)?.then((value){
-        if(value!=null && value){
+      NavUtils.toNamed(Routes.pin)?.then((value) {
+        if (value != null && value) {
           logoutFromSDK();
         }
       });
@@ -47,7 +46,7 @@ class SettingsController extends GetxController {
   logoutFromSDK() async {
     if (await AppUtils.isNetConnected()) {
       DialogUtils.progressLoading();
-      Mirrorfly.logoutOfChatSDK(flyCallBack: (response){
+      Mirrorfly.logoutOfChatSDK(flyCallBack: (response) {
         DialogUtils.hideLoading();
         if (response.isSuccess) {
           // clearAllPreferences();
@@ -55,30 +54,39 @@ class SettingsController extends GetxController {
           toToast(getTranslated("logoutFailed"));
           // Get.snackbar("Logout", "Logout Failed");
         }
-      })/*.catchError((er) {
+      }) /*.catchError((er) {
         DialogUtils.hideLoading();
         SessionManagement.clear().then((value) {
           // SessionManagement.setToken(token);
           NavUtils.offAllNamed(Routes.login);
         });
-      })*/;
+      })*/
+          ;
     } else {
       toToast(getTranslated("noInternetConnection"));
     }
   }
 
-  void clearAllPreferences(){
+  void clearAllPreferences() {
     var token = SessionManagement.getToken().checkNull();
-    var cameraPermissionAsked = SessionManagement.getBool(Constants.cameraPermissionAsked);
-    var audioRecordPermissionAsked = SessionManagement.getBool(Constants.audioRecordPermissionAsked);
-    var readPhoneStatePermissionAsked = SessionManagement.getBool(Constants.readPhoneStatePermissionAsked);
-    var bluetoothPermissionAsked = SessionManagement.getBool(Constants.bluetoothPermissionAsked);
+    var cameraPermissionAsked =
+        SessionManagement.getBool(Constants.cameraPermissionAsked);
+    var audioRecordPermissionAsked =
+        SessionManagement.getBool(Constants.audioRecordPermissionAsked);
+    var readPhoneStatePermissionAsked =
+        SessionManagement.getBool(Constants.readPhoneStatePermissionAsked);
+    var bluetoothPermissionAsked =
+        SessionManagement.getBool(Constants.bluetoothPermissionAsked);
     SessionManagement.clear().then((value) {
       SessionManagement.setToken(token);
-      SessionManagement.setBool(Constants.cameraPermissionAsked, cameraPermissionAsked);
-      SessionManagement.setBool(Constants.audioRecordPermissionAsked, audioRecordPermissionAsked);
-      SessionManagement.setBool(Constants.readPhoneStatePermissionAsked, readPhoneStatePermissionAsked);
-      SessionManagement.setBool(Constants.bluetoothPermissionAsked, bluetoothPermissionAsked);
+      SessionManagement.setBool(
+          Constants.cameraPermissionAsked, cameraPermissionAsked);
+      SessionManagement.setBool(
+          Constants.audioRecordPermissionAsked, audioRecordPermissionAsked);
+      SessionManagement.setBool(Constants.readPhoneStatePermissionAsked,
+          readPhoneStatePermissionAsked);
+      SessionManagement.setBool(
+          Constants.bluetoothPermissionAsked, bluetoothPermissionAsked);
       NavUtils.offAllNamed(Routes.login);
     });
   }

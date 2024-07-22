@@ -15,8 +15,10 @@ import '../../common/de_bouncer.dart';
 import '../../data/session_management.dart';
 import '../../data/utils.dart';
 
-class AddParticipantsController extends GetxController with GetTickerProviderStateMixin {
-  var callList = Get.find<CallController>().callList; //List<CallUserList>.empty(growable: true).obs;
+class AddParticipantsController extends GetxController
+    with GetTickerProviderStateMixin {
+  var callList = Get.find<CallController>()
+      .callList; //List<CallUserList>.empty(growable: true).obs;
   var groupId = Get.find<CallController>().groupId;
 
   ScrollController scrollController = ScrollController();
@@ -81,8 +83,8 @@ class AddParticipantsController extends GetxController with GetTickerProviderSta
 
   ///get ongoing call link
   var meetLink = "".obs;
-  void getCallLink(){
-    Mirrorfly.getCallLink().then((value){
+  void getCallLink() {
+    Mirrorfly.getCallLink().then((value) {
       meetLink(value);
     });
   }
@@ -129,8 +131,10 @@ class AddParticipantsController extends GetxController with GetTickerProviderSta
   }
 
   void filterGroupMembers() {
-    var filteredList =
-        mainUsersList.where((item) => item.getName().toLowerCase().contains(_searchText.trim())).toList();
+    var filteredList = mainUsersList
+        .where(
+            (item) => item.getName().toLowerCase().contains(_searchText.trim()))
+        .toList();
     usersList(filteredList);
   }
 
@@ -165,10 +169,12 @@ class AddParticipantsController extends GetxController with GetTickerProviderSta
 
   _scrollListener() {
     if (scrollController.hasClients) {
-      if (scrollController.position.extentAfter <= 0 && isPageLoading.value == false) {
+      if (scrollController.position.extentAfter <= 0 &&
+          isPageLoading.value == false) {
         if (scrollable.value) {
           //isPageLoading.value = true;
-          LogMessage.d("usersList.length ${usersList.length} ~/ 20", (usersList.length ~/ 20));
+          LogMessage.d("usersList.length ${usersList.length} ~/ 20",
+              (usersList.length ~/ 20));
           pageNum = (usersList.length ~/ 20) + 1;
           fetchUsers(false);
         }
@@ -185,34 +191,47 @@ class AddParticipantsController extends GetxController with GetTickerProviderSta
   }
 
   unBlock(ProfileDetails item) {
-    DialogUtils.showAlert(dialogStyle: AppStyleConfig.dialogStyle,message: getTranslated("unBlockUser").replaceFirst("%d", getName(item)), actions: [
-      TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
-          onPressed: () {
-            NavUtils.back();
-          },
-          child: Text(getTranslated("no").toUpperCase(), )),
-      TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
-          onPressed: () async {
-            if (await AppUtils.isNetConnected()) {
-              NavUtils.back();
-              DialogUtils.progressLoading();
-              Mirrorfly.unblockUser(userJid: item.jid.checkNull(), flyCallBack: (FlyResponse response) {
-                DialogUtils.hideLoading();
-                if (response.isSuccess && response.hasData) {
-                  toToast(getTranslated("hasUnBlocked").replaceFirst("%d", getName(item)));
-                  userUpdatedHisProfile(item.jid.checkNull());
+    DialogUtils.showAlert(
+        dialogStyle: AppStyleConfig.dialogStyle,
+        message: getTranslated("unBlockUser").replaceFirst("%d", getName(item)),
+        actions: [
+          TextButton(
+              style: AppStyleConfig.dialogStyle.buttonStyle,
+              onPressed: () {
+                NavUtils.back();
+              },
+              child: Text(
+                getTranslated("no").toUpperCase(),
+              )),
+          TextButton(
+              style: AppStyleConfig.dialogStyle.buttonStyle,
+              onPressed: () async {
+                if (await AppUtils.isNetConnected()) {
+                  NavUtils.back();
+                  DialogUtils.progressLoading();
+                  Mirrorfly.unblockUser(
+                      userJid: item.jid.checkNull(),
+                      flyCallBack: (FlyResponse response) {
+                        DialogUtils.hideLoading();
+                        if (response.isSuccess && response.hasData) {
+                          toToast(getTranslated("hasUnBlocked")
+                              .replaceFirst("%d", getName(item)));
+                          userUpdatedHisProfile(item.jid.checkNull());
+                        }
+                      });
+                } else {
+                  toToast(getTranslated("noInternetConnection"));
                 }
-              });
-            } else {
-              toToast(getTranslated("noInternetConnection"));
-            }
-          },
-          child: Text(getTranslated("yes").toUpperCase())),
-    ]);
+              },
+              child: Text(getTranslated("yes").toUpperCase())),
+        ]);
   }
 
   contactSelected(ProfileDetails item) {
-    if (callList.indexWhere((element) => element.userJid.toString() == item.jid.toString()).isNegative) {
+    if (callList
+        .indexWhere(
+            (element) => element.userJid.toString() == item.jid.toString())
+        .isNegative) {
       if (selectedUsersJIDList.contains(item.jid)) {
         selectedUsersList.removeWhere((user) => user.jid == item.jid);
         selectedUsersJIDList.remove(item.jid);
@@ -220,15 +239,18 @@ class AddParticipantsController extends GetxController with GetTickerProviderSta
         groupCallMembersCount(groupCallMembersCount.value - 1);
       } else {
         if (callList.length != getMaxCallUsersCount) {
-          if (getMaxCallUsersCount > (selectedUsersList.length + callList.length)) {
+          if (getMaxCallUsersCount >
+              (selectedUsersList.length + callList.length)) {
             selectedUsersList.add(item);
             selectedUsersJIDList.add(item.jid!);
             groupCallMembersCount(groupCallMembersCount.value + 1);
           } else {
-            toToast(getTranslated("youCanSelectForCall").replaceFirst("%d", (groupCallMembersCount.value).toString()));
+            toToast(getTranslated("youCanSelectForCall")
+                .replaceFirst("%d", (groupCallMembersCount.value).toString()));
           }
         } else {
-          toToast(getTranslated("callMembersLimit").replaceFirst("%d", getMaxCallUsersCount.toString()));
+          toToast(getTranslated("callMembersLimit")
+              .replaceFirst("%d", getMaxCallUsersCount.toString()));
         }
         //item.isSelected = true;
       }
@@ -263,8 +285,10 @@ class AddParticipantsController extends GetxController with GetTickerProviderSta
   Future<void> updateProfile(String jid) async {
     if (jid.isNotEmpty) {
       getProfileDetails(jid).then((value) {
-        var userListIndex = usersList.indexWhere((element) => element.jid == jid);
-        var mainListIndex = mainUsersList.indexWhere((element) => element.jid == jid);
+        var userListIndex =
+            usersList.indexWhere((element) => element.jid == jid);
+        var mainListIndex =
+            mainUsersList.indexWhere((element) => element.jid == jid);
         LogMessage.d('value.isBlockedMe', value.isBlockedMe.toString());
         if (!userListIndex.isNegative) {
           usersList[userListIndex] = value;
@@ -312,16 +336,19 @@ class AddParticipantsController extends GetxController with GetTickerProviderSta
       return;
     }
     if (callList.length != getMaxCallUsersCount) {
-      Mirrorfly.inviteUsersToOngoingCall(jidList: selectedUsersJIDList,flyCallback: (FlyResponse response){
-        LogMessage.d("inviteUsersToOngoingCall", response.toString());
-        if(response.isSuccess){
-          NavUtils.back();
-        }else{
-          toToast(getErrorDetails(response));
-        }
-      });
+      Mirrorfly.inviteUsersToOngoingCall(
+          jidList: selectedUsersJIDList,
+          flyCallback: (FlyResponse response) {
+            LogMessage.d("inviteUsersToOngoingCall", response.toString());
+            if (response.isSuccess) {
+              NavUtils.back();
+            } else {
+              toToast(getErrorDetails(response));
+            }
+          });
     } else {
-      toToast(getTranslated("callMembersLimit").replaceFirst("%d", getMaxCallUsersCount.toString()));
+      toToast(getTranslated("callMembersLimit")
+          .replaceFirst("%d", getMaxCallUsersCount.toString()));
     }
   }
 
@@ -351,7 +378,10 @@ class AddParticipantsController extends GetxController with GetTickerProviderSta
 
           if (groupJid.value.checkNull().isNotEmpty) {
             await Future.forEach(items, (it) async {
-              await Mirrorfly.isMemberOfGroup(groupJid: groupJid.value.checkNull(), userJid: it.jid.checkNull()).then((value) {
+              await Mirrorfly.isMemberOfGroup(
+                      groupJid: groupJid.value.checkNull(),
+                      userJid: it.jid.checkNull())
+                  .then((value) {
                 LogMessage.d("item", value.toString());
                 if (value == null || !value) {
                   list.add(it);
@@ -368,8 +398,10 @@ class AddParticipantsController extends GetxController with GetTickerProviderSta
                 // if(usersList.length==20) pageNum += 1;
                 scrollable.value = list.length == 20;
               } else {
-                var userlist = mainUsersList
-                    .where((p0) => getName(p0).toString().toLowerCase().contains(_searchText.trim().toLowerCase()));
+                var userlist = mainUsersList.where((p0) => getName(p0)
+                    .toString()
+                    .toLowerCase()
+                    .contains(_searchText.trim().toLowerCase()));
                 usersList(userlist.toList());
                 scrollable(false);
                 /*for (var userDetail in mainUsersList) {
@@ -393,8 +425,10 @@ class AddParticipantsController extends GetxController with GetTickerProviderSta
           } else {
             list.addAll(items);
             if (Constants.enableContactSync && fromSearch) {
-              var userlist = mainUsersList
-                  .where((p0) => getName(p0).toString().toLowerCase().contains(_searchText.trim().toLowerCase()));
+              var userlist = mainUsersList.where((p0) => getName(p0)
+                  .toString()
+                  .toLowerCase()
+                  .contains(_searchText.trim().toLowerCase()));
               usersList(userlist.toList());
               /*for (var userDetail in mainUsersList) {
               if (userDetail.name.toString().toLowerCase().contains(_searchText.trim().toLowerCase())) {
@@ -412,8 +446,10 @@ class AddParticipantsController extends GetxController with GetTickerProviderSta
                 // if(usersList.length==20) pageNum += 1;
                 scrollable.value = list.length == 20;
               } else {
-                var userlist = mainUsersList
-                    .where((p0) => getName(p0).toString().toLowerCase().contains(_searchText.trim().toLowerCase()));
+                var userlist = mainUsersList.where((p0) => getName(p0)
+                    .toString()
+                    .toLowerCase()
+                    .contains(_searchText.trim().toLowerCase()));
                 usersList(userlist.toList());
                 scrollable(false);
                 /*for (var userDetail in mainUsersList) {
@@ -441,10 +477,13 @@ class AddParticipantsController extends GetxController with GetTickerProviderSta
       }
 
       (!Constants.enableContactSync)
-          ? Mirrorfly.getUserList(page: pageNum, search: _searchText,
-          metaDataUserList: Constants.metaDataUserList, //#metaData
-          flyCallback: callback)
-          : Mirrorfly.getRegisteredUsers(fetchFromServer: false, flyCallback: callback);
+          ? Mirrorfly.getUserList(
+              page: pageNum,
+              search: _searchText,
+              metaDataUserList: Constants.metaDataUserList, //#metaData
+              flyCallback: callback)
+          : Mirrorfly.getRegisteredUsers(
+              fetchFromServer: false, flyCallback: callback);
       /*future.then((data) async {
         //Mirrorfly.getUserList(pageNum, _searchText).then((data) async {
         LogMessage.d("userlist", data);
@@ -557,30 +596,36 @@ class AddParticipantsController extends GetxController with GetTickerProviderSta
 
   void getGroupMembers() {
     if (groupId.isNotEmpty) {
-      Mirrorfly.getGroupMembersList(jid: groupId.value.checkNull(), flyCallBack: (FlyResponse response) {
-        LogMessage.d("getGroupMembersList", response.toString());
-        if (response.isSuccess && response.hasData) {
-          var list = profileFromJson(response.data);
-          var callConnectedUserList = List<String>.from(callList.map((element) => element.userJid?.value));
-          var filteredList = getFilteredList(callConnectedUserList, list);
-          mainUsersList(filteredList);
-          usersList(filteredList);
-        }
-      });
+      Mirrorfly.getGroupMembersList(
+          jid: groupId.value.checkNull(),
+          flyCallBack: (FlyResponse response) {
+            LogMessage.d("getGroupMembersList", response.toString());
+            if (response.isSuccess && response.hasData) {
+              var list = profileFromJson(response.data);
+              var callConnectedUserList = List<String>.from(
+                  callList.map((element) => element.userJid?.value));
+              var filteredList = getFilteredList(callConnectedUserList, list);
+              mainUsersList(filteredList);
+              usersList(filteredList);
+            }
+          });
     }
   }
 
-  List<ProfileDetails> getFilteredList(List<String> callConnectedUserList, List<ProfileDetails>? usersList) {
+  List<ProfileDetails> getFilteredList(
+      List<String> callConnectedUserList, List<ProfileDetails>? usersList) {
     return (usersList
             ?.where((element) =>
-                !callConnectedUserList.contains(element.jid) && element.jid != SessionManagement.getUserJID())
+                !callConnectedUserList.contains(element.jid) &&
+                element.jid != SessionManagement.getUserJID())
             .toList()) ??
         [];
   }
 
   var availableFeatures = Get.find<MainController>().availableFeature;
   void onAvailableFeaturesUpdated(AvailableFeatures features) {
-    LogMessage.d("GroupParticipants", "onAvailableFeaturesUpdated ${features.toJson()}");
+    LogMessage.d(
+        "GroupParticipants", "onAvailableFeaturesUpdated ${features.toJson()}");
     availableFeatures(features);
   }
 }

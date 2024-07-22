@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -18,8 +17,8 @@ import '../../../routes/route_settings.dart';
 import '../../chat/controllers/chat_controller.dart';
 import '../../gallery_picker/src/data/models/picked_asset_model.dart';
 
-class MediaPreviewController extends FullLifeCycleController with FullLifeCycleMixin {
-
+class MediaPreviewController extends FullLifeCycleController
+    with FullLifeCycleMixin {
   var userName = NavUtils.arguments['userName'];
   var profile = NavUtils.arguments['profile'] as ProfileDetails;
 
@@ -39,7 +38,8 @@ class MediaPreviewController extends FullLifeCycleController with FullLifeCycleM
   var showEmoji = false.obs;
 
   FocusNode captionFocusNode = FocusNode();
-  PageController pageViewController = PageController(initialPage: 0, keepPage: false);
+  PageController pageViewController =
+      PageController(initialPage: 0, keepPage: false);
 
   final Map<int, File> imageCache = {};
   final Map<int, File> imageCache1 = {};
@@ -47,30 +47,29 @@ class MediaPreviewController extends FullLifeCycleController with FullLifeCycleM
   @override
   void onInit() {
     super.onInit();
-    SchedulerBinding.instance
-        .addPostFrameCallback((_) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
       pickerType(NavUtils.arguments['from']);
       debugPrint("pickerType $pickerType");
       // if(pickerType.value == Constants.gallery) {
-        debugPrint("pickerType inside gallery type");
-        filePath(NavUtils.arguments['filePath']);
+      debugPrint("pickerType inside gallery type");
+      filePath(NavUtils.arguments['filePath']);
       // }else{
       //   debugPrint("pickerType inside camera type");
       //   cameraFilePath(NavUtils.arguments['filePath']);
       // }
       var index = 0;
-      for(var _ in filePath){
-        if(index == 0 && textMessage != null){
+      for (var _ in filePath) {
+        if (index == 0 && textMessage != null) {
           captionMessage.add(textMessage);
           index = index + 1;
-        }else {
+        } else {
           captionMessage.add("");
         }
       }
       // _loadFiles();
     });
 
-    if(textMessage != null){
+    if (textMessage != null) {
       caption.text = textMessage;
     }
     captionFocusNode.addListener(() {
@@ -99,7 +98,7 @@ class MediaPreviewController extends FullLifeCycleController with FullLifeCycleM
     return await pickedAssetModel.asset?.file;
   }*/
 
-  checkCacheFile(int index){
+  checkCacheFile(int index) {
     if (imageCache.containsKey(index)) {
       debugPrint("returning true");
       return true;
@@ -108,7 +107,7 @@ class MediaPreviewController extends FullLifeCycleController with FullLifeCycleM
     return false;
   }
 
-  getCacheFile(int index){
+  getCacheFile(int index) {
     return imageCache[index];
   }
 
@@ -149,6 +148,7 @@ class MediaPreviewController extends FullLifeCycleController with FullLifeCycleM
       return file;
     }
   }
+
   onChanged() {
     // count(139 - addStatusController.text.length);
 
@@ -159,7 +159,11 @@ class MediaPreviewController extends FullLifeCycleController with FullLifeCycleM
   Future<void> sendMedia() async {
     debugPrint("send media");
     var previousRoute = NavUtils.previousRoute;
-    Platform.isIOS ? DialogUtils.showLoading(message: getTranslated("compressingFiles"),dialogStyle: AppStyleConfig.dialogStyle) : DialogUtils.progressLoading();
+    Platform.isIOS
+        ? DialogUtils.showLoading(
+            message: getTranslated("compressingFiles"),
+            dialogStyle: AppStyleConfig.dialogStyle)
+        : DialogUtils.progressLoading();
     var featureNotAvailable = false;
     try {
       int i = 0;
@@ -172,20 +176,20 @@ class MediaPreviewController extends FullLifeCycleController with FullLifeCycleM
             return false;
           }
           debugPrint("sending image");
-          await Get.find<ChatController>(tag: userJid).sendImageMessage(
-              imageCache[i]?.path, captionMessage[i], "");
+          await Get.find<ChatController>(tag: userJid)
+              .sendImageMessage(imageCache[i]?.path, captionMessage[i], "");
         } else if (data.type == 'video') {
           if (!availableFeatures.value.isVideoAttachmentAvailable.checkNull()) {
             featureNotAvailable = true;
             return false;
           }
           debugPrint("sending video");
-          await Get.find<ChatController>(tag: userJid).sendVideoMessage(
-              imageCache[i]!.path, captionMessage[i], "");
+          await Get.find<ChatController>(tag: userJid)
+              .sendVideoMessage(imageCache[i]!.path, captionMessage[i], "");
         }
         i++;
       });
-    }finally {
+    } finally {
       debugPrint("finally $featureNotAvailable");
       DialogUtils.hideLoading();
       if (!featureNotAvailable) {
@@ -200,30 +204,32 @@ class MediaPreviewController extends FullLifeCycleController with FullLifeCycleM
   }
 
   void deleteMedia() {
-    LogMessage.d("currentPageIndex : ",currentPageIndex);
+    LogMessage.d("currentPageIndex : ", currentPageIndex);
     var provider = Get.find<GalleryPickerController>().provider;
     provider.unPick(currentPageIndex.value);
     filePath.removeAt(currentPageIndex.value);
     captionMessage.removeAt(currentPageIndex.value);
-    if(currentPageIndex.value > 0) {
+    if (currentPageIndex.value > 0) {
       currentPageIndex(currentPageIndex.value - 1);
-      LogMessage.d("currentPageIndex.value.toDouble()", currentPageIndex.value.toDouble());
-      pageViewController.animateToPage(currentPageIndex.value, duration: const Duration(milliseconds: 5), curve: Curves.easeInOut);
+      LogMessage.d("currentPageIndex.value.toDouble()",
+          currentPageIndex.value.toDouble());
+      pageViewController.animateToPage(currentPageIndex.value,
+          duration: const Duration(milliseconds: 5), curve: Curves.easeInOut);
       caption.text = captionMessage[currentPageIndex.value];
-    }else if (currentPageIndex.value == 0){
+    } else if (currentPageIndex.value == 0) {
       caption.text = captionMessage[currentPageIndex.value];
     }
   }
 
   void onMediaPreviewPageChanged(int value) {
-    LogMessage.d("onMediaPreviewPageChanged ",value.toString());
+    LogMessage.d("onMediaPreviewPageChanged ", value.toString());
     currentPageIndex(value);
     caption.text = captionMessage[value];
     captionFocusNode.unfocus();
   }
 
   void onCaptionTyped(String value) {
-    LogMessage.d("onCaptionTyped ",captionMessage.length);
+    LogMessage.d("onCaptionTyped ", captionMessage.length);
     captionMessage[currentPageIndex.value] = value;
   }
 
@@ -233,7 +239,7 @@ class MediaPreviewController extends FullLifeCycleController with FullLifeCycleM
   @override
   void onResumed() {
     LogMessage.d("LifeCycle", "onResumed");
-    if(!KeyboardVisibilityController().isVisible) {
+    if (!KeyboardVisibilityController().isVisible) {
       if (captionFocusNode.hasFocus) {
         captionFocusNode.unfocus();
         Future.delayed(const Duration(milliseconds: 100), () {
@@ -251,17 +257,15 @@ class MediaPreviewController extends FullLifeCycleController with FullLifeCycleM
 
   var availableFeatures = Get.find<MainController>().availableFeature;
   void onAvailableFeaturesUpdated(AvailableFeatures features) {
-    LogMessage.d("MediaPreview", "onAvailableFeaturesUpdated ${features.toJson()}");
+    LogMessage.d(
+        "MediaPreview", "onAvailableFeaturesUpdated ${features.toJson()}");
     availableFeatures(features);
   }
 
   @override
-  void onHidden() {
-
-  }
+  void onHidden() {}
 
   hideKeyBoard() {
     // FocusManager.instance.primaryFocus!.unfocus();
   }
-
 }

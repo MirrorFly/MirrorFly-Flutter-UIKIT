@@ -11,7 +11,8 @@ class VideoPlayerWidget extends StatefulWidget {
   final String videoPath;
   final String videoTitle;
 
-  const VideoPlayerWidget({super.key, required this.videoPath, required this.videoTitle});
+  const VideoPlayerWidget(
+      {super.key, required this.videoPath, required this.videoTitle});
 
   @override
   State<VideoPlayerWidget> createState() => _VideoPlayerWidgetState();
@@ -30,8 +31,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     _controller = VideoPlayerController.file(File(widget.videoPath))
       ..addListener(() {
         setState(() {
-          _sliderValue =
-              _controller.value.position.inSeconds.toDouble();
+          _sliderValue = _controller.value.position.inSeconds.toDouble();
           isStopped = _controller.value.isCompleted;
         });
       });
@@ -41,9 +41,8 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
         _controller.setLooping(false);
         _controller.setVolume(1.0);
         _controller.setPlaybackSpeed(1.0);
-
       });
-    }).catchError((e){
+    }).catchError((e) {
       LogMessage.d("initialize", "$e");
       //PlatformException(VideoError, Video player had error com.google.android.exoplayer2.ExoPlaybackException: Source error, null, null)
       toToast(getTranslated("errorVideoInitialize"));
@@ -136,7 +135,10 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
           children: [
             IconButton(
               onPressed: _rewind,
-              icon: const Icon(Icons.fast_rewind, color: buttonBgColor,),
+              icon: const Icon(
+                Icons.fast_rewind,
+                color: buttonBgColor,
+              ),
             ),
             const SizedBox(width: 16),
             FloatingActionButton(
@@ -150,7 +152,10 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
             const SizedBox(width: 16),
             IconButton(
               onPressed: _forward,
-              icon: const Icon(Icons.fast_forward, color: buttonBgColor,),
+              icon: const Icon(
+                Icons.fast_forward,
+                color: buttonBgColor,
+              ),
             ),
           ],
         ),
@@ -181,4 +186,3 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     );
   }
 }
-

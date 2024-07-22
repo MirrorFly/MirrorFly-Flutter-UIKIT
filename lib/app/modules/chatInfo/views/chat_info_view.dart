@@ -18,128 +18,152 @@ class ChatInfoView extends NavViewStateful<ChatInfoController> {
   const ChatInfoView({super.key});
 
   @override
-ChatInfoController createController({String? tag}) => Get.put(ChatInfoController());
-
+  ChatInfoController createController({String? tag}) =>
+      Get.put(ChatInfoController());
 
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: Theme.of(context).copyWith(appBarTheme: AppStyleConfig.chatInfoPageStyle.appBarTheme,),
+      data: Theme.of(context).copyWith(
+        appBarTheme: AppStyleConfig.chatInfoPageStyle.appBarTheme,
+      ),
       child: Scaffold(
         body: !controller.argument.disableAppbar
             ? NestedScrollView(
-          controller: controller.scrollController,
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            controller.silverBarHeight = NavUtils.height * 0.45;
-            return <Widget>[
-              Obx(() {
-                return SliverAppBar(
-                  centerTitle: false,
-                  titleSpacing: 0.0,
-                  expandedHeight: NavUtils.height * 0.45,
-                  snap: false,
-                  pinned: true,
-                  floating: false,
-                  leading: IconButton(
-                    icon: Icon(Icons.arrow_back,
-                        color: controller.isSliverAppBarExpanded
-                            ? AppStyleConfig.chatInfoPageStyle.silverAppBarIconColor
-                            : AppBarTheme.of(context).actionsIconTheme?.color),
-                    onPressed: () {
-                      NavUtils.back();
-                    },
-                  ),
-                  title: Visibility(
-                    visible: !controller.isSliverAppBarExpanded,
-                    child: Text(controller.profile.getName(),
-                        style: AppBarTheme.of(context).titleTextStyle,
-                        /*style: const TextStyle(
+                controller: controller.scrollController,
+                headerSliverBuilder:
+                    (BuildContext context, bool innerBoxIsScrolled) {
+                  controller.silverBarHeight = NavUtils.height * 0.45;
+                  return <Widget>[
+                    Obx(() {
+                      return SliverAppBar(
+                        centerTitle: false,
+                        titleSpacing: 0.0,
+                        expandedHeight: NavUtils.height * 0.45,
+                        snap: false,
+                        pinned: true,
+                        floating: false,
+                        leading: IconButton(
+                          icon: Icon(Icons.arrow_back,
+                              color: controller.isSliverAppBarExpanded
+                                  ? AppStyleConfig
+                                      .chatInfoPageStyle.silverAppBarIconColor
+                                  : AppBarTheme.of(context)
+                                      .actionsIconTheme
+                                      ?.color),
+                          onPressed: () {
+                            NavUtils.back();
+                          },
+                        ),
+                        title: Visibility(
+                          visible: !controller.isSliverAppBarExpanded,
+                          child: Text(
+                            controller.profile.getName(),
+                            style: AppBarTheme.of(context).titleTextStyle,
+                            /*style: const TextStyle(
                           color: Colors.black,
                           fontSize: 18.0,
                         )*/
-                    ),
-                  ),
-                  flexibleSpace: FlexibleSpaceBar(
-                    centerTitle: false,
-                    background: ImageNetwork(
-                      url: controller.profile.image.checkNull(),
-                      width: NavUtils.width,
-                      height: NavUtils.height * 0.45,
-                      clipOval: false,
-                      errorWidget: ProfileTextImage(
-                        text: controller.profile.getName(),
-                        radius: 0,
-                        fontSize: 120,
-                      ),
-                      onTap: () {
-                        if (controller.profile.image!.isNotEmpty && !(controller.profile
-                            .isBlockedMe.checkNull() || controller.profile.isAdminBlocked
-                            .checkNull()) && !(!controller.profile.isItSavedContact
-                            .checkNull() || controller.profile.isDeletedContact())) {
-                          NavUtils.toNamed(Routes.imageView, arguments: {
-                            'imageName': getName(controller.profile),
-                            'imageUrl': controller.profile.image.checkNull()
-                          });
-                        }
-                      },
-                      isGroup: controller.profile.isGroupProfile.checkNull(),
-                      blocked: controller.profile.isBlockedMe.checkNull() || controller.profile.isAdminBlocked.checkNull(),
-                      unknown: (!controller.profile.isItSavedContact.checkNull() || controller.profile.isDeletedContact()),
-                    ),
-                    // titlePadding: controller.isSliverAppBarExpanded
-                    //     ? const EdgeInsets.symmetric(vertical: 16, horizontal: 20)
-                    //     : const EdgeInsets.symmetric(
-                    //     vertical: 19, horizontal: 50),
-                    titlePadding: const EdgeInsets.only(left: 16),
+                          ),
+                        ),
+                        flexibleSpace: FlexibleSpaceBar(
+                          centerTitle: false,
+                          background: ImageNetwork(
+                            url: controller.profile.image.checkNull(),
+                            width: NavUtils.width,
+                            height: NavUtils.height * 0.45,
+                            clipOval: false,
+                            errorWidget: ProfileTextImage(
+                              text: controller.profile.getName(),
+                              radius: 0,
+                              fontSize: 120,
+                            ),
+                            onTap: () {
+                              if (controller.profile.image!.isNotEmpty &&
+                                  !(controller.profile.isBlockedMe
+                                          .checkNull() ||
+                                      controller.profile.isAdminBlocked
+                                          .checkNull()) &&
+                                  !(!controller.profile.isItSavedContact
+                                          .checkNull() ||
+                                      controller.profile.isDeletedContact())) {
+                                NavUtils.toNamed(Routes.imageView, arguments: {
+                                  'imageName': getName(controller.profile),
+                                  'imageUrl':
+                                      controller.profile.image.checkNull()
+                                });
+                              }
+                            },
+                            isGroup:
+                                controller.profile.isGroupProfile.checkNull(),
+                            blocked: controller.profile.isBlockedMe
+                                    .checkNull() ||
+                                controller.profile.isAdminBlocked.checkNull(),
+                            unknown: (!controller.profile.isItSavedContact
+                                    .checkNull() ||
+                                controller.profile.isDeletedContact()),
+                          ),
+                          // titlePadding: controller.isSliverAppBarExpanded
+                          //     ? const EdgeInsets.symmetric(vertical: 16, horizontal: 20)
+                          //     : const EdgeInsets.symmetric(
+                          //     vertical: 19, horizontal: 50),
+                          titlePadding: const EdgeInsets.only(left: 16),
 
-                    title: Visibility(
-                      visible: controller.isSliverAppBarExpanded,
-                      child: Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(getName(controller.profile),
-                                style: controller.isSliverAppBarExpanded ? AppStyleConfig.chatInfoPageStyle.silverAppbarTitleStyle : AppBarTheme.of(context).titleTextStyle
-                                /*TextStyle(
+                          title: Visibility(
+                            visible: controller.isSliverAppBarExpanded,
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(getName(controller.profile),
+                                      style: controller.isSliverAppBarExpanded
+                                          ? AppStyleConfig.chatInfoPageStyle
+                                              .silverAppbarTitleStyle
+                                          : AppBarTheme.of(context)
+                                              .titleTextStyle
+                                      /*TextStyle(
                                   color: controller.isSliverAppBarExpanded
                                       ? Colors.white
                                       : Colors.black,
                                   fontSize: 18.0,
                                 )*/
-                            ),
-                            Obx(() {
-                              return Text(controller.userPresenceStatus.value,
-                                  style: AppStyleConfig.chatInfoPageStyle.silverAppBarSubTitleStyle,
-                                  /*style: const TextStyle(
+                                      ),
+                                  Obx(() {
+                                    return Text(
+                                      controller.userPresenceStatus.value,
+                                      style: AppStyleConfig.chatInfoPageStyle
+                                          .silverAppBarSubTitleStyle,
+                                      /*style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 8.0,
-                                  ) *///TextStyle
-                              );
-                            }),
+                                  ) */ //TextStyle
+                                    );
+                                  }),
+                                ],
+                              ),
+                            ),
+                          ),
+                          stretchModes: const [
+                            StretchMode.zoomBackground,
+                            StretchMode.blurBackground,
+                            StretchMode.fadeTitle
                           ],
                         ),
-                      ),
-                    ),
-                    stretchModes: const [
-                      StretchMode.zoomBackground,
-                      StretchMode.blurBackground,
-                      StretchMode.fadeTitle
-                    ],
-                  ),
-                );
-              }),
-            ];
-          },
-          body: infoContent(),
-        ) : SafeArea(child: infoContent()),
+                      );
+                    }),
+                  ];
+                },
+                body: infoContent(),
+              )
+            : SafeArea(child: infoContent()),
       ),
     );
   }
 
-  Widget infoContent(){
+  Widget infoContent() {
     return ListView(
       children: [
         /*Obx(() {
@@ -149,9 +173,11 @@ ChatInfoController createController({String? tag}) => Get.put(ChatInfoController
         }),*/
         Obx(() {
           return listItem(
-            title: Text(getTranslated("muteNotification"),
-                style: AppStyleConfig.chatInfoPageStyle.muteNotificationStyle.textStyle,
-                /*style: const TextStyle(
+            title: Text(
+              getTranslated("muteNotification"),
+              style: AppStyleConfig
+                  .chatInfoPageStyle.muteNotificationStyle.textStyle,
+              /*style: const TextStyle(
                     color: Colors.black,
                     fontSize: 14,
                     fontWeight: FontWeight.w500)*/
@@ -161,19 +187,26 @@ ChatInfoController createController({String? tag}) => Get.put(ChatInfoController
                 height: 20.0,
                 valueFontSize: 12.0,
                 toggleSize: 12.0,
-                activeColor: AppStyleConfig.chatInfoPageStyle.muteNotificationStyle.toggleStyle.activeColor,
-                activeToggleColor: AppStyleConfig.chatInfoPageStyle.muteNotificationStyle.toggleStyle.activeToggleColor,
-                inactiveToggleColor: AppStyleConfig.chatInfoPageStyle.muteNotificationStyle.toggleStyle.inactiveToggleColor,
-                inactiveColor: AppStyleConfig.chatInfoPageStyle.muteNotificationStyle.toggleStyle.inactiveColor,
-                switchBorder: Border.all(color: controller.mute.value ? AppStyleConfig.chatInfoPageStyle.muteNotificationStyle.toggleStyle.activeToggleColor : AppStyleConfig.chatInfoPageStyle.muteNotificationStyle.toggleStyle.inactiveToggleColor, width: 1),
+                activeColor: AppStyleConfig.chatInfoPageStyle
+                    .muteNotificationStyle.toggleStyle.activeColor,
+                activeToggleColor: AppStyleConfig.chatInfoPageStyle
+                    .muteNotificationStyle.toggleStyle.activeToggleColor,
+                inactiveToggleColor: AppStyleConfig.chatInfoPageStyle
+                    .muteNotificationStyle.toggleStyle.inactiveToggleColor,
+                inactiveColor: AppStyleConfig.chatInfoPageStyle
+                    .muteNotificationStyle.toggleStyle.inactiveColor,
+                switchBorder: Border.all(
+                    color: controller.mute.value
+                        ? AppStyleConfig.chatInfoPageStyle.muteNotificationStyle
+                            .toggleStyle.activeToggleColor
+                        : AppStyleConfig.chatInfoPageStyle.muteNotificationStyle
+                            .toggleStyle.inactiveToggleColor,
+                    width: 1),
                 value: controller.mute.value,
-                onToggle: (value) =>
-                {
-                  controller.onToggleChange(value)
-                }
-            ), onTap: () {
-            controller.onToggleChange(!controller.mute.value);
-          },
+                onToggle: (value) => {controller.onToggleChange(value)}),
+            onTap: () {
+              controller.onToggleChange(!controller.mute.value);
+            },
           );
         }),
         Column(
@@ -181,9 +214,11 @@ ChatInfoController createController({String? tag}) => Get.put(ChatInfoController
           children: [
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Text(getTranslated("email"),
-                  style: AppStyleConfig.chatInfoPageStyle.optionsViewStyle.titleTextStyle,
-                  /*style: const TextStyle(
+              child: Text(
+                getTranslated("email"),
+                style: AppStyleConfig
+                    .chatInfoPageStyle.optionsViewStyle.titleTextStyle,
+                /*style: const TextStyle(
                   color: Colors.black,
                   fontSize: 14,
                   fontWeight: FontWeight.w500)*/
@@ -193,12 +228,23 @@ ChatInfoController createController({String? tag}) => Get.put(ChatInfoController
               padding: const EdgeInsets.only(left: 15.0, bottom: 16),
               child: Row(
                 children: [
-                  SvgPicture.asset(emailIcon,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.chatInfoPageStyle.optionsViewStyle.leadingIconColor, BlendMode.srcIn),),
-                  const SizedBox(width: 10,),
+                  SvgPicture.asset(
+                    emailIcon,
+                    package: package,
+                    colorFilter: ColorFilter.mode(
+                        AppStyleConfig.chatInfoPageStyle.optionsViewStyle
+                            .leadingIconColor,
+                        BlendMode.srcIn),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
                   Obx(() {
-                    return Text(controller.profile.email.checkNull(),
-                        style: AppStyleConfig.chatInfoPageStyle.optionsViewStyle.descriptionTextStyle,
-                        /*style: const TextStyle(
+                    return Text(
+                      controller.profile.email.checkNull(),
+                      style: AppStyleConfig.chatInfoPageStyle.optionsViewStyle
+                          .descriptionTextStyle,
+                      /*style: const TextStyle(
                             fontSize: 13,
                             color: textColor,
                             fontWeight: FontWeight.w500)*/
@@ -214,9 +260,11 @@ ChatInfoController createController({String? tag}) => Get.put(ChatInfoController
           children: [
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Text(getTranslated("mobileNumber"),
-                  style: AppStyleConfig.chatInfoPageStyle.optionsViewStyle.titleTextStyle,
-                  /*style: const TextStyle(
+              child: Text(
+                getTranslated("mobileNumber"),
+                style: AppStyleConfig
+                    .chatInfoPageStyle.optionsViewStyle.titleTextStyle,
+                /*style: const TextStyle(
                   color: Colors.black,
                   fontSize: 14,
                   fontWeight: FontWeight.w500)*/
@@ -226,12 +274,23 @@ ChatInfoController createController({String? tag}) => Get.put(ChatInfoController
               padding: const EdgeInsets.only(left: 15.0, bottom: 16),
               child: Row(
                 children: [
-                  SvgPicture.asset(phoneIcon,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.chatInfoPageStyle.optionsViewStyle.leadingIconColor, BlendMode.srcIn),),
-                  const SizedBox(width: 10,),
+                  SvgPicture.asset(
+                    phoneIcon,
+                    package: package,
+                    colorFilter: ColorFilter.mode(
+                        AppStyleConfig.chatInfoPageStyle.optionsViewStyle
+                            .leadingIconColor,
+                        BlendMode.srcIn),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
                   Obx(() {
-                    return Text(controller.profile.mobileNumber.checkNull(),
-                        style: AppStyleConfig.chatInfoPageStyle.optionsViewStyle.descriptionTextStyle,
-                        /*style: const TextStyle(
+                    return Text(
+                      controller.profile.mobileNumber.checkNull(),
+                      style: AppStyleConfig.chatInfoPageStyle.optionsViewStyle
+                          .descriptionTextStyle,
+                      /*style: const TextStyle(
                             fontSize: 13,
                             color: textColor,
                             fontWeight: FontWeight.w500)*/
@@ -247,9 +306,11 @@ ChatInfoController createController({String? tag}) => Get.put(ChatInfoController
           children: [
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Text(getTranslated("status"),
-                  style: AppStyleConfig.chatInfoPageStyle.optionsViewStyle.titleTextStyle,
-                  /*style: const TextStyle(
+              child: Text(
+                getTranslated("status"),
+                style: AppStyleConfig
+                    .chatInfoPageStyle.optionsViewStyle.titleTextStyle,
+                /*style: const TextStyle(
                   color: Colors.black,
                   fontSize: 14,
                   fontWeight: FontWeight.w500)*/
@@ -259,12 +320,23 @@ ChatInfoController createController({String? tag}) => Get.put(ChatInfoController
               padding: const EdgeInsets.only(left: 15.0, bottom: 16),
               child: Row(
                 children: [
-                  SvgPicture.asset(statusIcon,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.chatInfoPageStyle.optionsViewStyle.leadingIconColor, BlendMode.srcIn),),
-                  const SizedBox(width: 10,),
+                  SvgPicture.asset(
+                    statusIcon,
+                    package: package,
+                    colorFilter: ColorFilter.mode(
+                        AppStyleConfig.chatInfoPageStyle.optionsViewStyle
+                            .leadingIconColor,
+                        BlendMode.srcIn),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
                   Obx(() {
-                    return Text(controller.profile.status.checkNull(),
-                        style: AppStyleConfig.chatInfoPageStyle.optionsViewStyle.descriptionTextStyle,
-                        /*style: const TextStyle(
+                    return Text(
+                      controller.profile.status.checkNull(),
+                      style: AppStyleConfig.chatInfoPageStyle.optionsViewStyle
+                          .descriptionTextStyle,
+                      /*style: const TextStyle(
                             fontSize: 13,
                             color: textColor,
                             fontWeight: FontWeight.w500)*/
@@ -275,12 +347,23 @@ ChatInfoController createController({String? tag}) => Get.put(ChatInfoController
             ),
           ],
         ),
-        SettingListItem(leading: imageOutline,title: getTranslated("viewAllMedia"),trailing: rightArrowIcon,onTap: (){
-          controller.gotoViewAllMedia();
-        }, listItemStyle: AppStyleConfig.chatInfoPageStyle.viewAllMediaStyle,),
-        SettingListItem(leading: reportUser,title: getTranslated("report"),onTap: (){
-          controller.reportChatOrUser();
-        }, listItemStyle: AppStyleConfig.chatInfoPageStyle.viewAllMediaStyle,),
+        SettingListItem(
+          leading: imageOutline,
+          title: getTranslated("viewAllMedia"),
+          trailing: rightArrowIcon,
+          onTap: () {
+            controller.gotoViewAllMedia();
+          },
+          listItemStyle: AppStyleConfig.chatInfoPageStyle.viewAllMediaStyle,
+        ),
+        SettingListItem(
+          leading: reportUser,
+          title: getTranslated("report"),
+          onTap: () {
+            controller.reportChatOrUser();
+          },
+          listItemStyle: AppStyleConfig.chatInfoPageStyle.viewAllMediaStyle,
+        ),
         /*listItem(
             leading: SvgPicture.asset(imageOutline,package: package,),
             title: Text(getTranslated("viewAllMedia"),

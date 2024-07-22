@@ -11,5 +11,4 @@ class AppPages {
   static const adminBlocked = Routes.adminBlocked;
   static const outgoingCall = Routes.outGoingCallView;
   static const onGoingCall = Routes.onGoingCallView;
-
 }

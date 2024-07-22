@@ -43,7 +43,7 @@ const Color previewTextColor = Color(0xff7f7f7f);
 const Color callsSubText = Color(0Xff737373);
 const Color notificationAlertBg = Color(0xffEFF4FD);
 
-class AppColors{
+class AppColors {
   static const Color callerBackground = Color(0xff152134);
   static const Color bottomCallOptionBackground = Color(0xff162337);
   static const Color callOptionBackground = Color(0xff10294d);
@@ -63,6 +63,7 @@ class AppColors{
   static const Color transBlack75 = Color(0xBF000000);
   static const Color participantUnMuteColor = Color(0xffe3e2e2);
 }
+
 //call Assets
 const String plusIcon = 'assets/calls/plus_icon.svg';
 const String audioCallSmallIcon = 'assets/calls/audio_call_small_icon.svg';
@@ -98,14 +99,14 @@ const String callOptionsToolbarBg = 'assets/calls/ic_call_header_overlay.png';
 //Meeting Assets
 const String meetSchedule = 'assets/calls/schedule_meet.svg';
 
-
 //Call Participant assets
 const String participantMute = 'assets/calls/participant_mute.svg';
 const String participantUnMute = 'assets/calls/participant_unmute.svg';
-const String participantVideoEnabled = 'assets/calls/participant_video_enabled.svg';
-const String participantVideoDisabled = 'assets/calls/participant_video_disabled.svg';
+const String participantVideoEnabled =
+    'assets/calls/participant_video_enabled.svg';
+const String participantVideoDisabled =
+    'assets/calls/participant_video_disabled.svg';
 const String addParticipantsInCall = 'assets/calls/add_user_in_call.svg';
-
 
 //Assets
 const String package = 'mirrorfly_uikit_plugin/lib';
@@ -274,12 +275,14 @@ const String filePermission = "assets/logos/file_permission.svg";
 const String audioPermission = "assets/logos/audio_permission.svg";
 const String cameraPermission = "assets/logos/camera_permission.svg";
 const String contactPermission = "assets/logos/contact_permission.svg";
-const String contactSyncPermission = "assets/logos/contact_media_permission.svg";
+const String contactSyncPermission =
+    "assets/logos/contact_media_permission.svg";
 const String settingsPermission = "assets/logos/settings_permission.svg";
 const String locationPinPermission = "assets/logos/location_pin_permission.svg";
 const String recordAudioVideoPermission =
     "assets/logos/record_audio_video_permission.svg";
-const String notificationAlertPermission = 'assets/calls/ic_notification_alert.svg';
+const String notificationAlertPermission =
+    'assets/calls/ic_notification_alert.svg';
 
 const String icAdminBlocked = "assets/logos/ic_admin_blocked.svg";
 const String icExpand = "assets/logos/ic_expand.svg";
@@ -301,19 +304,22 @@ const String emailContactIcon = "assets/logos/emailcontact_icon.svg";
 const String icBioBackground = "assets/logos/ic_bio_background.png";
 const String icDeleteIcon = "assets/logos/ic_delete_icon.svg";
 
-
 //About us
-const String titleContactMsg = "Mirror Fly is a ready-to-go messaging solution for building enterprise-grade real-time chat IM applications that meet various degrees of requirements like team discussion, data sharing, task delegation and information handling on the go.";
+const String titleContactMsg =
+    "Mirror Fly is a ready-to-go messaging solution for building enterprise-grade real-time chat IM applications that meet various degrees of requirements like team discussion, data sharing, task delegation and information handling on the go.";
 const String titleContactUs = "Contact Us";
-const String titleContactMsgTime = "To have a detailed interaction with our experts";
+const String titleContactMsgTime =
+    "To have a detailed interaction with our experts";
 const String titleFaq = "FAQ";
-const String titleFaqMsg = "Kindly checkout FAQ section for doubts regarding Mirror fly. We might have already answered your question.";
+const String titleFaqMsg =
+    "Kindly checkout FAQ section for doubts regarding Mirror fly. We might have already answered your question.";
 const String mirrorFly = "Mirror Fly";
 const String websiteMirrorFly = "https://www.mirrorfly.com/";
-const String notificationNotWorkingURL = "https://app.mirrorfly.com/notifications/";
+const String notificationNotWorkingURL =
+    "https://app.mirrorfly.com/notifications/";
 
 toToast(String text) {
-  if(Platform.isIOS) {
+  if (Platform.isIOS) {
     FocusManager.instance.primaryFocus?.unfocus();
   }
   Fluttertoast.showToast(
@@ -336,10 +342,13 @@ toToast(String text) {
 }
 
 class Constants {
-  static MetaDataUserList? metaDataUserList = MetaDataUserList(key: "platform", value: ["flutter"]);
+  static MetaDataUserList? metaDataUserList =
+      MetaDataUserList(key: "platform", value: ["flutter"]);
   static const bool enableContactSync = false;
   static const bool enableTopic = false;
-  static const String topicId = enableTopic ? "5d3788c1-78ef-4158-a92b-a48f092da0b9" : "";//Mirrorfly Topic id
+  static const String topicId = enableTopic
+      ? "5d3788c1-78ef-4158-a92b-a48f092da0b9"
+      : ""; //Mirrorfly Topic id
   static const String packageName = "com.contus.flycommons.";
   static const String package = 'com.mirrorfly.uikit_flutter';
   static const String emptyString = "";
@@ -351,11 +360,9 @@ class Constants {
   static const changedPinAt = 'pin_changed_at';
   static const alertDate = 'alertDate';
   static const expiryDate = 'expiryDate';
-  static const sessionLockTime = 32;//in Seconds
-  static const pinExpiry = 31;//in Days
-  static const pinAlert = pinExpiry-5;//in Days
-
-
+  static const sessionLockTime = 32; //in Seconds
+  static const pinExpiry = 31; //in Days
+  static const pinAlert = pinExpiry - 5; //in Days
 
   static const mobileImageMaxWidth = 250;
   static const mobileImageMinWidth = 210;
@@ -365,11 +372,14 @@ class Constants {
   //asked permission
   static const locationPermissionAsked = "location_permission_asked_before";
   static const contactPermissionAsked = "contact_permission_asked_before";
-  static const contactSavePermissionAsked = "contact_save_permission_asked_before";
+  static const contactSavePermissionAsked =
+      "contact_save_permission_asked_before";
   static const storagePermissionAsked = "storage_permission_asked_before";
-  static const notificationPermissionAsked = "notification_permission_asked_before";
+  static const notificationPermissionAsked =
+      "notification_permission_asked_before";
 
-  static const audioRecordPermissionAsked = "audio_record_permission_asked_before";
+  static const audioRecordPermissionAsked =
+      "audio_record_permission_asked_before";
   static const cameraPermissionAsked = "camera_permission_asked_before";
   static const readPhoneStatePermissionAsked = "read_phone_state_asked_before";
   static const bluetoothPermissionAsked = "bluetooth_permission_asked_before";
@@ -452,7 +462,7 @@ class Constants {
   static const String typeSearchMessage = "Message";
 
   static const String emailPattern =
-  ("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,3})\$");
+      ("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,3})\$");
   static const String countryCodePattern = r'(^(\+?[0-9]{1,4}\-?)$)';
 
   static const String bulletPoint = "\u2022 ";
@@ -867,19 +877,23 @@ class Constants {
   static const String profileImageUpdateFailed = "Error while updating profile image";*/
 }
 
-
-
-Widget forMessageTypeIcon(String messageType,[MediaChatMessage? mediaChatMessage]) {
+Widget forMessageTypeIcon(String messageType,
+    [MediaChatMessage? mediaChatMessage]) {
   // debugPrint("messagetype $messageType");
   switch (messageType.toUpperCase()) {
     case Constants.mImage:
       return SvgPicture.asset(
         mImageIcon,
-        package: package,fit: BoxFit.contain,
+        package: package,
+        fit: BoxFit.contain,
       );
     case Constants.mAudio:
       return SvgPicture.asset(
-        mediaChatMessage != null ? mediaChatMessage.isAudioRecorded ? mAudioRecordIcon : mAudioIcon : mAudioIcon,
+        mediaChatMessage != null
+            ? mediaChatMessage.isAudioRecorded
+                ? mAudioRecordIcon
+                : mAudioIcon
+            : mAudioIcon,
         fit: BoxFit.contain,
         package: package,
         colorFilter: const ColorFilter.mode(textColor, BlendMode.srcIn),
@@ -887,27 +901,32 @@ Widget forMessageTypeIcon(String messageType,[MediaChatMessage? mediaChatMessage
     case Constants.mVideo:
       return SvgPicture.asset(
         mVideoIcon,
-        package: package,fit: BoxFit.contain,
+        package: package,
+        fit: BoxFit.contain,
       );
     case Constants.mDocument:
       return SvgPicture.asset(
         mDocumentIcon,
-        package: package,fit: BoxFit.contain,
+        package: package,
+        fit: BoxFit.contain,
       );
     case Constants.mFile:
       return SvgPicture.asset(
         mDocumentIcon,
-        package: package,fit: BoxFit.contain,
+        package: package,
+        fit: BoxFit.contain,
       );
     case Constants.mContact:
       return SvgPicture.asset(
         mContactIcon,
-        package: package,fit: BoxFit.contain,
+        package: package,
+        fit: BoxFit.contain,
       );
     case Constants.mLocation:
       return SvgPicture.asset(
         mLocationIcon,
-        package: package,fit: BoxFit.contain,
+        package: package,
+        fit: BoxFit.contain,
       );
     default:
       return const SizedBox();

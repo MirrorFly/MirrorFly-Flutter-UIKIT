@@ -22,7 +22,8 @@ class JoinCallPreviewView extends NavViewStateful<JoinCallController> {
   JoinCallController createController({String? tag}) =>
       Get.put(JoinCallController());
 
-  @override void onDispose() {
+  @override
+  void onDispose() {
     controller.disposePreview();
     super.onDispose();
   }
@@ -32,32 +33,36 @@ class JoinCallPreviewView extends NavViewStateful<JoinCallController> {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          decoration: AppStyleConfig.joinCallPreviewPageStyle
-              .backgroundDecoration,
+          decoration:
+              AppStyleConfig.joinCallPreviewPageStyle.backgroundDecoration,
           child: Column(
             children: [
               Stack(
                 children: [
-                  IconButton(onPressed: () {
-                    NavUtils.back();
-                  },
+                  IconButton(
+                      onPressed: () {
+                        NavUtils.back();
+                      },
                       icon: const Icon(Icons.arrow_back, color: Colors.white)),
                   Padding(
                     padding: const EdgeInsets.only(
                         top: 40.0, left: 20, right: 20, bottom: 8),
                     child: Center(
                       child: Obx(() {
-                        return FutureBuilder(future: CallUtils.getCallersName(
-                            controller.users, false),
+                        return FutureBuilder(
+                            future: CallUtils.getCallersName(
+                                controller.users, false),
                             builder: (ctx, snap) {
                               return Text(
-                                snap.hasData && snap.data != null &&
-                                    snap.data!.isNotEmpty
+                                snap.hasData &&
+                                        snap.data != null &&
+                                        snap.data!.isNotEmpty
                                     ? snap.data!
                                     : getTranslated("noOneHere"),
                                 style: AppStyleConfig.joinCallPreviewPageStyle
                                     .callerNameTextStyle,
-                                overflow: TextOverflow.ellipsis,);
+                                overflow: TextOverflow.ellipsis,
+                              );
                             });
                       }),
                     ),
@@ -68,31 +73,41 @@ class JoinCallPreviewView extends NavViewStateful<JoinCallController> {
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(
-                      controller.users.length > 3 ? 4 : controller.users
-                          .length, (index) =>
-                  (index == 3) ? Padding(
-                    padding: const EdgeInsets.all(2.0),
-                    child: ProfileTextImage(
-                      text: "+${(controller.users.length) - 3}",
-                      radius: 45 / 2,
-                      bgColor: Colors.white,
-                      fontColor: const Color(0xff12233E),
-                    ),
-                  ) : FutureBuilder(future: getProfileDetails(
-                      controller.users[index]!), builder: (ctx, snap) {
-                    return snap.hasData && snap.data != null ? Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: buildProfileImage(snap.data!, size: 45),
-                    ) : const Offstage();
-                  })),
+                      controller.users.length > 3 ? 4 : controller.users.length,
+                      (index) => (index == 3)
+                          ? Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: ProfileTextImage(
+                                text: "+${(controller.users.length) - 3}",
+                                radius: 45 / 2,
+                                bgColor: Colors.white,
+                                fontColor: const Color(0xff12233E),
+                              ),
+                            )
+                          : FutureBuilder(
+                              future:
+                                  getProfileDetails(controller.users[index]!),
+                              builder: (ctx, snap) {
+                                return snap.hasData && snap.data != null
+                                    ? Padding(
+                                        padding: const EdgeInsets.all(2.0),
+                                        child: buildProfileImage(snap.data!,
+                                            size: 45),
+                                      )
+                                    : const Offstage();
+                              })),
                 );
               }),
               const Spacer(),
               Obx(() {
-                return controller.subscribeSuccess.value ? const Offstage() :
-                Text(controller.displayStatus,style: AppStyleConfig.joinCallPreviewPageStyle
-                  .callerNameTextStyle,
-                  overflow: TextOverflow.ellipsis,);
+                return controller.subscribeSuccess.value
+                    ? const Offstage()
+                    : Text(
+                        controller.displayStatus,
+                        style: AppStyleConfig
+                            .joinCallPreviewPageStyle.callerNameTextStyle,
+                        overflow: TextOverflow.ellipsis,
+                      );
               }),
               const Spacer(),
               Container(
@@ -113,39 +128,45 @@ class JoinCallPreviewView extends NavViewStateful<JoinCallController> {
                     children: [
                       controller.muted.value
                           ? FloatingActionButton(
-                        shape: AppStyleConfig.joinCallPreviewPageStyle
-                            .actionButtonsStyle.shape,
-                        heroTag: "mute",
-                        elevation: 0,
-                        backgroundColor: AppStyleConfig.joinCallPreviewPageStyle
-                            .actionButtonsStyle.activeBgColor,
-                        //Colors.white,
-                        onPressed: () => controller.muteAudio(),
-                        child: SvgPicture.asset(
-                          muteActive,
-                          package: package,colorFilter: ColorFilter.mode(
-                              AppStyleConfig.joinCallPreviewPageStyle
-                                  .actionButtonsStyle.activeIconColor,
-                              BlendMode.srcIn),
-                        ),
-                      )
+                              shape: AppStyleConfig.joinCallPreviewPageStyle
+                                  .actionButtonsStyle.shape,
+                              heroTag: "mute",
+                              elevation: 0,
+                              backgroundColor: AppStyleConfig
+                                  .joinCallPreviewPageStyle
+                                  .actionButtonsStyle
+                                  .activeBgColor,
+                              //Colors.white,
+                              onPressed: () => controller.muteAudio(),
+                              child: SvgPicture.asset(
+                                muteActive,
+                                package: package,
+                                colorFilter: ColorFilter.mode(
+                                    AppStyleConfig.joinCallPreviewPageStyle
+                                        .actionButtonsStyle.activeIconColor,
+                                    BlendMode.srcIn),
+                              ),
+                            )
                           : FloatingActionButton(
-                        shape: AppStyleConfig.joinCallPreviewPageStyle
-                            .actionButtonsStyle.shape,
-                        heroTag: "mute",
-                        elevation: 0,
-                        backgroundColor: AppStyleConfig.joinCallPreviewPageStyle
-                            .actionButtonsStyle.inactiveBgColor,
-                        //Colors.white.withOpacity(0.3),
-                        onPressed: () => controller.muteAudio(),
-                        child: SvgPicture.asset(
-                          muteInactive,
-                          package: package,colorFilter: ColorFilter.mode(
-                              AppStyleConfig.joinCallPreviewPageStyle
-                                  .actionButtonsStyle.inactiveIconColor,
-                              BlendMode.srcIn),
-                        ),
-                      ),
+                              shape: AppStyleConfig.joinCallPreviewPageStyle
+                                  .actionButtonsStyle.shape,
+                              heroTag: "mute",
+                              elevation: 0,
+                              backgroundColor: AppStyleConfig
+                                  .joinCallPreviewPageStyle
+                                  .actionButtonsStyle
+                                  .inactiveBgColor,
+                              //Colors.white.withOpacity(0.3),
+                              onPressed: () => controller.muteAudio(),
+                              child: SvgPicture.asset(
+                                muteInactive,
+                                package: package,
+                                colorFilter: ColorFilter.mode(
+                                    AppStyleConfig.joinCallPreviewPageStyle
+                                        .actionButtonsStyle.inactiveIconColor,
+                                    BlendMode.srcIn),
+                              ),
+                            ),
                       /*if(controller.callType.value == CallType.video && !controller.videoMuted.value)...[
                         FloatingActionButton(
                           shape: AppStyleConfig.joinCallPreviewPageStyle.actionButtonsStyle.shape,
@@ -159,29 +180,37 @@ class JoinCallPreviewView extends NavViewStateful<JoinCallController> {
                               : SvgPicture.asset(cameraSwitchInactive,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.joinCallPreviewPageStyle.actionButtonsStyle.inactiveIconColor, BlendMode.srcIn),),
                         ),
                       ],*/
-                      const SizedBox(width: 15,),
+                      const SizedBox(
+                        width: 15,
+                      ),
                       FloatingActionButton(
-                        shape: AppStyleConfig.joinCallPreviewPageStyle
-                            .actionButtonsStyle.shape,
+                        shape: AppStyleConfig
+                            .joinCallPreviewPageStyle.actionButtonsStyle.shape,
                         heroTag: "video",
                         elevation: 0,
                         backgroundColor: controller.videoMuted.value
                             ? AppStyleConfig.joinCallPreviewPageStyle
-                            .actionButtonsStyle.activeBgColor
+                                .actionButtonsStyle.activeBgColor
                             : AppStyleConfig.joinCallPreviewPageStyle
-                            .actionButtonsStyle.inactiveBgColor,
+                                .actionButtonsStyle.inactiveBgColor,
                         onPressed: () => controller.videoMute(),
-                        child: controller.videoMuted.value ?
-                        SvgPicture.asset(videoInactive,
-                          package: package,colorFilter: ColorFilter.mode(
-                              AppStyleConfig.joinCallPreviewPageStyle
-                                  .actionButtonsStyle.activeIconColor,
-                              BlendMode.srcIn),)
+                        child: controller.videoMuted.value
+                            ? SvgPicture.asset(
+                                videoInactive,
+                                package: package,
+                                colorFilter: ColorFilter.mode(
+                                    AppStyleConfig.joinCallPreviewPageStyle
+                                        .actionButtonsStyle.activeIconColor,
+                                    BlendMode.srcIn),
+                              )
                             : SvgPicture.asset(
-                          videoActive, package: package,colorFilter: ColorFilter.mode(
-                            AppStyleConfig.joinCallPreviewPageStyle
-                                .actionButtonsStyle.inactiveIconColor,
-                            BlendMode.srcIn),),
+                                videoActive,
+                                package: package,
+                                colorFilter: ColorFilter.mode(
+                                    AppStyleConfig.joinCallPreviewPageStyle
+                                        .actionButtonsStyle.inactiveIconColor,
+                                    BlendMode.srcIn),
+                              ),
                       ),
                       /*FloatingActionButton(
                         shape: AppStyleConfig.joinCallPreviewPageStyle.actionButtonsStyle.shape,
@@ -210,11 +239,13 @@ class JoinCallPreviewView extends NavViewStateful<JoinCallController> {
                   padding: const EdgeInsets.only(bottom: 10.0, top: 20.0),
                   child: Obx(() {
                     return ElevatedButton(
-                      style: AppStyleConfig.joinCallPreviewPageStyle
-                          .joinCallButtonStyle,
-                      onPressed: controller.subscribeSuccess.value ? () {
-                        controller.joinCall();
-                      } : null,
+                      style: AppStyleConfig
+                          .joinCallPreviewPageStyle.joinCallButtonStyle,
+                      onPressed: controller.subscribeSuccess.value
+                          ? () {
+                              controller.joinCall();
+                            }
+                          : null,
                       child: Text(getTranslated("join_now")),
                     );
                   })),

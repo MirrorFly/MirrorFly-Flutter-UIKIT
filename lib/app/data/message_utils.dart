@@ -1,7 +1,6 @@
 part of 'utils.dart';
 
-class MessageUtils{
-
+class MessageUtils {
   /// Constructs a URI for a static Google Maps image based on the provided latitude and longitude coordinates.
   /// The image will display a map centered at the specified coordinates with a red marker indicating the location.
   ///
@@ -11,7 +10,8 @@ class MessageUtils{
   static Uri getMapImageUri(double latitude, double longitude) {
     var googleMapKey = Get.find<MainController>()
         .googleMapKey; // Obtain Google Maps API key from the main controller
-    return Uri.parse("https://maps.googleapis.com/maps/api/staticmap?center=$latitude,$longitude&zoom=13&size=300x200&markers=color:red|$latitude,$longitude&key=$googleMapKey");
+    return Uri.parse(
+        "https://maps.googleapis.com/maps/api/staticmap?center=$latitude,$longitude&zoom=13&size=300x200&markers=color:red|$latitude,$longitude&key=$googleMapKey");
   }
 
   /// Generates a Google Maps launch URI based on the provided latitude and longitude coordinates.
@@ -19,10 +19,10 @@ class MessageUtils{
   /// @param latitude The latitude coordinate.
   /// @param longitude The longitude coordinate.
   /// @return A [Uri] representing the Google Maps URI for launching the map at the specified location.
-  static Uri getMapLaunchUri(double latitude, double longitude){
-    return Uri.parse('https://www.google.com/maps/search/?api=1&query=$latitude, $longitude');
+  static Uri getMapLaunchUri(double latitude, double longitude) {
+    return Uri.parse(
+        'https://www.google.com/maps/search/?api=1&query=$latitude, $longitude');
   }
-
 
   /// Returns the color code corresponding to the given name.
   /// If the name matches the translated version of "you",
@@ -38,7 +38,6 @@ class MessageUtils{
     return colorsArray[(rand).abs()];
   }
 
-
   /// Returns an appropriate icon widget based on the provided media type.
   ///
   /// [mediaType]: The type of media for which the icon is needed.
@@ -46,7 +45,8 @@ class MessageUtils{
   /// If `true` and [mediaType] is audio, it displays a different icon for recorded audio.
   ///
   /// Returns a widget displaying the appropriate icon for the given [mediaType].
-  static Widget getMediaTypeIcon(String mediaType, [bool isAudioRecorded = false]) {
+  static Widget getMediaTypeIcon(String mediaType,
+      [bool isAudioRecorded = false]) {
     // Logs the media type for debugging purposes.
     LogMessage.d("iconfor", mediaType.toString());
 
@@ -54,11 +54,13 @@ class MessageUtils{
     switch (mediaType.toUpperCase()) {
       case Constants.mImage:
         return SvgPicture.asset(
-          mImageIcon, package: package,fit: BoxFit.contain,
+          mImageIcon,
+          package: package,
+          fit: BoxFit.contain,
           colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
         );
       case Constants.mAudio:
-      // Displays different icons based on whether the audio is recorded or not.
+        // Displays different icons based on whether the audio is recorded or not.
         return SvgPicture.asset(
           isAudioRecorded ? mAudioRecordIcon : mAudioIcon,
           fit: BoxFit.contain,
@@ -68,31 +70,35 @@ class MessageUtils{
       case Constants.mVideo:
         return SvgPicture.asset(
           mVideoIcon,
-          package: package,fit: BoxFit.contain,
+          package: package,
+          fit: BoxFit.contain,
           colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
         );
       case Constants.mDocument:
       case Constants.mFile:
-      // Displays the same icon for both document and file types.
+        // Displays the same icon for both document and file types.
         return SvgPicture.asset(
           mDocumentIcon,
-          package: package,fit: BoxFit.contain,
+          package: package,
+          fit: BoxFit.contain,
           colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
         );
       case Constants.mContact:
         return SvgPicture.asset(
           mContactIcon,
-          package: package,fit: BoxFit.contain,
+          package: package,
+          fit: BoxFit.contain,
           colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
         );
       case Constants.mLocation:
         return SvgPicture.asset(
           mLocationIcon,
-          package: package,fit: BoxFit.contain,
+          package: package,
+          fit: BoxFit.contain,
           colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
         );
       default:
-      // Returns an empty Offstage if the media type is not recognized.
+        // Returns an empty Offstage if the media type is not recognized.
         return const Offstage();
     }
   }
@@ -112,7 +118,8 @@ class MessageUtils{
   /// the appropriate icon is returned based on the message status. If the message type is a notification, or if the sender
   /// is the current user or the message is recalled, an Offstage widget is returned to indicate no icon should be displayed.
 
-  static Widget getMessageIndicatorIcon(String messageStatus, bool isSender, String messageType, bool isRecalled) {
+  static Widget getMessageIndicatorIcon(String messageStatus, bool isSender,
+      String messageType, bool isRecalled) {
     // debugPrint("Message Status ==>");
     // debugPrint("Message Status ==> $messageStatus");
     if (messageType.toUpperCase() != MessageType.isNotification) {
@@ -149,7 +156,6 @@ class MessageUtils{
         width: size, height: size, package: package);
   }
 
-
   /// Retrieves the corresponding image asset for a given document file type.
   ///
   /// @param filename The name of the document file.
@@ -158,7 +164,8 @@ class MessageUtils{
     if (filename.isEmpty || !filename.contains(".")) {
       return "";
     }
-    debugPrint("helper document--> ${filename.toLowerCase().substring(filename.lastIndexOf(".") + 1)}");
+    debugPrint(
+        "helper document--> ${filename.toLowerCase().substring(filename.lastIndexOf(".") + 1)}");
     switch (filename.toLowerCase().substring(filename.lastIndexOf(".") + 1)) {
       case "csv":
         return csvImage;
@@ -189,13 +196,13 @@ class MessageUtils{
     }
   }
 
-
   /// split the call link from the message
   static String getCallLinkFromMessage(String message) {
     var link = "";
     var messageArray = message.split(" ");
     for (var i = 0; i < messageArray.length; i++) {
-      if (messageArray[i].isURL && messageArray[i].startsWith(Constants.webChatLogin)) {
+      if (messageArray[i].isURL &&
+          messageArray[i].startsWith(Constants.webChatLogin)) {
         link = messageArray[i];
         break;
       }

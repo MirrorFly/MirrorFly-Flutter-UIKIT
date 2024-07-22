@@ -10,9 +10,12 @@ import '../../../model/chat_message_model.dart';
 import 'chat_widgets.dart';
 
 class LocationMessageView extends StatelessWidget {
-  const LocationMessageView({Key? key, required this.chatMessage, required this.isSelected,
-  this.locationMessageViewStyle = const LocationMessageViewStyle(),})
-      : super(key: key);
+  const LocationMessageView({
+    Key? key,
+    required this.chatMessage,
+    required this.isSelected,
+    this.locationMessageViewStyle = const LocationMessageViewStyle(),
+  }) : super(key: key);
   final ChatMessageModel chatMessage;
   final bool isSelected;
   final LocationMessageViewStyle locationMessageViewStyle;
@@ -34,7 +37,7 @@ class LocationMessageView extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 chatMessage.isMessageStarred.value
-                    ? SvgPicture.asset(starSmallIcon,package: package)
+                    ? SvgPicture.asset(starSmallIcon, package: package)
                     : const Offstage(),
                 const SizedBox(
                   width: 5,

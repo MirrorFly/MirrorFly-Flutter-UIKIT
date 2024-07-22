@@ -14,7 +14,8 @@ class StatusListView extends NavViewStateful<StatusListController> {
   const StatusListView({Key? key}) : super(key: key);
 
   @override
-StatusListController createController({String? tag}) => Get.put(StatusListController());
+  StatusListController createController({String? tag}) =>
+      Get.put(StatusListController());
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ StatusListController createController({String? tag}) => Get.put(StatusListContro
       ),
       body: PopScope(
         canPop: false,
-        onPopInvoked: (didPop){
+        onPopInvoked: (didPop) {
           if (didPop) {
             return;
           }
@@ -40,7 +41,8 @@ StatusListController createController({String? tag}) => Get.put(StatusListContro
             children: [
               Text(
                 getTranslated("yourCurrentStatus"),
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                style:
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
               ),
               Obx(
                 () => ListTile(
@@ -53,7 +55,8 @@ StatusListController createController({String? tag}) => Get.put(StatusListContro
                           fontWeight: FontWeight.normal)),
                   trailing: SvgPicture.asset(
                     pencilEditIcon,
-                    package: package,fit: BoxFit.contain,
+                    package: package,
+                    fit: BoxFit.contain,
                   ),
                   onTap: () {
                     NavUtils.toNamed(Routes.addProfileStatus, arguments: {
@@ -72,7 +75,8 @@ StatusListController createController({String? tag}) => Get.put(StatusListContro
               ),
               Text(
                 getTranslated("selectNewStatus"),
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                style:
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
               ),
               Obx(() => controller.statusList.isNotEmpty
                   ? Expanded(
@@ -98,14 +102,15 @@ StatusListController createController({String? tag}) => Get.put(StatusListContro
                                   item.status == controller.selectedStatus.value
                                       ? SvgPicture.asset(
                                           tickIcon,
-                                          package: package,fit: BoxFit.contain,
+                                          package: package,
+                                          fit: BoxFit.contain,
                                         )
                                       : const SizedBox(),
                               onTap: () {
                                 controller.updateStatus(item.status.checkNull(),
                                     item.id.checkNull());
                               },
-                              onLongPress: (){
+                              onLongPress: () {
                                 debugPrint("Status list long press");
                                 controller.deleteStatus(item);
                               },

@@ -20,8 +20,11 @@ Widget searchHeader(String? type, String count, BuildContext context) {
     width: NavUtils.size.width,
     padding: const EdgeInsets.all(8),
     color: dividerColor,
-    child: Text.rich(
-        TextSpan(text: type, children: [TextSpan(text: count.isNotEmpty ? " ($count)" : "", style: const TextStyle(fontWeight: FontWeight.bold))])),
+    child: Text.rich(TextSpan(text: type, children: [
+      TextSpan(
+          text: count.isNotEmpty ? " ($count)" : "",
+          style: const TextStyle(fontWeight: FontWeight.bold))
+    ])),
   );
 }
 

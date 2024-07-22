@@ -22,23 +22,21 @@ class GalleryPickerController extends GetxController {
     debugPrint("gallery picker controller --> $textMessage");
   }
 
-
-   addFile(List<PickedAssetModel> paths) {
-     pickedFile(paths);
-     pickedFile.refresh();
-   }
-   // addFile(List<PickedAssetModel> paths) {
-   //  debugPrint("list size--> ${paths.length}");
-   //  debugPrint("file name--> ${paths[0].file?.path}");
-   //  for(var filePath in paths){
-   //    if(pickedFile.contains(filePath)){
-   //      debugPrint("picked file remove");
-   //      pickedFile.remove(filePath);
-   //    }else{
-   //      debugPrint("picked file add");
-   //      pickedFile.add(filePath);
-   //    }
-   //  }
-   // }
-
+  addFile(List<PickedAssetModel> paths) {
+    pickedFile(paths);
+    pickedFile.refresh();
+  }
+  // addFile(List<PickedAssetModel> paths) {
+  //  debugPrint("list size--> ${paths.length}");
+  //  debugPrint("file name--> ${paths[0].file?.path}");
+  //  for(var filePath in paths){
+  //    if(pickedFile.contains(filePath)){
+  //      debugPrint("picked file remove");
+  //      pickedFile.remove(filePath);
+  //    }else{
+  //      debugPrint("picked file add");
+  //      pickedFile.add(filePath);
+  //    }
+  //  }
+  // }
 }

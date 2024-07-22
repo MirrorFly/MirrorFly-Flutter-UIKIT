@@ -7,7 +7,7 @@ class OutGoingCallBinding extends Bindings {
   void dependencies() {
     // Get.lazyPut(() => CallController());
     Get.lazyPut<CallController>(
-          () => CallController(),
+      () => CallController(),
     );
   }
 }

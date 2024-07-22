@@ -13,21 +13,25 @@ import '../../../common/widgets.dart';
 import '../../../data/utils.dart';
 import '../../../widgets/video_player_widget.dart';
 import '../controllers/media_preview_controller.dart';
+
 class MediaPreviewView extends NavViewStateful<MediaPreviewController> {
   const MediaPreviewView({Key? key}) : super(key: key);
 
   @override
-MediaPreviewController createController({String? tag}) => Get.put(MediaPreviewController());
+  MediaPreviewController createController({String? tag}) =>
+      Get.put(MediaPreviewController());
 
   @override
   Widget build(BuildContext context) {
     return Theme(
       data: ThemeData(
         appBarTheme: AppStyleConfig.mediaSentPreviewPageStyle.appBarTheme,
-        floatingActionButtonTheme: AppStyleConfig.mediaSentPreviewPageStyle.sentIcon,
+        floatingActionButtonTheme:
+            AppStyleConfig.mediaSentPreviewPageStyle.sentIcon,
       ),
       child: Scaffold(
-          backgroundColor: AppStyleConfig.mediaSentPreviewPageStyle.scaffoldBackgroundColor,
+          backgroundColor:
+              AppStyleConfig.mediaSentPreviewPageStyle.scaffoldBackgroundColor,
           appBar: AppBar(
             automaticallyImplyLeading: false,
             leadingWidth: 80,
@@ -43,38 +47,51 @@ MediaPreviewController createController({String? tag}) => Get.put(MediaPreviewCo
                   ),
                   Icon(
                     Icons.arrow_back,
-                    color: AppStyleConfig.mediaSentPreviewPageStyle.appBarTheme.iconTheme?.color,
+                    color: AppStyleConfig
+                        .mediaSentPreviewPageStyle.appBarTheme.iconTheme?.color,
                   ),
                   const SizedBox(
                     width: 10,
                   ),
                   ImageNetwork(
                     url: controller.profile.image.checkNull(),
-                    width: AppStyleConfig.mediaSentPreviewPageStyle.chatUserAppBarStyle.profileImageSize.width,
-                    height: AppStyleConfig.mediaSentPreviewPageStyle.chatUserAppBarStyle.profileImageSize.height,
+                    width: AppStyleConfig.mediaSentPreviewPageStyle
+                        .chatUserAppBarStyle.profileImageSize.width,
+                    height: AppStyleConfig.mediaSentPreviewPageStyle
+                        .chatUserAppBarStyle.profileImageSize.height,
                     clipOval: true,
                     errorWidget: controller.profile.isGroupProfile ?? false
                         ? ClipOval(
                             child: Image.asset(
                               groupImg,
-                              package: package,width: AppStyleConfig.mediaSentPreviewPageStyle.chatUserAppBarStyle.profileImageSize.width,
-                              height: AppStyleConfig.mediaSentPreviewPageStyle.chatUserAppBarStyle.profileImageSize.height,
+                              package: package,
+                              width: AppStyleConfig.mediaSentPreviewPageStyle
+                                  .chatUserAppBarStyle.profileImageSize.width,
+                              height: AppStyleConfig.mediaSentPreviewPageStyle
+                                  .chatUserAppBarStyle.profileImageSize.height,
                               fit: BoxFit.cover,
                             ),
                           )
                         : ProfileTextImage(
-                            text: controller.profile.getName(),/*controller.profile.name.checkNull().isEmpty
+                            text: controller.profile.getName(),
+                            /*controller.profile.name.checkNull().isEmpty
                                 ? controller.profile.nickName.checkNull().isEmpty
                                     ? controller.profile.mobileNumber.checkNull()
                                     : controller.profile.nickName.checkNull()
                                 : controller.profile.name.checkNull(),*/
-                            radius: AppStyleConfig.mediaSentPreviewPageStyle.chatUserAppBarStyle.profileImageSize.width / 2,
+                            radius: AppStyleConfig
+                                    .mediaSentPreviewPageStyle
+                                    .chatUserAppBarStyle
+                                    .profileImageSize
+                                    .width /
+                                2,
                           ),
                     isGroup: controller.profile.isGroupProfile.checkNull(),
                     blocked: controller.profile.isBlockedMe.checkNull() ||
                         controller.profile.isAdminBlocked.checkNull(),
-                    unknown: (!controller.profile.isItSavedContact.checkNull() ||
-                        controller.profile.isDeletedContact()),
+                    unknown:
+                        (!controller.profile.isItSavedContact.checkNull() ||
+                            controller.profile.isDeletedContact()),
                   ),
                 ],
               ),
@@ -86,7 +103,15 @@ MediaPreviewController createController({String? tag}) => Get.put(MediaPreviewCo
                         onPressed: () {
                           controller.deleteMedia();
                         },
-                        icon: SvgPicture.asset(deleteBinWhite,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.mediaSentPreviewPageStyle.appBarTheme.actionsIconTheme?.color ?? Colors.white, BlendMode.srcIn),))
+                        icon: SvgPicture.asset(
+                          deleteBinWhite,
+                          package: package,
+                          colorFilter: ColorFilter.mode(
+                              AppStyleConfig.mediaSentPreviewPageStyle
+                                      .appBarTheme.actionsIconTheme?.color ??
+                                  Colors.white,
+                              BlendMode.srcIn),
+                        ))
                     : const Offstage();
               })
             ],
@@ -151,57 +176,89 @@ MediaPreviewController createController({String? tag}) => Get.put(MediaPreviewCo
                                   children: [
                                     if (controller.filePath.isNotEmpty)
                                       // ...controller.filePath.map((data) {
-                                      ...controller.filePath.asMap().entries.map((entry) {
+                                      ...controller.filePath
+                                          .asMap()
+                                          .entries
+                                          .map((entry) {
                                         int index = entry.key;
                                         var data = entry.value;
+
                                         /// show image
                                         if (data.type == 'image') {
-                                          return controller.checkCacheFile(index) ? Center(
-                                            child: imagePreview(controller.getCacheFile(index)),
-                                          )
+                                          return controller
+                                                  .checkCacheFile(index)
+                                              ? Center(
+                                                  child: imagePreview(controller
+                                                      .getCacheFile(index)),
+                                                )
                                               : FutureBuilder<File?>(
-                                            future: controller.getFile(index),
-                                            builder: (BuildContext context, AsyncSnapshot<File?> snapshot) {
-                                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                                return const Center(child: CircularProgressIndicator());
-                                              } else if (snapshot.hasError) {
-                                                return Text(getTranslated("errorLoadingImage"));
-                                              } else if (snapshot.hasData && snapshot.data != null) {
-                                                return Center(
-                                                  child: imagePreview(snapshot.data!),
+                                                  future:
+                                                      controller.getFile(index),
+                                                  builder:
+                                                      (BuildContext context,
+                                                          AsyncSnapshot<File?>
+                                                              snapshot) {
+                                                    if (snapshot
+                                                            .connectionState ==
+                                                        ConnectionState
+                                                            .waiting) {
+                                                      return const Center(
+                                                          child:
+                                                              CircularProgressIndicator());
+                                                    } else if (snapshot
+                                                        .hasError) {
+                                                      return Text(getTranslated(
+                                                          "errorLoadingImage"));
+                                                    } else if (snapshot
+                                                            .hasData &&
+                                                        snapshot.data != null) {
+                                                      return Center(
+                                                        child: imagePreview(
+                                                            snapshot.data!),
+                                                      );
+                                                    } else {
+                                                      return Text(getTranslated(
+                                                          "noData"));
+                                                    }
+                                                  },
                                                 );
-                                              } else {
-                                                return Text(getTranslated("noData"));
-                                              }
-                                            },
-                                          );
                                         }
+
                                         /// show video
                                         else {
                                           return FutureBuilder<File?>(
                                             future: controller.getFile(index),
-                                            builder: (BuildContext context, AsyncSnapshot<File?> snapshot) {
-                                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                                return const Center(child: CircularProgressIndicator());
+                                            builder: (BuildContext context,
+                                                AsyncSnapshot<File?> snapshot) {
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.waiting) {
+                                                return const Center(
+                                                    child:
+                                                        CircularProgressIndicator());
                                               } else if (snapshot.hasError) {
-                                                return Text(getTranslated("errorLoadingImage"));
-                                              } else if (snapshot.hasData && snapshot.data != null) {
+                                                return Text(getTranslated(
+                                                    "errorLoadingImage"));
+                                              } else if (snapshot.hasData &&
+                                                  snapshot.data != null) {
                                                 return VideoPlayerWidget(
-                                                  videoPath: snapshot.data?.path ?? "",
-                                                  videoTitle: data.title ?? "Video",
+                                                  videoPath:
+                                                      snapshot.data?.path ?? "",
+                                                  videoTitle:
+                                                      data.title ?? "Video",
                                                 );
                                               } else {
-                                                return Text(getTranslated("noData"));
+                                                return Text(
+                                                    getTranslated("noData"));
                                               }
                                             },
                                           );
-
                                         }
                                       })
-                                    else
-                                    ...[
-                                          () {
-                                        return Center(child: Text(getTranslated("noDataAvailable")));
+                                    else ...[
+                                      () {
+                                        return Center(
+                                            child: Text(getTranslated(
+                                                "noDataAvailable")));
                                       }()
                                     ],
                                   ],
@@ -218,7 +275,8 @@ MediaPreviewController createController({String? tag}) => Get.put(MediaPreviewCo
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 5, horizontal: 15),
                                   child: Row(
                                     children: [
                                       Obx(() {
@@ -227,19 +285,28 @@ MediaPreviewController createController({String? tag}) => Get.put(MediaPreviewCo
                                                 !controller.showAdd
                                             ? InkWell(
                                                 onTap: () {
-                                                  if (!controller.showEmoji.value) {
+                                                  if (!controller
+                                                      .showEmoji.value) {
                                                     controller.captionFocusNode
                                                         .unfocus();
                                                   }
                                                   Future.delayed(
                                                       const Duration(
-                                                          milliseconds: 100), () {
-                                                    controller.showEmoji(!controller
-                                                        .showEmoji.value);
+                                                          milliseconds: 100),
+                                                      () {
+                                                    controller.showEmoji(
+                                                        !controller
+                                                            .showEmoji.value);
                                                   });
                                                 },
                                                 child: SvgPicture.asset(
-                                                    'assets/logos/smile.svg', colorFilter: ColorFilter.mode(AppStyleConfig.mediaSentPreviewPageStyle.iconColor, BlendMode.srcIn),))
+                                                  'assets/logos/smile.svg',
+                                                  colorFilter: ColorFilter.mode(
+                                                      AppStyleConfig
+                                                          .mediaSentPreviewPageStyle
+                                                          .iconColor,
+                                                      BlendMode.srcIn),
+                                                ))
                                             : controller.filePath.length < 10 &&
                                                     controller.showAdd
                                                 ? InkWell(
@@ -247,7 +314,14 @@ MediaPreviewController createController({String? tag}) => Get.put(MediaPreviewCo
                                                       NavUtils.back();
                                                     },
                                                     child: SvgPicture.asset(
-                                                        previewAddImg,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.mediaSentPreviewPageStyle.iconColor, BlendMode.srcIn),),
+                                                      previewAddImg,
+                                                      package: package,
+                                                      colorFilter: ColorFilter.mode(
+                                                          AppStyleConfig
+                                                              .mediaSentPreviewPageStyle
+                                                              .iconColor,
+                                                          BlendMode.srcIn),
+                                                    ),
                                                   )
                                                 : const Offstage();
                                       }),
@@ -255,7 +329,9 @@ MediaPreviewController createController({String? tag}) => Get.put(MediaPreviewCo
                                         width: 5,
                                       ),
                                       Container(
-                                        color: AppStyleConfig.mediaSentPreviewPageStyle.iconColor,
+                                        color: AppStyleConfig
+                                            .mediaSentPreviewPageStyle
+                                            .iconColor,
                                         width: 1,
                                         height: 25,
                                         margin: const EdgeInsets.symmetric(
@@ -269,10 +345,15 @@ MediaPreviewController createController({String? tag}) => Get.put(MediaPreviewCo
                                           onFocusChange: (isFocus) =>
                                               controller.isFocused(isFocus),
                                           child: TextFormField(
-                                            focusNode: controller.captionFocusNode,
+                                            focusNode:
+                                                controller.captionFocusNode,
                                             controller: controller.caption,
-                                            onChanged: controller.onCaptionTyped,
-                                            style: AppStyleConfig.mediaSentPreviewPageStyle.textFieldStyle.editTextStyle,
+                                            onChanged:
+                                                controller.onCaptionTyped,
+                                            style: AppStyleConfig
+                                                .mediaSentPreviewPageStyle
+                                                .textFieldStyle
+                                                .editTextStyle,
                                             // style: const TextStyle(
                                             //   color: Colors.white,
                                             //   fontSize: 15,
@@ -281,8 +362,12 @@ MediaPreviewController createController({String? tag}) => Get.put(MediaPreviewCo
                                             minLines: 1,
                                             decoration: InputDecoration(
                                               border: InputBorder.none,
-                                              hintText: getTranslated("addCaption"),
-                                              hintStyle: AppStyleConfig.mediaSentPreviewPageStyle.textFieldStyle.editTextHintStyle,
+                                              hintText:
+                                                  getTranslated("addCaption"),
+                                              hintStyle: AppStyleConfig
+                                                  .mediaSentPreviewPageStyle
+                                                  .textFieldStyle
+                                                  .editTextHintStyle,
                                               // hintStyle: const TextStyle(
                                               //   color: previewTextColor,
                                               //   fontSize: 15,
@@ -303,13 +388,16 @@ MediaPreviewController createController({String? tag}) => Get.put(MediaPreviewCo
                                   children: [
                                     Icon(
                                       Icons.keyboard_arrow_right,
-                                      color: AppStyleConfig.mediaSentPreviewPageStyle.iconColor,
+                                      color: AppStyleConfig
+                                          .mediaSentPreviewPageStyle.iconColor,
                                       // color: Colors.white,
                                       size: 13,
                                     ),
                                     Text(
                                       controller.userName,
-                                      style: AppStyleConfig.mediaSentPreviewPageStyle.nameTextStyle,
+                                      style: AppStyleConfig
+                                          .mediaSentPreviewPageStyle
+                                          .nameTextStyle,
                                       // style: const TextStyle(
                                       //     color: previewTextColor, fontSize: 13),
                                     ),
@@ -334,15 +422,17 @@ MediaPreviewController createController({String? tag}) => Get.put(MediaPreviewCo
                                               Obx(() {
                                                 return InkWell(
                                                   onTap: () {
+                                                    controller.currentPageIndex(
+                                                        index);
                                                     controller
-                                                        .currentPageIndex(index);
-                                                    controller.pageViewController
+                                                        .pageViewController
                                                         .animateToPage(index,
                                                             duration:
                                                                 const Duration(
                                                                     milliseconds:
                                                                         1),
-                                                            curve: Curves.easeIn);
+                                                            curve:
+                                                                Curves.easeIn);
                                                   },
                                                   child: Container(
                                                     width: 45,
@@ -358,10 +448,12 @@ MediaPreviewController createController({String? tag}) => Get.put(MediaPreviewCo
                                                           ))
                                                         : null,
                                                     margin: const EdgeInsets
-                                                        .symmetric(horizontal: 1),
-                                                    child: Image.memory(controller
-                                                        .filePath[index]
-                                                        .thumbnail!),
+                                                        .symmetric(
+                                                        horizontal: 1),
+                                                    child: Image.memory(
+                                                        controller
+                                                            .filePath[index]
+                                                            .thumbnail!),
                                                   ),
                                                 );
                                               }),
@@ -373,7 +465,8 @@ MediaPreviewController createController({String? tag}) => Get.put(MediaPreviewCo
                                                       left: 4,
                                                       child: SvgPicture.asset(
                                                         videoCamera,
-                                                        package: package,width: 5,
+                                                        package: package,
+                                                        width: 5,
                                                         height: 5,
                                                       )),
                                             ],
@@ -406,7 +499,7 @@ MediaPreviewController createController({String? tag}) => Get.put(MediaPreviewCo
     });
   }
 
-  Widget imagePreview(File file){
+  Widget imagePreview(File file) {
     return PhotoView(
       imageProvider: FileImage(file),
       minScale: PhotoViewComputedScale.contained * 1,

@@ -18,7 +18,7 @@ class OnGoingCallView extends NavViewStateful<CallController> {
   const OnGoingCallView({super.key});
 
   @override
-CallController createController({String? tag}) => Get.put(CallController());
+  CallController createController({String? tag}) => Get.put(CallController());
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ CallController createController({String? tag}) => Get.put(CallController());
       child: Container(
         decoration: AppStyleConfig.ongoingCallPageStyle.backgroundDecoration,
         child: Scaffold(
-          backgroundColor: Colors.transparent,//AppColors.callBg,
+          backgroundColor: Colors.transparent, //AppColors.callBg,
           body: SafeArea(
             child: Stack(
               fit: StackFit.expand,
@@ -43,21 +43,35 @@ CallController createController({String? tag}) => Get.put(CallController());
                     child: Stack(
                       children: [
                         Obx(() {
-                          debugPrint("controller.pinnedUserJid ${controller.pinnedUserJid}");
-                          return controller.pinnedUserJid.value.isNotEmpty && controller.layoutSwitch.value
+                          debugPrint(
+                              "controller.pinnedUserJid ${controller.pinnedUserJid}");
+                          return controller.pinnedUserJid.value.isNotEmpty &&
+                                  controller.layoutSwitch.value
                               ? MirrorFlyView(
                                   key: UniqueKey(),
                                   userJid: controller.pinnedUserJid.value,
                                   alignProfilePictureCenter: false,
-                                  showSpeakingRipple: controller.callType.value == CallType.audio,
-                                  viewBgColor: AppStyleConfig.ongoingCallPageStyle.pinnedCallUserTileStyle.backgroundColor,//AppColors.audioCallerBackground,
-                                  profileSize: AppStyleConfig.ongoingCallPageStyle.pinnedCallUserTileStyle.profileImageSize,
+                                  showSpeakingRipple:
+                                      controller.callType.value ==
+                                          CallType.audio,
+                                  viewBgColor: AppStyleConfig
+                                      .ongoingCallPageStyle
+                                      .pinnedCallUserTileStyle
+                                      .backgroundColor, //AppColors.audioCallerBackground,
+                                  profileSize: AppStyleConfig
+                                      .ongoingCallPageStyle
+                                      .pinnedCallUserTileStyle
+                                      .profileImageSize,
                                   onClick: () {
                                     // if(controller.callType.value==CallType.video) {
-                                    controller.isVisible(!controller.isVisible.value);
+                                    controller
+                                        .isVisible(!controller.isVisible.value);
                                     // }
                                   },
-                                ).setBorderRadius(AppStyleConfig.ongoingCallPageStyle.pinnedCallUserTileStyle.borderRadius)
+                                ).setBorderRadius(AppStyleConfig
+                                  .ongoingCallPageStyle
+                                  .pinnedCallUserTileStyle
+                                  .borderRadius)
                               : const Offstage();
                         }),
                         Obx(() {
@@ -79,22 +93,33 @@ CallController createController({String? tag}) => Get.put(CallController());
                                   if (controller.callList.length > 1 &&
                                       getTileCallStatus(
                                               controller.callList
-                                                  .firstWhere((y) => y.userJid!.value == controller.pinnedUserJid.value)
+                                                  .firstWhere((y) =>
+                                                      y.userJid!.value ==
+                                                      controller
+                                                          .pinnedUserJid.value)
                                                   .callStatus
                                                   ?.value,
-                                              controller.pinnedUserJid.value.checkNull(),
+                                              controller.pinnedUserJid.value
+                                                  .checkNull(),
                                               controller.isOneToOneCall)
                                           .isNotEmpty &&
                                       controller.layoutSwitch.value) ...[
                                     Text(
                                       getTileCallStatus(
                                           controller.callList
-                                              .firstWhere((y) => y.userJid!.value == controller.pinnedUserJid.value)
+                                              .firstWhere((y) =>
+                                                  y.userJid!.value ==
+                                                  controller
+                                                      .pinnedUserJid.value)
                                               .callStatus
                                               ?.value,
-                                          controller.pinnedUserJid.value.checkNull(),
+                                          controller.pinnedUserJid.value
+                                              .checkNull(),
                                           controller.isOneToOneCall),
-                                      style: AppStyleConfig.ongoingCallPageStyle.pinnedCallUserTileStyle.callStatusTextStyle,
+                                      style: AppStyleConfig
+                                          .ongoingCallPageStyle
+                                          .pinnedCallUserTileStyle
+                                          .callStatusTextStyle,
                                       // style: const TextStyle(color: Colors.white),
                                     ),
                                     const SizedBox(
@@ -103,13 +128,29 @@ CallController createController({String? tag}) => Get.put(CallController());
                                   ],
                                   if (controller.callList.length > 1 &&
                                       controller.callList
-                                          .firstWhere((y) => y.userJid!.value == controller.pinnedUserJid.value)
+                                          .firstWhere((y) =>
+                                              y.userJid!.value ==
+                                              controller.pinnedUserJid.value)
                                           .isAudioMuted
                                           .value &&
                                       controller.layoutSwitch.value) ...[
                                     CircleAvatar(
-                                      backgroundColor: AppStyleConfig.ongoingCallPageStyle.pinnedCallUserTileStyle.muteActionStyle.activeBgColor,//AppColors.audioMutedIconBgColor,
-                                      child: SvgPicture.asset(callMutedIcon,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.ongoingCallPageStyle.pinnedCallUserTileStyle.muteActionStyle.activeIconColor, BlendMode.srcIn),),
+                                      backgroundColor: AppStyleConfig
+                                          .ongoingCallPageStyle
+                                          .pinnedCallUserTileStyle
+                                          .muteActionStyle
+                                          .activeBgColor, //AppColors.audioMutedIconBgColor,
+                                      child: SvgPicture.asset(
+                                        callMutedIcon,
+                                        package: package,
+                                        colorFilter: ColorFilter.mode(
+                                            AppStyleConfig
+                                                .ongoingCallPageStyle
+                                                .pinnedCallUserTileStyle
+                                                .muteActionStyle
+                                                .activeIconColor,
+                                            BlendMode.srcIn),
+                                      ),
                                     )
                                   ],
                                 ],
@@ -130,7 +171,11 @@ CallController createController({String? tag}) => Get.put(CallController());
                     }),
                     Obx(() {
                       return !controller.layoutSwitch.value
-                          ? Expanded(child: buildGridItem(controller,AppStyleConfig.ongoingCallPageStyle.gridCallUserTileStyle))
+                          ? Expanded(
+                              child: buildGridItem(
+                                  controller,
+                                  AppStyleConfig.ongoingCallPageStyle
+                                      .gridCallUserTileStyle))
                           : const Offstage();
                     }),
                   ],
@@ -143,7 +188,12 @@ CallController createController({String? tag}) => Get.put(CallController());
                       return (controller.callList.length >= 2)
                           ? Align(
                               alignment: Alignment.bottomRight,
-                              child: controller.layoutSwitch.value ? buildListItem(controller,AppStyleConfig.ongoingCallPageStyle.listCallUserTileStyle) : const Offstage(),
+                              child: controller.layoutSwitch.value
+                                  ? buildListItem(
+                                      controller,
+                                      AppStyleConfig.ongoingCallPageStyle
+                                          .listCallUserTileStyle)
+                                  : const Offstage(),
                             )
                           : const Offstage();
                     }),
@@ -168,7 +218,8 @@ CallController createController({String? tag}) => Get.put(CallController());
                     bottom: controller.isVisible.value ? 0.0 : -140,
                     left: 0.0,
                     right: 0.0,
-                    child: buildCallOptions(AppStyleConfig.ongoingCallPageStyle.actionButtonsStyle),
+                    child: buildCallOptions(
+                        AppStyleConfig.ongoingCallPageStyle.actionButtonsStyle),
                   );
                 }),
                 Obx(() {
@@ -190,7 +241,8 @@ CallController createController({String? tag}) => Get.put(CallController());
                     onPressed: () {},
                     icon: Icon(
                       Icons.keyboard_arrow_down,
-                      color: AppStyleConfig.ongoingCallPageStyle.actionIconColor,
+                      color:
+                          AppStyleConfig.ongoingCallPageStyle.actionIconColor,
                     ),
                   ),
                 ),
@@ -213,25 +265,31 @@ CallController createController({String? tag}) => Get.put(CallController());
                   future: controller.groupId.isEmpty
                       ? CallUtils.getCallersName(
                           List<String>.from(controller.callList
-                              .where((p0) => p0.userJid != null && SessionManagement.getUserJID() != p0.userJid!.value)
+                              .where((p0) =>
+                                  p0.userJid != null &&
+                                  SessionManagement.getUserJID() !=
+                                      p0.userJid!.value)
                               .map((e) => e.userJid!.value)),
                           true)
                       : CallUtils.getNameOfJid(controller.groupId.value),
                   builder: (ctx, data) {
-                    return data.data.checkNull().isEmpty ? const Offstage() : SizedBox(
-                      width: 200,
-                      child: Text(
-                        data.data.checkNull(),
-                        style: AppStyleConfig.ongoingCallPageStyle.callerNameTextStyle,
-                        /*style: const TextStyle(
+                    return data.data.checkNull().isEmpty
+                        ? const Offstage()
+                        : SizedBox(
+                            width: 200,
+                            child: Text(
+                              data.data.checkNull(),
+                              style: AppStyleConfig
+                                  .ongoingCallPageStyle.callerNameTextStyle,
+                              /*style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w500,
                           fontSize: 12.0,
                         ),*/
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    );
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          );
                   }),
               const SizedBox(
                 height: 8,
@@ -241,7 +299,8 @@ CallController createController({String? tag}) => Get.put(CallController());
                   visible: !controller.joinViaLink,
                   child: Text(
                     controller.callTimer.value,
-                    style: AppStyleConfig.ongoingCallPageStyle.callDurationTextStyle,
+                    style: AppStyleConfig
+                        .ongoingCallPageStyle.callDurationTextStyle,
                     /*style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w400,
@@ -262,7 +321,13 @@ CallController createController({String? tag}) => Get.put(CallController());
               onPressed: () {
                 controller.openParticipantScreen();
               },
-              icon: SvgPicture.asset(addUserCall,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.ongoingCallPageStyle.actionIconColor, BlendMode.srcIn),),
+              icon: SvgPicture.asset(
+                addUserCall,
+                package: package,
+                colorFilter: ColorFilter.mode(
+                    AppStyleConfig.ongoingCallPageStyle.actionIconColor,
+                    BlendMode.srcIn),
+              ),
             ),
             IconButton(
               splashRadius: 24,
@@ -271,7 +336,10 @@ CallController createController({String? tag}) => Get.put(CallController());
               },
               icon: SvgPicture.asset(
                 gridIcon,
-                package: package,colorFilter: ColorFilter.mode(AppStyleConfig.ongoingCallPageStyle.actionIconColor, BlendMode.srcIn),
+                package: package,
+                colorFilter: ColorFilter.mode(
+                    AppStyleConfig.ongoingCallPageStyle.actionIconColor,
+                    BlendMode.srcIn),
               ),
             )
           ],
@@ -282,7 +350,9 @@ CallController createController({String? tag}) => Get.put(CallController());
 
   Widget buildCallOptions(ActionButtonStyle style) {
     double rightSideWidth = 15;
-    controller.callType.value == CallType.video ? rightSideWidth = 20 : rightSideWidth = 30;
+    controller.callType.value == CallType.video
+        ? rightSideWidth = 20
+        : rightSideWidth = 30;
     return Obx(() {
       return Column(
         children: [
@@ -308,41 +378,76 @@ CallController createController({String? tag}) => Get.put(CallController());
                 heroTag: "mute",
                 elevation: 0,
                 shape: style.shape,
-                backgroundColor: controller.muted.value ? style.activeBgColor : style.inactiveBgColor,//Colors.white.withOpacity(0.3),
+                backgroundColor: controller.muted.value
+                    ? style.activeBgColor
+                    : style.inactiveBgColor, //Colors.white.withOpacity(0.3),
                 onPressed: () => controller.muteAudio(),
                 child: controller.muted.value
                     ? SvgPicture.asset(
                         muteActive,
-                  package: package,colorFilter: ColorFilter.mode(style.activeIconColor, BlendMode.srcIn),
+                        package: package,
+                        colorFilter: ColorFilter.mode(
+                            style.activeIconColor, BlendMode.srcIn),
                       )
                     : SvgPicture.asset(
                         muteInactive,
-                  package: package,colorFilter: ColorFilter.mode(style.inactiveIconColor, BlendMode.srcIn),
+                        package: package,
+                        colorFilter: ColorFilter.mode(
+                            style.inactiveIconColor, BlendMode.srcIn),
                       ),
               ),
               SizedBox(width: rightSideWidth),
-              if((controller.callType.value == CallType.video || controller.isGroupCall || controller.joinViaLink) && !controller.videoMuted.value)...[
-                  FloatingActionButton(
-                      heroTag: "switchCamera",
-                      elevation: 0,
-                      shape: style.shape,
-                      backgroundColor: controller.cameraSwitch.value ? style.activeBgColor : style.inactiveBgColor,//Colors.white : Colors.white.withOpacity(0.3),
-                      onPressed: () => controller.switchCamera(),
-                      child: controller.cameraSwitch.value
-                          ? SvgPicture.asset(cameraSwitchActive,package: package,colorFilter: ColorFilter.mode(style.activeIconColor, BlendMode.srcIn),)
-                          : SvgPicture.asset(cameraSwitchInactive,package: package,colorFilter: ColorFilter.mode(style.inactiveIconColor, BlendMode.srcIn),),
-                    ),
+              if ((controller.callType.value == CallType.video ||
+                      controller.isGroupCall ||
+                      controller.joinViaLink) &&
+                  !controller.videoMuted.value) ...[
+                FloatingActionButton(
+                  heroTag: "switchCamera",
+                  elevation: 0,
+                  shape: style.shape,
+                  backgroundColor: controller.cameraSwitch.value
+                      ? style.activeBgColor
+                      : style
+                          .inactiveBgColor, //Colors.white : Colors.white.withOpacity(0.3),
+                  onPressed: () => controller.switchCamera(),
+                  child: controller.cameraSwitch.value
+                      ? SvgPicture.asset(
+                          cameraSwitchActive,
+                          package: package,
+                          colorFilter: ColorFilter.mode(
+                              style.activeIconColor, BlendMode.srcIn),
+                        )
+                      : SvgPicture.asset(
+                          cameraSwitchInactive,
+                          package: package,
+                          colorFilter: ColorFilter.mode(
+                              style.inactiveIconColor, BlendMode.srcIn),
+                        ),
+                ),
                 SizedBox(width: rightSideWidth)
               ],
               FloatingActionButton(
                 heroTag: "videoMute",
                 elevation: 0,
                 shape: style.shape,
-                backgroundColor: controller.videoMuted.value ? style.activeBgColor : style.inactiveBgColor,//Colors.white : Colors.white.withOpacity(0.3),
+                backgroundColor: controller.videoMuted.value
+                    ? style.activeBgColor
+                    : style
+                        .inactiveBgColor, //Colors.white : Colors.white.withOpacity(0.3),
                 onPressed: () => controller.videoMute(),
                 child: controller.videoMuted.value
-                    ? SvgPicture.asset(videoInactive,package: package,colorFilter: ColorFilter.mode(style.activeIconColor, BlendMode.srcIn),)
-                    : SvgPicture.asset(videoActive,package: package,colorFilter: ColorFilter.mode(style.inactiveIconColor, BlendMode.srcIn),),
+                    ? SvgPicture.asset(
+                        videoInactive,
+                        package: package,
+                        colorFilter: ColorFilter.mode(
+                            style.activeIconColor, BlendMode.srcIn),
+                      )
+                    : SvgPicture.asset(
+                        videoActive,
+                        package: package,
+                        colorFilter: ColorFilter.mode(
+                            style.inactiveIconColor, BlendMode.srcIn),
+                      ),
               ),
               SizedBox(
                 width: rightSideWidth,
@@ -351,32 +456,57 @@ CallController createController({String? tag}) => Get.put(CallController());
                 heroTag: "speaker",
                 elevation: 0,
                 shape: style.shape,
-                backgroundColor: controller.audioOutputType.value == AudioDeviceType.receiver
-                    ? style.inactiveBgColor//Colors.white.withOpacity(0.3)
-                    : style.activeBgColor,//Colors.white,
+                backgroundColor:
+                    controller.audioOutputType.value == AudioDeviceType.receiver
+                        ? style.inactiveBgColor //Colors.white.withOpacity(0.3)
+                        : style.activeBgColor, //Colors.white,
                 onPressed: () => controller.changeSpeaker(),
-                child: controller.audioOutputType.value == AudioDeviceType.receiver
-                    ? SvgPicture.asset(speakerInactive,package: package,colorFilter: ColorFilter.mode(style.inactiveIconColor, BlendMode.srcIn),)
-                    : controller.audioOutputType.value == AudioDeviceType.speaker
-                        ? SvgPicture.asset(speakerActive,package: package,colorFilter: ColorFilter.mode(style.activeIconColor, BlendMode.srcIn))
-                        : controller.audioOutputType.value == AudioDeviceType.bluetooth
-                            ? SvgPicture.asset(speakerBluetooth,package: package,colorFilter: ColorFilter.mode(style.activeIconColor, BlendMode.srcIn))
-                            : controller.audioOutputType.value == AudioDeviceType.headset
-                                ? SvgPicture.asset(speakerHeadset,package: package,colorFilter: ColorFilter.mode(style.activeIconColor, BlendMode.srcIn))
-                                : SvgPicture.asset(speakerActive,package: package,colorFilter: ColorFilter.mode(style.activeIconColor, BlendMode.srcIn)),
+                child: controller.audioOutputType.value ==
+                        AudioDeviceType.receiver
+                    ? SvgPicture.asset(
+                        speakerInactive,
+                        package: package,
+                        colorFilter: ColorFilter.mode(
+                            style.inactiveIconColor, BlendMode.srcIn),
+                      )
+                    : controller.audioOutputType.value ==
+                            AudioDeviceType.speaker
+                        ? SvgPicture.asset(speakerActive,
+                            package: package,
+                            colorFilter: ColorFilter.mode(
+                                style.activeIconColor, BlendMode.srcIn))
+                        : controller.audioOutputType.value ==
+                                AudioDeviceType.bluetooth
+                            ? SvgPicture.asset(speakerBluetooth,
+                                package: package,
+                                colorFilter: ColorFilter.mode(
+                                    style.activeIconColor, BlendMode.srcIn))
+                            : controller.audioOutputType.value ==
+                                    AudioDeviceType.headset
+                                ? SvgPicture.asset(speakerHeadset,
+                                    package: package,
+                                    colorFilter: ColorFilter.mode(
+                                        style.activeIconColor, BlendMode.srcIn))
+                                : SvgPicture.asset(speakerActive,
+                                    package: package,
+                                    colorFilter: ColorFilter.mode(
+                                        style.activeIconColor,
+                                        BlendMode.srcIn)),
               ),
             ],
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 10.0, top: 20.0),
             child: ElevatedButton(
-                style: AppStyleConfig.ongoingCallPageStyle.disconnectButtonStyle,
+                style:
+                    AppStyleConfig.ongoingCallPageStyle.disconnectButtonStyle,
                 onPressed: () {
                   controller.disconnectCall();
                 },
                 child: SvgPicture.asset(
                   callEndButton,
-                package: package,)),
+                  package: package,
+                )),
           ),
           // )
         ],

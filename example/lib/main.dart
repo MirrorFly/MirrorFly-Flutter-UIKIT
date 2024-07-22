@@ -16,10 +16,11 @@ void main() {
   MirrorflyUikit.instance.initUIKIT(
     navigatorKey: navigatorKey,
     licenseKey: 'LICENSE_KEY',
-    iOSContainerID: 'group.com.mirrorfly.flutter', );
+    iOSContainerID: 'group.com.mirrorfly.flutter',
+  );
 
   /// Use this method to add the locale you want to support in the UIKIT Plugin.
-  AppLocalizations.addSupportedLocales(const Locale("hi","IN"));
+  AppLocalizations.addSupportedLocales(const Locale("hi", "IN"));
 
   runApp(const MyApp());
 }
@@ -36,14 +37,17 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         navigatorKey: navigatorKey,
         themeMode: ThemeMode.dark,
         debugShowCheckedModeBanner: false,
+
         /// CHANGE THE LOCALE TO 'en' TO SEE THE LOCALIZATION IN ENGLISH, 'ar' FOR ARABIC, 'hi' FOR HINDI
         locale: const Locale('en'),
+
         /// ADD THE SUPPORTED LOCALES TO THE APP
         supportedLocales: AppLocalizations.supportedLocales,
         localizationsDelegates: const [
@@ -52,10 +56,10 @@ class _MyAppState extends State<MyApp> {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
+
         /// ADD THE NAVIGATION OBSERVER TO THE APP, TO HANDLE THE NAVIGATION EVENTS
-        navigatorObservers: [
-          MirrorFlyNavigationObserver()
-        ],
+        navigatorObservers: [MirrorFlyNavigationObserver()],
+
         /// ADD THE ROUTE GENERATOR TO THE APP, TO HANDLE THE ROUTES
         onGenerateRoute: (settings) {
           switch (settings.name) {
@@ -66,7 +70,6 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(textTheme: GoogleFonts.latoTextTheme()),
         home: const Dashboard());
   }
-  
 }
 
 class Dashboard extends StatefulWidget {
@@ -123,8 +126,8 @@ class _DashboardState extends State<Dashboard> {
                         onPressed: () async {
                           if (uniqueId.isNotEmpty) {
                             try {
-                              var response =
-                                  await MirrorflyUikit.login(userIdentifier: uniqueId);
+                              var response = await MirrorflyUikit.login(
+                                  userIdentifier: uniqueId);
                               debugPrint("register user $response");
                               showSnack(response['message']);
                             } catch (e) {
@@ -141,11 +144,16 @@ class _DashboardState extends State<Dashboard> {
               Center(
                 child: buildTextButton(
                   onPressed: () async {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (con) => const DashboardView(),settings: const RouteSettings(name: 'DashboardView',arguments: DashboardViewArguments(didMissedCallNotificationLaunchApp: false))));
-                    },
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (con) => const DashboardView(),
+                            settings: const RouteSettings(
+                                name: 'DashboardView',
+                                arguments: DashboardViewArguments(
+                                    didMissedCallNotificationLaunchApp:
+                                        false))));
+                  },
                   text: 'chat page',
                 ),
               ),

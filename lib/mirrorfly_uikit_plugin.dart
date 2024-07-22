@@ -45,16 +45,16 @@ class MirrorflyUikit {
   /// * [NavigatorState] provide GlobalKey for NavigatorState ex: GlobalKey<[NavigatorState]> navigatorKey = GlobalKey<[NavigatorState]>();
   Future<Map> initUIKIT(
       {required GlobalKey<NavigatorState> navigatorKey,
-        required String licenseKey,
-        // String? googleMapKey,
-        required String iOSContainerID,
-        String storageFolderName = "Mirrorfly",
-        // bool showMobileNumberOnList = true,
-        // bool showStatusOption = true,
-        bool enableDebugLog = true,
-        bool chatHistoryEnable = true,
-        bool enableMobileNumberLogin = false,
-        bool enableLocalNotification = true}) async {
+      required String licenseKey,
+      // String? googleMapKey,
+      required String iOSContainerID,
+      String storageFolderName = "Mirrorfly",
+      // bool showMobileNumberOnList = true,
+      // bool showStatusOption = true,
+      bool enableDebugLog = true,
+      bool chatHistoryEnable = true,
+      bool enableMobileNumberLogin = false,
+      bool enableLocalNotification = true}) async {
     Completer<Map<String, dynamic>> completer = Completer();
 
     // this.showMobileNumberOnList = showMobileNumberOnList;
@@ -148,10 +148,13 @@ class MirrorflyUikit {
   /// and specify whether to forcefully register the user if not already registered with [isForceRegister].to specify the app user type use [userType].
   /// The [identifierMetaData] parameter is optional and represents additional metadata associated with the User.
   ///sample response {'status': true, 'message': 'Login Success};
-  static Future<Map> login(
-      {required String userIdentifier, String fcmToken = "",String userType = "d",
-        bool isForceRegister = true,
-        List<IdentifierMetaData>? identifierMetaData,}) async {
+  static Future<Map> login({
+    required String userIdentifier,
+    String fcmToken = "",
+    String userType = "d",
+    bool isForceRegister = true,
+    List<IdentifierMetaData>? identifierMetaData,
+  }) async {
     Completer<Map<String, dynamic>> completer = Completer();
     if (!isSDKInitialized) {
       completer.complete(setResponse(false, 'SDK Not Initialized'));

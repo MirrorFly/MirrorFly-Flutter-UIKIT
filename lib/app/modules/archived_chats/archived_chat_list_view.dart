@@ -16,18 +16,20 @@ import 'archived_chat_list_controller.dart';
 class ArchivedChatListView extends NavViewStateful<ArchivedChatListController> {
   const ArchivedChatListView(
       {super.key,
-        this.enableAppBar = true,
-        this.showChatDeliveryIndicator = true});
+      this.enableAppBar = true,
+      this.showChatDeliveryIndicator = true});
   final bool enableAppBar;
   final bool showChatDeliveryIndicator;
 
   @override
-ArchivedChatListController createController({String? tag}) => Get.put(ArchivedChatListController());
+  ArchivedChatListController createController({String? tag}) =>
+      Get.put(ArchivedChatListController());
 
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: Theme.of(context).copyWith(appBarTheme: AppStyleConfig.archivedChatsPageStyle.appBarTheme),
+      data: Theme.of(context).copyWith(
+          appBarTheme: AppStyleConfig.archivedChatsPageStyle.appBarTheme),
       child: FocusDetector(
         onFocusGained: () {
           controller.getArchivedChatsList();
@@ -47,15 +49,16 @@ ArchivedChatListController createController({String? tag}) => Get.put(ArchivedCh
           child: Obx(() {
             return Scaffold(
               appBar: AppBar(
-                leading: controller.selected.value ? IconButton(
-                  icon: const Icon(Icons.clear),
-                  onPressed: () {
-                    controller.clearAllChatSelection();
-                  },
-                ) : null,
+                leading: controller.selected.value
+                    ? IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          controller.clearAllChatSelection();
+                        },
+                      )
+                    : null,
                 title: controller.selected.value
-                    ? Text(
-                    (controller.selectedChats.length).toString())
+                    ? Text((controller.selectedChats.length).toString())
                     : Text(getTranslated("archivedChats")),
                 actions: [
                   Visibility(
@@ -68,12 +71,16 @@ ArchivedChatListController createController({String? tag}) => Get.put(ArchivedCh
                         actions: [
                           CustomAction(
                             visibleWidget: IconButton(
-                                onPressed: () {
-                                  controller.deleteChats();
-                                },
-                                icon: SvgPicture.asset(delete, package: package),tooltip: 'Delete',),
+                              onPressed: () {
+                                controller.deleteChats();
+                              },
+                              icon: SvgPicture.asset(delete, package: package),
+                              tooltip: 'Delete',
+                            ),
                             overflowWidget: Text(getTranslated("delete")),
-                            showAsAction: controller.delete.value ? ShowAsAction.always : ShowAsAction.gone,
+                            showAsAction: controller.delete.value
+                                ? ShowAsAction.always
+                                : ShowAsAction.gone,
                             keyValue: 'Delete',
                             onItemClick: () {
                               controller.deleteChats();
@@ -84,7 +91,17 @@ ArchivedChatListController createController({String? tag}) => Get.put(ArchivedCh
                               onPressed: () {
                                 controller.muteChats();
                               },
-                              icon: SvgPicture.asset(mute,package: package,colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)),tooltip: 'Mute',),
+                              icon: SvgPicture.asset(mute,
+                                  package: package,
+                                  colorFilter: ColorFilter.mode(
+                                      Theme.of(context)
+                                              .appBarTheme
+                                              .actionsIconTheme
+                                              ?.color ??
+                                          Colors.black,
+                                      BlendMode.srcIn)),
+                              tooltip: 'Mute',
+                            ),
                             overflowWidget: Text(getTranslated("mute")),
                             showAsAction: controller.mute.value
                                 ? ShowAsAction.always
@@ -99,7 +116,17 @@ ArchivedChatListController createController({String? tag}) => Get.put(ArchivedCh
                               onPressed: () {
                                 controller.unMuteChats();
                               },
-                              icon: SvgPicture.asset(unMute,package: package,colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)),tooltip: 'UnMute',),
+                              icon: SvgPicture.asset(unMute,
+                                  package: package,
+                                  colorFilter: ColorFilter.mode(
+                                      Theme.of(context)
+                                              .appBarTheme
+                                              .actionsIconTheme
+                                              ?.color ??
+                                          Colors.black,
+                                      BlendMode.srcIn)),
+                              tooltip: 'UnMute',
+                            ),
                             overflowWidget: Text(getTranslated("unMute")),
                             showAsAction: controller.unMute.value
                                 ? ShowAsAction.always
@@ -111,10 +138,20 @@ ArchivedChatListController createController({String? tag}) => Get.put(ArchivedCh
                           ),
                           CustomAction(
                             visibleWidget: IconButton(
-                                onPressed: () {
-                                  controller.unArchiveSelectedChats();
-                                },
-                                icon: SvgPicture.asset(unarchive,package: package,colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)),tooltip: 'UnArchive',),
+                              onPressed: () {
+                                controller.unArchiveSelectedChats();
+                              },
+                              icon: SvgPicture.asset(unarchive,
+                                  package: package,
+                                  colorFilter: ColorFilter.mode(
+                                      Theme.of(context)
+                                              .appBarTheme
+                                              .actionsIconTheme
+                                              ?.color ??
+                                          Colors.black,
+                                      BlendMode.srcIn)),
+                              tooltip: 'UnArchive',
+                            ),
                             overflowWidget: Text(getTranslated("unArchive")),
                             showAsAction: ShowAsAction.always,
                             keyValue: 'UnArchive',
@@ -127,8 +164,8 @@ ArchivedChatListController createController({String? tag}) => Get.put(ArchivedCh
                 ],
               ),
               body: SafeArea(
-                child: Obx(() =>
-                    controller.archivedChats.isNotEmpty ? ListView.builder(
+                child: Obx(() => controller.archivedChats.isNotEmpty
+                    ? ListView.builder(
                         padding: EdgeInsets.zero,
                         itemCount: controller.archivedChats.length,
                         shrinkWrap: true,
@@ -136,14 +173,16 @@ ArchivedChatListController createController({String? tag}) => Get.put(ArchivedCh
                           var item = controller.archivedChats[index];
                           return Obx(() {
                             return RecentChatItem(
-                              recentChatItemStyle: AppStyleConfig.archivedChatsPageStyle.recentChatItemStyle,
+                              recentChatItemStyle: AppStyleConfig
+                                  .archivedChatsPageStyle.recentChatItemStyle,
                               item: item,
-                              onAvatarClick: (RecentChatData chatItem){
-                                controller.getProfileDetail(context, item, index);
+                              onAvatarClick: (RecentChatData chatItem) {
+                                controller.getProfileDetail(
+                                    context, item, index);
                               },
                               isSelected: controller.isSelected(index),
-                              typingUserid: controller.typingUser(
-                                  item.jid.checkNull()),
+                              typingUserid:
+                                  controller.typingUser(item.jid.checkNull()),
                               archiveVisible: false,
                               archiveEnabled: controller.archiveEnabled.value,
                               onTap: (RecentChatData chatItem) {
@@ -159,9 +198,14 @@ ArchivedChatListController createController({String? tag}) => Get.put(ArchivedCh
                               },
                             );
                           });
-                        }) : Center(
-                      child: Text(getTranslated("noArchivedChats"),style: AppStyleConfig.archivedChatsPageStyle.noDataTextStyle,),
-                    )),
+                        })
+                    : Center(
+                        child: Text(
+                          getTranslated("noArchivedChats"),
+                          style: AppStyleConfig
+                              .archivedChatsPageStyle.noDataTextStyle,
+                        ),
+                      )),
               ),
             );
           }),

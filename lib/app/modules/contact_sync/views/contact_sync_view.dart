@@ -26,17 +26,28 @@ class _ContactSyncPageState extends State<ContactSyncPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const Spacer(),
-            Text(getTranslated("hello"), style: const TextStyle(fontSize: 23,
-                fontWeight: FontWeight.w800,
-                color: textHintColor), textAlign: TextAlign.center,),
-            Text(controller.name,
+            Text(
+              getTranslated("hello"),
+              style: const TextStyle(
+                  fontSize: 23,
+                  fontWeight: FontWeight.w800,
+                  color: textHintColor),
+              textAlign: TextAlign.center,
+            ),
+            Text(
+              controller.name,
               style: const TextStyle(fontSize: 23, fontWeight: FontWeight.w800),
-              textAlign: TextAlign.center,),
-            const SizedBox(height: 20,),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
             Obx(() {
-              return Text(controller.textContactSync.value,
+              return Text(
+                controller.textContactSync.value,
                 style: const TextStyle(fontSize: 16, color: textColor),
-                textAlign: TextAlign.center,);
+                textAlign: TextAlign.center,
+              );
             }),
             const Spacer(),
             Padding(
@@ -55,8 +66,8 @@ class _ContactSyncPageState extends State<ContactSyncPage> {
                           return Visibility(
                             visible: controller.syncing.value,
                             child: RotationTransition(
-                                turns: controller.turnsTween.animate(
-                                    controller.animController),
+                                turns: controller.turnsTween
+                                    .animate(controller.animController),
                                 child: SvgPicture.asset(syncIcon)),
                           );
                         }),
