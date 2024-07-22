@@ -62,6 +62,7 @@ class MessageUtils{
         return SvgPicture.asset(
           isAudioRecorded ? mAudioRecordIcon : mAudioIcon,
           fit: BoxFit.contain,
+          package: package,
           colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
         );
       case Constants.mVideo:
@@ -117,13 +118,13 @@ class MessageUtils{
     if (messageType.toUpperCase() != MessageType.isNotification) {
       if (isSender && !isRecalled) {
         if (messageStatus == 'A') {
-          return SvgPicture.asset(acknowledgedIcon);
+          return SvgPicture.asset(acknowledgedIcon, package: package);
         } else if (messageStatus == 'D') {
-          return SvgPicture.asset(deliveredIcon);
+          return SvgPicture.asset(deliveredIcon, package: package);
         } else if (messageStatus == 'S') {
-          return SvgPicture.asset(seenIcon);
+          return SvgPicture.asset(seenIcon, package: package);
         } else if (messageStatus == 'N') {
-          return SvgPicture.asset(unSendIcon);
+          return SvgPicture.asset(unSendIcon, package: package);
         } else {
           return const Offstage();
         }
@@ -145,7 +146,7 @@ class MessageUtils{
   static Widget getDocumentTypeIcon(String mediaFileName, double size) {
     debugPrint("mediaFileName--> $mediaFileName");
     return SvgPicture.asset(getDocAsset(mediaFileName),
-        width: size, height: size);
+        width: size, height: size, package: package);
   }
 
 

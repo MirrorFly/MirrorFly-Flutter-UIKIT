@@ -133,6 +133,7 @@ MainController createController({String? tag}) => MainController();
                     ? ClipOval(
                         child: Image.asset(
                           getSingleOrGroup(isGroup),
+                          package: package,
                           height: height,
                           width: width,
                           fit: BoxFit.cover,
@@ -140,6 +141,7 @@ MainController createController({String? tag}) => MainController();
                       )
                     : Image.asset(
                         getSingleOrGroup(isGroup),
+                        package: package,
                         height: height,
                         width: width,
                         fit: BoxFit.cover,
@@ -166,6 +168,7 @@ MainController createController({String? tag}) => MainController();
                               )
                             : Image.asset(
                                 getSingleOrGroup(isGroup),
+                                package: package,
                                 height: height,
                                 width: width,
                                 fit: BoxFit.cover,
@@ -180,6 +183,7 @@ MainController createController({String? tag}) => MainController();
                               )
                             : Image.asset(
                                 getSingleOrGroup(isGroup),
+                                package: package,
                                 height: height,
                                 width: width,
                                 fit: BoxFit.cover,
@@ -213,6 +217,7 @@ MainController createController({String? tag}) => MainController();
         ? ClipOval(
             child: Image.asset(
               getSingleOrGroup(isGroup),
+              package: package,
               height: height,
               width: width,
               fit: BoxFit.cover,
@@ -220,6 +225,7 @@ MainController createController({String? tag}) => MainController();
           )
         : Image.asset(
             getSingleOrGroup(isGroup),
+            package: package,
             height: height,
             width: width,
             fit: BoxFit.cover,
@@ -267,7 +273,7 @@ MainController createController({String? tag}) => MainController();
   }
 
   String getSingleOrGroup(bool isGroup) {
-    return isGroup ? groupImg : profileImg;
+    return isGroup ? groupImg : profileImage;
   }
 }
 

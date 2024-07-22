@@ -54,7 +54,7 @@ class ChatView extends NavViewStateful<ChatController> {
               height: NavUtils.height,
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage("assets/logos/chat_bg.png"),
+                  image: AssetImage(chatBgIcon, package: package),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -271,7 +271,7 @@ class ChatView extends NavViewStateful<ChatController> {
                                                     child: CircleAvatar(
                                                       backgroundColor: AppStyleConfig.chatPageStyle.messageTypingAreaStyle.audioRecordIcon.bgColor,//const Color(0xff3276E2),
                                                       radius: 48/2,
-                                                      child: SvgPicture.asset("assets/logos/mic.svg",
+                                                      child: SvgPicture.asset(audioMic, package: package,
                                                         colorFilter: ColorFilter.mode(AppStyleConfig.chatPageStyle.messageTypingAreaStyle.audioRecordIcon.iconColor, BlendMode.srcIn),
                                                       ),),
                                                   ),
@@ -426,7 +426,7 @@ class ChatView extends NavViewStateful<ChatController> {
                 onPressed: () {
                   controller.showAttachmentsView(context);
                 },
-                icon: SvgPicture.asset('assets/logos/attach.svg',colorFilter: ColorFilter.mode(AppStyleConfig.chatPageStyle.messageTypingAreaStyle.emojiIconColor, BlendMode.srcIn),),
+                icon: SvgPicture.asset(attachIcon,package: package, colorFilter: ColorFilter.mode(AppStyleConfig.chatPageStyle.messageTypingAreaStyle.emojiIconColor, BlendMode.srcIn),),
               )
         ],
         if(controller.isAudioRecording.value == Constants.audioRecordInitial &&
@@ -435,7 +435,7 @@ class ChatView extends NavViewStateful<ChatController> {
                 onPressed: () {
                   controller.startRecording();
                 },
-                icon: SvgPicture.asset('assets/logos/mic.svg',colorFilter: ColorFilter.mode(AppStyleConfig.chatPageStyle.messageTypingAreaStyle.emojiIconColor, BlendMode.srcIn),),
+                icon: SvgPicture.asset(audioMic, package: package, colorFilter: ColorFilter.mode(AppStyleConfig.chatPageStyle.messageTypingAreaStyle.emojiIconColor, BlendMode.srcIn),),
               )
         ],
         /*const SizedBox(

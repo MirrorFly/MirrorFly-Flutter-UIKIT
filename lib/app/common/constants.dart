@@ -210,6 +210,8 @@ const String audioWhite = 'assets/logos/audio_white.svg';
 const String videoWhite = 'assets/logos/video_icon.svg';
 const String cornerShadow = 'assets/logos/ic_baloon.png';
 const String disabledIcon = 'assets/logos/disabled.png';
+const String chatBgIcon = 'assets/logos/chat_bg.png';
+const String attachIcon = 'assets/logos/attach.svg';
 
 const String phoneCall = 'assets/logos/phonecall.svg';
 const String videoCall = 'assets/logos/videocall.svg';
@@ -245,7 +247,7 @@ const String deleteDustbin = 'assets/animation/delete_dustbin.json';
 const String audioJson = 'assets/animation/enable_mic.json';
 const String audioJson1 = 'assets/animation/enable_mic1.json';
 
-const String profileImg = 'assets/logos/profile_img.png';
+// const String profileImg = 'assets/logos/profile_img.png';
 const String groupImg = 'assets/logos/ic_grp_bg.png';
 const String imageEdit = 'assets/logos/ic_image_edit.svg';
 const String edit = 'assets/logos/ic_edit.svg';

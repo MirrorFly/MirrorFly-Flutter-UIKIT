@@ -95,7 +95,7 @@ class SettingListItem extends StatelessWidget {
                 padding: const EdgeInsets.all(18.0),
                 child: SizedBox(
                     width: 24,
-                    child: SvgPicture.asset(leading!,colorFilter: ColorFilter.mode(listItemStyle.leadingIconColor, BlendMode.srcIn))),
+                    child: SvgPicture.asset(leading!, package: package, colorFilter: ColorFilter.mode(listItemStyle.leadingIconColor, BlendMode.srcIn))),
               ) :  const SizedBox(height: 4,),
               Expanded(
                   child: Text(

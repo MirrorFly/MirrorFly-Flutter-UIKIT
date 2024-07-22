@@ -265,7 +265,7 @@ class AppPermission {
       permissions.add(Permission.phone);
     }
     if (!microphone.isGranted ||
-        (await Permission.microphone
+        (Platform.isAndroid && await Permission.microphone
             .shouldShowRequestRationale) /*&& !SessionManagement.getBool(Constants.audioRecordPermissionAsked)*/) {
       permissions.add(Permission.microphone);
     }
@@ -369,6 +369,7 @@ class AppPermission {
         content: content,dialogStyle: AppStyleConfig.dialogStyle); //Constants.audioCallPermission);
     if (deniedPopupValue) {
       LogMessage.d("deniedPopupValue", deniedPopupValue);
+      LogMessage.d("deniedPopupValue permissions", permissions);
       var newp = await permissions.request();
       PermissionStatus? microphone_ = newp[Permission.microphone];
       PermissionStatus? phone_ = newp[Permission.phone];
@@ -392,6 +393,11 @@ class AppPermission {
         LogMessage.d("notification_", notification_.isPermanentlyDenied);
         SessionManagement.setBool(Constants.notificationPermissionAsked, true);
       }
+      debugPrint("returning permission ${microphone_?.isGranted ?? true}");
+      debugPrint("returning permission ${phone_?.isGranted ?? true}");
+      debugPrint("returning permission ${bluetoothConnect_?.isGranted ?? true}");
+      debugPrint("returning permission ${notification_?.isGranted ?? true}");
+
       return (microphone_?.isGranted ?? true) &&
           (phone_?.isGranted ?? true) &&
           (bluetoothConnect_?.isGranted ?? true) &&
