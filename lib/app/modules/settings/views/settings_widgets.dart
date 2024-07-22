@@ -104,7 +104,7 @@ class SettingListItem extends StatelessWidget {
                   )),
               trailing != null ? Padding(
                 padding: const EdgeInsets.all(18.0),
-                child: SvgPicture.asset(trailing!,colorFilter: ColorFilter.mode(listItemStyle.trailingIconColor, BlendMode.srcIn)),
+                child: SvgPicture.asset(trailing!,package:package,colorFilter: ColorFilter.mode(listItemStyle.trailingIconColor, BlendMode.srcIn)),
               ) : const Offstage(),
             ],
           ),

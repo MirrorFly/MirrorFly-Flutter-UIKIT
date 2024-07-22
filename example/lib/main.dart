@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_localizations.dart';
 import 'package:mirrorfly_uikit_plugin/app/model/arguments.dart';
 import 'package:mirrorfly_uikit_plugin/app/routes/mirrorfly_navigation_observer.dart';
+import 'package:mirrorfly_uikit_plugin/app/routes/route_settings.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -42,6 +43,12 @@ class _MyAppState extends State<MyApp> {
         navigatorObservers: [
           MirrorFlyNavigationObserver()
         ],
+        onGenerateRoute: (settings) {
+          switch (settings.name) {
+            default:
+              return mirrorFlyRoute(settings);
+          }
+        },
         theme: ThemeData(textTheme: GoogleFonts.latoTextTheme()),
         home: const Dashboard());
   }
