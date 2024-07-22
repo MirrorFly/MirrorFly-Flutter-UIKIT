@@ -6,6 +6,7 @@ import 'package:mirrorfly_uikit_plugin/app/model/arguments.dart';
 import 'package:mirrorfly_uikit_plugin/app/routes/mirrorfly_navigation_observer.dart';
 import 'package:mirrorfly_uikit_plugin/app/routes/route_settings.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 void main() {
@@ -14,6 +15,7 @@ void main() {
     navigatorKey: navigatorKey,
     licenseKey: 'ckIjaccWBoMNvxdbql8LJ2dmKqT5bp',
     iOSContainerID: 'group.com.mirrorfly.flutter', );
+  AppLocalizations.addSupportedLocales(const Locale("hi","IN"));
   runApp(const MyApp());
 }
 
@@ -35,10 +37,13 @@ class _MyAppState extends State<MyApp> {
         navigatorKey: navigatorKey,
         themeMode: ThemeMode.dark,
         debugShowCheckedModeBanner: false,
-        locale: AppLocalizations.defaultLocale,
+        locale: const Locale('en'),
         supportedLocales: AppLocalizations.supportedLocales,
         localizationsDelegates: const [
           AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
         ],
         navigatorObservers: [
           MirrorFlyNavigationObserver()

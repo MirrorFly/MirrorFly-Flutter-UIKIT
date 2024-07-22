@@ -972,7 +972,7 @@ class ChatView extends NavViewStateful<ChatController> {
                   icon: SvgPicture.asset(videoCallIcon,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.chatPageStyle.appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)),
                 ),
                 overflowWidget: Text(getTranslated("videoCall"),style:AppStyleConfig.chatPageStyle.popupMenuThemeData.textStyle),
-                showAsAction: controller.isVideoCallAvailable ? ShowAsAction.always : ShowAsAction.gone,
+                showAsAction: controller.isVideoCallAvailable && (controller.arguments?.enableCalls).checkNull() ? ShowAsAction.always : ShowAsAction.gone,
                 keyValue: 'Video Call',
                 onItemClick: controller.ableToCall ? () {
                   controller.makeVideoCall();
@@ -986,7 +986,7 @@ class ChatView extends NavViewStateful<ChatController> {
                   icon: SvgPicture.asset(audioCallIcon,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.chatPageStyle.appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)),
                 ),
                 overflowWidget: Text(getTranslated("audioCall"),style:AppStyleConfig.chatPageStyle.popupMenuThemeData.textStyle),
-                showAsAction: controller.isAudioCallAvailable ? ShowAsAction.always : ShowAsAction.gone,
+                showAsAction: controller.isAudioCallAvailable && (controller.arguments?.enableCalls).checkNull() ? ShowAsAction.always : ShowAsAction.gone,
                 keyValue: 'Audio Call',
                 onItemClick: controller.ableToCall ? () {
                   controller.makeVoiceCall();
