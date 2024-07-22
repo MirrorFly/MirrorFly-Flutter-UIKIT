@@ -309,6 +309,8 @@ abstract class BaseController {
         case CallStatus.callTimeout:
           if (Get.isRegistered<OutgoingCallController>()) {
             Get.find<OutgoingCallController>().timeout(callMode, userJid, callType, callStatus);
+          }else {
+            debugPrint("#Mirrorfly call outgoing controller not registered for timeout event");
           }
           if (Get.isRegistered<CallController>()) {
             Get.find<CallController>().timeout(callMode, userJid, callType, callStatus);

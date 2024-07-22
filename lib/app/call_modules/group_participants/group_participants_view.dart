@@ -47,7 +47,7 @@ GroupParticipantsController createController({String? tag}) => Get.put(GroupPart
               visible: controller.isSearchVisible,
               child: IconButton(
                   onPressed: () => controller.onSearchPressed(),
-                  icon: SvgPicture.asset(searchIcon)),
+                  icon: SvgPicture.asset(searchIcon, package: package)),
             ),
             Visibility(
               visible: controller.isClearVisible,
@@ -112,6 +112,7 @@ GroupParticipantsController createController({String? tag}) => Get.put(GroupPart
                               controller.callType.value == CallType.audio
                                   ? audioCallSmallIcon
                                   : videoCallSmallIcon,
+                              package: package,
                             ),
                             const SizedBox(width: 8,),
                             Text(getTranslated("callNowWithCount").replaceFirst("%d", "${(controller.groupCallMembersCount.value - 1)}"),

@@ -212,6 +212,9 @@ const String cornerShadow = 'assets/logos/ic_baloon.png';
 const String disabledIcon = 'assets/logos/disabled.png';
 const String chatBgIcon = 'assets/logos/chat_bg.png';
 const String attachIcon = 'assets/logos/attach.svg';
+const String arrowDropDown = 'assets/calls/ic_arrow_down_red.svg';
+const String arrowUpIcon = 'assets/calls/ic_arrow_up_green.svg';
+const String arrowDownIcon = 'assets/calls/ic_arrow_down_green.svg.svg';
 
 const String phoneCall = 'assets/logos/phonecall.svg';
 const String videoCall = 'assets/logos/videocall.svg';
@@ -878,6 +881,7 @@ Widget forMessageTypeIcon(String messageType,[MediaChatMessage? mediaChatMessage
       return SvgPicture.asset(
         mediaChatMessage != null ? mediaChatMessage.isAudioRecorded ? mAudioRecordIcon : mAudioIcon : mAudioIcon,
         fit: BoxFit.contain,
+        package: package,
         colorFilter: const ColorFilter.mode(textColor, BlendMode.srcIn),
       );
     case Constants.mVideo:

@@ -113,7 +113,7 @@ class ChatSearchView extends StatelessWidget {
                           onPressed: () {
                             controller.forwardSingleMessage(chatList[index].messageId);
                           },
-                          icon: SvgPicture.asset(forwardMedia)),
+                          icon: SvgPicture.asset(forwardMedia, package: package)),
                     ),
                     Container(
                       constraints: BoxConstraints(maxWidth: NavUtils.width * 0.75),

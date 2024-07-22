@@ -69,7 +69,7 @@ class TextMessageView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               chatMessage.isMessageStarred.value
-                  ? SvgPicture.asset(starSmallIcon)
+                  ? SvgPicture.asset(starSmallIcon, package: package)
                   : const Offstage(),
               const SizedBox(
                 width: 5,

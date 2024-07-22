@@ -207,7 +207,7 @@ class OutGoingCallView extends NavViewStateful<OutgoingCallController> {
                         onPressed: (){
                           controller.disconnectOutgoingCall();
                         },
-                        child: SvgPicture.asset(callEndButton),
+                        child: SvgPicture.asset(callEndButton, package: package),
                       )
                       /*ElevatedButton(
                           style: ElevatedButton.styleFrom(

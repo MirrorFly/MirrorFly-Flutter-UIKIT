@@ -852,7 +852,7 @@ class AppPermission {
                   child: CircleAvatar(
                 backgroundColor: buttonBgColor,
                 radius: 30,
-                child: SvgPicture.asset(notificationAlertPermission),
+                child: SvgPicture.asset(notificationAlertPermission, package: package),
               )),
             ),
             Padding(

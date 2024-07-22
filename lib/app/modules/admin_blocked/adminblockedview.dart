@@ -31,7 +31,7 @@ class AdminBlockedView extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(top:20.0),
-                child: SvgPicture.asset(icAdminBlocked),
+                child: SvgPicture.asset(icAdminBlocked, package: package),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 15.0,right: 55.0,left: 55.0),

@@ -66,7 +66,7 @@ class _ForwardChatViewState extends State<ForwardChatView> {
               visible: controller.isSearchVisible,
               child: IconButton(
                   onPressed: () => controller.onSearchPressed(),
-                  icon: SvgPicture.asset(searchIcon)),
+                  icon: SvgPicture.asset(searchIcon, package: package,)),
             )
           ],
         ),

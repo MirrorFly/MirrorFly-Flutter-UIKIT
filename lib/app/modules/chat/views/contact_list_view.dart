@@ -204,6 +204,7 @@ ContactController createController({String? tag}) => Get.put(ContactController()
                                               arg.callType == CallType.audio
                                                   ? audioCallSmallIcon
                                                   : videoCallSmallIcon,
+                                              package: package,
                                               colorFilter: ColorFilter.mode(AppStyleConfig.contactListPageStyle.buttonIconColor, BlendMode.srcIn),
                                             ),
                                             const SizedBox(width: 8,),

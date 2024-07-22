@@ -131,7 +131,7 @@ Widget chatListItem(
                 )),
             Padding(
               padding: const EdgeInsets.all(18.0),
-              child: SvgPicture.asset(trailing),
+              child: SvgPicture.asset(trailing, package: package),
             ),
           ],
         ),

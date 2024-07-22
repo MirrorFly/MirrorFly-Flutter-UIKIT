@@ -71,7 +71,7 @@ ArchivedChatListController createController({String? tag}) => Get.put(ArchivedCh
                                 onPressed: () {
                                   controller.deleteChats();
                                 },
-                                icon: SvgPicture.asset(delete),tooltip: 'Delete',),
+                                icon: SvgPicture.asset(delete, package: package),tooltip: 'Delete',),
                             overflowWidget: Text(getTranslated("delete")),
                             showAsAction: controller.delete.value ? ShowAsAction.always : ShowAsAction.gone,
                             keyValue: 'Delete',
