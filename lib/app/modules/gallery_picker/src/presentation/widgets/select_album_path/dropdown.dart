@@ -14,13 +14,13 @@ class DropDown<T> extends StatefulWidget {
   final GlobalKey? relativeKey;
 
   const DropDown({
-    Key? key,
+    super.key,
     required this.child,
     required this.dropdownWidgetBuilder,
     this.onResult,
     this.onShow,
     this.relativeKey,
-  }) : super(key: key);
+  });
   @override
   DropDownState<T> createState() => DropDownState<T>();
 }

@@ -9,12 +9,12 @@ class OverlayDropDown<T> extends StatelessWidget {
   final AnimationController animationController;
   final DropdownWidgetBuilder<T> builder;
   const OverlayDropDown({
-    Key? key,
+    super.key,
     required this.height,
     required this.close,
     required this.animationController,
     required this.builder,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
