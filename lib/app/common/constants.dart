@@ -1,13 +1,13 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
-import '../models.dart';
+import '../extensions/extensions.dart';
+import 'package:mirrorfly_plugin/mirrorflychat.dart';
 import 'package:path_provider/path_provider.dart';
-import 'extensions.dart';
+
+import '../model/chat_message_model.dart';
 
 //Colors
 const Color appBarColor = Color(0xffF2F2F2);
@@ -24,23 +24,24 @@ const Color textButtonColor = Color(0xffFFFFFF);
 const Color buttonBgColor = Color(0xff3276E2);
 const Color chatSentBgColor = Color(0xffe2eafc);
 const Color chatReplyContainerColor = Color(0xffD0D8EB);
-const Color chatReplySenderColor = Color(0xffefefef);
-const Color dividerColor = Color(0xffe2e2e2);
-const Color audioColor = Color(0xffB9C1D6);
-const Color audioColorDark = Color(0xff848FAD);
-const Color audioBgColor = Color(0xff848FAD);
-const Color bottomSheetColor = Color(0xff242A3F);
-const Color notificationTextColor = Color(0xff565656);
-const Color notificationTextBgColor = Color(0xffDADADA);
-const Color chatBorderColor = Color(0xffDDE3E5);
-const Color chatTimeColor = Color(0xff959595);
+const Color chatReplySenderColor = Color(0xffEFEFEF);
+const Color dividerColor = Color(0XffE2E2E2);
+const Color audioColor = Color(0XffB9C1D6);
+const Color audioColorDark = Color(0Xff848FAD);
+const Color audioBgColor = Color(0Xff848FAD);
+const Color bottomSheetColor = Color(0Xff242A3F);
+const Color notificationTextColor = Color(0Xff565656);
+const Color notificationTextBgColor = Color(0XffDADADA);
+const Color chatBorderColor = Color(0XffDDE3E5);
+const Color chatTimeColor = Color(0Xff959595);
 const Color borderColor = Color(0xffAFB8D0);
 const Color playIconColor = Color(0xff7285B5);
+const Color progressColor = Color(0xff8C97B3);
 const Color durationTextColor = Color(0xff455E93);
 const Color chatBgColor = Color(0xffD0D8EB);
 const Color previewTextColor = Color(0xff7f7f7f);
-const Color dummy = Color(0xffe5c8c8);
-const Color darkPopupColor = Color(0xff262626);
+const Color callsSubText = Color(0Xff737373);
+const Color notificationAlertBg = Color(0xffEFF4FD);
 
 class AppColors {
   static const Color callerBackground = Color(0xff152134);
@@ -95,6 +96,9 @@ const String callOptionsUpArrow = 'assets/calls/call_options_up_arrow.svg';
 const String callOptionsBottomBg = 'assets/calls/ic_group_user_info_layout.png';
 const String callOptionsToolbarBg = 'assets/calls/ic_call_header_overlay.png';
 
+//Meeting Assets
+const String meetSchedule = 'assets/calls/schedule_meet.svg';
+
 //Call Participant assets
 const String participantMute = 'assets/calls/participant_mute.svg';
 const String participantUnMute = 'assets/calls/participant_unmute.svg';
@@ -106,6 +110,7 @@ const String addParticipantsInCall = 'assets/calls/add_user_in_call.svg';
 
 //Assets
 const String package = 'mirrorfly_uikit_plugin/lib';
+const String mirrorflySmall = 'assets/logos/ic_notification_small.png';
 const String registerIcon = 'assets/logos/register_logo.svg';
 const String statusIcon = 'assets/logos/status.svg';
 const String searchIcon = 'assets/logos/magnifying_glass.svg';
@@ -119,6 +124,7 @@ const String rightArrowIcon = 'assets/logos/forward_arrow.svg';
 const String chatIcon = 'assets/logos/chat.svg';
 const String staredMsgIcon = 'assets/logos/stared message.svg';
 const String notificationIcon = 'assets/logos/Notifications.svg';
+const String notificationPermissionIcon = 'assets/logos/notification_icon.svg';
 const String tickRound = 'assets/logos/tick_round.svg';
 const String tickRoundBlue = 'assets/logos/tick_round_blue.svg';
 const String blockedIcon = 'assets/logos/blocked_contacts.svg';
@@ -136,12 +142,7 @@ const String tickIcon = 'assets/logos/tick.svg';
 const String smileIcon = 'assets/logos/smile.svg';
 const String icQrScannerWebLogin = 'assets/logos/ic_qr_scanner_web_login.png';
 const String redirectLastMessage = 'assets/logos/ic_redirect_last_message.png';
-const String sendIcon = 'assets/logos/send.svg';
-const String imgSendIcon = 'assets/logos/img_send.svg';
-const String attachIcon = 'assets/logos/attach.svg';
-const String cameraProfileChange = 'assets/logos/camera_profile_change.png';
-const String micIcon = 'assets/logos/mic.svg';
-const String chatBg = 'assets/logos/chat_bg.png';
+
 const String icLogo = 'assets/logos/ic_logo.png';
 const String icChrome = 'assets/logos/ic_chrome.png';
 const String icEdgeBrowser = 'assets/logos/ic_edge_browser.png';
@@ -164,6 +165,8 @@ const String pin = 'assets/logos/pin.svg';
 const String unpin = 'assets/logos/unpin.svg';
 
 // const String audioImg = 'assets/logos/audio.svg';
+const String audioRecordIcon = 'assets/logos/audio_record_icon.svg';
+const String sendIcon = 'assets/logos/send.svg';
 const String audioImg = 'assets/logos/headset_img.svg';
 const String headsetImg = 'assets/logos/headset_white.svg';
 const String documentImg = 'assets/logos/document_icon.svg';
@@ -208,6 +211,11 @@ const String audioWhite = 'assets/logos/audio_white.svg';
 const String videoWhite = 'assets/logos/video_icon.svg';
 const String cornerShadow = 'assets/logos/ic_baloon.png';
 const String disabledIcon = 'assets/logos/disabled.png';
+const String chatBgIcon = 'assets/logos/chat_bg.png';
+const String attachIcon = 'assets/logos/attach.svg';
+const String arrowDropDown = 'assets/calls/ic_arrow_down_red.svg';
+const String arrowUpIcon = 'assets/calls/ic_arrow_up_green.svg';
+const String arrowDownIcon = 'assets/calls/ic_arrow_down_green.svg.svg';
 
 const String phoneCall = 'assets/logos/phonecall.svg';
 const String videoCall = 'assets/logos/videocall.svg';
@@ -243,7 +251,7 @@ const String deleteDustbin = 'assets/animation/delete_dustbin.json';
 const String audioJson = 'assets/animation/enable_mic.json';
 const String audioJson1 = 'assets/animation/enable_mic1.json';
 
-const String profileImg = 'assets/logos/profile_img.png';
+// const String profileImg = 'assets/logos/profile_img.png';
 const String groupImg = 'assets/logos/ic_grp_bg.png';
 const String imageEdit = 'assets/logos/ic_image_edit.svg';
 const String edit = 'assets/logos/ic_edit.svg';
@@ -273,6 +281,8 @@ const String settingsPermission = "assets/logos/settings_permission.svg";
 const String locationPinPermission = "assets/logos/location_pin_permission.svg";
 const String recordAudioVideoPermission =
     "assets/logos/record_audio_video_permission.svg";
+const String notificationAlertPermission =
+    'assets/calls/ic_notification_alert.svg';
 
 const String icAdminBlocked = "assets/logos/ic_admin_blocked.svg";
 const String icExpand = "assets/logos/ic_expand.svg";
@@ -282,7 +292,7 @@ const String forwardMedia = "assets/logos/forward_media.svg";
 const String arrowDown = "assets/logos/arrow_down.svg";
 const String arrowUp = "assets/logos/arrow_up.svg";
 
-// const String mediaBg = "assets/logos/ic_baloon.svg";
+const String mediaBg = "assets/logos/ic_baloon.svg";
 
 //contact sync
 const String syncIcon = "assets/logos/sync.svg";
@@ -317,8 +327,8 @@ toToast(String text) {
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 1,
-      textColor: MirrorflyUikit.getTheme?.colorOnPrimary,
-      backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
+      textColor: Colors.black,
+      backgroundColor: Colors.white,
       fontSize: 16.0);
   // Get.showSnackbar(
   //   GetSnackBar(
@@ -331,34 +341,150 @@ toToast(String text) {
   // );
 }
 
-mirrorFlyLog(String tag, String msg) {
-  if (kDebugMode) {
-    // print("MirrorFly : $tag ==> $msg");
-    final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
-    pattern
-        .allMatches(msg)
-        .forEach((match) => debugPrint("MirrorFly : $tag==>${match.group(0)}"));
-  }
-}
-
 class Constants {
+  static MetaDataUserList? metaDataUserList =
+      MetaDataUserList(key: "platform", value: ["flutter"]);
   static const bool enableContactSync = false;
   static const bool enableTopic = false;
   static const String topicId = enableTopic
       ? "5d3788c1-78ef-4158-a92b-a48f092da0b9"
       : ""; //Mirrorfly Topic id
-  static const String package = 'com.mirrorfly.uikit_flutter';
-  static const String webChatLogin = 'https://webchat-uikit-qa.contus.us/';
-  static const String tag = 'Contus Fly';
-  static const String googleMapPackageName = "com.google.android.apps.maps";
-  static const String googleMapQuery =
-      "https://www.google.com/maps/search/?api=1&query=";
   static const String packageName = "com.contus.flycommons.";
+  static const String package = 'com.mirrorfly.uikit_flutter';
+  static const String emptyString = "";
+  static const String webChatLogin = 'https://webchat-uikit-qa.contus.us/';
+  static const maxNameLength = 26;
+  static const callNotificationId = 124;
 
-/*static const String applicationLink = "https://app.contusfly.contus.com";
+  static const appSession = 'app_session';
+  static const changedPinAt = 'pin_changed_at';
+  static const alertDate = 'alertDate';
+  static const expiryDate = 'expiryDate';
+  static const sessionLockTime = 32; //in Seconds
+  static const pinExpiry = 31; //in Days
+  static const pinAlert = pinExpiry - 5; //in Days
+
+  static const mobileImageMaxWidth = 250;
+  static const mobileImageMinWidth = 210;
+  static const mobileImageMaxHeight = 320;
+  static const mobileImageMinHeight = 80;
+
+  //asked permission
+  static const locationPermissionAsked = "location_permission_asked_before";
+  static const contactPermissionAsked = "contact_permission_asked_before";
+  static const contactSavePermissionAsked =
+      "contact_save_permission_asked_before";
+  static const storagePermissionAsked = "storage_permission_asked_before";
+  static const notificationPermissionAsked =
+      "notification_permission_asked_before";
+
+  static const audioRecordPermissionAsked =
+      "audio_record_permission_asked_before";
+  static const cameraPermissionAsked = "camera_permission_asked_before";
+  static const readPhoneStatePermissionAsked = "read_phone_state_asked_before";
+  static const bluetoothPermissionAsked = "bluetooth_permission_asked_before";
+
+  static const List<int> defaultColorList = [
+    0Xff9068BE,
+    0XffE62739,
+    0Xff845007,
+    0Xff3A4660,
+    0Xff1D1E22,
+    0XffBE7D6A,
+    0Xff005995,
+    0Xff600473,
+    0XffCD5554,
+    0Xff00303F,
+    0XffBE4F0C,
+    0Xff4ABDAC,
+    0XffFC4A1A,
+    0Xff368CBF,
+    0Xff7EBC59,
+    0Xff201D3A,
+    0Xff269CCC,
+    0Xff737272,
+    0Xff237107,
+    0Xff52028E,
+    0XffAF0D74,
+    0Xff6CB883,
+    0Xff0DAFA4,
+    0XffA71515,
+    0Xff157FA7,
+    0Xff7E52B1,
+    0Xff27956A,
+    0Xff9A4B70,
+    0XffFBBE30,
+    0XffED3533,
+    0Xff571C8D,
+    0Xff54181C,
+    0Xff9B6700,
+    0Xff6E8E14,
+    0Xff0752A1,
+    0XffBF6421,
+    0Xff00A59C,
+    0Xff9F0190,
+    0XffAE3A3A,
+    0Xff858102,
+    0Xff027E02,
+    0XffF66E54
+  ];
+
+  //Message Types
+  static const String mAutoText = "AUTO_TEXT";
+  static const String mText = "TEXT";
+  static const String mImage = "IMAGE";
+  static const String mAudio = "AUDIO";
+  static const String mVideo = "VIDEO";
+  static const String mContact = "CONTACT";
+  static const String mLocation = "LOCATION";
+  static const String mDocument = "DOCUMENT";
+  static const String mFile = "FILE";
+  static const String mNotification = "NOTIFICATION";
+
+  static const String composing = "composing";
+  static const String gone = "Gone";
+
+  //Audio Recording Types
+  static const String audioRecording = "AUDIO_RECORDING";
+  static const String audioRecordDone = "AUDIO_RECORDING_COMPLETED";
+  static const String audioRecordDelete = "AUDIO_RECORDING_DELETE";
+  static const String audioRecordInitial = "AUDIO_RECORDING_NOT_INITIALIZED";
+
+  static const editMessageTimeLimit = 15; // in Minutes
+
+  static const int minGroupMembers = 2;
+
+  static const String msgTypeText = "text";
+  static const String msgTypeNotification = "notification";
+
+  static const String typeSearchRecent = "Chats";
+  static const String typeSearchContact = "Contact";
+  static const String typeSearchMessage = "Message";
+
+  static const String emailPattern =
+      ("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,3})\$");
+  static const String countryCodePattern = r'(^(\+?[0-9]{1,4}\-?)$)';
+
+  static const String bulletPoint = "\u2022 ";
+
+  //Picker Type
+  static const String camera = "camera_pick";
+  static const String gallery = "gallery_pick";
+
+  //data usage
+  static const photo = "Photos";
+  static const audio = "Audio";
+  static const video = "Videos";
+  static const document = "Documents";
+
+  /*static const String tag = 'Contus Fly';
+  static const String googleMapPackageName = "com.google.android.apps.maps";
+
+
+  static const String applicationLink = "https://app.contusfly.contus.com";
   static const String smsContent =
-      "Hey, MirrorFly is a real time chat, Audio and Video call solution for B2B and B2C.\n Download the app from this URL: https://app.mirrorfly.com";*/
-
+      "Hey, MirrorFly is a real time chat, Audio and Video call solution for B2B and B2C.\n Download the app from this URL: https://app.mirrorfly.com";
+  static const String maximumLoginReached = "You have reached the maximum device limit, If you want to continue one of your device will logged out . Do you want to continue?";
   static const String rosterJid = "roster_jid";
   static const String isLiveUser = "is_live_user";
   static const String ifBlockedMe = "ifBlockedMe";
@@ -382,10 +508,9 @@ class Constants {
   static const String userBusyStatus = "user_busy_status";
   static const String android = "android";
   static const String image = "image";
-  static const String emptyString = "";
+
   static const String encryptString = " Encrypted";
-  static const String composing = "composing";
-  static const String gone = "Gone";
+
   static const String lastSeen = "lastseen";
   static const String online = "Online";
   static const String presenceAvailable = "presence_available";
@@ -492,21 +617,19 @@ class Constants {
   static const int selectMapReqCode = 118;
   static const int countryReqCode = 118;
 
-  static const String msgTypeText = "text";
+
   static const String msgTypeContact = "contact";
   static const String msgTypeNotification = "notification";
 
-  static const String emailPattern =
-      ("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,3})\$");
+
   static const String mobilePattern = r'([0-9]{5,9})';
 
   static const String textPattern = r'[a-zA-Z]';
-  static const String countryCodePattern = r'(^(\+?[0-9]{1,4}\-?)$)';
+
   // static const String websitePattern =
   //     r'(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+';
   // final RegExp websitePattern = RegExp(r"^(?:http|https):\/\/[\w\-_]+(?:\.[\w\-_]+)+[\w\-.,@?^=%&:/~\\+#]*$");
-  static const String websitePattern =
-      r'(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})';
+  static const String websitePattern = r'(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})';
   // static const String websitePattern = r'(http|https)://[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:/~+#-]*[\w@?^=%&amp;/~+#-])?';
   // static const String websitePattern = r"((https?:www\.)|(https?:\/\/)|(www\.))[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9]{1,6}(\/[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)?";
   // static const String websitePattern = ("^((http?|https?)://)?[-a-zA-Z0-9@:%._\\+~#?&//=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%._\\+~#?&//=]*)\$");
@@ -514,20 +637,20 @@ class Constants {
   static const String O = "o";
   static const String N = "n";
 
-/*  static const String typeSearchRecent = "Chats";
-  static const String typeSearchContact = "Contact";
-  static const String typeSearchMessage = "Message";*/
+
 
   static const String you = "You";
   static const String deletedUser = "Deleted User";
 
-  static const int minGroupMembers = 2;
+
 
   static const String yesterday = "yesterday";
   static const String today = "today";
   static const bool isMobileLogin = true;
+  static const String baseUrl = "com.contus.flycommons.base_url";
+  static const String apiKey = "com.contus.flycommons.api_key";
+  static const String mix = "@mix.";
 
-  static const String bulletPoint = "\u2022 ";
 
   static const String groupEvent = "group_events";
   static const String archiveEvent = "archive_events";
@@ -539,106 +662,50 @@ class Constants {
   static const String muteEvent = "mute_event";
   static const String pinEvent = "pin_event";
 
-  static const String typeChat = "chat";
-  static const String typeGroupChat = "groupchat";
-  static const String typeBroadcastChat = "broadcast";
 
-  static const String termsConditions =
-      "https://www.mirrorfly.com/terms-and-conditions.php";
-  static const String privacyPolicy =
-      "https://www.mirrorfly.com/privacy-policy.php";
 
-  static const maxAudioFileSize = 2 * 1024; //30;
-  static const maxVideoFileSize = 2 * 1024; //30;
-  static const maxImageFileSize = 2 * 1024; //10;
-  static const maxDocFileSize = 2 * 1024; //20;
+  static const String termsConditions = "https://www.mirrorfly.com/terms-and-conditions.php";
+  static const String privacyPolicy = "https://www.mirrorfly.com/privacy-policy.php";
 
-  static const mobileImageMaxWidth = 250;
-  static const mobileImageMinWidth = 210;
-  static const mobileImageMaxHeight = 320;
-  static const mobileImageMinHeight = 80;
 
-  static const editMessageTimeLimit = 15; // in Minutes
 
-  static const mediaMaxLimitRestriction =
-      'File size is too large. Try uploading file size below %d MB';
-  static const mediaSizeError =
-      'File size is too large. Try uploading file size below';
+  static const editMessage = "Edit Message";
+
+
+  static const mediaMaxLimitRestriction = 'File size is too large. Try uploading file size below %d MB';
+  static const mediaSizeError = 'File size is too large. Try uploading file size below';
   static const supportedFormats = [
-    "jpg",
-    "jpeg",
-    "png",
-    "mp3",
-    "wav",
-    "aac",
-    "mpeg",
-    "mp4",
-    "doc",
-    "docx",
-    "pdf",
-    "xls",
-    "xlsx",
-    "txt",
-    "csv",
-    "ppt",
-    "zip",
-    "rar",
-    "pptx",
-    "acc"
+      "jpg",
+      "jpeg",
+      "png",
+      "mp3",
+      "wav",
+      "aac",
+      "mpeg",
+      "mp4",
+      "doc",
+      "docx",
+      "pdf",
+      "xls",
+      "xlsx",
+      "txt",
+      "csv",
+      "ppt",
+      "zip",
+      "rar",
+      "pptx",
+      "acc"
   ];
 
-  /*static const List<String> defaultStatusList = [
+  static const List<String> defaultStatusList = [
     "Available",
     "Sleeping...",
     "Urgent calls only",
     "At the movies",
     "I am in Mirror Fly"
-  ];*/
-  /*static const List<int> defaultColorList = [
-    0Xff9068BE,
-    0XffE62739,
-    0Xff845007,
-    0Xff3A4660,
-    0Xff1D1E22,
-    0XffBE7D6A,
-    0Xff005995,
-    0Xff600473,
-    0XffCD5554,
-    0Xff00303F,
-    0XffBE4F0C,
-    0Xff4ABDAC,
-    0XffFC4A1A,
-    0Xff368CBF,
-    0Xff7EBC59,
-    0Xff201D3A,
-    0Xff269CCC,
-    0Xff737272,
-    0Xff237107,
-    0Xff52028E,
-    0XffAF0D74,
-    0Xff6CB883,
-    0Xff0DAFA4,
-    0XffA71515,
-    0Xff157FA7,
-    0Xff7E52B1,
-    0Xff27956A,
-    0Xff9A4B70,
-    0XffFBBE30,
-    0XffED3533,
-    0Xff571C8D,
-    0Xff54181C,
-    0Xff9B6700,
-    0Xff6E8E14,
-    0Xff0752A1,
-    0XffBF6421,
-    0Xff00A59C,
-    0Xff9F0190,
-    0XffAE3A3A,
-    0Xff858102,
-    0Xff027E02,
-    0XffF66E54
-  ];*/
-  // static const String defaultStatus = "I am in Mirror Fly";
+  ];
+
+  static const String defaultStatus = "I am in Mirror Fly";
 
   static const int mediaDownloading = 3;
   static const int mediaDownloaded = 4;
@@ -650,21 +717,19 @@ class Constants {
   static const int mediaUploaded = 2;
   static const int mediaUploadedNotAvailable = 7;
 
+  //need to cross check the media download case with Android
   static const int mediaDownloadFailed = 401;
-  static const int mediaUploadFailed = 401;
+  //Removing it because android they don't have media upload failed. so we have handle it as mediaNotUploaded in internal Models
+  // static const int mediaUploadFailed = 401;
 
   static const double borderRadius = 27;
   static const double defaultPadding = 8;
 
-  static const String mediaDoesNotExist =
-      "Sorry. Media file isn't available in your internal storage";
+  static const String mediaDoesNotExist = "Sorry. Media file isn't available in your internal storage";
   static const String mediaNotExist = "Sorry, media isn't available";
-  static const String insufficientMemoryError =
-      "Not enough storage space on your device. Please free up space in your phone's memory.";
+  static const String insufficientMemoryError = "Not enough storage space on your device. Please free up space in your phone's memory.";
   static const String errorTryAgain = "Error Occurred, Please try again";
-  static const String errorVideoInitialize =
-      "Error Occurred during video initialize";
-
+  static const String errorVideoInitialize = "Error Occurred during video initialize";
   // static GlobalKey<AnimatedListState> audioListKey =
   // GlobalKey<AnimatedListState>();
 
@@ -676,63 +741,38 @@ class Constants {
   static const String xls = "xls";
   static const String xlsx = "xlsx";
 
-  //Message Types
-  static const String mAutoText = "AUTO_TEXT";
-  static const String mText = "TEXT";
-  static const String mImage = "IMAGE";
-  static const String mAudio = "AUDIO";
-  static const String mVideo = "VIDEO";
-  static const String mContact = "CONTACT";
-  static const String mLocation = "LOCATION";
-  static const String mDocument = "DOCUMENT";
-  static const String mFile = "FILE";
-  static const String mNotification = "NOTIFICATION";
 
-  //Audio Recording Types
-  static const String audioRecording = "AUDIO_RECORDING";
-  static const String audioRecordDone = "AUDIO_RECORDING_COMPLETED";
-  static const String audioRecordDelete = "AUDIO_RECORDING_DELETE";
-  static const String audioRecordInitial = "AUDIO_RECORDING_NOT_INITIALIZED";
+
+
+
+
+
 
   //Permission dialog contents
   static const String settingPermission =
       "You will not receive notifications while the app is in background if you disable these permissions";
-  static const String writeStoragePermission =
-      "To download media, allow MirrorFly access to your device's storage.";
-  static const String filePermission =
-      "To send media, allow MirrorFly access to your device's photos,media, and files.";
-  static const String cameraPermission =
-      "To capture photos and video, allow MirrorFly access to the camera and storage.";
-  static const String locationPermission =
-      "MirrorFly needs access to your location in order to share your current location.";
-  static const String contactPermission =
-      "To help you connect with friends and family, allow Mirrorfly access to your contacts.";
-  static const String contactSyncPermission =
-      "MirrorFly will continuously upload your contacts to its encrypted servers to let you discover and connect with your friends. Your contacts are uploaded using MirrorFly private contact discovery which means they are end-to-end encrypted and secured.";
+  static const String writeStoragePermission = "To download media, allow MirrorFly access to your device's storage.";
+  static const String filePermission = "To send media, allow MirrorFly access to your device's photos,media, and files.";
+  static const String cameraPermission = "To capture photos and video, allow MirrorFly access to the camera and microphone.";
+  static const String locationPermission = "MirrorFly needs access to your location in order to share your current location.";
+  static const String contactPermission = "To help you connect with friends and family, allow Mirrorfly access to your contacts.";
+  static const String contactSyncPermission = "MirrorFly will continuously upload your contacts to its encrypted servers to let you discover and connect with your friends. Your contacts are uploaded using MirrorFly private contact discovery which means they are end-to-end encrypted and secured.";
 
-  static const String audioPermission =
-      "To send audio messages, allow MirrorFly access to your Microphone.";
+  static const String audioPermission = "To send audio messages, allow MirrorFly access to your Microphone.";
 
   static const String audioCallPermission =
       "MirrorFly need the Microphone Permissions in order to call Family";
 
-  static const String videoCallPermission =
-      "MirrorFly need the Microphone and Camera Permissions in order to call Family";
+  static const String videoCallPermission = "MirrorFly need the Microphone and Camera Permissions in order to call Family";
 
-  static const String contactPermissionDenied =
-      "MirrorFly need the Contacts Permission in order to help you connect with friends and family, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Contacts\"";
-  static const String locationPermissionDenied =
-      "MirrorFly need the Location Permission in order to attach a location, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Location\".";
-  static const String cameraPermissionDenied =
-      "MirrorFly need the Camera and Storage Permission in order to capture photos and video, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Camera\" and \"Storage\".";
-  static const String writeStoragePermissionDenied =
-      "MirrorFly need the Storage Permission in order to download photos, media, and files, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Storage\".";
-  static const String storagePermissionDenied =
-      "MirrorFly need the Storage Permission in order to attach photos, media, and files, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Storage\".";
-  static const String microPhonePermissionDenied =
-      "MirrorFly need the Microphone Permission in order to send audio messages, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Microphone\".";
-  static const String audioCallPermissionDenied =
-      "MirrorFly need the Microphone Permission in order to call Family, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Microphone\".";
+  static const String contactPermissionDenied = "MirrorFly need the Contacts Permission in order to help you connect with friends and family, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Contacts\"";
+  static const String locationPermissionDenied = "MirrorFly need the Location Permission in order to attach a location, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Location\".";
+  static const String cameraPermissionDenied = "MirrorFly need the Camera and Storage Permission in order to capture photos and video, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Camera\" and \"Storage\".";
+  static const String cameraCapturePermanentlyDeniedContent = "MirrorFly need the Camera and Microphone Permission in order to capture photos and video, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Camera\" and \"Microphone\".";
+  static const String writeStoragePermissionDenied = "MirrorFly need the Storage Permission in order to download photos, media, and files, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Storage\".";
+  static const String storagePermissionDenied = "MirrorFly need the Storage Permission in order to attach photos, media, and files, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Storage\".";
+  static const String microPhonePermissionDenied = "MirrorFly need the Microphone Permission in order to send audio messages, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Microphone\".";
+  static const String audioCallPermissionDenied = "MirrorFly need the Microphone Permission in order to call Family, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Microphone\".";
   static const String videoCallPermissionDenied =
       "MirrorFly need the Microphone and Camera Permissions in order to call Family, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Microphone\" and \"Camera\".";
 
@@ -746,20 +786,17 @@ class Constants {
   static const String httpStatusCode = "http_status_code";
 
   static const String googleTranslationLabel = "Translate Message";
-  static const String googleTranslationMessage =
-      "Enable Translate Message to choose Translation Language";
-  static const String googleTranslationLanguageLable =
-      "Choose Translation Language";
-  static const String googleTranslationLanguageDoubleTap =
-      "Double Tap the received messages to translate";
+  static const String googleTranslationMessage = "Enable Translate Message to choose Translation Language";
+  static const String googleTranslationLanguageLable = "Choose Translation Language";
+  static const String googleTranslationLanguageDoubleTap = "Double Tap the received messages to translate";
 
-  /*static const String editBusyStatus = "Edit Busy Status Message";
+  static const String editBusyStatus = "Edit Busy Status Message";
   static const String yourBusyStatus = "Your Busy Status";
-  static const String newBusyStatus = "Select your new status";
+  static const String newBusyStatus = "Select your new Status";
   static const String busyStatusDescription =
-      "Your busy status will be set as auto-response to the messages received from individuals.";*/
+      "Your busy status will be set as auto-response to the messages received from individuals.";
 
-  /*static const String autoDownload = "Auto Download";
+  static const String autoDownload = "Auto Download";
   static const String autoDownloadLable =
       "Enable “Auto download” to turn all types of files received readily viewable";
   static const String dataUsageSettings = "Data Usage Settings";
@@ -767,103 +804,62 @@ class Constants {
       "Setup your mobile and wifi data usage based on media type";
   static const String mediaAutoDownload = "Media Auto download";
   static const String whenUsingMobileData = "When using Mobile Data";
-  static const String whenUsingWifiData = "When connected on Wi-Fi";*/
+  static const String whenUsingWifiData = "When connected on Wi-Fi";
   static const List<String> mediaTypes = [
     "Photos",
     "Videos",
     "Audio",
     "Documents"
   ];
-  static const photo = "Photos";
-  static const audio = "Audio";
-  static const video = "Videos";
-  static const document = "Documents";
 
-  static const appSession = 'app_session';
-  static const changedPinAt = 'pin_changed_at';
-  static const alertDate = 'alertDate';
-  static const expiryDate = 'expiryDate';
-  static const sessionLockTime = 32; //in Seconds
-  static const pinExpiry = 31; //in Days
-  static const pinAlert = pinExpiry - 5; //in Days
-  static const forgetPinOTPText =
-      'Generate OTP to your registered mobile number';
-  static const invalidPinOTPText =
-      'Invalid PIN, Generate OTP to your registered mobile number';
 
-  //asked permission
-  static const locationPermissionAsked = "location_permission_asked_before";
-  static const contactPermissionAsked = "contact_permission_asked_before";
-  static const contactSavePermissionAsked =
-      "contact_save_permission_asked_before";
-  static const storagePermissionAsked = "storage_permission_asked_before";
-  static const notificationPermissionAsked =
-      "notification_permission_asked_before";
 
-  static const audioRecordPermissionAsked =
-      "audio_record_permission_asked_before";
-  static const cameraPermissionAsked = "camera_permission_asked_before";
-  static const readPhoneStatePermissionAsked = "read_phone_state_asked_before";
-  static const bluetoothPermissionAsked = "bluetooth_permission_asked_before";
 
-  //For UIKIT Call Routes Only
+  static const forgetPinOTPText ='Generate OTP to your registered mobile number';
+  static const invalidPinOTPText ='Invalid PIN, Generate OTP to your registered mobile number';
 
-  static const onGoingCallView = "ongoing_call_view";
-  static const outGoingCallView = "outgoing_call_view";
-  static const participantView = "participant_view";
-  static const callTimeOutView = "time_out_view";
-  static const groupParticipantView = "group_participants_view";
 
-//Call
+
+
+  static const remoteEngagedToast = " is on another call";
+
+  //Call
   static const unavailableTryAgain = "Unavailable, Try again later";
   static const cancel = "Cancel";
   static const ok = "OK";
   static const callAgain = "Call Again";
   static const callTimeoutMessage = "Seems like no one attended the call";
-  static const remoteEngagedToast = " is on another call";
 
-  static const callNotificationId = 124;
+
 
   //Call Types
   static const audioCall = "audio";
   static const videoCall = "video";
 
-  static const videoSwitchMessage =
-      "Are you sure you want to switch to Video Call?";
+  static const videoSwitchMessage = "Are you sure you want to switch to Video Call?";
   static const videoSwitchRequestMessage = "Requesting to switch to Video Call";
-  static const videoSwitchRequestedMessage =
-      "requesting to switch to video call";
+  static const videoSwitchRequestedMessage = "requesting to switch to video call";
   static const callMembersLimit = "Maximum %d members allowed in a call";
   static const callMembersLimit6 = "You can only select %d participants";
-  static const maxNameLength = 26;
+
   static const msgOngoingCallAlert = "You are already on another call";
   static const addParticipantsToCall = "Add participant to the call";
 
-  //Call Log
-  static const String noCallLog = "No Call Log";
-  static const String noCallLogHistoryFound = "No Call log history found";
-  static const String anyNewCallsWillAppearHere =
-      "Any new Calls will appear here";
 
   static const String cameraPermissionName = "Camera";
   static const String microphonePermissionName = "Microphone";
   static const String bluetoothPermissionName = "Nearby devices";
   static const String notificationPermissionName = "Notifications";
   static const String phonePermissionName = "Phone";
-  static const String notificationPermissionTitle =
-      "Turn on notification for MirrorFly";
-  static const String notificationPermissionMessage =
-      "Allow MirrorFly to send you notifications to stay \nconnected with friends and family.\n\n Please continue to app Settings > select Permission > enable Notification.\n";
-  static const String callPermission =
-      "MirrorFly need the %d Permissions in order to call Family";
-  static const String callPermissionDenied =
-      "MirrorFly need the %d Permissions in order to call Family, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable %d.";
+  static const String notificationPermissionTitle = "Turn on notification for MirrorFly";
+  static const String notificationPermissionMessage = "Allow MirrorFly to send you notifications to stay \nconnected with friends and family.\n\n Please continue to app Settings > select Permission > enable Notification.\n";
+  static const String callPermission = "MirrorFly need the %d Permissions in order to call Family";
+  static const String callPermissionDenied = "MirrorFly need the %d Permissions in order to call Family, but they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable %d.";
+
 
   static const String deleteCallLog = "Do you want to delete a call log?";
-  static const String deleteSelectedCallLog =
-      "Do you want to delete the selected call logs?";
-  static const String deleteAllCallLog =
-      "Do you want to clear your entire call log?";
+  static const String deleteSelectedCallLog = "Do you want to delete the selected call logs?";
+  static const String deleteAllCallLog = "Do you want to clear your entire call log?";
   static const String noCallLogs = "No Call log history found";
   static const String noCallLogsMessage = "Any new Calls will appear here";
   static const String noChats = "No new messages";
@@ -872,10 +868,13 @@ class Constants {
   static const String removeFromCallLog = "Remove from call log";
   static const String callInfo = "Call Info";
 
-  static const String profileImageRemoveFailed =
-      "Error while removing profile image";
-  static const String profileImageUpdateFailed =
-      "Error while updating profile image";
+  //Call Log
+  static const String noCallLog = "No Call Log";
+  static const String noCallLogHistoryFound = "No Call log history found";
+  static const String anyNewCallsWillAppearHere = "Any new Calls will appear here";
+
+  static const String profileImageRemoveFailed = "Error while removing profile image";
+  static const String profileImageUpdateFailed = "Error while updating profile image";*/
 }
 
 Widget forMessageTypeIcon(String messageType,
@@ -895,8 +894,8 @@ Widget forMessageTypeIcon(String messageType,
                 ? mAudioRecordIcon
                 : mAudioIcon
             : mAudioIcon,
-        package: package,
         fit: BoxFit.contain,
+        package: package,
         colorFilter: const ColorFilter.mode(textColor, BlendMode.srcIn),
       );
     case Constants.mVideo:
@@ -935,7 +934,7 @@ Widget forMessageTypeIcon(String messageType,
 }
 
 String? forMessageTypeString(String messageType, {String? content}) {
-  // mirrorFlyLog("Recent Chat content", content.toString());
+  // LogMessage.d("Recent Chat content", content.toString());
   switch (messageType.toUpperCase()) {
     case Constants.mImage:
       return content.checkNull().isNotEmpty ? content : "Image";

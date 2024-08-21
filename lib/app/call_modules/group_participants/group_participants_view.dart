@@ -1,34 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import '../../common/app_localizations.dart';
+import '../../common/constants.dart';
 import 'package:mirrorfly_plugin/mirrorflychat.dart';
 
-import '../../common/constants.dart';
-import '../../modules/dashboard/widgets.dart';
+import '../../data/utils.dart';
+import '../../extensions/extensions.dart';
+import '../../modules/dashboard/dashboard_widgets/contact_item.dart';
 import 'group_participants_controller.dart';
 
-class GroupParticipantsView extends StatefulWidget {
-  const GroupParticipantsView(
-      {super.key, required this.groupId, required this.callType});
-
-  final String groupId;
-  final String callType;
+class GroupParticipantsView
+    extends NavViewStateful<GroupParticipantsController> {
+  const GroupParticipantsView({Key? key}) : super(key: key);
 
   @override
-  State<GroupParticipantsView> createState() => _GroupParticipantsViewState();
-}
-
-class _GroupParticipantsViewState extends State<GroupParticipantsView> {
-  final controller = Get.put(GroupParticipantsController());
-
-  @override
-  void initState() {
-    super.initState();
-    controller.initGroupParticipantController(
-        buildContext: context,
-        groupId: widget.groupId,
-        callType: widget.callType);
-  }
+  GroupParticipantsController createController({String? tag}) =>
+      Get.put(GroupParticipantsController());
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +26,7 @@ class _GroupParticipantsViewState extends State<GroupParticipantsView> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              controller.search ? controller.backFromSearch() : Get.back();
+              controller.search ? controller.backFromSearch() : NavUtils.back();
             },
           ),
           title: controller.search
@@ -50,11 +38,12 @@ class _GroupParticipantsViewState extends State<GroupParticipantsView> {
                   style: const TextStyle(fontSize: 16),
                   controller: controller.searchQuery,
                   autofocus: true,
-                  decoration: const InputDecoration(
-                      hintText: "Search...", border: InputBorder.none),
+                  decoration: InputDecoration(
+                      hintText: getTranslated("searchPlaceholder"),
+                      border: InputBorder.none),
                 )
-              : const Text(
-                  "Add Participants",
+              : Text(
+                  getTranslated("addParticipants"),
                   overflow: TextOverflow.fade,
                 ),
           actions: [
@@ -62,7 +51,7 @@ class _GroupParticipantsViewState extends State<GroupParticipantsView> {
               visible: controller.isSearchVisible,
               child: IconButton(
                   onPressed: () => controller.onSearchPressed(),
-                  icon: SvgPicture.asset(searchIcon)),
+                  icon: SvgPicture.asset(searchIcon, package: package)),
             ),
             Visibility(
               visible: controller.isClearVisible,
@@ -133,12 +122,15 @@ class _GroupParticipantsViewState extends State<GroupParticipantsView> {
                               controller.callType.value == CallType.audio
                                   ? audioCallSmallIcon
                                   : videoCallSmallIcon,
+                              package: package,
                             ),
                             const SizedBox(
                               width: 8,
                             ),
                             Text(
-                              "CALL NOW ( ${(controller.groupCallMembersCount.value - 1)} )",
+                              getTranslated("callNowWithCount").replaceFirst(
+                                  "%d",
+                                  "${(controller.groupCallMembersCount.value - 1)}"),
                               style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 14,

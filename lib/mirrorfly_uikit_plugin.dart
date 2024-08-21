@@ -1,41 +1,31 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:mirrorfly_plugin/flychat.dart';
-import 'package:mirrorfly_plugin/logmessage.dart';
-import 'package:mirrorfly_plugin/model/callback.dart';
-import 'package:mirrorfly_plugin/model/register_model.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
-import 'package:mirrorfly_uikit_plugin/app/model/app_config.dart';
+import 'package:mirrorfly_plugin/mirrorflychat.dart';
+import 'package:mirrorfly_uikit_plugin/app/extensions/extensions.dart';
 import 'package:mirrorfly_uikit_plugin/app/model/reply_hash_map.dart';
 
-import 'app/common/app_theme.dart';
-import 'app/common/constants.dart';
 import 'app/common/main_controller.dart';
-import 'app/common/navigation_manager.dart';
-import 'app/data/apputils.dart';
 import 'app/data/session_management.dart';
+import 'app/data/utils.dart';
 import 'mirrorfly_uikit_plugin_platform_interface.dart';
-import 'app/common/extensions.dart';
 
 class MirrorflyUikit {
-  static MirrorFlyAppTheme? getTheme = MirrorFlyTheme.mirrorFlyLightTheme;
+  // static MirrorFlyAppTheme? getTheme = MirrorFlyTheme.mirrorFlyLightTheme;
   bool showMobileNumberOnList = true;
   bool showStatusOption = true;
   bool enableLocalNotification = true;
-  String googleMapKey = '';
+  // String googleMapKey = '';
   static bool isSDKInitialized = false;
   static String theme = "light";
 
   static var instance = MirrorflyUikit();
 
   // Initialize the NavigationManager in the constructor
-  final NavigationManager navigationManager = NavigationManager();
+  // final NavigationManager navigationManager = NavigationManager();
 
-  GlobalKey<NavigatorState>? globalNavigatorKey;
+  static GlobalKey<NavigatorState>? globalNavigatorKey;
 
   static Future<String?> getPlatformVersion() {
     return MirrorflyUikitPluginPlatform.instance.getPlatformVersion();
@@ -43,24 +33,31 @@ class MirrorflyUikit {
 
   ///Used as a initUIKIT class for [MirrorflyUikit]
   /// * [licenseKey] provide the License Key
-  /// * [googleMapKey] provide the googleMap Key for location messages
   /// * [iOSContainerID] provide the App Group of the iOS Project
-  /// * [showMobileNumberOnList] to show mobile on contact list
   /// * [storageFolderName] provide the Local Storage Folder Name
-  /// * [NavigatorState] provide GlobalKey for NavigatorState ex: GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  /// * [chatHistoryEnable]: Flag indicating whether chat history should be enabled. Defaults to true.
+  /// * [enableMobileNumberLogin]: Flag indicating whether mobile number login should be enabled. Defaults to false.
+  /// * [enableDebugLog]: Flag indicating whether debug logs should be enabled. Defaults to false.
+  /// * [NavigatorState] provide GlobalKey for NavigatorState ex: GlobalKey<[NavigatorState]> navigatorKey = GlobalKey<[NavigatorState]>();
   Future<Map> initUIKIT(
       {required GlobalKey<NavigatorState> navigatorKey,
       required String licenseKey,
-      String? googleMapKey,
+      // String? googleMapKey,
       required String iOSContainerID,
-      String? storageFolderName,
-      bool showMobileNumberOnList = true,
-      bool showStatusOption = true,
+      String storageFolderName = "Mirrorfly",
+      // bool showMobileNumberOnList = true,
+      // bool showStatusOption = true,
       bool enableDebugLog = true,
       bool chatHistoryEnable = true,
       bool enableMobileNumberLogin = false,
       bool enableLocalNotification = true}) async {
     Completer<Map<String, dynamic>> completer = Completer();
+
+    // this.showMobileNumberOnList = showMobileNumberOnList;
+    // this.showStatusOption = showStatusOption;
+    this.enableLocalNotification = enableLocalNotification;
+    // this.googleMapKey = googleMapKey ?? '';
+    globalNavigatorKey = navigatorKey;
 
     Mirrorfly.initializeSDK(
         licenseKey: licenseKey,
@@ -73,49 +70,28 @@ class MirrorflyUikit {
           if (response.isSuccess) {
             LogMessage.d("initUIKIT onSuccess", response.message);
             isSDKInitialized = true;
-            _getMediaEndpoint();
+            _initialiseUIKITDependencies();
             completer
                 .complete(setResponse(true, 'SDK Initialized Successfully'));
           } else {
             isSDKInitialized = false;
-            _getMediaEndpoint();
+            _initialiseUIKITDependencies();
             LogMessage.d(
                 "initUIKIT onFailure", response.errorMessage.toString());
             completer.complete(setResponse(false, 'SDK Initialization Failed'));
           }
         });
 
-    showMobileNumberOnList = showMobileNumberOnList;
-    showStatusOption = showStatusOption;
-    enableLocalNotification = enableLocalNotification;
-    googleMapKey = googleMapKey ?? '';
-    globalNavigatorKey = navigatorKey;
-    ReplyHashMap.init();
-    rootBundle.loadString('assets/mirrorfly_config.json').then((configFile) {
-      var config = AppConfig.fromJson(json.decode(configFile));
-      theme = config.appTheme.theme!;
-      getTheme = MirrorFlyTheme.customTheme(
-          primaryColor: config.appTheme.customTheme!.primaryColor,
-          secondaryColor: config.appTheme.customTheme!.secondaryColor,
-          scaffoldColor: config.appTheme.customTheme!.scaffoldColor,
-          colorOnPrimary: config.appTheme.customTheme!.colorOnPrimary,
-          textPrimaryColor: config.appTheme.customTheme!.textPrimaryColor,
-          textSecondaryColor: config.appTheme.customTheme!.textSecondaryColor,
-          chatBubblePrimaryColor:
-              config.appTheme.customTheme!.chatBubblePrimaryColor,
-          chatBubbleSecondaryColor:
-              config.appTheme.customTheme!.chatBubbleSecondaryColor,
-          appBarColor: config.appTheme.customTheme!.appBarColor,
-          colorOnAppbar: config.appTheme.customTheme!.colorOnAppbar);
-    }).catchError((e) {
-      debugPrint("MirrorFly config file not found in assets $e");
-    });
-    SessionManagement.onInit().then((value) {
-      Get.put<MainController>(MainController());
-      SessionManagement.setBool(
-          AppConstants.enableLocalNotification, enableLocalNotification);
-    });
     return completer.future;
+  }
+
+  _initialiseUIKITDependencies() {
+    SessionManagement.onInit().then((value) {
+      _getMediaEndpoint();
+      // SessionManagement.setBool(AppConstants.enableLocalNotification, enableLocalNotification);
+      Get.put<MainController>(MainController());
+    });
+    ReplyHashMap.init();
   }
 
   ///Used as a register class for [MirrorflyUikit]
@@ -165,9 +141,16 @@ class MirrorflyUikit {
   ///
   ///* [userIdentifier] provide the Unique Id to Register the User
   ///* [fcmToken] provide the FCM token this is an optional
+  /// and specify whether to forcefully register the user if not already registered with [isForceRegister].to specify the app user type use [userType].
+  /// The [identifierMetaData] parameter is optional and represents additional metadata associated with the User.
   ///sample response {'status': true, 'message': 'Login Success};
-  Future<Map> login(
-      {required String userIdentifier, String fcmToken = ""}) async {
+  static Future<Map> login({
+    required String userIdentifier,
+    String fcmToken = "",
+    String userType = "d",
+    bool isForceRegister = true,
+    List<IdentifierMetaData>? identifierMetaData,
+  }) async {
     Completer<Map<String, dynamic>> completer = Completer();
     if (!isSDKInitialized) {
       completer.complete(setResponse(false, 'SDK Not Initialized'));
@@ -175,6 +158,9 @@ class MirrorflyUikit {
     Mirrorfly.login(
         userIdentifier: userIdentifier.removeAllWhitespace,
         fcmToken: fcmToken,
+        userType: userType,
+        isForceRegister: isForceRegister,
+        identifierMetaData: identifierMetaData,
         flyCallback: (FlyResponse response) async {
           if (response.isSuccess) {
             if (response.hasData) {
@@ -214,7 +200,7 @@ class MirrorflyUikit {
   ///Use this Method to logout from our UIkit
   ///this will clear all the chat data.
   ///sample response {'status': true, 'message': 'Logout successfully};
-  Future<Map<String, dynamic>> logoutFromUIKIT() async {
+  static Future<Map<String, dynamic>> logoutFromUIKIT() async {
     Completer<Map<String, dynamic>> completer = Completer();
 
     Mirrorfly.logoutOfChatSDK(flyCallBack: (response) {
@@ -256,12 +242,12 @@ class MirrorflyUikit {
 
   _getMediaEndpoint() async {
     Mirrorfly.mediaEndPoint().then((value) {
-      mirrorFlyLog("media_endpoint", value.toString());
+      LogMessage.d("media_endpoint", value.toString());
       if (value != null) {
         if (value.isNotEmpty) {
           SessionManagement.setMediaEndPoint(value);
         } else {
-          mirrorFlyLog("failed to get media_endpoint", value.toString());
+          LogMessage.d("failed to get media_endpoint", value.toString());
         }
       }
     });

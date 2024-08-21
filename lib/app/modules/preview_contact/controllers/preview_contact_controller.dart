@@ -1,10 +1,10 @@
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
+import '../../../common/app_localizations.dart';
 
 import '../../../common/constants.dart';
-import '../../../data/helper.dart';
+import '../../../data/utils.dart';
 import '../../../model/local_contact_model.dart';
 import '../../chat/controllers/chat_controller.dart';
 
@@ -12,40 +12,35 @@ class PreviewContactController extends GetxController {
   var contactList = <LocalContactPhone>[].obs;
   var argContactList = <LocalContact>[];
   var previewContactList = <String>[];
-  var previewContactName = Constants.emptyString;
-  var from = Constants.emptyString;
+  var previewContactName = "";
+  var from = "";
 
-  void init(List<LocalContact>? contactList, List<String>? previewContactList,
-      String from, String? contactName) {
-    this.from = from;
-    if (from == "chat" && previewContactList != null && contactName != null) {
-      this.previewContactList = previewContactList;
-      previewContactName = contactName;
-    } else if (contactList != null) {
-      argContactList = contactList;
-    } else {
-      debugPrint("Contact list is Empty");
-    }
+  var userJid = NavUtils.arguments['userJid'];
+
+  @override
+  void onInit() {
+    super.onInit();
+    from = NavUtils.arguments['from'];
   }
 
   @override
   void onReady() {
     super.onReady();
     if (from == "chat") {
-      // previewContactList = Get.arguments['previewContactList'];
-      // previewContactName = Get.arguments['contactName'];
+      previewContactList = NavUtils.arguments['previewContactList'];
+      previewContactName = NavUtils.arguments['contactName'];
 
       var newContactList = <ContactDetail>[];
       for (var phone in previewContactList) {
-        ContactDetail contactDetail = ContactDetail(
-            mobNo: phone, isSelected: true, mobNoType: Constants.emptyString);
+        ContactDetail contactDetail =
+            ContactDetail(mobNo: phone, isSelected: true, mobNoType: "");
         newContactList.add(contactDetail);
       }
       LocalContactPhone localContactPhone = LocalContactPhone(
           contactNo: newContactList, userName: previewContactName);
       contactList.add(localContactPhone);
     } else {
-      // argContactList = Get.arguments['contactList'];
+      argContactList = NavUtils.arguments['contactList'];
       for (var contact in argContactList) {
         var newContactList = <ContactDetail>[];
         for (var phone in contact.contact.phones!) {
@@ -68,13 +63,28 @@ class PreviewContactController extends GetxController {
         item.middleName ??
         item.androidAccountName ??
         item.familyName ??
-        Constants.emptyString;
+        "";
   }
 
-  shareContact(BuildContext context) async {
-    Helper.showLoading(
-        message: AppConstants.sharingContact, buildContext: context);
+  shareContact() async {
+    // if(await AppUtils.isNetConnected()) {
+    //   if(contactList.isNotEmpty) {
+    //     var response = await Get.find<ChatController>().sendContactMessage(
+    //         contactList, contactName);
+    //     debugPrint("ContactResponse ==> $response");
+    //     if (response != null) {
+    //       NavUtils.back();
+    //       NavUtils.back();
+    //     }
+    //   }else{
+    //     toToast("Contact Number is Empty");
+    //   }
+    // }else{
+    //   toToast(getTranslated("noInternetConnection"));
+    // }
+
     var contactServerSharing = <ShareContactDetails>[];
+    // if (await AppUtils.isNetConnected()) {
     for (var item in contactList) {
       var contactSharing = <String>[];
       for (var contactItem in item.contactNo) {
@@ -86,7 +96,7 @@ class PreviewContactController extends GetxController {
         }
       }
       if (contactSharing.isEmpty) {
-        toToast(AppConstants.selectLeastOne);
+        toToast(getTranslated("selectLeastOne"));
         return;
       }
       debugPrint("adding contact list--> ${contactSharing.toString()}");
@@ -101,16 +111,16 @@ class PreviewContactController extends GetxController {
       debugPrint("sending contact--> ${contactItem.userName}");
       debugPrint("sending contact--> ${contactItem.contactNo}");
 
-      var response = await Get.find<ChatController>().sendContactMessage(
-          contactItem.contactNo, contactItem.userName, context);
+      var response = await Get.find<ChatController>(tag: userJid)
+          .sendContactMessage(contactItem.contactNo, contactItem.userName);
       debugPrint("ContactResponse ==> $response");
     }
 
-    if (context.mounted) {
-      Helper.hideLoading(context: context);
-      Navigator.pop(context);
-      Navigator.pop(context);
-    }
+    NavUtils.back();
+    NavUtils.back();
+    // } else {
+    //   toToast(getTranslated("noInternetConnection"));
+    // }
   }
 
   void changeStatus(ContactDetail phoneItem) {

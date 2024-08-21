@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../common/constants.dart';
 
 class CallHighlightedText extends StatelessWidget {
@@ -7,10 +6,10 @@ class CallHighlightedText extends StatelessWidget {
   final String content;
 
   const CallHighlightedText({
-    super.key,
+    Key? key,
     required this.searchString,
     required this.content,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

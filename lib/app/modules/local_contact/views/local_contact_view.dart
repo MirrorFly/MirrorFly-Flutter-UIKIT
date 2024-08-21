@@ -2,103 +2,91 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
-import 'package:mirrorfly_uikit_plugin/app/model/local_contact_model.dart';
+import '../../../common/app_localizations.dart';
+import '../../../model/local_contact_model.dart';
+import '../../../stylesheet/stylesheet.dart';
 
-import '../../../../mirrorfly_uikit_plugin.dart';
+import '../../../app_style_config.dart';
 import '../../../common/constants.dart';
 import '../../../common/widgets.dart';
+import '../../../data/utils.dart';
+import '../../../extensions/extensions.dart';
 import '../controllers/local_contact_controller.dart';
 
-class LocalContactView extends StatefulWidget {
-  const LocalContactView({super.key, this.enableAppBar = true});
-  final bool enableAppBar;
-  @override
-  State<LocalContactView> createState() => _LocalContactViewState();
-}
-
-class _LocalContactViewState extends State<LocalContactView> {
-  final controller = Get.put(LocalContactController());
+class LocalContactView extends NavViewStateful<LocalContactController> {
+  const LocalContactView({Key? key}) : super(key: key);
 
   @override
-  void dispose() {
-    Get.delete<LocalContactController>();
-    super.dispose();
-  }
+  LocalContactController createController({String? tag}) =>
+      Get.put(LocalContactController());
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      return Scaffold(
-        backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-        appBar: widget.enableAppBar
-            ? AppBar(
-                centerTitle: false,
-                titleSpacing: 0.0,
-                iconTheme: IconThemeData(
-                    color: MirrorflyUikit.getTheme?.colorOnAppbar),
-                backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-                title: controller.search.value
-                    ? TextField(
-                        controller: controller.searchTextController,
-                        onChanged: (text) =>
-                            controller.onSearchTextChanged(text),
-                        autofocus: true,
-                        cursorColor: MirrorflyUikit.getTheme?.colorOnAppbar,
-                        keyboardAppearance: MirrorflyUikit.theme == "dark"
-                            ? Brightness.dark
-                            : Brightness.light,
-                        style: TextStyle(
-                            color: MirrorflyUikit.getTheme?.colorOnAppbar),
-                        decoration: InputDecoration(
-                            hintText: AppConstants.searchPlaceHolder,
-                            border: InputBorder.none,
-                            hintStyle: TextStyle(
-                                color: MirrorflyUikit.getTheme?.colorOnAppbar
-                                    .withOpacity(0.6))),
-                      )
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            AppConstants.contactToSend,
-                            style: TextStyle(
-                                fontSize: 15,
-                                color: MirrorflyUikit.getTheme?.colorOnAppbar),
-                          ),
-                          Text(
-                            '${controller.contactsSelected.length} ${AppConstants.selected}',
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: MirrorflyUikit.getTheme?.colorOnAppbar),
-                          ),
-                        ],
+    return Theme(
+      data: Theme.of(context).copyWith(
+          appBarTheme: AppStyleConfig.localContactPageStyle.appBarTheme,
+          floatingActionButtonTheme: AppStyleConfig
+              .localContactPageStyle.floatingActionButtonThemeData),
+      child: Scaffold(
+        appBar: AppBar(
+          titleSpacing: 0.0,
+          title: Obx(() {
+            return controller.search.value
+                ? TextField(
+                    controller: controller.searchTextController,
+                    onChanged: (text) => controller.onSearchTextChanged(text),
+                    autofocus: true,
+                    style: AppStyleConfig.localContactPageStyle
+                        .searchTextFieldStyle.editTextStyle,
+                    decoration: InputDecoration(
+                        hintText: getTranslated("searchPlaceholder"),
+                        border: InputBorder.none,
+                        hintStyle: AppStyleConfig.localContactPageStyle
+                            .searchTextFieldStyle.editTextHintStyle),
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        getTranslated("contactToSend"),
+                        style: AppStyleConfig
+                            .localContactPageStyle.appBarTheme.titleTextStyle,
                       ),
-                actions: [
-                  controller.search.value
-                      ? const SizedBox()
-                      : IconButton(
-                          icon: SvgPicture.asset(
-                            searchIcon,
-                            package: package,
-                            width: 18,
-                            height: 18,
-                            colorFilter: ColorFilter.mode(
-                                MirrorflyUikit.getTheme!.colorOnAppbar,
-                                BlendMode.srcIn),
-                            fit: BoxFit.contain,
-                          ),
-                          onPressed: () {
-                            if (controller.search.value) {
-                              controller.search.value = false;
-                            } else {
-                              controller.search.value = true;
-                            }
-                          },
-                        ),
-                ],
-              )
-            : null,
+                      Text(
+                        getTranslated("selectedCount").replaceAll(
+                            "%d", '${controller.contactsSelected.length}'),
+                        style: AppStyleConfig
+                            .localContactPageStyle.appBarTheme.toolbarTextStyle,
+                      ),
+                    ],
+                  );
+          }),
+          actions: [
+            Obx(() => controller.search.value
+                ? const Offstage()
+                : IconButton(
+                    icon: SvgPicture.asset(
+                      searchIcon,
+                      package: package,
+                      width: 18,
+                      height: 18,
+                      fit: BoxFit.contain,
+                      colorFilter: ColorFilter.mode(
+                          AppStyleConfig.localContactPageStyle.appBarTheme
+                                  .actionsIconTheme?.color ??
+                              Colors.black,
+                          BlendMode.srcIn),
+                    ),
+                    onPressed: () {
+                      if (controller.search.value) {
+                        controller.search.value = false;
+                      } else {
+                        controller.search.value = true;
+                      }
+                    },
+                  )),
+          ],
+        ),
         body: PopScope(
           canPop: false,
           onPopInvoked: (didPop) {
@@ -111,39 +99,38 @@ class _LocalContactViewState extends State<LocalContactView> {
               controller.search.value = false;
               return;
             } else {
-              Navigator.pop(context);
+              NavUtils.back();
             }
           },
           child: SafeArea(
             child: Obx(() => controller.contactList.isEmpty
-                ? Center(
-                    child: CircularProgressIndicator(
-                    color: MirrorflyUikit.getTheme?.primaryColor,
-                  ))
-                : contactListView()),
+                ? const Center(child: CircularProgressIndicator())
+                : contactListView(
+                    context,
+                    AppStyleConfig
+                        .localContactPageStyle.selectedContactItemStyle,
+                    AppStyleConfig.localContactPageStyle.contactItemStyle)),
           ),
         ),
-        floatingActionButton: Visibility(
-          visible: controller.contactsSelected.isNotEmpty,
-          child: FloatingActionButton(
-            backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
-            onPressed: () {
-              controller.shareContact(context);
-            },
-            child: SvgPicture.asset(
-              rightArrowProceed,
-              package: package,
-              colorFilter: ColorFilter.mode(
-                  MirrorflyUikit.getTheme!.colorOnPrimary, BlendMode.srcIn),
-              width: 18,
+        floatingActionButton: Obx(() {
+          return Visibility(
+            visible: controller.contactsSelected.isNotEmpty,
+            child: FloatingActionButton(
+              onPressed: () {
+                controller.shareContact();
+              },
+              child: const Icon(
+                Icons.arrow_forward,
+              ),
             ),
-          ),
-        ),
-      );
-    });
+          );
+        }),
+      ),
+    );
   }
 
-  selectedListView(RxList<LocalContact> contactsSelected) {
+  selectedListView(RxList<LocalContact> contactsSelected,
+      LocalContactItem selectedContactItemStyle) {
     return contactsSelected.isNotEmpty
         ? SizedBox(
             height: 70,
@@ -164,25 +151,18 @@ class _LocalContactViewState extends State<LocalContactView> {
                             children: [
                               ProfileTextImage(
                                 text: controller.name(item.contact),
-                                radius: 22,
+                                radius: selectedContactItemStyle
+                                        .profileImageSize.width /
+                                    2,
                               ),
                               Positioned(
-                                  right: 0,
-                                  bottom: 0,
-                                  child: CircleAvatar(
-                                      radius: 9,
-                                      backgroundColor: MirrorflyUikit
-                                          .getTheme?.colorOnPrimary,
-                                      child: CircleAvatar(
-                                          radius: 8,
-                                          backgroundColor: MirrorflyUikit
-                                              .getTheme?.primaryColor,
-                                          child: Icon(
-                                            Icons.close,
-                                            size: 10,
-                                            color: MirrorflyUikit
-                                                .getTheme?.colorOnPrimary,
-                                          )))),
+                                  right: 2,
+                                  bottom: 2,
+                                  child: SvgPicture.asset(
+                                    closeContactIcon,
+                                    package: package,
+                                    width: 15,
+                                  )),
                             ],
                           ),
                         ],
@@ -194,20 +174,22 @@ class _LocalContactViewState extends State<LocalContactView> {
         : const SizedBox.shrink();
   }
 
-  contactListView() {
+  contactListView(
+      BuildContext context,
+      LocalContactItem selectedContactItemStyle,
+      LocalContactItem contactItemStyle) {
     return Obx(() {
       return Column(
         children: [
-          selectedListView(controller.contactsSelected),
+          selectedListView(
+              controller.contactsSelected, selectedContactItemStyle),
           controller.searchList.isEmpty &&
                   controller.searchTextController.text.isNotEmpty
-              ? Expanded(
-                  child: Center(
-                      child: Text(
-                  AppConstants.noResultsFound,
-                  style: TextStyle(
-                      color: MirrorflyUikit.getTheme?.textPrimaryColor),
-                )))
+              ? Center(
+                  child: Text(
+                  getTranslated("noResultFound"),
+                  style: AppStyleConfig.localContactPageStyle.noDataTextStyle,
+                ))
               : Expanded(
                   child: ListView.builder(
                       itemCount: controller.searchList.length,
@@ -227,29 +209,20 @@ class _LocalContactViewState extends State<LocalContactView> {
                                   children: [
                                     ProfileTextImage(
                                       text: controller.name(item.contact),
-                                      radius: 18,
+                                      radius: contactItemStyle
+                                              .profileImageSize.width /
+                                          2,
                                     ),
                                     Visibility(
                                       visible: item.isSelected,
                                       child: Positioned(
                                           right: 0,
                                           bottom: 0,
-                                          child: CircleAvatar(
-                                              radius: 8,
-                                              backgroundColor: MirrorflyUikit
-                                                  .getTheme?.colorOnPrimary,
-                                              child: CircleAvatar(
-                                                  radius: 7,
-                                                  backgroundColor:
-                                                      MirrorflyUikit.getTheme
-                                                          ?.primaryColor,
-                                                  child: Icon(
-                                                    Icons.check,
-                                                    size: 9,
-                                                    color: MirrorflyUikit
-                                                        .getTheme
-                                                        ?.colorOnPrimary,
-                                                  )))),
+                                          child: SvgPicture.asset(
+                                            contactSelectTick,
+                                            package: package,
+                                            width: 12,
+                                          )),
                                     ),
                                   ],
                                 ),
@@ -260,10 +233,8 @@ class _LocalContactViewState extends State<LocalContactView> {
                                     child: Text(
                                   controller.name(item.contact),
                                   maxLines: 1,
-                                  style: TextStyle(
-                                      color: MirrorflyUikit
-                                          .getTheme?.textPrimaryColor),
                                   overflow: TextOverflow.ellipsis,
+                                  style: contactItemStyle.titleStyle,
                                 )),
                               ],
                             ),

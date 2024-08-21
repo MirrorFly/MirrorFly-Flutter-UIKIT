@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mirrorfly_plugin/mirrorflychat.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/extensions.dart';
-
-import '../../../mirrorfly_uikit_plugin.dart';
 import '../../common/constants.dart';
 import '../../common/de_bouncer.dart';
 import '../../common/main_controller.dart';
-import '../../data/apputils.dart';
 import '../../data/helper.dart';
 import '../../data/permissions.dart';
 import '../../data/session_management.dart';
-import '../../modules/chatInfo/views/chat_info_view.dart';
-import '../../modules/group/views/group_info_view.dart';
-import '../outgoing_call/outgoing_call_view.dart';
+import '../../extensions/extensions.dart';
+import 'package:mirrorfly_plugin/mirrorflychat.dart';
+
+import '../../app_style_config.dart';
+import '../../common/app_localizations.dart';
+import '../../data/utils.dart';
+import '../../model/arguments.dart';
+import '../../routes/route_settings.dart';
 
 class GroupParticipantsController extends GetxController {
   var usersList = <ProfileDetails>[].obs;
@@ -23,17 +23,12 @@ class GroupParticipantsController extends GetxController {
 
   var groupId = "".obs;
   var callType = "".obs;
-
-  late BuildContext context;
-
-  Future<void> initGroupParticipantController(
-      {required BuildContext buildContext,
-      required String groupId,
-      required String callType}) async {
-    context = buildContext;
+  @override
+  Future<void> onInit() async {
+    super.onInit();
     getMaxCallUsersCount = (await Mirrorfly.getMaxCallUsersCount()) ?? 8;
-    this.groupId(groupId);
-    this.callType(callType);
+    groupId(NavUtils.arguments["groupId"]);
+    callType(NavUtils.arguments["callType"]);
     getGroupMembers();
   }
 
@@ -48,7 +43,7 @@ class GroupParticipantsController extends GetxController {
         jid: groupId.value.checkNull(),
         fetchFromServer: false,
         flyCallBack: (FlyResponse response) {
-          mirrorFlyLog("getGroupMembersList", response.toString());
+          LogMessage.d("getGroupMembersList", response.toString());
           if (response.isSuccess && response.hasData) {
             var list = profileFromJson(response.data);
             var withoutMe = list
@@ -128,34 +123,24 @@ class GroupParticipantsController extends GetxController {
 
   showProfilePopup(Rx<ProfileDetails> profile) {
     showQuickProfilePopup(
-        context: Get.context,
         // chatItem: chatItem,
         chatTap: () {
-          Get.back();
+          NavUtils.back();
           onListItemPressed(profile.value);
         },
         infoTap: () {
-          Get.back();
+          NavUtils.back();
           if (profile.value.isGroupProfile ?? false) {
-            // Get.toNamed(Routes.groupInfo, arguments: profile.value);
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (con) =>
-                        GroupInfoView(jid: profile.value.jid.checkNull())));
+            NavUtils.toNamed(Routes.groupInfo,
+                arguments: profile.value.jid.checkNull());
           } else {
-            // Get.toNamed(Routes.chatInfo, arguments: profile.value);
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (con) =>
-                        ChatInfoView(jid: profile.value.jid.checkNull())));
+            NavUtils.toNamed(Routes.chatInfo,
+                arguments:
+                    ChatInfoArguments(chatJid: profile.value.jid.checkNull()));
           }
         },
         profile: profile,
-        availableFeatures: availableFeatures,
-        callTap: () {},
-        videoTap: () {});
+        availableFeatures: availableFeatures);
   }
 
   onListItemPressed(ProfileDetails item) {
@@ -167,35 +152,42 @@ class GroupParticipantsController extends GetxController {
   }
 
   unBlock(ProfileDetails item) {
-    Helper.showAlert(
-        message: "Unblock ${getName(item)}?",
+    DialogUtils.showAlert(
+        dialogStyle: AppStyleConfig.dialogStyle,
+        message: getTranslated("unBlockUser").replaceFirst("%d", getName(item)),
         actions: [
           TextButton(
+              style: AppStyleConfig.dialogStyle.buttonStyle,
               onPressed: () {
-                Get.back();
+                NavUtils.back();
               },
-              child: const Text("NO", style: TextStyle(color: buttonBgColor))),
+              child: Text(
+                getTranslated("no").toUpperCase(),
+              )),
           TextButton(
+              style: AppStyleConfig.dialogStyle.buttonStyle,
               onPressed: () async {
                 if (await AppUtils.isNetConnected()) {
-                  Get.back();
-                  Helper.progressLoading(context: context);
+                  NavUtils.back();
+                  DialogUtils.progressLoading();
                   Mirrorfly.unblockUser(
                       userJid: item.jid.checkNull(),
                       flyCallBack: (FlyResponse response) {
-                        Helper.hideLoading(context: context);
+                        DialogUtils.hideLoading();
                         if (response.isSuccess && response.hasData) {
-                          toToast("${getName(item)} has been Unblocked");
+                          toToast(getTranslated("hasUnBlocked")
+                              .replaceFirst("%d", getName(item)));
                           userUpdatedHisProfile(item.jid.checkNull());
                         }
                       });
                 } else {
-                  toToast(Constants.noInternetConnection);
+                  toToast(getTranslated("noInternetConnection"));
                 }
               },
-              child: const Text("YES", style: TextStyle(color: buttonBgColor))),
-        ],
-        context: context);
+              child: Text(
+                getTranslated("yes").toUpperCase(),
+              )),
+        ]);
   }
 
   void userUpdatedHisProfile(String jid) {
@@ -209,7 +201,7 @@ class GroupParticipantsController extends GetxController {
             usersList.indexWhere((element) => element.jid == jid);
         var mainUserListIndex =
             mainUserList.indexWhere((element) => element.jid == jid);
-        mirrorFlyLog('value.isBlockedMe', value.isBlockedMe.toString());
+        LogMessage.d('value.isBlockedMe', value.isBlockedMe.toString());
         if (!userListIndex.isNegative) {
           usersList[userListIndex] = value;
           usersList.refresh();
@@ -237,7 +229,7 @@ class GroupParticipantsController extends GetxController {
         selectedUsersJIDList.add(item.jid!);
         groupCallMembersCount(groupCallMembersCount.value + 1);
       } else {
-        toToast(Constants.callMembersLimit
+        toToast(getTranslated("callMembersLimit")
             .replaceFirst("%d", getMaxCallUsersCount.toString()));
       }
     }
@@ -249,51 +241,43 @@ class GroupParticipantsController extends GetxController {
       return;
     }
     if (!availableFeatures.value.isGroupCallAvailable.checkNull()) {
-      Helper.showFeatureUnavailable(context);
+      DialogUtils.showFeatureUnavailable();
       return;
     }
     if ((await Mirrorfly.isOnGoingCall()).checkNull()) {
       debugPrint("#Mirrorfly Call You are on another call");
-      toToast(Constants.msgOngoingCallAlert);
+      toToast(getTranslated("msgOngoingCallAlert"));
       return;
     }
     if (!(await AppUtils.isNetConnected())) {
-      toToast(Constants.noInternetConnection);
+      toToast(getTranslated("noInternetConnection"));
       return;
     }
     if (callType.value == CallType.audio) {
-      if (await AppPermission.askAudioCallPermissions(context)) {
+      if (await AppPermission.askAudioCallPermissions()) {
         Mirrorfly.makeGroupVoiceCall(
             groupJid: groupId.value,
             toUserJidList: selectedUsersJIDList,
             flyCallBack: (FlyResponse response) {
               if (response.isSuccess) {
-                /*Get.offNamed(Routes.outGoingCallView,
-                arguments: {"userJid": selectedUsersJIDList, "callType": CallType.audio});*/
-                MirrorflyUikit.instance.navigationManager.navigateTo(
-                    context: context,
-                    pageToNavigate:
-                        OutGoingCallView(userJid: selectedUsersJIDList),
-                    routeName: Constants.outGoingCallView,
-                    onNavigateComplete: () {});
+                NavUtils.offNamed(Routes.outGoingCallView, arguments: {
+                  "userJid": selectedUsersJIDList,
+                  "callType": CallType.audio
+                });
               }
             });
       }
     } else if (callType.value == CallType.video) {
-      if (await AppPermission.askVideoCallPermissions(context)) {
+      if (await AppPermission.askVideoCallPermissions()) {
         Mirrorfly.makeGroupVideoCall(
             groupJid: groupId.value,
             toUserJidList: selectedUsersJIDList,
             flyCallBack: (FlyResponse response) {
               if (response.isSuccess) {
-                /*Get.offNamed(Routes.outGoingCallView,
-                arguments: {"userJid": selectedUsersJIDList, "callType": CallType.video});*/
-                MirrorflyUikit.instance.navigationManager.navigateTo(
-                    context: context,
-                    pageToNavigate:
-                        OutGoingCallView(userJid: selectedUsersJIDList),
-                    routeName: Constants.outGoingCallView,
-                    onNavigateComplete: () {});
+                NavUtils.offNamed(Routes.outGoingCallView, arguments: {
+                  "userJid": selectedUsersJIDList,
+                  "callType": CallType.video
+                });
               }
             });
       }

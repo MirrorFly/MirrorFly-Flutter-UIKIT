@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
+import '../../../app_style_config.dart';
+import '../../../common/app_localizations.dart';
+import '../../../extensions/extensions.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
-import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
-import '../../../models.dart';
-
-import '../chat_widgets.dart';
+import '../../../data/utils.dart';
+import '../../../model/chat_message_model.dart';
+import '../../../stylesheet/stylesheet.dart';
 import '../controllers/chat_controller.dart';
+import '../widgets/chat_widgets.dart';
+import '../widgets/message_content.dart';
+import '../widgets/notification_message_view.dart';
+import '../widgets/reply_message_widgets.dart';
+import '../widgets/sender_header.dart';
 
 class ChatSearchView extends StatelessWidget {
-  ChatSearchView({super.key, this.showChatDeliveryIndicator = true});
+  ChatSearchView({super.key});
 
-  final bool showChatDeliveryIndicator;
-
-  final controller = Get.find<ChatController>();
+  final ChatController controller = ChatController(null).get();
 
   @override
   Widget build(BuildContext context) {
@@ -28,76 +32,93 @@ class ChatSearchView extends StatelessWidget {
           return;
         }
       },
-      child: Scaffold(
-        backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-        appBar: AppBar(
-          backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-          actionsIconTheme: IconThemeData(
-              color: MirrorflyUikit.getTheme?.colorOnAppbar ?? iconColor),
-          iconTheme: IconThemeData(
-              color: MirrorflyUikit.getTheme?.colorOnAppbar ?? iconColor),
-          automaticallyImplyLeading: true,
-          title: TextField(
-            onChanged: (text) => controller.setSearch(text),
-            controller: controller.searchedText,
-            focusNode: controller.searchfocusNode,
-            autofocus: true,
-            cursorColor: MirrorflyUikit.getTheme?.colorOnAppbar,
-            style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
-            decoration: InputDecoration(
-                hintText: AppConstants.searchPlaceHolder,
-                border: InputBorder.none,
-                hintStyle: TextStyle(
-                    color: MirrorflyUikit.getTheme?.colorOnAppbar
-                        .withOpacity(0.5))),
-            onSubmitted: (str) {
-              if (controller.filteredPosition.isNotEmpty) {
-                controller.scrollUp();
-              } else {
-                toToast(AppConstants.noResultsFound);
-              }
-            },
-          ),
-          // iconTheme: const IconThemeData(color: iconColor),
-          actions: [
-            IconButton(
-                onPressed: () {
+      child: Theme(
+        data: Theme.of(context)
+            .copyWith(appBarTheme: AppStyleConfig.chatPageStyle.appBarTheme),
+        child: Scaffold(
+          appBar: AppBar(
+            automaticallyImplyLeading: true,
+            title: TextField(
+              onChanged: (text) => controller.setSearch(text),
+              controller: controller.searchedText,
+              focusNode: controller.searchfocusNode,
+              autofocus: true,
+              style: AppStyleConfig
+                  .chatPageStyle.searchTextFieldStyle.editTextStyle,
+              decoration: InputDecoration(
+                  hintText: getTranslated("searchPlaceholder"),
+                  border: InputBorder.none,
+                  hintStyle: AppStyleConfig
+                      .chatPageStyle.searchTextFieldStyle.editTextHintStyle),
+              onSubmitted: (str) {
+                if (controller.filteredPosition.isNotEmpty) {
                   controller.scrollUp();
-                },
-                icon: const Icon(Icons.keyboard_arrow_up)),
-            IconButton(
-                onPressed: () {
-                  controller.scrollDown();
-                },
-                icon: const Icon(Icons.keyboard_arrow_down)),
-          ],
+                } else {
+                  toToast(getTranslated("noResultsFound"));
+                }
+              },
+            ),
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    controller.scrollUp();
+                  },
+                  icon: const Icon(Icons.keyboard_arrow_up)),
+              IconButton(
+                  onPressed: () {
+                    controller.scrollDown();
+                  },
+                  icon: const Icon(Icons.keyboard_arrow_down)),
+            ],
+          ),
+          body: Obx(() => controller.chatList.isEmpty
+              ? const Offstage()
+              : chatListView(controller.chatList,
+                  senderChatStyle:
+                      AppStyleConfig.chatPageStyle.senderChatBubbleStyle,
+                  receiverChatStyle:
+                      AppStyleConfig.chatPageStyle.receiverChatBubbleStyle,
+                  chatSelectedColor:
+                      AppStyleConfig.chatPageStyle.chatSelectionBgColor,
+                  notificationMessageViewStyle: AppStyleConfig
+                      .chatPageStyle.notificationMessageViewStyle)),
         ),
-        body: Obx(() => controller.chatList.isEmpty
-            ? const SizedBox.shrink()
-            : chatListView(controller.chatList)),
       ),
     );
   }
 
-  Widget chatListView(List<ChatMessageModel> chatList) {
-    return ScrollablePositionedList.builder(
+  Widget chatListView(List<ChatMessageModel> chatList,
+      {required SenderChatBubbleStyle senderChatStyle,
+      required ReceiverChatBubbleStyle receiverChatStyle,
+      required Color chatSelectedColor,
+      required NotificationMessageViewStyle notificationMessageViewStyle}) {
+    return ScrollablePositionedList.separated(
+      separatorBuilder: (context, index) {
+        var string = AppUtils.groupedDateMessage(index, chatList); //Date Labels
+        return string != null
+            ? NotificationMessageView(chatMessage: string)
+            : const Offstage();
+      },
       itemCount: chatList.length,
-      //initialScrollIndex: chatList.length,
       itemScrollController: controller.searchScrollController,
-      itemPositionsListener: controller.itemPositionsListener,
+      itemPositionsListener: controller.newItemPositionsListener,
       reverse: true,
       itemBuilder: (context, index) {
         return Column(
           children: [
-            groupedDateMessage(index, chatList) != null
-                ? NotificationMessageView(
-                    chatMessage: groupedDateMessage(index, chatList))
-                : const SizedBox.shrink(),
+            Obx(() {
+              // LogMessage.d("ScrollablePositionedList inside AutomaticKeepAlive", "build $index");
+              return controller.showLoadingPrevious.value &&
+                      index == chatList.length - 1
+                  ? const Center(child: CircularProgressIndicator())
+                  : const Offstage();
+            }),
             (chatList[index].messageType.toUpperCase() !=
                     Constants.mNotification)
                 ? Container(
+                    key: ValueKey(chatList[index].messageId),
                     color: chatList[index].isSelected.value
-                        ? MirrorflyUikit.getTheme?.primaryColor.withAlpha(60)
+                        ? chatSelectedColor
                         : Colors.transparent,
                     margin: const EdgeInsets.only(
                         left: 14, right: 14, top: 5, bottom: 10),
@@ -118,63 +139,84 @@ class ChatSearchView extends StatelessWidget {
                                   controller.forwardSingleMessage(
                                       chatList[index].messageId);
                                 },
-                                icon: SvgPicture.asset(
-                                  forwardMedia,
-                                  package: package,
-                                )),
+                                icon: SvgPicture.asset(forwardMedia,
+                                    package: package)),
                           ),
-                          ChatContainer(
-                            chatMessage: chatList[index],
+                          Container(
+                            constraints:
+                                BoxConstraints(maxWidth: NavUtils.width * 0.75),
+                            decoration: chatList[index].isMessageSentByMe
+                                ? senderChatStyle.decoration
+                                : receiverChatStyle.decoration,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SenderHeader(
+                                if (controller.profile.isGroupProfile
+                                    .checkNull()) ...[
+                                  SenderHeader(
                                     isGroupProfile:
                                         controller.profile.isGroupProfile,
                                     chatList: chatList,
-                                    index: index),
+                                    index: index,
+                                    textStyle: receiverChatStyle
+                                        .participantNameTextStyle,
+                                  ),
+                                ],
                                 chatList[index].isThisAReplyMessage
                                     ? chatList[index].replyParentChatMessage ==
                                             null
                                         ? messageNotAvailableWidget(
                                             chatList[index])
                                         : ReplyMessageHeader(
-                                            chatMessage: chatList[index])
-                                    : const SizedBox.shrink(),
+                                            chatMessage: chatList[index],
+                                            replyHeaderMessageViewStyle: chatList[
+                                                        index]
+                                                    .isMessageSentByMe
+                                                ? senderChatStyle
+                                                    .replyHeaderMessageViewStyle
+                                                : receiverChatStyle
+                                                    .replyHeaderMessageViewStyle,
+                                          )
+                                    : const Offstage(),
                                 MessageContent(
                                   chatList: chatList,
                                   index: index,
                                   search: controller.searchedText.text.trim(),
                                   onPlayAudio: () {
-                                    controller.playAudio(chatList[index]);
+                                    // controller.playAudio(chatList[index]);
                                   },
                                   onSeekbarChange: (value) {},
-                                  showChatDeliveryIndicator:
-                                      showChatDeliveryIndicator,
-                                ),
+                                  senderChatBubbleStyle: senderChatStyle,
+                                  receiverChatBubbleStyle: receiverChatStyle,
+                                  notificationMessageViewStyle:
+                                      notificationMessageViewStyle,
+                                )
                               ],
                             ),
                           ),
-                          Visibility(
-                            visible: !chatList[index].isMessageSentByMe &&
-                                controller
-                                    .forwardMessageVisibility(chatList[index]),
-                            child: IconButton(
+                          if (!chatList[index].isMessageSentByMe &&
+                              controller.forwardMessageVisibility(
+                                  chatList[index])) ...[
+                            IconButton(
                                 onPressed: () {
                                   controller.forwardSingleMessage(
                                       chatList[index].messageId);
                                 },
-                                icon: SvgPicture.asset(
-                                  forwardMedia,
-                                  package: package,
-                                )),
-                          ),
+                                icon: SvgPicture.asset(forwardMedia))
+                          ],
                         ],
                       ),
                     ),
                   )
                 : NotificationMessageView(
                     chatMessage: chatList[index].messageTextContent),
+            Obx(() {
+              return controller.showLoadingNext.value && index == 0
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : const Offstage();
+            }),
           ],
         );
       },

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../../data/utils.dart';
 // import 'package:video_player/video_player.dart';
 
 class VideoPlayController extends GetxController {
@@ -7,13 +9,12 @@ class VideoPlayController extends GetxController {
   // late VideoPlayerController videoPlayerController;
   var isInitialized = false.obs;
   var isPlaying = false.obs;
-
   @override
   void onInit() {
     super.onInit();
-    videoPath(Get.arguments['filePath']);
+    videoPath(NavUtils.arguments['filePath']);
     debugPrint("##path ${videoPath.value}");
-    // videoPlayerController = VideoPlayerController.file(File(Get.arguments['filePath']))
+    // videoPlayerController = VideoPlayerController.file(File(NavUtils.arguments['filePath']))
     //   ..initialize().then((_) {
     //     // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
     //     isInitialized(true);

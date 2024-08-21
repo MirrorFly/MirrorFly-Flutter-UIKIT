@@ -1,24 +1,23 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:mirrorfly_plugin/flychat.dart';
-import 'package:get/get.dart';
-import 'package:mirrorfly_plugin/model/callback.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
-import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
-import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
-
 import '../../../../common/main_controller.dart';
-import '../../../../data/apputils.dart';
-import '../../../../data/helper.dart';
+import 'package:mirrorfly_plugin/mirrorfly.dart';
+import 'package:get/get.dart';
+import '../../../../common/constants.dart';
+import '../../../../data/session_management.dart';
+
+import '../../../../app_style_config.dart';
+import '../../../../common/app_localizations.dart';
+import '../../../../data/utils.dart';
 import '../../../../data/permissions.dart';
+import '../../../../routes/route_settings.dart';
 
 class ChatSettingsController extends GetxController {
   final _archiveEnabled = false.obs;
   final lastSeenPreference = false.obs;
   final busyStatusPreference = false.obs;
-  final busyStatus = Constants.emptyString.obs;
+  final busyStatus = "".obs;
   bool get archiveEnabled => _archiveEnabled.value;
 
   final _autoDownloadEnabled = false.obs;
@@ -63,20 +62,18 @@ class ChatSettingsController extends GetxController {
             }
           });
     } else {
-      toToast(AppConstants.noInternetConnection);
+      toToast(getTranslated("noInternetConnection"));
     }
   }
 
-  Future<void> enableDisableAutoDownload(BuildContext context) async {
-    AppPermission.getStoragePermission(context: context).then((value) {
-      if (value) {
-        // if (await askStoragePermission(context)) {
-        var enable = !_autoDownloadEnabled
-            .value; //SessionManagement.isAutoDownloadEnable();
-        Mirrorfly.setMediaAutoDownload(enable: enable);
-        _autoDownloadEnabled(enable);
-      }
-    });
+  Future<void> enableDisableAutoDownload() async {
+    var permission = await AppPermission.getStoragePermission();
+    if (permission) {
+      var enable = !_autoDownloadEnabled
+          .value; //SessionManagement.isAutoDownloadEnable();
+      Mirrorfly.setMediaAutoDownload(enable: enable);
+      _autoDownloadEnabled(enable);
+    }
   }
 
   Future<void> enableDisableTranslate() async {
@@ -85,44 +82,43 @@ class ChatSettingsController extends GetxController {
     SessionManagement.setGoogleTranslationEnable(enable);
     _translationEnabled(enable);
     /*}else{
-      toToast(AppConstants.noInternetConnection);
+      toToast(getTranslated("noInternetConnection"));
     }*/
   }
 
   void chooseLanguage() {
-    /*Get.toNamed(Routes.languages,arguments: translationLanguage)?.then((value){
-      if(value!=null){
+    NavUtils.toNamed(Routes.languages, arguments: translationLanguage)
+        ?.then((value) {
+      if (value != null) {
         var language = value as String;
         _translationLanguage(language);
       }
-    });*/
+    });
   }
 
-  void clearAllConversation(BuildContext context) {
-    Helper.showAlert(
-        message: AppConstants.areYouClearAllChat,
+  void clearAllConversation() {
+    DialogUtils.showAlert(
+        dialogStyle: AppStyleConfig.dialogStyle,
+        message: getTranslated("areYouClearAllChat"),
         actions: [
           TextButton(
+              style: AppStyleConfig.dialogStyle.buttonStyle,
               onPressed: () {
-                // Get.back();
-                Navigator.pop(context);
+                NavUtils.back();
               },
               child: Text(
-                AppConstants.no.toUpperCase(),
-                style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),
+                getTranslated("no").toUpperCase(),
               )),
           TextButton(
+              style: AppStyleConfig.dialogStyle.buttonStyle,
               onPressed: () {
-                // Get.back();
-                Navigator.pop(context);
+                NavUtils.back();
                 clearAllConv();
               },
               child: Text(
-                AppConstants.yes.toUpperCase(),
-                style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),
+                getTranslated("yes").toUpperCase(),
               )),
-        ],
-        context: context);
+        ]);
   }
 
   Future<void> clearAllConv() async {
@@ -130,13 +126,13 @@ class ChatSettingsController extends GetxController {
       Mirrorfly.clearAllConversation(flyCallBack: (FlyResponse response) {
         if (response.isSuccess) {
           clearAllConvRecentChatUI();
-          toToast(AppConstants.allChatsCleared);
+          toToast(getTranslated("allChatsCleared"));
         } else {
-          toToast(AppConstants.serverError);
+          toToast(getTranslated("serverError"));
         }
       });
     } else {
-      toToast(AppConstants.noInternetConnection);
+      toToast(getTranslated("noInternetConnection"));
     }
   }
 
@@ -151,11 +147,11 @@ class ChatSettingsController extends GetxController {
             }
           });
     } else {
-      toToast(AppConstants.noInternetConnection);
+      toToast(getTranslated("noInternetConnection"));
     }
   }
 
-  busyStatusEnable() async {
+  busyStatusEnable() {
     bool busyStatusVal = !busyStatusPreference.value;
     debugPrint("busy_status_val ${busyStatusVal.toString()}");
     busyStatusPreference(busyStatusVal);
@@ -169,7 +165,7 @@ class ChatSettingsController extends GetxController {
   void getMyBusyStatus() {
     Mirrorfly.getMyBusyStatus().then((value) {
       var userBusyStatus = json.decode(value);
-      debugPrint("Busy Status ${userBusyStatus["status"]}");
+      debugPrint("Busy Status $userBusyStatus");
       // var busyStatus = userBusyStatus["status"];
       // if(busyStatus)
       busyStatus(userBusyStatus["status"]);

@@ -1,6 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import '../common/app_localizations.dart';
+import '../common/constants.dart';
+import '../data/utils.dart';
+import 'package:mirrorfly_plugin/mirrorflychat.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPlayerWidget extends StatefulWidget {
@@ -18,6 +22,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   late VideoPlayerController _controller;
   late Future<void> _initializeVideoPlayerFuture;
   bool _isPlaying = false;
+  bool isStopped = false;
   double _sliderValue = 0.0;
 
   @override
@@ -27,6 +32,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
       ..addListener(() {
         setState(() {
           _sliderValue = _controller.value.position.inSeconds.toDouble();
+          isStopped = _controller.value.isCompleted;
         });
       });
     _initializeVideoPlayerFuture = _controller.initialize().then((_) {
@@ -36,6 +42,11 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
         _controller.setVolume(1.0);
         _controller.setPlaybackSpeed(1.0);
       });
+    }).catchError((e) {
+      LogMessage.d("initialize", "$e");
+      //PlatformException(VideoError, Video player had error com.google.android.exoplayer2.ExoPlaybackException: Source error, null, null)
+      toToast(getTranslated("errorVideoInitialize"));
+      Navigator.pop(context);
     });
   }
 
@@ -112,9 +123,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     final duration = _controller.value.duration;
 
     String formatDuration(Duration d) {
-      final minutes = d.inMinutes.toString().padLeft(2, '0');
-      final seconds = (d.inSeconds % 60).toString().padLeft(2, '0');
-      return '$minutes:$seconds';
+      return DateTimeUtils.durationToString(d);
     }
 
     return Column(
@@ -128,14 +137,16 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
               onPressed: _rewind,
               icon: const Icon(
                 Icons.fast_rewind,
-                color: Colors.blue,
+                color: buttonBgColor,
               ),
             ),
             const SizedBox(width: 16),
             FloatingActionButton(
               onPressed: _playPause,
+              backgroundColor: buttonBgColor,
               child: Icon(
-                _isPlaying ? Icons.pause : Icons.play_arrow,
+                !_isPlaying || isStopped ? Icons.play_arrow : Icons.pause,
+                color: Colors.white,
               ),
             ),
             const SizedBox(width: 16),
@@ -143,7 +154,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
               onPressed: _forward,
               icon: const Icon(
                 Icons.fast_forward,
-                color: Colors.blue,
+                color: buttonBgColor,
               ),
             ),
           ],
@@ -153,7 +164,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
           children: [
             Text(
               formatDuration(position),
-              style: const TextStyle(fontSize: 16, color: Colors.blue),
+              style: const TextStyle(fontSize: 16, color: buttonBgColor),
             ),
             Expanded(
               child: Slider(
@@ -161,11 +172,13 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
                 max: _controller.value.duration.inSeconds.toDouble(),
                 value: _sliderValue,
                 onChanged: _onSliderChanged,
+                thumbColor: buttonBgColor,
+                activeColor: buttonBgColor,
               ),
             ),
             Text(
-              formatDuration(duration - position),
-              style: const TextStyle(fontSize: 16, color: Colors.blue),
+              formatDuration(duration),
+              style: const TextStyle(fontSize: 16, color: buttonBgColor),
             ),
           ],
         ),

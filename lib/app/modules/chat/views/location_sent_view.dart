@@ -1,47 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
+import '../../../common/app_localizations.dart';
+import '../../../extensions/extensions.dart';
 
-import '../../../../mirrorfly_uikit_plugin.dart';
+import '../../../app_style_config.dart';
 import '../controllers/location_controller.dart';
 
-class LocationSentView extends StatefulWidget {
+class LocationSentView extends NavViewStateful<LocationController> {
   const LocationSentView({super.key, this.enableAppBar = true});
   final bool enableAppBar;
-  @override
-  State<LocationSentView> createState() => _LocationSentViewState();
-}
 
-class _LocationSentViewState extends State<LocationSentView> {
-  var controller = Get.put(LocationController());
   @override
-  void dispose() {
-    Get.delete<LocationController>();
-    super.dispose();
-  }
+  LocationController createController({String? tag}) =>
+      Get.put(LocationController());
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: true,
-      onPopInvoked: (didPop) {
-        if (didPop) {
-          return;
-        }
-      },
+    return Theme(
+      data: Theme.of(context).copyWith(
+          appBarTheme: AppStyleConfig.locationSentPageStyle.appBarTheme,
+          floatingActionButtonTheme: AppStyleConfig
+              .locationSentPageStyle.floatingActionButtonThemeData),
       child: Scaffold(
-        backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-        appBar: widget.enableAppBar
+        appBar: enableAppBar
             ? AppBar(
-                iconTheme: IconThemeData(
-                    color: MirrorflyUikit.getTheme?.colorOnAppbar),
-                backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-                title: Text(
-                  AppConstants.userLocation,
-                  style:
-                      TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
-                ),
+                title: Text(getTranslated("userLocation")),
                 automaticallyImplyLeading: true,
               )
             : null,
@@ -81,38 +65,32 @@ class _LocationSentViewState extends State<LocationSentView> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      AppConstants.sendThisLocation,
-                                      style: TextStyle(
-                                          color: MirrorflyUikit
-                                              .getTheme?.primaryColor,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.normal),
+                                      getTranslated("sendThisLocation"),
+                                      style: AppStyleConfig
+                                          .locationSentPageStyle.titleStyle,
+                                      // style: const TextStyle(color: buttonBgColor,fontSize: 14,fontWeight: FontWeight.normal),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(top: 8.0),
                                       child: Text(
                                         controller.address1.value,
-                                        style: TextStyle(
-                                            color: MirrorflyUikit
-                                                .getTheme?.textPrimaryColor,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w700),
+                                        style: AppStyleConfig
+                                            .locationSentPageStyle
+                                            .addressLine1Style,
+                                        // style: const TextStyle(color: textHintColor,fontSize: 16,fontWeight: FontWeight.w700),
                                       ),
                                     ),
                                     Text(
                                       controller.address2.value,
-                                      style: TextStyle(
-                                          color: MirrorflyUikit
-                                              .getTheme?.textSecondaryColor,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.normal),
+                                      style: AppStyleConfig
+                                          .locationSentPageStyle
+                                          .addressLine2Style,
+                                      // style: const TextStyle(color: textColor,fontSize: 14,fontWeight: FontWeight.normal),
                                     ),
                                   ],
                                 )
-                              : Center(
-                                  child: CircularProgressIndicator(
-                                  color: MirrorflyUikit.getTheme?.primaryColor,
-                                )),
+                              : const Center(
+                                  child: CircularProgressIndicator()),
                         ),
                       ),
                     ),
@@ -123,14 +101,16 @@ class _LocationSentViewState extends State<LocationSentView> {
                           if (controller.location.value.latitude != 0) {
                             //sent Location Message
                             Navigator.pop(context, controller.location.value);
-                            // Get.back(result: controller.location.value);
                           }
                         },
-                        backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
                         child: Icon(
                           Icons.arrow_forward_rounded,
-                          color: MirrorflyUikit.getTheme?.colorOnPrimary,
-                          size: 18,
+                          color: Theme.of(context)
+                              .floatingActionButtonTheme
+                              .foregroundColor,
+                          size: Theme.of(context)
+                              .floatingActionButtonTheme
+                              .iconSize,
                         ),
                       ),
                     )

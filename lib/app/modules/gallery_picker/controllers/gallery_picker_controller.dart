@@ -1,30 +1,31 @@
-import 'package:mirrorfly_plugin/model/user_list_model.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/gallery_picker/src/presentation/pages/gallery_media_picker_controller.dart';
-
-import '../../../data/helper.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../modules/gallery_picker/src/presentation/pages/gallery_media_picker_controller.dart';
+import 'package:mirrorfly_plugin/mirrorfly.dart';
 
+import '../../../data/utils.dart';
 import '../src/data/models/picked_asset_model.dart';
 
 class GalleryPickerController extends GetxController {
   var provider = GalleryMediaPickerController();
   var pickedFile = <PickedAssetModel>[].obs;
-  var textMessage = ''.obs;
-  var profile = ProfileDetails().obs;
+  var userName = NavUtils.arguments['userName'];
+  var textMessage = NavUtils.arguments['caption'];
+  var profile = NavUtils.arguments['profile'] as ProfileDetails;
+  var userJid = NavUtils.arguments['userJid'];
   var maxPickImages = 10;
 
-  void init(String senderJid, String caption) {
-    textMessage(caption);
-    getProfileDetails(senderJid).then((value) {
-      profile(value);
-    });
+  @override
+  void onInit() {
+    super.onInit();
+    pickedFile.clear();
+    debugPrint("gallery picker controller --> $textMessage");
   }
 
   addFile(List<PickedAssetModel> paths) {
-    pickedFile.clear();
-    pickedFile.addAll(paths);
+    pickedFile(paths);
+    pickedFile.refresh();
   }
-
   // addFile(List<PickedAssetModel> paths) {
   //  debugPrint("list size--> ${paths.length}");
   //  debugPrint("file name--> ${paths[0].file?.path}");

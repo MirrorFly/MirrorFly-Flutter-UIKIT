@@ -5,14 +5,16 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mirrorfly_plugin/mirrorflychat.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
-import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
-import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
+import '../../../common/app_localizations.dart';
+import '../../../common/constants.dart';
+import 'package:mirrorfly_plugin/mirrorfly.dart';
+import '../../../app_style_config.dart';
+import '../../../data/utils.dart';
+import '../../../model/arguments.dart';
+import '../../../routes/route_settings.dart';
 
 import '../../../common/crop_image.dart';
-import '../../chat/views/contact_list_view.dart';
+import '../../../data/permissions.dart';
 
 class GroupCreationController extends GetxController {
   var imagePath = "".obs;
@@ -41,7 +43,7 @@ class GroupCreationController extends GetxController {
 
   onGroupNameChanged() {
     debugPrint("text changing");
-    debugPrint("length--> ${groupName.text.length}");
+    debugPrint("length--> ${groupName.text.characters.length}");
     _count((25 - groupName.text.characters.length));
   }
 
@@ -97,30 +99,24 @@ class GroupCreationController extends GetxController {
     _count((25 - groupName.text.characters.length));
   }
 
-  goToAddParticipantsPage(BuildContext context) {
+  goToAddParticipantsPage() {
     if (groupName.text.trim().isNotEmpty) {
-      //Get.toNamed(Routes.ADD_PARTICIPANTS);
-      // Get.toNamed(Routes.contacts, arguments: {"forward" : false,"group":true,"groupJid":"" })?.then((value){
-      //   if(value!=null){
-      //     createGroup(value as List<String>, context);
-      //   }
-      // });
-      Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (con) =>
-                      const ContactListView(group: true, groupJid: "")))
-          .then((value) {
+      //NavUtils.toNamed(Routes.ADD_PARTICIPANTS);
+      NavUtils.toNamed(Routes.contacts,
+              arguments: const ContactListArguments(
+                  forGroup:
+                      true) /*{"forward" : false,"group":true,"groupJid":"" }*/)
+          ?.then((value) {
         if (value != null) {
-          createGroup(value as List<String>, context);
+          createGroup(value as List<String>);
         }
       });
     } else {
-      toToast(AppConstants.pleaseProvideGroupName);
+      toToast(getTranslated("pleaseProvideGroupName"));
     }
   }
 
-  showHideEmoji(BuildContext context) {
+  showHideEmoji() {
     if (!showEmoji.value) {
       focusNode.unfocus();
     } else {
@@ -132,124 +128,100 @@ class GroupCreationController extends GetxController {
     });
   }
 
-  Future imagePick(BuildContext context) async {
-    FilePickerResult? result = await FilePicker.platform
-        .pickFiles(allowMultiple: false, type: FileType.image);
-    if (result != null) {
-      // isImageSelected.value = true;
-      // Get.to(CropImage(
-      //   imageFile: File(result.files.single.path!),
-      // ))?.then((value) {
-      //   value as MemoryImage;
-      //   // imageBytes = value.bytes;
-      //   var name ="${DateTime.now().millisecondsSinceEpoch}.jpg";
-      //   writeImageTemp(value.bytes, name).then((value) {
-      //     imagePath(value.path);
-      //   });
-      // });
-
-      if (context.mounted) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (con) => CropImage(
-                      imageFile: File(result.files.single.path!),
-                    ))).then((value) {
-          value as MemoryImage;
-          // imageBytes = value.bytes;
-          var name = "${DateTime.now().millisecondsSinceEpoch}.jpg";
-          writeImageTemp(value.bytes, name).then((value) {
-            imagePath(value.path);
-          });
+  Future imagePick() async {
+    if (await AppPermission.getStoragePermission()) {
+      FilePickerResult? result = await FilePicker.platform
+          .pickFiles(allowMultiple: false, type: FileType.image);
+      if (result != null) {
+        // isImageSelected.value = true;
+        NavUtils.to(CropImage(
+          imageFile: File(result.files.single.path!),
+        ))?.then((value) {
+          if (value != null) {
+            value as MemoryImage;
+            // imageBytes = value.bytes;
+            var name = "${DateTime.now().millisecondsSinceEpoch}.jpg";
+            writeImageTemp(value.bytes, name).then((value) {
+              imagePath(value.path);
+            });
+          }
         });
+      } else {
+        // User canceled the picker
+        // isImageSelected.value = false;
       }
-    } else {
-      // User canceled the picker
-      // isImageSelected.value = false;
     }
   }
 
   final ImagePicker _picker = ImagePicker();
-  camera(BuildContext context) async {
+  camera() async {
     final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
     if (photo != null) {
       // isImageSelected.value = true;
-      // Get.to(CropImage(
-      //   imageFile: File(photo.path),
-      // ))?.then((value) {
-      //   value as MemoryImage;
-      //   // imageBytes = value.bytes;
-      //   var name ="${DateTime.now().millisecondsSinceEpoch}.jpg";
-      //   writeImageTemp(value.bytes, name).then((value) {
-      //     imagePath(value.path);
-      //   });
-      // });
-
-      if (context.mounted) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (con) => CropImage(
-                      imageFile: File(photo.path),
-                    ))).then((value) {
+      NavUtils.to(CropImage(
+        imageFile: File(photo.path),
+      ))?.then((value) {
+        if (value != null) {
           value as MemoryImage;
           // imageBytes = value.bytes;
           var name = "${DateTime.now().millisecondsSinceEpoch}.jpg";
           writeImageTemp(value.bytes, name).then((value) {
             imagePath(value.path);
           });
-        });
-      }
+        }
+      });
     } else {
       // User canceled the Camera
       // isImageSelected.value = false;
     }
   }
 
-  createGroup(List<String> users, BuildContext context) {
-    mirrorFlyLog("group name", groupName.text);
-    mirrorFlyLog("users", users.toString());
-    mirrorFlyLog("group image", imagePath.value);
-    Helper.showLoading(buildContext: context);
+  createGroup(
+    List<String> users,
+  ) {
+    LogMessage.d("group name", groupName.text);
+    LogMessage.d("users", users.toString());
+    LogMessage.d("group image", imagePath.value);
+    DialogUtils.showLoading(dialogStyle: AppStyleConfig.dialogStyle);
     Mirrorfly.createGroup(
         groupName: groupName.text.toString(),
         userList: users,
         image: imagePath.value,
         flyCallBack: (FlyResponse response) {
-          Helper.hideLoading(context: context);
+          DialogUtils.hideLoading();
           if (response.isSuccess) {
-            // Get.back();
-            Navigator.pop(context);
-            toToast(AppConstants.groupCreatedSuccessfully);
+            NavUtils.back();
+            toToast(getTranslated("groupCreatedSuccessfully"));
           }
         });
   }
 
-  void choosePhoto(BuildContext context) {
-    Helper.showVerticalButtonAlert(context, [
+  void choosePhoto() {
+    DialogUtils.showVerticalButtonAlert(actions: [
       ListTile(
-          dense: true,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-          onTap: () {
-            Navigator.pop(context);
-            imagePick(context);
-          },
-          title: Text(
-            AppConstants.chooseFromGallery,
-            style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),
-          )),
+        dense: true,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+        onTap: () {
+          NavUtils.back();
+          imagePick();
+        },
+        title: Text(
+          getTranslated("chooseFromGallery"),
+          style: const TextStyle(color: textBlackColor, fontSize: 14),
+        ),
+      ),
       ListTile(
-          dense: true,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-          onTap: () async {
-            Navigator.pop(context);
-            camera(context);
-          },
-          title: Text(AppConstants.takePhoto,
-              style:
-                  TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor))),
+        dense: true,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+        onTap: () {
+          NavUtils.back();
+          camera();
+        },
+        title: Text(
+          getTranslated("takePhoto"),
+          style: const TextStyle(color: textBlackColor, fontSize: 14),
+        ),
+      ),
     ]);
   }
 }

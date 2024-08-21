@@ -2,62 +2,54 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:mirrorfly_plugin/model/callback.dart';
-import 'package:mirrorfly_plugin/model/group_members_model.dart';
-import 'package:mirrorfly_plugin/model/recent_chat.dart';
-import 'package:mirrorfly_plugin/model/user_list_model.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
-import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
+import '../../common/app_localizations.dart';
+import '../../data/helper.dart';
+import '../../extensions/extensions.dart';
+import '../../routes/route_settings.dart';
+import '../../stylesheet/stylesheet.dart';
+import 'package:mirrorfly_plugin/mirrorflychat.dart';
 
-import '../../../mirrorfly_uikit_plugin.dart';
 import '../../common/constants.dart';
-import '../../common/extensions.dart';
 import '../../common/widgets.dart';
-import 'package:mirrorfly_plugin/flychat.dart';
-import '../../models.dart';
-
 import '../../data/session_management.dart';
-import '../chat/chat_widgets.dart';
+import '../../data/utils.dart';
+import '../../model/chat_message_model.dart';
 
 Widget searchHeader(String? type, String count, BuildContext context) {
   return Container(
-    width: MediaQuery.of(context).size.width,
+    width: NavUtils.size.width,
     padding: const EdgeInsets.all(8),
-    color: MirrorflyUikit.getTheme?.scaffoldColor ?? dividerColor,
-    child: Text.rich(
-        TextSpan(text: type, children: [
-          TextSpan(
-            text: count.isNotEmpty ? " ($count)" : Constants.emptyString,
-          )
-        ]),
-        style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: MirrorflyUikit.getTheme?.textPrimaryColor)),
+    color: dividerColor,
+    child: Text.rich(TextSpan(text: type, children: [
+      TextSpan(
+          text: count.isNotEmpty ? " ($count)" : "",
+          style: const TextStyle(fontWeight: FontWeight.bold))
+    ])),
   );
 }
 
 class RecentChatItem extends StatelessWidget {
-  RecentChatItem({
-    super.key,
-    required this.item,
-    required this.onTap,
-    this.onLongPress,
-    this.onAvatarClick,
-    this.onchange,
-    this.spanTxt = Constants.emptyString,
-    this.isSelected = false,
-    this.isCheckBoxVisible = false,
-    this.isChecked = false,
-    this.isForwardMessage = false,
-    this.typingUserid = Constants.emptyString,
-    this.archiveVisible = true,
-    this.archiveEnabled = false,
-    this.showChatDeliveryIndicator = true,
-  });
+  const RecentChatItem(
+      {Key? key,
+      required this.item,
+      required this.onTap,
+      this.onLongPress,
+      this.onAvatarClick,
+      this.onchange,
+      this.spanTxt = "",
+      this.isSelected = false,
+      this.isCheckBoxVisible = false,
+      this.isChecked = false,
+      this.isForwardMessage = false,
+      this.typingUserid = "",
+      this.archiveVisible = true,
+      this.archiveEnabled = false,
+      this.recentChatItemStyle = const RecentChatItemStyle()})
+      : super(key: key);
   final RecentChatData item;
-  final Function() onTap;
-  final Function()? onLongPress;
-  final Function()? onAvatarClick;
+  final Function(RecentChatData chatItem) onTap;
+  final Function(RecentChatData chatItem)? onLongPress;
+  final Function(RecentChatData chatItem)? onAvatarClick;
   final String spanTxt;
   final bool isCheckBoxVisible;
   final bool isChecked;
@@ -65,35 +57,31 @@ class RecentChatItem extends StatelessWidget {
   final bool archiveVisible;
   final Function(bool? value)? onchange;
   final bool isSelected;
-  final bool showChatDeliveryIndicator;
   final String typingUserid;
 
-  final titleStyle = TextStyle(
-      fontSize: 16.0,
-      fontWeight: FontWeight.w700,
-      fontFamily: 'sf_ui',
-      color: MirrorflyUikit.getTheme?.textPrimaryColor ?? textHintColor);
-  final typingStyle = TextStyle(
+  final titleStyle = const TextStyle(
+      fontSize: 16.0, fontWeight: FontWeight.w700, fontFamily: 'sf_ui');
+  final typingStyle = const TextStyle(
       fontSize: 14.0,
       fontWeight: FontWeight.w600,
       fontFamily: 'sf_ui',
-      color: MirrorflyUikit.getTheme?.primaryColor ?? buttonBgColor);
+      color: buttonBgColor);
   final bool archiveEnabled;
+  final RecentChatItemStyle recentChatItemStyle;
 
   @override
   Widget build(BuildContext context) {
-    // debugPrint("showChatDeliveryIndicator $showChatDeliveryIndicator");
-    return Container(
-      color: isSelected
-          ? MirrorflyUikit.getTheme?.textPrimaryColor.withAlpha(50)
-          : Colors.transparent,
-      child: Row(
-        children: [
-          buildProfileImage(),
-          Expanded(
-            child: InkWell(
-              onLongPress: onLongPress,
-              onTap: onTap,
+    LogMessage.d("RecentChatItem", "build ${item.jid}");
+    return InkWell(
+      onLongPress: () => onLongPress != null ? onLongPress!(item) : null,
+      onTap: () => onTap(item),
+      child: Container(
+        key: ValueKey(item.jid),
+        color: isSelected ? Colors.black12 : Colors.transparent,
+        child: Row(
+          children: [
+            buildProfileImage(recentChatItemStyle),
+            Expanded(
               child: Container(
                 padding: const EdgeInsets.only(top: 8),
                 child: Column(
@@ -106,20 +94,23 @@ class RecentChatItem extends StatelessWidget {
                         buildRecentChatActions(context)
                       ],
                     ),
-                    const AppDivider(
-                      padding: EdgeInsets.only(top: 8),
+                    AppDivider(
+                      padding: const EdgeInsets.only(top: 8),
+                      color: recentChatItemStyle.dividerColor,
                     )
                   ],
                 ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
 
   Expanded buildRecentChatMessageDetails() {
+    LogMessage.d(
+        "RecentChatItem", " buildRecentChatMessageDetails build ${item.jid}");
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,7 +118,7 @@ class RecentChatItem extends StatelessWidget {
           spanTxt.isEmpty
               ? Text(
                   getRecentName(item),
-                  style: titleStyle,
+                  style: recentChatItemStyle.titleTextStyle,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 )
@@ -135,22 +126,22 @@ class RecentChatItem extends StatelessWidget {
                   getRecentName(item),
                   //item.profileName.checkNull(),
                   spanTxt,
-                  titleStyle),
+                  recentChatItemStyle.titleTextStyle,
+                  recentChatItemStyle.spanTextColor),
           Row(
             children: [
               item.isLastMessageSentByMe.checkNull() &&
                       !isForwardMessage &&
-                      !item.isLastMessageRecalledByUser.checkNull() &&
-                      showChatDeliveryIndicator
-                  ? (item.lastMessageType == Constants.msgTypeText &&
+                      !item.isLastMessageRecalledByUser.checkNull()
+                  ? (item.lastMessageType == MessageType.isText &&
                                   item.lastMessageContent
                                       .checkNull()
                                       .isNotEmpty ||
-                              item.lastMessageType != Constants.msgTypeText) &&
+                              item.lastMessageType != MessageType.isText) &&
                           typingUserid.isEmpty
                       ? buildMessageIndicator()
-                      : const SizedBox()
-                  : const SizedBox(),
+                      : const Offstage()
+                  : const Offstage(),
               isForwardMessage
                   ? item.isGroup!
                       ? buildGroupMembers()
@@ -180,17 +171,9 @@ class RecentChatItem extends StatelessWidget {
           buildRecentChatTime(context),
           Visibility(
             visible: isCheckBoxVisible,
-            child: Theme(
-              data: ThemeData(
-                unselectedWidgetColor: Colors.grey,
-              ),
-              child: Checkbox(
-                activeColor:
-                    MirrorflyUikit.getTheme!.primaryColor, //Colors.white,
-                checkColor: MirrorflyUikit.getTheme?.colorOnPrimary,
-                value: isChecked,
-                onChanged: onchange,
-              ),
+            child: Checkbox(
+              value: isChecked,
+              onChanged: onchange,
             ),
           ),
           Row(
@@ -210,24 +193,30 @@ class RecentChatItem extends StatelessWidget {
     return Visibility(
       visible: !isCheckBoxVisible,
       child: Text(
-        getRecentChatTime(context, item.lastMessageTime),
+        DateTimeUtils.getRecentChatTime(context, item.lastMessageTime),
         textAlign: TextAlign.end,
-        style: TextStyle(
+        style: returnFormattedCount(item.unreadMessageCount!) != "0"
+            ? recentChatItemStyle.timeTextStyle
+                .copyWith(color: recentChatItemStyle.unreadColor)
+            : recentChatItemStyle.timeTextStyle
+        /* TextStyle(
             fontSize: 12.0,
             fontWeight: FontWeight.w600,
             fontFamily: 'sf_ui',
             color: returnFormattedCount(item.unreadMessageCount!) != "0"
                 //item.isConversationUnRead!
-                ? MirrorflyUikit.getTheme?.primaryColor ?? buttonBgColor
-                : MirrorflyUikit.getTheme?.textSecondaryColor ?? textColor),
+                ? buttonBgColor
+                : textColor)*/
+        ,
       ),
     );
   }
 
   Padding buildMessageIndicator() {
+    debugPrint("buildMessageIndicator ${item.nickName}");
     return Padding(
       padding: const EdgeInsets.only(right: 8.0),
-      child: getMessageIndicator(
+      child: MessageUtils.getMessageIndicatorIcon(
           item.lastMessageStatus.checkNull(),
           item.isLastMessageSentByMe.checkNull(),
           item.lastMessageType.checkNull(),
@@ -235,44 +224,49 @@ class RecentChatItem extends StatelessWidget {
     );
   }
 
-  InkWell buildProfileImage() {
+  InkWell buildProfileImage(RecentChatItemStyle recentChatItemStyle) {
     return InkWell(
-      onTap: onAvatarClick,
+      onTap: () => onAvatarClick != null ? onAvatarClick!(item) : null,
       child: Container(
           margin:
               const EdgeInsets.only(left: 19.0, top: 10, bottom: 10, right: 10),
           child: Stack(
             children: [
-              buildProfileImageView(),
+              buildProfileImageView(recentChatItemStyle.profileImageSize),
               item.isConversationUnRead!
-                  ? buildConvReadIcon()
-                  : const SizedBox(),
+                  ? buildConvReadIcon(recentChatItemStyle.unreadCountTextStyle,
+                      recentChatItemStyle.unreadCountBgColor)
+                  : const Offstage(),
               item.isEmailContact().checkNull()
                   ? buildEmailIcon()
-                  : const SizedBox.shrink(),
+                  : const Offstage(),
             ],
           )),
     );
   }
 
-  ImageNetwork buildProfileImageView() {
+  ImageNetwork buildProfileImageView(Size profileImageSize) {
     return ImageNetwork(
       url: item.profileImage.toString(),
-      width: 48,
-      height: 48,
+      width: profileImageSize.width,
+      height: profileImageSize.height,
       clipOval: true,
       errorWidget: item.isGroup!
           ? ClipOval(
               child: Image.asset(
                 groupImg,
                 package: package,
-                height: 48,
-                width: 48,
+                height: profileImageSize.width,
+                width: profileImageSize.height,
                 fit: BoxFit.cover,
               ),
             )
           : ProfileTextImage(
-              text: getRecentName(item),
+              radius: profileImageSize.width / 2,
+              text: getRecentName(
+                  item), /* item.profileName.checkNull().isEmpty
+                              ? item.nickName.checkNull()
+                              : item.profileName.checkNull(),*/
             ),
       isGroup: item.isGroup.checkNull(),
       blocked: item.isBlockedMe.checkNull() || item.isAdminBlocked.checkNull(),
@@ -280,22 +274,18 @@ class RecentChatItem extends StatelessWidget {
     );
   }
 
-  Positioned buildConvReadIcon() {
+  Positioned buildConvReadIcon(TextStyle textStyle, Color bgColor) {
     return Positioned(
         right: 0,
         child: CircleAvatar(
+          backgroundColor: bgColor,
           radius: 9,
-          backgroundColor: MirrorflyUikit.getTheme?.primaryColor,
-          child: Center(
-            child: Text(
-              returnFormattedCount(item.unreadMessageCount!) != "0"
-                  ? returnFormattedCount(item.unreadMessageCount!)
-                  : Constants.emptyString,
-              style: TextStyle(
-                  fontSize: 8,
-                  color: MirrorflyUikit.getTheme?.colorOnPrimary,
-                  fontFamily: 'sf_ui'),
-            ),
+          child: Text(
+            returnFormattedCount(item.unreadMessageCount!) != "0"
+                ? returnFormattedCount(item.unreadMessageCount!)
+                : "",
+            style: textStyle,
+            // style: const TextStyle(fontSize: 8, color: Colors.white, fontFamily: 'sf_ui'),
           ),
         ));
   }
@@ -304,10 +294,7 @@ class RecentChatItem extends StatelessWidget {
     return Positioned(
         right: 0,
         bottom: 0,
-        child: SvgPicture.asset(
-          emailContactIcon,
-          package: package,
-        ));
+        child: SvgPicture.asset(emailContactIcon, package: package));
   }
 
   Visibility buildArchivedTextVisibility() {
@@ -317,15 +304,17 @@ class RecentChatItem extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 2.0),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4.0),
-              border: Border.all(
-                  color: MirrorflyUikit.getTheme?.primaryColor ?? buttonBgColor,
-                  width: 0.8)),
+              border: Border.all(color: buttonBgColor, width: 0.8)),
           child: Text(
-            AppConstants.archived,
-            style: TextStyle(
-                color: MirrorflyUikit.getTheme?.primaryColor ?? buttonBgColor),
+            getTranslated("archived"),
+            style: const TextStyle(color: buttonBgColor),
           ),
-        ));
+        ) /*SvgPicture.asset(
+                                      archive,
+                                      package: package,width: 18,
+                                      height: 18,
+                                    )*/
+        );
   }
 
   Visibility buildMuteIconVisibility() {
@@ -334,8 +323,6 @@ class RecentChatItem extends StatelessWidget {
         child: SvgPicture.asset(
           mute,
           package: package,
-          colorFilter: ColorFilter.mode(
-              MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),
           width: 13,
           height: 13,
         ));
@@ -350,8 +337,6 @@ class RecentChatItem extends StatelessWidget {
           package: package,
           width: 18,
           height: 18,
-          colorFilter: ColorFilter.mode(
-              MirrorflyUikit.getTheme!.textPrimaryColor, BlendMode.srcIn),
         ));
   }
 
@@ -372,7 +357,7 @@ class RecentChatItem extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 );
               } else {
-                mirrorFlyLog("hasError", data.error.toString());
+                LogMessage.d("hasError", data.error.toString());
                 return const SizedBox(
                   height: 15,
                 );
@@ -382,9 +367,9 @@ class RecentChatItem extends StatelessWidget {
 
   String getTypingUser(ProfileDetails profile, bool? isGroup) {
     if (isGroup.checkNull()) {
-      return "${profile.getName().checkNull()} typing...";
+      return "${profile.getName().checkNull()} ${getTranslated("typingIndicator")}";
     } else {
-      return "typing...";
+      return getTranslated("typingIndicator");
     }
   }
 
@@ -417,7 +402,8 @@ class RecentChatItem extends StatelessWidget {
                     ? Flexible(
                         child: Text(
                           "${chat.senderUserName.checkNull()}:",
-                          style: Theme.of(context).textTheme.titleSmall,
+                          style: recentChatItemStyle
+                              .subtitleTextStyle, //Theme.of(context).textTheme.titleSmall,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -438,31 +424,34 @@ class RecentChatItem extends StatelessWidget {
                           : 0.0,
                 ),
                 Expanded(
-                  child: spanTxt.isEmpty
-                      ? Text(
-                          chat.isMessageRecalled.value
-                              ? setRecalledMessageText(chat.isMessageSentByMe)
-                              : forMessageTypeString(chat.messageType,
-                                      content: chat
-                                          .mediaChatMessage?.mediaCaptionText
-                                          .checkNull()) ??
-                                  chat.messageTextContent.checkNull(),
-                          style: Theme.of(context).textTheme.titleSmall,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        )
-                      : spannableText(
-                          chat.isMessageRecalled.value
-                              ? setRecalledMessageText(chat.isMessageSentByMe)
-                              : forMessageTypeString(
-                                      chat.messageType.checkNull(),
-                                      content: chat
-                                          .mediaChatMessage?.mediaCaptionText
-                                          .checkNull()) ??
-                                  chat.messageTextContent.checkNull(),
-                          spanTxt,
-                          Theme.of(context).textTheme.titleSmall),
-                ),
+                    child: spanTxt.isEmpty
+                        ? Text(
+                            chat.isMessageRecalled.value
+                                ? setRecalledMessageText(chat.isMessageSentByMe)
+                                : forMessageTypeString(chat.messageType,
+                                        content: chat
+                                            .mediaChatMessage?.mediaCaptionText
+                                            .checkNull()) ??
+                                    chat.messageTextContent.checkNull(),
+                            style: recentChatItemStyle
+                                .subtitleTextStyle, //Theme.of(context).textTheme.titleSmall,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          )
+                        : spannableText(
+                            chat.isMessageRecalled.value
+                                ? setRecalledMessageText(chat.isMessageSentByMe)
+                                : forMessageTypeString(
+                                        chat.messageType.checkNull(),
+                                        content: chat
+                                            .mediaChatMessage?.mediaCaptionText
+                                            .checkNull()) ??
+                                    chat.messageTextContent.checkNull(),
+                            spanTxt,
+                            recentChatItemStyle.subtitleTextStyle,
+                            recentChatItemStyle
+                                .spanTextColor) //Theme.of(context).textTheme.titleSmall),
+                    ),
               ],
             );
           }
@@ -479,12 +468,11 @@ class RecentChatItem extends StatelessWidget {
             builder: (context, profileData) {
               if (profileData.hasData) {
                 return Text(
-                  profileData.data?.status ?? Constants.emptyString,
-                  style: TextStyle(
-                      color: MirrorflyUikit.getTheme?.textSecondaryColor),
+                  profileData.data?.status ?? "",
+                  style: recentChatItemStyle.subtitleTextStyle,
                 );
               }
-              return const Text(Constants.emptyString);
+              return const Text("");
             }));
   }
 
@@ -495,14 +483,13 @@ class RecentChatItem extends StatelessWidget {
           builder: (BuildContext context, data) {
             if (data.hasData) {
               return Text(
-                data.data ?? Constants.emptyString,
+                data.data ?? "",
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    color: MirrorflyUikit.getTheme?.textSecondaryColor),
+                style: recentChatItemStyle.subtitleTextStyle,
               );
             }
-            return const Text(Constants.emptyString);
+            return const Text("");
           }),
     );
   }
@@ -531,27 +518,198 @@ class RecentChatItem extends StatelessWidget {
 
   String setRecalledMessageText(bool isFromSender) {
     return (isFromSender)
-        ? AppConstants.youDeletedThisMessage
-        : AppConstants.thisMessageWasDeleted;
+        ? getTranslated("youDeletedThisMessage")
+        : getTranslated("thisMessageWasDeleted");
   }
 }
 
-Widget spannableText(String text, String spannableText, TextStyle? style) {
+class RecentChatMessageItem extends StatelessWidget {
+  const RecentChatMessageItem(
+      {super.key,
+      required this.profile,
+      required this.item,
+      required this.onTap,
+      this.searchTxt = "",
+      this.recentChatItemStyle = const RecentChatItemStyle()});
+  final ProfileDetails profile;
+  final ChatMessageModel item;
+  final RecentChatItemStyle recentChatItemStyle;
+  final Function() onTap;
+  final String searchTxt;
+
+  @override
+  Widget build(BuildContext context) {
+    var unreadMessageCount = "0";
+    return InkWell(
+      onTap: () => onTap,
+      child: Row(
+        children: [
+          Container(
+              margin: const EdgeInsets.only(
+                  left: 19.0, top: 10, bottom: 10, right: 10),
+              child: Stack(
+                children: [
+                  ImageNetwork(
+                    url: profile.image.checkNull(),
+                    width: recentChatItemStyle.profileImageSize.width,
+                    height: recentChatItemStyle.profileImageSize.height,
+                    clipOval: true,
+                    errorWidget: ProfileTextImage(
+                      text: profile.getName(),
+                      radius: recentChatItemStyle.profileImageSize.width / 2,
+                    ),
+                    isGroup: profile.isGroupProfile.checkNull(),
+                    blocked: profile.isBlockedMe.checkNull() ||
+                        profile.isAdminBlocked.checkNull(),
+                    unknown: (!profile.isItSavedContact.checkNull() ||
+                        profile.isDeletedContact()),
+                  ),
+                  unreadMessageCount.toString() != "0"
+                      ? Positioned(
+                          right: 0,
+                          child: CircleAvatar(
+                            radius: 9,
+                            backgroundColor:
+                                recentChatItemStyle.unreadCountBgColor,
+                            child: Text(
+                              unreadMessageCount.toString(),
+                              style: recentChatItemStyle.unreadCountTextStyle,
+                              // style: const TextStyle(fontSize: 9, color: Colors.white, fontFamily: 'sf_ui'),
+                            ),
+                          ))
+                      : const Offstage(),
+                ],
+              )),
+          Flexible(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        profile.getName(), //profile.name.toString(),
+                        style: recentChatItemStyle.titleTextStyle,
+                        // style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700, fontFamily: 'sf_ui', color: textHintColor),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 16.0, left: 8),
+                      child: Text(
+                          DateTimeUtils.getRecentChatTime(
+                              context, item.messageSentTime.toInt()),
+                          textAlign: TextAlign.end,
+                          style: unreadMessageCount != "0"
+                              ? recentChatItemStyle.timeTextStyle.copyWith(
+                                  color: recentChatItemStyle.unreadColor)
+                              : recentChatItemStyle.timeTextStyle
+                          /*style: TextStyle(
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'sf_ui',
+                            color: unreadMessageCount.toString() != "0" ? buttonBgColor : textColor),*/
+                          ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    unreadMessageCount.toString() != "0"
+                        ? const Padding(
+                            padding: EdgeInsets.only(right: 8.0),
+                            child: CircleAvatar(
+                              radius: 4,
+                              backgroundColor: Colors.green,
+                            ),
+                          )
+                        : const Offstage(),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: MessageUtils.getMessageIndicatorIcon(
+                                item.messageStatus.value.checkNull(),
+                                item.isMessageSentByMe.checkNull(),
+                                item.messageType.checkNull(),
+                                item.isMessageRecalled.value),
+                          ),
+                          item.isMessageRecalled.value
+                              ? const Offstage()
+                              : forMessageTypeIcon(
+                                  item.messageType, item.mediaChatMessage),
+                          SizedBox(
+                            width: forMessageTypeString(item.messageType,
+                                        content: item
+                                            .mediaChatMessage?.mediaCaptionText
+                                            .checkNull()) !=
+                                    null
+                                ? 3.0
+                                : 0.0,
+                          ),
+                          Expanded(
+                            child: forMessageTypeString(item.messageType,
+                                        content: item
+                                            .mediaChatMessage?.mediaCaptionText
+                                            .checkNull()) ==
+                                    null
+                                ? spannableText(
+                                    item.messageTextContent.toString(),
+                                    searchTxt,
+                                    recentChatItemStyle.subtitleTextStyle,
+                                    recentChatItemStyle.spanTextColor,
+                                  )
+                                : Text(
+                                    forMessageTypeString(item.messageType,
+                                            content: item.mediaChatMessage
+                                                ?.mediaCaptionText
+                                                .checkNull()) ??
+                                        item.messageTextContent.toString(),
+                                    // style: Theme.of(context).textTheme.titleSmall,
+                                    style:
+                                        recentChatItemStyle.subtitleTextStyle,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                AppDivider(
+                  color: recentChatItemStyle.dividerColor,
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+Widget spannableText(
+    String text, String spannableText, TextStyle? style, Color? spanTextColor) {
   var startIndex = text.toLowerCase().indexOf(spannableText.toLowerCase());
   var endIndex = startIndex + spannableText.length;
   if (startIndex != -1 && endIndex != -1) {
     var startText = text.substring(0, startIndex);
     var colorText = text.substring(startIndex, endIndex);
     var endText = text.substring(endIndex, text.length);
-    //mirrorFlyLog("startText", startText);
-    //mirrorFlyLog("endText", endText);
-    //mirrorFlyLog("colorText", colorText);
+    //LogMessage.d("startText", startText);
+    //LogMessage.d("endText", endText);
+    //LogMessage.d("colorText", colorText);
     return Text.rich(
       TextSpan(
           text: startText,
           children: [
             TextSpan(
-                text: colorText, style: const TextStyle(color: Colors.blue)),
+                text: colorText,
+                style: TextStyle(
+                    color:
+                        spanTextColor) /*const TextStyle(color: Colors.blue)*/),
             TextSpan(text: endText, style: style)
           ],
           style: style),
@@ -595,47 +753,45 @@ bool isCountryCode(String text) {
   return false;
 }
 
-Widget textMessageSpannableText(String message, bool isSentByMe,
-    {int? maxLines, bool isClickable = true}) {
+Widget textMessageSpannableText(
+  String message,
+  TextStyle? textStyle,
+  Color urlColor, {
+  int? maxLines,
+}) {
   //final GlobalKey textKey = GlobalKey();
-  TextStyle underlineStyle = const TextStyle(
+  TextStyle? underlineStyle = textStyle?.copyWith(
+      color: urlColor,
       decoration: TextDecoration.underline,
-      fontSize: 14,
-      color: Colors.blueAccent);
-  TextStyle normalStyle = TextStyle(
-      fontSize: 14,
-      color: isSentByMe
-          ? MirrorflyUikit.getTheme?.chatBubblePrimaryColor.textPrimaryColor
-          : MirrorflyUikit.getTheme?.chatBubbleSecondaryColor.textPrimaryColor);
-  var prevValue = Constants.emptyString;
+      decorationColor:
+          urlColor); //const TextStyle(decoration: TextDecoration.underline, fontSize: 14, color: Colors.blueAccent);
+  TextStyle? normalStyle =
+      textStyle; //const TextStyle(fontSize: 14, color: textHintColor);
+  var prevValue = "";
   return Text.rich(
-    customTextSpan(
-        message, prevValue, normalStyle, underlineStyle, isClickable),
+    customTextSpan(message, prevValue, normalStyle, underlineStyle),
     maxLines: maxLines,
     overflow: maxLines == null ? null : TextOverflow.ellipsis,
   );
 }
 
 TextSpan customTextSpan(String message, String prevValue,
-    TextStyle? normalStyle, TextStyle underlineStyle, bool isClickable) {
+    TextStyle? normalStyle, TextStyle? underlineStyle) {
   return TextSpan(
     children: message.split(" ").map((e) {
       if (isCountryCode(e)) {
         prevValue = e;
-      } else if (prevValue != Constants.emptyString &&
-          spannableTextType(e) == "mobile") {
+      } else if (prevValue != "" && spannableTextType(e) == "mobile") {
         e = "$prevValue $e";
-        prevValue = Constants.emptyString;
+        prevValue = "";
       }
       return TextSpan(
           text: "$e ",
           style: spannableTextType(e) == "text" ? normalStyle : underlineStyle,
           recognizer: TapGestureRecognizer()
-            ..onTap = isClickable
-                ? () {
-                    onTapForSpanText(e);
-                  }
-                : null);
+            ..onTap = () {
+              onTapForSpanText(e);
+            });
     }).toList(),
   );
 }
@@ -644,7 +800,19 @@ onTapForSpanText(String e) {
   var stringType = spannableTextType(e);
   debugPrint("Text span click");
   if (stringType == "website") {
-    launchInBrowser(e);
+    if (e.startsWith(Constants.webChatLogin)) {
+      AppUtils.isNetConnected().then((value) {
+        if (value) {
+          NavUtils.toNamed(Routes.joinCallPreview, arguments: {
+            "callLinkId": e.replaceAll(Constants.webChatLogin, "")
+          });
+        } else {
+          toToast(getTranslated("noInternetConnection"));
+        }
+      });
+    } else {
+      launchInBrowser(e);
+    }
     // return;
   } else if (stringType == "mobile") {
     makePhoneCall(e);
@@ -660,22 +828,25 @@ onTapForSpanText(String e) {
   // return;
 }
 
-Widget callLogTime(String time, int? callState) {
+Widget callLogTime(String time, int? callState, TextStyle? textStyle) {
   return Row(
     children: [
       callState == 0
           ? SvgPicture.asset(
-              "assets/calls/ic_arrow_down_red.svg",
+              arrowDropDown,
+              package: package,
               colorFilter: const ColorFilter.mode(Colors.red, BlendMode.srcIn),
             )
           : callState == 1
               ? SvgPicture.asset(
-                  "assets/calls/ic_arrow_up_green.svg",
+                  arrowUpIcon,
+                  package: package,
                   colorFilter:
                       const ColorFilter.mode(Colors.green, BlendMode.srcIn),
                 )
               : SvgPicture.asset(
-                  "assets/calls/ic_arrow_down_green.svg",
+                  arrowDownIcon,
+                  package: package,
                   colorFilter:
                       const ColorFilter.mode(Colors.green, BlendMode.srcIn),
                 ),
@@ -684,123 +855,9 @@ Widget callLogTime(String time, int? callState) {
       ),
       Text(
         time,
-        style: const TextStyle(color: Colors.black),
+        style: textStyle,
+        // style: const TextStyle(color: Colors.black),
       ),
     ],
   );
-}
-
-class ContactItem extends StatelessWidget {
-  const ContactItem({
-    super.key,
-    required this.item,
-    this.onAvatarClick,
-    this.spanTxt = "",
-    this.isCheckBoxVisible = false,
-    required this.checkValue,
-    required this.onCheckBoxChange,
-    this.onListItemPressed,
-  });
-  final ProfileDetails item;
-  final Function()? onAvatarClick;
-  final String spanTxt;
-  final bool isCheckBoxVisible;
-  final bool checkValue;
-  final Function(bool?) onCheckBoxChange;
-  final Function()? onListItemPressed;
-  @override
-  Widget build(BuildContext context) {
-    // LogMessage.d("Contact item", item.toJson());
-    // LogMessage.d("Contact item name", getName(item));
-    return Opacity(
-      opacity: item.isBlocked.checkNull() ? 0.3 : 1.0,
-      child: InkWell(
-        onTap: onListItemPressed,
-        child: Row(
-          children: [
-            InkWell(
-              onTap: onAvatarClick,
-              child: Container(
-                  margin: const EdgeInsets.only(
-                      left: 19.0, top: 10, bottom: 10, right: 10),
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: item.image.checkNull().isEmpty
-                        ? iconBgColor
-                        : buttonBgColor,
-                    shape: BoxShape.circle,
-                  ),
-                  child: ImageNetwork(
-                    url: item.image.toString(),
-                    width: 48,
-                    height: 48,
-                    clipOval: true,
-                    errorWidget: getName(item) //item.nickName
-                            .checkNull()
-                            .isNotEmpty
-                        ? ProfileTextImage(text: getName(item))
-                        : const Icon(
-                            Icons.person,
-                            color: Colors.white,
-                          ),
-                    blocked: item.isBlockedMe.checkNull() ||
-                        item.isAdminBlocked.checkNull(),
-                    unknown: (!item.isItSavedContact.checkNull() ||
-                        item.isDeletedContact()),
-                    isGroup: item.isGroupProfile.checkNull(),
-                  )), //controller.showProfilePopup(item.obs);
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  spanTxt.isEmpty
-                      ? Text(
-                          getName(item),
-                          style: Theme.of(context).textTheme.titleMedium,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        )
-                      : spannableText(
-                          getName(item),
-                          //item.profileName.checkNull(),
-                          spanTxt.trim(),
-                          const TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'sf_ui',
-                              color: textHintColor)),
-                  Text(
-                    item.status.toString(),
-                    style: Theme.of(context).textTheme.titleSmall,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  )
-                ],
-              ),
-            ),
-            Visibility(
-              visible: isCheckBoxVisible,
-              child: Checkbox(
-                value:
-                    checkValue, //controller.selectedUsersJIDList.contains(item.jid),
-                onChanged: (value) {
-                  onCheckBoxChange(value);
-                  //controller.onListItemPressed(item);
-                },
-                activeColor: AppColors.checkBoxChecked,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(2),
-                    side: const BorderSide(color: AppColors.checkBoxBorder)),
-              ),
-            ),
-          ],
-        ),
-        // onTap: () {
-        //   controller.onListItemPressed(item);
-        // },
-      ),
-    );
-  }
 }

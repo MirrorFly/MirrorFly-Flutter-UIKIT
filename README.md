@@ -6,10 +6,9 @@
 ## Table of contents
 
 1. [Introduction](#Introduction)
-2. [Requirements](#requirements)
-3. [Integration](#Integration)
-4. [Call Feature](#call-feature)
-5. [Getting help](#getting-help)
+1. [Requirements](#requirements)
+1. [Integration](#Integration)
+1. [Getting help](#getting-help)
 
 ## Introduction
 
@@ -22,10 +21,9 @@ The minimum requirements for Flutter are:
 - Visual Studio Code or Android Studio
 - Dart 2.19.1 or above
 - Flutter 2.0.0 or higher
-- targetSdkVersion,compileSdk 34 or above.
 
 The requirements for Android are:
-- Android Lollipop 5.1 (API Level 22) or above
+- Android Lollipop 5.0 (API Level 21) or above
 - Java 7 or higher
 - Gradle 4.1.0 or higher
 
@@ -69,36 +67,36 @@ Installing the Mirrorfly UIKit Plugin is a simple process. Follow the steps ment
 ### Create iOS dependency
  - Check and Add the following code at end of your `ios/Podfile`
 
-```gradle
+```dart
 post_install do |installer|
-  installer.aggregate_targets.each do |target|
-           target.xcconfigs.each do |variant, xcconfig|
-           xcconfig_path = target.client_root + target.xcconfig_relative_path(variant)
-           IO.write(xcconfig_path, IO.read(xcconfig_path).gsub("DT_TOOLCHAIN_DIR", "TOOLCHAIN_DIR"))
-           end
-       end
-  
-  installer.pods_project.targets.each do |target|
-    flutter_additional_ios_build_settings(target)
-    target.build_configurations.each do |config|
-      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.1'
-      config.build_settings['ENABLE_BITCODE'] = 'NO'
-      config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'No'
-      config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
-      config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = 'arm64'
-      
-      shell_script_path = "Pods/Target Support Files/#{target.name}/#{target.name}-frameworks.sh"
-            if File::exist?(shell_script_path)
-              shell_script_input_lines = File.readlines(shell_script_path)
-              shell_script_output_lines = shell_script_input_lines.map { |line| line.sub("source=\"$(readlink \"${source}\")\"", "source=\"$(readlink -f \"${source}\")\"") }
-              File.open(shell_script_path, 'w') do |f|
-                shell_script_output_lines.each do |line|
-                  f.write line
+    installer.aggregate_targets.each do |target|
+        target.xcconfigs.each do |variant, xcconfig|
+        xcconfig_path = target.client_root + target.xcconfig_relative_path(variant)
+        IO.write(xcconfig_path, IO.read(xcconfig_path).gsub("DT_TOOLCHAIN_DIR", "TOOLCHAIN_DIR"))
+        end
+    end
+    
+    installer.pods_project.targets.each do |target|
+        flutter_additional_ios_build_settings(target)
+        target.build_configurations.each do |config|
+            config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.1'
+            config.build_settings['ENABLE_BITCODE'] = 'NO'
+            config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'No'
+            config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
+            config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = 'arm64'
+            
+                shell_script_path = "Pods/Target Support Files/#{target.name}/#{target.name}-frameworks.sh"
+                if File::exist?(shell_script_path)
+                    shell_script_input_lines = File.readlines(shell_script_path)
+                    shell_script_output_lines = shell_script_input_lines.map { |line| line.sub("source=\"$(readlink \"${source}\")\"", "source=\"$(readlink -f \"${source}\")\"") }
+                    File.open(shell_script_path, 'w') do |f|
+                        shell_script_output_lines.each do |line|
+                          f.write line
+                        end
+                    end
                 end
-              end
             end
-     end
-  end
+    end
 end
 ```
  - Now, enable all the below mentioned capabilities into your project from `Xcode`.
@@ -116,7 +114,7 @@ Goto Project -> Target -> Signing & Capabilities -> Click `+ Capability` at the 
 
 ```yaml
 dependencies:
-  mirrorfly_uikit_plugin: ^1.0.0
+  mirrorfly_uikit_plugin: ^2.0.0
 ```
 
 - Run `flutter pub get` command in your project directory.
@@ -140,35 +138,51 @@ Here are the steps to integrate the Mirrorfly UIkit Plugin:
 To initialize the plugin, place the below code in your `main.dart` file inside `main` function before `runApp()`.
 
 ```dart
+final navigatorKey = GlobalKey<NavigatorState>();
  void main() {
   WidgetsFlutterBinding.ensureInitialized();
   MirrorflyUikit.instance.initUIKIT(
-      navigatorKey: NAVIGATOR_KEY,
-      licenseKey: LICENSE_KEY,
-      iOSContainerID: iOS_APP_GROUP_ID,
-      chatHistoryEnable: ENABLE_CHAT_HISTORY);
+      licenseKey: 'Your_Mirrorfly_Licence_Key',
+      googleMapKey: 'Your_Google_Map_Key_for_location_messages',
+      iOSContainerID: 'Your_iOS_app_Container_id',
+      navigatorKey: navigatorKey,
+      enableLocalNotification: true);
   runApp(const MyApp());
 }
 ```
 
 ### Step 2: Add Configuration json file
 
-create `mirrorfly_config.json` json file with configuration details then add the json file into under your `assets` folder(`assets/mirrorfly_config.json`).
+**Notice:** The previous method of placing the `mirrorfly_config.json` file under the `assets` folder (`assets/mirrorfly_config.json`) has been removed. The configuration file setup has been moved to a new method.
 
-> **Info** Download config json file from [Flutter UIKit docs](https://www.mirrorfly.com/docs/uikit/flutter/customization/)
+### New Method:
 
-### Step 3: Login
+You can now add inline styles and themes for the UI pages in the UIKIT plugin. The `AppStyleConfig` class is used to set the styles for the UIKIT pages.
 
-Use the below method to login a user in sandbox Live mode.
+### To set the Dashboard page style:
+```dart
+AppStyleConfig.setDashboardStyle(const DashBoardPageStyle(tabItemStyle: TabItemStyle(textStyle: TextStyle(fontStyle: FontStyle.italic))));
+```
+
+### To set the Chat page style:
+```dart
+AppStyleConfig.setChatPageStyle(const ChatPageStyle(messageTypingAreaStyle: MessageTypingAreaStyle(sentIconColor: Colors.blue)));
+```
+
+> **Info** The above code sample sets the style for the Dashboard and Chat pages. You can add more styles and customizations in the same method using different styling parameters
+
+### Step 3: Registration
+
+Use the below method to register a user in sandbox Live mode.
 
 > **Info** Unless you log out the session, make a note that should never call the registration method more than once in an application
 
-> **Note**: While registration, the below `login` method will accept the `fcmToken` as an optional param and pass it across. `The connection will be established automatically upon completion of login`.
+> **Note**: While registration, the below `registerUser` method will accept the `fcmToken` as an optional param and pass it across. `The connection will be established automatically upon completion of registration and not required for seperate login`.
 
 ```dart
 try {
-    var response = await MirrorflyUikit.instance.login(userIdentifier: userIdentifier, fcmToken: FCM_TOKEN);
-    debugPrint("login user $response");
+    var response = await MirrorflyUikit.registerUser(userIdentifier: uniqueId, fcmToken: "Your Google FCM Token");
+    debugPrint("register user $response");
     //{'status': true, 'message': 'Register Success};
 } catch (e) {
   debugPrint(e.toString());
@@ -217,17 +231,50 @@ import mirrorfly_plugin
     }
 ```
 
-## Call Feature
+### Step 5: Locale Support
 
-> **Note**: To enable the Call Feature in iOS, need to enable VOIP as shown below.
+The UIKit Plugin supports multiple languages. You can set the locale for the plugin as shown below:
 
+```dart
+ MaterialApp(
+    navigatorKey: navigatorKey,
+    themeMode: ThemeMode.dark,
+    debugShowCheckedModeBanner: false,
+    /// CHANGE THE LOCALE TO 'en' TO SEE THE LOCALIZATION IN ENGLISH, 'ar' FOR ARABIC, 'hi' FOR HINDI
+    locale: const Locale('en'),
+    /// ADD THE SUPPORTED LOCALES TO THE APP
+    supportedLocales: AppLocalizations.supportedLocales,
+    localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+    ],
+    /// ADD THE NAVIGATION OBSERVER TO THE APP, TO HANDLE THE NAVIGATION EVENTS
+    navigatorObservers: [
+      MirrorFlyNavigationObserver()
+    ],
+    /// ADD THE ROUTE GENERATOR TO THE APP, TO HANDLE THE ROUTES
+    onGenerateRoute: (settings) {
+    switch (settings.name) {
+        default:
+          return mirrorFlyRoute(settings);
+        }
+    },
+    theme: ThemeData(textTheme: GoogleFonts.latoTextTheme()),
+    home: YOUR_HOME_PAGE);
+```
 
-![Screenshot](https://www.mirrorfly.com/docs/assets/images/capabilities-voip2-1760b4b8264b2f928df4d6fb5d933b62.png)
+### Step 6: To Add Your Locale Support
 
+To add your locale support, you can add the locale file in the `assets/locale` folder. The locale file should be named as `en.json` for English, `ar.json` for Arabic, and so on and add it to the supported locales in the `AppLocalizations` class.
 
+```dart
+AppLocalizations.addSupportedLocales(const Locale("ar","UAE"));
+```
 
 ## Getting Help
 
-Check out the Official Mirrorfly UIKit [Flutter UIKit docs](https://www.mirrorfly.com/docs/uikit/flutter/quick-start/)
+Check out the Official Mirrorfly UIKit [Flutter UIKit docs](https://www.mirrorfly.com/docs/UIKit/flutter/quick-start/)
 
 <br />

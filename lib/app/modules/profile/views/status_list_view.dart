@@ -1,58 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/extensions.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/widgets.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/profile/controllers/status_controller.dart';
+import '../../../common/app_localizations.dart';
+import '../../../common/widgets.dart';
+import '../../../extensions/extensions.dart';
+import '../../../modules/profile/controllers/status_controller.dart';
 
-import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
-import 'add_status_view.dart';
+import '../../../data/utils.dart';
+import '../../../routes/route_settings.dart';
 
-class StatusListView extends StatefulWidget {
-  const StatusListView(
-      {super.key, required this.status, this.enableAppBar = true});
-  final bool enableAppBar;
-  final String status;
+class StatusListView extends NavViewStateful<StatusListController> {
+  const StatusListView({Key? key}) : super(key: key);
 
   @override
-  State<StatusListView> createState() => _StatusListViewState();
-}
-
-class _StatusListViewState extends State<StatusListView> {
-  var controller = Get.put(StatusListController());
-
-  @override
-  void initState() {
-    controller.init(widget.status);
-    super.initState();
-  }
+  StatusListController createController({String? tag}) =>
+      Get.put(StatusListController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-      appBar: widget.enableAppBar
-          ? AppBar(
-              automaticallyImplyLeading: true,
-              title: Text(
-                AppConstants.status,
-                style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
-              ),
-              iconTheme:
-                  IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
-              backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-            )
-          : null,
-      // Navigator.pop(context, controller.selectedStatus.value);
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+        title: Text(getTranslated("status")),
+      ),
       body: PopScope(
         canPop: false,
         onPopInvoked: (didPop) {
           if (didPop) {
             return;
           }
-          controller.onBackPressed(context, controller.selectedStatus.value);
+          controller.onBackPressed(controller.selectedStatus.value);
         },
         child: Container(
           padding: const EdgeInsets.all(
@@ -62,37 +40,32 @@ class _StatusListViewState extends State<StatusListView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                AppConstants.yourCurrentStatus,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: MirrorflyUikit.getTheme?.textPrimaryColor,
-                ),
+                getTranslated("yourCurrentStatus"),
+                style:
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
               ),
               Obx(
                 () => ListTile(
                   contentPadding: EdgeInsets.zero,
                   title: Text(controller.selectedStatus.value,
                       maxLines: null,
-                      style: TextStyle(
-                          color: MirrorflyUikit.getTheme?.textSecondaryColor,
+                      style: const TextStyle(
+                          color: textColor,
                           fontSize: 14,
                           fontWeight: FontWeight.normal)),
-                  trailing: SvgPicture.asset(pencilEditIcon,
-                      package: package,
-                      fit: BoxFit.contain,
-                      colorFilter: ColorFilter.mode(
-                          MirrorflyUikit.getTheme!.textSecondaryColor,
-                          BlendMode.srcIn)),
-                  onTap: () async {
-                    final result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (con) => AddStatusView(
-                                status: controller.selectedStatus.value)));
-                    if (result != null) {
-                      if (context.mounted) controller.insertStatus(context);
-                    }
+                  trailing: SvgPicture.asset(
+                    pencilEditIcon,
+                    package: package,
+                    fit: BoxFit.contain,
+                  ),
+                  onTap: () {
+                    NavUtils.toNamed(Routes.addProfileStatus, arguments: {
+                      "status": controller.selectedStatus.value
+                    })?.then((value) {
+                      if (value != null) {
+                        controller.insertStatus();
+                      }
+                    });
                   },
                 ),
               ),
@@ -101,11 +74,9 @@ class _StatusListViewState extends State<StatusListView> {
                 height: 10,
               ),
               Text(
-                AppConstants.selectNewStatus,
-                style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: MirrorflyUikit.getTheme?.textPrimaryColor),
+                getTranslated("selectNewStatus"),
+                style:
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
               ),
               Obx(() => controller.statusList.isNotEmpty
                   ? Expanded(
@@ -123,10 +94,8 @@ class _StatusListViewState extends State<StatusListView> {
                                   style: TextStyle(
                                       color: item.status ==
                                               controller.selectedStatus.value
-                                          ? MirrorflyUikit
-                                              .getTheme?.textPrimaryColor
-                                          : MirrorflyUikit
-                                              .getTheme?.textSecondaryColor,
+                                          ? textBlack1color
+                                          : textColor,
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500)),
                               trailing:
@@ -138,14 +107,12 @@ class _StatusListViewState extends State<StatusListView> {
                                         )
                                       : const SizedBox(),
                               onTap: () {
-                                controller.updateStatus(
-                                    context,
-                                    item.status.checkNull(),
+                                controller.updateStatus(item.status.checkNull(),
                                     item.id.checkNull());
                               },
                               onLongPress: () {
                                 debugPrint("Status list long press");
-                                controller.deleteStatus(item, context);
+                                controller.deleteStatus(item);
                               },
                             );
                           }),

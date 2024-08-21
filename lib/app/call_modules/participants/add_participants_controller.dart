@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../call_modules/outgoing_call/call_controller.dart';
+import '../../common/main_controller.dart';
+import '../../data/helper.dart';
+import '../../extensions/extensions.dart';
 
 import 'package:mirrorfly_plugin/mirrorflychat.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/extensions.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../app_style_config.dart';
+import '../../common/app_localizations.dart';
 import '../../common/constants.dart';
 import '../../common/de_bouncer.dart';
-import '../../common/main_controller.dart';
-import '../../data/apputils.dart';
-import '../../data/helper.dart';
 import '../../data/session_management.dart';
-import '../outgoing_call/call_controller.dart';
+import '../../data/utils.dart';
 
 class AddParticipantsController extends GetxController
     with GetTickerProviderStateMixin {
@@ -32,12 +34,14 @@ class AddParticipantsController extends GetxController
   bool get isCheckBoxVisible => true;
   TabController? tabController;
   var getMaxCallUsersCount = 8;
-  late BuildContext context;
-
-  Future<void> initParticipant({required BuildContext buildContext}) async {
-    context = buildContext;
+  @override
+  Future<void> onInit() async {
+    super.onInit();
+    getCallLink();
+    groupId(await Mirrorfly.getCallGroupJid());
     tabController = TabController(length: 2, vsync: this);
     getMaxCallUsersCount = (await Mirrorfly.getMaxCallUsersCount()) ?? 8;
+    // callList = Get.find<CallController>().callList;
     scrollController.addListener(_scrollListener);
     tabController?.animation?.addListener(() {
       LogMessage.d("DefaultTabController", "${tabController?.index}");
@@ -52,17 +56,37 @@ class AddParticipantsController extends GetxController
       if (currentTabIndex == 0) {
         getBackFromSearch();
       }
+      // currentOffset equals 0 when tabs are not swiped
+      // currentOffset ranges from -0.5 to 0.5
+      // final currentOffset = currentTabIndex! - animationValue!;
+      // for (int i = 0; i < tabsCount; i++) {
+      //   if (i == currentTabIndex) {
+      // //     // For current tab bringing currentOffset to range from 0.0 to 1.0
+      //     tabScales[i] = (0.5 - currentOffset.abs()) / 0.5;
+      //   } else {
+      // //     // For other tabs setting scale to 0.0
+      //     tabScales[i] = 0.0;
+      //   }
+      // }
     });
     if (groupId.isEmpty) {
       if (await AppUtils.isNetConnected() || Constants.enableContactSync) {
         isPageLoading(true);
         fetchUsers(false);
       } else {
-        toToast(Constants.noInternetConnection);
+        toToast(getTranslated("noInternetConnection"));
       }
     } else {
       getGroupMembers();
     }
+  }
+
+  ///get ongoing call link
+  var meetLink = "".obs;
+  void getCallLink() {
+    Mirrorfly.getCallLink().then((value) {
+      meetLink(value);
+    });
   }
 
   void onSearchPressed() {
@@ -167,35 +191,40 @@ class AddParticipantsController extends GetxController
   }
 
   unBlock(ProfileDetails item) {
-    Helper.showAlert(
-        message: "Unblock ${getName(item)}?",
+    DialogUtils.showAlert(
+        dialogStyle: AppStyleConfig.dialogStyle,
+        message: getTranslated("unBlockUser").replaceFirst("%d", getName(item)),
         actions: [
           TextButton(
+              style: AppStyleConfig.dialogStyle.buttonStyle,
               onPressed: () {
-                Get.back();
+                NavUtils.back();
               },
-              child: const Text("NO", style: TextStyle(color: buttonBgColor))),
+              child: Text(
+                getTranslated("no").toUpperCase(),
+              )),
           TextButton(
+              style: AppStyleConfig.dialogStyle.buttonStyle,
               onPressed: () async {
                 if (await AppUtils.isNetConnected()) {
-                  Get.back();
-                  Helper.progressLoading(context: context);
+                  NavUtils.back();
+                  DialogUtils.progressLoading();
                   Mirrorfly.unblockUser(
                       userJid: item.jid.checkNull(),
                       flyCallBack: (FlyResponse response) {
-                        Helper.hideLoading(context: context);
+                        DialogUtils.hideLoading();
                         if (response.isSuccess && response.hasData) {
-                          toToast("${getName(item)} has been Unblocked");
+                          toToast(getTranslated("hasUnBlocked")
+                              .replaceFirst("%d", getName(item)));
                           userUpdatedHisProfile(item.jid.checkNull());
                         }
                       });
                 } else {
-                  toToast(Constants.noInternetConnection);
+                  toToast(getTranslated("noInternetConnection"));
                 }
               },
-              child: const Text("YES")),
-        ],
-        context: context);
+              child: Text(getTranslated("yes").toUpperCase())),
+        ]);
   }
 
   contactSelected(ProfileDetails item) {
@@ -216,18 +245,18 @@ class AddParticipantsController extends GetxController
             selectedUsersJIDList.add(item.jid!);
             groupCallMembersCount(groupCallMembersCount.value + 1);
           } else {
-            toToast(Constants.callMembersLimit6
+            toToast(getTranslated("youCanSelectForCall")
                 .replaceFirst("%d", (groupCallMembersCount.value).toString()));
           }
         } else {
-          toToast(Constants.callMembersLimit
+          toToast(getTranslated("callMembersLimit")
               .replaceFirst("%d", getMaxCallUsersCount.toString()));
         }
         //item.isSelected = true;
       }
       usersList.refresh();
     } else {
-      toToast("User Already Added");
+      toToast(getTranslated("userAlreadyAddedInCall"));
     }
   }
 
@@ -260,7 +289,7 @@ class AddParticipantsController extends GetxController
             usersList.indexWhere((element) => element.jid == jid);
         var mainListIndex =
             mainUsersList.indexWhere((element) => element.jid == jid);
-        mirrorFlyLog('value.isBlockedMe', value.isBlockedMe.toString());
+        LogMessage.d('value.isBlockedMe', value.isBlockedMe.toString());
         if (!userListIndex.isNegative) {
           usersList[userListIndex] = value;
           usersList.refresh();
@@ -299,22 +328,26 @@ class AddParticipantsController extends GetxController
       return;
     }
     if (!availableFeatures.value.isGroupCallAvailable.checkNull()) {
-      Helper.showFeatureUnavailable(context);
+      DialogUtils.showFeatureUnavailable();
       return;
     }
     if (!(await AppUtils.isNetConnected())) {
-      toToast(Constants.noInternetConnection);
+      toToast(getTranslated("noInternetConnection"));
       return;
     }
     if (callList.length != getMaxCallUsersCount) {
-      if (await AppUtils.isNetConnected()) {
-        Mirrorfly.inviteUsersToOngoingCall(jidList: selectedUsersJIDList);
-        Get.back();
-      } else {
-        toToast(Constants.noInternetConnection);
-      }
+      Mirrorfly.inviteUsersToOngoingCall(
+          jidList: selectedUsersJIDList,
+          flyCallback: (FlyResponse response) {
+            LogMessage.d("inviteUsersToOngoingCall", response.toString());
+            if (response.isSuccess) {
+              NavUtils.back();
+            } else {
+              toToast(getErrorDetails(response));
+            }
+          });
     } else {
-      toToast(Constants.callMembersLimit
+      toToast(getTranslated("callMembersLimit")
           .replaceFirst("%d", getMaxCallUsersCount.toString()));
     }
   }
@@ -338,7 +371,7 @@ class AddParticipantsController extends GetxController
       callback(FlyResponse response) async {
         if (response.isSuccess && response.hasData) {
           var data = response.data;
-          mirrorFlyLog("userlist", data);
+          LogMessage.d("userlist", data);
           var item = userListFromJson(data);
           var items = getFilteredList(callConnectedUserList, item.data);
           var list = <ProfileDetails>[];
@@ -349,7 +382,7 @@ class AddParticipantsController extends GetxController
                       groupJid: groupJid.value.checkNull(),
                       userJid: it.jid.checkNull())
                   .then((value) {
-                mirrorFlyLog("item", value.toString());
+                LogMessage.d("item", value.toString());
                 if (value == null || !value) {
                   list.add(it);
                 }
@@ -445,12 +478,15 @@ class AddParticipantsController extends GetxController
 
       (!Constants.enableContactSync)
           ? Mirrorfly.getUserList(
-              page: pageNum, search: _searchText, flyCallback: callback)
+              page: pageNum,
+              search: _searchText,
+              metaDataUserList: Constants.metaDataUserList, //#metaData
+              flyCallback: callback)
           : Mirrorfly.getRegisteredUsers(
               fetchFromServer: false, flyCallback: callback);
       /*future.then((data) async {
         //Mirrorfly.getUserList(pageNum, _searchText).then((data) async {
-        mirrorFlyLog("userlist", data);
+        LogMessage.d("userlist", data);
         var item = userListFromJson(data);
         var items = getFilteredList(callConnectedUserList,item.data);
         var list = <ProfileDetails>[];
@@ -460,7 +496,7 @@ class AddParticipantsController extends GetxController
             await Mirrorfly.isMemberOfGroup(
                 groupJid.value.checkNull(), it.jid.checkNull())
                 .then((value) {
-              mirrorFlyLog("item", value.toString());
+              LogMessage.d("item", value.toString());
               if (value == null || !value) {
                 list.add(it);
               }
@@ -554,7 +590,7 @@ class AddParticipantsController extends GetxController
         toToast(error.toString());
       });*/
     } else {
-      toToast(Constants.noInternetConnection);
+      toToast(getTranslated("noInternetConnection"));
     }
   }
 
@@ -563,11 +599,11 @@ class AddParticipantsController extends GetxController
       Mirrorfly.getGroupMembersList(
           jid: groupId.value.checkNull(),
           flyCallBack: (FlyResponse response) {
-            mirrorFlyLog("getGroupMembersList", response.toString());
+            LogMessage.d("getGroupMembersList", response.toString());
             if (response.isSuccess && response.hasData) {
               var list = profileFromJson(response.data);
-              var callConnectedUserList =
-                  List<String>.from(callList.map((element) => element.userJid));
+              var callConnectedUserList = List<String>.from(
+                  callList.map((element) => element.userJid?.value));
               var filteredList = getFilteredList(callConnectedUserList, list);
               mainUsersList(filteredList);
               usersList(filteredList);

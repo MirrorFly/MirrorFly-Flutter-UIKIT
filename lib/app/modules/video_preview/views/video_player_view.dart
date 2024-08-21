@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../../modules/video_preview/controllers/video_play_controller.dart';
 
+import '../../../extensions/extensions.dart';
 import '../../../widgets/video_player_widget.dart';
 
-class VideoPlayerView extends StatelessWidget {
-  const VideoPlayerView({super.key, required this.videoPath});
+class VideoPlayerView extends NavViewStateful<VideoPlayController> {
+  const VideoPlayerView({Key? key}) : super(key: key);
 
-  final String videoPath;
+  @override
+  VideoPlayController createController({String? tag}) =>
+      Get.put(VideoPlayController());
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +22,7 @@ class VideoPlayerView extends StatelessWidget {
       ),
       body: SafeArea(
         child: VideoPlayerWidget(
-          videoPath: videoPath,
+          videoPath: controller.videoPath.value,
           videoTitle: "Video",
         ),
       ),

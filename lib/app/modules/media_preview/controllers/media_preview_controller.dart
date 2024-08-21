@@ -3,79 +3,75 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:mirrorfly_plugin/logmessage.dart';
-import 'package:mirrorfly_plugin/model/available_features.dart';
-import 'package:mirrorfly_plugin/model/user_list_model.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
 import 'package:get/get.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/extensions.dart';
-
+import '../../../common/app_localizations.dart';
 import '../../../common/constants.dart';
+import '../../../extensions/extensions.dart';
+import '../../../modules/gallery_picker/controllers/gallery_picker_controller.dart';
+import 'package:mirrorfly_plugin/mirrorfly.dart';
+
+import '../../../app_style_config.dart';
 import '../../../common/main_controller.dart';
-import '../../../data/helper.dart';
+import '../../../data/utils.dart';
+import '../../../routes/route_settings.dart';
 import '../../chat/controllers/chat_controller.dart';
-import '../../gallery_picker/controllers/gallery_picker_controller.dart';
 import '../../gallery_picker/src/data/models/picked_asset_model.dart';
 
 class MediaPreviewController extends FullLifeCycleController
     with FullLifeCycleMixin {
-  var userName = Constants.emptyString; //Get.arguments['userName'];
-  Rx<ProfileDetails> profile =
-      ProfileDetails().obs; //Get.arguments['profile'] as Profile;
+  var userName = NavUtils.arguments['userName'];
+  var profile = NavUtils.arguments['profile'] as ProfileDetails;
 
   TextEditingController caption = TextEditingController();
 
   var filePath = <PickedAssetModel>[].obs;
 
+  var pickerType = Constants.camera.obs;
+
   var captionMessage = <String>[].obs;
-  var textMessage = Constants.emptyString; //Get.arguments['caption'];
-  var showAdd = true;
+  var textMessage = NavUtils.arguments['caption'];
+  var from = NavUtils.arguments['from'];
+  var userJid = NavUtils.arguments['userJid'];
+  var showAdd = NavUtils.arguments['showAdd'] ?? true;
   var currentPageIndex = 0.obs;
   var isFocused = false.obs;
   var showEmoji = false.obs;
-  late bool isFromGalleryPicker;
 
   FocusNode captionFocusNode = FocusNode();
   PageController pageViewController =
       PageController(initialPage: 0, keepPage: false);
 
-  /*@override
-  void onInit() {
-    super.onInit();
-
-  }*/
+  final Map<int, File> imageCache = {};
+  final Map<int, File> imageCache1 = {};
 
   @override
-  void onHidden() {
-    // Your implementation here
-  }
-
-  void init(
-      List<PickedAssetModel> filePath,
-      String userName,
-      ProfileDetails profile,
-      String textMessage,
-      bool showAdd,
-      bool isFromGalleryPicker) {
-    this.userName = userName;
-    this.profile(profile);
-    this.filePath(filePath);
-    this.textMessage = textMessage;
-    this.showAdd = showAdd;
-    this.isFromGalleryPicker = isFromGalleryPicker;
+  void onInit() {
+    super.onInit();
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      // filePath(Get.arguments['filePath']);
+      pickerType(NavUtils.arguments['from']);
+      debugPrint("pickerType $pickerType");
+      // if(pickerType.value == Constants.gallery) {
+      debugPrint("pickerType inside gallery type");
+      filePath(NavUtils.arguments['filePath']);
+      // }else{
+      //   debugPrint("pickerType inside camera type");
+      //   cameraFilePath(NavUtils.arguments['filePath']);
+      // }
       var index = 0;
       for (var _ in filePath) {
-        if (index == 0) {
+        if (index == 0 && textMessage != null) {
           captionMessage.add(textMessage);
           index = index + 1;
         } else {
-          captionMessage.add(Constants.emptyString);
+          captionMessage.add("");
         }
       }
+      // _loadFiles();
     });
-    caption.text = textMessage;
+
+    if (textMessage != null) {
+      caption.text = textMessage;
+    }
     captionFocusNode.addListener(() {
       if (captionFocusNode.hasFocus) {
         showEmoji(false);
@@ -83,62 +79,126 @@ class MediaPreviewController extends FullLifeCycleController
     });
   }
 
+  /*Future<void> _loadFiles() async {
+    int index = 0;
+    for (var pickedAssetModel in filePath) {
+      try {
+        File? file = await _getFileFromAsset(pickedAssetModel);
+        if (file != null) {
+          imageCache[index] = file;
+        }
+      } catch (e) {
+        debugPrint("Failed to load file: $e");
+      }
+      index++;
+    }
+  }
+
+  Future<File?> _getFileFromAsset(PickedAssetModel pickedAssetModel) async {
+    return await pickedAssetModel.asset?.file;
+  }*/
+
+  checkCacheFile(int index) {
+    if (imageCache.containsKey(index)) {
+      debugPrint("returning true");
+      return true;
+    }
+    debugPrint("returning false");
+    return false;
+  }
+
+  getCacheFile(int index) {
+    return imageCache[index];
+  }
+
+  // Future<File?> getFile(int index) async {
+  //   if (imageCache.containsKey(index)) {
+  //     return imageCache[index];
+  //   } else if(pickerType.value == Constants.gallery){
+  //     debugPrint("getFile inside gallery file type");
+  //     File? file = await filePath[index].asset?.file;
+  //     if (file != null) {
+  //       imageCache[index] = file;
+  //     }
+  //     return file;
+  //   }else{
+  //     debugPrint("getFile inside camera file type");
+  //     imageCache[index] = filePath[index].file!;
+  //     return filePath[index].file;
+  //   }
+  // }
+  Future<File?> getFile(int index) async {
+    if (imageCache.containsKey(index)) {
+      return imageCache[index];
+    } else {
+      File? file;
+      try {
+        debugPrint("getFile attempt for index: $index");
+        if (pickerType.value == Constants.gallery) {
+          file = await filePath[index].asset?.file;
+        } else {
+          file = filePath[index].file;
+        }
+        if (file != null) {
+          imageCache[index] = file;
+        }
+      } catch (e) {
+        debugPrint("Error loading file for index $index: $e");
+      }
+      return file;
+    }
+  }
+
   onChanged() {
     // count(139 - addStatusController.text.length);
+
+    //Adding the below code, to send the emoji in caption text
     captionMessage[currentPageIndex.value] = caption.text.toString();
   }
 
-  sendMedia(BuildContext context) async {
+  Future<void> sendMedia() async {
     debugPrint("send media");
-    // var previousRoute = Get.previousRoute;
-    // if (await AppUtils.isNetConnected()) {
+    var previousRoute = NavUtils.previousRoute;
     Platform.isIOS
-        ? Helper.showLoading(
-            message: AppConstants.compressingFiles, buildContext: context)
-        : Helper.progressLoading(context: context);
+        ? DialogUtils.showLoading(
+            message: getTranslated("compressingFiles"),
+            dialogStyle: AppStyleConfig.dialogStyle)
+        : DialogUtils.progressLoading();
     var featureNotAvailable = false;
     try {
       int i = 0;
       await Future.forEach(filePath, (data) async {
-        debugPrint(data.type);
+        // debugPrint(data.type);
+        /// show image
         if (data.type == 'image') {
           if (!availableFeatures.value.isImageAttachmentAvailable.checkNull()) {
             featureNotAvailable = true;
             return false;
           }
           debugPrint("sending image");
-          var response = await Get.find<ChatController>().sendImageMessage(
-              data.path, captionMessage[i], Constants.emptyString, context);
-          debugPrint("Preview View ==> $response");
-          if (response != null) {
-            debugPrint("Image send Success");
-          }
+          await Get.find<ChatController>(tag: userJid)
+              .sendImageMessage(imageCache[i]?.path, captionMessage[i], "");
         } else if (data.type == 'video') {
           if (!availableFeatures.value.isVideoAttachmentAvailable.checkNull()) {
             featureNotAvailable = true;
             return false;
           }
           debugPrint("sending video");
-          var response = await Get.find<ChatController>().sendVideoMessage(
-              data.path!, captionMessage[i], Constants.emptyString, context);
-          debugPrint("Preview View ==> $response");
-          if (response != null) {
-            debugPrint("Video send Success");
-          }
+          await Get.find<ChatController>(tag: userJid)
+              .sendVideoMessage(imageCache[i]!.path, captionMessage[i], "");
         }
         i++;
       });
     } finally {
-      if (context.mounted) Helper.hideLoading(context: context);
+      debugPrint("finally $featureNotAvailable");
+      DialogUtils.hideLoading();
       if (!featureNotAvailable) {
-        if (isFromGalleryPicker) {
-          // Get.back();
-          if (context.mounted) Navigator.pop(context);
+        if (previousRoute == Routes.galleryPicker) {
+          NavUtils.back();
         }
-        // Get.back();
-        if (context.mounted) Navigator.pop(context);
+        NavUtils.back();
       } else {
-        if (context.mounted) Helper.showFeatureUnavailable(context);
+        DialogUtils.showFeatureUnavailable();
       }
     }
   }
@@ -169,7 +229,7 @@ class MediaPreviewController extends FullLifeCycleController
   }
 
   void onCaptionTyped(String value) {
-    debugPrint("length--> ${captionMessage.length}");
+    LogMessage.d("onCaptionTyped ", captionMessage.length);
     captionMessage[currentPageIndex.value] = value;
   }
 
@@ -178,7 +238,7 @@ class MediaPreviewController extends FullLifeCycleController
 
   @override
   void onResumed() {
-    mirrorFlyLog("LifeCycle", "onResumed");
+    LogMessage.d("LifeCycle", "onResumed");
     if (!KeyboardVisibilityController().isVisible) {
       if (captionFocusNode.hasFocus) {
         captionFocusNode.unfocus();
@@ -200,5 +260,12 @@ class MediaPreviewController extends FullLifeCycleController
     LogMessage.d(
         "MediaPreview", "onAvailableFeaturesUpdated ${features.toJson()}");
     availableFeatures(features);
+  }
+
+  @override
+  void onHidden() {}
+
+  hideKeyBoard() {
+    // FocusManager.instance.primaryFocus!.unfocus();
   }
 }

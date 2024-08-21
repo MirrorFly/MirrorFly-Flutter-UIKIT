@@ -1,30 +1,41 @@
 import 'dart:convert';
 
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
-import 'package:mirrorfly_plugin/flychat.dart';
-import 'package:mirrorfly_plugin/logmessage.dart';
-import 'package:mirrorfly_plugin/model/callback.dart';
-import 'package:mirrorfly_plugin/model/status_model.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
-import '../../../../mirrorfly_uikit_plugin.dart';
+import 'package:mirrorfly_plugin/mirrorfly.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
+import '../../../app_style_config.dart';
+import '../../../common/app_localizations.dart';
 import '../../../common/constants.dart';
-import '../../../data/apputils.dart';
-import '../../../data/helper.dart';
+import '../../../data/utils.dart';
 import '../../settings/views/chat_settings/chat_settings_controller.dart';
 
 class BusyStatusController extends GetxController with WidgetsBindingObserver {
-  final busyStatus = Constants.emptyString.obs;
+  final busyStatus = "".obs;
   var busyStatusList = List<StatusData>.empty(growable: true).obs;
-  var selectedStatus = Constants.emptyString.obs;
+  var selectedStatus = "".obs;
   var loading = false.obs;
 
   var addStatusController = TextEditingController();
   FocusNode focusNode = FocusNode();
   var showEmoji = false.obs;
   var count = 139.obs;
+
+  void init(String? status) {
+    WidgetsBinding.instance.addObserver(this);
+    if (status != null) {
+      selectedStatus.value = status;
+      addStatusController.text = selectedStatus.value;
+    }
+    onChanged();
+    getMyBusyStatus();
+    getMyBusyStatusList();
+  }
+
+  void close() {
+    WidgetsBinding.instance.removeObserver(this);
+  }
 
   onChanged() {
     count(139 - addStatusController.text.characters.length);
@@ -66,6 +77,7 @@ class BusyStatusController extends GetxController with WidgetsBindingObserver {
       if (cursorPosition < 0) {
         controller.text += emoji.emoji;
         // widget.onEmojiSelected?.call(category, emoji);
+        count((139 - addStatusController.text.characters.length));
         return;
       }
 
@@ -80,17 +92,6 @@ class BusyStatusController extends GetxController with WidgetsBindingObserver {
         );
     }
     count((139 - addStatusController.text.characters.length));
-  }
-
-  void init(String? status) {
-    WidgetsBinding.instance.addObserver(this);
-    if (status != null) {
-      selectedStatus.value = status;
-      addStatusController.text = selectedStatus.value;
-    }
-    onChanged();
-    getMyBusyStatus();
-    getMyBusyStatusList();
   }
 
   void getMyBusyStatus() {
@@ -131,19 +132,18 @@ class BusyStatusController extends GetxController with WidgetsBindingObserver {
 
   void deleteBusyStatus(StatusData item, BuildContext context) {
     if (!item.isCurrentStatus!) {
-      Helper.showButtonAlert(actions: [
+      DialogUtils.showButtonAlert(actions: [
         ListTile(
           contentPadding: const EdgeInsets.only(left: 10),
-          title: Text(AppConstants.delete,
+          title: Text(getTranslated("delete"),
               style:
                   const TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
           onTap: () {
-            // Get.back();
             Navigator.pop(context);
             busyDeleteConfirmation(item, context);
           },
         ),
-      ], context: context);
+      ]);
     }
   }
 
@@ -168,7 +168,7 @@ class BusyStatusController extends GetxController with WidgetsBindingObserver {
     if (addStatusController.text.trim().isNotEmpty) {
       Navigator.pop(context, addStatusController.text.trim().toString());
     } else {
-      toToast(AppConstants.statusCantEmpty);
+      toToast(getTranslated("statusNotEmpty"));
     }
   }
 
@@ -184,93 +184,56 @@ class BusyStatusController extends GetxController with WidgetsBindingObserver {
   }
 
   void busyDeleteConfirmation(StatusData item, BuildContext context) {
-    Helper.showAlert(
-        message: AppConstants.youWantDeleteStatus,
+    DialogUtils.showAlert(
+        dialogStyle: AppStyleConfig.dialogStyle,
+        message: getTranslated("deleteStatus"),
         actions: [
           TextButton(
+              style: AppStyleConfig.dialogStyle.buttonStyle,
               onPressed: () {
-                // Get.back();
                 Navigator.pop(context);
               },
-              child: Text(AppConstants.no,
-                  style:
-                      TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
+              child: Text(getTranslated("no"))),
           TextButton(
-              onPressed: () async {
-                if (await AppUtils.isNetConnected()) {
-                  // Get.back();
-                  if (context.mounted) Navigator.pop(context);
-                  if (context.mounted)
-                    Helper.showLoading(
-                        message: AppConstants.deletingBusyStatus,
-                        buildContext: context);
-                  Mirrorfly.deleteBusyStatus(
-                          id: item.id!,
-                          status: item.status!,
-                          isCurrentStatus: item.isCurrentStatus!)
-                      .then((value) {
-                    busyStatusList.remove(item);
-                    Helper.hideLoading(context: context);
-                  }).catchError((error) {
-                    Helper.hideLoading(context: context);
-                    toToast(AppConstants.unableDeleteBusyStatus);
-                  });
-                } else {
-                  toToast(AppConstants.noInternetConnection);
-                }
+              style: AppStyleConfig.dialogStyle.buttonStyle,
+              onPressed: () {
+                AppUtils.isNetConnected().then((isConnected) {
+                  if (isConnected) {
+                    Navigator.pop(context);
+                    DialogUtils.showLoading(
+                        message: "Deleting Busy Status",
+                        dialogStyle: AppStyleConfig.dialogStyle);
+                    Mirrorfly.deleteBusyStatus(
+                            id: item.id!,
+                            status: item.status!,
+                            isCurrentStatus: item.isCurrentStatus!)
+                        .then((value) {
+                      busyStatusList.remove(item);
+                      DialogUtils.hideLoading();
+                    }).catchError((error) {
+                      DialogUtils.hideLoading();
+                      toToast(getTranslated("unableDeleteBusyStatus"));
+                    });
+                  } else {
+                    toToast(getTranslated("noInternetConnection"));
+                  }
+                });
               },
-              child: Text(AppConstants.yes,
-                  style:
-                      TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
-        ],
-        context: context);
+              child: Text(
+                getTranslated("yes"),
+              )),
+        ]);
   }
 
-  // @override
-  // void onDetached() {
-  // }
-  //
-  // @override
-  // void onInactive() {
-  // }
-  //
-  // @override
-  // void onPaused() {
-  // }
-
-  // @override
-  // void onResumed() {
-  //   if(!KeyboardVisibilityController().isVisible) {
-  //     if (focusNode.hasFocus) {
-  //       focusNode.unfocus();
-  //       Future.delayed(const Duration(milliseconds: 100), () {
-  //         focusNode.requestFocus();
-  //       });
-  //     }
-  //   }
-  // }
-
-  void showHideEmoji(BuildContext context) {
+  showHideEmoji(BuildContext context) {
     if (!showEmoji.value) {
       focusNode.unfocus();
+      Future.delayed(const Duration(milliseconds: 500), () {
+        showEmoji(!showEmoji.value);
+      });
     } else {
-      focusNode.requestFocus();
-      return;
-    }
-    Future.delayed(const Duration(milliseconds: 100), () {
       showEmoji(!showEmoji.value);
-    });
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      // This code will be executed when the app is resumed
-      debugPrint('App resumed');
+      focusNode.requestFocus();
     }
-  }
-
-  void close() {
-    WidgetsBinding.instance.removeObserver(this);
   }
 }

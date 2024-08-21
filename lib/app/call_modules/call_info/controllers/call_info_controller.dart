@@ -1,44 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mirrorfly_plugin/model/call_log_model.dart';
 import 'package:mirrorfly_plugin/mirrorflychat.dart';
+import 'package:mirrorfly_plugin/model/call_log_model.dart';
+import '../../../extensions/extensions.dart';
 
-import '../../../../mirrorfly_uikit_plugin.dart';
+import '../../../app_style_config.dart';
+import '../../../common/app_localizations.dart';
 import '../../../common/constants.dart';
-import '../../../data/apputils.dart';
-import '../../../data/helper.dart';
 import '../../../data/permissions.dart';
-import '../../../common/extensions.dart';
-import '../../outgoing_call/outgoing_call_view.dart';
+import '../../../data/utils.dart';
+import '../../../routes/route_settings.dart';
 
 class CallInfoController extends GetxController {
   var callLogData_ = CallLogData().obs;
   CallLogData get callLogData => callLogData_.value;
 
-  late BuildContext context;
-
-/*  @override
+  @override
   void onInit() {
-    callLogData_((Get.arguments as CallLogData));
+    callLogData_((NavUtils.arguments as CallLogData));
     super.onInit();
-  }*/
-
-  Future<void> initInfoController({
-    required BuildContext buildContext,
-  }) async {
-    context = buildContext;
-    // callLogData_();
   }
 
   makeCall(List<String>? userList, String callType, CallLogData item) async {
     if (userList!.isNotEmpty) {
       if (await AppUtils.isNetConnected()) {
         if (callType == CallType.video) {
-          if (await AppPermission.askVideoCallPermissions(Get.context!)) {
-            Get.back();
+          if (await AppPermission.askVideoCallPermissions()) {
+            NavUtils.back();
             if ((await Mirrorfly.isOnGoingCall()).checkNull()) {
               debugPrint("#Mirrorfly Call You are on another call");
-              toToast(Constants.msgOngoingCallAlert);
+              toToast(getTranslated("msgOngoingCallAlert"));
             } else {
               Mirrorfly.makeGroupVideoCall(
                   groupJid:
@@ -46,23 +37,20 @@ class CallInfoController extends GetxController {
                   toUserJidList: userList,
                   flyCallBack: (FlyResponse response) {
                     if (response.isSuccess) {
-                      // Get.toNamed(Routes.outGoingCallView, arguments: {"userJid": userList, "callType": CallType.video});
-
-                      MirrorflyUikit.instance.navigationManager.navigateTo(
-                          context: context,
-                          pageToNavigate: OutGoingCallView(userJid: userList),
-                          routeName: Constants.outGoingCallView,
-                          onNavigateComplete: () {});
+                      NavUtils.toNamed(Routes.outGoingCallView, arguments: {
+                        "userJid": userList,
+                        "callType": CallType.video
+                      });
                     }
                   });
             }
           }
         } else {
-          if (await AppPermission.askAudioCallPermissions(context)) {
-            Get.back();
+          if (await AppPermission.askAudioCallPermissions()) {
+            NavUtils.back();
             if ((await Mirrorfly.isOnGoingCall()).checkNull()) {
               debugPrint("#Mirrorfly Call You are on another call");
-              toToast(Constants.msgOngoingCallAlert);
+              toToast(getTranslated("msgOngoingCallAlert"));
             } else {
               Mirrorfly.makeGroupVoiceCall(
                   groupJid:
@@ -70,51 +58,53 @@ class CallInfoController extends GetxController {
                   toUserJidList: userList,
                   flyCallBack: (FlyResponse response) {
                     if (response.isSuccess) {
-                      // Get.toNamed(Routes.outGoingCallView, arguments: {"userJid": userList, "callType": CallType.audio});
-                      MirrorflyUikit.instance.navigationManager.navigateTo(
-                          context: context,
-                          pageToNavigate: OutGoingCallView(userJid: userList),
-                          routeName: Constants.outGoingCallView,
-                          onNavigateComplete: () {});
+                      NavUtils.toNamed(Routes.outGoingCallView, arguments: {
+                        "userJid": userList,
+                        "callType": CallType.audio
+                      });
                     }
                   });
             }
           }
         }
       } else {
-        toToast(Constants.noInternetConnection);
+        toToast(getTranslated("noInternetConnection"));
       }
     }
   }
 
   itemDeleteCallLog(List<String> selectedCallLogs) {
-    Helper.showAlert(
-        message: "Do you want to delete a call log?",
+    DialogUtils.showAlert(
+        dialogStyle: AppStyleConfig.dialogStyle,
+        message: getTranslated("deleteCallLogConfirmation"),
         actions: [
           TextButton(
+              style: AppStyleConfig.dialogStyle.buttonStyle,
               onPressed: () {
-                Get.back();
+                NavUtils.back();
               },
-              child: Text(Constants.cancel.toUpperCase(),
-                  style: const TextStyle(color: buttonBgColor))),
+              child: Text(
+                getTranslated("cancel").toUpperCase(),
+              )),
           TextButton(
+              style: AppStyleConfig.dialogStyle.buttonStyle,
               onPressed: () {
-                Get.back();
+                NavUtils.back();
                 Mirrorfly.deleteCallLog(
                     jidList: selectedCallLogs,
                     isClearAll: false,
                     flyCallBack: (FlyResponse response) {
                       if (response.isSuccess) {
-                        Get.back(result: true);
+                        NavUtils.back(result: true);
                       } else {
-                        toToast("Error in call log delete");
+                        toToast(getTranslated("errorOnCallLogDelete"));
                       }
                     });
               },
-              child: const Text(Constants.ok,
-                  style: TextStyle(color: buttonBgColor))),
+              child: Text(
+                getTranslated("ok").toUpperCase(),
+              )),
         ],
-        barrierDismissible: true,
-        context: Get.context!);
+        barrierDismissible: true);
   }
 }

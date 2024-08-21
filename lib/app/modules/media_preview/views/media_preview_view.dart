@@ -2,449 +2,490 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-
 import 'package:get/get.dart';
-import 'package:mirrorfly_plugin/mirrorfly.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/extensions.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/gallery_picker/src/data/models/picked_asset_model.dart';
+import '../../../app_style_config.dart';
+import '../../../common/app_localizations.dart';
+import '../../../common/constants.dart';
+import '../../../extensions/extensions.dart';
 import 'package:photo_view/photo_view.dart';
 
-import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/widgets.dart';
+import '../../../data/utils.dart';
 import '../../../widgets/video_player_widget.dart';
 import '../controllers/media_preview_controller.dart';
 
-class MediaPreviewView extends StatefulWidget {
-  const MediaPreviewView(
-      {super.key,
-      required this.filePath,
-      required this.userName,
-      required this.profile,
-      required this.caption,
-      required this.showAdd,
-      this.isFromGalleryPicker = false,
-      this.enableAppBar = true});
-  final List<PickedAssetModel> filePath;
-  final String userName;
-  final ProfileDetails profile;
-  final String caption;
-  final bool showAdd;
-  final bool isFromGalleryPicker;
-  final bool enableAppBar;
+class MediaPreviewView extends NavViewStateful<MediaPreviewController> {
+  const MediaPreviewView({Key? key}) : super(key: key);
 
   @override
-  State<MediaPreviewView> createState() => _MediaPreviewViewState();
-}
-
-class _MediaPreviewViewState extends State<MediaPreviewView> {
-  var controller = Get.put(MediaPreviewController());
-
-  @override
-  void initState() {
-    controller.init(widget.filePath, widget.userName, widget.profile,
-        widget.caption, widget.showAdd, widget.isFromGalleryPicker);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    Get.delete<MediaPreviewController>();
-    super.dispose();
-  }
+  MediaPreviewController createController({String? tag}) =>
+      Get.put(MediaPreviewController());
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-        appBar: widget.enableAppBar
-            ? AppBar(
-                backgroundColor: Colors.black,
-                automaticallyImplyLeading: false,
-                leadingWidth: 80,
-                leading: InkWell(
-                  onTap: () {
-                    // Get.back();
-                    Navigator.pop(context);
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      const Icon(
-                        Icons.arrow_back,
-                        color: Colors.white,
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Obx(() {
-                        return ImageNetwork(
-                          url: (controller.profile.value.image).checkNull(),
-                          width: 35,
-                          height: 35,
-                          clipOval: true,
-                          errorWidget:
-                              controller.profile.value.isGroupProfile ?? false
-                                  ? ClipOval(
-                                      child: Image.asset(
-                                        groupImg,
-                                        package: package,
-                                        height: 35,
-                                        width: 35,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    )
-                                  : ProfileTextImage(
-                                      text: controller.profile.value
-                                          .getName() /*controller.profile?.name.checkNull().isEmpty
-                              ? controller.profile.nickName.checkNull().isEmpty
-                                  ? controller.profile.mobileNumber.checkNull()
-                                  : controller.profile.nickName.checkNull()
-                              : controller.profile.name.checkNull()*/
-                                      ,
-                                      radius: 18,
-                                    ),
-                          isGroup: (controller.profile.value.isGroupProfile)
-                              .checkNull(),
-                          blocked: (controller.profile.value.isBlockedMe)
-                                  .checkNull() ||
-                              controller.profile.value.isAdminBlocked
-                                  .checkNull(),
-                          unknown: (!controller.profile.value.isItSavedContact
-                                  .checkNull() ||
-                              controller.profile.value.isDeletedContact()),
-                        );
-                      }),
-                    ],
-                  ),
-                ),
-                actions: [
-                  Obx(() {
-                    return controller.filePath.length > 1
-                        ? IconButton(
-                            onPressed: () {
-                              controller.deleteMedia();
-                            },
-                            icon: SvgPicture.asset(
-                              deleteBinWhite,
-                              package: package,
-                            ))
-                        : const SizedBox.shrink();
-                  })
-                ],
-              )
-            : null,
-        body: PopScope(
-          canPop: false,
-          onPopInvoked: (didPop) {
-            if (didPop) {
-              return;
-            }
-            Navigator.pop(context, "back");
-          },
-          child: SafeArea(
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-              color: Colors.black,
-              child: Column(
+    return Theme(
+      data: ThemeData(
+        appBarTheme: AppStyleConfig.mediaSentPreviewPageStyle.appBarTheme,
+        floatingActionButtonTheme:
+            AppStyleConfig.mediaSentPreviewPageStyle.sentIcon,
+      ),
+      child: Scaffold(
+          backgroundColor:
+              AppStyleConfig.mediaSentPreviewPageStyle.scaffoldBackgroundColor,
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            leadingWidth: 80,
+            leading: InkWell(
+              onTap: () {
+                NavUtils.back();
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Expanded(
-                    child: Obx(() {
-                      return controller.filePath.isEmpty
-
-                          /// no images selected
-                          ? Container(
-                              height: double.infinity,
-                              width: double.infinity,
-                              alignment: Alignment.center,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Transform.scale(
-                                    scale: 8,
-                                    child: const Icon(
-                                      Icons.image_outlined,
-                                      color: Colors.white,
-                                      size: 10,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 50),
-                                  Text(
-                                    AppConstants.noMediaSelected,
-                                    style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white70),
-                                  )
-                                ],
-                              ),
-                            )
-
-                          /// selected media
-                          : PageView(
-                              controller: controller.pageViewController,
-                              onPageChanged:
-                                  controller.onMediaPreviewPageChanged,
-                              children: [
-                                ...controller.filePath.map((data) {
-                                  /// show image
-                                  if (data.type == 'image') {
-                                    return Center(
-                                        child: PhotoView(
-                                      imageProvider:
-                                          FileImage(File(data.path!)),
-                                      // Contained = the smallest possible size to fit one dimension of the screen
-                                      minScale:
-                                          PhotoViewComputedScale.contained * 1,
-                                      // Covered = the smallest possible size to fit the whole screen
-                                      maxScale:
-                                          PhotoViewComputedScale.covered * 2,
-                                      enableRotation: true,
-                                      basePosition: Alignment.center,
-                                      // Set the background color to the "classic white"
-                                      backgroundDecoration: const BoxDecoration(
-                                          color: Colors.transparent),
-                                      loadingBuilder: (context, event) =>
-                                          Center(
-                                        child: CircularProgressIndicator(
-                                          color: MirrorflyUikit
-                                              .getTheme?.primaryColor,
-                                        ),
-                                      ),
-                                    ));
-                                  }
-
-                                  /// show video
-                                  else {
-                                    return VideoPlayerWidget(
-                                      videoPath: data.path ?? "",
-                                      videoTitle: data.title ?? "Video",
-                                    );
-                                  }
-                                })
-                              ],
-                            );
-                    }),
+                  const SizedBox(
+                    width: 10,
                   ),
-                  Container(
-                    color: Colors.black38,
-                    width: MediaQuery.of(context).size.width,
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                    child: Column(
-                      children: [
-                        IntrinsicHeight(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Obx(() {
-                                    return controller.isFocused.value ||
-                                            controller.showEmoji.value ||
-                                            !controller.showAdd
-                                        ? InkWell(
-                                            onTap: () {
-                                              if (!controller.showEmoji.value) {
-                                                controller.captionFocusNode
-                                                    .unfocus();
-                                              }
-                                              Future.delayed(
-                                                  const Duration(
-                                                      milliseconds: 100), () {
-                                                controller.showEmoji(!controller
-                                                    .showEmoji.value);
-                                              });
-                                            },
-                                            child: SvgPicture.asset(
-                                              smileIcon,
-                                              package: package,
-                                              colorFilter:
-                                                  const ColorFilter.mode(
-                                                      previewTextColor,
-                                                      BlendMode.srcIn),
-                                            ))
-                                        : controller.filePath.length < 10 &&
-                                                controller.showAdd
-                                            ? InkWell(
-                                                onTap: () {
-                                                  Navigator.pop(context);
-                                                  // Get.back();
-                                                },
-                                                child: SvgPicture.asset(
-                                                  previewAddImg,
-                                                  package: package,
-                                                ),
-                                              )
-                                            : const SizedBox.shrink();
-                                  }),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  Container(
-                                    color: previewTextColor,
-                                    width: 1,
-                                    height: 25,
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 5),
-                                  ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  Expanded(
-                                    child: Focus(
-                                      onFocusChange: (isFocus) =>
-                                          controller.isFocused(isFocus),
-                                      child: TextFormField(
-                                        focusNode: controller.captionFocusNode,
-                                        controller: controller.caption,
-                                        onChanged: controller.onCaptionTyped,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 15,
-                                        ),
-                                        maxLines: 6,
-                                        minLines: 1,
-                                        decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                          hintText: AppConstants.addCaption,
-                                          hintStyle: const TextStyle(
-                                            color: previewTextColor,
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  FloatingActionButton(
-                                      backgroundColor:
-                                          MirrorflyUikit.getTheme?.primaryColor,
-                                      onPressed: () {
-                                        controller.sendMedia(context);
-                                      },
-                                      child: Center(
-                                          child: Icon(
-                                        Icons.send,
-                                        color: MirrorflyUikit
-                                            .getTheme?.colorOnPrimary,
-                                      )) /*SvgPicture.asset(
-                                      imgSendIcon, package: package,color: MirrorflyUikit.getTheme?.primaryColor,),*/
-                                      ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.keyboard_arrow_right,
-                                    color: Colors.white,
-                                    size: 13,
-                                  ),
-                                  Text(
-                                    controller.userName,
-                                    style: const TextStyle(
-                                        color: previewTextColor, fontSize: 13),
-                                  ),
-                                ],
-                              ),
-                            ],
+                  Icon(
+                    Icons.arrow_back,
+                    color: AppStyleConfig
+                        .mediaSentPreviewPageStyle.appBarTheme.iconTheme?.color,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  ImageNetwork(
+                    url: controller.profile.image.checkNull(),
+                    width: AppStyleConfig.mediaSentPreviewPageStyle
+                        .chatUserAppBarStyle.profileImageSize.width,
+                    height: AppStyleConfig.mediaSentPreviewPageStyle
+                        .chatUserAppBarStyle.profileImageSize.height,
+                    clipOval: true,
+                    errorWidget: controller.profile.isGroupProfile ?? false
+                        ? ClipOval(
+                            child: Image.asset(
+                              groupImg,
+                              package: package,
+                              width: AppStyleConfig.mediaSentPreviewPageStyle
+                                  .chatUserAppBarStyle.profileImageSize.width,
+                              height: AppStyleConfig.mediaSentPreviewPageStyle
+                                  .chatUserAppBarStyle.profileImageSize.height,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : ProfileTextImage(
+                            text: controller.profile.getName(),
+                            /*controller.profile.name.checkNull().isEmpty
+                                ? controller.profile.nickName.checkNull().isEmpty
+                                    ? controller.profile.mobileNumber.checkNull()
+                                    : controller.profile.nickName.checkNull()
+                                : controller.profile.name.checkNull(),*/
+                            radius: AppStyleConfig
+                                    .mediaSentPreviewPageStyle
+                                    .chatUserAppBarStyle
+                                    .profileImageSize
+                                    .width /
+                                2,
                           ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Obx(() {
-                          return controller.filePath.length > 1
-                              ? SizedBox(
-                                  height: 45,
-                                  child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: controller.filePath.length,
-                                      itemBuilder: (context, index) {
-                                        return Stack(
-                                          children: [
-                                            Obx(() {
-                                              return InkWell(
-                                                onTap: () {
-                                                  controller
-                                                      .currentPageIndex(index);
-                                                  controller.pageViewController
-                                                      .animateToPage(index,
-                                                          duration:
-                                                              const Duration(
-                                                                  milliseconds:
-                                                                      1),
-                                                          curve: Curves.easeIn);
-                                                },
-                                                child: Container(
-                                                  width: 45,
-                                                  height: 45,
-                                                  decoration: controller
-                                                              .currentPageIndex
-                                                              .value ==
-                                                          index
-                                                      ? BoxDecoration(
-                                                          border: Border.all(
-                                                          color: MirrorflyUikit
-                                                              .getTheme!
-                                                              .primaryColor,
-                                                          width: 1,
-                                                        ))
-                                                      : null,
-                                                  margin: const EdgeInsets
-                                                      .symmetric(horizontal: 1),
-                                                  child: Image.memory(controller
-                                                      .filePath[index]
-                                                      .thumbnail!),
-                                                ),
-                                              );
-                                            }),
-                                            controller.filePath[index].type ==
-                                                    "image"
-                                                ? const SizedBox.shrink()
-                                                : Positioned(
-                                                    bottom: 4,
-                                                    left: 4,
-                                                    child: SvgPicture.asset(
-                                                      videoCamera,
-                                                      package: package,
-                                                      width: 5,
-                                                      height: 5,
-                                                    )),
-                                          ],
-                                        );
-                                      }),
-                                )
-                              : const SizedBox.shrink();
-                        }),
-                        emojiLayout(),
-                      ],
-                    ),
+                    isGroup: controller.profile.isGroupProfile.checkNull(),
+                    blocked: controller.profile.isBlockedMe.checkNull() ||
+                        controller.profile.isAdminBlocked.checkNull(),
+                    unknown:
+                        (!controller.profile.isItSavedContact.checkNull() ||
+                            controller.profile.isDeletedContact()),
                   ),
                 ],
               ),
             ),
+            actions: [
+              Obx(() {
+                return controller.filePath.length > 1
+                    ? IconButton(
+                        onPressed: () {
+                          controller.deleteMedia();
+                        },
+                        icon: SvgPicture.asset(
+                          deleteBinWhite,
+                          package: package,
+                          colorFilter: ColorFilter.mode(
+                              AppStyleConfig.mediaSentPreviewPageStyle
+                                      .appBarTheme.actionsIconTheme?.color ??
+                                  Colors.white,
+                              BlendMode.srcIn),
+                        ))
+                    : const Offstage();
+              })
+            ],
           ),
-        ));
-  }
+          body: PopScope(
+            canPop: false,
+            onPopInvoked: (didPop) {
+              if (didPop) {
+                return;
+              }
+              NavUtils.back(result: "back");
+            },
+            child: GestureDetector(
+              onTap: () => controller.hideKeyBoard(),
+              child: Container(
+                height: NavUtils.size.height,
+                color: Colors.black,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Obx(() {
+                        return controller.filePath.isEmpty
 
-/*  void onMediaPreviewPageChanged(int value) {
-    debugPrint(value.toString());
-    // final deBouncer = DeBouncer(milliseconds: 200);
-    // deBouncer.run(() {
-    controller.currentPageIndex(value);
-    controller.caption.text = controller.captionMessage[value];
-    controller.captionFocusNode.unfocus();
-    // });
-    // Future.delayed(const Duration(milliseconds: 200), (){
-    //   controller.currentPageIndex(value);
-    //   controller.caption.text = controller.captionMessage[value];
-    // });
-  }*/
+                            /// no images selected
+                            ? Container(
+                                height: double.infinity,
+                                width: double.infinity,
+                                alignment: Alignment.center,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Transform.scale(
+                                      scale: 8,
+                                      child: const Icon(
+                                        Icons.image_outlined,
+                                        color: Colors.white,
+                                        size: 10,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 50),
+                                    Text(
+                                      getTranslated("noMediaSelected"),
+                                      style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white70),
+                                    )
+                                  ],
+                                ),
+                              )
+
+                            /// selected media
+                            : GestureDetector(
+                                onTap: () {
+                                  controller.captionFocusNode.unfocus();
+                                },
+                                child: PageView(
+                                  controller: controller.pageViewController,
+                                  onPageChanged:
+                                      controller.onMediaPreviewPageChanged,
+                                  children: [
+                                    if (controller.filePath.isNotEmpty)
+                                      // ...controller.filePath.map((data) {
+                                      ...controller.filePath
+                                          .asMap()
+                                          .entries
+                                          .map((entry) {
+                                        int index = entry.key;
+                                        var data = entry.value;
+
+                                        /// show image
+                                        if (data.type == 'image') {
+                                          return controller
+                                                  .checkCacheFile(index)
+                                              ? Center(
+                                                  child: imagePreview(controller
+                                                      .getCacheFile(index)),
+                                                )
+                                              : FutureBuilder<File?>(
+                                                  future:
+                                                      controller.getFile(index),
+                                                  builder:
+                                                      (BuildContext context,
+                                                          AsyncSnapshot<File?>
+                                                              snapshot) {
+                                                    if (snapshot
+                                                            .connectionState ==
+                                                        ConnectionState
+                                                            .waiting) {
+                                                      return const Center(
+                                                          child:
+                                                              CircularProgressIndicator());
+                                                    } else if (snapshot
+                                                        .hasError) {
+                                                      return Text(getTranslated(
+                                                          "errorLoadingImage"));
+                                                    } else if (snapshot
+                                                            .hasData &&
+                                                        snapshot.data != null) {
+                                                      return Center(
+                                                        child: imagePreview(
+                                                            snapshot.data!),
+                                                      );
+                                                    } else {
+                                                      return Text(getTranslated(
+                                                          "noData"));
+                                                    }
+                                                  },
+                                                );
+                                        }
+
+                                        /// show video
+                                        else {
+                                          return FutureBuilder<File?>(
+                                            future: controller.getFile(index),
+                                            builder: (BuildContext context,
+                                                AsyncSnapshot<File?> snapshot) {
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.waiting) {
+                                                return const Center(
+                                                    child:
+                                                        CircularProgressIndicator());
+                                              } else if (snapshot.hasError) {
+                                                return Text(getTranslated(
+                                                    "errorLoadingImage"));
+                                              } else if (snapshot.hasData &&
+                                                  snapshot.data != null) {
+                                                return VideoPlayerWidget(
+                                                  videoPath:
+                                                      snapshot.data?.path ?? "",
+                                                  videoTitle:
+                                                      data.title ?? "Video",
+                                                );
+                                              } else {
+                                                return Text(
+                                                    getTranslated("noData"));
+                                              }
+                                            },
+                                          );
+                                        }
+                                      })
+                                    else ...[
+                                      () {
+                                        return Center(
+                                            child: Text(getTranslated(
+                                                "noDataAvailable")));
+                                      }()
+                                    ],
+                                  ],
+                                ),
+                              );
+                      }),
+                    ),
+                    SizedBox(
+                      width: NavUtils.size.width,
+                      child: Column(
+                        children: [
+                          IntrinsicHeight(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 5, horizontal: 15),
+                                  child: Row(
+                                    children: [
+                                      Obx(() {
+                                        return controller.isFocused.value ||
+                                                controller.showEmoji.value ||
+                                                !controller.showAdd
+                                            ? InkWell(
+                                                onTap: () {
+                                                  if (!controller
+                                                      .showEmoji.value) {
+                                                    controller.captionFocusNode
+                                                        .unfocus();
+                                                  }
+                                                  Future.delayed(
+                                                      const Duration(
+                                                          milliseconds: 100),
+                                                      () {
+                                                    controller.showEmoji(
+                                                        !controller
+                                                            .showEmoji.value);
+                                                  });
+                                                },
+                                                child: SvgPicture.asset(
+                                                  'assets/logos/smile.svg',
+                                                  colorFilter: ColorFilter.mode(
+                                                      AppStyleConfig
+                                                          .mediaSentPreviewPageStyle
+                                                          .iconColor,
+                                                      BlendMode.srcIn),
+                                                ))
+                                            : controller.filePath.length < 10 &&
+                                                    controller.showAdd
+                                                ? InkWell(
+                                                    onTap: () {
+                                                      NavUtils.back();
+                                                    },
+                                                    child: SvgPicture.asset(
+                                                      previewAddImg,
+                                                      package: package,
+                                                      colorFilter: ColorFilter.mode(
+                                                          AppStyleConfig
+                                                              .mediaSentPreviewPageStyle
+                                                              .iconColor,
+                                                          BlendMode.srcIn),
+                                                    ),
+                                                  )
+                                                : const Offstage();
+                                      }),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      Container(
+                                        color: AppStyleConfig
+                                            .mediaSentPreviewPageStyle
+                                            .iconColor,
+                                        width: 1,
+                                        height: 25,
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 5),
+                                      ),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      Expanded(
+                                        child: Focus(
+                                          onFocusChange: (isFocus) =>
+                                              controller.isFocused(isFocus),
+                                          child: TextFormField(
+                                            focusNode:
+                                                controller.captionFocusNode,
+                                            controller: controller.caption,
+                                            onChanged:
+                                                controller.onCaptionTyped,
+                                            style: AppStyleConfig
+                                                .mediaSentPreviewPageStyle
+                                                .textFieldStyle
+                                                .editTextStyle,
+                                            // style: const TextStyle(
+                                            //   color: Colors.white,
+                                            //   fontSize: 15,
+                                            // ),
+                                            maxLines: 6,
+                                            minLines: 1,
+                                            decoration: InputDecoration(
+                                              border: InputBorder.none,
+                                              hintText:
+                                                  getTranslated("addCaption"),
+                                              hintStyle: AppStyleConfig
+                                                  .mediaSentPreviewPageStyle
+                                                  .textFieldStyle
+                                                  .editTextHintStyle,
+                                              // hintStyle: const TextStyle(
+                                              //   color: previewTextColor,
+                                              //   fontSize: 15,
+                                              // ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      FloatingActionButton(
+                                          onPressed: () {
+                                            controller.sendMedia();
+                                          },
+                                          child: const Icon(Icons.send)),
+                                    ],
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.keyboard_arrow_right,
+                                      color: AppStyleConfig
+                                          .mediaSentPreviewPageStyle.iconColor,
+                                      // color: Colors.white,
+                                      size: 13,
+                                    ),
+                                    Text(
+                                      controller.userName,
+                                      style: AppStyleConfig
+                                          .mediaSentPreviewPageStyle
+                                          .nameTextStyle,
+                                      // style: const TextStyle(
+                                      //     color: previewTextColor, fontSize: 13),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Obx(() {
+                            return controller.filePath.length > 1
+                                ? SizedBox(
+                                    height: 45,
+                                    child: ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: controller.filePath.length,
+                                        itemBuilder: (context, index) {
+                                          return Stack(
+                                            children: [
+                                              Obx(() {
+                                                return InkWell(
+                                                  onTap: () {
+                                                    controller.currentPageIndex(
+                                                        index);
+                                                    controller
+                                                        .pageViewController
+                                                        .animateToPage(index,
+                                                            duration:
+                                                                const Duration(
+                                                                    milliseconds:
+                                                                        1),
+                                                            curve:
+                                                                Curves.easeIn);
+                                                  },
+                                                  child: Container(
+                                                    width: 45,
+                                                    height: 45,
+                                                    decoration: controller
+                                                                .currentPageIndex
+                                                                .value ==
+                                                            index
+                                                        ? BoxDecoration(
+                                                            border: Border.all(
+                                                            color: Colors.blue,
+                                                            width: 1,
+                                                          ))
+                                                        : null,
+                                                    margin: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 1),
+                                                    child: Image.memory(
+                                                        controller
+                                                            .filePath[index]
+                                                            .thumbnail!),
+                                                  ),
+                                                );
+                                              }),
+                                              controller.filePath[index].type ==
+                                                      "image"
+                                                  ? const Offstage()
+                                                  : Positioned(
+                                                      bottom: 4,
+                                                      left: 4,
+                                                      child: SvgPicture.asset(
+                                                        videoCamera,
+                                                        package: package,
+                                                        width: 5,
+                                                        height: 5,
+                                                      )),
+                                            ],
+                                          );
+                                        }),
+                                  )
+                                : const Offstage();
+                          }),
+                          emojiLayout(),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )),
+    );
+  }
 
   Widget emojiLayout() {
     return Obx(() {
@@ -453,8 +494,25 @@ class _MediaPreviewViewState extends State<MediaPreviewView> {
             textController: controller.caption,
             onEmojiSelected: (cat, emoji) => controller.onChanged());
       } else {
-        return const SizedBox.shrink();
+        return const Offstage();
       }
     });
+  }
+
+  Widget imagePreview(File file) {
+    return PhotoView(
+      imageProvider: FileImage(file),
+      minScale: PhotoViewComputedScale.contained * 1,
+      maxScale: PhotoViewComputedScale.covered * 2,
+      enableRotation: true,
+      basePosition: Alignment.center,
+      backgroundDecoration: const BoxDecoration(color: Colors.transparent),
+      loadingBuilder: (context, event) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+      // errorBuilder: (ct, ob, trace) {
+      //   return Image.memory(data.thumbnail!); // Ensure `data.thumbnail` is available or handle this case properly.
+      // },
+    );
   }
 }

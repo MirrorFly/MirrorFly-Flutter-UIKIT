@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mirrorfly_plugin/mirrorflychat.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/extensions.dart';
-import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/chat_view.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/dashboard/views/dashboard_view.dart';
-import '../../../../mirrorfly_uikit_plugin.dart';
-import '../../../common/main_controller.dart';
+import '../../../common/constants.dart';
+import '../../../data/helper.dart';
+import '../../../extensions/extensions.dart';
 import '../../../data/session_management.dart';
+import '../../../app_style_config.dart';
+import '../../../data/utils.dart';
+import 'package:mirrorfly_plugin/mirrorfly.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../../common/app_localizations.dart';
 import '../../../common/de_bouncer.dart';
-import '../../../data/apputils.dart';
+import '../../../common/main_controller.dart';
 
 class ForwardChatController extends GetxController {
   //main list
@@ -27,8 +25,7 @@ class ForwardChatController extends GetxController {
 
   List<RecentChatData> get recentChats => _recentChats.take(3).toList();
 
-  final _groupList =
-      List<ProfileDetails>.empty(growable: true).obs; //<Profile>[].obs;
+  final _groupList = <ProfileDetails>[].obs;
 
   set groupList(List<ProfileDetails> value) => _groupList.value = value;
 
@@ -60,9 +57,12 @@ class ForwardChatController extends GetxController {
 
   var forwardMessageIds = <String>[];
 
-  init(List<String> messageIds) {
-    debugPrint("messageIds $messageIds");
-    forwardMessageIds = messageIds;
+  late final BuildContext buildContext;
+
+  init(List<String> messageId, BuildContext context) {
+    buildContext = context;
+    var messageIds = messageId;
+    forwardMessageIds.addAll(messageIds);
     userlistScrollController.addListener(_scrollListener);
     getRecentChatList();
   }
@@ -97,7 +97,7 @@ class ForwardChatController extends GetxController {
           isPageLoading.value == false) {
         if (scrollable.value && !searching) {
           //isPageLoading.value = true;
-          mirrorFlyLog("scroll", "end");
+          LogMessage.d("scroll", "end");
           pageNum++;
           getUsers(bottom: true);
         }
@@ -146,7 +146,7 @@ class ForwardChatController extends GetxController {
   }
 
   var pageNum = 1;
-  var searchQuery = TextEditingController(text: Constants.emptyString);
+  var searchQuery = TextEditingController(text: '');
   var searching = false;
   var searchLoading = false.obs;
   var contactLoading = false.obs;
@@ -168,6 +168,11 @@ class ForwardChatController extends GetxController {
                   _userList.add(user);
                 }
               }
+              /*if (_mainuserList.isEmpty) {
+                _mainuserList.addAll(list.data!);
+              }
+              _userList.addAll(list.data!);
+              _userList.refresh();*/
             }
           }
           searching = false;
@@ -182,11 +187,32 @@ class ForwardChatController extends GetxController {
           ? Mirrorfly.getUserList(
               page: pageNum,
               search: searchQuery.text.trim().toString(),
+              metaDataUserList: Constants.metaDataUserList, //#metaData
               flyCallback: callback)
           : Mirrorfly.getRegisteredUsers(
               fetchFromServer: false, flyCallback: callback);
+      /*future
+      // Mirrorfly.getUserList(pageNum, searchQuery.text.trim().toString())
+          .then((value) {
+        if (value.isNotEmpty) {
+          var list = userListFromJson(value);
+          if (list.data != null) {
+            if (_mainuserList.isEmpty) {
+              _mainuserList.addAll(list.data!);
+            }
+            _userList.addAll(list.data!);
+            _userList.refresh();
+          }
+        }
+        searching = false;
+        contactLoading(false);
+      }).catchError((error) {
+        debugPrint("issue===> $error");
+        searching = false;
+        contactLoading(false);
+      });*/
     } else {
-      toToast(Constants.noInternetConnection);
+      toToast(getTranslated("noInternetConnection"));
     }
   }
 
@@ -283,21 +309,45 @@ class ForwardChatController extends GetxController {
           ? Mirrorfly.getUserList(
               page: pageNum,
               search: searchQuery.text.trim().toString(),
+              metaDataUserList: Constants.metaDataUserList, //#metaData
               flyCallback: callback)
           : Mirrorfly.getRegisteredUsers(
               fetchFromServer: false, flyCallback: callback);
+      /*future
+      // Mirrorfly.getUserList(pageNum, searchQuery.text.trim().toString())
+          .then((value) {
+        if (value.isNotEmpty) {
+          var list = userListFromJson(value);
+          if (list.data != null) {
+            scrollable((list.data!.length == 20 && !Constants.enableContactSync));
+            if(!Constants.enableContactSync) {
+              _userList(list.data);
+            }else{
+              _userList(list.data!.where((element) => element.nickName.checkNull().toLowerCase().contains(searchQuery.text.trim().toString().toLowerCase())).toList());
+            }
+          } else {
+            scrollable(false);
+          }
+        }
+        searching = false;
+        searchLoading(false);
+      }).catchError((error) {
+        debugPrint("issue===> $error");
+        searching = false;
+        searchLoading(false);
+      });*/
     } else {
-      toToast(Constants.noInternetConnection);
+      toToast(getTranslated("noInternetConnection"));
     }
   }
 
   bool isChecked(String jid) => selectedJids.contains(jid);
 
-  void onItemSelect(String jid, String name, bool isBlocked, bool isGroup,
-      BuildContext context) async {
+  Future<void> onItemSelect(
+      String jid, String name, bool isBlocked, bool isGroup) async {
     if (isGroup.checkNull() &&
         !availableFeatures.value.isGroupChatAvailable.checkNull()) {
-      Helper.showFeatureUnavailable(context);
+      DialogUtils.showFeatureUnavailable();
       return;
     }
     if (isGroup.checkNull() &&
@@ -305,13 +355,11 @@ class ForwardChatController extends GetxController {
                 groupJid: jid,
                 userJid: SessionManagement.getUserJID().checkNull()))
             .checkNull()) {
-      toToast(AppConstants.youAreNoLonger);
+      toToast(getTranslated("youAreNoLonger"));
       return;
     }
     if (isBlocked.checkNull()) {
-      if (context.mounted) {
-        unBlock(jid, name, context);
-      }
+      unBlock(jid, name);
     } else {
       onItemClicked(jid, name);
     }
@@ -320,45 +368,43 @@ class ForwardChatController extends GetxController {
   unBlock(
     String jid,
     String name,
-    BuildContext context,
   ) {
-    Helper.showAlert(
-        message: "${AppConstants.unblock} $name?",
+    DialogUtils.showAlert(
+        dialogStyle: AppStyleConfig.dialogStyle,
+        message: getTranslated("unBlockUser").replaceFirst("%d", name),
         actions: [
           TextButton(
+              style: AppStyleConfig.dialogStyle.buttonStyle,
               onPressed: () {
-                // Get.back();
-                Navigator.pop(context);
+                NavUtils.back();
               },
               child: Text(
-                AppConstants.no.toUpperCase(),
-                style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),
+                getTranslated("no").toUpperCase(),
               )),
           TextButton(
+              style: AppStyleConfig.dialogStyle.buttonStyle,
               onPressed: () async {
-                if (await AppUtils.isNetConnected()) {
-                  // Get.back();
-                  if (context.mounted) Navigator.pop(context);
-                  // Helper.progressLoading();
-                  Mirrorfly.unblockUser(
-                      userJid: jid.checkNull(),
-                      flyCallBack: (FlyResponse response) {
-                        // Helper.hideLoading();
-                        if (response.isSuccess && response.hasData) {
-                          toToast("$name ${AppConstants.hasUnBlocked}");
-                          userUpdatedHisProfile(jid);
-                        }
-                      });
-                } else {
-                  toToast(AppConstants.noInternetConnection);
-                }
+                AppUtils.isNetConnected().then((isConnected) {
+                  if (isConnected) {
+                    NavUtils.back();
+                    Mirrorfly.unblockUser(
+                        userJid: jid.checkNull(),
+                        flyCallBack: (FlyResponse response) {
+                          if (response.isSuccess && response.hasData) {
+                            toToast(getTranslated("hasUnBlocked")
+                                .replaceFirst("%d", name));
+                            userUpdatedHisProfile(jid);
+                          }
+                        });
+                  } else {
+                    toToast(getTranslated("noInternetConnection"));
+                  }
+                });
               },
               child: Text(
-                AppConstants.yes.toUpperCase(),
-                style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),
+                getTranslated("yes").toUpperCase(),
               )),
-        ],
-        context: context);
+        ]);
   }
 
   void onItemClicked(String jid, String name) {
@@ -370,7 +416,7 @@ class ForwardChatController extends GetxController {
         selectedJids.add(jid);
         selectedNames.add(name);
       } else {
-        toToast(AppConstants.onlyForwardUpTo5);
+        toToast(getTranslated("onlyForwardLimit"));
       }
     }
 
@@ -380,10 +426,10 @@ class ForwardChatController extends GetxController {
   }
 
   final deBouncer = DeBouncer(milliseconds: 700);
-  String lastInputValue = Constants.emptyString;
+  String lastInputValue = "";
 
   void onSearch(String search) {
-    mirrorFlyLog("search", "onSearch");
+    LogMessage.d("search", "onSearch");
     if (lastInputValue != searchQuery.text.toString().trim()) {
       lastInputValue = searchQuery.text.toString().trim();
       if (searchQuery.text.toString().trim().isNotEmpty) {
@@ -411,44 +457,37 @@ class ForwardChatController extends GetxController {
     _userList(_mainuserList);
   }
 
-  forwardMessages(BuildContext context) async {
-    if (await AppUtils.isNetConnected()) {
-      var busyStatus = await Mirrorfly.isBusyStatusEnabled();
-      if (!busyStatus.checkNull()) {
-        if (forwardMessageIds.isNotEmpty && selectedJids.isNotEmpty) {
-          if (context.mounted) {
-            Helper.showLoading(
-                message: "Forward message", buildContext: context);
-            Future.delayed(const Duration(milliseconds: 1000), () async {
+  forwardMessages() {
+    AppUtils.isNetConnected().then((isConnected) {
+      if (isConnected) {
+        Mirrorfly.isBusyStatusEnabled().then((isSuccess) async {
+          if (!isSuccess) {
+            if (forwardMessageIds.isNotEmpty && selectedJids.isNotEmpty) {
+              DialogUtils.showLoading(
+                  message: getTranslated("forwardMessage"),
+                  dialogStyle: AppStyleConfig.dialogStyle);
+              // Future.delayed(const Duration(milliseconds: 1000), () async {
               await Mirrorfly.forwardMessagesToMultipleUsers(
                   messageIds: forwardMessageIds,
                   userList: selectedJids,
                   flyCallBack: (FlyResponse response) {
                     // debugPrint("to chat profile ==> ${selectedUsersList[0].toJson().toString()}");
-                    Helper.hideLoading(context: context);
                     updateLastMessage(selectedJids);
-                    // debugPrint("to chat profile ==> ${selectedUsersList[0].toJson().toString()}");
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (con) => ChatView(jid: selectedJids.last)),
-                        (route) => route is DashboardView);
-                    // Get.offNamedUntil(Routes.chat,arguments: value, (route){
-                    //   LogMessage.d("offNamedUntil",route.settings.name);
-                    //   return route.settings.name.toString().startsWith(Routes.dashboard);
-                    // });
+                    DialogUtils.hideLoading();
+                    NavUtils.back();
                   });
-            });
+              // });
+            }
+          } else {
+            //show busy status popup
+            // var messageObject = MessageObject(toJid: profile.jid.toString(),replyMessageId: (isReplying.value) ? replyChatMessage.messageId : "", messageType: Constants.mText,textMessage: messageController.text);
+            // showBusyStatusAlert(disableBusyChatAndSend());
           }
-        }
+        });
       } else {
-        //show busy status popup
-        // var messageObject = MessageObject(toJid: profile.jid.toString(),replyMessageId: (isReplying.value) ? replyChatMessage.messageId : Constants.emptyString, messageType: Constants.mText,textMessage: messageController.text);
-        //showBusyStatusAlert(disableBusyChatAndSend());
+        toToast(getTranslated("noInternetConnection"));
       }
-    } else {
-      toToast(AppConstants.noInternetConnection);
-    }
+    });
   }
 
   void updateLastMessage(List<String> chatJid) {
@@ -459,7 +498,7 @@ class ForwardChatController extends GetxController {
   }
 
   Future<String> getParticipantsNameAsCsv(String jid) async {
-    var groupParticipantsName = Constants.emptyString;
+    var groupParticipantsName = "";
     await Mirrorfly.getGroupMembersList(
         jid: jid,
         fetchFromServer: false,

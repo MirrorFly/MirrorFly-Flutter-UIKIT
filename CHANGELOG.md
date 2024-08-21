@@ -1,3 +1,14 @@
+## 2.0.0
+* Font Customisation Added
+* Localisation feature Added
+* Plugin Updates
+* Dependency updates
+* Bug Fix
+
+## 1.0.1
+* Dependency updates
+* Bug Fix
+
 ## 1.0.0
 * Plugin Updates
 * Dependency updates

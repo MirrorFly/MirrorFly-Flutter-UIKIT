@@ -1,45 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/widgets.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/group/controllers/group_info_controller.dart';
+import '../../../common/app_localizations.dart';
+import '../../../common/widgets.dart';
+import '../../../modules/group/controllers/group_info_controller.dart';
 
-import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
+import '../../../data/utils.dart';
+import '../../../extensions/extensions.dart';
 
-class NameChangeView extends StatefulWidget {
-  const NameChangeView({super.key, this.enableAppBar = true});
-  final bool enableAppBar;
+class NameChangeView extends NavView<GroupInfoController> {
+  const NameChangeView({Key? key}) : super(key: key);
+
   @override
-  State<NameChangeView> createState() => _NameChangeViewState();
-}
+  GroupInfoController createController({String? tag}) => GroupInfoController();
 
-class _NameChangeViewState extends State<NameChangeView> {
-  final controller = Get.find<GroupInfoController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-      appBar: widget.enableAppBar
-          ? AppBar(
-              automaticallyImplyLeading: true,
-              title: Text(
-                AppConstants.enterNewName,
-                style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
-              ),
-              iconTheme:
-                  IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
-              backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-            )
-          : null,
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+        title: Text(getTranslated("enterNewName")),
+      ),
       body: PopScope(
         canPop: false,
         onPopInvoked: (didPop) {
           if (didPop) {
             return;
           }
-          controller.onBackPressed(context);
+          controller.onBackPressed();
         },
         child: SafeArea(
           child: Column(
@@ -56,23 +45,17 @@ class _NameChangeViewState extends State<NameChangeView> {
                         children: [
                           Expanded(
                             child: TextField(
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.normal,
-                                overflow: TextOverflow.visible,
-                                color:
-                                    MirrorflyUikit.getTheme?.textPrimaryColor,
-                              ),
+                              focusNode: controller.focusNode,
+                              style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.normal,
+                                  overflow: TextOverflow.visible),
                               onChanged: (_) => controller.onChanged(),
                               maxLength: 25,
                               maxLines: 1,
-                              focusNode: controller.focusNode,
                               controller: controller.nameController,
-                              cursorColor:
-                                  MirrorflyUikit.getTheme?.primaryColor,
                               decoration: const InputDecoration(
-                                  border: InputBorder.none,
-                                  counterText: Constants.emptyString),
+                                  border: InputBorder.none, counterText: ""),
                             ),
                           ),
                           Container(
@@ -82,43 +65,29 @@ class _NameChangeViewState extends State<NameChangeView> {
                                 child: Obx(
                                   () => Text(
                                     controller.count.toString(),
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.normal,
-                                      color: MirrorflyUikit
-                                          .getTheme?.textSecondaryColor,
-                                    ),
+                                    style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.normal),
                                   ),
                                 ),
                               )),
-                          /*IconButton(
-                              onPressed: () {
-                                if (!controller.showEmoji.value) {
-                                  FocusScope.of(context).unfocus();
-                                  controller.focusNode.canRequestFocus = false;
-                                }
-                                Future.delayed(const Duration(milliseconds: 500), () {
-                                  controller.showEmoji(!controller.showEmoji.value);
-                                });
-                              },
-                              icon: SvgPicture.asset(smileIcon,package: package,)),*/
                           Obx(() {
                             return IconButton(
                                 onPressed: () {
+                                  debugPrint("showHideEmoji icon pressed");
                                   controller.showHideEmoji(context);
                                 },
                                 icon: controller.showEmoji.value
-                                    ? Icon(
+                                    ? const Icon(
                                         Icons.keyboard,
-                                        color: MirrorflyUikit
-                                            .getTheme?.textPrimaryColor,
+                                        color: iconColor,
                                       )
-                                    : SvgPicture.asset(smileIcon,
+                                    : SvgPicture.asset(
+                                        smileIcon,
                                         package: package,
-                                        colorFilter: ColorFilter.mode(
-                                            MirrorflyUikit
-                                                .getTheme!.textPrimaryColor,
-                                            BlendMode.srcIn)));
+                                        width: 18,
+                                        height: 18,
+                                      ));
                           })
                         ],
                       ),
@@ -139,49 +108,35 @@ class _NameChangeViewState extends State<NameChangeView> {
               IntrinsicHeight(
                 child: Row(children: [
                   Expanded(
-                    child: ElevatedButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: MaterialStateColor.resolveWith(
-                              (states) =>
-                                  MirrorflyUikit.getTheme!.secondaryColor),
-                          shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.zero)),
+                    child: TextButton(
+                      onPressed: () => NavUtils.back(),
                       child: Text(
-                        AppConstants.cancel.toUpperCase(),
-                        style: TextStyle(
-                            color: MirrorflyUikit.getTheme?.textPrimaryColor,
-                            fontSize: 16.0),
+                        getTranslated("cancel").toUpperCase(),
+                        style: const TextStyle(
+                            color: Colors.black, fontSize: 16.0),
                       ),
                     ),
                   ),
-                  const Divider(
+                  const VerticalDivider(
                     color: Colors.grey,
-                    thickness: 0.2,
+                    thickness: 1,
                   ),
                   Expanded(
-                    child: ElevatedButton(
+                    child: TextButton(
                       onPressed: () {
                         if (controller.nameController.text.trim().isNotEmpty) {
-                          // Get.back(result: controller.nameController.text
-                          //     .trim().toString());
-                          Navigator.pop(context,
-                              controller.nameController.text.trim().toString());
+                          NavUtils.back(
+                              result: controller.nameController.text
+                                  .trim()
+                                  .toString());
                         } else {
-                          toToast(AppConstants.nameCantEmpty);
+                          toToast(getTranslated("nameCantEmpty"));
                         }
                       },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: MaterialStateColor.resolveWith(
-                              (states) =>
-                                  MirrorflyUikit.getTheme!.secondaryColor),
-                          shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.zero)),
                       child: Text(
-                        AppConstants.ok.toUpperCase(),
-                        style: TextStyle(
-                            color: MirrorflyUikit.getTheme?.textPrimaryColor,
-                            fontSize: 16.0),
+                        getTranslated("ok").toUpperCase(),
+                        style: const TextStyle(
+                            color: Colors.black, fontSize: 16.0),
                       ),
                     ),
                   ),

@@ -1,39 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
+import '../../../common/app_localizations.dart';
+import '../../../extensions/extensions.dart';
 
-import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
 import '../../../common/widgets.dart';
+import '../../../data/utils.dart';
 import '../controllers/busy_status_controller.dart';
 
-class AddBusyStatusView extends StatefulWidget {
+class AddBusyStatusView extends NavViewStateful<BusyStatusController> {
   const AddBusyStatusView(
-      {super.key, required String status, this.enableAppBar = true});
+      {super.key, required this.status, this.enableAppBar = true});
   final bool enableAppBar;
-  @override
-  State<AddBusyStatusView> createState() => _AddBusyStatusViewState();
-}
+  final String? status;
 
-class _AddBusyStatusViewState extends State<AddBusyStatusView> {
-  final controller = Get.find<BusyStatusController>();
+  @override
+  BusyStatusController createController({String? tag}) =>
+      Get.put(BusyStatusController());
+
+  @override
+  void onInit() {
+    controller.addStatusController.text = status ?? "";
+    controller
+        .count(139 - controller.addStatusController.text.characters.length);
+    super.onInit();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-      appBar: widget.enableAppBar
-          ? AppBar(
-              automaticallyImplyLeading: true,
-              title: Text(
-                AppConstants.addBusyStatus,
-                style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
-              ),
-              iconTheme:
-                  IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
-              backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-            )
-          : null,
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+        title: Text(getTranslated("addBusyStatus")),
+      ),
       body: PopScope(
         canPop: false,
         onPopInvoked: (didPop) {
@@ -43,8 +43,7 @@ class _AddBusyStatusViewState extends State<AddBusyStatusView> {
           if (controller.showEmoji.value) {
             controller.showEmoji(false);
           } else {
-            // Get.back();
-            Navigator.pop(context);
+            NavUtils.back();
           }
         },
         child: SafeArea(
@@ -60,9 +59,8 @@ class _AddBusyStatusViewState extends State<AddBusyStatusView> {
                     children: [
                       Expanded(
                         child: TextField(
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 20,
-                              color: MirrorflyUikit.getTheme?.textPrimaryColor,
                               fontWeight: FontWeight.normal,
                               overflow: TextOverflow.visible),
                           onChanged: (value) {
@@ -73,18 +71,14 @@ class _AddBusyStatusViewState extends State<AddBusyStatusView> {
                           autofocus: true,
                           focusNode: controller.focusNode,
                           controller: controller.addStatusController,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                               enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: MirrorflyUikit
-                                        .getTheme!.textSecondaryColor),
+                                borderSide: BorderSide(color: Colors.grey),
                               ),
                               focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color:
-                                        MirrorflyUikit.getTheme!.primaryColor),
+                                borderSide: BorderSide(color: buttonBgColor),
                               ),
-                              counterText: Constants.emptyString),
+                              counterText: ""),
                           onTap: () {
                             if (controller.showEmoji.value) {
                               controller.showEmoji(false);
@@ -99,10 +93,8 @@ class _AddBusyStatusViewState extends State<AddBusyStatusView> {
                             child: Obx(
                               () => Text(
                                 controller.count.toString(),
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 20,
-                                    color: MirrorflyUikit
-                                        .getTheme?.textSecondaryColor,
                                     fontWeight: FontWeight.normal),
                               ),
                             ),
@@ -113,19 +105,11 @@ class _AddBusyStatusViewState extends State<AddBusyStatusView> {
                               controller.showHideEmoji(context);
                             },
                             icon: controller.showEmoji.value
-                                ? Icon(
+                                ? const Icon(
                                     Icons.keyboard,
-                                    color: MirrorflyUikit
-                                        .getTheme?.textPrimaryColor,
+                                    color: iconColor,
                                   )
-                                : SvgPicture.asset(
-                                    smileIcon,
-                                    package: package,
-                                    colorFilter: ColorFilter.mode(
-                                        MirrorflyUikit
-                                            .getTheme!.textPrimaryColor,
-                                        BlendMode.srcIn),
-                                  ));
+                                : SvgPicture.asset(smileIcon));
                       })
                     ],
                   ),
@@ -138,20 +122,17 @@ class _AddBusyStatusViewState extends State<AddBusyStatusView> {
                       if (controller.showEmoji.value) {
                         controller.showEmoji(false);
                       }
-                      // Get.back();
-                      Navigator.pop(context);
+                      NavUtils.back();
                     },
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: MaterialStateColor.resolveWith(
-                            (states) =>
-                                MirrorflyUikit.getTheme!.secondaryColor),
+                        backgroundColor: WidgetStateColor.resolveWith(
+                            (states) => Colors.white),
                         shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.zero)),
                     child: Text(
-                      AppConstants.cancel.toUpperCase(),
-                      style: TextStyle(
-                          color: MirrorflyUikit.getTheme?.textPrimaryColor,
-                          fontSize: 16.0),
+                      getTranslated("cancel").toUpperCase(),
+                      style:
+                          const TextStyle(color: Colors.black, fontSize: 16.0),
                     ),
                   ),
                 ),
@@ -168,16 +149,14 @@ class _AddBusyStatusViewState extends State<AddBusyStatusView> {
                       controller.validateAndFinish(context);
                     },
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: MaterialStateColor.resolveWith(
-                            (states) =>
-                                MirrorflyUikit.getTheme!.secondaryColor),
+                        backgroundColor: WidgetStateColor.resolveWith(
+                            (states) => Colors.white),
                         shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.zero)),
                     child: Text(
-                      AppConstants.ok.toUpperCase(),
-                      style: TextStyle(
-                          color: MirrorflyUikit.getTheme?.textPrimaryColor,
-                          fontSize: 16.0),
+                      getTranslated("ok").toUpperCase(),
+                      style:
+                          const TextStyle(color: Colors.black, fontSize: 16.0),
                     ),
                   ),
                 ),

@@ -1,20 +1,23 @@
 import 'package:get/get.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/extensions.dart';
-import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
+import '../../../data/session_management.dart';
+import '../../../extensions/extensions.dart';
+
+import '../../../data/utils.dart';
 
 class ImageViewController extends GetxController {
   var imageName = ''.obs;
   var imagePath = ''.obs;
   var imageUrl = ''.obs;
-
-  void init({required String imageName, String? imagePath, String? imageUrl}) {
-    this.imageName(imageName);
-    this.imagePath(imagePath);
-    if (imageUrl.toString().startsWith("http")) {
-      this.imageUrl(imageUrl);
+  @override
+  void onInit() {
+    super.onInit();
+    imageName(NavUtils.arguments['imageName']);
+    imagePath(NavUtils.arguments['imagePath']);
+    if (NavUtils.arguments['imageUrl'].toString().startsWith("http")) {
+      imageUrl(NavUtils.arguments['imageUrl']);
     } else {
-      this.imageUrl(SessionManagement.getMediaEndPoint().checkNull() +
-          imageUrl.toString());
+      imageUrl(SessionManagement.getMediaEndPoint().checkNull() +
+          NavUtils.arguments['imageUrl'].toString());
     }
   }
 }

@@ -1,183 +1,114 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/extensions.dart';
+import '../../../app_style_config.dart';
+import '../../../common/app_localizations.dart';
 
-import '../../../../mirrorfly_uikit_plugin.dart';
-import '../../media_preview/views/media_preview_view.dart';
+import '../../../data/utils.dart';
+import '../../../extensions/extensions.dart';
+import '../../../routes/route_settings.dart';
 import '../controllers/gallery_picker_controller.dart';
 import '../src/presentation/pages/gallery_media_picker.dart';
 
-class GalleryPickerView extends StatefulWidget {
-  const GalleryPickerView(
-      {super.key, required this.senderJid, required this.caption});
-
-  final String senderJid;
-  final String caption;
+class GalleryPickerView extends NavViewStateful<GalleryPickerController> {
+  const GalleryPickerView({Key? key}) : super(key: key);
 
   @override
-  State<GalleryPickerView> createState() => _GalleryPickerViewState();
-}
-
-class _GalleryPickerViewState extends State<GalleryPickerView> {
-  final controller = Get.put(GalleryPickerController());
-
-  @override
-  void initState() {
-    controller.init(widget.senderJid, widget.caption);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    Get.delete<GalleryPickerController>();
-    super.dispose();
-  }
+  GalleryPickerController createController({String? tag}) =>
+      Get.put(GalleryPickerController());
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-      appBar: AppBar(
-        backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-        actionsIconTheme:
-            IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
-        iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
-        title: Row(
-          children: [
-            Obx(() {
-              return Text(
-                'Send to ${controller.profile.value.getName()}',
-                style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),
-              );
-            }),
-          ],
+    return Theme(
+      data: Theme.of(context)
+          .copyWith(appBarTheme: AppStyleConfig.galleryPageStyle.appBarTheme),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(getTranslated("sendToUser")
+              .replaceAll("%d", "${controller.userName}")),
         ),
-        centerTitle: true,
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: FutureBuilder(
-                future: null,
-                builder: (context, snapshot) {
-                  return GalleryMediaPicker(
-                    provider: controller.provider,
-                    childAspectRatio: 1,
-                    crossAxisCount: 3,
-                    thumbnailQuality: 200,
-                    thumbnailBoxFix: BoxFit.cover,
-                    singlePick: false,
-                    gridViewBackgroundColor:
-                        MirrorflyUikit.getTheme!.scaffoldColor,
-                    imageBackgroundColor:
-                        MirrorflyUikit.getTheme!.scaffoldColor,
-                    maxPickImages: controller.maxPickImages,
-                    appBarHeight: 60,
-                    selectedBackgroundColor: Colors.black,
-                    selectedCheckColor: MirrorflyUikit.getTheme!.primaryColor,
-                    selectedCheckBackgroundColor: Colors.white,
-                    pathList: (paths) {
-                      debugPrint("file selected");
-                      controller.addFile(paths);
-                    },
-                    appBarColor: MirrorflyUikit.getTheme!.scaffoldColor,
-                    appBarIconColor: MirrorflyUikit.getTheme?.textPrimaryColor,
-                    appBarTextColor: MirrorflyUikit.getTheme!.textPrimaryColor,
-                    albumBackGroundColor:
-                        MirrorflyUikit.getTheme?.scaffoldColor,
-                    albumTextColor: MirrorflyUikit.getTheme!.textPrimaryColor,
-                    appBarLeadingWidget: Align(
-                      alignment: Alignment.bottomRight,
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 15, bottom: 12),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Obx(() {
-                              return Text(
-                                "${controller.pickedFile.length} / ${controller.maxPickImages}",
-                                style: TextStyle(
-                                    color: MirrorflyUikit
-                                        .getTheme?.textPrimaryColor),
-                              );
-                            }),
-                            const SizedBox(
-                              width: 20,
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                List<String> mediaPath = [];
-                                // media.pickedFile.map((p) {
-                                //   setState(() {
-                                //     mediaPath.add(p.path);
-                                //   });
-                                // }).toString();
-                                if (controller.pickedFile.isNotEmpty) {
-                                  // await Share.shareFiles(mediaPath);
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (con) => MediaPreviewView(
-                                                filePath: controller.pickedFile,
-                                                userName: controller
-                                                    .profile.value
-                                                    .getName(),
-                                                profile:
-                                                    controller.profile.value,
-                                                caption: controller
-                                                    .textMessage.value,
-                                                showAdd: false,
-                                                isFromGalleryPicker: true,
-                                              ))).then((value) {
-                                    if (value != null) {
-                                      Navigator.pop(context);
-                                    }
-                                  });
-                                  /*Get.toNamed(Routes.mediaPreview, arguments: {
-                                      "filePath": controller.pickedFile,
-                                      "userName": controller.userName,
-                                      'profile': controller.profile,
-                                      'caption': controller.textMessage
-                                    })?.then((value) {
-                                      value != null ? Get.back() : null;
-
-                                    });*/
-                                } else {
-                                  // Get.back();
-                                  Navigator.pop(context);
-                                }
-                                mediaPath.clear();
-                              },
-                              child: Container(
-                                  height: 30,
-                                  width: 55,
-                                  decoration: BoxDecoration(
-                                    color:
-                                        MirrorflyUikit.getTheme?.primaryColor,
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                        color: MirrorflyUikit
-                                            .getTheme!.primaryColor,
-                                        width: 1.5),
-                                  ),
-                                  child: Center(
-                                      child: Text(
-                                    AppConstants.done,
-                                    style: TextStyle(
-                                        color: MirrorflyUikit
-                                            .getTheme?.colorOnPrimary),
-                                  ))),
-                            )
-                          ],
+        body: Column(
+          children: [
+            Expanded(
+              child: FutureBuilder(
+                  future: null,
+                  builder: (context, snapshot) {
+                    return GalleryMediaPicker(
+                      provider: controller.provider,
+                      childAspectRatio: 1,
+                      crossAxisCount: 3,
+                      thumbnailQuality: 200,
+                      thumbnailBoxFix: BoxFit.cover,
+                      singlePick: false,
+                      gridViewBackgroundColor: Colors.grey,
+                      imageBackgroundColor: Colors.black,
+                      maxPickImages: controller.maxPickImages,
+                      appBarHeight: 60,
+                      selectedBackgroundColor: Colors.black,
+                      selectedCheckColor: Colors.black87,
+                      selectedCheckBackgroundColor: Colors.white10,
+                      pathList: (paths) {
+                        debugPrint("file selected");
+                        controller.addFile(paths);
+                      },
+                      appBarLeadingWidget: Align(
+                        alignment: Alignment.bottomRight,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 15, bottom: 12),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Obx(() {
+                                return Text(
+                                    "${controller.pickedFile.length} / ${controller.maxPickImages}");
+                              }),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              GestureDetector(
+                                onTap: () async {
+                                  // List<String> mediaPath = [];
+                                  // media.pickedFile.map((p) {
+                                  //   setState(() {
+                                  //     mediaPath.add(p.path);
+                                  //   });
+                                  // }).toString();
+                                  if (controller.pickedFile.isNotEmpty) {
+                                    // await Share.shareFiles(mediaPath);
+                                    //
+                                    NavUtils.toNamed(Routes.mediaPreview,
+                                        arguments: {
+                                          "filePath": controller.pickedFile,
+                                          "userName": controller.userName,
+                                          'profile': controller.profile,
+                                          'caption': controller.textMessage,
+                                          'from': 'gallery_pick',
+                                          'userJid': controller.userJid
+                                        })?.then((value) {
+                                      value != null ? NavUtils.back() : null;
+                                    });
+                                  } else {
+                                    NavUtils.back();
+                                  }
+                                  // mediaPath.clear();
+                                },
+                                child: Container(
+                                    height: 30,
+                                    width: 50,
+                                    decoration: AppStyleConfig
+                                        .galleryPageStyle.buttonDecoration,
+                                    child: Center(
+                                        child: Text(getTranslated("done")))),
+                              )
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                }),
-          ),
-        ],
+                    );
+                  }),
+            ),
+          ],
+        ),
       ),
     );
   }

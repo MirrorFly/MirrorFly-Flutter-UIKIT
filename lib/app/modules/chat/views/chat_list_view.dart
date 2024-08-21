@@ -1,23 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:mirrorfly_plugin/logmessage.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/extensions.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/chat/controllers/chat_controller.dart';
-import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit_plugin.dart';
+import '../../../data/utils.dart';
+import '../../../extensions/extensions.dart';
+import '../../../modules/chat/controllers/chat_controller.dart';
+import '../../../stylesheet/stylesheet.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:swipe_to/swipe_to.dart';
 
 import '../../../common/constants.dart';
 import '../../../model/chat_message_model.dart';
-import '../chat_widgets.dart';
+import '../widgets/chat_widgets.dart';
+import '../widgets/message_content.dart';
+import '../widgets/notification_message_view.dart';
+import '../widgets/reply_message_widgets.dart';
+import '../widgets/sender_header.dart';
 
 class ChatListView extends StatefulWidget {
   final ChatController chatController;
   final List<ChatMessageModel> chatList;
+  final SenderChatBubbleStyle senderChatStyle;
+  final ReceiverChatBubbleStyle receiverChatStyle;
+  final NotificationMessageViewStyle notificationMessageViewStyle;
+  final Color chatSelectedColor;
 
   const ChatListView(
-      {super.key, required this.chatController, required this.chatList});
+      {super.key,
+      required this.chatController,
+      required this.chatList,
+      required this.senderChatStyle,
+      required this.receiverChatStyle,
+      required this.chatSelectedColor,
+      required this.notificationMessageViewStyle});
 
   @override
   State<ChatListView> createState() => _ChatListViewState();
@@ -40,29 +54,26 @@ class _ChatListViewState extends State<ChatListView> {
         child: Obx(() {
           return ScrollablePositionedList.separated(
             separatorBuilder: (context, index) {
-              var string =
-                  groupedDateMessage(index, widget.chatList); //Date Labels
+              var string = AppUtils.groupedDateMessage(
+                  index, widget.chatList); //Date Labels
               return string != null
                   ? NotificationMessageView(chatMessage: string)
                   : const Offstage();
             },
             itemScrollController: widget.chatController.newScrollController,
             itemPositionsListener:
-                widget.chatController.newitemPositionsListener,
+                widget.chatController.newItemPositionsListener,
             itemCount: widget.chatList.length,
             shrinkWrap: true,
             reverse: true,
             itemBuilder: (context, pos) {
               final index = pos;
-              LogMessage.d("ScrollablePositionedList",
-                  "build $index ${widget.chatList[index].messageId}");
+              // LogMessage.d("ScrollablePositionedList", "build $index ${widget.chatList[index].messageId}");
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Obx(() {
-                    LogMessage.d(
-                        "ScrollablePositionedList inside AutomaticKeepAlive",
-                        "build $index");
+                    // LogMessage.d("ScrollablePositionedList inside AutomaticKeepAlive", "build $index");
                     return widget.chatController.showLoadingPrevious.value &&
                             index == widget.chatList.length - 1
                         ? const Center(child: CircularProgressIndicator())
@@ -86,15 +97,21 @@ class _ChatListViewState extends State<ChatListView> {
                           animationDuration: const Duration(milliseconds: 300),
                           offsetDx: 0.2,
                           child: GestureDetector(
-                            onLongPress: () {
-                              debugPrint("LongPressed");
-                              FocusManager.instance.primaryFocus?.unfocus();
-                              if (!widget.chatController.isSelected.value) {
-                                widget.chatController.isSelected(true);
-                                widget.chatController
-                                    .addChatSelection(widget.chatList[index]);
-                              }
-                            },
+                            onLongPress: (widget.chatController.arguments
+                                        ?.disableAppBar)
+                                    .checkNull()
+                                ? null
+                                : () {
+                                    debugPrint("LongPressed");
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                    if (!widget
+                                        .chatController.isSelected.value) {
+                                      widget.chatController.isSelected(true);
+                                      widget.chatController.addChatSelection(
+                                          widget.chatList[index]);
+                                    }
+                                  },
                             onTap: () {
                               debugPrint("On Tap");
                               FocusManager.instance.primaryFocus?.unfocus();
@@ -131,13 +148,11 @@ class _ChatListViewState extends State<ChatListView> {
                               widget.chatController.translateMessage(index);
                             },
                             child: Obx(() {
-                              LogMessage.d("Container",
-                                  "build ${widget.chatList[index].messageId}");
+                              // LogMessage.d("Container", "build ${widget.chatList[index].messageId}");
                               return Container(
                                 key: ValueKey(widget.chatList[index].messageId),
                                 color: widget.chatList[index].isSelected.value
-                                    ? MirrorflyUikit.getTheme?.primaryColor
-                                        .withAlpha(60)
+                                    ? widget.chatSelectedColor
                                     : Colors.transparent,
                                 margin: const EdgeInsets.only(
                                     left: 14, right: 14, top: 5, bottom: 10),
@@ -152,9 +167,11 @@ class _ChatListViewState extends State<ChatListView> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Visibility(
-                                        visible: widget.chatController
-                                            .forwardMessageVisibility(
-                                                widget.chatList[index]),
+                                        visible: widget.chatList[index]
+                                                .isMessageSentByMe &&
+                                            widget.chatController
+                                                .forwardMessageVisibility(
+                                                    widget.chatList[index]),
                                         child: IconButton(
                                             onPressed: () {
                                               widget.chatController
@@ -162,11 +179,24 @@ class _ChatListViewState extends State<ChatListView> {
                                                       .chatList[index]
                                                       .messageId);
                                             },
-                                            icon:
-                                                SvgPicture.asset(forwardMedia)),
+                                            icon: SvgPicture.asset(forwardMedia,
+                                                package: package)),
                                       ),
-                                      ChatContainer(
-                                        chatMessage: widget.chatList[index],
+                                      Container(
+                                        constraints: BoxConstraints(
+                                            maxWidth: NavUtils.width * 0.75),
+                                        decoration: widget.chatList[index]
+                                                .isMessageSentByMe
+                                            ? widget.senderChatStyle.decoration
+                                            : widget
+                                                .receiverChatStyle.decoration,
+                                        /*decoration: BoxDecoration(
+                                            borderRadius: const BorderRadius.only(
+                                                topLeft: Radius.circular(10), topRight: Radius.circular(10), bottomLeft: Radius.circular(10)),
+                                            color: (widget.chatList[index].isMessageSentByMe ? chatSentBgColor : Colors.white),
+                                            border: widget.chatList[index].isMessageSentByMe
+                                                ? Border.all(color: chatSentBgColor)
+                                                : Border.all(color: chatBorderColor)),*/
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -175,12 +205,16 @@ class _ChatListViewState extends State<ChatListView> {
                                                 .isGroupProfile
                                                 .checkNull()) ...[
                                               SenderHeader(
-                                                  isGroupProfile: widget
-                                                      .chatController
-                                                      .profile
-                                                      .isGroupProfile,
-                                                  chatList: widget.chatList,
-                                                  index: index),
+                                                isGroupProfile: widget
+                                                    .chatController
+                                                    .profile
+                                                    .isGroupProfile,
+                                                chatList: widget.chatList,
+                                                index: index,
+                                                textStyle: widget
+                                                    .receiverChatStyle
+                                                    .participantNameTextStyle,
+                                              ),
                                             ],
                                             widget.chatList[index]
                                                     .isThisAReplyMessage
@@ -191,37 +225,44 @@ class _ChatListViewState extends State<ChatListView> {
                                                         widget.chatList[index])
                                                     : ReplyMessageHeader(
                                                         chatMessage: widget
-                                                            .chatList[index])
-                                                : const SizedBox.shrink(),
+                                                            .chatList[index],
+                                                        replyHeaderMessageViewStyle: widget
+                                                                .chatList[index]
+                                                                .isMessageSentByMe
+                                                            ? widget
+                                                                .senderChatStyle
+                                                                .replyHeaderMessageViewStyle
+                                                            : widget
+                                                                .receiverChatStyle
+                                                                .replyHeaderMessageViewStyle,
+                                                      )
+                                                : const Offstage(),
                                             MessageContent(
-                                                chatList: widget.chatList,
-                                                index: index,
-                                                onPlayAudio: () {
-                                                  if (widget
-                                                          .chatController
-                                                          .isAudioRecording
-                                                          .value ==
-                                                      Constants
-                                                          .audioRecording) {
-                                                    widget.chatController
-                                                        .stopRecording();
-                                                  }
+                                              chatList: widget.chatList,
+                                              index: index,
+                                              onPlayAudio: () {
+                                                if (widget
+                                                        .chatController
+                                                        .isAudioRecording
+                                                        .value ==
+                                                    Constants.audioRecording) {
                                                   widget.chatController
-                                                      .playAudio(widget
-                                                          .chatList[index]);
-                                                },
-                                                onSeekbarChange:
-                                                    (double value) {
-                                                  widget.chatController
-                                                      .onSeekbarChange(
-                                                          value,
-                                                          widget
-                                                              .chatList[index]);
-                                                },
-                                                isSelected: widget
-                                                    .chatController
-                                                    .isSelected
-                                                    .value)
+                                                      .stopRecording();
+                                                }
+                                                // widget.chatController.playAudio(widget.chatList[index]);
+                                              },
+                                              onSeekbarChange: (double value) {
+                                                // widget.chatController.onSeekbarChange(value, widget.chatList[index]);
+                                              },
+                                              isSelected: widget.chatController
+                                                  .isSelected.value,
+                                              senderChatBubbleStyle:
+                                                  widget.senderChatStyle,
+                                              receiverChatBubbleStyle:
+                                                  widget.receiverChatStyle,
+                                              notificationMessageViewStyle: widget
+                                                  .notificationMessageViewStyle,
+                                            )
                                           ],
                                         ),
                                       ),
@@ -237,8 +278,8 @@ class _ChatListViewState extends State<ChatListView> {
                                                       .chatList[index]
                                                       .messageId);
                                             },
-                                            icon:
-                                                SvgPicture.asset(forwardMedia))
+                                            icon: SvgPicture.asset(forwardMedia,
+                                                package: package))
                                       ],
                                     ],
                                   ),
