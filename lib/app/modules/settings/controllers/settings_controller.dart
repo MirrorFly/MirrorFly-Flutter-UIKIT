@@ -1,80 +1,106 @@
-import 'dart:io';
-
-import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
-import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
-import 'package:mirrorfly_plugin/flychat.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-import 'package:path/path.dart';
+import 'package:mirrorfly_plugin/mirrorfly.dart';
+import '../../../data/utils.dart';
+import '../../../routes/route_settings.dart';
 import 'package:yaml/yaml.dart';
+import '../../../extensions/extensions.dart';
 
+import '../../../common/app_localizations.dart';
 import '../../../common/constants.dart';
-import '../../../data/apputils.dart';
 import '../../../data/session_management.dart';
 
 class SettingsController extends GetxController {
-  PackageInfo? packageInfo;
-
+  // PackageInfo? packageInfo;
+  RxString version = "".obs;
+  RxString releaseDate = "".obs;
   @override
   void onInit() {
     super.onInit();
     getPackageInfo();
+    // getReleaseDate();
   }
 
   getPackageInfo() async {
-    packageInfo.obs.value = await PackageInfo.fromPlatform();
+    // var packageInfo = await PackageInfo.fromPlatform();
+    String yamlContent = await rootBundle.loadString('pubspec.yaml');
+    YamlMap yamlMap = loadYaml(yamlContent);
+    String buildVersion = yamlMap['version'];
+    String buildReleaseDate = yamlMap['build_release_date'];
+    version(buildVersion);
+    releaseDate(buildReleaseDate);
   }
 
-  logout(BuildContext context) {
-    Get.back();
+  logout() {
     if (SessionManagement.getEnablePin()) {
-      // Get.toNamed(Routes.pin)?.then((value){
-      //   if(value!=null && value){
-      //     logoutFromSDK(context);
-      //   }
-      // });
-    } else {
-      logoutFromSDK(context);
-    }
-  }
-
-  logoutFromSDK(BuildContext context) async {
-    if (await AppUtils.isNetConnected()) {
-      if(context.mounted)Helper.progressLoading(context: context);
-      Mirrorfly.logoutOfChatSDK().then((value) {
-        Helper.hideLoading(context: context);
-        if (value) {
-          var token = SessionManagement.getToken().checkNull();
-          SessionManagement.clear().then((value) {
-            SessionManagement.setToken(token);
-            // Get.offAllNamed(Routes.login);
-          });
-        } else {
-          Get.snackbar("Logout", "Logout Failed");
+      NavUtils.toNamed(Routes.pin)?.then((value) {
+        if (value != null && value) {
+          logoutFromSDK();
         }
-      }).catchError((er) {
-        Helper.hideLoading(context: context);
-        SessionManagement.clear().then((value) {
-          // SessionManagement.setToken(token);
-          // Get.offAllNamed(Routes.login);
-        });
       });
     } else {
-      toToast(AppConstants.noInternetConnection);
+      logoutFromSDK();
     }
   }
 
-  getReleaseDate() async {
-    var releaseDate = "Nov";
-    String pathToYaml =
-        join(dirname(Platform.script.toFilePath()), '../pubspec.yaml');
-    File file = File(pathToYaml);
-    file.readAsString().then((String content) {
-      Map yaml = loadYaml(content);
-      debugPrint(yaml['build_release_date']);
-      releaseDate = yaml['build_release_date'];
-    });
-    return releaseDate;
+  logoutFromSDK() async {
+    if (await AppUtils.isNetConnected()) {
+      DialogUtils.progressLoading();
+      Mirrorfly.logoutOfChatSDK(flyCallBack: (response) {
+        DialogUtils.hideLoading();
+        if (response.isSuccess) {
+          // clearAllPreferences();
+        } else {
+          toToast(getTranslated("logoutFailed"));
+          // Get.snackbar("Logout", "Logout Failed");
+        }
+      }) /*.catchError((er) {
+        DialogUtils.hideLoading();
+        SessionManagement.clear().then((value) {
+          // SessionManagement.setToken(token);
+          NavUtils.offAllNamed(Routes.login);
+        });
+      })*/
+          ;
+    } else {
+      toToast(getTranslated("noInternetConnection"));
+    }
   }
+
+  void clearAllPreferences() {
+    var token = SessionManagement.getToken().checkNull();
+    var cameraPermissionAsked =
+        SessionManagement.getBool(Constants.cameraPermissionAsked);
+    var audioRecordPermissionAsked =
+        SessionManagement.getBool(Constants.audioRecordPermissionAsked);
+    var readPhoneStatePermissionAsked =
+        SessionManagement.getBool(Constants.readPhoneStatePermissionAsked);
+    var bluetoothPermissionAsked =
+        SessionManagement.getBool(Constants.bluetoothPermissionAsked);
+    SessionManagement.clear().then((value) {
+      SessionManagement.setToken(token);
+      SessionManagement.setBool(
+          Constants.cameraPermissionAsked, cameraPermissionAsked);
+      SessionManagement.setBool(
+          Constants.audioRecordPermissionAsked, audioRecordPermissionAsked);
+      SessionManagement.setBool(Constants.readPhoneStatePermissionAsked,
+          readPhoneStatePermissionAsked);
+      SessionManagement.setBool(
+          Constants.bluetoothPermissionAsked, bluetoothPermissionAsked);
+      NavUtils.offAllNamed(Routes.login);
+    });
+  }
+
+  // getReleaseDate() async {
+  //   var releaseDate = "";
+  //   String pathToYaml =
+  //       join(dirname(Platform.script.toFilePath()), '../pubspec.yaml');
+  //   File file = File(pathToYaml);
+  //   file.readAsString().then((String content) {
+  //     Map yaml = loadYaml(content);
+  //     debugPrint(yaml['build_release_date']);
+  //     releaseDate = yaml['build_release_date'];
+  //   });
+  //   return releaseDate;
+  // }
 }

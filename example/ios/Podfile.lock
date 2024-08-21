@@ -1,5 +1,5 @@
 PODS:
-  - Alamofire (5.5.0)
+  - Alamofire (5.9.1)
   - audioplayers_darwin (0.0.1):
     - Flutter
   - camera_avfoundation (0.0.1):
@@ -14,35 +14,35 @@ PODS:
     - Flutter
   - device_info_plus (0.0.1):
     - Flutter
-  - DKImagePickerController/Core (4.3.4):
+  - DKImagePickerController/Core (4.3.9):
     - DKImagePickerController/ImageDataManager
     - DKImagePickerController/Resource
-  - DKImagePickerController/ImageDataManager (4.3.4)
-  - DKImagePickerController/PhotoGallery (4.3.4):
+  - DKImagePickerController/ImageDataManager (4.3.9)
+  - DKImagePickerController/PhotoGallery (4.3.9):
     - DKImagePickerController/Core
     - DKPhotoGallery
-  - DKImagePickerController/Resource (4.3.4)
-  - DKPhotoGallery (0.0.17):
-    - DKPhotoGallery/Core (= 0.0.17)
-    - DKPhotoGallery/Model (= 0.0.17)
-    - DKPhotoGallery/Preview (= 0.0.17)
-    - DKPhotoGallery/Resource (= 0.0.17)
+  - DKImagePickerController/Resource (4.3.9)
+  - DKPhotoGallery (0.0.19):
+    - DKPhotoGallery/Core (= 0.0.19)
+    - DKPhotoGallery/Model (= 0.0.19)
+    - DKPhotoGallery/Preview (= 0.0.19)
+    - DKPhotoGallery/Resource (= 0.0.19)
     - SDWebImage
     - SwiftyGif
-  - DKPhotoGallery/Core (0.0.17):
+  - DKPhotoGallery/Core (0.0.19):
     - DKPhotoGallery/Model
     - DKPhotoGallery/Preview
     - SDWebImage
     - SwiftyGif
-  - DKPhotoGallery/Model (0.0.17):
+  - DKPhotoGallery/Model (0.0.19):
     - SDWebImage
     - SwiftyGif
-  - DKPhotoGallery/Preview (0.0.17):
+  - DKPhotoGallery/Preview (0.0.19):
     - DKPhotoGallery/Model
     - DKPhotoGallery/Resource
     - SDWebImage
     - SwiftyGif
-  - DKPhotoGallery/Resource (0.0.17):
+  - DKPhotoGallery/Resource (0.0.19):
     - SDWebImage
     - SwiftyGif
   - emoji_picker_flutter (0.0.1):
@@ -51,35 +51,44 @@ PODS:
     - DKImagePickerController/PhotoGallery
     - Flutter
   - Flutter (1.0.0)
+  - flutter_app_badger (1.3.0):
+    - Flutter
+  - flutter_inappwebview_ios (0.0.1):
+    - Flutter
+    - flutter_inappwebview_ios/Core (= 0.0.1)
+    - OrderedSet (~> 5.0)
+  - flutter_inappwebview_ios/Core (0.0.1):
+    - Flutter
+    - OrderedSet (~> 5.0)
   - flutter_keyboard_visibility (0.0.1):
     - Flutter
-  - flutter_libphonenumber (0.0.1):
+  - flutter_libphonenumber_ios (1.1.4):
     - Flutter
-    - PhoneNumberKit/PhoneNumberKitCore (= 3.3.4)
+    - PhoneNumberKit/PhoneNumberKitCore (= 3.7.9)
   - flutter_local_notifications (0.0.1):
     - Flutter
-  - fluttercontactpicker (4.6.0):
+  - flutter_native_contact_picker (0.0.1):
     - Flutter
   - fluttertoast (0.0.2):
     - Flutter
     - Toast
-  - FMDB (2.7.5):
-    - FMDB/standard (= 2.7.5)
-  - FMDB/standard (2.7.5)
   - geocoding_ios (1.0.5):
     - Flutter
   - geolocator_apple (1.2.0):
     - Flutter
   - google_maps_flutter_ios (0.0.1):
     - Flutter
-    - GoogleMaps (< 8.0)
-  - GoogleMaps (6.2.1):
-    - GoogleMaps/Maps (= 6.2.1)
-  - GoogleMaps/Base (6.2.1)
-  - GoogleMaps/Maps (6.2.1):
+    - GoogleMaps (< 10.0, >= 8.4)
+  - GoogleMaps (8.4.0):
+    - GoogleMaps/Maps (= 8.4.0)
+  - GoogleMaps/Base (8.4.0)
+  - GoogleMaps/Maps (8.4.0):
     - GoogleMaps/Base
-  - GoogleWebRTC (1.1.32000)
+  - GoogleWebRTC (1.1.31999)
+  - IDZSwiftCommonCrypto (0.16.1)
   - image_picker_ios (0.0.1):
+    - Flutter
+  - is_lock_screen (2.0.0):
     - Flutter
   - KissXML (5.3.1):
     - KissXML/All (= 5.3.1)
@@ -91,73 +100,80 @@ PODS:
   - KissXML/Core (5.3.1)
   - libidn (1.35)
   - libPhoneNumber-iOS (0.9.15)
-  - mirrorfly_plugin (0.0.9):
-    - Alamofire
+  - mirrorfly_plugin (1.0.5):
+    - Alamofire (= 5.9.1)
     - Flutter
-    - GoogleWebRTC
-    - libPhoneNumber-iOS
-    - MirrorFlySDK (= 5.9.9)
-    - RealmSwift (= 10.20.1)
-    - Socket.IO-Client-Swift (= 15.2.0)
-    - SocketRocket
-    - XMPPFramework/Swift
-  - mirrorfly_uikit_plugin (0.0.1):
-    - Flutter
-    - Socket.IO-Client-Swift (= 15.2.0)
-  - MirrorFlySDK (5.9.9):
-    - Alamofire (= 5.5.0)
-    - CocoaLumberjack (= 3.6.2)
-    - GoogleWebRTC
+    - GoogleWebRTC (= 1.1.31999)
+    - IDZSwiftCommonCrypto (~> 0.16.1)
     - libPhoneNumber-iOS (= 0.9.15)
-    - RealmSwift (= 10.20.1)
-    - Socket.IO-Client-Swift (= 15.2.0)
+    - MirrorFlySDK (= 5.17.5)
+    - RealmSwift (~> 10.49.2)
+    - SDWebImage
+    - Socket.IO-Client-Swift (= 16.0.1)
+    - SocketRocket
+    - Starscream (= 4.0.4)
+    - XMPPFramework/Swift
+  - mirrorfly_uikit_plugin (0.0.12):
+    - Flutter
+  - MirrorFlySDK (5.17.5):
+    - Alamofire (= 5.9.1)
+    - CocoaLumberjack (= 3.6.2)
+    - GoogleWebRTC (= 1.1.31999)
+    - IDZSwiftCommonCrypto (~> 0.16)
+    - libPhoneNumber-iOS (= 0.9.15)
+    - RealmSwift (~> 10.49.2)
+    - Socket.IO-Client-Swift (= 16.0.1)
     - SocketRocket (= 0.6.0)
+    - Starscream (= 4.0.4)
     - XMPPFramework/Swift (= 4.0.0)
   - MTBBarcodeScanner (5.0.11)
   - open_file_plus (1.0.0):
     - Flutter
+  - OrderedSet (5.0.0)
   - package_info_plus (0.4.5):
     - Flutter
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - permission_handler_apple (9.0.4):
+  - permission_handler_apple (9.3.0):
     - Flutter
-  - PhoneNumberKit/PhoneNumberKitCore (3.3.4)
+  - PhoneNumberKit/PhoneNumberKitCore (3.7.9)
   - photo_manager (2.0.0):
     - Flutter
     - FlutterMacOS
   - qr_code_scanner (0.2.0):
     - Flutter
     - MTBBarcodeScanner
-  - Realm (10.20.1):
-    - Realm/Headers (= 10.20.1)
-  - Realm/Headers (10.20.1)
-  - RealmSwift (10.20.1):
-    - Realm (= 10.20.1)
-  - record (0.0.1):
+  - Realm (10.49.3):
+    - Realm/Headers (= 10.49.3)
+  - Realm/Headers (10.49.3)
+  - RealmSwift (10.49.3):
+    - Realm (= 10.49.3)
+  - record_darwin (1.0.0):
     - Flutter
-  - SDWebImage (5.16.0):
-    - SDWebImage/Core (= 5.16.0)
-  - SDWebImage/Core (5.16.0)
+    - FlutterMacOS
+  - SDWebImage (5.19.4):
+    - SDWebImage/Core (= 5.19.4)
+  - SDWebImage/Core (5.19.4)
   - share_plus (0.0.1):
     - Flutter
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - Socket.IO-Client-Swift (15.2.0):
-    - Starscream (~> 3.1)
+  - Socket.IO-Client-Swift (16.0.1):
+    - Starscream (~> 4.0)
   - SocketRocket (0.6.0)
   - sqflite (0.0.3):
     - Flutter
-    - FMDB (>= 2.7.5)
-  - Starscream (3.1.1)
-  - SwiftyGif (5.4.4)
-  - Toast (4.0.0)
+    - FlutterMacOS
+  - Starscream (4.0.4)
+  - SwiftyGif (5.4.5)
+  - Toast (4.1.1)
   - url_launcher_ios (0.0.1):
     - Flutter
   - video_player_avfoundation (0.0.1):
     - Flutter
+    - FlutterMacOS
   - XMPPFramework/default (4.0.0):
     - CocoaAsyncSocket (~> 7.6)
     - CocoaLumberjack
@@ -175,15 +191,18 @@ DEPENDENCIES:
   - emoji_picker_flutter (from `.symlinks/plugins/emoji_picker_flutter/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - Flutter (from `Flutter`)
+  - flutter_app_badger (from `.symlinks/plugins/flutter_app_badger/ios`)
+  - flutter_inappwebview_ios (from `.symlinks/plugins/flutter_inappwebview_ios/ios`)
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
-  - flutter_libphonenumber (from `.symlinks/plugins/flutter_libphonenumber/ios`)
+  - flutter_libphonenumber_ios (from `.symlinks/plugins/flutter_libphonenumber_ios/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
-  - fluttercontactpicker (from `.symlinks/plugins/fluttercontactpicker/ios`)
+  - flutter_native_contact_picker (from `.symlinks/plugins/flutter_native_contact_picker/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - geocoding_ios (from `.symlinks/plugins/geocoding_ios/ios`)
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
   - google_maps_flutter_ios (from `.symlinks/plugins/google_maps_flutter_ios/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
+  - is_lock_screen (from `.symlinks/plugins/is_lock_screen/ios`)
   - mirrorfly_plugin (from `.symlinks/plugins/mirrorfly_plugin/ios`)
   - mirrorfly_uikit_plugin (from `.symlinks/plugins/mirrorfly_uikit_plugin/ios`)
   - open_file_plus (from `.symlinks/plugins/open_file_plus/ios`)
@@ -192,12 +211,12 @@ DEPENDENCIES:
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - photo_manager (from `.symlinks/plugins/photo_manager/ios`)
   - qr_code_scanner (from `.symlinks/plugins/qr_code_scanner/ios`)
-  - record (from `.symlinks/plugins/record/ios`)
+  - record_darwin (from `.symlinks/plugins/record_darwin/ios`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
-  - sqflite (from `.symlinks/plugins/sqflite/ios`)
+  - sqflite (from `.symlinks/plugins/sqflite/darwin`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
-  - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/ios`)
+  - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/darwin`)
 
 SPEC REPOS:
   trunk:
@@ -206,14 +225,15 @@ SPEC REPOS:
     - CocoaLumberjack
     - DKImagePickerController
     - DKPhotoGallery
-    - FMDB
     - GoogleMaps
     - GoogleWebRTC
+    - IDZSwiftCommonCrypto
     - KissXML
     - libidn
     - libPhoneNumber-iOS
     - MirrorFlySDK
     - MTBBarcodeScanner
+    - OrderedSet
     - PhoneNumberKit
     - Realm
     - RealmSwift
@@ -240,14 +260,18 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/file_picker/ios"
   Flutter:
     :path: Flutter
+  flutter_app_badger:
+    :path: ".symlinks/plugins/flutter_app_badger/ios"
+  flutter_inappwebview_ios:
+    :path: ".symlinks/plugins/flutter_inappwebview_ios/ios"
   flutter_keyboard_visibility:
     :path: ".symlinks/plugins/flutter_keyboard_visibility/ios"
-  flutter_libphonenumber:
-    :path: ".symlinks/plugins/flutter_libphonenumber/ios"
+  flutter_libphonenumber_ios:
+    :path: ".symlinks/plugins/flutter_libphonenumber_ios/ios"
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
-  fluttercontactpicker:
-    :path: ".symlinks/plugins/fluttercontactpicker/ios"
+  flutter_native_contact_picker:
+    :path: ".symlinks/plugins/flutter_native_contact_picker/ios"
   fluttertoast:
     :path: ".symlinks/plugins/fluttertoast/ios"
   geocoding_ios:
@@ -258,6 +282,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/google_maps_flutter_ios/ios"
   image_picker_ios:
     :path: ".symlinks/plugins/image_picker_ios/ios"
+  is_lock_screen:
+    :path: ".symlinks/plugins/is_lock_screen/ios"
   mirrorfly_plugin:
     :path: ".symlinks/plugins/mirrorfly_plugin/ios"
   mirrorfly_uikit_plugin:
@@ -274,74 +300,78 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/photo_manager/ios"
   qr_code_scanner:
     :path: ".symlinks/plugins/qr_code_scanner/ios"
-  record:
-    :path: ".symlinks/plugins/record/ios"
+  record_darwin:
+    :path: ".symlinks/plugins/record_darwin/ios"
   share_plus:
     :path: ".symlinks/plugins/share_plus/ios"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   sqflite:
-    :path: ".symlinks/plugins/sqflite/ios"
+    :path: ".symlinks/plugins/sqflite/darwin"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
   video_player_avfoundation:
-    :path: ".symlinks/plugins/video_player_avfoundation/ios"
+    :path: ".symlinks/plugins/video_player_avfoundation/darwin"
 
 SPEC CHECKSUMS:
-  Alamofire: 1c4fb5369c3fe93d2857c780d8bbe09f06f97e7c
+  Alamofire: f36a35757af4587d8e4f4bfa223ad10be2422b8c
   audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40
-  camera_avfoundation: 3125e8cd1a4387f6f31c6c63abb8a55892a9eeeb
+  camera_avfoundation: dd002b0330f4981e1bbcb46ae9b62829237459a4
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   CocoaLumberjack: bd155f2dd06c0e0b03f876f7a3ee55693122ec94
   contacts_service: 849e1f84281804c8bfbec1b4c3eedcb23c5d3eca
-  device_info_plus: e5c5da33f982a436e103237c0c85f9031142abed
-  DKImagePickerController: b512c28220a2b8ac7419f21c491fc8534b7601ac
-  DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
-  emoji_picker_flutter: df19dac03a2b39ac667dc8d1da939ef3a9e21347
-  file_picker: ce3938a0df3cc1ef404671531facef740d03f920
-  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  device_info_plus: 97af1d7e84681a90d0693e63169a5d50e0839a0d
+  DKImagePickerController: 946cec48c7873164274ecc4624d19e3da4c1ef3c
+  DKPhotoGallery: b3834fecb755ee09a593d7c9e389d8b5d6deed60
+  emoji_picker_flutter: fe2e6151c5b548e975d546e6eeb567daf0962a58
+  file_picker: 09aa5ec1ab24135ccd7a1621c46c84134bfd6655
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  flutter_app_badger: b87fc231847b03b92ce1412aa351842e7e97932f
+  flutter_inappwebview_ios: 97215cf7d4677db55df76782dbd2930c5e1c1ea0
   flutter_keyboard_visibility: 0339d06371254c3eb25eeb90ba8d17dca8f9c069
-  flutter_libphonenumber: 8e7a8f974fda0f5915cf0af846879adf90b08f51
-  flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
-  fluttercontactpicker: d582836dea6b5d489f3d259f35d7817ae82ee5e6
-  fluttertoast: fafc4fa4d01a6a9e4f772ecd190ffa525e9e2d9c
-  FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
-  geocoding_ios: a389ea40f6f548de6e63006a2e31bf66ff80769a
-  geolocator_apple: cc556e6844d508c95df1e87e3ea6fa4e58c50401
-  google_maps_flutter_ios: abdac20d6ce8931f6ebc5f46616df241bfaa2cfd
-  GoogleMaps: 20d7b12be49a14287f797e88e0e31bc4156aaeb4
-  GoogleWebRTC: 4d261187b30512efdb711d21fa961a6adf138717
-  image_picker_ios: 4a8aadfbb6dc30ad5141a2ce3832af9214a705b5
+  flutter_libphonenumber_ios: eb22e6f6e97c9604805f00bff961ca397071dfdc
+  flutter_local_notifications: 4cde75091f6327eb8517fa068a0a5950212d2086
+  flutter_native_contact_picker: bd430ba0fbf82768bb50c2c52a69a65759a8f907
+  fluttertoast: e9a18c7be5413da53898f660530c56f35edfba9c
+  geocoding_ios: d7460f56e80e118d57678efe5c2cdc888739ff18
+  geolocator_apple: 6cbaf322953988e009e5ecb481f07efece75c450
+  google_maps_flutter_ios: 5bc2be60ad012e79b182ce0fb0ef5030a50fb03e
+  GoogleMaps: 8939898920281c649150e0af74aa291c60f2e77d
+  GoogleWebRTC: b39a78c4f5cc6b0323415b9233db03a2faa7b0f0
+  IDZSwiftCommonCrypto: aefd3487b88dc3d7a1de2553188c720ac3194940
+  image_picker_ios: c560581cceedb403a6ff17f2f816d7fea1421fc1
+  is_lock_screen: 8ae6397a49b2fde58fd80a6ed30fbaf2be9418d6
   KissXML: 5c8e0f2e8b9f071d3e1ae123dec3eb5da615c10c
   libidn: e4576a956b797c584c77aaedfc6e3dd639b61bdc
   libPhoneNumber-iOS: 0a32a9525cf8744fe02c5206eb30d571e38f7d75
-  mirrorfly_plugin: eef5e5c31c45a3f32d333cd8cac31269bfbebfcb
-  mirrorfly_uikit_plugin: b56ba3185f23d055735c80598b7f4bd604a541a4
-  MirrorFlySDK: 9f333f0021db878b22edfd5deadafa230d2ce39d
+  mirrorfly_plugin: d3590d222e47c3af5c9ad47cb65df80a2701aedc
+  mirrorfly_uikit_plugin: cdf631f36257893ede43c0e2d0b0a1f01eda4e82
+  MirrorFlySDK: 0e6f565152aa381c2319540be9090a9b68dfbfd6
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   open_file_plus: 05737718530c14cf02868e3b7754d7fe4df76d8b
-  package_info_plus: fd030dabf36271f146f1f3beacd48f564b0f17f7
-  path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
-  permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
-  PhoneNumberKit: 441e8b26ec88d598e3591de9061eff18f5dd12e8
-  photo_manager: 4f6810b7dfc4feb03b461ac1a70dacf91fba7604
+  OrderedSet: aaeb196f7fef5a9edf55d89760da9176ad40b93c
+  package_info_plus: 58f0028419748fad15bf008b270aaa8e54380b1c
+  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
+  permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
+  PhoneNumberKit: 9c8d546d65c3784721d575a29e712ae8b992fe79
+  photo_manager: ff695c7a1dd5bc379974953a2b5c0a293f7c4c8a
   qr_code_scanner: bb67d64904c3b9658ada8c402e8b4d406d5d796e
-  Realm: fac5ecd031fcb81171627b74944c885662d4b266
-  RealmSwift: 9b02d25acb46a14756bde9893abb99e2e3675923
-  record: 7ee2393532f8553bbb09fa19e95478323b7c0a99
-  SDWebImage: 2aea163b50bfcb569a2726b6a754c54a4506fcf6
-  share_plus: 599aa54e4ea31d4b4c0e9c911bcc26c55e791028
-  shared_preferences_foundation: e2dae3258e06f44cc55f49d42024fd8dd03c590c
-  Socket.IO-Client-Swift: 1e3e3a1f09f3312a167f0d781eb2f383d477357c
+  Realm: d7cfad3146a7cb9caa00799a216ff0d80c33f36f
+  RealmSwift: 06fb2d9cf029b837fe76136446199906b096470a
+  record_darwin: df0a677188e5fed18472550298e675f19ddaffbe
+  SDWebImage: 066c47b573f408f18caa467d71deace7c0f8280d
+  share_plus: 8875f4f2500512ea181eef553c3e27dba5135aad
+  shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
+  Socket.IO-Client-Swift: c116d6dc9fd6be9c259bacfe143f8725bce7d79e
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
-  sqflite: 31f7eba61e3074736dff8807a9b41581e4f7f15a
-  Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
-  SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
-  Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
-  url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
-  video_player_avfoundation: 81e49bb3d9fb63dccf9fa0f6d877dc3ddbeac126
+  sqflite: 673a0e54cc04b7d6dba8d24fb8095b31c3a99eec
+  Starscream: 5178aed56b316f13fa3bc55694e583d35dd414d9
+  SwiftyGif: 706c60cf65fa2bc5ee0313beece843c8eb8194d4
+  Toast: 1f5ea13423a1e6674c4abdac5be53587ae481c4e
+  url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
+  video_player_avfoundation: 7c6c11d8470e1675df7397027218274b6d2360b3
   XMPPFramework: 5d31ff9f73dce031b24bc49bcf88093627a3a86e
 
-PODFILE CHECKSUM: 47b2c902d1acf30f02eba82fb56fa7ad9f41b5bd
+PODFILE CHECKSUM: 68a3dd6fcb7eb48bbf115ccf64ae76b317885ce9
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.15.2

@@ -1,50 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/widgets.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/profile/controllers/status_controller.dart';
+import '../../../common/app_localizations.dart';
+import '../../../common/widgets.dart';
+import '../../../modules/profile/controllers/status_controller.dart';
 
-import '../../../../mirrorfly_uikit_plugin.dart';
 import '../../../common/constants.dart';
+import '../../../extensions/extensions.dart';
 
-class AddStatusView extends StatefulWidget {
-  const AddStatusView({Key? key, required this.status,this.enableAppBar=true}) : super(key: key);
-  final bool enableAppBar;
-  final String status;
-  @override
-  State<AddStatusView> createState() => _AddStatusViewState();
-}
-
-class _AddStatusViewState extends State<AddStatusView> {
-  // var controller = Get.find(StatusListController());
-  final StatusListController controller = Get.find();
+class AddStatusView extends NavView<StatusListController> {
+  const AddStatusView({Key? key}) : super(key: key);
 
   @override
-  void initState() {
-    super.initState();
-    controller.selectedStatus.value = widget.status;
-  }
+  StatusListController createController({String? tag}) =>
+      StatusListController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: MirrorflyUikit.getTheme?.scaffoldColor,
-      appBar: widget.enableAppBar ? AppBar(
+      appBar: AppBar(
         automaticallyImplyLeading: true,
-        title: Text(AppConstants.addNewStatus, style: TextStyle(color: MirrorflyUikit.getTheme?.colorOnAppbar),),
-        iconTheme: IconThemeData(color: MirrorflyUikit.getTheme?.colorOnAppbar),
-        backgroundColor: MirrorflyUikit.getTheme?.appBarColor,
-      ) : null,
-      body: WillPopScope(
-        onWillPop: () {
+        title: Text(getTranslated("addNewStatus")),
+      ),
+      body: PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) {
+          if (didPop) {
+            return;
+          }
           if (controller.showEmoji.value) {
             controller.showEmoji(false);
           } else {
-            // Get.back();
-            Navigator.pop(context);
+            controller.onBackPressed();
           }
-          return Future.value(false);
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,9 +46,8 @@ class _AddStatusViewState extends State<AddStatusView> {
                   children: [
                     Expanded(
                       child: TextField(
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 20,
-                            color: MirrorflyUikit.getTheme?.textPrimaryColor,
                             fontWeight: FontWeight.normal,
                             overflow: TextOverflow.visible),
                         onChanged: (_) => controller.onChanged(),
@@ -68,11 +55,9 @@ class _AddStatusViewState extends State<AddStatusView> {
                         focusNode: controller.focusNode,
                         maxLength: 139,
                         maxLines: 1,
-                        cursorColor: MirrorflyUikit.getTheme?.primaryColor,
-                        keyboardAppearance: MirrorflyUikit.theme == "dark" ? Brightness.dark : Brightness.light,
                         controller: controller.addStatusController,
                         decoration: const InputDecoration(
-                            border: InputBorder.none, counterText: Constants.emptyString),
+                            border: InputBorder.none, counterText: ""),
                         onTap: () {
                           if (controller.showEmoji.value) {
                             controller.showEmoji(false);
@@ -85,14 +70,11 @@ class _AddStatusViewState extends State<AddStatusView> {
                         padding: const EdgeInsets.all(4.0),
                         child: Center(
                           child: Obx(
-                                () =>
-                                Text(
-                                  controller.count.toString(),
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: MirrorflyUikit.getTheme?.textSecondaryColor,
-                                      fontWeight: FontWeight.normal),
-                                ),
+                            () => Text(
+                              controller.count.toString(),
+                              style: const TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.normal),
+                            ),
                           ),
                         )),
                     Obx(() {
@@ -106,12 +88,17 @@ class _AddStatusViewState extends State<AddStatusView> {
                             if (!controller.showEmoji.value) {
                               controller.focusNode.unfocus();
                             }
-                            Future.delayed(
-                                const Duration(milliseconds: 500), () {
+                            Future.delayed(const Duration(milliseconds: 500),
+                                () {
                               controller.showEmoji(!controller.showEmoji.value);
                             });
                           },
-                          icon: controller.showEmoji.value ? Icon(Icons.keyboard, color: MirrorflyUikit.getTheme?.textSecondaryColor, ) : SvgPicture.asset(smileIcon,package: package, colorFilter : ColorFilter.mode(MirrorflyUikit.getTheme!.textSecondaryColor, BlendMode.srcIn),));
+                          icon: controller.showEmoji.value
+                              ? const Icon(
+                                  Icons.keyboard,
+                                  color: iconColor,
+                                )
+                              : SvgPicture.asset(smileIcon));
                     })
                   ],
                 ),
@@ -120,30 +107,35 @@ class _AddStatusViewState extends State<AddStatusView> {
             Row(children: [
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () =>  Navigator.pop(context),
+                  onPressed: () => controller.onBackPressed(),
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: MirrorflyUikit.getTheme?.secondaryColor,
+                      backgroundColor: WidgetStateColor.resolveWith(
+                          (states) => Colors.white),
                       shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.zero)),
                   child: Text(
-                    AppConstants.cancel.toUpperCase(),
-                    style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor, fontSize: 16.0),
+                    getTranslated("cancel").toUpperCase(),
+                    style: const TextStyle(color: Colors.black, fontSize: 16.0),
                   ),
                 ),
               ),
-              const AppDivider(),
+              const Divider(
+                color: Colors.grey,
+                thickness: 0.2,
+              ),
               Expanded(
                 child: ElevatedButton(
                   onPressed: () {
-                    controller.validateAndFinish(context);
+                    controller.validateAndFinish();
                   },
                   style: ElevatedButton.styleFrom(
-                      backgroundColor:  MirrorflyUikit.getTheme?.secondaryColor,
+                      backgroundColor: WidgetStateColor.resolveWith(
+                          (states) => Colors.white),
                       shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.zero)),
                   child: Text(
-                    AppConstants.ok.toUpperCase(),
-                    style: TextStyle(color:  MirrorflyUikit.getTheme?.textPrimaryColor, fontSize: 16.0),
+                    getTranslated("ok").toUpperCase(),
+                    style: const TextStyle(color: Colors.black, fontSize: 16.0),
                   ),
                 ),
               ),
@@ -159,9 +151,10 @@ class _AddStatusViewState extends State<AddStatusView> {
     return Obx(() {
       if (controller.showEmoji.value) {
         return EmojiLayout(
-            textController: controller.addStatusController,
-            onBackspacePressed: () => controller.onChanged(),
-            onEmojiSelected: (cat, emoji) => controller.onChanged());
+            textController:
+                TextEditingController(), //controller.addStatusController,
+            onBackspacePressed: () => controller.onEmojiBackPressed(),
+            onEmojiSelected: (cat, emoji) => controller.onEmojiSelected(emoji));
       } else {
         return const SizedBox.shrink();
       }

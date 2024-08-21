@@ -1,618 +1,39 @@
+import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
-import 'package:mirrorfly_plugin/flychat.dart';
-import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/image_view/views/image_view_view.dart';
-import 'package:open_file_plus/open_file_plus.dart';
+import '../common/constants.dart';
+import '../data/permissions.dart';
+import '../data/session_management.dart';
+import '../extensions/extensions.dart';
+import 'package:mirrorfly_plugin/mirrorflychat.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../mirrorfly_uikit_plugin.dart';
+import '../app_style_config.dart';
+import '../common/app_localizations.dart';
 import '../common/widgets.dart';
 import '../model/chat_message_model.dart';
-import '../model/group_members_model.dart';
-import '../model/message_delivered_model.dart';
-import '../model/profile_model.dart';
-import '../model/recent_chat.dart';
-import '../model/user_list_model.dart';
-import 'apputils.dart';
+import '../routes/route_settings.dart';
+import 'utils.dart';
 
-class Helper {
-  static void showLoading(
-      {String? message,
-      bool dismiss = false,
-      required BuildContext buildContext}) {
-    showDialog(
-      barrierDismissible: false,
-      context: buildContext,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: MirrorflyUikit.theme == "dark" ? darkPopupColor : Colors.white,
-          child: WillPopScope(
-            onWillPop: () async {
-              return Future.value(dismiss);
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
-                  const SizedBox(width: 16),
-                  Text(message ?? 'Loading...', style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor),),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  static void progressLoading({bool dismiss = false, required BuildContext context}) {
-    showDialog(
-
-        barrierDismissible: dismiss,
-        barrierColor: Colors.transparent, context: context, builder: (BuildContext context) { return AlertDialog(
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      content: WillPopScope(
-        onWillPop: () async => Future.value(dismiss),
-        child: SizedBox(
-          width: 60,
-          height: 60,
-          child: Center(
-            child: CircularProgressIndicator(color: MirrorflyUikit.getTheme?.primaryColor,),
-          ),
-        ),
-      ),
-    ); });
-  }
-
-  static void showAlert(
-      {String? title,
-      required String message,
-      List<Widget>? actions,
-      Widget? content,
-      required BuildContext context}) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: MirrorflyUikit.theme == "dark" ? darkPopupColor : Colors.white,
-          title: title != null
-              ? Text(
-                  title,
-                  style: TextStyle(fontSize: 17, color: MirrorflyUikit.getTheme?.textPrimaryColor),
-                )
-              : const SizedBox.shrink(),
-          contentPadding: title != null
-              ? const EdgeInsets.only(top: 15, right: 25, left: 25, bottom: 0)
-              : const EdgeInsets.only(top: 0, right: 25, left: 25, bottom: 5),
-          content: content ??
-              Text(
-                message,
-                style: TextStyle(
-                    color: MirrorflyUikit.getTheme?.textSecondaryColor, fontWeight: FontWeight.normal),
-              ),
-          contentTextStyle: TextStyle(
-              color: MirrorflyUikit.getTheme?.textSecondaryColor, fontWeight: FontWeight.w500),
-          actions: actions,
-        );
-      },
-    );
-  }
-
-  static void showVerticalButtonAlert(BuildContext context, List<Widget> actions) {
-    showDialog(
-      context: context, builder: (BuildContext context) {
-      return Dialog(
-        backgroundColor: MirrorflyUikit.theme == "dark" ? darkPopupColor : Colors.white,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: actions,
-        ),
-      );
-    },
-    );
-  }
-
-  static void showButtonAlert(
-      {List<Widget>? actions, required BuildContext context}) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          actions: actions,
-        );
-      },
-    );
-  }
-
-//hide loading
-  static void hideLoading({required BuildContext context}) {
-    // if (Get.isDialogOpen!) {
-    //   Get.back(
-    //     canPop: true,
-    //   );
-    // }
-    Navigator.pop(context);
-  }
-
-  static String formatBytes(int bytes, int decimals) {
-    if (bytes <= 0) return "0 B";
-    const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
-    var i = (log(bytes) / log(1024)).floor();
-    return '${(bytes / pow(1024, i)).toStringAsFixed(decimals)} ${suffixes[i]}';
-  }
-
-  static String durationToString(Duration duration) {
-    debugPrint("duration conversion $duration");
-    /*final mm = (duration.inMinutes % 60).toString().padLeft(2, '0');
-    final ss = (duration.inSeconds % 60).toString().padLeft(2, '0');
-    return '$mm:$ss';*/
-    //return (duration.inSeconds % 60).toString().padLeft(2, '0');
-    /*return (duration.inMilliseconds /60)
-        .toStringAsFixed(2)
-        .replaceFirst('.', ':')
-        .padLeft(5, '0');*/
-    var seconds =
-        ((duration.inSeconds % 60)).toStringAsFixed(0).padLeft(2, '0');
-    // debugPrint("return ")
-    return '${(duration.inMinutes).toStringAsFixed(0).padLeft(2, '0')}:$seconds';
-  }
-
-  static String getMapImageUri(double latitude, double longitude) {
-    var key = MirrorflyUikit.instance.googleMapKey;//Constants.googleMapKey;
-    return ("https://maps.googleapis.com/maps/api/staticmap?center=$latitude,$longitude&zoom=13&size=300x200&markers=color:red|$latitude,$longitude&key=$key");
-  }
-
-  static int getColourCode(String name) {
-    if (name == Constants.you) return 0Xff000000;
-    var colorsArray = AppConstants.defaultColorList;
-    var hashcode = name.hashCode;
-    var rand = hashcode % colorsArray.length;
-    return colorsArray[(rand).abs()];
-  }
-
-  static Widget forMessageTypeIcon(String? messageType,
-      [bool isAudioRecorded = false]) {
-    mirrorFlyLog("iconfor", messageType.toString());
-    switch (messageType?.toUpperCase()) {
-      case Constants.mImage:
-        return SvgPicture.asset(
-          mImageIcon,
-          package: package,
-          fit: BoxFit.contain,
-          colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
-        );
-      case Constants.mAudio:
-        return SvgPicture.asset(
-          isAudioRecorded ? mAudioRecordIcon : mAudioIcon,
-          package: package,
-          fit: BoxFit.contain,
-          colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
-        );
-      case Constants.mVideo:
-        return SvgPicture.asset(
-          mVideoIcon,
-          package: package,
-          fit: BoxFit.contain,
-          colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
-        );
-      case Constants.mDocument:
-        return SvgPicture.asset(
-          mDocumentIcon,
-          package: package,
-          fit: BoxFit.contain,
-          colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
-        );
-      case Constants.mFile:
-        return SvgPicture.asset(
-          mDocumentIcon,
-          package: package,
-          fit: BoxFit.contain,
-          colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
-        );
-      case Constants.mContact:
-        return SvgPicture.asset(
-          mContactIcon,
-          package: package,
-          fit: BoxFit.contain,
-          colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
-        );
-      case Constants.mLocation:
-        return SvgPicture.asset(
-          mLocationIcon,
-          fit: BoxFit.contain,
-          colorFilter: const ColorFilter.mode(playIconColor, BlendMode.srcIn),
-        );
-      default:
-        return const SizedBox.shrink();
-    }
-  }
-
-  static String forMessageTypeString(String? messageType) {
-    switch (messageType?.toUpperCase()) {
-      case Constants.mImage:
-        return "Image";
-      case Constants.mAudio:
-        return "Audio";
-      case Constants.mVideo:
-        return "Video";
-      case Constants.mDocument:
-        return "Document";
-      case Constants.mFile:
-        return "Document";
-      case Constants.mContact:
-        return "Contact";
-      case Constants.mLocation:
-        return "Location";
-      default:
-        return "";
-    }
-  }
-
-  static String capitalize(String str) {
-    return "${str[0].toUpperCase()}${str.substring(1).toLowerCase()}";
-  }
-}
-
-bool checkFileUploadSize(String path, String mediaType) {
-  var file = File(path);
-  int sizeInBytes = file.lengthSync();
-  debugPrint("file size --> $sizeInBytes");
-  double sizeInMb = sizeInBytes / (1024 * 1024);
-  debugPrint("sizeInBytes $sizeInMb");
-
-  // debugPrint(getFileSizeText(sizeInBytes.toString()));
-
-  if (mediaType == Constants.mImage && sizeInMb <= Constants.maxImageFileSize) {
-    return true;
-  } else if (mediaType == Constants.mAudio && sizeInMb <= Constants.maxAudioFileSize) {
-    return true;
-  } else if (mediaType == Constants.mVideo && sizeInMb <= Constants.maxVideoFileSize) {
-    return true;
-  } else if (mediaType == Constants.mDocument && sizeInMb <= Constants.maxDocFileSize) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-String getFileSizeText(String fileSizeInBytes) {
-  var fileSizeBuilder = "";
-  var fileSize = int.parse(fileSizeInBytes);
-  if (fileSize > 1073741824) {
-    fileSizeBuilder =
-        (getRoundedFileSize(fileSize / 1073741824)).toString() + (" ") + ("GB");
-  } else if (fileSize > 1048576) {
-    fileSizeBuilder =
-        (getRoundedFileSize(fileSize / 1048576)).toString() + (" ") + ("MB");
-  } else if (fileSize > 1024) {
-    fileSizeBuilder =
-        (getRoundedFileSize(fileSize / 1024)).toString() + (" ") + ("KB");
-  } else {
-    fileSizeBuilder = (fileSizeInBytes).toString() + (" ") + ("bytes");
-  }
-  return fileSizeBuilder.toString();
-}
-
-double getRoundedFileSize(double unscaledValue) {
-  //return BigDecimal.valueOf(unscaledValue).setScale(2, RoundingMode.HALF_UP).toDouble()
-  return unscaledValue.roundToDouble();
-}
-
-extension FileFormatter on num {
-  String readableFileSize({bool base1024 = true}) {
-    final base = base1024 ? 1024 : 1000;
-    if (this <= 0) return "0";
-    final units = ["bytes", "KB", "MB", "GB", "TB"];
-    int digitGroups = (log(this) / log(base)).round();
-    return "${NumberFormat("#,##0.#").format(this / pow(base, digitGroups))} ${units[digitGroups]}";
-  }
-}
-
-String getDateFromTimestamp(int convertedTime, String format) {
-  var calendar = DateTime.fromMicrosecondsSinceEpoch(convertedTime);
-  return DateFormat(format).format(calendar);
-}
-
-extension StringParsing on String? {
-  //check null
-  String checkNull() {
-    return this ?? "";
-  }
-
-  bool toBool(){
-    return this != null ? this!.toLowerCase() == "true" : false;
-  }
-
-  int checkIndexes(String searchedKey) {
-    var i = -1;
-    if (i == -1 || i < searchedKey.length) {
-      while (this!.contains(searchedKey, i + 1)) {
-        i = this!.indexOf(searchedKey, i + 1);
-
-        if (i == 0 ||
-            (i > 0 &&
-                (RegExp("[^A-Za-z0-9 ]").hasMatch(this!.split("")[i]) ||
-                    this!.split("")[i] == " "))) {
-          return i;
-        }
-        i++;
-      }
-    }
-    return -1;
-  }
-
-  bool startsWithTextInWords(String text) {
-    return !this!.toLowerCase().contains(text.toLowerCase())
-        ? false
-        : this!.toLowerCase().startsWith(text.toLowerCase());
-    //checkIndexes(text)>-1;
-    /*return when {
-      this.indexOf(text, ignoreCase = true) <= -1 -> false
-      else -> return this.checkIndexes(text) > -1
-    }*/
-  }
-}
-
-extension BooleanParsing on bool? {
-  //check null
-  bool checkNull() {
-    return this ?? false;
-  }
-}
-
-extension MemberParsing on Member {
-  bool isDeletedContact() {
-    return contactType == "deleted_contact";
-  }
-
-  Future<String> getUsername() async {
-    var value = await Mirrorfly.getProfileDetails(jid.checkNull());
-    var str = await compute(profiledata, value.toString());
-    // var str = Profile.fromJson(json.decode(value.toString()));
-    return getName(str); //str.name.checkNull();
-  }
-
-  Future<Profile> getProfileDetails() async {
-    var value = await Mirrorfly.getProfileDetails(jid.checkNull());
-    var str = await compute(profiledata, value.toString());
-    // var str = Profile.fromJson(json.decode(value.toString()));
-    return str;
-  }
-
-  bool isItSavedContact() {
-    return contactType == 'live_contact';
-  }
-
-  bool isUnknownContact() {
-    return !isDeletedContact() &&
-        !isItSavedContact() &&
-        !isGroupProfile.checkNull();
-  }
-
-  bool isEmailContact() =>
-      !isGroupProfile.checkNull() &&
-      isGroupInOfflineMode
-          .checkNull(); // for email contact isGroupInOfflineMode will be true
-}
-
-extension MemberProfileParsing on MemberProfileDetails {
-  bool isDeletedContact() {
-    return contactType == "deleted_contact";
-  }
-}
-
-extension ProfileDataParsing on ProfileData {
-  bool isDeletedContact(){
-    return false;
-  }
-  String getChatType() {
-    return (isGroupProfile ?? false)
-        ? Constants.typeGroupChat
-        : Constants.typeChat;
-  }
-  String getName(){
-    if (MirrorflyUikit.instance.isTrialLicenceKey) {
-      /*return item.name.toString().checkNull().isEmpty
-        ? item.nickName.toString()
-        : item.name.toString();*/
-      return name.checkNull().isEmpty
-          ? (nickName.checkNull().isEmpty
-          ? mobileNumber.checkNull()
-          : nickName.checkNull())
-          : name.checkNull();
-    } else {
-      if (jid.checkNull() == SessionManagement.getUserJID()) {
-        return Constants.you;
-      } else {
-        mirrorFlyLog('nickName', nickName.toString());
-        return nickName.checkNull();
-      }
-      /*var status = true;
-    if(status) {
-      return item.nickName
-          .checkNull()
-          .isEmpty
-          ? (item.name
-          .checkNull()
-          .isEmpty
-          ? item.mobileNumber.checkNull()
-          : item.name.checkNull())
-          : item.nickName.checkNull();
-    }else{
-      return item.mobileNumber.checkNull();
-    }*/
-    }
-  }
-}
-
-Future<Profile> getProfileDetails(String jid) async {
-  var value = await Mirrorfly.getProfileDetails(jid.checkNull());
-  var profile = profiledata(value.toString());
+Future<ProfileDetails> getProfileDetails(String jid) async {
+  var value = await Mirrorfly.getProfileDetails(jid: jid.checkNull());
+  // profileDataFromJson(value);
+  // debugPrint("getProfileDetails--> $value");
   // var profile = await compute(profiledata, value.toString());
-  debugPrint("profile ${profile.name}");
+  var profile = ProfileDetails.fromJson(json.decode(value.toString()));
   return profile;
 }
 
-Future<ProfileData> getUserProfile(String jid, {bool server = false}) async {
-  var value = await Mirrorfly.getUserProfile(jid.checkNull(), server);
-  var profile = profileDataFromJson(value.toString());
-  // var profile = await compute(profileDataFromJson, value.toString());
-  debugPrint("profile ${profile.data}");
-  // var str = profileDataFromJson(value.toString());
-  return profile.data ?? ProfileData();
-}
-
-Future<Profile> getGroupProfile(String jid, {bool server = false}) async {
-  var value2 = await Mirrorfly.getGroupProfile(jid.checkNull(), server);
-  var group = await compute(profiledata, value2.toString());
-  debugPrint('group : ${group.name}');
-  return group;
-}
-
 Future<ChatMessageModel> getMessageOfId(String mid) async {
-  var value = await Mirrorfly.getMessageOfId(mid.checkNull());
-  // debugPrint("message--> $value");
-  var chatMessage = await compute(sendMessageModelFromJson, value.toString());
+  var value = await Mirrorfly.getMessageOfId(messageId: mid.checkNull());
+  //LogMessage.d("getMessageOfId", "$value");
+  var chatMessage = sendMessageModelFromJson(value
+      .toString()); //await compute(sendMessageModelFromJson, value.toString());
   return chatMessage;
-}
-
-extension ProfileParesing on Profile {
-  bool isDeletedContact() {
-    return contactType == "deleted_contact";
-  }
-
-  String getChatType() {
-    return (isGroupProfile ?? false)
-        ? Constants.typeGroupChat
-        : Constants.typeChat;
-  }
-
-  bool isItSavedContact() {
-    return contactType == 'live_contact';
-  }
-
-  bool isUnknownContact() {
-    return !isDeletedContact() &&
-        !isItSavedContact() &&
-        !isGroupProfile.checkNull();
-  }
-
-  bool isEmailContact() =>
-      !isGroupProfile.checkNull() &&
-      isGroupInOfflineMode
-          .checkNull(); // for email contact isGroupInOfflineMode will be true
-
-  String getName() {
-    if (MirrorflyUikit.instance.isTrialLicenceKey) {
-      /*return item.name.toString().checkNull().isEmpty
-        ? item.nickName.toString()
-        : item.name.toString();*/
-      return name.checkNull().isEmpty
-          ? (nickName.checkNull().isEmpty
-          ? mobileNumber.checkNull()
-          : nickName.checkNull())
-          : name.checkNull();
-    } else {
-      if (jid.checkNull() == SessionManagement.getUserJID()) {
-        return Constants.you;
-      } else if (isDeletedContact()) {
-        mirrorFlyLog('isDeletedContact', isDeletedContact().toString());
-        return Constants.deletedUser;
-      } else if (isUnknownContact() || nickName.checkNull().isEmpty) {
-        mirrorFlyLog('isUnknownContact', isUnknownContact().toString());
-        return mobileNumber.checkNull().isNotEmpty
-            ? mobileNumber.checkNull()
-            : getMobileNumberFromJid(jid.checkNull());
-      } else {
-        mirrorFlyLog('nickName', nickName.toString());
-        return nickName.checkNull();
-      }
-      /*var status = true;
-    if(status) {
-      return item.nickName
-          .checkNull()
-          .isEmpty
-          ? (item.name
-          .checkNull()
-          .isEmpty
-          ? item.mobileNumber.checkNull()
-          : item.name.checkNull())
-          : item.nickName.checkNull();
-    }else{
-      return item.mobileNumber.checkNull();
-    }*/
-    }
-  }
-}
-
-extension ChatmessageParsing on ChatMessageModel {
-  bool isMediaDownloaded() {
-    return isMediaMessage() &&
-        (mediaChatMessage?.mediaDownloadStatus == Constants.mediaDownloaded);
-  }
-
-  bool isMediaUploaded() {
-    return isMediaMessage() &&
-        (mediaChatMessage?.mediaUploadStatus == Constants.mediaUploaded);
-  }
-
-  bool isMediaMessage() => (isAudioMessage() ||
-      isVideoMessage() ||
-      isImageMessage() ||
-      isFileMessage());
-
-  bool isTextMessage() => messageType == Constants.mText;
-
-  bool isAudioMessage() => messageType == Constants.mAudio;
-
-  bool isImageMessage() => messageType == Constants.mImage;
-
-  bool isVideoMessage() => messageType == Constants.mVideo;
-
-  bool isFileMessage() => messageType == Constants.mDocument;
-
-  bool isNotificationMessage() =>
-      messageType.toUpperCase() == Constants.mNotification;
-}
-
-extension RecentChatParsing on RecentChatData {
-  String getChatType() {
-    return (isGroup.checkNull())
-        ? Constants.typeGroupChat
-        : (isBroadCast.checkNull())
-            ? Constants.typeBroadcastChat
-            : Constants.typeChat;
-  }
-
-  bool isDeletedContact() {
-    return contactType == "deleted_contact";
-  }
-
-  bool isItSavedContact() {
-    return contactType == 'live_contact';
-  }
-
-  bool isUnknownContact() {
-    return !isDeletedContact() && !isItSavedContact() && !isGroup.checkNull();
-  }
-
-  bool isEmailContact() =>
-      !isGroup.checkNull() &&
-      isGroupInOfflineMode
-          .checkNull(); // for email contact isGroupInOfflineMode will be true
 }
 
 String returnFormattedCount(int count) {
@@ -644,25 +65,6 @@ InkWell listItem(
   );
 }
 
-String getRecentChatTime(BuildContext context, int? epochTime) {
-  if (epochTime == null) return "";
-  if (epochTime == 0) return "";
-  var convertedTime = epochTime; // / 1000;
-  //messageDate.time = convertedTime
-  var hourTime = manipulateMessageTime(
-      context, DateTime.fromMicrosecondsSinceEpoch(convertedTime));
-  var currentYear = DateTime.now().year;
-  var calendar = DateTime.fromMicrosecondsSinceEpoch(convertedTime);
-  var time = (currentYear == calendar.year)
-      ? DateFormat("dd-MMM").format(calendar)
-      : DateFormat("yyyy/MM/dd").format(calendar);
-  return (equalsWithYesterday(calendar, Constants.today))
-      ? hourTime
-      : (equalsWithYesterday(calendar, Constants.yesterday))
-          ? AppConstants.yesterday.toUpperCase()
-          : time;
-}
-
 String manipulateMessageTime(BuildContext context, DateTime messageDate) {
   var format = MediaQuery.of(context).alwaysUse24HourFormat ? 24 : 12;
   calendar = messageDate;
@@ -683,7 +85,7 @@ String setDateHourFormat(int format, int hours) {
 }
 
 bool equalsWithYesterday(DateTime srcDate, String day) {
-  if (day == Constants.yesterday) {
+  if (day == getTranslated("yesterday")) {
     var messageDate = DateFormat('yyyy/MM/dd').format(srcDate);
     var yesterdayDate = DateFormat('yyyy/MM/dd').format(DateTime.now().subtract(
         const Duration(
@@ -703,7 +105,6 @@ bool equalsWithToday(DateTime srcDate, String day) {
 var calendar = DateTime.now();
 
 String getChatTime(BuildContext context, int? epochTime) {
-  // debugPrint("epochTime--> $epochTime");
   if (epochTime == null) return "";
   if (epochTime == 0) return "";
   var convertedTime = epochTime;
@@ -714,44 +115,6 @@ String getChatTime(BuildContext context, int? epochTime) {
   // calendar = DateTime.fromMicrosecondsSinceEpoch(convertedTime);
   //debugPrint('hourTime $hourTime');
   return hourTime;
-}
-
-bool checkFile(String mediaLocalStoragePath) {
-  return mediaLocalStoragePath.isNotEmpty &&
-      File(mediaLocalStoragePath).existsSync();
-}
-
-checkIosFile(String mediaLocalStoragePath) async {
-  var isExists = await Mirrorfly.iOSFileExist(mediaLocalStoragePath);
-  return isExists;
-}
-
-openDocument(String mediaLocalStoragePath) async {
-  // if (await askStoragePermission()) {
-  if (mediaLocalStoragePath.isNotEmpty) {
-    final result = await OpenFile.open(mediaLocalStoragePath);
-    debugPrint(result.message);
-    if (result.message.contains("file does not exist")) {
-      toToast(AppConstants.fileDoesNotExist);
-    } else if (result.message.contains('No APP found to open this file')) {
-      toToast(AppConstants.youDoNotHaveApp);
-    }
-
-    /*Mirrorfly.openFile(mediaLocalStoragePath).catchError((onError) {
-      final scaffold = ScaffoldMessenger.of(context);
-      scaffold.showSnackBar(
-        SnackBar(
-          content: const Text(
-              'No supported application available to open this file format'),
-          action: SnackBarAction(
-              label: 'Ok', onPressed: scaffold.hideCurrentSnackBar),
-        ),
-      );
-    });*/
-  } else {
-    debugPrint("media does not exist");
-  }
-  // }
 }
 
 Future<void> launchInBrowser(String url) async {
@@ -765,7 +128,7 @@ Future<void> launchInBrowser(String url) async {
       throw 'Could not launch $url';
     }
   } else {
-    toToast(AppConstants.noInternetConnection);
+    toToast(getTranslated("noInternetConnection"));
   }
 }
 
@@ -796,9 +159,7 @@ launchCaller(String phoneNumber) async {
   // } else {
   //   throw 'Could not launch $url';
   // }
-  canLaunchUrl(Uri(scheme: 'tel', path: phoneNumber)).then((bool result) {
-    debugPrint("success");
-  });
+  AppUtils.launchWeb(Uri(scheme: 'tel', path: phoneNumber));
 }
 
 Future<void> launchEmail(String emailID) async {
@@ -828,9 +189,9 @@ class Triple {
 }
 
 Future<RecentChatData?> getRecentChatOfJid(String jid) async {
-  var value = await Mirrorfly.getRecentChatOf(jid);
-  mirrorFlyLog("chat", value.toString());
-  if (value != null) {
+  var value = await Mirrorfly.getRecentChatOf(jid: jid);
+  LogMessage.d("chat", value.toString());
+  if (value.isNotEmpty) {
     var data = recentChatDataFromJson(value);
     return data;
   } else {
@@ -838,95 +199,87 @@ Future<RecentChatData?> getRecentChatOfJid(String jid) async {
   }
 }
 
-String getName(Profile item) {
-  if (MirrorflyUikit.instance.isTrialLicenceKey) {
+String getName(ProfileDetails item) {
+  if (!Constants.enableContactSync) {
     /*return item.name.toString().checkNull().isEmpty
         ? item.nickName.toString()
         : item.name.toString();*/
     return item.name.checkNull().isEmpty
         ? (item.nickName.checkNull().isEmpty
-            ? item.mobileNumber.checkNull()
+            ? getMobileNumberFromJid(item.jid.checkNull())
             : item.nickName.checkNull())
         : item.name.checkNull();
   } else {
     if (item.jid.checkNull() == SessionManagement.getUserJID()) {
-      return Constants.you;
+      return getTranslated("you");
     } else if (item.isDeletedContact()) {
-      mirrorFlyLog('isDeletedContact', item.isDeletedContact().toString());
-      return Constants.deletedUser;
+      LogMessage.d("getName", 'isDeletedContact ${item.isDeletedContact()}');
+      return getTranslated("deletedUser");
     } else if (item.isUnknownContact() || item.nickName.checkNull().isEmpty) {
-      mirrorFlyLog('isUnknownContact', item.isUnknownContact().toString());
+      LogMessage.d("getName", 'isUnknownContact ${item.isUnknownContact()}');
       return item.mobileNumber.checkNull().isNotEmpty
           ? item.mobileNumber.checkNull()
           : getMobileNumberFromJid(item.jid.checkNull());
     } else {
-      mirrorFlyLog('nickName', item.nickName.toString());
-      return item.nickName.checkNull();
+      LogMessage.d("getName", 'nickName ${item.nickName} name ${item.name}');
+      return item.nickName.checkNull().isEmpty
+          ? (item.name.checkNull().isEmpty
+              ? getMobileNumberFromJid(item.jid.checkNull())
+              : item.name.checkNull())
+          : item.nickName.checkNull(); //#FLUTTER-1300
     }
-    /*var status = true;
-    if(status) {
-      return item.nickName
-          .checkNull()
-          .isEmpty
-          ? (item.name
-          .checkNull()
-          .isEmpty
-          ? item.mobileNumber.checkNull()
-          : item.name.checkNull())
-          : item.nickName.checkNull();
-    }else{
-      return item.mobileNumber.checkNull();
-    }*/
   }
 }
 
 String getRecentName(RecentChatData item) {
-  if (MirrorflyUikit.instance.isTrialLicenceKey) {
+  if (!Constants.enableContactSync) {
     /*return item.name.toString().checkNull().isEmpty
         ? item.nickName.toString()
         : item.name.toString();*/
     return item.profileName.checkNull().isEmpty
-        ? item.nickName.checkNull()
+        ? item.nickName.checkNull().isNotEmpty
+            ? item.nickName.checkNull()
+            : getMobileNumberFromJid(item.jid.checkNull())
         : item.profileName.checkNull();
   } else {
     if (item.jid.checkNull() == SessionManagement.getUserJID()) {
-      return Constants.you;
+      return getTranslated("you");
     } else if (item.isDeletedContact()) {
-      mirrorFlyLog('isDeletedContact', item.isDeletedContact().toString());
-      return Constants.deletedUser;
+      LogMessage.d('isDeletedContact', item.isDeletedContact().toString());
+      return getTranslated("deletedUser");
     } else if (item.isUnknownContact() || item.nickName.checkNull().isEmpty) {
-      mirrorFlyLog('isUnknownContact', item.jid.toString());
+      LogMessage.d('isUnknownContact', item.jid.toString());
       return getMobileNumberFromJid(item.jid.checkNull());
     } else {
-      mirrorFlyLog('nickName', item.nickName.toString());
+      LogMessage.d('nickName', item.nickName.toString());
       return item.nickName.checkNull();
     }
   }
 }
 
-String getMemberName(Member item) {
-  if (MirrorflyUikit.instance.isTrialLicenceKey) {
+String getMemberName(ProfileDetails item) {
+  if (!Constants.enableContactSync) {
     /*return item.name.toString().checkNull().isEmpty
         ? item.nickName.toString()
         : item.name.toString();*/
     return item.name.checkNull().isEmpty
         ? (item.nickName.checkNull().isEmpty
-            ? item.mobileNumber.checkNull()
+            ? getMobileNumberFromJid(item.jid.checkNull())
             : item.nickName.checkNull())
         : item.name.checkNull();
   } else {
     if (item.jid.checkNull() == SessionManagement.getUserJID()) {
-      return Constants.you;
+      return getTranslated("you");
     } else if (item.isDeletedContact()) {
-      mirrorFlyLog('isDeletedContact', item.isDeletedContact().toString());
-      return Constants.deletedUser;
+      LogMessage.d('isDeletedContact', item.isDeletedContact().toString());
+      return getTranslated("deletedUser");
     } else if (item.isUnknownContact() || item.nickName.checkNull().isEmpty) {
-      mirrorFlyLog('isUnknownContact', item.isUnknownContact().toString());
+      LogMessage.d('isUnknownContact', item.isUnknownContact().toString());
       return item.mobileNumber.checkNull().isNotEmpty
           ? item.mobileNumber.checkNull()
           : getMobileNumberFromJid(item.jid.checkNull());
     } else {
-      mirrorFlyLog('nickName', item.nickName.toString());
+      LogMessage.d('nickName', item.nickName.toString());
       return item.nickName.checkNull();
     }
     /*var status = true;
@@ -961,28 +314,32 @@ String getMobileNumberFromJid(String jid) {
 }
 
 String convertSecondToLastSeen(String seconds) {
-  if(seconds.isNotEmpty) {
-    if(seconds=="0") return AppConstants.online;
+  if (seconds.isNotEmpty) {
+    if (seconds == "0") return getTranslated("online");
+    LogMessage.d("getUserLastSeenTime", "seconds $seconds");
     // var userLastSeenDate = DateTime.now().subtract(Duration(milliseconds: double.parse(seconds).toInt()));
-    DateTime lastSeen = DateTime.fromMillisecondsSinceEpoch(
-        double.parse(seconds).toInt());
+    DateTime lastSeen =
+        DateTime.fromMillisecondsSinceEpoch(int.parse(seconds), isUtc: false);
     Duration diff = DateTime.now().difference(lastSeen);
 
-    if (int.parse(DateFormat('yyyy').format(lastSeen)) <
-        int.parse(DateFormat('yyyy').format(DateTime.now()))) {
-      return '${AppConstants.lastSeenOn} ${DateFormat('dd/mm/yyyy')}';
-    } else if (diff.inDays > 1) {
-      return '${AppConstants.lastSeenOn} ${DateFormat('dd MMM').format(lastSeen)}';
+    LogMessage.d("getUserLastSeenTime", "diff ${diff.inDays}");
+    if (diff.inDays == 0) {
+      return getTranslated("lastSeenAt")
+          .replaceFirst("%d", DateFormat('hh:mm a').format(lastSeen));
     } else if (diff.inDays == 1) {
-      return AppConstants.lastSeenYesterday;
-    } else
-    if (diff.inHours >= 1 || diff.inMinutes >= 1 || diff.inSeconds >= 1) {
-      return '${AppConstants.lastSeenAt} ${DateFormat('hh:mm a').format(lastSeen)}';
+      return getTranslated("lastSeenYesterday");
+    } else if (diff.inDays > 1 && diff.inDays < 365) {
+      var last = DateFormat('dd MMM').format(lastSeen);
+      return getTranslated("lastSeenOn").replaceFirst("%d", last);
+    } else if (int.parse(DateFormat('yyyy').format(lastSeen)) <
+        int.parse(DateFormat('yyyy').format(DateTime.now()))) {
+      return getTranslated("lastSeenOn")
+          .replaceFirst("%d", DateFormat('dd/MM/yyyy').format(lastSeen));
     } else {
-      return AppConstants.online;
+      return getTranslated("online");
     }
-  }else{
-    return Constants.emptyString;
+  } else {
+    return "";
   }
 }
 
@@ -1001,26 +358,33 @@ String getDisplayImage(RecentChatData recentChat) {
 }
 
 void showQuickProfilePopup(
-    {required context,
-    required Function() chatTap,
-    required Function() callTap,
-    required Function() videoTap,
+    {required Function() chatTap,
+    Function()? callTap,
+    Function()? videoTap,
     required Function() infoTap,
-    required Rx<Profile> profile}) {
-  showDialog(context: context, builder: (BuildContext context) {
-    return Obx(() {
+    required Rx<ProfileDetails> profile,
+    required Rx<AvailableFeatures> availableFeatures}) {
+  var isAudioCallAvailable = profile.value.isGroupProfile.checkNull()
+      ? false
+      : availableFeatures.value.isOneToOneCallAvailable.checkNull();
+  var isVideoCallAvailable = profile.value.isGroupProfile.checkNull()
+      ? false
+      : availableFeatures.value.isOneToOneCallAvailable.checkNull();
+
+  DialogUtils.createDialog(
+    Obx(() {
       return Dialog(
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(20.0))),
         child: SizedBox(
-          width: MediaQuery.of(context).size.width * 0.7,
+          width: NavUtils.width * 0.7,
           height: 300,
           child: Column(
             children: [
               Expanded(
                 child: InkWell(
                   onTap: () {
-                    mirrorFlyLog('image click', 'true');
+                    LogMessage.d('image click', 'true');
                     debugPrint(
                         "quick profile click--> ${profile.toJson().toString()}");
                     if (profile.value.image!.isNotEmpty &&
@@ -1028,13 +392,11 @@ void showQuickProfilePopup(
                             profile.value.isAdminBlocked.checkNull()) &&
                         !( //!profile.value.isItSavedContact.checkNull() || //This is commented because Android side received as true and iOS side false
                             profile.value.isDeletedContact())) {
-                      Navigator.pop(context);
-                      Navigator.push(context, MaterialPageRoute(builder: (con)=>ImageViewView(imageName: getName(profile.value),imageUrl: profile.value.image,)));
-                      /*Get.back();
-                      Get.toNamed(Routes.imageView, arguments: {
+                      NavUtils.back();
+                      NavUtils.toNamed(Routes.imageView, arguments: {
                         'imageName': getName(profile.value),
                         'imageUrl': profile.value.image.checkNull()
-                      });*/
+                      });
                     }
                   },
                   child: Stack(
@@ -1046,29 +408,28 @@ void showQuickProfilePopup(
                               topRight: Radius.circular(20)),
                           child: ImageNetwork(
                             url: profile.value.image.toString(),
-                            width: MediaQuery.of(context).size.width * 0.7,
+                            width: NavUtils.width * 0.7,
                             height: 250,
                             clipOval: false,
                             errorWidget: profile.value.isGroupProfile!
                                 ? Image.asset(
-                              groupImg,
-                              package: package,
-                              height: 250,
-                              width: MediaQuery.of(context).size.width *
-                                  0.72,
-                              fit: BoxFit.cover,
-                            )
+                                    groupImg,
+                                    package: package,
+                                    height: 250,
+                                    width: NavUtils.width * 0.72,
+                                    fit: BoxFit.cover,
+                                  )
                                 : ProfileTextImage(
-                              text: getName(profile.value),
-                              fontSize: 75,
-                              radius: 0,
-                            ),
+                                    text: getName(profile.value),
+                                    fontSize: 75,
+                                    radius: 0,
+                                  ),
                             isGroup: profile.value.isGroupProfile.checkNull(),
                             blocked: profile.value.isBlockedMe.checkNull() ||
                                 profile.value.isAdminBlocked.checkNull(),
                             unknown:
-                            (!profile.value.isItSavedContact.checkNull() ||
-                                profile.value.isDeletedContact()),
+                                (!profile.value.isItSavedContact.checkNull() ||
+                                    profile.value.isDeletedContact()),
                           )),
                       Padding(
                         padding: const EdgeInsets.symmetric(
@@ -1076,9 +437,9 @@ void showQuickProfilePopup(
                         child: Text(
                           profile.value.isGroupProfile!
                               ? profile.value.name.checkNull()
-                              : MirrorflyUikit.instance.isTrialLicenceKey
-                              ? profile.value.mobileNumber.checkNull()
-                              : profile.value.nickName.checkNull(),
+                              : !Constants.enableContactSync
+                                  ? profile.value.mobileNumber.checkNull()
+                                  : profile.value.nickName.checkNull(),
                           style: const TextStyle(color: Colors.white),
                         ),
                       ),
@@ -1103,29 +464,35 @@ void showQuickProfilePopup(
                         ),
                       ),
                     ),
-                    !profile.value.isGroupProfile.checkNull()
+                    isAudioCallAvailable
                         ? Expanded(
-                      child: InkWell(
-                        onTap: callTap,
-                        child: SvgPicture.asset(
-                          quickCall,
-                          package: package,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    )
+                            child: InkWell(
+                              onTap: () {
+                                NavUtils.back();
+                                makeVoiceCall(profile, availableFeatures);
+                              },
+                              child: SvgPicture.asset(
+                                quickCall,
+                                package: package,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          )
                         : const SizedBox.shrink(),
-                    !profile.value.isGroupProfile.checkNull()
+                    isVideoCallAvailable
                         ? Expanded(
-                      child: InkWell(
-                        onTap: videoTap,
-                        child: SvgPicture.asset(
-                          quickVideo,
-                          package: package,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    )
+                            child: InkWell(
+                              onTap: () {
+                                NavUtils.back();
+                                makeVideoCall(profile, availableFeatures);
+                              },
+                              child: SvgPicture.asset(
+                                quickVideo,
+                                package: package,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          )
                         : const SizedBox.shrink(),
                     Expanded(
                       child: InkWell(
@@ -1144,64 +511,150 @@ void showQuickProfilePopup(
           ),
         ),
       );
-    });
-  },
+    }),
   );
 }
 
-String getDocAsset(String filename) {
-  if (filename.isEmpty || !filename.contains(".")) {
+showBlockStatusAlert(Function? function, Rx<ProfileDetails> profile,
+    Rx<AvailableFeatures> availableFeatures) {
+  DialogUtils.showAlert(
+      dialogStyle: AppStyleConfig.dialogStyle,
+      message: getTranslated("unBlockToSendMsg"),
+      actions: [
+        TextButton(
+            style: AppStyleConfig.dialogStyle.buttonStyle,
+            onPressed: () {
+              NavUtils.back();
+            },
+            child: Text(
+              getTranslated("cancel").toUpperCase(),
+            )),
+        TextButton(
+            style: AppStyleConfig.dialogStyle.buttonStyle,
+            onPressed: () async {
+              NavUtils.back();
+              Mirrorfly.unblockUser(
+                  userJid: profile.value.jid.checkNull(),
+                  flyCallBack: (FlyResponse response) {
+                    if (response.isSuccess) {
+                      debugPrint(response.toString());
+                      profile.value.isBlocked = false;
+                      if (function != null) {
+                        function.call(profile, availableFeatures);
+                      }
+                    }
+                  });
+            },
+            child: Text(
+              getTranslated("unblock").toUpperCase(),
+            )),
+      ]);
+}
+
+makeVoiceCall(
+    Rx<ProfileDetails> profile, Rx<AvailableFeatures> availableFeatures) async {
+  if (profile.value.isAdminBlocked.checkNull()) {
+    toToast(getTranslated("adminBlockedUser"));
+    return;
+  }
+  if (profile.value.isBlocked.checkNull()) {
+    showBlockStatusAlert(makeVoiceCall, profile, availableFeatures);
+    return;
+  }
+  if (!availableFeatures.value.isOneToOneCallAvailable.checkNull()) {
+    DialogUtils.showFeatureUnavailable();
+    return;
+  }
+  if ((await Mirrorfly.isOnGoingCall()).checkNull()) {
+    debugPrint("#Mirrorfly Call You are on another call");
+    toToast(getTranslated("msgOngoingCallAlert"));
+    return;
+  }
+  if (!(await AppUtils.isNetConnected())) {
+    toToast(getTranslated("noInternetConnection"));
+    return;
+  }
+  if (await AppPermission.askAudioCallPermissions()) {
+    Mirrorfly.makeVoiceCall(
+        toUserJid: profile.value.jid.checkNull(),
+        flyCallBack: (FlyResponse response) {
+          if (response.isSuccess) {
+            NavUtils.toNamed(Routes.outGoingCallView, arguments: {
+              "userJid": [profile.value.jid],
+              "callType": CallType.audio
+            });
+          }
+        });
+  } else {
+    debugPrint("permission not given");
+  }
+}
+
+makeVideoCall(
+    Rx<ProfileDetails> profile, Rx<AvailableFeatures> availableFeatures) async {
+  if (profile.value.isAdminBlocked.checkNull()) {
+    toToast(getTranslated("adminBlockedUser"));
+    return;
+  }
+  if (profile.value.isBlocked.checkNull()) {
+    showBlockStatusAlert(makeVideoCall, profile, availableFeatures);
+    return;
+  }
+  if (!availableFeatures.value.isGroupCallAvailable.checkNull()) {
+    DialogUtils.showFeatureUnavailable();
+    return;
+  }
+  if ((await Mirrorfly.isOnGoingCall()).checkNull()) {
+    debugPrint("#Mirrorfly Call You are on another call");
+    toToast(getTranslated("msgOngoingCallAlert"));
+    return;
+  }
+  if (!(await AppUtils.isNetConnected())) {
+    toToast(getTranslated("noInternetConnection"));
+    return;
+  }
+  // if (await AppUtils.isNetConnected()) {
+  if (await AppPermission.askVideoCallPermissions()) {
+    // if ((await Mirrorfly.isOnGoingCall()).checkNull()) {
+    //   debugPrint("#Mirrorfly Call You are on another call");
+    //   toToast(getTranslated("msgOngoingCallAlert"));
+    // } else {
+    Mirrorfly.makeVideoCall(
+        toUserJid: profile.value.jid.checkNull(),
+        flyCallBack: (FlyResponse response) {
+          if (response.isSuccess) {
+            NavUtils.toNamed(Routes.outGoingCallView, arguments: {
+              "userJid": [profile.value.jid],
+              "callType": CallType.video
+            });
+          }
+        });
+    // }
+  } else {
+    LogMessage.d("askVideoCallPermissions", "false");
+  }
+  // } else {
+  //   toToast(getTranslated("noInternetConnection"));
+  // }
+}
+
+String getCallLogDuration(int startTime, int endTime) {
+  var millis = endTime - startTime;
+  var duration = Duration(microseconds: millis);
+
+  if (startTime == 0 || endTime == 0 || millis == 0) {
     return "";
-  }
-  debugPrint(
-      "helper document--> ${filename.toLowerCase().substring(filename.lastIndexOf(".") + 1)}");
-  switch (filename.toLowerCase().substring(filename.lastIndexOf(".") + 1)) {
-    case "csv":
-      return csvImage;
-    case "pdf":
-      return pdfImage;
-    case "doc":
-      return docImage;
-    case "docx":
-      return docxImage;
-    case "txt":
-      return txtImage;
-    case "xls":
-      return xlsImage;
-    case "xlsx":
-      return xlsxImage;
-    case "ppt":
-      return pptImage;
-    case "pptx":
-      return pptxImage;
-    case "zip":
-      return zipImage;
-    case "rar":
-      return rarImage;
-    case "apk":
-      return apkImage;
-    default:
-      return "";
+  } else {
+    var seconds =
+        ((duration.inSeconds % 60)).toStringAsFixed(0).padLeft(2, '0');
+    return '${(duration.inMinutes).toStringAsFixed(0).padLeft(2, '0')}:$seconds';
   }
 }
 
-
-// ranges from 0.0 to 1.0
-
-Color darken(Color color, [double amount = .1]) {
-  assert(amount >= 0 && amount <= 1);
-
-  final hsl = HSLColor.fromColor(color);
-  final hslDark = hsl.withLightness((hsl.lightness - amount).clamp(0.0, 1.0));
-
-  return hslDark.toColor();
-}
-
-Color lighten(Color color, [double amount = .1]) {
-  assert(amount >= 0 && amount <= 1);
-
-  final hsl = HSLColor.fromColor(color);
-  final hslLight = hsl.withLightness((hsl.lightness + amount).clamp(0.0, 1.0));
-
-  return hslLight.toColor();
+String getErrorDetails(FlyResponse response) {
+  if (Platform.isIOS) {
+    return '${response.errorMessage}${response.errorDetails != null ? ", ${response.errorDetails}" : ""}';
+  } else {
+    return response.errorMessage;
+  }
 }

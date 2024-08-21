@@ -1,4 +1,4 @@
-import 'chat_message_model.dart';
+import '../model/chat_message_model.dart';
 
 abstract class GroupedMedia {
   late double id;

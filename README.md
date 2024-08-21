@@ -69,16 +69,34 @@ Installing the Mirrorfly UIKit Plugin is a simple process. Follow the steps ment
 
 ```dart
 post_install do |installer|
-  installer.pods_project.targets.each do |target|
-    flutter_additional_ios_build_settings(target)
-    target.build_configurations.each do |config|
-      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.1'
-      config.build_settings['ENABLE_BITCODE'] = 'NO'
-      config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'No'
-      config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
-      config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"      
-     end
-  end
+    installer.aggregate_targets.each do |target|
+        target.xcconfigs.each do |variant, xcconfig|
+        xcconfig_path = target.client_root + target.xcconfig_relative_path(variant)
+        IO.write(xcconfig_path, IO.read(xcconfig_path).gsub("DT_TOOLCHAIN_DIR", "TOOLCHAIN_DIR"))
+        end
+    end
+    
+    installer.pods_project.targets.each do |target|
+        flutter_additional_ios_build_settings(target)
+        target.build_configurations.each do |config|
+            config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.1'
+            config.build_settings['ENABLE_BITCODE'] = 'NO'
+            config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'No'
+            config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
+            config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = 'arm64'
+            
+                shell_script_path = "Pods/Target Support Files/#{target.name}/#{target.name}-frameworks.sh"
+                if File::exist?(shell_script_path)
+                    shell_script_input_lines = File.readlines(shell_script_path)
+                    shell_script_output_lines = shell_script_input_lines.map { |line| line.sub("source=\"$(readlink \"${source}\")\"", "source=\"$(readlink -f \"${source}\")\"") }
+                    File.open(shell_script_path, 'w') do |f|
+                        shell_script_output_lines.each do |line|
+                          f.write line
+                        end
+                    end
+                end
+            end
+    end
 end
 ```
  - Now, enable all the below mentioned capabilities into your project from `Xcode`.
@@ -96,7 +114,7 @@ Goto Project -> Target -> Signing & Capabilities -> Click `+ Capability` at the 
 
 ```yaml
 dependencies:
-  mirrorfly_uikit_plugin: ^0.0.12
+  mirrorfly_uikit_plugin: ^2.0.0
 ```
 
 - Run `flutter pub get` command in your project directory.
@@ -120,12 +138,14 @@ Here are the steps to integrate the Mirrorfly UIkit Plugin:
 To initialize the plugin, place the below code in your `main.dart` file inside `main` function before `runApp()`.
 
 ```dart
+final navigatorKey = GlobalKey<NavigatorState>();
  void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  MirrorflyUikit.instance.initUIKIT(  baseUrl: 'YOUR_BASE_URL',
+  MirrorflyUikit.instance.initUIKIT(
       licenseKey: 'Your_Mirrorfly_Licence_Key',
       googleMapKey: 'Your_Google_Map_Key_for_location_messages',
       iOSContainerID: 'Your_iOS_app_Container_id',
+      navigatorKey: navigatorKey,
       enableLocalNotification: true);
   runApp(const MyApp());
 }
@@ -133,9 +153,23 @@ To initialize the plugin, place the below code in your `main.dart` file inside `
 
 ### Step 2: Add Configuration json file
 
-create `mirrorfly_config.json` json file with configuration details then add the json file into under your `assets` folder(`assets/mirrorfly_config.json`).
+**Notice:** The previous method of placing the `mirrorfly_config.json` file under the `assets` folder (`assets/mirrorfly_config.json`) has been removed. The configuration file setup has been moved to a new method.
 
-> **Info** Download config json file from [Flutter UIKit docs](https://www.mirrorfly.com/docs/UIKit/flutter/quick-start/)
+### New Method:
+
+You can now add inline styles and themes for the UI pages in the UIKIT plugin. The `AppStyleConfig` class is used to set the styles for the UIKIT pages.
+
+### To set the Dashboard page style:
+```dart
+AppStyleConfig.setDashboardStyle(const DashBoardPageStyle(tabItemStyle: TabItemStyle(textStyle: TextStyle(fontStyle: FontStyle.italic))));
+```
+
+### To set the Chat page style:
+```dart
+AppStyleConfig.setChatPageStyle(const ChatPageStyle(messageTypingAreaStyle: MessageTypingAreaStyle(sentIconColor: Colors.blue)));
+```
+
+> **Info** The above code sample sets the style for the Dashboard and Chat pages. You can add more styles and customizations in the same method using different styling parameters
 
 ### Step 3: Registration
 
@@ -195,6 +229,48 @@ import mirrorfly_plugin
         MirrorFlyNotification().handleNotification(notificationRequest: request, contentHandler: contentHandler, containerID: "containerID", licenseKey: "Your License Key")
         
     }
+```
+
+### Step 5: Locale Support
+
+The UIKit Plugin supports multiple languages. You can set the locale for the plugin as shown below:
+
+```dart
+ MaterialApp(
+    navigatorKey: navigatorKey,
+    themeMode: ThemeMode.dark,
+    debugShowCheckedModeBanner: false,
+    /// CHANGE THE LOCALE TO 'en' TO SEE THE LOCALIZATION IN ENGLISH, 'ar' FOR ARABIC, 'hi' FOR HINDI
+    locale: const Locale('en'),
+    /// ADD THE SUPPORTED LOCALES TO THE APP
+    supportedLocales: AppLocalizations.supportedLocales,
+    localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+    ],
+    /// ADD THE NAVIGATION OBSERVER TO THE APP, TO HANDLE THE NAVIGATION EVENTS
+    navigatorObservers: [
+      MirrorFlyNavigationObserver()
+    ],
+    /// ADD THE ROUTE GENERATOR TO THE APP, TO HANDLE THE ROUTES
+    onGenerateRoute: (settings) {
+    switch (settings.name) {
+        default:
+          return mirrorFlyRoute(settings);
+        }
+    },
+    theme: ThemeData(textTheme: GoogleFonts.latoTextTheme()),
+    home: YOUR_HOME_PAGE);
+```
+
+### Step 6: To Add Your Locale Support
+
+To add your locale support, you can add the locale file in the `assets/locale` folder. The locale file should be named as `en.json` for English, `ar.json` for Arabic, and so on and add it to the supported locales in the `AppLocalizations` class.
+
+```dart
+AppLocalizations.addSupportedLocales(const Locale("ar","UAE"));
 ```
 
 ## Getting Help
