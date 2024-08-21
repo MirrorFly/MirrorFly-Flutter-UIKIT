@@ -2,6 +2,8 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:photo_manager/photo_manager.dart';
+
 class PickedAssetModel {
   String? id;
   String? path;
@@ -20,6 +22,7 @@ class PickedAssetModel {
   DateTime? modifiedDateTime;
   String? title;
   Size? size;
+  AssetEntity? asset;
 
   PickedAssetModel({
     this.id,
@@ -39,6 +42,7 @@ class PickedAssetModel {
     this.modifiedDateTime,
     this.title,
     this.size,
+    this.asset,
   });
 
   factory PickedAssetModel.fromJson(Map<String, dynamic> json) =>
@@ -60,6 +64,7 @@ class PickedAssetModel {
         modifiedDateTime: DateTime.parse(json["modifiedDateTime"]),
         title: json["title"],
         size: json["size"],
+        asset: json["asset"],
       );
 
   Map<String, dynamic> toJson() => {

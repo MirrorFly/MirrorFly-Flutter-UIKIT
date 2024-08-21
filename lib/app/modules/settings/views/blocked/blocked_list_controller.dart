@@ -1,47 +1,51 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
+import '../../../../extensions/extensions.dart';
+import '../../../../common/constants.dart';
+import '../../../../data/helper.dart';
+import 'package:mirrorfly_plugin/mirrorfly.dart';
 
-import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
-import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
-import 'package:mirrorfly_plugin/flychat.dart';
-import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
-
-import '../../../../data/apputils.dart';
-import '../../../../models.dart';
-
+import '../../../../app_style_config.dart';
+import '../../../../common/app_localizations.dart';
+import '../../../../data/utils.dart';
 
 class BlockedListController extends GetxController {
-  final _blockedUsers = <Member>[].obs;
+  final _blockedUsers = <ProfileDetails>[].obs;
   set blockedUsers(value) => _blockedUsers.value = value;
-  List<Member> get blockedUsers => _blockedUsers;
+  List<ProfileDetails> get blockedUsers => _blockedUsers;
 
   @override
-  void onInit(){
+  void onInit() {
     super.onInit();
-    debugPrint("oninit");
-    getUsersIBlocked(false);
+    getUsersIBlocked();
   }
 
-  getUsersIBlocked(bool server){
-    debugPrint("getting blockked user");
-    Mirrorfly.getUsersIBlocked(server).then((value){
-      if(value!=null && value != ""){
-        var list = memberFromJson(value);
-        list.sort((a, b) => getMemberName(a).checkNull().toString().toLowerCase().compareTo(getMemberName(b).checkNull().toString().toLowerCase()));
-        _blockedUsers(list);
-      }else{
-        _blockedUsers.clear();
-      }
-    });
+  getUsersIBlocked([bool? server]) async {
+    Mirrorfly.getUsersIBlocked(
+        fetchFromServer: server ?? await AppUtils.isNetConnected(),
+        flyCallBack: (FlyResponse response) {
+          if (response.isSuccess && response.hasData) {
+            LogMessage.d("getUsersIBlocked", response.toString());
+            var list = profileFromJson(response.data);
+            list.sort((a, b) => getMemberName(a)
+                .checkNull()
+                .toString()
+                .toLowerCase()
+                .compareTo(
+                    getMemberName(b).checkNull().toString().toLowerCase()));
+            _blockedUsers(list);
+          } else {
+            _blockedUsers.clear();
+          }
+        });
   }
+
   void userUpdatedHisProfile(String jid) {
     if (jid.isNotEmpty) {
-       //This function is not working in UI kit so commented
+      //This function is not working in UI kit so commented
       getProfileDetails(jid).then((value) {
         var index = _blockedUsers.indexWhere((element) => element.jid == jid);
-        if(!index.isNegative) {
+        if (!index.isNegative) {
           _blockedUsers[index].name = value.name;
           _blockedUsers[index].nickName = value.nickName;
           _blockedUsers[index].email = value.email;
@@ -53,38 +57,45 @@ class BlockedListController extends GetxController {
         }
       });
     }
-
   }
-  unBlock(Member item, BuildContext context){
-    Helper.showAlert(message: "${AppConstants.unblock} ${getMemberName(item)}?", actions: [
-      TextButton(
-          onPressed: () {
-            // Get.back();
-            Navigator.pop(context);
-          },
-          child: Text(AppConstants.no.toUpperCase(), style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor),)),
-      TextButton(
-          onPressed: () async {
-            if(await AppUtils.isNetConnected()) {
-              // Get.back();
-              if(context.mounted)Navigator.pop(context);
-              if(context.mounted)Helper.progressLoading(context: context);
-              Mirrorfly.unblockUser(item.jid.checkNull()).then((value) {
-                Helper.hideLoading(context: context);
-                if(value!=null && value) {
-                  toToast("${getMemberName(item)} ${AppConstants.hasUnBlocked}");
-                  getUsersIBlocked(false);
+
+  unBlock(ProfileDetails item) {
+    DialogUtils.showAlert(
+        dialogStyle: AppStyleConfig.dialogStyle,
+        message: "Unblock ${getMemberName(item)}?",
+        actions: [
+          TextButton(
+              style: AppStyleConfig.dialogStyle.buttonStyle,
+              onPressed: () {
+                NavUtils.back();
+              },
+              child: const Text(
+                "NO",
+              )),
+          TextButton(
+              style: AppStyleConfig.dialogStyle.buttonStyle,
+              onPressed: () async {
+                if (await AppUtils.isNetConnected()) {
+                  NavUtils.back();
+                  DialogUtils.progressLoading();
+                  Mirrorfly.unblockUser(
+                    userJid: item.jid.checkNull(),
+                    flyCallBack: (FlyResponse response) {
+                      DialogUtils.hideLoading();
+                      if (response.isSuccess) {
+                        toToast("${getMemberName(item)} has been Unblocked");
+                        getUsersIBlocked(false);
+                      }
+                    },
+                  );
+                } else {
+                  toToast(getTranslated("noInternetConnection"));
                 }
-              }).catchError((error) {
-                Helper.hideLoading(context: context);
-                debugPrint(error);
-              });
-            }else{
-              toToast(AppConstants.noInternetConnection);
-            }
-          },
-          child: Text(AppConstants.yes.toUpperCase(), style: TextStyle(color: MirrorflyUikit.getTheme?.primaryColor))),
-    ], context: context);
+              },
+              child: const Text(
+                "YES",
+              )),
+        ]);
   }
 
   void userDeletedHisProfile(String jid) {

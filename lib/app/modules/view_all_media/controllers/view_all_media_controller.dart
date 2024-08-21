@@ -6,20 +6,23 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
-import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
-import 'package:mirrorfly_plugin/flychat.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/view_all_media_preview/views/view_all_media_preview_view.dart';
-import '../../../models.dart';
+import '../../../common/app_localizations.dart';
+import '../../../data/utils.dart';
+import '../../../extensions/extensions.dart';
+import 'package:mirrorfly_plugin/mirrorflychat.dart';
 
 import '../../../common/constants.dart';
+import '../../../model/arguments.dart';
+import '../../../model/chat_message_model.dart';
+import '../../../model/group_media_model.dart';
+import '../../../routes/route_settings.dart';
 import '../../chat/controllers/chat_controller.dart';
-
 
 class ViewAllMediaController extends GetxController {
   final _medialist = <String, List<MessageItem>>{}.obs;
-  set medialist(Map<String,List<MessageItem>> value) => _medialist.value = value;
-  Map<String,List<MessageItem>> get medialistdata => _medialist;
+  set medialist(Map<String, List<MessageItem>> value) =>
+      _medialist.value = value;
+  Map<String, List<MessageItem>> get medialistdata => _medialist;
 
   final _docslist = <String, List<MessageItem>>{}.obs;
   set docslist(Map<String, List<MessageItem>> value) => _docslist.value = value;
@@ -29,9 +32,7 @@ class ViewAllMediaController extends GetxController {
   set linklist(Map<String, List<MessageItem>> value) => _linklist.value = value;
   Map<String, List<MessageItem>> get linklistdata => _linklist;
 
-  var name = Constants.emptyString;
-  var jid = Constants.emptyString;
-  var isGroup = false;
+  var name = ''.obs;
 
   var imageCount = 0.obs;
   var audioCount = 0.obs;
@@ -41,58 +42,75 @@ class ViewAllMediaController extends GetxController {
   var previewMediaList = List<ChatMessageModel>.empty(growable: true).obs;
   var newLinkMessages = List<ChatMessageModel>.empty(growable: true).obs;
 
+  ViewAllMediaArguments get arguments =>
+      NavUtils.arguments as ViewAllMediaArguments;
 
-  // @override
-  // void onInit() {
-  //   super.onInit();
-  void init(String name,String jid,bool isGroup){
-    this.name=name;
-    this.jid=jid;
-    this.isGroup=isGroup;
-
+  @override
+  void onInit() {
+    super.onInit();
     getMediaMessages();
     getDocsMessages();
     getLinkMessages();
 
     _medialist.bindStream(_medialist.stream);
     ever(_medialist, (callback) {
-      mirrorFlyLog("media list", medialistdata.length.toString());
+      LogMessage.d("media list", medialistdata.length.toString());
     });
     _docslist.bindStream(_docslist.stream);
     ever(_docslist, (callback) {
-      mirrorFlyLog("docs list", docslistdata.length.toString());
+      LogMessage.d("docs list", docslistdata.length.toString());
     });
     _linklist.bindStream(_linklist.stream);
     ever(_linklist, (callback) {
-      mirrorFlyLog("link list", linklistdata.length.toString());
+      LogMessage.d("link list", linklistdata.length.toString());
     });
   }
 
   void onMessageReceived(ChatMessageModel chatMessageModel) {
-    mirrorFlyLog("View All Media Controller", "onMessageReceived");
+    LogMessage.d("View All Media Controller", "onMessageReceived");
     getLinkMessages();
   }
 
   void onMediaStatusUpdated(ChatMessageModel chatMessageModel) {
-    if(chatMessageModel.isFileMessage()){
+    if (chatMessageModel.isFileMessage()) {
       getDocsMessages();
-    }else{
+    } else {
       getMediaMessages();
     }
   }
 
   getMediaMessages() {
-    Mirrorfly.getMediaMessages(jid).then((value) async {
+    Mirrorfly.getMediaMessages(jid: arguments.chatJid).then((value) async {
       if (value != null) {
-        // mirrorFlyLog("getMediaMessages", value);
+        LogMessage.d("getMediaMessages", value);
         var data = chatMessageModelFromJson(value);
-        previewMediaList.clear();
-        previewMediaList.addAll(data);
-        imageCount(previewMediaList.where((chatItem) => chatItem.isImageMessage()).toList().length);
-        videoCount(previewMediaList.where((chatItem) => chatItem.isVideoMessage()).toList().length);
-        audioCount(previewMediaList.where((chatItem) => chatItem.isAudioMessage()).toList().length);
+        // previewMediaList.clear();
+        previewMediaList(data);
         if (data.isNotEmpty) {
           _medialist(await getMapGroupedMediaList(data, true));
+          imageCount(0);
+          videoCount(0);
+          audioCount(0);
+          medialistdata.forEach((key, List<MessageItem> value) {
+            var imgCount = value
+                .where((MessageItem chatItem) =>
+                    chatItem.chatMessage.isImageMessage())
+                .toList()
+                .length;
+            imageCount(imageCount.value + imgCount);
+            var vidCount = value
+                .where((MessageItem chatItem) =>
+                    chatItem.chatMessage.isVideoMessage())
+                .toList()
+                .length;
+            videoCount(videoCount.value + vidCount);
+            var adiCount = value
+                .where((MessageItem chatItem) =>
+                    chatItem.chatMessage.isAudioMessage())
+                .toList()
+                .length;
+            audioCount(audioCount.value + adiCount);
+          });
           // debugPrint("_media list length--> ${_medialist.length}");
         }
       }
@@ -101,14 +119,14 @@ class ViewAllMediaController extends GetxController {
 
   //getDocsMessages
   getDocsMessages() {
-    Mirrorfly.getDocsMessages(jid).then((value) async {
+    Mirrorfly.getDocsMessages(jid: arguments.chatJid).then((value) async {
       if (value != null) {
-        mirrorFlyLog("get doc before json",value);
+        LogMessage.d("getDocsMessages", value);
         var data = chatMessageModelFromJson(value);
         documentCount(data.length);
-        // mirrorFlyLog("getDocsMessagess",json.encode(data));
+        // LogMessage.d("getDocsMessagess",json.encode(data));
         if (data.isNotEmpty) {
-          _docslist(await getMapGroupedMediaList(data, false));
+          _docslist(await getMapGroupedMediaList(data, true));
         }
       }
     });
@@ -116,8 +134,9 @@ class ViewAllMediaController extends GetxController {
 
   //getLinkMessages
   getLinkMessages() {
-    Mirrorfly.getLinkMessages(jid).then((value) async {
+    Mirrorfly.getLinkMessages(jid: arguments.chatJid).then((value) async {
       if (value != null) {
+        LogMessage.d("getLinkMessages", value);
         var data = chatMessageModelFromJson(value);
         linkCount(data.length);
         if (data.isNotEmpty) {
@@ -127,18 +146,16 @@ class ViewAllMediaController extends GetxController {
     });
   }
 
-  navigateMessage(ChatMessageModel linkChatItem,BuildContext context) {
-    // Get.toNamed(Routes.chat,parameters: {'isFromStarred':'true',"userJid":linkChatItem.chatUserJid,"messageId":linkChatItem.messageId});
-    // Get.back();
-    // Get.back();
-    Navigator.pop(context);
-    Navigator.pop(context);
+  navigateMessage(ChatMessageModel linkChatItem) {
+    // NavUtils.toNamed(Routes.chat,parameters: {'isFromStarred':'true',"userJid":linkChatItem.chatUserJid,"messageId":linkChatItem.messageId});
+    NavUtils.back();
+    NavUtils.back();
     if (Get.isRegistered<ChatController>()) {
       Get.find<ChatController>().navigateToMessage(linkChatItem);
     }
   }
 
-  Future<Map<String,List<MessageItem>>> getMapGroupedMediaList(
+  Future<Map<String, List<MessageItem>>> getMapGroupedMediaList(
       List<ChatMessageModel> mediaMessages, bool isMedia,
       [bool isLinkMedia = false]) async {
     // debugPrint("media message length--> ${mediaMessages.length}");
@@ -151,7 +168,7 @@ class ViewAllMediaController extends GetxController {
     int month;
     int day;
     //var viewAllMediaList = <GroupedMedia>[];
-    Map<String,List<MessageItem>> mapMediaList = {};
+    Map<String, List<MessageItem>> mapMediaList = {};
     var previousCategoryType = 10;
     var messages = <MessageItem>[];
     for (var chatMessage in mediaMessages) {
@@ -172,10 +189,11 @@ class ViewAllMediaController extends GetxController {
       // debugPrint("getMapGroupedMediaList category--> $category");
       if (isLinkMedia) {
         if (previousCategoryType != category.key) {
-          messages=[];
+          messages = [];
         }
         previousCategoryType = category.key;
-        mapMediaList[category.value]=getMapMessageWithURLList(messages,chatMessage);
+        mapMediaList[category.value] =
+            getMapMessageWithURLList(messages, chatMessage);
       } else {
         // debugPrint("getMapGroupedMediaList isMessage Recalled--> ${chatMessage.isMessageRecalled}");
         // debugPrint("getMapGroupedMediaList isMediaDownloaded--> ${chatMessage.isMediaDownloaded()}");
@@ -187,24 +205,25 @@ class ViewAllMediaController extends GetxController {
           // debugPrint("getMapGroupedMediaList isMediaAvailable --> true");
           if (previousCategoryType != category.key) {
             // debugPrint("getMapGroupedMediaList previousCategoryType check --->${previousCategoryType != category.key}");
-            messages=[];
+            messages = [];
           }
           // debugPrint("getMapGroupedMediaList messages add--> ${chatMessage.toJson()}");
           messages.add(MessageItem(chatMessage));
           // debugPrint("getMapGroupedMediaList category value--> ${category.value}");
-          mapMediaList[category.value]=messages;
+          mapMediaList[category.value] = messages;
           previousCategoryType = category.key;
-        }else{
+        } else {
           debugPrint("getMapGroupedMediaList isMediaAvailable --> false");
         }
       }
     }
     // debugPrint("getMapGroupedMediaList Return map list--> ${mapMediaList.length.toString()}");
-    return mapMediaList;//viewAllMediaList;
+    return mapMediaList; //viewAllMediaList;
   }
 
-  List<MessageItem> getMapMessageWithURLList(List<MessageItem> messageList,ChatMessageModel message) {
-    var textContent = Constants.emptyString;
+  List<MessageItem> getMapMessageWithURLList(
+      List<MessageItem> messageList, ChatMessageModel message) {
+    var textContent = "";
     if (message.isTextMessage()) {
       textContent = message.messageTextContent!;
     } else if (message.isImageMessage()) {
@@ -218,7 +237,7 @@ class ViewAllMediaController extends GetxController {
         map["host"] = it.key;
         map["url"] = it.value;
         messageList.add(MessageItem(message, map));
-        mirrorFlyLog("link msg", map.toString());
+        LogMessage.d("link msg", map.toString());
       });
     }
     return messageList;
@@ -229,23 +248,23 @@ class ViewAllMediaController extends GetxController {
     var urls = <MapEntry<String, String>>[];
     var splitString = text.split(exp);
     for (var string in splitString) {
-        try {
-          var item = Uri.parse(string);
-          if(item.host.isNotEmpty) {
-            urls.add(MapEntry(item.host, item.toString()));
-          }
-        } catch (ignored) {
-          mirrorFlyLog('$string url exception', ignored.toString());
+      try {
+        var item = Uri.parse(string);
+        if (item.host.isNotEmpty) {
+          urls.add(MapEntry(item.host, item.toString()));
         }
+      } catch (ignored) {
+        LogMessage.d('$string url exception', ignored.toString());
+      }
     }
-    mirrorFlyLog("urls", urls.toString());
+    LogMessage.d("urls", urls.toString());
     return urls;
   }
 
   Future<bool> isMediaAvailable(
       ChatMessageModel chatMessage, bool isMedia) async {
     var mediaExist = await isMediaExists(
-        chatMessage.mediaChatMessage!.mediaLocalStoragePath);
+        chatMessage.mediaChatMessage!.mediaLocalStoragePath.value);
     // debugPrint("mediaLocalStoragePath---> ${chatMessage.mediaChatMessage!.mediaLocalStoragePath}");
     // debugPrint("isMediaAvailable---> ${mediaExist.toString()}");
     return (!isMedia || mediaExist);
@@ -256,10 +275,9 @@ class ViewAllMediaController extends GetxController {
     var fileExists = file.absolute.existsSync();
     // debugPrint("file path---> $filePath");
     debugPrint("file exists---> ${fileExists.toString()}");
-    var fileExists1 =
-        File(filePath).existsSync() ||
-            Directory(filePath).existsSync() ||
-            Link(filePath).existsSync();
+    var fileExists1 = File(filePath).existsSync() ||
+        Directory(filePath).existsSync() ||
+        Link(filePath).existsSync();
     debugPrint("file exists1---> ${fileExists1.toString()}");
     return await io.File(filePath).absolute.exists();
   }
@@ -280,23 +298,23 @@ class ViewAllMediaController extends GetxController {
       return MapEntry(5, year.toString());
     } else if ((currentMonth - month) == 1) {
       if (day > currentDay) {
-        return MapEntry(3, AppConstants.lastMonth);
+        return MapEntry(3, getTranslated("lastMonth"));
       } else {
         return MapEntry(4, dateSymbols[month]);
       }
     } else if (currentMonth > month) {
       return MapEntry(4, dateSymbols[month]);
     } else if ((currentDay - day) > 7) {
-      return MapEntry(2, AppConstants.lastMonth);
+      return MapEntry(2, getTranslated("lastMonth"));
     } else if ((currentDay - day) > 2) {
-      return MapEntry(1, AppConstants.lastWeek);
+      return MapEntry(1, getTranslated("lastWeek"));
     }
-    return MapEntry(0, AppConstants.recent);
+    return MapEntry(0, getTranslated("recent"));
   }
 
-  Image imageFromBase64String(String base64String,
-      double? width, double? height) {
-    var decodedBase64 = base64String.replaceAll("\n", Constants.emptyString);
+  Image imageFromBase64String(
+      String base64String, double? width, double? height) {
+    var decodedBase64 = base64String.replaceAll("\n", "");
     Uint8List image = const Base64Decoder().convert(decodedBase64);
     return Image.memory(
       image,
@@ -311,12 +329,11 @@ class ViewAllMediaController extends GetxController {
     if(result.message.contains("file does not exist")){
       toToast("The Selected file Doesn't Exist or Unable to Open");
     }*/
-    openDocument(path);
+    AppUtils.openDocument(path);
   }
 
-  openImage(BuildContext context,int gridIndex){
-    Navigator.push(context, MaterialPageRoute(builder: (con)=>ViewAllMediaPreviewView(images: previewMediaList,index : gridIndex)));
-    // Get.toNamed(Routes.viewAllMediaPreview, arguments: {"images" : previewMediaList, "index": gridIndex});
+  openImage(int gridIndex) {
+    NavUtils.toNamed(Routes.viewAllMediaPreview,
+        arguments: {"images": previewMediaList, "index": gridIndex});
   }
-
 }

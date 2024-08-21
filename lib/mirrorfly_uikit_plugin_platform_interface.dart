@@ -8,7 +8,8 @@ abstract class MirrorflyUikitPluginPlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
-  static MirrorflyUikitPluginPlatform _instance = MethodChannelMirrorflyUikitPlugin();
+  static MirrorflyUikitPluginPlatform _instance =
+      MethodChannelMirrorflyUikitPlugin();
 
   /// The default instance of [MirrorflyUikitPluginPlatform] to use.
   ///

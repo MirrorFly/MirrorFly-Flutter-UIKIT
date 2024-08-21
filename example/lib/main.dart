@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/notification/notification_service.dart';
-// import 'package:mirrorfly_uikit_plugin/app/common/AppConstants.dart';
+import 'package:mirrorfly_uikit_plugin/app/model/arguments.dart';
+import 'package:mirrorfly_uikit_plugin/app/routes/mirrorfly_navigation_observer.dart';
+import 'package:mirrorfly_uikit_plugin/app/routes/route_settings.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
+final navigatorKey = GlobalKey<NavigatorState>();
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   MirrorflyUikit.instance.initUIKIT(
-      baseUrl: 'YOUR_BASE_URL',
-      licenseKey: 'Your_Mirrorfly_Licence_Key',
-      googleMapKey: 'Your_Google_Map_Key_for_location_messages',
-      iOSContainerID: 'Your_iOS_app_Container_id');
-  // AppConstants.newGroup = "New Group Create";
+    navigatorKey: navigatorKey,
+    licenseKey: 'LICENSE_KEY',
+    iOSContainerID: 'group.com.mirrorfly.flutter',
+  );
+
+  /// Use this method to add the locale you want to support in the UIKIT Plugin.
+  AppLocalizations.addSupportedLocales(const Locale("hi", "IN"));
+
   runApp(const MyApp());
 }
 
@@ -26,26 +32,41 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
-    _configureSelectNotificationSubject();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        navigatorKey: navigatorKey,
         themeMode: ThemeMode.dark,
         debugShowCheckedModeBanner: false,
+
+        /// CHANGE THE LOCALE TO 'en' TO SEE THE LOCALIZATION IN ENGLISH, 'ar' FOR ARABIC, 'hi' FOR HINDI
+        locale: const Locale('en'),
+
+        /// ADD THE SUPPORTED LOCALES TO THE APP
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+
+        /// ADD THE NAVIGATION OBSERVER TO THE APP, TO HANDLE THE NAVIGATION EVENTS
+        navigatorObservers: [MirrorFlyNavigationObserver()],
+
+        /// ADD THE ROUTE GENERATOR TO THE APP, TO HANDLE THE ROUTES
+        onGenerateRoute: (settings) {
+          switch (settings.name) {
+            default:
+              return mirrorFlyRoute(settings);
+          }
+        },
         theme: ThemeData(textTheme: GoogleFonts.latoTextTheme()),
         home: const Dashboard());
   }
-
-  void _configureSelectNotificationSubject() {
-    ///Used to perform the action when local notification is selected.
-    selectNotificationStream.stream.listen((String? payload) async {
-      debugPrint("payload $payload");
-    });
-  }
-
-
 }
 
 class Dashboard extends StatefulWidget {
@@ -102,8 +123,8 @@ class _DashboardState extends State<Dashboard> {
                         onPressed: () async {
                           if (uniqueId.isNotEmpty) {
                             try {
-                              var response =
-                                  await MirrorflyUikit.registerUser(userIdentifier: uniqueId);
+                              var response = await MirrorflyUikit.login(
+                                  userIdentifier: uniqueId);
                               debugPrint("register user $response");
                               showSnack(response['message']);
                             } catch (e) {
@@ -123,11 +144,12 @@ class _DashboardState extends State<Dashboard> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (con) => const DashboardView(
-                                  title: "Chats",
-                              enableAppBar: true,
-                              showChatDeliveryIndicator: true,
-                                )));
+                            builder: (con) => const DashboardView(),
+                            settings: const RouteSettings(
+                                name: 'DashboardView',
+                                arguments: DashboardViewArguments(
+                                    didMissedCallNotificationLaunchApp:
+                                        false))));
                   },
                   text: 'chat page',
                 ),
@@ -144,10 +166,10 @@ class _DashboardState extends State<Dashboard> {
       onPressed: onPressed,
       style: ButtonStyle(
         backgroundColor:
-            MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
-        padding: MaterialStateProperty.all<EdgeInsets>(
+            WidgetStateProperty.all<Color>(Theme.of(context).primaryColor),
+        padding: WidgetStateProperty.all<EdgeInsets>(
             const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0)),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
           ),

@@ -3,9 +3,11 @@ import 'dart:math';
 
 import 'package:custom_image_crop/custom_image_crop.dart';
 import 'package:flutter/material.dart';
-import 'package:mirrorfly_uikit_plugin/app/data/helper.dart';
+import '../common/app_localizations.dart';
 
-import '../../mirrorfly_uikit_plugin.dart';
+import '../app_style_config.dart';
+import '../data/utils.dart';
+
 class CropImage extends StatefulWidget {
   const CropImage({Key? key, required this.imageFile}) : super(key: key);
   final File imageFile;
@@ -39,10 +41,12 @@ class _CropImageState extends State<CropImage> {
         children: [
           Expanded(
             child: Container(
-              color: Colors.transparent,
-              // padding: const EdgeInsets.all(20.0),
+              color: const Color(0X55000000),
+              padding: const EdgeInsets.all(20.0),
               child: CustomImageCrop(
                 cropController: controller,
+                canMove: true,
+                forceInsideCropArea: true,
                 shape: CustomCropShape.Square,
                 image: FileImage(widget.imageFile),
               ),
@@ -59,33 +63,65 @@ class _CropImageState extends State<CropImage> {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: ()=>Navigator.pop(context),
-                    style: ElevatedButton.styleFrom(backgroundColor: MirrorflyUikit.getTheme?.secondaryColor, shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
-                    child: Text("CANCEL",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor,fontSize:16.0),),
+                    onPressed: () => NavUtils.back(),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: WidgetStateColor.resolveWith(
+                            (states) => Colors.white),
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero),
+                        padding: EdgeInsets.zero),
+                    child: Text(
+                      getTranslated("cancel").toUpperCase(),
+                      style:
+                          const TextStyle(color: Colors.black, fontSize: 16.0),
+                    ),
                   ),
                 ),
                 /*SizedBox(width: 1.0,),
                 Material(child: IconButton(icon: const Icon(Icons.zoom_in), onPressed: () => controller.addTransition(CropImageData(scale: 1.33))),),
                 SizedBox(width: 1.0,),
                 Material(child: IconButton(icon: const Icon(Icons.zoom_out), onPressed: () => controller.addTransition(CropImageData(scale: 0.75))),),*/
-                const SizedBox(width: 1.0,),
-                Material(color: MirrorflyUikit.getTheme?.secondaryColor,child: IconButton(onPressed: ()=>controller.addTransition(CropImageData(angle: -pi / 4)), icon: Icon(Icons.rotate_left, color: MirrorflyUikit.getTheme?.textPrimaryColor,))),
-                const SizedBox(width: 1.0,),
-                Material(color: MirrorflyUikit.getTheme?.secondaryColor,child: IconButton(onPressed: ()=>controller.addTransition(CropImageData(angle: pi / 4)), icon: Icon(Icons.rotate_right, color: MirrorflyUikit.getTheme?.textPrimaryColor,))),
-                const SizedBox(width: 1.0,),
+                const SizedBox(
+                  width: 1.0,
+                ),
+                Material(
+                    child: IconButton(
+                        onPressed: () => controller
+                            .addTransition(CropImageData(angle: -pi / 4)),
+                        icon: const Icon(Icons.rotate_left))),
+                const SizedBox(
+                  width: 1.0,
+                ),
+                Material(
+                    child: IconButton(
+                        onPressed: () => controller
+                            .addTransition(CropImageData(angle: pi / 4)),
+                        icon: const Icon(Icons.rotate_right))),
+                const SizedBox(
+                  width: 1.0,
+                ),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () async {
-                      Helper.showLoading(message: "Image Cropping...", buildContext: context);
-                      await controller.onCropImage().then((image){
-                        Helper.hideLoading(context: context);
-                        // Get.back(result: image);
-                        Navigator.pop(context, image);
+                      DialogUtils.showLoading(
+                          message: getTranslated("imageCropping"),
+                          dialogStyle: AppStyleConfig.dialogStyle);
+                      await controller.onCropImage().then((image) {
+                        DialogUtils.hideLoading();
+                        NavUtils.back(result: image);
                       });
-
                     },
-                    style: ElevatedButton.styleFrom(backgroundColor: MirrorflyUikit.getTheme?.secondaryColor, shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
-                    child: Text("SAVE",style: TextStyle(color: MirrorflyUikit.getTheme?.textPrimaryColor,fontSize:16.0),),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: WidgetStateColor.resolveWith(
+                            (states) => Colors.white),
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero),
+                        padding: EdgeInsets.zero),
+                    child: Text(
+                      getTranslated("save").toUpperCase(),
+                      style:
+                          const TextStyle(color: Colors.black, fontSize: 16.0),
+                    ),
                   ),
                 ),
               ],
@@ -96,7 +132,7 @@ class _CropImageState extends State<CropImage> {
     );
   }
   // Future<void> _cropImage() async {
-    /*final scale = cropKey.currentState!.scale;
+  /*final scale = cropKey.currentState!.scale;
     final area = cropKey.currentState!.area;
     if (area == null) {
       // cannot crop, widget is not setup
