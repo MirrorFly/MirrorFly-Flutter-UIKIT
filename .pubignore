@@ -1,0 +1,18 @@
+# Ignore build output
+build/
+
+# Ignore temporary files
+*.tmp
+
+# Ignore IDE files
+.idea/
+*.iml
+
+# Ignore test coverage output
+coverage/
+
+# Ignore node_modules (if you have any)
+node_modules/
+
+# Ignore other specific files
+#path/to/specific/file.dart

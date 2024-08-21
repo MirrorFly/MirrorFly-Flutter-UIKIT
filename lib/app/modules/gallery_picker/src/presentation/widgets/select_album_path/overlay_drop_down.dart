@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../../data/utils.dart';
 import 'dropdown.dart';
 
 class OverlayDropDown<T> extends StatelessWidget {
@@ -8,17 +9,17 @@ class OverlayDropDown<T> extends StatelessWidget {
   final AnimationController animationController;
   final DropdownWidgetBuilder<T> builder;
   const OverlayDropDown({
-    Key? key,
+    super.key,
     required this.height,
     required this.close,
     required this.animationController,
     required this.builder,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     /// local variables
-    final Size size = MediaQuery.of(context).size;
+    final Size size = NavUtils.size;
     final double screenHeight = size.height;
     final double screenWidth = size.width;
     final double space = screenHeight - height;

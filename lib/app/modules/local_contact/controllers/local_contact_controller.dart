@@ -1,22 +1,23 @@
-
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_constants.dart';
+import '../../../common/app_localizations.dart';
+
+import '../../../data/utils.dart';
+import '../../../routes/route_settings.dart';
 
 import '../../../common/constants.dart';
 import '../../../model/local_contact_model.dart';
-import '../../preview_contact/views/preview_contact_view.dart';
-
 
 class LocalContactController extends GetxController {
-
-  var search=false.obs;
+  var search = false.obs;
 
   var contactList = List<LocalContact>.empty(growable: true).obs;
   var searchList = List<LocalContact>.empty(growable: true).obs;
   var contactsSelected = List<LocalContact>.empty(growable: true).obs;
   TextEditingController searchTextController = TextEditingController();
+
+  var userJid = NavUtils.arguments['userJid'];
 
   @override
   void onInit() {
@@ -24,11 +25,12 @@ class LocalContactController extends GetxController {
     getContacts();
   }
 
-  getContacts() async{
+  getContacts() async {
     await ContactsService.getContacts().then((localContactList) {
       for (var userDetail in localContactList) {
         if (userDetail.phones != null && userDetail.phones!.isNotEmpty) {
-          LocalContact localContact = LocalContact(contact: userDetail, isSelected: false);
+          LocalContact localContact =
+              LocalContact(contact: userDetail, isSelected: false);
           contactList.add(localContact);
           searchList.add(localContact);
         }
@@ -36,7 +38,7 @@ class LocalContactController extends GetxController {
     });
   }
 
-  onSearchCancelled(){
+  onSearchCancelled() {
     searchList.clear();
     searchList.addAll(contactList);
   }
@@ -49,44 +51,54 @@ class LocalContactController extends GetxController {
       return;
     }
     for (var userDetail in contactList) {
-      if (name(userDetail.contact).toString().toLowerCase().contains(searchTextController.text.trim().toLowerCase())) {
+      if (name(userDetail.contact)
+          .toString()
+          .toLowerCase()
+          .contains(searchTextController.text.trim().toLowerCase())) {
         searchList.add(userDetail);
       }
     }
   }
 
-  shareContact(BuildContext context) async {
+  shareContact() async {
     // var contactList = List<LocalContact>.empty(growable: true);
     // for (var mobileNumber in contactsSelected) {
     //   final number = mobileNumber.value;
     //   contactList.add(number!.replaceAll(RegExp('[+() -]'), ''));
     // }
 
-    // Get.toNamed(Routes.previewContact, arguments: {"contactList" : contactsSelected,"shareContactList" : contactsSelected, "from": "contact_pick"});
-    Navigator.push(context, MaterialPageRoute(builder: (con) => PreviewContactView(contactList : contactsSelected, from: "contact_pick")));
+    NavUtils.toNamed(Routes.previewContact, arguments: {
+      "contactList": contactsSelected,
+      "shareContactList": contactsSelected,
+      "from": "contact_pick",
+      "userJid": userJid
+    });
   }
 
   name(Contact item) {
-    return item.displayName ?? item.givenName ?? item.middleName ?? item.androidAccountName ?? item.familyName ?? "";
+    return item.displayName ??
+        item.givenName ??
+        item.middleName ??
+        item.androidAccountName ??
+        item.familyName ??
+        "";
   }
 
-  isValidContactNumber(List<Item> phones){
+  isValidContactNumber(List<Item> phones) {
     return phones.isNotEmpty;
   }
 
   void contactSelected(LocalContact localContact) {
-
-    if(contactsSelected.contains(localContact)){
+    if (contactsSelected.contains(localContact)) {
       localContact.isSelected = false;
       contactsSelected.remove(localContact);
-    }else {
-      if(contactsSelected.length == 5){
-        toToast(AppConstants.cantShare5More);
+    } else {
+      if (contactsSelected.length == 5) {
+        toToast(getTranslated("cantShare5More"));
         return;
       }
       localContact.isSelected = true;
       contactsSelected.add(localContact);
     }
   }
-
 }

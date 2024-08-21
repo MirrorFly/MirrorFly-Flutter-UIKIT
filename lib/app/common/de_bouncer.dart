@@ -1,7 +1,5 @@
-
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-
 
 class DeBouncer {
   final int milliseconds;
@@ -17,7 +15,7 @@ class DeBouncer {
     _timer = Timer(Duration(milliseconds: milliseconds), action);
   }
 
-  cancel(){
+  cancel() {
     if (null != _timer) {
       _timer?.cancel();
     }

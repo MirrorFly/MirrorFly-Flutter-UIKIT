@@ -1,4 +1,5 @@
 library mirrorfly_uikit;
+
 export 'mirrorfly_uikit_plugin.dart';
 export '/app/modules/dashboard/views/dashboard_view.dart';
 export '/app/modules/archived_chats/archived_chat_list_view.dart';
@@ -12,3 +13,5 @@ export '/app/modules/profile/views/profile_view.dart';
 export '/app/modules/settings/views/settings_view.dart';
 export '/app/modules/starred_messages/views/starred_messages_view.dart';
 export '/app/modules/view_all_media/views/view_all_media_view.dart';
+export '/app/app_style_config.dart';
+export '/app/common/app_localizations.dart';
