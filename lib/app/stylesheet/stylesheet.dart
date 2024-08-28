@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:otp_text_field/otp_field_style.dart';
-import 'package:otp_text_field/otp_text_field.dart';
-import 'package:otp_text_field/style.dart';
 
 part 'add_participants_page_style.dart';
 part 'archived_page_style.dart';
@@ -26,7 +23,6 @@ part 'media_sent_preview_page_style.dart';
 part 'message_info_page_style.dart';
 part 'message_view_styles.dart';
 part 'ongoing_call_page_style.dart';
-part 'otp_page_style.dart';
 part 'outgoing_call_page_style.dart';
 part 'profile_view_style.dart';
 part 'settings_page_style.dart';
