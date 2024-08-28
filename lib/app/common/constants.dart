@@ -7,7 +7,7 @@ import 'package:mirrorfly_plugin/mirrorflychat.dart';
 
 // Icon Package Name
 
-String? iconPackageName; //= 'mirrorfly_uikit_plugin/lib';
+String? iconPackageName = 'mirrorfly_uikit_plugin/lib';
 
 //Colors
 const Color appBarColor = Color(0xffF2F2F2);
