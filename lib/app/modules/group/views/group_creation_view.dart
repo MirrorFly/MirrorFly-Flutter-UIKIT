@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../../app_style_config.dart';
 import '../../../common/app_localizations.dart';
@@ -17,14 +16,12 @@ class GroupCreationView extends NavViewStateful<GroupCreationController> {
   const GroupCreationView({Key? key}) : super(key: key);
 
   @override
-  GroupCreationController createController({String? tag}) =>
-      Get.put(GroupCreationController());
+GroupCreationController createController({String? tag}) => Get.put(GroupCreationController());
 
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: Theme.of(context).copyWith(
-          appBarTheme: AppStyleConfig.createGroupPageStyle.appbarTheme),
+      data: Theme.of(context).copyWith(appBarTheme: AppStyleConfig.createGroupPageStyle.appbarTheme),
       child: Scaffold(
         appBar: AppBar(
           title: Text(
@@ -42,7 +39,7 @@ class GroupCreationView extends NavViewStateful<GroupCreationController> {
         ),
         body: PopScope(
           canPop: false,
-          onPopInvoked: (didPop) {
+          onPopInvokedWithResult: (didPop, result) {
             if (didPop) {
               return;
             }
@@ -76,73 +73,33 @@ class GroupCreationView extends NavViewStateful<GroupCreationController> {
                                   () => InkWell(
                                     child: controller.imagePath.value.isNotEmpty
                                         ? SizedBox(
-                                            width: AppStyleConfig
-                                                .createGroupPageStyle
-                                                .profileImageSize
-                                                .width,
-                                            height: AppStyleConfig
-                                                .createGroupPageStyle
-                                                .profileImageSize
-                                                .height,
+                                            width: AppStyleConfig.createGroupPageStyle.profileImageSize.width,
+                                            height: AppStyleConfig.createGroupPageStyle.profileImageSize.height,
                                             child: ClipOval(
                                               child: Image.file(
-                                                File(
-                                                    controller.imagePath.value),
+                                                File(controller.imagePath.value),
                                                 fit: BoxFit.fill,
                                               ),
                                             ))
                                         : ImageNetwork(
-                                            url: controller.userImgUrl.value
-                                                .checkNull(),
-                                            width: AppStyleConfig
-                                                .createGroupPageStyle
-                                                .profileImageSize
-                                                .width,
-                                            height: AppStyleConfig
-                                                .createGroupPageStyle
-                                                .profileImageSize
-                                                .height,
+                                            url: controller.userImgUrl.value.checkNull(),
+                                            width: AppStyleConfig.createGroupPageStyle.profileImageSize.width,
+                                            height: AppStyleConfig.createGroupPageStyle.profileImageSize.height,
                                             clipOval: true,
                                             errorWidget: ClipOval(
-                                              child: Image.asset(groupImg,
-                                                  package: package,
-                                                  width: AppStyleConfig
-                                                      .createGroupPageStyle
-                                                      .profileImageSize
-                                                      .width,
-                                                  height: AppStyleConfig
-                                                      .createGroupPageStyle
-                                                      .profileImageSize
-                                                      .height,
-                                                  fit: BoxFit.cover),
+                                              child: AppUtils.assetIcon(assetName:groupImg, width: AppStyleConfig.createGroupPageStyle.profileImageSize.width, height: AppStyleConfig.createGroupPageStyle.profileImageSize.height, fit: BoxFit.cover),
                                             ),
                                             isGroup: true,
                                             blocked: false,
                                             unknown: false,
                                           ),
                                     onTap: () {
-                                      if (controller.imagePath.value
-                                          .checkNull()
-                                          .isNotEmpty) {
+                                      if (controller.imagePath.value.checkNull().isNotEmpty) {
                                         NavUtils.toNamed(Routes.imageView,
-                                            arguments: {
-                                              'imageName':
-                                                  controller.groupName.text,
-                                              'imagePath': controller
-                                                  .imagePath.value
-                                                  .checkNull()
-                                            });
-                                      } else if (controller.userImgUrl.value
-                                          .checkNull()
-                                          .isNotEmpty) {
+                                            arguments: {'imageName': controller.groupName.text, 'imagePath': controller.imagePath.value.checkNull()});
+                                      } else if (controller.userImgUrl.value.checkNull().isNotEmpty) {
                                         NavUtils.toNamed(Routes.imageView,
-                                            arguments: {
-                                              'imageName':
-                                                  controller.groupName.text,
-                                              'imageUrl': controller
-                                                  .userImgUrl.value
-                                                  .checkNull()
-                                            });
+                                            arguments: {'imageName': controller.groupName.text, 'imageUrl': controller.userImgUrl.value.checkNull()});
                                       } else {
                                         controller.choosePhoto();
                                       }
@@ -157,30 +114,19 @@ class GroupCreationView extends NavViewStateful<GroupCreationController> {
                                   child: Container(
                                     width: 40,
                                     decoration: BoxDecoration(
-                                        color: AppStyleConfig
-                                            .createGroupPageStyle
-                                            .cameraIconStyle
-                                            .bgColor,
-                                        border: Border.all(
-                                            color: AppStyleConfig
-                                                    .createGroupPageStyle
-                                                    .cameraIconStyle
-                                                    .borderColor ??
-                                                Colors.white,
-                                            width: 1),
-                                        shape: BoxShape.circle),
+                                        color: AppStyleConfig.createGroupPageStyle.cameraIconStyle.bgColor,
+                                        border: Border.all(color: AppStyleConfig.createGroupPageStyle.cameraIconStyle.borderColor ?? Colors.white,width: 1),
+                                        shape: BoxShape.circle
+                                    ),
                                     child: InkWell(
                                       onTap: controller.loading.value
                                           ? null
                                           : () {
                                               controller.choosePhoto();
                                             },
-                                      child: SvgPicture.asset(
+                                      child: AppUtils.svgIcon(icon:
                                         'assets/logos/camera_profile_change.svg',
-                                        colorFilter: ColorFilter.mode(
-                                            AppStyleConfig.createGroupPageStyle
-                                                .cameraIconStyle.iconColor,
-                                            BlendMode.srcIn),
+                                        colorFilter: ColorFilter.mode(AppStyleConfig.createGroupPageStyle.cameraIconStyle.iconColor, BlendMode.srcIn),
                                       ),
                                     ),
                                   ),
@@ -198,28 +144,19 @@ class GroupCreationView extends NavViewStateful<GroupCreationController> {
                           children: [
                             Expanded(
                               child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 40.0, right: 20),
+                                padding: const EdgeInsets.only(left: 40.0, right: 20),
                                 child: TextField(
                                   focusNode: controller.focusNode,
                                   // style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal, overflow: TextOverflow.visible),
-                                  onChanged: (_) =>
-                                      controller.onGroupNameChanged(),
+                                  onChanged: (_) => controller.onGroupNameChanged(),
                                   maxLength: 25,
                                   maxLines: 1,
                                   controller: controller.groupName,
                                   decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    counterText: "",
-                                    hintText:
-                                        getTranslated("typeGroupNameHere"),
-                                    hintStyle: AppStyleConfig
-                                        .createGroupPageStyle
-                                        .nameTextFieldStyle
-                                        .editTextHintStyle,
-                                  ),
-                                  style: AppStyleConfig.createGroupPageStyle
-                                      .nameTextFieldStyle.editTextStyle,
+                                    border: InputBorder.none, counterText: "",
+                                    hintText: getTranslated("typeGroupNameHere"),
+                                    hintStyle: AppStyleConfig.createGroupPageStyle.nameTextFieldStyle.editTextHintStyle,),
+                                  style: AppStyleConfig.createGroupPageStyle.nameTextFieldStyle.editTextStyle,
                                 ),
                               ),
                             ),
@@ -230,9 +167,7 @@ class GroupCreationView extends NavViewStateful<GroupCreationController> {
                                   child: Obx(
                                     () => Text(
                                       controller.count.toString(),
-                                      style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.normal),
+                                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
                                     ),
                                   ),
                                 )),
@@ -244,28 +179,20 @@ class GroupCreationView extends NavViewStateful<GroupCreationController> {
                                   icon: controller.showEmoji.value
                                       ? Icon(
                                           Icons.keyboard,
-                                          color: AppStyleConfig
-                                              .createGroupPageStyle.emojiColor,
+                                          color: AppStyleConfig.createGroupPageStyle.emojiColor,
                                         )
-                                      : SvgPicture.asset(
+                                      : AppUtils.svgIcon(icon:
                                           smileIcon,
-                                          package: package,
                                           width: 18,
                                           height: 18,
-                                          colorFilter: ColorFilter.mode(
-                                              AppStyleConfig
-                                                  .createGroupPageStyle
-                                                  .emojiColor,
-                                              BlendMode.srcIn),
+                                    colorFilter: ColorFilter.mode(AppStyleConfig.createGroupPageStyle.emojiColor, BlendMode.srcIn),
                                         ));
                             })
                           ],
                         ),
                         const AppDivider(),
-                        Text(
-                          getTranslated("provideGroupNameIcon"),
-                          style: AppStyleConfig.createGroupPageStyle
-                              .nameTextFieldStyle.titleStyle,
+                        Text(getTranslated("provideGroupNameIcon"),
+                          style: AppStyleConfig.createGroupPageStyle.nameTextFieldStyle.titleStyle,
                           // style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
                         ),
                       ],
@@ -278,10 +205,8 @@ class GroupCreationView extends NavViewStateful<GroupCreationController> {
                     if (controller.showEmoji.value) {
                       return EmojiLayout(
                         textController: TextEditingController(),
-                        onBackspacePressed: () =>
-                            controller.onEmojiBackPressed(),
-                        onEmojiSelected: (cat, emoji) =>
-                            controller.onEmojiSelected(emoji),
+                        onBackspacePressed: () => controller.onEmojiBackPressed(),
+                        onEmojiSelected: (cat, emoji) => controller.onEmojiSelected(emoji),
                       );
                     } else {
                       return const SizedBox.shrink();

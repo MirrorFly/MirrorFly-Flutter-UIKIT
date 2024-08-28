@@ -9,7 +9,7 @@ class ScannerView extends NavView<ScannerController> {
   const ScannerView({Key? key}) : super(key: key);
 
   @override
-  ScannerController createController({String? tag}) => ScannerController();
+ ScannerController createController({String? tag}) => ScannerController();
 
   @override
   Widget build(BuildContext context) {
@@ -22,17 +22,12 @@ class ScannerView extends NavView<ScannerController> {
         title: const Text('Scan code'),
         automaticallyImplyLeading: true,
       ),
-      body: Column(
+      body:  Column(
         children: <Widget>[
           Container(
             padding: const EdgeInsets.all(16),
             color: Colors.white,
-            child: const Center(
-              child: Text(
-                "Visit ${Constants.webChatLogin} on your computer and scan the QR code",
-                style: TextStyle(fontSize: 17),
-              ),
-            ),
+            child: const Center(child: Text("Visit ${Constants.webChatLogin} on your computer and scan the QR code",style: TextStyle(fontSize: 17),),),
           ),
           Expanded(
             child: QRView(

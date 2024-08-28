@@ -1,3 +1,4 @@
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../../../data/utils.dart';
@@ -19,44 +20,34 @@ Widget messageNotAvailableWidget(ChatMessageModel chatMessage) {
           ? chatReplyContainerColor
           : chatReplySenderColor,
     ),
-    child: Text(
-      getTranslated("messageUnavailable"),
-      maxLines: 2,
-      overflow: TextOverflow.ellipsis,
-    ),
+    child: Text(getTranslated("messageUnavailable"), maxLines: 2, overflow: TextOverflow.ellipsis,),
   );
 }
 
-Widget getLocationImage(
-    LocationChatMessage? locationChatMessage, double width, double height,
+Widget getLocationImage(LocationChatMessage? locationChatMessage, double width, double height,
     {bool isSelected = false}) {
   return InkWell(
       onTap: isSelected
           ? null
           : () async {
-              Uri googleUrl = MessageUtils.getMapLaunchUri(
-                  locationChatMessage!.latitude, locationChatMessage.longitude);
-              AppUtils.launchWeb(googleUrl);
-            },
+        Uri googleUrl = MessageUtils.getMapLaunchUri(locationChatMessage!.latitude,locationChatMessage.longitude);
+        AppUtils.launchWeb(googleUrl);
+      },
       child: FutureBuilder(
-          future: Mirrorfly.getValueFromManifestOrInfoPlist(
-              androidManifestKey: "com.google.android.geo.API_THUMP_KEY",
-              iOSPlistKey: "API_THUMP_KEY"),
-          builder: (context, snap) {
-            return CachedNetworkImage(
-              imageUrl: AppUtils.getMapImageUrl(locationChatMessage!.latitude,
-                  locationChatMessage.longitude, snap.data.checkNull()),
-              fit: BoxFit.fill,
-              width: width,
-              height: height,
-            );
-          }));
+        future: Mirrorfly.getValueFromManifestOrInfoPlist(androidManifestKey: "com.google.android.geo.API_THUMP_KEY", iOSPlistKey: "API_THUMP_KEY"),
+        builder: (context,snap) {
+          return CachedNetworkImage(
+            imageUrl: AppUtils.getMapImageUrl(locationChatMessage!.latitude,locationChatMessage.longitude,snap.data.checkNull()),
+            fit: BoxFit.fill,
+            width: width,
+            height: height,
+          );
+        }
+      ));
 }
 
 Widget chatSpannedText(String text, String spannableText, TextStyle? style,
-    {int? maxLines,
-    Color spanColor = Colors.orange,
-    Color urlColor = Colors.blue}) {
+    {int? maxLines,Color spanColor = Colors.orange,Color urlColor = Colors.blue}) {
   var startIndex = text.toLowerCase().contains(spannableText.toLowerCase())
       ? text.toLowerCase().indexOf(spannableText.toLowerCase())
       : -1;
@@ -69,7 +60,8 @@ Widget chatSpannedText(String text, String spannableText, TextStyle? style,
       TextSpan(
           text: startText,
           children: [
-            TextSpan(text: colorText, style: TextStyle(color: spanColor)),
+            TextSpan(
+                text: colorText, style: TextStyle(color: spanColor)),
             TextSpan(text: endText)
           ],
           style: style),
@@ -77,6 +69,10 @@ Widget chatSpannedText(String text, String spannableText, TextStyle? style,
       overflow: TextOverflow.ellipsis,
     );
   } else {
-    return textMessageSpannableText(text, style, urlColor, maxLines: maxLines);
+    return textMessageSpannableText(text,style,urlColor,
+        maxLines: maxLines);
   }
 }
+
+
+

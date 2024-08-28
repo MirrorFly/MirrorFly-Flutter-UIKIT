@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../../common/app_localizations.dart';
 import '../../../common/widgets.dart';
 import '../../../modules/profile/controllers/status_controller.dart';
 
 import '../../../common/constants.dart';
+import '../../../data/utils.dart';
 import '../../../extensions/extensions.dart';
 
 class AddStatusView extends NavView<StatusListController> {
   const AddStatusView({Key? key}) : super(key: key);
 
   @override
-  StatusListController createController({String? tag}) =>
-      StatusListController();
+StatusListController createController({String? tag}) => StatusListController();
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +23,7 @@ class AddStatusView extends NavView<StatusListController> {
       ),
       body: PopScope(
         canPop: false,
-        onPopInvoked: (didPop) {
+        onPopInvokedWithResult: (didPop, result) {
           if (didPop) {
             return;
           }
@@ -70,11 +69,13 @@ class AddStatusView extends NavView<StatusListController> {
                         padding: const EdgeInsets.all(4.0),
                         child: Center(
                           child: Obx(
-                            () => Text(
-                              controller.count.toString(),
-                              style: const TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.normal),
-                            ),
+                                () =>
+                                Text(
+                                  controller.count.toString(),
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.normal),
+                                ),
                           ),
                         )),
                     Obx(() {
@@ -88,17 +89,12 @@ class AddStatusView extends NavView<StatusListController> {
                             if (!controller.showEmoji.value) {
                               controller.focusNode.unfocus();
                             }
-                            Future.delayed(const Duration(milliseconds: 500),
-                                () {
+                            Future.delayed(
+                                const Duration(milliseconds: 500), () {
                               controller.showEmoji(!controller.showEmoji.value);
                             });
                           },
-                          icon: controller.showEmoji.value
-                              ? const Icon(
-                                  Icons.keyboard,
-                                  color: iconColor,
-                                )
-                              : SvgPicture.asset(smileIcon));
+                          icon: controller.showEmoji.value ? const Icon(Icons.keyboard, color: iconColor,) : AppUtils.svgIcon(icon:smileIcon));
                     })
                   ],
                 ),
@@ -110,7 +106,7 @@ class AddStatusView extends NavView<StatusListController> {
                   onPressed: () => controller.onBackPressed(),
                   style: ElevatedButton.styleFrom(
                       backgroundColor: WidgetStateColor.resolveWith(
-                          (states) => Colors.white),
+                              (states) => Colors.white),
                       shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.zero)),
                   child: Text(
@@ -130,7 +126,7 @@ class AddStatusView extends NavView<StatusListController> {
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: WidgetStateColor.resolveWith(
-                          (states) => Colors.white),
+                              (states) => Colors.white),
                       shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.zero)),
                   child: Text(
@@ -151,8 +147,7 @@ class AddStatusView extends NavView<StatusListController> {
     return Obx(() {
       if (controller.showEmoji.value) {
         return EmojiLayout(
-            textController:
-                TextEditingController(), //controller.addStatusController,
+            textController: TextEditingController(),//controller.addStatusController,
             onBackspacePressed: () => controller.onEmojiBackPressed(),
             onEmojiSelected: (cat, emoji) => controller.onEmojiSelected(emoji));
       } else {

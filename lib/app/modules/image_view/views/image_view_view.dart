@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import '../../../common/app_localizations.dart';
 import '../../../common/main_controller.dart';
@@ -15,8 +14,7 @@ class ImageViewView extends NavViewStateful<ImageViewController> {
   const ImageViewView({Key? key}) : super(key: key);
 
   @override
-  ImageViewController createController({String? tag}) =>
-      Get.put(ImageViewController());
+ImageViewController createController({String? tag}) => Get.put(ImageViewController());
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +46,7 @@ class ImageViewView extends NavViewStateful<ImageViewController> {
                   ? PhotoView(
                       imageProvider: CachedNetworkImageProvider(
                           controller.imageUrl.value,
-                          headers: {
-                            "Authorization": main.currentAuthToken.value
-                          }),
+                          headers: {"Authorization": main.currentAuthToken.value}),
                       // Contained = the smallest possible size to fit one dimension of the screen
                       minScale: PhotoViewComputedScale.contained * 0.8,
                       // Covered = the smallest possible size to fit the whole screen

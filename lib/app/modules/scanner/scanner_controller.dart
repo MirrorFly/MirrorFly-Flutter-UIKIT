@@ -1,9 +1,10 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../common/constants.dart';
+import 'package:mirrorfly_plugin/mirrorfly.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
-import 'package:mirrorfly_plugin/mirrorfly.dart';
 import '../../app_style_config.dart';
 import '../../common/app_localizations.dart';
 import '../../data/utils.dart';
@@ -51,7 +52,7 @@ class ScannerController extends GetxController {
   loginWebChatViaQRCode(String? barcode) async {
     LogMessage.d("barcode", barcode.toString());
     if (barcode != null) {
-      if (await AppUtils.isNetConnected()) {
+      if(await AppUtils.isNetConnected()) {
         controller!.pauseCamera();
         /*Mirrorfly.loginWebChatViaQRCode(barcode).then((value) {
           if (value != null) {
@@ -63,14 +64,15 @@ class ScannerController extends GetxController {
         }).catchError((er) {
           controller!.resumeCamera();
         });*/
-      } else {
+      }else{
         toToast(getTranslated("noInternetConnection"));
       }
+
     }
   }
 
   logoutWebUser() async {
-    if (await AppUtils.isNetConnected()) {
+    if(await AppUtils.isNetConnected()) {
       DialogUtils.progressLoading();
       /*Mirrorfly.webLoginDetailsCleared();
       Mirrorfly.logoutWebUser(loginQr).then((value) {
@@ -80,7 +82,7 @@ class ScannerController extends GetxController {
           NavUtils.back();
         }
       });*/
-    } else {
+    }else{
       toToast(getTranslated("noInternetConnection"));
     }
   }
@@ -135,27 +137,18 @@ class ScannerController extends GetxController {
   }
 
   logoutWeb() {
-    DialogUtils.showAlert(
-        dialogStyle: AppStyleConfig.dialogStyle,
-        message: getTranslated("logoutConfirmation"),
-        actions: [
-          TextButton(
-              style: AppStyleConfig.dialogStyle.buttonStyle,
-              onPressed: () {
-                NavUtils.back();
-              },
-              child: Text(
-                getTranslated("no").toUpperCase(),
-              )),
-          TextButton(
-              style: AppStyleConfig.dialogStyle.buttonStyle,
-              onPressed: () {
-                NavUtils.back();
-                logoutWebUser();
-              },
-              child: Text(
-                getTranslated("yes").toUpperCase(),
-              )),
-        ]);
+    DialogUtils.showAlert(dialogStyle: AppStyleConfig.dialogStyle,message: getTranslated("logoutConfirmation"), actions: [
+      TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
+          onPressed: () {
+            NavUtils.back();
+          },
+          child: Text(getTranslated("no").toUpperCase(), )),
+      TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
+          onPressed: () {
+            NavUtils.back();
+            logoutWebUser();
+          },
+          child: Text(getTranslated("yes").toUpperCase(), )),
+    ]);
   }
 }

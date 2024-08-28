@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:mirrorfly_plugin/mirrorfly.dart';
 
 class AudioLevelAnimation extends StatefulWidget {
@@ -13,8 +13,7 @@ class AudioLevelAnimation extends StatefulWidget {
     Key? key,
     required this.bgColor,
     this.radius = 14,
-    required this.audioLevel,
-    this.dotsColor = Colors.white,
+    required this.audioLevel, this.dotsColor = Colors.white,
   }) : super(key: key);
 
   @override

@@ -6,8 +6,8 @@ import 'package:mirrorfly_plugin/mirrorfly.dart';
 
 import '../../../app_style_config.dart';
 import '../../../common/app_localizations.dart';
-import '../../../data/utils.dart';
 import '../../../data/session_management.dart';
+import '../../../data/utils.dart';
 import '../../../routes/route_settings.dart';
 
 class DeleteAccountReasonController extends FullLifeCycleController
@@ -20,28 +20,22 @@ class DeleteAccountReasonController extends FullLifeCycleController
   get focusNode => FocusNode();
 
   deleteAccount() {
-    DialogUtils.showAlert(
-        dialogStyle: AppStyleConfig.dialogStyle,
+    DialogUtils.showAlert(dialogStyle: AppStyleConfig.dialogStyle,
         title: getTranslated("proceedDeleteAccount"),
-        message: getTranslated("proceedDeleteAccountContent"),
+        message:
+            getTranslated("proceedDeleteAccountContent"),
         actions: [
-          TextButton(
-              style: AppStyleConfig.dialogStyle.buttonStyle,
+          TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
               onPressed: () {
                 NavUtils.back();
               },
-              child: Text(
-                getTranslated("cancel"),
-              )),
-          TextButton(
-              style: AppStyleConfig.dialogStyle.buttonStyle,
+              child: Text(getTranslated("cancel"), )),
+          TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
               onPressed: () async {
                 // NavUtils.back();
                 deleteUserAccount();
               },
-              child: Text(
-                getTranslated("ok").toUpperCase(),
-              )),
+              child: Text(getTranslated("ok").toUpperCase(), )),
         ]);
   }
 
@@ -49,28 +43,23 @@ class DeleteAccountReasonController extends FullLifeCycleController
     if (await AppUtils.isNetConnected()) {
       NavUtils.back();
       // Future.delayed(const Duration(milliseconds: 100), () {
-      DialogUtils.showLoading(
-          message: getTranslated("deletingAccount"),
-          dialogStyle: AppStyleConfig.dialogStyle);
+       DialogUtils.showLoading(message: getTranslated("deletingAccount"),dialogStyle: AppStyleConfig.dialogStyle);
       debugPrint("on DeleteAccount");
       SessionManagement.setLogin(false);
-      Mirrorfly.deleteAccount(
-          reason: reasonValue.value,
-          feedback: feedback.text,
-          flyCallBack: (FlyResponse response) {
-            debugPrint('DeleteAccount $response');
-            if (response.isSuccess) {
-              Future.delayed(const Duration(milliseconds: 500), () {
-                DialogUtils.hideLoading();
-                SessionManagement.clear()
-                    .then((value) => NavUtils.offAllNamed(Routes.login));
-                toToast(getTranslated("accountDeleted"));
-              });
-            } else {
-              SessionManagement.setLogin(true);
-              toToast(getTranslated("unableToDeleteAccount"));
-            }
-          }).catchError((error) {
+      Mirrorfly.deleteAccount(reason: reasonValue.value, feedback: feedback.text, flyCallBack: (FlyResponse response) {
+        debugPrint('DeleteAccount $response');
+        if(response.isSuccess) {
+          Future.delayed(const Duration(milliseconds: 500), () {
+            DialogUtils.hideLoading();
+            SessionManagement.clear()
+                .then((value) => NavUtils.offAllNamed(Routes.login));
+            toToast(getTranslated("accountDeleted"));
+          });
+        }else{
+          SessionManagement.setLogin(true);
+          toToast(getTranslated("unableToDeleteAccount"));
+        }
+      }).catchError((error) {
         DialogUtils.hideLoading();
       });
       // });
@@ -101,5 +90,7 @@ class DeleteAccountReasonController extends FullLifeCycleController
   }
 
   @override
-  void onHidden() {}
+  void onHidden() {
+
+  }
 }

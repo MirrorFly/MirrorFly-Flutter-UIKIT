@@ -13,11 +13,13 @@ class ImageViewController extends GetxController {
     super.onInit();
     imageName(NavUtils.arguments['imageName']);
     imagePath(NavUtils.arguments['imagePath']);
-    if (NavUtils.arguments['imageUrl'].toString().startsWith("http")) {
+    if(NavUtils.arguments['imageUrl'].toString().startsWith("http")) {
       imageUrl(NavUtils.arguments['imageUrl']);
-    } else {
+    }else {
       imageUrl(SessionManagement.getMediaEndPoint().checkNull() +
           NavUtils.arguments['imageUrl'].toString());
     }
   }
+
+
 }

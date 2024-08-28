@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import '../../../data/utils.dart';
 import '../../../extensions/extensions.dart';
 import '../../../stylesheet/stylesheet.dart';
@@ -11,12 +10,7 @@ import 'chat_widgets.dart';
 import 'media_message_overlay.dart';
 
 class DocumentMessageView extends StatelessWidget {
-  const DocumentMessageView(
-      {Key? key,
-      required this.chatMessage,
-      this.search = "",
-      this.docMessageViewStyle = const DocMessageViewStyle(),
-      this.decoration = const BoxDecoration()})
+  const DocumentMessageView({Key? key, required this.chatMessage, this.search = "",this.docMessageViewStyle = const DocMessageViewStyle(), this.decoration = const BoxDecoration()})
       : super(key: key);
   final ChatMessageModel chatMessage;
   final String search;
@@ -24,8 +18,7 @@ class DocumentMessageView extends StatelessWidget {
   final Decoration decoration;
 
   onDocumentClick() {
-    AppUtils.openDocument(
-        chatMessage.mediaChatMessage!.mediaLocalStoragePath.value);
+    AppUtils.openDocument(chatMessage.mediaChatMessage!.mediaLocalStoragePath.value);
   }
 
   @override
@@ -75,39 +68,32 @@ class DocumentMessageView extends StatelessWidget {
                   Expanded(
                     child: search.isEmpty
                         ? Text(
-                            chatMessage.mediaChatMessage!.mediaFileName,
-                            style: docMessageViewStyle.fileTextStyle.textStyle,
-                            // style: const TextStyle(
-                            //   fontSize: 12,
-                            // ),
-                            maxLines: 2,
-                          ) /*textMessageSpannableText(
+                      chatMessage.mediaChatMessage!.mediaFileName,
+                      style: docMessageViewStyle.fileTextStyle.textStyle,
+                      // style: const TextStyle(
+                      //   fontSize: 12,
+                      // ),
+                      maxLines: 2,
+                    ) /*textMessageSpannableText(
                             chatMessage.mediaChatMessage!.mediaFileName
                                 .checkNull(),
                             maxLines: 2,
                           )*/
                         : chatSpannedText(
-                            chatMessage.mediaChatMessage!.mediaFileName
-                                .checkNull(),
-                            search,
-                            docMessageViewStyle.fileTextStyle.textStyle,
-                            // const TextStyle(
-                            //     color: Colors.black,
-                            //     fontWeight: FontWeight.w400),
-                            maxLines: 2,
-                            spanColor: docMessageViewStyle
-                                .fileTextStyle.highlightColor,
-                          ), /*Text(
+                        chatMessage.mediaChatMessage!.mediaFileName
+                            .checkNull(),
+                        search,
+                        docMessageViewStyle.fileTextStyle.textStyle,
+                        // const TextStyle(
+                        //     color: Colors.black,
+                        //     fontWeight: FontWeight.w400),
+                        maxLines: 2,spanColor: docMessageViewStyle.fileTextStyle.highlightColor,), /*Text(
                     chatMessage.mediaChatMessage!.mediaFileName,
                     maxLines: 2,
                         style: const TextStyle(fontSize: 12,color: Colors.black,fontWeight: FontWeight.w400),
                   )*/
                   ),
-                  MediaMessageOverlay(
-                    chatMessage: chatMessage,
-                    downloadUploadViewStyle:
-                        docMessageViewStyle.downloadUploadViewStyle,
-                  ),
+                  MediaMessageOverlay(chatMessage: chatMessage,downloadUploadViewStyle:  docMessageViewStyle.downloadUploadViewStyle,),
                 ],
               ),
             ),
@@ -133,7 +119,7 @@ class DocumentMessageView extends StatelessWidget {
                   ),
                   const Spacer(),
                   chatMessage.isMessageStarred.value
-                      ? SvgPicture.asset(starSmallIcon)
+                      ? AppUtils.svgIcon(icon:starSmallIcon)
                       : const Offstage(),
                   const SizedBox(
                     width: 5,

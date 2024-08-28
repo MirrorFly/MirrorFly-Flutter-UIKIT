@@ -1,16 +1,15 @@
+
 import 'package:flutter/material.dart';
 import '../../../stylesheet/stylesheet.dart';
 
 import '../../../common/app_localizations.dart';
 import '../../../common/constants.dart';
 import '../../../data/helper.dart';
+import '../../../data/utils.dart';
 import '../../../model/chat_message_model.dart';
 
 class RecalledMessageView extends StatelessWidget {
-  const RecalledMessageView(
-      {Key? key,
-      required this.chatMessage,
-      this.textMessageViewStyle = const TextMessageViewStyle()})
+  const RecalledMessageView({Key? key, required this.chatMessage, this.textMessageViewStyle = const TextMessageViewStyle()})
       : super(key: key);
   final ChatMessageModel chatMessage;
   final TextMessageViewStyle textMessageViewStyle;
@@ -29,9 +28,8 @@ class RecalledMessageView extends StatelessWidget {
           Flexible(
             child: Row(
               children: [
-                Image.asset(
+                AppUtils.assetIcon(assetName:
                   disabledIcon,
-                  package: package,
                   width: 15,
                   height: 15,
                 ),

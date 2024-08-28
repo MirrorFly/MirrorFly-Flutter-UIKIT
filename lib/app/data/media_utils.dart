@@ -1,18 +1,18 @@
 part of 'utils.dart';
 
 class MediaUtils {
-  static const maxAudioFileSize = 2 * 1024; //30;
-  static const maxVideoFileSize = 2 * 1024; //30;
-  static const maxImageFileSize = 2 * 1024; //10;
-  static const maxDocFileSize = 2 * 1024; //20;
 
-  static bool isMediaFileNotAvailable(
-      bool isMediaFileAvailable, ChatMessageModel message) {
+  static const maxAudioFileSize = 2 * 1024;//30;
+  static const maxVideoFileSize = 2 * 1024;//30;
+  static const maxImageFileSize = 2 * 1024;//10;
+  static const maxDocFileSize = 2 * 1024;//20;
+
+  static bool isMediaFileNotAvailable(bool isMediaFileAvailable, ChatMessageModel message) {
     return !isMediaFileAvailable && message.isMediaMessage();
   }
 
   static bool isMediaExists(String? filePath) {
-    if (filePath == null || filePath.isEmpty) {
+    if(filePath == null || filePath.isEmpty) {
       return false;
     }
     File file = File(filePath);
@@ -69,21 +69,16 @@ class MediaUtils {
     }
   }
 
-  static bool isMediaFileAvailable(
-      MessageType msgType, ChatMessageModel message) {
+  static bool isMediaFileAvailable(MessageType msgType, ChatMessageModel message) {
     bool mediaExist = false;
     if (msgType == MessageType.audio ||
         msgType == MessageType.video ||
         msgType == MessageType.image ||
         msgType == MessageType.document) {
-      final downloadedMediaValue =
-          message.mediaChatMessage?.mediaDownloadStatus.value ?? "";
-      final uploadedMediaValue =
-          message.mediaChatMessage?.mediaUploadStatus.value ?? "";
-      if (MediaDownloadStatus.mediaDownloaded.value.toString() ==
-              downloadedMediaValue ||
-          MediaUploadStatus.mediaUploaded.value.toString() ==
-              uploadedMediaValue) {
+      final downloadedMediaValue = message.mediaChatMessage?.mediaDownloadStatus.value ?? "";
+      final uploadedMediaValue = message.mediaChatMessage?.mediaUploadStatus.value ?? "";
+      if (MediaDownloadStatus.mediaDownloaded.value.toString() == downloadedMediaValue ||
+          MediaUploadStatus.mediaUploaded.value.toString() == uploadedMediaValue) {
         mediaExist = true;
       }
     }
@@ -98,8 +93,7 @@ class MediaUtils {
       // Open the file
       File file = File(filePath);
       if (!file.existsSync()) {
-        return const Tuple2(
-            Constants.mobileImageMaxWidth, Constants.mobileImageMaxHeight);
+        return const Tuple2(Constants.mobileImageMaxWidth, Constants.mobileImageMaxHeight);
       }
 
       // Read metadata
@@ -110,11 +104,10 @@ class MediaUtils {
       final int width = image.width;
       final int height = image.height;
       debugPrint('Image dimensions: $width x $height');
-      return Tuple2(width, height);
+      return Tuple2(width,height);
     } catch (e) {
       debugPrint('Error: $e');
-      return const Tuple2(
-          Constants.mobileImageMaxWidth, Constants.mobileImageMaxHeight);
+      return const Tuple2(Constants.mobileImageMaxWidth, Constants.mobileImageMaxHeight);
     }
   }
 
@@ -122,11 +115,9 @@ class MediaUtils {
   ///
   /// @param originalWidth original width of media
   /// @param originalHeight original height of media
-  static Tuple2<int, int> getMobileWidthAndHeight(
-      int? originalWidth, int? originalHeight) {
+  static Tuple2<int, int> getMobileWidthAndHeight(int? originalWidth, int? originalHeight) {
     if (originalWidth == null || originalHeight == null) {
-      return const Tuple2(
-          Constants.mobileImageMaxWidth, Constants.mobileImageMaxHeight);
+      return const Tuple2(Constants.mobileImageMaxWidth, Constants.mobileImageMaxHeight);
     }
 
     var newWidth = originalWidth;
@@ -149,12 +140,9 @@ class MediaUtils {
     }
 
     return Tuple2(
-      newWidth > Constants.mobileImageMinWidth
-          ? newWidth
-          : Constants.mobileImageMinWidth,
-      newHeight > Constants.mobileImageMinHeight
-          ? newHeight
-          : Constants.mobileImageMinHeight,
+      newWidth > Constants.mobileImageMinWidth ? newWidth : Constants.mobileImageMinWidth,
+      newHeight > Constants.mobileImageMinHeight ? newHeight : Constants.mobileImageMinHeight,
     );
   }
+
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import '../../../common/app_localizations.dart';
 
@@ -7,13 +6,11 @@ import '../../../common/constants.dart';
 import '../../../extensions/extensions.dart';
 import '../controllers/delete_account_reason_controller.dart';
 
-class DeleteAccountReasonView
-    extends NavViewStateful<DeleteAccountReasonController> {
+class DeleteAccountReasonView extends NavViewStateful<DeleteAccountReasonController> {
   const DeleteAccountReasonView({Key? key}) : super(key: key);
 
   @override
-  DeleteAccountReasonController createController({String? tag}) =>
-      Get.put(DeleteAccountReasonController());
+DeleteAccountReasonController createController({String? tag}) => Get.put(DeleteAccountReasonController());
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +27,7 @@ class DeleteAccountReasonView
                 children: [
                   Text(
                     getTranslated("deleteAccountReason"),
-                    style: const TextStyle(
-                        color: textHintColor,
-                        fontSize: 15,
-                        fontWeight: FontWeight.normal),
+                    style: const TextStyle(color: textHintColor, fontSize: 15,fontWeight: FontWeight.normal),
                   ),
                   const SizedBox(
                     height: 15,
@@ -45,18 +39,11 @@ class DeleteAccountReasonView
                           ? null
                           : controller.reasonValue.value,
                       icon: const Icon(Icons.keyboard_arrow_down),
-                      hint: Text(
-                        getTranslated("selectReason"),
-                        style: const TextStyle(fontWeight: FontWeight.normal),
-                      ),
+                      hint: Text(getTranslated("selectReason"),style: const TextStyle(fontWeight: FontWeight.normal),),
                       items: controller.deleteReasons.map((String items) {
                         return DropdownMenuItem(
                           value: items,
-                          child: Text(
-                            items,
-                            style:
-                                const TextStyle(fontWeight: FontWeight.normal),
-                          ),
+                          child: Text(items,style: const TextStyle(fontWeight: FontWeight.normal),),
                         );
                       }).toList(),
                       onChanged: (newValue) {
@@ -77,22 +64,15 @@ class DeleteAccountReasonView
                       hintText: getTranslated("tellUsImprove"),
                       hintStyle: const TextStyle(fontWeight: FontWeight.normal),
                       counterText: '',
-                      focusedBorder: const UnderlineInputBorder(
-                          borderSide: BorderSide(color: dividerColor)),
-                      border: const UnderlineInputBorder(
-                          borderSide:
-                              BorderSide(color: dividerColor, width: 0)),
+                      focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: dividerColor)),
+                      border: const UnderlineInputBorder(borderSide: BorderSide(color: dividerColor,width: 0)),
                     ),
                   ),
                   const SizedBox(
                     height: 15,
                   ),
-                  Text(
-                    getTranslated("feedbackDesc"),
-                    style: const TextStyle(
-                        color: textColor,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w300),
+            Text(
+                    getTranslated("feedbackDesc"),style: const TextStyle(color: textColor,fontSize: 11,fontWeight: FontWeight.w300),
                   ),
                   const SizedBox(
                     height: 55,
@@ -115,9 +95,7 @@ class DeleteAccountReasonView
                               },
                               child: Text(
                                 getTranslated("deleteMyAccount"),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white),
+                                style: const TextStyle(fontWeight: FontWeight.w600,color: Colors.white),
                               ),
                             ),
                           );

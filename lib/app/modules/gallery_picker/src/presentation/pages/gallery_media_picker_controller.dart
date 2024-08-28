@@ -41,7 +41,8 @@ mixin PhotoDataController on ChangeNotifier {
     int Function(
       AssetPathEntity a,
       AssetPathEntity b,
-    ) sortBy = _defaultSort,
+    )
+        sortBy = _defaultSort,
   }) {
     list.sort(sortBy);
     pathList.clear();
@@ -101,7 +102,7 @@ class GalleryMediaPickerController extends ChangeNotifier
     notifyListeners();
   }
 
-  void removeEntity(AssetEntity entity) {
+  void removeEntity(AssetEntity entity){
     if (picked.contains(entity)) {
       picked.remove(entity);
       pickedNotifier.value = picked;
@@ -112,7 +113,7 @@ class GalleryMediaPickerController extends ChangeNotifier
     }
   }
 
-  void unPick(int index) {
+  void unPick(int index){
     debugPrint("unPick $index");
     picked.removeAt(index);
     pickedNotifier.value = picked;

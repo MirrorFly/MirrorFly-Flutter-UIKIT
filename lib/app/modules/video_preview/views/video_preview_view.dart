@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../../common/app_localizations.dart';
 import 'package:video_player/video_player.dart';
@@ -12,8 +11,7 @@ class VideoPreviewView extends NavViewStateful<VideoPreviewController> {
   const VideoPreviewView({Key? key}) : super(key: key);
 
   @override
-  VideoPreviewController createController({String? tag}) =>
-      Get.put(VideoPreviewController());
+VideoPreviewController createController({String? tag}) => Get.put(VideoPreviewController());
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +19,21 @@ class VideoPreviewView extends NavViewStateful<VideoPreviewController> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        iconTheme: const IconThemeData(color: Colors.white),
+          iconTheme: const IconThemeData(
+              color: Colors.white
+          ),
+
       ),
       body: SafeArea(
         child: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width,
+          height: MediaQuery
+              .of(context)
+              .size
+              .height,
           child: Stack(
             children: [
               Obx(() {
@@ -34,13 +41,13 @@ class VideoPreviewView extends NavViewStateful<VideoPreviewController> {
                   return Center(
                     child: SizedBox(
                         width: NavUtils.size.width,
-                        height:
-                            controller.videoPlayerController.value.size.height,
+                        height: controller.videoPlayerController.value.size.height,
                         child: AspectRatio(
-                          aspectRatio: controller
-                              .videoPlayerController.value.aspectRatio,
+                          aspectRatio:
+                          controller.videoPlayerController.value.aspectRatio,
                           child: VideoPlayer(controller.videoPlayerController),
-                        )),
+                        )
+                    ),
                   );
                 } else {
                   return Container();
@@ -50,9 +57,12 @@ class VideoPreviewView extends NavViewStateful<VideoPreviewController> {
                 bottom: 0,
                 child: Container(
                   color: Colors.black38,
-                  width: MediaQuery.of(context).size.width,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 5, horizontal: 15),
                   child: IntrinsicHeight(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,9 +74,7 @@ class VideoPreviewView extends NavViewStateful<VideoPreviewController> {
                               color: Colors.white,
                               size: 27,
                             ),
-                            const SizedBox(
-                              width: 5,
-                            ),
+                            const SizedBox(width: 5,),
                             const Padding(
                               padding: EdgeInsets.only(top: 12.0, bottom: 12.0),
                               child: VerticalDivider(
@@ -74,9 +82,7 @@ class VideoPreviewView extends NavViewStateful<VideoPreviewController> {
                                 thickness: 1,
                               ),
                             ),
-                            const SizedBox(
-                              width: 5,
-                            ),
+                            const SizedBox(width: 5,),
                             Expanded(
                               child: TextFormField(
                                 controller: controller.caption,
@@ -90,19 +96,19 @@ class VideoPreviewView extends NavViewStateful<VideoPreviewController> {
                                   hintText: getTranslated("addCaption"),
                                   hintStyle: const TextStyle(
                                     color: Colors.white,
-                                  ),
-                                ),
+                                  ),),
                               ),
                             ),
                             InkWell(
                                 onTap: () {
                                   controller.sendVideoMessage();
+
                                 },
-                                child: SvgPicture.asset(
+                                child: AppUtils.svgIcon(icon:
                                     'assets/logos/img_send.svg')),
                           ],
                         ),
-                        // SvgPicture.asset(
+                        // AppUtils.svgIcon(icon:
                         //   rightArrow,
                         //   width: 18,
                         //   height: 18,
@@ -116,10 +122,8 @@ class VideoPreviewView extends NavViewStateful<VideoPreviewController> {
                               color: Colors.white,
                               size: 27,
                             ),
-                            Text(
-                              controller.userName,
-                              style: const TextStyle(color: Colors.white),
-                            ),
+                            Text(controller.userName, style: const TextStyle(
+                                color: Colors.white),),
                           ],
                         ),
                       ],
@@ -137,17 +141,14 @@ class VideoPreviewView extends NavViewStateful<VideoPreviewController> {
                     radius: 33,
                     backgroundColor: Colors.black38,
                     child: Obx(() {
-                      return controller.isPlaying.value
-                          ? const Icon(
-                              Icons.pause,
-                              color: Colors.white,
-                              size: 50,
-                            )
-                          : const Icon(
-                              Icons.play_arrow,
-                              color: Colors.white,
-                              size: 50,
-                            );
+                      return controller.isPlaying.value ?
+                      const Icon(Icons.pause,
+                        color: Colors.white,
+                        size: 50,
+                      ) : const Icon(Icons.play_arrow,
+                        color: Colors.white,
+                        size: 50,
+                      );
                     }),
                   ),
                 ),

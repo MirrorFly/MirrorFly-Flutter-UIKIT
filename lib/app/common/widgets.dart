@@ -5,14 +5,14 @@ import 'package:emoji_picker_flutter/emoji_picker_flutter.dart' as emoji;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:mirrorfly_plugin/mirrorflychat.dart';
-
+import '../common/app_localizations.dart';
 import '../data/session_management.dart';
-import '../data/utils.dart';
 import '../extensions/extensions.dart';
 import '../modules/dashboard/widgets.dart';
+import 'package:mirrorfly_plugin/mirrorflychat.dart';
+
+import '../data/utils.dart';
 import '../stylesheet/stylesheet.dart';
-import 'app_localizations.dart';
 import 'constants.dart';
 import 'main_controller.dart';
 
@@ -145,17 +145,15 @@ class ImageNetwork extends NavView<MainController> {
                 }
                 return clipOval
                     ? ClipOval(
-                        child: Image.asset(
+                        child: AppUtils.assetIcon(assetName:
                           getSingleOrGroup(isGroup),
-                          package: package,
                           height: height,
                           width: width,
                           fit: BoxFit.cover,
                         ),
                       )
-                    : Image.asset(
+                    : AppUtils.assetIcon(assetName:
                         getSingleOrGroup(isGroup),
-                        package: package,
                         height: height,
                         width: width,
                         fit: BoxFit.cover,
@@ -183,9 +181,8 @@ class ImageNetwork extends NavView<MainController> {
                                 image: provider,
                                 fit: BoxFit.fill,
                               )
-                            : Image.asset(
+                            : AppUtils.assetIcon(assetName:
                                 getSingleOrGroup(isGroup),
-                                package: package,
                                 height: height,
                                 width: width,
                                 fit: BoxFit.cover,
@@ -199,9 +196,8 @@ class ImageNetwork extends NavView<MainController> {
                                 image: provider,
                                 fit: BoxFit.fill,
                               )
-                            : Image.asset(
+                            : AppUtils.assetIcon(assetName:
                                 getSingleOrGroup(isGroup),
-                                package: package,
                                 height: height,
                                 width: width,
                                 fit: BoxFit.cover,
@@ -233,17 +229,15 @@ class ImageNetwork extends NavView<MainController> {
     }
     return clipOval
         ? ClipOval(
-            child: Image.asset(
+            child: AppUtils.assetIcon(assetName:
               getSingleOrGroup(isGroup),
-              package: package,
               height: height,
               width: width,
               fit: BoxFit.cover,
             ),
           )
-        : Image.asset(
+        : AppUtils.assetIcon(assetName:
             getSingleOrGroup(isGroup),
-            package: package,
             height: height,
             width: width,
             fit: BoxFit.cover,
@@ -297,7 +291,7 @@ class ImageNetwork extends NavView<MainController> {
   }
 
   String getSingleOrGroup(bool isGroup) {
-    return isGroup ? groupImg : profileImage;
+    return isGroup ? groupImg : profileImg;
   }
 }
 

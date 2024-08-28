@@ -16,13 +16,13 @@ class ChangePathWidget extends StatefulWidget {
   /// album divider color
   final Color albumDividerColor;
   const ChangePathWidget({
-    super.key,
+    Key? key,
     required this.provider,
     required this.close,
     required this.albumBackGroundColor,
     required this.albumDividerColor,
     required this.albumTextColor,
-  });
+  }) : super(key: key);
 
   @override
   ChangePathWidgetState createState() => ChangePathWidgetState();

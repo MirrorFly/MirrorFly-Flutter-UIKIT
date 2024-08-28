@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:mirrorfly_plugin/mirrorflychat.dart';
 
 import '../common/constants.dart';
+import '../data/utils.dart';
 
 class CustomActionBarIcons extends StatefulWidget {
   final double availableWidth;
@@ -12,19 +12,18 @@ class CustomActionBarIcons extends StatefulWidget {
   final List<CustomAction> actions;
   final PopupMenuThemeData popupMenuThemeData;
 
-  const CustomActionBarIcons(
-      {super.key,
-      required this.availableWidth,
-      required this.actionWidth,
-      required this.actions,
-      this.popupMenuThemeData = const PopupMenuThemeData()});
+  const CustomActionBarIcons({
+    super.key,
+    required this.availableWidth,
+    required this.actionWidth,
+    required this.actions, this.popupMenuThemeData = const PopupMenuThemeData()
+  });
 
   @override
   State<CustomActionBarIcons> createState() => _CustomActionBarIconsState();
 }
 
-class _CustomActionBarIconsState extends State<CustomActionBarIcons>
-    with WidgetsBindingObserver {
+class _CustomActionBarIconsState extends State<CustomActionBarIcons> with WidgetsBindingObserver {
   // AppLifecycleState? _appLifecycleState;
   final GlobalKey _menuKey = GlobalKey();
   BuildContext? _context;
@@ -45,12 +44,12 @@ class _CustomActionBarIconsState extends State<CustomActionBarIcons>
     super.didChangeAppLifecycleState(state);
     switch (state) {
       case AppLifecycleState.inactive:
-        if (_context != null) {
-          Navigator.pop(_context!);
+        if(_context!=null) {
+           Navigator.pop(_context!);
         }
         break;
       case AppLifecycleState.resumed:
-        _context = null;
+        _context=null;
         break;
       case AppLifecycleState.paused:
         break;
@@ -69,8 +68,7 @@ class _CustomActionBarIconsState extends State<CustomActionBarIcons>
   Widget build(BuildContext context) {
     LogMessage.d("popupThemeData", widget.popupMenuThemeData.toString());
     // LogMessage.d("CustomActionBarIcons", "build");
-    widget.actions
-        .sort(); // items with ShowAsAction.NEVER are placed at the end
+    widget.actions.sort(); // items with ShowAsAction.NEVER are placed at the end
 
     List<CustomAction> visible = widget.actions
         .where((CustomAction customAction) =>
@@ -86,11 +84,9 @@ class _CustomActionBarIconsState extends State<CustomActionBarIcons>
 
     for (CustomAction customAction in widget.actions) {
       if (customAction.showAsAction == ShowAsAction.ifRoom) {
-        if (widget.availableWidth -
-                visible.length * widget.actionWidth -
-                getOverflowWidth() >
+        if (widget.availableWidth - visible.length * widget.actionWidth - getOverflowWidth() >
             widget.actionWidth) {
-          if (customAction.visibleWidget != null) {
+          if(customAction.visibleWidget!=null) {
             // there is enough room
             visible.insert(widget.actions.indexOf(customAction),
                 customAction); // insert in its given position
@@ -123,43 +119,33 @@ class _CustomActionBarIconsState extends State<CustomActionBarIcons>
             PopupMenuTheme(
               data: widget.popupMenuThemeData,
               child: PopupMenuButton(
-                  key: _menuKey,
-                  icon: SvgPicture.asset(
-                    moreIcon,
-                    package: package,
-                    width: 3.66,
-                    height: 16.31,
-                    colorFilter: ColorFilter.mode(
-                        widget.popupMenuThemeData.iconColor ?? Colors.black,
-                        BlendMode.srcIn),
-                  ),
-                  onCanceled: () {
-                    _context = null;
-                    FocusManager.instance.primaryFocus!.unfocus();
+                key: _menuKey,
+                icon: AppUtils.svgIcon(icon:moreIcon, width: 3.66, height: 16.31,colorFilter:ColorFilter.mode(widget.popupMenuThemeData.iconColor ?? Colors.black, BlendMode.srcIn),),
+                onCanceled: (){
+                  _context = null;
+                  FocusManager.instance.primaryFocus!.unfocus();
                   },
-                  onOpened: () {
+                  onOpened: (){
                     LogMessage.d("PopupMenuButton", "onOpened");
                   },
-                  itemBuilder: (BuildContext context) {
-                    _context = context;
-                    for (CustomAction customAction in overflow) {
-                      LogMessage.d("PopupMenuButton", customAction.keyValue);
-                    }
-                    return [
-                      for (CustomAction customAction in overflow)
-                        PopupMenuItem(
-                          value: customAction.keyValue,
-                          onTap: customAction.onItemClick != null
-                              ? () {
-                                  _context = null;
-                                  customAction.onItemClick!();
-                                }
-                              : null,
-                          child: customAction.overflowWidget,
-                        )
-                    ];
+                itemBuilder: (BuildContext context) {
+                  _context = context;
+                  for (CustomAction customAction in overflow) {
+                    LogMessage.d("PopupMenuButton", customAction.keyValue);
                   }
-                  /*=> [
+                  return [
+                    for (CustomAction customAction in overflow)
+                      PopupMenuItem(
+                        value: customAction.keyValue,
+                        onTap: customAction.onItemClick != null ? () {
+                          _context=null;
+                          customAction.onItemClick!();
+                        } : null,
+                        child: customAction.overflowWidget,
+                      )
+                  ];
+                }
+                /*=> [
                   for (CustomAction customAction in overflow)
                     PopupMenuItem(
                       value: customAction.keyValue,
@@ -167,7 +153,7 @@ class _CustomActionBarIconsState extends State<CustomActionBarIcons>
                       child: customAction.overflowWidget,
                     )
                 ],*/
-                  ),
+              ),
             )
         ],
       ),
@@ -183,13 +169,14 @@ class CustomAction implements Comparable<CustomAction> {
   final VoidCallback? onItemClick;
   final RxBool? recreate;
 
-  CustomAction(
-      {this.visibleWidget,
-      required this.overflowWidget,
-      required this.showAsAction,
-      required this.keyValue,
-      required this.onItemClick,
-      this.recreate});
+  CustomAction({
+    this.visibleWidget,
+    required this.overflowWidget,
+    required this.showAsAction,
+    required this.keyValue,
+    required this.onItemClick,
+    this.recreate
+  });
 
   @override
   int compareTo(CustomAction other) {

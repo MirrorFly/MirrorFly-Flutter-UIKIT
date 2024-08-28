@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../../common/app_localizations.dart';
 import '../../../common/widgets.dart';
@@ -24,7 +23,7 @@ class NameChangeView extends NavView<GroupInfoController> {
       ),
       body: PopScope(
         canPop: false,
-        onPopInvoked: (didPop) {
+        onPopInvokedWithResult: (didPop, result) {
           if (didPop) {
             return;
           }
@@ -46,8 +45,8 @@ class NameChangeView extends NavView<GroupInfoController> {
                           Expanded(
                             child: TextField(
                               focusNode: controller.focusNode,
-                              style: const TextStyle(
-                                  fontSize: 20,
+                              style:
+                              const TextStyle(fontSize: 20,
                                   fontWeight: FontWeight.normal,
                                   overflow: TextOverflow.visible),
                               onChanged: (_) => controller.onChanged(),
@@ -63,12 +62,12 @@ class NameChangeView extends NavView<GroupInfoController> {
                               padding: const EdgeInsets.all(4.0),
                               child: Center(
                                 child: Obx(
-                                  () => Text(
-                                    controller.count.toString(),
-                                    style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.normal),
-                                  ),
+                                      () =>
+                                      Text(
+                                        controller.count.toString(),
+                                        style: const TextStyle(fontSize: 20,
+                                            fontWeight: FontWeight.normal),
+                                      ),
                                 ),
                               )),
                           Obx(() {
@@ -79,32 +78,21 @@ class NameChangeView extends NavView<GroupInfoController> {
                                 },
                                 icon: controller.showEmoji.value
                                     ? const Icon(
-                                        Icons.keyboard,
-                                        color: iconColor,
-                                      )
-                                    : SvgPicture.asset(
-                                        smileIcon,
-                                        package: package,
-                                        width: 18,
-                                        height: 18,
-                                      ));
+                                  Icons.keyboard, color: iconColor,)
+                                    : AppUtils.svgIcon(icon:
+                                  smileIcon, width: 18, height: 18,));
                           })
                         ],
                       ),
                       const Divider(
-                        height: 1,
-                        color: dividerColor,
-                        thickness: 1,
-                      ),
+                        height: 1, color: dividerColor, thickness: 1,),
                     ],
                   ),
                 ),
+
               ),
-              const Divider(
-                thickness: 1,
-                color: Colors.grey,
-                height: 1,
-              ),
+
+              const Divider(thickness: 1, color: Colors.grey, height: 1,),
               IntrinsicHeight(
                 child: Row(children: [
                   Expanded(
@@ -112,8 +100,8 @@ class NameChangeView extends NavView<GroupInfoController> {
                       onPressed: () => NavUtils.back(),
                       child: Text(
                         getTranslated("cancel").toUpperCase(),
-                        style: const TextStyle(
-                            color: Colors.black, fontSize: 16.0),
+                        style: const TextStyle(color: Colors.black,
+                            fontSize: 16.0),
                       ),
                     ),
                   ),
@@ -124,19 +112,19 @@ class NameChangeView extends NavView<GroupInfoController> {
                   Expanded(
                     child: TextButton(
                       onPressed: () {
-                        if (controller.nameController.text.trim().isNotEmpty) {
-                          NavUtils.back(
-                              result: controller.nameController.text
-                                  .trim()
-                                  .toString());
+                        if (controller.nameController.text
+                            .trim()
+                            .isNotEmpty) {
+                          NavUtils.back(result: controller.nameController.text
+                              .trim().toString());
                         } else {
                           toToast(getTranslated("nameCantEmpty"));
                         }
                       },
                       child: Text(
                         getTranslated("ok").toUpperCase(),
-                        style: const TextStyle(
-                            color: Colors.black, fontSize: 16.0),
+                        style: const TextStyle(color: Colors.black,
+                            fontSize: 16.0),
                       ),
                     ),
                   ),

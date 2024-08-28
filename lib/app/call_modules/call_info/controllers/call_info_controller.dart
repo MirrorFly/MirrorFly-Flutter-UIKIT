@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../../data/permissions.dart';
+import '../../../extensions/extensions.dart';
 import 'package:mirrorfly_plugin/mirrorflychat.dart';
 import 'package:mirrorfly_plugin/model/call_log_model.dart';
-import '../../../extensions/extensions.dart';
 
 import '../../../app_style_config.dart';
 import '../../../common/app_localizations.dart';
 import '../../../common/constants.dart';
-import '../../../data/permissions.dart';
 import '../../../data/utils.dart';
 import '../../../routes/route_settings.dart';
 
-class CallInfoController extends GetxController {
+
+class CallInfoController extends GetxController{
+
   var callLogData_ = CallLogData().obs;
   CallLogData get callLogData => callLogData_.value;
 
@@ -31,18 +34,11 @@ class CallInfoController extends GetxController {
               debugPrint("#Mirrorfly Call You are on another call");
               toToast(getTranslated("msgOngoingCallAlert"));
             } else {
-              Mirrorfly.makeGroupVideoCall(
-                  groupJid:
-                      item.groupId.checkNull().isNotEmpty ? item.groupId! : "",
-                  toUserJidList: userList,
-                  flyCallBack: (FlyResponse response) {
-                    if (response.isSuccess) {
-                      NavUtils.toNamed(Routes.outGoingCallView, arguments: {
-                        "userJid": userList,
-                        "callType": CallType.video
-                      });
-                    }
-                  });
+              Mirrorfly.makeGroupVideoCall(groupJid: item.groupId.checkNull().isNotEmpty ? item.groupId! : "", toUserJidList: userList, flyCallBack: (FlyResponse response) {
+                if (response.isSuccess) {
+                  NavUtils.toNamed(Routes.outGoingCallView, arguments: {"userJid": userList, "callType": CallType.video});
+                }
+              });
             }
           }
         } else {
@@ -52,18 +48,11 @@ class CallInfoController extends GetxController {
               debugPrint("#Mirrorfly Call You are on another call");
               toToast(getTranslated("msgOngoingCallAlert"));
             } else {
-              Mirrorfly.makeGroupVoiceCall(
-                  groupJid:
-                      item.groupId.checkNull().isNotEmpty ? item.groupId! : "",
-                  toUserJidList: userList,
-                  flyCallBack: (FlyResponse response) {
-                    if (response.isSuccess) {
-                      NavUtils.toNamed(Routes.outGoingCallView, arguments: {
-                        "userJid": userList,
-                        "callType": CallType.audio
-                      });
-                    }
-                  });
+              Mirrorfly.makeGroupVoiceCall(groupJid: item.groupId.checkNull().isNotEmpty ? item.groupId! : "", toUserJidList: userList, flyCallBack: (FlyResponse response) {
+                if (response.isSuccess) {
+                  NavUtils.toNamed(Routes.outGoingCallView, arguments: {"userJid": userList, "callType": CallType.audio});
+                }
+              });
             }
           }
         }
@@ -74,37 +63,28 @@ class CallInfoController extends GetxController {
   }
 
   itemDeleteCallLog(List<String> selectedCallLogs) {
-    DialogUtils.showAlert(
-        dialogStyle: AppStyleConfig.dialogStyle,
+    DialogUtils.showAlert(dialogStyle: AppStyleConfig.dialogStyle,
         message: getTranslated("deleteCallLogConfirmation"),
         actions: [
-          TextButton(
-              style: AppStyleConfig.dialogStyle.buttonStyle,
+          TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
               onPressed: () {
                 NavUtils.back();
               },
-              child: Text(
-                getTranslated("cancel").toUpperCase(),
-              )),
-          TextButton(
-              style: AppStyleConfig.dialogStyle.buttonStyle,
+              child: Text(getTranslated("cancel").toUpperCase(), )),
+          TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
               onPressed: () {
                 NavUtils.back();
-                Mirrorfly.deleteCallLog(
-                    jidList: selectedCallLogs,
-                    isClearAll: false,
-                    flyCallBack: (FlyResponse response) {
-                      if (response.isSuccess) {
-                        NavUtils.back(result: true);
-                      } else {
-                        toToast(getTranslated("errorOnCallLogDelete"));
-                      }
-                    });
+                Mirrorfly.deleteCallLog(jidList: selectedCallLogs, isClearAll: false, flyCallBack: (FlyResponse response) {
+                  if (response.isSuccess) {
+                    NavUtils.back(result: true);
+                  } else {
+                    toToast(getTranslated("errorOnCallLogDelete"));
+                  }
+                });
               },
-              child: Text(
-                getTranslated("ok").toUpperCase(),
-              )),
+              child: Text(getTranslated("ok").toUpperCase(), )),
         ],
         barrierDismissible: true);
   }
+
 }

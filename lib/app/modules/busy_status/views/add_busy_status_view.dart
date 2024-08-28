@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import '../../../common/app_localizations.dart';
-import '../../../extensions/extensions.dart';
 
+import '../../../common/app_localizations.dart';
 import '../../../common/constants.dart';
 import '../../../common/widgets.dart';
 import '../../../data/utils.dart';
+import '../../../extensions/extensions.dart';
 import '../controllers/busy_status_controller.dart';
 
 class AddBusyStatusView extends NavViewStateful<BusyStatusController> {
@@ -16,17 +15,14 @@ class AddBusyStatusView extends NavViewStateful<BusyStatusController> {
   final String? status;
 
   @override
-  BusyStatusController createController({String? tag}) =>
-      Get.put(BusyStatusController());
+BusyStatusController createController({String? tag}) => Get.put(BusyStatusController());
 
   @override
   void onInit() {
     controller.addStatusController.text = status ?? "";
-    controller
-        .count(139 - controller.addStatusController.text.characters.length);
+    controller.count(139 - controller.addStatusController.text.characters.length);
     super.onInit();
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +32,7 @@ class AddBusyStatusView extends NavViewStateful<BusyStatusController> {
       ),
       body: PopScope(
         canPop: false,
-        onPopInvoked: (didPop) {
+        onPopInvokedWithResult: (didPop, result) {
           if (didPop) {
             return;
           }
@@ -91,12 +87,13 @@ class AddBusyStatusView extends NavViewStateful<BusyStatusController> {
                           padding: const EdgeInsets.all(4.0),
                           child: Center(
                             child: Obx(
-                              () => Text(
-                                controller.count.toString(),
-                                style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.normal),
-                              ),
+                                  () =>
+                                  Text(
+                                    controller.count.toString(),
+                                    style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.normal),
+                                  ),
                             ),
                           )),
                       Obx(() {
@@ -104,12 +101,8 @@ class AddBusyStatusView extends NavViewStateful<BusyStatusController> {
                             onPressed: () {
                               controller.showHideEmoji(context);
                             },
-                            icon: controller.showEmoji.value
-                                ? const Icon(
-                                    Icons.keyboard,
-                                    color: iconColor,
-                                  )
-                                : SvgPicture.asset(smileIcon));
+                            icon: controller.showEmoji.value ? const Icon(
+                              Icons.keyboard, color: iconColor,) : AppUtils.svgIcon(icon:smileIcon));
                       })
                     ],
                   ),
@@ -126,13 +119,12 @@ class AddBusyStatusView extends NavViewStateful<BusyStatusController> {
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: WidgetStateColor.resolveWith(
-                            (states) => Colors.white),
+                                (states) => Colors.white),
                         shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.zero)),
                     child: Text(
                       getTranslated("cancel").toUpperCase(),
-                      style:
-                          const TextStyle(color: Colors.black, fontSize: 16.0),
+                      style: const TextStyle(color: Colors.black, fontSize: 16.0),
                     ),
                   ),
                 ),
@@ -150,13 +142,12 @@ class AddBusyStatusView extends NavViewStateful<BusyStatusController> {
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: WidgetStateColor.resolveWith(
-                            (states) => Colors.white),
+                                (states) => Colors.white),
                         shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.zero)),
                     child: Text(
                       getTranslated("ok").toUpperCase(),
-                      style:
-                          const TextStyle(color: Colors.black, fontSize: 16.0),
+                      style: const TextStyle(color: Colors.black, fontSize: 16.0),
                     ),
                   ),
                 ),
@@ -173,8 +164,7 @@ class AddBusyStatusView extends NavViewStateful<BusyStatusController> {
     return Obx(() {
       if (controller.showEmoji.value) {
         return EmojiLayout(
-            textController:
-                TextEditingController(), //controller.addStatusController,
+            textController: TextEditingController(),//controller.addStatusController,
             onBackspacePressed: () {
               controller.onEmojiBackPressed();
             },

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../../common/app_localizations.dart';
 import '../../../common/widgets.dart';
@@ -14,8 +13,7 @@ class StatusListView extends NavViewStateful<StatusListController> {
   const StatusListView({Key? key}) : super(key: key);
 
   @override
-  StatusListController createController({String? tag}) =>
-      Get.put(StatusListController());
+StatusListController createController({String? tag}) => Get.put(StatusListController());
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +24,7 @@ class StatusListView extends NavViewStateful<StatusListController> {
       ),
       body: PopScope(
         canPop: false,
-        onPopInvoked: (didPop) {
+        onPopInvokedWithResult: (didPop, result) {
           if (didPop) {
             return;
           }
@@ -41,8 +39,7 @@ class StatusListView extends NavViewStateful<StatusListController> {
             children: [
               Text(
                 getTranslated("yourCurrentStatus"),
-                style:
-                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
               ),
               Obx(
                 () => ListTile(
@@ -53,9 +50,8 @@ class StatusListView extends NavViewStateful<StatusListController> {
                           color: textColor,
                           fontSize: 14,
                           fontWeight: FontWeight.normal)),
-                  trailing: SvgPicture.asset(
+                  trailing: AppUtils.svgIcon(icon:
                     pencilEditIcon,
-                    package: package,
                     fit: BoxFit.contain,
                   ),
                   onTap: () {
@@ -75,8 +71,7 @@ class StatusListView extends NavViewStateful<StatusListController> {
               ),
               Text(
                 getTranslated("selectNewStatus"),
-                style:
-                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
               ),
               Obx(() => controller.statusList.isNotEmpty
                   ? Expanded(
@@ -100,9 +95,8 @@ class StatusListView extends NavViewStateful<StatusListController> {
                                       fontWeight: FontWeight.w500)),
                               trailing:
                                   item.status == controller.selectedStatus.value
-                                      ? SvgPicture.asset(
+                                      ? AppUtils.svgIcon(icon:
                                           tickIcon,
-                                          package: package,
                                           fit: BoxFit.contain,
                                         )
                                       : const SizedBox(),
@@ -110,7 +104,7 @@ class StatusListView extends NavViewStateful<StatusListController> {
                                 controller.updateStatus(item.status.checkNull(),
                                     item.id.checkNull());
                               },
-                              onLongPress: () {
+                              onLongPress: (){
                                 debugPrint("Status list long press");
                                 controller.deleteStatus(item);
                               },

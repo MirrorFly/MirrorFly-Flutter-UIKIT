@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
-import 'package:mirrorfly_plugin/mirrorfly.dart';
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mirrorfly_plugin/mirrorfly.dart';
 
 import '../../../app_style_config.dart';
 import '../../../common/app_localizations.dart';
@@ -41,7 +41,7 @@ class BusyStatusController extends GetxController with WidgetsBindingObserver {
     count(139 - addStatusController.text.characters.length);
   }
 
-  onEmojiBackPressed() {
+  onEmojiBackPressed(){
     var text = addStatusController.text;
     var cursorPosition = addStatusController.selection.base.offset;
 
@@ -57,7 +57,7 @@ class BusyStatusController extends GetxController with WidgetsBindingObserver {
     if (cursorPosition >= 0) {
       final selection = addStatusController.value.selection;
       final newTextBeforeCursor =
-          selection.textBefore(text).characters.skipLast(1).toString();
+      selection.textBefore(text).characters.skipLast(1).toString();
       LogMessage.d("newTextBeforeCursor", newTextBeforeCursor);
       addStatusController
         ..text = newTextBeforeCursor + selection.textAfter(text)
@@ -67,8 +67,8 @@ class BusyStatusController extends GetxController with WidgetsBindingObserver {
     count((139 - addStatusController.text.characters.length));
   }
 
-  onEmojiSelected(Emoji emoji) {
-    if (addStatusController.text.characters.length < 139) {
+  onEmojiSelected(Emoji emoji){
+    if(addStatusController.text.characters.length < 139){
       final controller = addStatusController;
       final text = controller.text;
       final selection = controller.selection;
@@ -82,7 +82,7 @@ class BusyStatusController extends GetxController with WidgetsBindingObserver {
       }
 
       final newText =
-          text.replaceRange(selection.start, selection.end, emoji.emoji);
+      text.replaceRange(selection.start, selection.end, emoji.emoji);
       final emojiLength = emoji.emoji.length;
       controller
         ..text = newText
@@ -131,13 +131,16 @@ class BusyStatusController extends GetxController with WidgetsBindingObserver {
   }
 
   void deleteBusyStatus(StatusData item, BuildContext context) {
-    if (!item.isCurrentStatus!) {
+
+    if(!item.isCurrentStatus!){
       DialogUtils.showButtonAlert(actions: [
         ListTile(
           contentPadding: const EdgeInsets.only(left: 10),
           title: Text(getTranslated("delete"),
-              style:
-                  const TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
+              style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.normal)),
+
           onTap: () {
             Navigator.pop(context);
             busyDeleteConfirmation(item, context);
@@ -173,67 +176,56 @@ class BusyStatusController extends GetxController with WidgetsBindingObserver {
   }
 
   void setCurrentStatus(String status) {
-    Mirrorfly.setMyBusyStatus(
-        busyStatus: status,
-        flyCallBack: (FlyResponse response) {
-          debugPrint("status value $response");
-          var settingController = Get.find<ChatSettingsController>();
-          settingController.busyStatus(status);
-          getMyBusyStatusList();
-        });
+    Mirrorfly.setMyBusyStatus(busyStatus: status, flyCallBack: (FlyResponse response) {
+      debugPrint("status value $response");
+      var settingController = Get.find<ChatSettingsController>();
+      settingController.busyStatus(status);
+      getMyBusyStatusList();
+    });
   }
 
   void busyDeleteConfirmation(StatusData item, BuildContext context) {
-    DialogUtils.showAlert(
-        dialogStyle: AppStyleConfig.dialogStyle,
-        message: getTranslated("deleteStatus"),
-        actions: [
-          TextButton(
-              style: AppStyleConfig.dialogStyle.buttonStyle,
-              onPressed: () {
+    DialogUtils.showAlert(dialogStyle: AppStyleConfig.dialogStyle,message: getTranslated("deleteStatus"), actions: [
+      TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text(getTranslated("no") )),
+      TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
+          onPressed: () {
+            AppUtils.isNetConnected().then((isConnected) {
+              if (isConnected) {
                 Navigator.pop(context);
-              },
-              child: Text(getTranslated("no"))),
-          TextButton(
-              style: AppStyleConfig.dialogStyle.buttonStyle,
-              onPressed: () {
-                AppUtils.isNetConnected().then((isConnected) {
-                  if (isConnected) {
-                    Navigator.pop(context);
-                    DialogUtils.showLoading(
-                        message: "Deleting Busy Status",
-                        dialogStyle: AppStyleConfig.dialogStyle);
-                    Mirrorfly.deleteBusyStatus(
-                            id: item.id!,
-                            status: item.status!,
-                            isCurrentStatus: item.isCurrentStatus!)
-                        .then((value) {
-                      busyStatusList.remove(item);
-                      DialogUtils.hideLoading();
-                    }).catchError((error) {
-                      DialogUtils.hideLoading();
-                      toToast(getTranslated("unableDeleteBusyStatus"));
-                    });
-                  } else {
-                    toToast(getTranslated("noInternetConnection"));
-                  }
+                DialogUtils.showLoading(message: "Deleting Busy Status",dialogStyle: AppStyleConfig.dialogStyle);
+                Mirrorfly.deleteBusyStatus(id:
+                item.id!, status: item.status!, isCurrentStatus: item.isCurrentStatus!)
+                    .then((value) {
+                  busyStatusList.remove(item);
+                  DialogUtils.hideLoading();
+                }).catchError((error) {
+                  DialogUtils.hideLoading();
+                toToast(getTranslated("unableDeleteBusyStatus"));
                 });
-              },
-              child: Text(
-                getTranslated("yes"),
-              )),
-        ]);
+              } else {
+              toToast(getTranslated("noInternetConnection"));
+              }
+            });
+          },
+          child: Text(getTranslated("yes"), )),
+    ]);
   }
 
-  showHideEmoji(BuildContext context) {
+  showHideEmoji(BuildContext context){
     if (!showEmoji.value) {
       focusNode.unfocus();
       Future.delayed(const Duration(milliseconds: 500), () {
         showEmoji(!showEmoji.value);
       });
-    } else {
+    }else{
       showEmoji(!showEmoji.value);
       focusNode.requestFocus();
     }
+
   }
+
 }

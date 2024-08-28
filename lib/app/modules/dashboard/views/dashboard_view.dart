@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:get/get.dart';
 import '../../../app_style_config.dart';
 import '../../../common/constants.dart';
-import '../../../data/utils.dart';
 import '../../../extensions/extensions.dart';
 import '../../../modules/dashboard/views/callhistory_view.dart';
 import '../../../modules/dashboard/views/recentchat_view.dart';
@@ -14,6 +12,7 @@ import 'package:mirrorfly_plugin/mirrorflychat.dart';
 
 import '../../../common/app_localizations.dart';
 import '../../../common/app_theme.dart';
+import '../../../data/utils.dart';
 import '../../../widgets/custom_action_bar_icons.dart';
 import '../../dashboard/controllers/dashboard_controller.dart';
 
@@ -21,8 +20,7 @@ class DashboardView extends NavViewStateful<DashboardController> {
   const DashboardView({Key? key}) : super(key: key);
 
   @override
-  DashboardController createController({String? tag}) =>
-      Get.put(DashboardController(), tag: key?.hashCode.toString());
+DashboardController createController({String? tag}) => Get.put(DashboardController(),tag: key?.hashCode.toString());
 
   @override
   Widget build(BuildContext context) {
@@ -36,9 +34,8 @@ class DashboardView extends NavViewStateful<DashboardController> {
         },
         child: Obx(
           () => PopScope(
-            canPop:
-                !(controller.selected.value || controller.isSearching.value),
-            onPopInvoked: (didPop) {
+            canPop: !(controller.selected.value || controller.isSearching.value),
+            onPopInvokedWithResult: (didPop, result) {
               if (didPop) {
                 return;
               }
@@ -51,11 +48,9 @@ class DashboardView extends NavViewStateful<DashboardController> {
               }
             },
             child: Theme(
-              data: Theme.of(context).copyWith(
-                  tabBarTheme: AppStyleConfig.dashBoardPageStyle.tabBarTheme,
-                  appBarTheme: AppStyleConfig.dashBoardPageStyle.appBarTheme,
-                  floatingActionButtonTheme: AppStyleConfig
-                      .dashBoardPageStyle.floatingActionButtonThemeData),
+              data: Theme.of(context).copyWith(tabBarTheme: AppStyleConfig.dashBoardPageStyle.tabBarTheme,
+              appBarTheme: AppStyleConfig.dashBoardPageStyle.appBarTheme,
+                  floatingActionButtonTheme: AppStyleConfig.dashBoardPageStyle.floatingActionButtonThemeData),
               child: CustomSafeArea(
                 child: DefaultTabController(
                   length: 2,
@@ -64,117 +59,60 @@ class DashboardView extends NavViewStateful<DashboardController> {
                         floatingActionButton: controller.isSearching.value
                             ? null
                             : Obx(() {
-                                return createFab(
-                                    controller.currentTab.value, ctx);
+                                return createFab(controller.currentTab.value,ctx);
                               }),
                         body: NestedScrollView(
-                            headerSliverBuilder: (BuildContext context,
-                                bool innerBoxIsScrolled) {
+                            headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
                               return [
                                 Obx(() {
                                   return SliverAppBar(
                                     snap: false,
                                     pinned: true,
-                                    floating: !controller.selected.value ||
-                                        !controller.isSearching.value,
+                                    floating: !controller.selected.value || !controller.isSearching.value,
                                     automaticallyImplyLeading: false,
                                     leading: controller.selected.value
                                         ? IconButton(
                                             icon: const Icon(Icons.clear),
                                             onPressed: () {
-                                              controller
-                                                  .clearAllChatSelection();
+                                              controller.clearAllChatSelection();
                                             },
                                           )
                                         : controller.isSearching.value
                                             ? IconButton(
-                                                icon: const Icon(
-                                                    Icons.arrow_back),
+                                                icon: const Icon(Icons.arrow_back),
                                                 onPressed: () {
-                                                  controller
-                                                      .getBackFromSearch();
+                                                  controller.getBackFromSearch();
                                                 },
                                               )
                                             : null,
                                     title: controller.selected.value
                                         ? controller.currentTab.value == 0
-                                            ? Text(
-                                                (controller
-                                                        .selectedChats.length)
-                                                    .toString(),
-                                                style: AppStyleConfig
-                                                    .dashBoardPageStyle
-                                                    .appBarTheme
-                                                    .titleTextStyle,
-                                              )
-                                            : Text(
-                                                (controller.selectedCallLogs
-                                                        .length)
-                                                    .toString(),
-                                                style: AppStyleConfig
-                                                    .dashBoardPageStyle
-                                                    .appBarTheme
-                                                    .titleTextStyle)
+                                            ? Text((controller.selectedChats.length).toString(),style: AppStyleConfig.dashBoardPageStyle.appBarTheme.titleTextStyle,)
+                                            : Text((controller.selectedCallLogs.length).toString(),style: AppStyleConfig.dashBoardPageStyle.appBarTheme.titleTextStyle)
                                         : controller.isSearching.value
                                             ? TextField(
-                                                focusNode:
-                                                    controller.searchFocusNode,
-                                                onChanged: (text) =>
-                                                    controller.onChange(
-                                                        text,
-                                                        controller
-                                                            .currentTab.value),
+                                                focusNode: controller.searchFocusNode,
+                                                onChanged: (text) => controller.onChange(text, controller.currentTab.value),
                                                 controller: controller.search,
                                                 autofocus: true,
-                                                decoration: InputDecoration(
-                                                    hintText: getTranslated(
-                                                        "searchPlaceholder"),
-                                                    border: InputBorder.none,
-                                                    hintStyle: AppStyleConfig
-                                                        .dashBoardPageStyle
-                                                        .searchTextFieldStyle
-                                                        .editTextHintStyle),
-                                                style: AppStyleConfig
-                                                    .dashBoardPageStyle
-                                                    .searchTextFieldStyle
-                                                    .editTextStyle,
+                                                decoration: InputDecoration(hintText: getTranslated("searchPlaceholder"), border: InputBorder.none,hintStyle: AppStyleConfig.dashBoardPageStyle.searchTextFieldStyle.editTextHintStyle),
+                                      style: AppStyleConfig.dashBoardPageStyle.searchTextFieldStyle.editTextStyle,
                                               )
                                             : null,
                                     bottom: controller.isSearching.value
                                         ? null
                                         : TabBar(
-                                            controller:
-                                                controller.tabController,
+                                            controller: controller.tabController,
                                             tabs: [
                                                 Obx(() {
-                                                  return tabItem(
-                                                      title:
-                                                          getTranslated("chats")
-                                                              .toUpperCase(),
-                                                      count: controller
-                                                          .unreadCountString,
-                                                      tabItemStyle:
-                                                          AppStyleConfig
-                                                              .dashBoardPageStyle
-                                                              .tabItemStyle);
+                                                  return tabItem(title: getTranslated("chats").toUpperCase(), count: controller.unreadCountString,tabItemStyle: AppStyleConfig.dashBoardPageStyle.tabItemStyle);
                                                 }),
-                                                tabItem(
-                                                    title:
-                                                        getTranslated("calls")
-                                                            .toUpperCase(),
-                                                    count: controller
-                                                        .unreadCallCountString,
-                                                    tabItemStyle: AppStyleConfig
-                                                        .dashBoardPageStyle
-                                                        .tabItemStyle)
+                                                tabItem(title: getTranslated("calls").toUpperCase(), count: controller.unreadCallCountString,tabItemStyle: AppStyleConfig.dashBoardPageStyle.tabItemStyle)
                                               ]),
                                     actions: [
                                       CustomActionBarIcons(
-                                          popupMenuThemeData: AppStyleConfig
-                                              .dashBoardPageStyle
-                                              .popupMenuThemeData,
-                                          availableWidth:
-                                              NavUtils.size.width * 0.80,
+                                        popupMenuThemeData: AppStyleConfig.dashBoardPageStyle.popupMenuThemeData,
+                                          availableWidth: NavUtils.size.width * 0.80,
                                           // 80 percent of the screen width
                                           actionWidth: 48,
                                           // default for IconButtons
@@ -184,27 +122,11 @@ class DashboardView extends NavViewStateful<DashboardController> {
                                                 onPressed: () {
                                                   controller.chatInfo();
                                                 },
-                                                icon: SvgPicture.asset(infoIcon,
-                                                    package: package,
-                                                    colorFilter: ColorFilter.mode(
-                                                        Theme.of(context)
-                                                                .appBarTheme
-                                                                .actionsIconTheme
-                                                                ?.color ??
-                                                            Colors.black,
-                                                        BlendMode.srcIn)),
+                                                icon: AppUtils.svgIcon(icon:infoIcon,colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)),
                                                 tooltip: 'Info',
                                               ),
-                                              overflowWidget: Text(
-                                                  getTranslated("info"),
-                                                  style: AppStyleConfig
-                                                      .dashBoardPageStyle
-                                                      .popupMenuThemeData
-                                                      .textStyle),
-                                              showAsAction:
-                                                  controller.info.value
-                                                      ? ShowAsAction.always
-                                                      : ShowAsAction.gone,
+                                              overflowWidget: Text(getTranslated("info"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
+                                              showAsAction: controller.info.value ? ShowAsAction.always : ShowAsAction.gone,
                                               keyValue: 'Info',
                                               onItemClick: () {
                                                 controller.chatInfo();
@@ -213,34 +135,13 @@ class DashboardView extends NavViewStateful<DashboardController> {
                                             CustomAction(
                                               visibleWidget: IconButton(
                                                 onPressed: () {
-                                                  controller.currentTab.value ==
-                                                          0
-                                                      ? controller.deleteChats()
-                                                      : controller
-                                                          .deleteCallLog();
+                                                  controller.currentTab.value == 0 ? controller.deleteChats() : controller.deleteCallLog();
                                                 },
-                                                icon: SvgPicture.asset(delete,
-                                                    package: package,
-                                                    colorFilter: ColorFilter.mode(
-                                                        Theme.of(context)
-                                                                .appBarTheme
-                                                                .actionsIconTheme
-                                                                ?.color ??
-                                                            Colors.black,
-                                                        BlendMode.srcIn)),
+                                                icon: AppUtils.svgIcon(icon:delete,colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)),
                                                 tooltip: 'Delete',
                                               ),
-                                              overflowWidget: Text(
-                                                  getTranslated("delete"),
-                                                  style: AppStyleConfig
-                                                      .dashBoardPageStyle
-                                                      .popupMenuThemeData
-                                                      .textStyle),
-                                              showAsAction: controller
-                                                      .availableFeatures
-                                                      .value
-                                                      .isDeleteChatAvailable
-                                                      .checkNull()
+                                              overflowWidget: Text(getTranslated("delete"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
+                                              showAsAction: controller.availableFeatures.value.isDeleteChatAvailable.checkNull()
                                                   ? controller.delete.value
                                                       ? ShowAsAction.always
                                                       : ShowAsAction.gone
@@ -255,26 +156,11 @@ class DashboardView extends NavViewStateful<DashboardController> {
                                                 onPressed: () {
                                                   controller.pinChats();
                                                 },
-                                                icon: SvgPicture.asset(pin,
-                                                    package: package,
-                                                    colorFilter: ColorFilter.mode(
-                                                        Theme.of(context)
-                                                                .appBarTheme
-                                                                .actionsIconTheme
-                                                                ?.color ??
-                                                            Colors.black,
-                                                        BlendMode.srcIn)),
+                                                icon: AppUtils.svgIcon(icon:pin,colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)),
                                                 tooltip: 'Pin',
                                               ),
-                                              overflowWidget: Text(
-                                                  getTranslated("pin"),
-                                                  style: AppStyleConfig
-                                                      .dashBoardPageStyle
-                                                      .popupMenuThemeData
-                                                      .textStyle),
-                                              showAsAction: controller.pin.value
-                                                  ? ShowAsAction.always
-                                                  : ShowAsAction.gone,
+                                              overflowWidget: Text(getTranslated("pin"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
+                                              showAsAction: controller.pin.value ? ShowAsAction.always : ShowAsAction.gone,
                                               keyValue: 'Pin',
                                               onItemClick: () {
                                                 controller.pinChats();
@@ -285,27 +171,11 @@ class DashboardView extends NavViewStateful<DashboardController> {
                                                 onPressed: () {
                                                   controller.unPinChats();
                                                 },
-                                                icon: SvgPicture.asset(unpin,
-                                                    package: package,
-                                                    colorFilter: ColorFilter.mode(
-                                                        Theme.of(context)
-                                                                .appBarTheme
-                                                                .actionsIconTheme
-                                                                ?.color ??
-                                                            Colors.black,
-                                                        BlendMode.srcIn)),
+                                                icon: AppUtils.svgIcon(icon:unpin,colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)),
                                                 tooltip: 'UnPin',
                                               ),
-                                              overflowWidget: Text(
-                                                  getTranslated("unPin"),
-                                                  style: AppStyleConfig
-                                                      .dashBoardPageStyle
-                                                      .popupMenuThemeData
-                                                      .textStyle),
-                                              showAsAction:
-                                                  controller.unpin.value
-                                                      ? ShowAsAction.always
-                                                      : ShowAsAction.gone,
+                                              overflowWidget: Text(getTranslated("unPin"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
+                                              showAsAction: controller.unpin.value ? ShowAsAction.always : ShowAsAction.gone,
                                               keyValue: 'UnPin',
                                               onItemClick: () {
                                                 controller.unPinChats();
@@ -316,27 +186,11 @@ class DashboardView extends NavViewStateful<DashboardController> {
                                                 onPressed: () {
                                                   controller.muteChats();
                                                 },
-                                                icon: SvgPicture.asset(mute,
-                                                    package: package,
-                                                    colorFilter: ColorFilter.mode(
-                                                        Theme.of(context)
-                                                                .appBarTheme
-                                                                .actionsIconTheme
-                                                                ?.color ??
-                                                            Colors.black,
-                                                        BlendMode.srcIn)),
+                                                icon: AppUtils.svgIcon(icon:mute,colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)),
                                                 tooltip: 'Mute',
                                               ),
-                                              overflowWidget: Text(
-                                                  getTranslated("mute"),
-                                                  style: AppStyleConfig
-                                                      .dashBoardPageStyle
-                                                      .popupMenuThemeData
-                                                      .textStyle),
-                                              showAsAction:
-                                                  controller.mute.value
-                                                      ? ShowAsAction.always
-                                                      : ShowAsAction.gone,
+                                              overflowWidget: Text(getTranslated("mute"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
+                                              showAsAction: controller.mute.value ? ShowAsAction.always : ShowAsAction.gone,
                                               keyValue: 'Mute',
                                               onItemClick: () {
                                                 controller.muteChats();
@@ -347,27 +201,11 @@ class DashboardView extends NavViewStateful<DashboardController> {
                                                 onPressed: () {
                                                   controller.unMuteChats();
                                                 },
-                                                icon: SvgPicture.asset(unMute,
-                                                    package: package,
-                                                    colorFilter: ColorFilter.mode(
-                                                        Theme.of(context)
-                                                                .appBarTheme
-                                                                .actionsIconTheme
-                                                                ?.color ??
-                                                            Colors.black,
-                                                        BlendMode.srcIn)),
+                                                icon: AppUtils.svgIcon(icon:unMute,colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)),
                                                 tooltip: 'UnMute',
                                               ),
-                                              overflowWidget: Text(
-                                                  getTranslated("unMute"),
-                                                  style: AppStyleConfig
-                                                      .dashBoardPageStyle
-                                                      .popupMenuThemeData
-                                                      .textStyle),
-                                              showAsAction:
-                                                  controller.unmute.value
-                                                      ? ShowAsAction.always
-                                                      : ShowAsAction.gone,
+                                              overflowWidget: Text(getTranslated("unMute"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
+                                              showAsAction: controller.unmute.value ? ShowAsAction.always : ShowAsAction.gone,
                                               keyValue: 'UnMute',
                                               onItemClick: () {
                                                 controller.unMuteChats();
@@ -378,63 +216,29 @@ class DashboardView extends NavViewStateful<DashboardController> {
                                                 onPressed: () {
                                                   controller.archiveChats();
                                                 },
-                                                icon: SvgPicture.asset(archive,
-                                                    package: package,
-                                                    colorFilter: ColorFilter.mode(
-                                                        Theme.of(context)
-                                                                .appBarTheme
-                                                                .actionsIconTheme
-                                                                ?.color ??
-                                                            Colors.black,
-                                                        BlendMode.srcIn)),
+                                                icon: AppUtils.svgIcon(icon:archive,colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)),
                                                 tooltip: 'Archive',
                                               ),
-                                              overflowWidget: Text(
-                                                  getTranslated("archived"),
-                                                  style: AppStyleConfig
-                                                      .dashBoardPageStyle
-                                                      .popupMenuThemeData
-                                                      .textStyle),
-                                              showAsAction:
-                                                  controller.archive.value
-                                                      ? ShowAsAction.always
-                                                      : ShowAsAction.gone,
+                                              overflowWidget: Text(getTranslated("archived"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
+                                              showAsAction: controller.archive.value ? ShowAsAction.always : ShowAsAction.gone,
                                               keyValue: 'Archived',
                                               onItemClick: () {
                                                 controller.archiveChats();
                                               },
                                             ),
                                             CustomAction(
-                                              visibleWidget: const Icon(
-                                                  Icons.mark_chat_read),
-                                              overflowWidget: Text(
-                                                  getTranslated("markAsRead"),
-                                                  style: AppStyleConfig
-                                                      .dashBoardPageStyle
-                                                      .popupMenuThemeData
-                                                      .textStyle),
-                                              showAsAction:
-                                                  controller.read.value
-                                                      ? ShowAsAction.never
-                                                      : ShowAsAction.gone,
+                                              visibleWidget: const Icon(Icons.mark_chat_read),
+                                              overflowWidget: Text(getTranslated("markAsRead"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
+                                              showAsAction: controller.read.value ? ShowAsAction.never : ShowAsAction.gone,
                                               keyValue: 'Mark as Read',
                                               onItemClick: () {
                                                 controller.itemsRead();
                                               },
                                             ),
                                             CustomAction(
-                                              visibleWidget: const Icon(
-                                                  Icons.mark_chat_unread),
-                                              overflowWidget: Text(
-                                                  getTranslated("markAsUnread"),
-                                                  style: AppStyleConfig
-                                                      .dashBoardPageStyle
-                                                      .popupMenuThemeData
-                                                      .textStyle),
-                                              showAsAction:
-                                                  controller.unread.value
-                                                      ? ShowAsAction.never
-                                                      : ShowAsAction.gone,
+                                              visibleWidget: const Icon(Icons.mark_chat_unread),
+                                              overflowWidget: Text(getTranslated("markAsUnread"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
+                                              showAsAction: controller.unread.value ? ShowAsAction.never : ShowAsAction.gone,
                                               keyValue: 'Mark as unread',
                                               onItemClick: () {
                                                 controller.itemsUnRead();
@@ -445,35 +249,18 @@ class DashboardView extends NavViewStateful<DashboardController> {
                                                 onPressed: () {
                                                   controller.gotoSearch();
                                                 },
-                                                icon: SvgPicture.asset(
-                                                    searchIcon,
-                                                    package: package,
-                                                    width: 18,
-                                                    height: 18,
-                                                    fit: BoxFit.contain,
-                                                    colorFilter: ColorFilter.mode(
-                                                        Theme.of(context)
-                                                                .appBarTheme
-                                                                .actionsIconTheme
-                                                                ?.color ??
-                                                            Colors.black,
-                                                        BlendMode.srcIn)),
+                                                icon: AppUtils.svgIcon(icon:
+                                                  searchIcon,
+                                                  width: 18,
+                                                  height: 18,
+                                                  fit: BoxFit.contain,
+                                                    colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)
+                                                ),
                                                 tooltip: 'Search',
                                               ),
-                                              overflowWidget: Text(
-                                                  getTranslated("search"),
-                                                  style: AppStyleConfig
-                                                      .dashBoardPageStyle
-                                                      .popupMenuThemeData
-                                                      .textStyle),
-                                              showAsAction: controller
-                                                      .availableFeatures
-                                                      .value
-                                                      .isRecentChatSearchAvailable
-                                                      .checkNull()
-                                                  ? controller.selected.value ||
-                                                          controller
-                                                              .isSearching.value
+                                              overflowWidget: Text(getTranslated("search"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
+                                              showAsAction: controller.availableFeatures.value.isRecentChatSearchAvailable.checkNull()
+                                                  ? controller.selected.value || controller.isSearching.value
                                                       ? ShowAsAction.gone
                                                       : ShowAsAction.always
                                                   : ShowAsAction.gone,
@@ -483,43 +270,19 @@ class DashboardView extends NavViewStateful<DashboardController> {
                                               },
                                             ),
                                             CustomAction(
-                                              visibleWidget: IconButton(
-                                                  onPressed: () => controller
-                                                      .onClearPressed(),
-                                                  icon:
-                                                      const Icon(Icons.close)),
-                                              overflowWidget: Text(
-                                                  getTranslated("clear"),
-                                                  style: AppStyleConfig
-                                                      .dashBoardPageStyle
-                                                      .popupMenuThemeData
-                                                      .textStyle),
-                                              showAsAction:
-                                                  controller.clearVisible.value
-                                                      ? ShowAsAction.always
-                                                      : ShowAsAction.gone,
+                                              visibleWidget: IconButton(onPressed: () => controller.onClearPressed(), icon: const Icon(Icons.close)),
+                                              overflowWidget: Text(getTranslated("clear"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
+                                              showAsAction: controller.clearVisible.value ? ShowAsAction.always : ShowAsAction.gone,
                                               keyValue: 'Clear',
                                               onItemClick: () {
                                                 controller.onClearPressed();
                                               },
                                             ),
                                             CustomAction(
-                                              visibleWidget:
-                                                  const Icon(Icons.group_add),
-                                              overflowWidget: Text(
-                                                  getTranslated("newGroup"),
-                                                  style: AppStyleConfig
-                                                      .dashBoardPageStyle
-                                                      .popupMenuThemeData
-                                                      .textStyle),
-                                              showAsAction: controller
-                                                      .availableFeatures
-                                                      .value
-                                                      .isGroupChatAvailable
-                                                      .checkNull()
-                                                  ? controller.selected.value ||
-                                                          controller
-                                                              .isSearching.value
+                                              visibleWidget: const Icon(Icons.group_add),
+                                              overflowWidget: Text(getTranslated("newGroup"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
+                                              showAsAction: controller.availableFeatures.value.isGroupChatAvailable.checkNull()
+                                                  ? controller.selected.value || controller.isSearching.value
                                                       ? ShowAsAction.gone
                                                       : ShowAsAction.never
                                                   : ShowAsAction.gone,
@@ -529,47 +292,21 @@ class DashboardView extends NavViewStateful<DashboardController> {
                                               },
                                             ),
                                             CustomAction(
-                                              visibleWidget:
-                                                  const Icon(Icons.web),
-                                              overflowWidget: Text(
-                                                  getTranslated("clearCallLog"),
-                                                  style: AppStyleConfig
-                                                      .dashBoardPageStyle
-                                                      .popupMenuThemeData
-                                                      .textStyle),
+                                              visibleWidget: const Icon(Icons.web),
+                                              overflowWidget: Text(getTranslated("clearCallLog"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
                                               showAsAction:
-                                                  controller.selected.value ||
-                                                          controller.isSearching
-                                                              .value ||
-                                                          controller.currentTab
-                                                                  .value ==
-                                                              0 ||
-                                                          controller.callLogList
-                                                              .isEmpty
+                                                  controller.selected.value || controller.isSearching.value || controller.currentTab.value == 0 || controller.callLogList.isEmpty
                                                       ? ShowAsAction.gone
                                                       : ShowAsAction.never,
                                               keyValue: 'Clear call log',
-                                              onItemClick: () => controller
-                                                      .callLogList.isNotEmpty
-                                                  ? controller.clearCallLog()
-                                                  : toToast(getTranslated(
-                                                      "noCallLog")),
+                                              onItemClick: () =>
+                                                  controller.callLogList.isNotEmpty ? controller.clearCallLog() : toToast(getTranslated("noCallLog")),
                                             ),
                                             CustomAction(
-                                              visibleWidget:
-                                                  const Icon(Icons.settings),
-                                              overflowWidget: Text(
-                                                  getTranslated("settings"),
-                                                  style: AppStyleConfig
-                                                      .dashBoardPageStyle
-                                                      .popupMenuThemeData
-                                                      .textStyle),
+                                              visibleWidget: const Icon(Icons.settings),
+                                              overflowWidget: Text(getTranslated("settings"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
                                               showAsAction:
-                                                  controller.selected.value ||
-                                                          controller
-                                                              .isSearching.value
-                                                      ? ShowAsAction.gone
-                                                      : ShowAsAction.never,
+                                                  controller.selected.value || controller.isSearching.value ? ShowAsAction.gone : ShowAsAction.never,
                                               keyValue: 'Settings',
                                               onItemClick: () {
                                                 controller.gotoSettings();
@@ -589,36 +326,11 @@ class DashboardView extends NavViewStateful<DashboardController> {
                                 }),
                               ];
                             },
-                            body: TabBarView(
-                                controller: controller.tabController,
-                                children: [
-                                  RecentChatView(
-                                    controller: controller,
-                                    archivedTileStyle: AppStyleConfig
-                                        .dashBoardPageStyle.archivedTileStyle,
-                                    recentChatItemStyle: AppStyleConfig
-                                        .dashBoardPageStyle.recentChatItemStyle,
-                                    noDataTextStyle: AppStyleConfig
-                                        .dashBoardPageStyle.noDataTextStyle,
-                                    contactItemStyle: AppStyleConfig
-                                        .dashBoardPageStyle.contactItemStyle,
-                                  ),
-                                  CallHistoryView(
-                                    controller: controller,
-                                    callHistoryItemStyle: AppStyleConfig
-                                        .dashBoardPageStyle
-                                        .callHistoryItemStyle,
-                                    noDataTextStyle: AppStyleConfig
-                                        .dashBoardPageStyle.noDataTextStyle,
-                                    createMeetLinkStyle: AppStyleConfig
-                                        .dashBoardPageStyle.createMeetLinkStyle,
-                                    recentCallsTitleStyle: AppStyleConfig
-                                        .dashBoardPageStyle.titlesTextStyle,
-                                    meetBottomSheetStyle: AppStyleConfig
-                                        .dashBoardPageStyle
-                                        .meetBottomSheetStyle,
-                                  )
-                                ])));
+                            body: TabBarView(controller: controller.tabController, children: [
+                              RecentChatView(controller: controller, archivedTileStyle: AppStyleConfig.dashBoardPageStyle.archivedTileStyle, recentChatItemStyle: AppStyleConfig.dashBoardPageStyle.recentChatItemStyle,noDataTextStyle: AppStyleConfig.dashBoardPageStyle.noDataTextStyle,contactItemStyle: AppStyleConfig.dashBoardPageStyle.contactItemStyle,),
+                              CallHistoryView(controller: controller,callHistoryItemStyle: AppStyleConfig.dashBoardPageStyle.callHistoryItemStyle,noDataTextStyle: AppStyleConfig.dashBoardPageStyle.noDataTextStyle,
+                              createMeetLinkStyle: AppStyleConfig.dashBoardPageStyle.createMeetLinkStyle,recentCallsTitleStyle: AppStyleConfig.dashBoardPageStyle.titlesTextStyle,meetBottomSheetStyle: AppStyleConfig.dashBoardPageStyle.meetBottomSheetStyle,)
+                            ])));
                   }),
                 ),
               ),
@@ -629,14 +341,13 @@ class DashboardView extends NavViewStateful<DashboardController> {
 
   Widget? createScaledFab(BuildContext context) {
     // Searching for index of a tab with not 0.0 scale
-    final indexOfCurrentFab =
-        controller.tabScales.indexWhere((fabScale) => fabScale != 0);
+    final indexOfCurrentFab = controller.tabScales.indexWhere((fabScale) => fabScale != 0);
     // If there are no fabs with non-zero opacity return nothing
     if (indexOfCurrentFab == -1) {
       return null;
     }
     // Creating fab for current index
-    final fab = createFab(indexOfCurrentFab, context);
+    final fab = createFab(indexOfCurrentFab,context);
     // If no fab created return nothing
     /*if (fab == null) {
       return null;
@@ -650,7 +361,7 @@ class DashboardView extends NavViewStateful<DashboardController> {
   }
 
   // Create fab for provided index
-  Widget createFab(final int index, BuildContext context) {
+  Widget createFab(final int index,BuildContext context) {
     if (index == 0) {
       return FloatingActionButton(
         tooltip: "New Chat",
@@ -658,14 +369,11 @@ class DashboardView extends NavViewStateful<DashboardController> {
         onPressed: () {
           controller.gotoContacts();
         },
-        child: SvgPicture.asset(
+        child:
+        AppUtils.svgIcon(icon:
           chatFabIcon,
-          package: package,
           width: Theme.of(context).floatingActionButtonTheme.iconSize,
-          colorFilter: ColorFilter.mode(
-              Theme.of(context).floatingActionButtonTheme.foregroundColor ??
-                  Colors.white,
-              BlendMode.srcIn),
+          colorFilter: ColorFilter.mode(Theme.of(context).floatingActionButtonTheme.foregroundColor ?? Colors.white, BlendMode.srcIn),
         ),
       );
     }
@@ -673,18 +381,12 @@ class DashboardView extends NavViewStateful<DashboardController> {
     if (index == 1) {
       return AnimatedFloatingAction(
         tooltip: "New Call",
-        backgroundColor:
-            Theme.of(context).floatingActionButtonTheme.backgroundColor,
-        foregroundColor:
-            Theme.of(context).floatingActionButtonTheme.foregroundColor,
-        icon: SvgPicture.asset(
+        backgroundColor: Theme.of(context).floatingActionButtonTheme.backgroundColor,
+        foregroundColor: Theme.of(context).floatingActionButtonTheme.foregroundColor,
+        icon: AppUtils.svgIcon(icon:
           plusIcon,
-          package: package,
           width: Theme.of(context).floatingActionButtonTheme.iconSize,
-          colorFilter: ColorFilter.mode(
-              Theme.of(context).floatingActionButtonTheme.foregroundColor ??
-                  Colors.white,
-              BlendMode.srcIn),
+          colorFilter: ColorFilter.mode(Theme.of(context).floatingActionButtonTheme.foregroundColor ?? Colors.white, BlendMode.srcIn),
           fit: BoxFit.contain,
         ),
         audioCallOnPressed: () {
@@ -698,10 +400,7 @@ class DashboardView extends NavViewStateful<DashboardController> {
     return const Offstage();
   }
 
-  Widget tabItem(
-      {required String title,
-      required String count,
-      required TabItemStyle tabItemStyle}) {
+  Widget tabItem({required String title, required String count,required TabItemStyle tabItemStyle}) {
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Row(
@@ -709,8 +408,7 @@ class DashboardView extends NavViewStateful<DashboardController> {
         children: [
           Text(
             title,
-            style: tabItemStyle
-                .textStyle, //const TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
+            style: tabItemStyle.textStyle,//const TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
           ),
           int.parse(count) > 0
               ? Padding(
@@ -720,8 +418,7 @@ class DashboardView extends NavViewStateful<DashboardController> {
                     radius: 9,
                     child: Text(
                       count.toString(),
-                      style: tabItemStyle.countIndicatorStyle
-                          .textStyle, //const TextStyle(fontSize: 12, color: Colors.white, fontFamily: 'sf_ui'),
+                      style: tabItemStyle.countIndicatorStyle.textStyle,//const TextStyle(fontSize: 12, color: Colors.white, fontFamily: 'sf_ui'),
                     ),
                   ),
                 )

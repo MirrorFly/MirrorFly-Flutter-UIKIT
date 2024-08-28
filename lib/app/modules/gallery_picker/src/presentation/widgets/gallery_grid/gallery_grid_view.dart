@@ -1,9 +1,10 @@
+
 import 'package:flutter/material.dart';
-import '../../../../../../common/de_bouncer.dart';
-import 'thumbnail_widget.dart';
 import 'package:photo_manager/photo_manager.dart';
 
+import '../../../../../../common/de_bouncer.dart';
 import '../../pages/gallery_media_picker_controller.dart';
+import 'thumbnail_widget.dart';
 
 typedef OnAssetItemClick = void Function(AssetEntity entity, int index);
 typedef RemoveAssetItem = void Function(AssetEntity entity, int index);
@@ -89,9 +90,7 @@ class GalleryGridViewState extends State<GalleryGridView> {
   static Map<int?, AssetEntity?> _createMap() {
     return {};
   }
-
   final debouncer = DeBouncer(milliseconds: 300);
-
   /// create cache for images
   var cacheMap = _createMap();
 
@@ -163,7 +162,7 @@ class GalleryGridViewState extends State<GalleryGridView> {
         debugPrint("item click ${DateTime.now()}");
         var asset = cacheMap[index];
         if (asset == null) {
-          asset = (await widget.path!
+           asset = (await widget.path!
               .getAssetListRange(start: index, end: index + 1))[0];
           cacheMap[index] = asset;
         }
@@ -211,6 +210,7 @@ class GalleryGridViewState extends State<GalleryGridView> {
           /// thumbnail widget
           return GestureDetector(
             onTap: () async {
+
               widget.onAssetItemClick?.call(asset, index);
 
               /*debouncer.run(() async {
@@ -223,6 +223,7 @@ class GalleryGridViewState extends State<GalleryGridView> {
                   widget.onAssetRemove?.call(asset, index);
                 }
               });*/
+
             },
             child: ThumbnailWidget(
               asset: asset,

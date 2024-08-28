@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import '../../../extensions/extensions.dart';
 import '../../../stylesheet/stylesheet.dart';
@@ -17,8 +18,7 @@ class ContactItem extends StatelessWidget {
     this.isCheckBoxVisible = false,
     required this.checkValue,
     required this.onCheckBoxChange,
-    this.onListItemPressed,
-    this.contactItemStyle = const ContactItemStyle(),
+    this.onListItemPressed,this.contactItemStyle = const ContactItemStyle(),
   }) : super(key: key);
   final ProfileDetails item;
   final Function()? onAvatarClick;
@@ -43,14 +43,11 @@ class ContactItem extends StatelessWidget {
                 InkWell(
                   onTap: onAvatarClick,
                   child: Container(
-                      margin: const EdgeInsets.only(
-                          left: 18.0, top: 10, bottom: 10, right: 10),
+                      margin: const EdgeInsets.only(left: 18.0, top: 10, bottom: 10, right: 10),
                       width: contactItemStyle.profileImageSize.width,
                       height: contactItemStyle.profileImageSize.height,
                       decoration: BoxDecoration(
-                        color: item.image.checkNull().isEmpty
-                            ? iconBgColor
-                            : buttonBgColor,
+                        color: item.image.checkNull().isEmpty ? iconBgColor : buttonBgColor,
                         shape: BoxShape.circle,
                       ),
                       child: ImageNetwork(
@@ -59,17 +56,15 @@ class ContactItem extends StatelessWidget {
                         height: contactItemStyle.profileImageSize.height - 2,
                         clipOval: true,
                         errorWidget: getName(item) //item.nickName
-                                .checkNull()
-                                .isNotEmpty
+                            .checkNull()
+                            .isNotEmpty
                             ? ProfileTextImage(text: getName(item))
                             : const Icon(
-                                Icons.person,
-                                color: Colors.white,
-                              ),
-                        blocked: item.isBlockedMe.checkNull() ||
-                            item.isAdminBlocked.checkNull(),
-                        unknown: (!item.isItSavedContact.checkNull() ||
-                            item.isDeletedContact()),
+                          Icons.person,
+                          color: Colors.white,
+                        ),
+                        blocked: item.isBlockedMe.checkNull() || item.isAdminBlocked.checkNull(),
+                        unknown: (!item.isItSavedContact.checkNull() || item.isDeletedContact()),
                         isGroup: item.isGroupProfile.checkNull(),
                       )), //controller.showProfilePopup(item.obs);
                 ),
@@ -79,22 +74,20 @@ class ContactItem extends StatelessWidget {
                     children: [
                       spanTxt.isEmpty
                           ? Text(
-                              getName(item),
-                              style: contactItemStyle.titleStyle,
-                              // style: Theme.of(context).textTheme.titleMedium,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            )
+                        getName(item),
+                        style: contactItemStyle.titleStyle,
+                        // style: Theme.of(context).textTheme.titleMedium,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      )
                           : spannableText(
-                              getName(item),
-                              //item.profileName.checkNull(),
-                              spanTxt.trim(),
-                              contactItemStyle.titleStyle,
-                              // const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700, fontFamily: 'sf_ui', color: textHintColor),
-                              contactItemStyle.spanTextColor),
-                      const SizedBox(
-                        height: 5,
-                      ),
+                          getName(item),
+                          //item.profileName.checkNull(),
+                          spanTxt.trim(),
+                          contactItemStyle.titleStyle,
+                          // const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700, fontFamily: 'sf_ui', color: textHintColor),
+                          contactItemStyle.spanTextColor),
+                      const SizedBox(height: 5,),
                       Text(
                         item.status.toString(),
                         style: contactItemStyle.descriptionStyle,
@@ -108,8 +101,7 @@ class ContactItem extends StatelessWidget {
                 Visibility(
                   visible: isCheckBoxVisible,
                   child: Checkbox(
-                    value:
-                        checkValue, //controller.selectedUsersJIDList.contains(item.jid),
+                    value: checkValue, //controller.selectedUsersJIDList.contains(item.jid),
                     onChanged: (value) {
                       onCheckBoxChange(value);
                       //controller.onListItemPressed(item);
@@ -120,11 +112,7 @@ class ContactItem extends StatelessWidget {
                 ),
               ],
             ),
-            AppDivider(
-              color: contactItemStyle.dividerColor,
-              padding: EdgeInsets.only(
-                  left: contactItemStyle.profileImageSize.width),
-            )
+            AppDivider(color: contactItemStyle.dividerColor,padding: EdgeInsets.only(left: contactItemStyle.profileImageSize.width),)
           ],
         ),
         // onTap: () {
