@@ -8,9 +8,9 @@ import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  MirrorflyUikit.instance.initUIKIT(
+  await MirrorflyUikit.instance.initUIKIT(
     navigatorKey: navigatorKey,
     licenseKey: 'LICENSE_KEY',
     iOSContainerID: 'group.com.mirrorfly.flutter',
@@ -123,7 +123,7 @@ class _DashboardState extends State<Dashboard> {
                         onPressed: () async {
                           if (uniqueId.isNotEmpty) {
                             try {
-                              var response = await MirrorflyUikit.login(
+                              var response = await MirrorflyUikit.instance.login(
                                   userIdentifier: uniqueId);
                               debugPrint("register user $response");
                               showSnack(response['message']);
@@ -196,7 +196,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   logoutFromSDK() async {
-    MirrorflyUikit.logoutFromUIKIT().then((value) {
+    MirrorflyUikit.instance.logoutFromUIKIT().then((value) {
       debugPrint("logout user $value");
       showSnack(value['message']);
     }).catchError((er) {});
