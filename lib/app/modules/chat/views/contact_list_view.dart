@@ -148,7 +148,7 @@ ContactController createController({String? tag}) => Get.put(ContactController()
                                 padding: const EdgeInsets.symmetric(vertical: 20.0),
                                 child: Text(getTranslated("noContactsFound"),style: AppStyleConfig.contactListPageStyle.noDataTextStyle,),
                               ),)),
-                          controller.isPageLoading.value
+                          controller.isPageLoading.value && controller.usersList.isEmpty
                               ? const Center(
                               child: Padding(
                                 padding: EdgeInsets.all(16.0),
@@ -156,7 +156,7 @@ ContactController createController({String? tag}) => Get.put(ContactController()
                               )) : const Offstage(),
                               Column(
                             children: [
-                              controller.isPageLoading.value ? Expanded(child: Container()) : Expanded(
+                              controller.isPageLoading.value && controller.usersList.isEmpty ? Expanded(child: Container()) : Expanded(
                                 child: ListView.builder(
                                     itemCount: controller.scrollable.value
                                         ? controller.usersList.length + 1

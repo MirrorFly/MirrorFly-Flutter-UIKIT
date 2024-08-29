@@ -1,6 +1,6 @@
 
-import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:get/get.dart';
 import '../../../common/app_localizations.dart';
 
@@ -28,12 +28,14 @@ class LocalContactController extends GetxController {
   }
 
   getContacts() async{
-    await ContactsService.getContacts().then((localContactList) {
+    FlutterContacts.getContacts(withProperties: true).then((localContactList) {
       for (var userDetail in localContactList) {
-        if (userDetail.phones != null && userDetail.phones!.isNotEmpty) {
+        if (userDetail.phones.isNotEmpty) {
           LocalContact localContact = LocalContact(contact: userDetail, isSelected: false);
           contactList.add(localContact);
           searchList.add(localContact);
+        }else{
+          debugPrint("No phone number found for contact--> $userDetail");
         }
       }
     });
@@ -70,11 +72,7 @@ class LocalContactController extends GetxController {
   }
 
   name(Contact item) {
-    return item.displayName ?? item.givenName ?? item.middleName ?? item.androidAccountName ?? item.familyName ?? "";
-  }
-
-  isValidContactNumber(List<Item> phones){
-    return phones.isNotEmpty;
+    return item.displayName;
   }
 
   void contactSelected(LocalContact localContact) {
