@@ -10,7 +10,8 @@ class DialogUtils {
   static BuildContext get buildContext => NavUtils.currentContext;
 
   static createDialog(Widget builder){
-    return showDialog(context: buildContext, builder: (_){
+    return showDialog(
+        context: buildContext, builder: (_){
       return builder;
     },routeSettings: _routeSettings);
   }
