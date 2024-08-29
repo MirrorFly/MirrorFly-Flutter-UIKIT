@@ -8,7 +8,6 @@ import '../../../common/app_localizations.dart';
 import '../../../common/widgets.dart';
 import '../../../data/helper.dart';
 import '../../../extensions/extensions.dart';
-import '../../../modules/chat/widgets/floating_fab.dart';
 import 'package:mirrorfly_plugin/logmessage.dart';
 
 import '../../../call_modules/ripple_animation_view.dart';
