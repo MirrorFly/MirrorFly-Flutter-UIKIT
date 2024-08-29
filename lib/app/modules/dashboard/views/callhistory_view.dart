@@ -34,7 +34,7 @@ class CallHistoryView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
+       /* Container(
           color: Theme
               .of(context)
               .scaffoldBackgroundColor,
@@ -67,7 +67,7 @@ class CallHistoryView extends StatelessWidget {
               ],
             ),
           ),
-        ),
+        ),*/
         Obx(() {
           return controller.callLogList.isEmpty ? const Offstage() : Container(
               color: Theme

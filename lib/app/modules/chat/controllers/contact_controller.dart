@@ -30,6 +30,7 @@ class ContactController extends FullLifeCycleController with FullLifeCycleMixin 
   final TextEditingController searchQuery = TextEditingController();
   var _searchText = "";
   var _first = true;
+  var isSearchingNew = false.obs;
 
 
 
@@ -133,6 +134,7 @@ class ContactController extends FullLifeCycleController with FullLifeCycleMixin 
         pageNum = 1;
       } else {
         isPageLoading(true);
+        isSearchingNew(true);
         _searchText = searchQuery.text.trim();
         pageNum = 1;
       }
@@ -225,6 +227,7 @@ class ContactController extends FullLifeCycleController with FullLifeCycleMixin 
               }
             }
             isPageLoading.value = false;
+            isSearchingNew.value = false;
             usersList.refresh();
           } else {
             list.addAll(item.data!);

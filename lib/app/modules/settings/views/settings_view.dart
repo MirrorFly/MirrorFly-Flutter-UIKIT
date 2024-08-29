@@ -42,21 +42,18 @@ class SettingsView extends NavView<SettingsController> {
                 getTranslated("starredMessages"), leading: staredMsgIcon, trailing: rightArrowIcon,listItemStyle: AppStyleConfig.settingsPageStyle.listItemStyle, onTap: () {
                 NavUtils.toNamed(Routes.starredMessages);
               }),
-              SettingListItem(title:
+             /* SettingListItem(title:
                   getTranslated("notifications"), leading: notificationIcon, trailing: rightArrowIcon,listItemStyle: AppStyleConfig.settingsPageStyle.listItemStyle, onTap: () =>
-                  NavUtils.toNamed(Routes.notification)),
+                  NavUtils.toNamed(Routes.notification)),*/
               SettingListItem(title:
                   getTranslated("blockedContacts"), leading: blockedIcon, trailing: rightArrowIcon,listItemStyle: AppStyleConfig.settingsPageStyle.listItemStyle, onTap: () =>
                   NavUtils.toNamed(Routes.blockedList)),
-              SettingListItem(title:
+              /*SettingListItem(title:
                   getTranslated("appLock"), leading: lockIcon, trailing: rightArrowIcon,listItemStyle: AppStyleConfig.settingsPageStyle.listItemStyle, onTap: () =>
                   NavUtils.toNamed(Routes.appLock)),
               SettingListItem(title:
                   getTranslated("aboutAndHelp"),leading:  aboutIcon, trailing: rightArrowIcon,listItemStyle: AppStyleConfig.settingsPageStyle.listItemStyle, onTap: () =>
                   NavUtils.to(const AboutAndHelpView())),
-              /*Commented out, because this feature is NA*/
-              // SettingListItem(title:
-              //     getTranslated("connectionLabel"), leading: connectionIcon, trailing: toggleOffIcon,listItemStyle: AppStyleConfig.settingsPageStyle.listItemStyle, onTap: () {}),
               SettingListItem(title:
                   getTranslated("deleteMyAccount"), leading: delete, trailing: rightArrowIcon,listItemStyle: AppStyleConfig.settingsPageStyle.listItemStyle, onTap: () {
                 NavUtils.toNamed(Routes.deleteAccount);
@@ -108,7 +105,7 @@ class SettingsView extends NavView<SettingsController> {
                         ),
                       ]);
                 }),
-              )
+              )*/
             ],
           ),
         ),

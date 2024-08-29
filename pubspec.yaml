@@ -32,7 +32,7 @@ dependencies:
   custom_image_crop: ^0.0.13
   photo_view: ^0.15.0
   audioplayers: ^6.1.0
-  contacts_service: ^0.6.3
+  flutter_contacts: ^1.1.9+2
   google_maps_flutter: ^2.9.0
   geolocator: ^13.0.1
   geocoding: ^3.0.0
@@ -60,6 +60,7 @@ dependencies:
   http: ^1.2.2
   flutter_libphonenumber: ^2.3.3
   fading_edge_scrollview: ^4.1.1
+
   mirrorfly_plugin: ^1.0.6
 #  mirrorfly_plugin:
 #    path: ../p078-mirrorfly-flutter-plugin
