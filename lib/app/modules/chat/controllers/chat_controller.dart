@@ -1409,7 +1409,7 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
                   NavUtils.back();
                   clearChatHistory(false);
                 },
-                child: Text(getTranslated("cleatAll").toUpperCase(), )),
+                child: Text(getTranslated("clearAll").toUpperCase(), )),
           ),
           TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
               onPressed: () {

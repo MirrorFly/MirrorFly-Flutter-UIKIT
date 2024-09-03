@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import '../../../app_style_config.dart';
 import '../../../common/app_localizations.dart';
 import '../../../modules/settings/controllers/settings_controller.dart';
@@ -9,7 +8,6 @@ import '../../../common/constants.dart';
 import '../../../data/utils.dart';
 import '../../../extensions/extensions.dart';
 import '../../../routes/route_settings.dart';
-import 'about/about_and_help_view.dart';
 
 class SettingsView extends NavView<SettingsController> {
   const SettingsView({Key? key}) : super(key: key);
