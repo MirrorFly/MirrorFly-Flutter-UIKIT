@@ -15,7 +15,7 @@ dependencies:
   plugin_platform_interface: ^2.0.2
 
   cupertino_icons: ^1.0.8
-  get: 4.6.6
+  get: ^4.6.6
   shared_preferences: ^2.3.2
   flutter_svg: ^2.0.10+1
   cached_network_image: ^3.4.1
@@ -25,7 +25,7 @@ dependencies:
   package_info_plus: ^8.0.2
   image_picker: ^1.1.2
   permission_handler: ^11.3.1
-  emoji_picker_flutter: 3.0.0
+  emoji_picker_flutter: ^3.0.0
   path_provider: ^2.1.4
   lottie: ^3.1.2
   url_launcher: ^6.3.0
