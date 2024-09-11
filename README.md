@@ -114,7 +114,7 @@ Goto Project -> Target -> Signing & Capabilities -> Click `+ Capability` at the 
 
 ```yaml
 dependencies:
-  mirrorfly_uikit_plugin: ^2.0.0
+  mirrorfly_uikit_plugin: ^2.0.1-beta
 ```
 
 - Run `flutter pub get` command in your project directory.
@@ -141,7 +141,7 @@ To initialize the plugin, place the below code in your `main.dart` file inside `
 final navigatorKey = GlobalKey<NavigatorState>();
  void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  MirrorflyUikit.instance.initUIKIT(
+  await MirrorflyUikit.instance.initUIKIT(
       licenseKey: 'Your_Mirrorfly_Licence_Key',
       googleMapKey: 'Your_Google_Map_Key_for_location_messages',
       iOSContainerID: 'Your_iOS_app_Container_id',
@@ -171,17 +171,17 @@ AppStyleConfig.setChatPageStyle(const ChatPageStyle(messageTypingAreaStyle: Mess
 
 > **Info** The above code sample sets the style for the Dashboard and Chat pages. You can add more styles and customizations in the same method using different styling parameters
 
-### Step 3: Registration
+### Step 3: Login/Register User
 
-Use the below method to register a user in sandbox Live mode.
+Use the below method to register a user in sandbox/Live mode.
 
 > **Info** Unless you log out the session, make a note that should never call the registration method more than once in an application
 
-> **Note**: While registration, the below `registerUser` method will accept the `fcmToken` as an optional param and pass it across. `The connection will be established automatically upon completion of registration and not required for seperate login`.
+> **Note**: While registration/login, the below `login` method will accept the `fcmToken` as an optional param and pass it across. `The connection will be established automatically upon completion of login`.
 
 ```dart
 try {
-    var response = await MirrorflyUikit.registerUser(userIdentifier: uniqueId, fcmToken: "Your Google FCM Token");
+    var response = await MirrorflyUikit.instance.login(userIdentifier: uniqueId, fcmToken: "Your Google FCM Token");
     debugPrint("register user $response");
     //{'status': true, 'message': 'Register Success};
 } catch (e) {
@@ -271,6 +271,16 @@ To add your locale support, you can add the locale file in the `assets/locale` f
 
 ```dart
 AppLocalizations.addSupportedLocales(const Locale("ar","UAE"));
+```
+
+### Step 7: To Log Out
+
+To log out the user, use the below method:
+
+```dart
+MirrorflyUikit.instance.logoutFromUIKIT().then((value) {
+    debugPrint("Logout Success");
+}).catchError((er) {});
 ```
 
 ## Getting Help

@@ -10,11 +10,13 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 final navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await MirrorflyUikit.instance.initUIKIT(
+  var response = await MirrorflyUikit.instance.initUIKIT(
     navigatorKey: navigatorKey,
     licenseKey: 'LICENSE_KEY',
     iOSContainerID: 'group.com.mirrorfly.flutter',
   );
+
+  debugPrint("init response $response");
 
   /// Use this method to add the locale you want to support in the UIKIT Plugin.
   AppLocalizations.addSupportedLocales(const Locale("hi", "IN"));
