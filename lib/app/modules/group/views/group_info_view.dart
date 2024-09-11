@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:get/get.dart';
 import '../../../app_style_config.dart';
@@ -111,9 +110,8 @@ class GroupInfoView extends NavViewStateful<GroupInfoController> {
                                     .checkNull() &&
                                 controller.isMemberOfGroup,
                             child: IconButton(
-                              icon: SvgPicture.asset(
-                                edit,
-                                package: package,
+                              icon: AppUtils.svgIcon(
+                                icon: edit,
                                 colorFilter: ColorFilter.mode(
                                     AppStyleConfig.groupChatInfoPageStyle
                                         .silverAppBarIconColor,
@@ -141,9 +139,8 @@ class GroupInfoView extends NavViewStateful<GroupInfoController> {
                             width: NavUtils.size.width,
                             height: NavUtils.height * 0.45,
                             clipOval: false,
-                            errorWidget: Image.asset(
-                              groupImg,
-                              package: package,
+                            errorWidget: AppUtils.assetIcon(
+                              assetName: groupImg,
                               height: NavUtils.height * 0.45,
                               width: NavUtils.size.width,
                               fit: BoxFit.fill,
@@ -185,9 +182,8 @@ class GroupInfoView extends NavViewStateful<GroupInfoController> {
                                 .checkNull() &&
                             controller.isMemberOfGroup,
                         child: IconButton(
-                          icon: SvgPicture.asset(
-                            imageEdit,
-                            package: package,
+                          icon: AppUtils.svgIcon(
+                            icon: imageEdit,
                             colorFilter: ColorFilter.mode(
                                 controller.isSliverAppBarExpanded
                                     ? AppStyleConfig.groupChatInfoPageStyle
@@ -264,9 +260,8 @@ class GroupInfoView extends NavViewStateful<GroupInfoController> {
                 Obx(() => Visibility(
                       visible: controller.isAdmin,
                       child: ListItem(
-                          leading: SvgPicture.asset(
-                            addUser,
-                            package: package,
+                          leading: AppUtils.svgIcon(
+                            icon: addUser,
                             colorFilter: ColorFilter.mode(
                                 AppStyleConfig.groupChatInfoPageStyle
                                     .addParticipantStyle.leadingIconColor,
@@ -319,7 +314,7 @@ class GroupInfoView extends NavViewStateful<GroupInfoController> {
                       AppStyleConfig.groupChatInfoPageStyle.viewAllMediaStyle,
                 ),
                 /*ListItem(
-                  leading: SvgPicture.asset(imageOutline,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.groupChatInfoPageStyle.viewAllMediaStyle.leadingIconColor, BlendMode.srcIn),),
+                  leading: AppUtils.svgIcon(icon:imageOutline,colorFilter: ColorFilter.mode(AppStyleConfig.groupChatInfoPageStyle.viewAllMediaStyle.leadingIconColor, BlendMode.srcIn),),
                   title: Text(getTranslated("viewAllMedia"), style: AppStyleConfig.groupChatInfoPageStyle.viewAllMediaStyle.titleTextStyle),
                   trailing: Icon(Icons.keyboard_arrow_right,color: AppStyleConfig.groupChatInfoPageStyle.viewAllMediaStyle.trailingIconColor,),
                   onTap: () => controller.gotoViewAllMedia(),
@@ -335,7 +330,7 @@ class GroupInfoView extends NavViewStateful<GroupInfoController> {
                       AppStyleConfig.groupChatInfoPageStyle.reportGroupStyle,
                 ),
                 /*ListItem(
-                  leading: SvgPicture.asset(reportGroup,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.groupChatInfoPageStyle.reportGroupStyle.leadingIconColor, BlendMode.srcIn),),
+                  leading: AppUtils.svgIcon(icon:reportGroup,colorFilter: ColorFilter.mode(AppStyleConfig.groupChatInfoPageStyle.reportGroupStyle.leadingIconColor, BlendMode.srcIn),),
                   title: Text(getTranslated("reportGroup"), style: AppStyleConfig.groupChatInfoPageStyle.reportGroupStyle.titleTextStyle),
                   onTap: () => controller.reportGroup(),
                 ),*/
@@ -361,9 +356,9 @@ class GroupInfoView extends NavViewStateful<GroupInfoController> {
                       listItemStyle:
                           AppStyleConfig.groupChatInfoPageStyle.leaveGroupStyle,
                     ), /*ListItem(
-                      leading: SvgPicture.asset(
+                      leading: AppUtils.svgIcon(icon:
                         leaveGroup,
-                        package: package,width: 18,
+                        width: 18,
                         colorFilter: ColorFilter.mode(AppStyleConfig.groupChatInfoPageStyle.leaveGroupStyle.leadingIconColor, BlendMode.srcIn),
                       ),
                       title: Text(!controller.isMemberOfGroup ? getTranslated("deleteGroup") : getTranslated("leaveGroup"),

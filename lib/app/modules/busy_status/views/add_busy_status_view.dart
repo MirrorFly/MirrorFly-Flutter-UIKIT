@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import '../../../common/app_localizations.dart';
-import '../../../extensions/extensions.dart';
 
+import '../../../common/app_localizations.dart';
 import '../../../common/constants.dart';
 import '../../../common/widgets.dart';
 import '../../../data/utils.dart';
+import '../../../extensions/extensions.dart';
 import '../controllers/busy_status_controller.dart';
 
 class AddBusyStatusView extends NavViewStateful<BusyStatusController> {
@@ -36,7 +35,7 @@ class AddBusyStatusView extends NavViewStateful<BusyStatusController> {
       ),
       body: PopScope(
         canPop: false,
-        onPopInvoked: (didPop) {
+        onPopInvokedWithResult: (didPop, result) {
           if (didPop) {
             return;
           }
@@ -109,7 +108,7 @@ class AddBusyStatusView extends NavViewStateful<BusyStatusController> {
                                     Icons.keyboard,
                                     color: iconColor,
                                   )
-                                : SvgPicture.asset(smileIcon));
+                                : AppUtils.svgIcon(icon: smileIcon));
                       })
                     ],
                   ),

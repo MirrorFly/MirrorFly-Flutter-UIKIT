@@ -33,7 +33,7 @@ class SelectedPathDropdownButton extends StatelessWidget {
   final Widget? appBarLeadingWidget;
 
   const SelectedPathDropdownButton(
-      {super.key,
+      {Key? key,
       required this.provider,
       required this.dropdownRelativeKey,
       required this.appBarTextColor,
@@ -42,7 +42,8 @@ class SelectedPathDropdownButton extends StatelessWidget {
       required this.albumBackGroundColor,
       required this.albumDividerColor,
       required this.albumTextColor,
-      this.appBarLeadingWidget});
+      this.appBarLeadingWidget})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

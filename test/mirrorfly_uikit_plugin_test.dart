@@ -24,6 +24,6 @@ void main() {
         MockMirrorflyUikitPluginPlatform();
     MirrorflyUikitPluginPlatform.instance = fakePlatform;
 
-    expect(await MirrorflyUikit.getPlatformVersion(), '42');
+    expect(await MirrorflyUikit.instance.getPlatformVersion(), '42');
   });
 }

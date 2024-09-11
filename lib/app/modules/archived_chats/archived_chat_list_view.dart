@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:get/get.dart';
 import '../../app_style_config.dart';
@@ -36,7 +35,7 @@ class ArchivedChatListView extends NavViewStateful<ArchivedChatListController> {
         },
         child: PopScope(
           canPop: false,
-          onPopInvoked: (didPop) {
+          onPopInvokedWithResult: (didPop, result) {
             if (didPop) {
               return;
             }
@@ -74,7 +73,7 @@ class ArchivedChatListView extends NavViewStateful<ArchivedChatListController> {
                               onPressed: () {
                                 controller.deleteChats();
                               },
-                              icon: SvgPicture.asset(delete, package: package),
+                              icon: AppUtils.svgIcon(icon: delete),
                               tooltip: 'Delete',
                             ),
                             overflowWidget: Text(getTranslated("delete")),
@@ -91,8 +90,8 @@ class ArchivedChatListView extends NavViewStateful<ArchivedChatListController> {
                               onPressed: () {
                                 controller.muteChats();
                               },
-                              icon: SvgPicture.asset(mute,
-                                  package: package,
+                              icon: AppUtils.svgIcon(
+                                  icon: mute,
                                   colorFilter: ColorFilter.mode(
                                       Theme.of(context)
                                               .appBarTheme
@@ -116,8 +115,8 @@ class ArchivedChatListView extends NavViewStateful<ArchivedChatListController> {
                               onPressed: () {
                                 controller.unMuteChats();
                               },
-                              icon: SvgPicture.asset(unMute,
-                                  package: package,
+                              icon: AppUtils.svgIcon(
+                                  icon: unMute,
                                   colorFilter: ColorFilter.mode(
                                       Theme.of(context)
                                               .appBarTheme
@@ -141,8 +140,8 @@ class ArchivedChatListView extends NavViewStateful<ArchivedChatListController> {
                               onPressed: () {
                                 controller.unArchiveSelectedChats();
                               },
-                              icon: SvgPicture.asset(unarchive,
-                                  package: package,
+                              icon: AppUtils.svgIcon(
+                                  icon: unarchive,
                                   colorFilter: ColorFilter.mode(
                                       Theme.of(context)
                                               .appBarTheme

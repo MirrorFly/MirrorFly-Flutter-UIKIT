@@ -6,10 +6,10 @@ import '../../data/permissions.dart';
 import '../../data/session_management.dart';
 import '../../data/utils.dart';
 import '../../extensions/extensions.dart';
+import '../../routes/route_settings.dart';
 import 'package:mirrorfly_plugin/mirrorfly.dart';
 
 import '../../common/app_localizations.dart';
-import '../../routes/route_settings.dart';
 
 class JoinCallController extends FullLifeCycleController
     with FullLifeCycleMixin, CallLinkEventListeners {

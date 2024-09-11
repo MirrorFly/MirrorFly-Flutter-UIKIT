@@ -8,13 +8,13 @@ import 'package:image_picker/image_picker.dart';
 import '../../../common/app_localizations.dart';
 import '../../../common/constants.dart';
 import 'package:mirrorfly_plugin/mirrorfly.dart';
+
 import '../../../app_style_config.dart';
+import '../../../common/crop_image.dart';
+import '../../../data/permissions.dart';
 import '../../../data/utils.dart';
 import '../../../model/arguments.dart';
 import '../../../routes/route_settings.dart';
-
-import '../../../common/crop_image.dart';
-import '../../../data/permissions.dart';
 
 class GroupCreationController extends GetxController {
   var imagePath = "".obs;
@@ -141,7 +141,7 @@ class GroupCreationController extends GetxController {
             value as MemoryImage;
             // imageBytes = value.bytes;
             var name = "${DateTime.now().millisecondsSinceEpoch}.jpg";
-            writeImageTemp(value.bytes, name).then((value) {
+            MessageUtils.writeImageTemp(value.bytes, name).then((value) {
               imagePath(value.path);
             });
           }
@@ -165,7 +165,7 @@ class GroupCreationController extends GetxController {
           value as MemoryImage;
           // imageBytes = value.bytes;
           var name = "${DateTime.now().millisecondsSinceEpoch}.jpg";
-          writeImageTemp(value.bytes, name).then((value) {
+          MessageUtils.writeImageTemp(value.bytes, name).then((value) {
             imagePath(value.path);
           });
         }

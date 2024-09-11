@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../common/app_localizations.dart';
-import '../../data/utils.dart';
+
 import 'package:mirrorfly_plugin/mirrorfly_view.dart';
 
 import '../../app_style_config.dart';
@@ -10,6 +9,7 @@ import '../../common/constants.dart';
 import '../../common/widgets.dart';
 import '../../data/helper.dart';
 import '../../data/session_management.dart';
+import '../../data/utils.dart';
 import '../../extensions/extensions.dart';
 import '../call_utils.dart';
 import '../call_widgets.dart';
@@ -138,9 +138,8 @@ class JoinCallPreviewView extends NavViewStateful<JoinCallController> {
                                   .activeBgColor,
                               //Colors.white,
                               onPressed: () => controller.muteAudio(),
-                              child: SvgPicture.asset(
-                                muteActive,
-                                package: package,
+                              child: AppUtils.svgIcon(
+                                icon: muteActive,
                                 colorFilter: ColorFilter.mode(
                                     AppStyleConfig.joinCallPreviewPageStyle
                                         .actionButtonsStyle.activeIconColor,
@@ -158,9 +157,8 @@ class JoinCallPreviewView extends NavViewStateful<JoinCallController> {
                                   .inactiveBgColor,
                               //Colors.white.withOpacity(0.3),
                               onPressed: () => controller.muteAudio(),
-                              child: SvgPicture.asset(
-                                muteInactive,
-                                package: package,
+                              child: AppUtils.svgIcon(
+                                icon: muteInactive,
                                 colorFilter: ColorFilter.mode(
                                     AppStyleConfig.joinCallPreviewPageStyle
                                         .actionButtonsStyle.inactiveIconColor,
@@ -176,8 +174,8 @@ class JoinCallPreviewView extends NavViewStateful<JoinCallController> {
                           // backgroundColor: controller.cameraSwitch.value ? Colors.white : Colors.white.withOpacity(0.3),
                           onPressed: () => controller.switchCamera(),
                           child: controller.cameraSwitch.value
-                              ? SvgPicture.asset(cameraSwitchActive,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.joinCallPreviewPageStyle.actionButtonsStyle.activeIconColor, BlendMode.srcIn),)
-                              : SvgPicture.asset(cameraSwitchInactive,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.joinCallPreviewPageStyle.actionButtonsStyle.inactiveIconColor, BlendMode.srcIn),),
+                              ? AppUtils.svgIcon(icon:cameraSwitchActive,colorFilter: ColorFilter.mode(AppStyleConfig.joinCallPreviewPageStyle.actionButtonsStyle.activeIconColor, BlendMode.srcIn),)
+                              : AppUtils.svgIcon(icon:cameraSwitchInactive,colorFilter: ColorFilter.mode(AppStyleConfig.joinCallPreviewPageStyle.actionButtonsStyle.inactiveIconColor, BlendMode.srcIn),),
                         ),
                       ],*/
                       const SizedBox(
@@ -195,17 +193,15 @@ class JoinCallPreviewView extends NavViewStateful<JoinCallController> {
                                 .actionButtonsStyle.inactiveBgColor,
                         onPressed: () => controller.videoMute(),
                         child: controller.videoMuted.value
-                            ? SvgPicture.asset(
-                                videoInactive,
-                                package: package,
+                            ? AppUtils.svgIcon(
+                                icon: videoInactive,
                                 colorFilter: ColorFilter.mode(
                                     AppStyleConfig.joinCallPreviewPageStyle
                                         .actionButtonsStyle.activeIconColor,
                                     BlendMode.srcIn),
                               )
-                            : SvgPicture.asset(
-                                videoActive,
-                                package: package,
+                            : AppUtils.svgIcon(
+                                icon: videoActive,
                                 colorFilter: ColorFilter.mode(
                                     AppStyleConfig.joinCallPreviewPageStyle
                                         .actionButtonsStyle.inactiveIconColor,
@@ -222,14 +218,14 @@ class JoinCallPreviewView extends NavViewStateful<JoinCallController> {
                             : AppStyleConfig.joinCallPreviewPageStyle.actionButtonsStyle.activeBgColor,//Colors.white,
                         onPressed: () => controller.changeSpeaker(),
                         child: controller.audioOutputType.value == AudioDeviceType.receiver
-                            ? SvgPicture.asset(speakerInactive,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.joinCallPreviewPageStyle.actionButtonsStyle.inactiveIconColor, BlendMode.srcIn),)
+                            ? AppUtils.svgIcon(icon:speakerInactive,colorFilter: ColorFilter.mode(AppStyleConfig.joinCallPreviewPageStyle.actionButtonsStyle.inactiveIconColor, BlendMode.srcIn),)
                             : controller.audioOutputType.value == AudioDeviceType.speaker
-                            ? SvgPicture.asset(speakerActive,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.joinCallPreviewPageStyle.actionButtonsStyle.activeIconColor, BlendMode.srcIn))
+                            ? AppUtils.svgIcon(icon:speakerActive,colorFilter: ColorFilter.mode(AppStyleConfig.joinCallPreviewPageStyle.actionButtonsStyle.activeIconColor, BlendMode.srcIn))
                             : controller.audioOutputType.value == AudioDeviceType.bluetooth
-                            ? SvgPicture.asset(speakerBluetooth,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.joinCallPreviewPageStyle.actionButtonsStyle.activeIconColor, BlendMode.srcIn))
+                            ? AppUtils.svgIcon(icon:speakerBluetooth,colorFilter: ColorFilter.mode(AppStyleConfig.joinCallPreviewPageStyle.actionButtonsStyle.activeIconColor, BlendMode.srcIn))
                             : controller.audioOutputType.value == AudioDeviceType.headset
-                            ? SvgPicture.asset(speakerHeadset,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.joinCallPreviewPageStyle.actionButtonsStyle.activeIconColor, BlendMode.srcIn))
-                            : SvgPicture.asset(speakerActive,package: package,colorFilter: ColorFilter.mode(AppStyleConfig.joinCallPreviewPageStyle.actionButtonsStyle.activeIconColor, BlendMode.srcIn)),
+                            ? AppUtils.svgIcon(icon:speakerHeadset,colorFilter: ColorFilter.mode(AppStyleConfig.joinCallPreviewPageStyle.actionButtonsStyle.activeIconColor, BlendMode.srcIn))
+                            : AppUtils.svgIcon(icon:speakerActive,colorFilter: ColorFilter.mode(AppStyleConfig.joinCallPreviewPageStyle.actionButtonsStyle.activeIconColor, BlendMode.srcIn)),
                       ),*/
                     ],
                   ),
