@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-
 import 'package:get/get.dart';
+import '../../../app_style_config.dart';
+import '../../../call_modules/call_utils.dart';
+import '../../../data/helper.dart';
+import '../../../data/utils.dart';
 import 'package:mirrorfly_plugin/mirrorflychat.dart';
 
-import '../../../app_style_config.dart';
 import '../../../common/app_localizations.dart';
 import '../../../common/constants.dart';
 import '../../../common/widgets.dart';
-import '../../../data/helper.dart';
-import '../../../data/utils.dart';
 import '../../../extensions/extensions.dart';
-import '../../call_utils.dart';
 import '../../call_widgets.dart';
 import '../controllers/call_timeout_controller.dart';
 
@@ -133,9 +131,9 @@ class CallTimeoutView extends NavViewStateful<CallTimeoutController> {
                                   );
                       }),
                       /*ClipOval(
-                        child: Image.asset(
+                        child: AppUtils.assetIcon(assetName:
                           groupImg,
-                          package: package,height: 100,
+                          height: 100,
                           width: 100,
                           fit: BoxFit.cover,
                         ),
@@ -189,9 +187,8 @@ class CallTimeoutView extends NavViewStateful<CallTimeoutController> {
                                         onPressed: () {
                                           controller.cancelCallTimeout();
                                         },
-                                        child: SvgPicture.asset(
-                                          callCancel,
-                                          package: package,
+                                        child: AppUtils.svgIcon(
+                                          icon: callCancel,
                                           colorFilter: ColorFilter.mode(
                                               AppStyleConfig
                                                   .callAgainPageStyle
@@ -233,9 +230,8 @@ class CallTimeoutView extends NavViewStateful<CallTimeoutController> {
                                           },
                                           child: controller.callType.value ==
                                                   CallType.audio
-                                              ? SvgPicture.asset(
-                                                  audioCallAgain,
-                                                  package: package,
+                                              ? AppUtils.svgIcon(
+                                                  icon: audioCallAgain,
                                                   colorFilter: ColorFilter.mode(
                                                       AppStyleConfig
                                                           .callAgainPageStyle
@@ -243,7 +239,8 @@ class CallTimeoutView extends NavViewStateful<CallTimeoutController> {
                                                           .activeIconColor,
                                                       BlendMode.srcIn),
                                                 )
-                                              : SvgPicture.asset(videoCallAgain,
+                                              : AppUtils.svgIcon(
+                                                  icon: videoCallAgain,
                                                   colorFilter: ColorFilter.mode(
                                                       AppStyleConfig
                                                           .callAgainPageStyle

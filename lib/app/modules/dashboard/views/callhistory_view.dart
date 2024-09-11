@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../../extensions/extensions.dart';
 import '../../../modules/dashboard/controllers/dashboard_controller.dart';
@@ -39,38 +38,40 @@ class CallHistoryView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Container(
-        //   color: Theme
-        //       .of(context)
-        //       .scaffoldBackgroundColor,
-        //   child: InkWell(
-        //     onTap: () {
-        //       controller.showMeetBottomSheet(meetBottomSheetStyle);
-        //     },
-        //     child: Row(
-        //       children: [
-        //         Container(
-        //           width: 50,
-        //           height: 50,
-        //           margin: const EdgeInsets.all(10.0),
-        //           decoration: createMeetLinkStyle.iconDecoration,
-        //           child: Center(child: Icon(
-        //             Icons.link, color: createMeetLinkStyle.iconColor,
-        //             size: 18,),),
-        //         ),
-        // Column(
-        //   crossAxisAlignment: CrossAxisAlignment.start,
-        //   children: [
-        //     Text(getTranslated("createNewMeeting"),
-        //       style: createMeetLinkStyle.textStyle,),
-        //     Text(getTranslated("createNewMeetingSubtitle"),
-        //       style: createMeetLinkStyle.subTitleTextStyle,)
-        //   ],
-        // )
-        //       ],
-        //     ),
-        //   ),
-        // ),
+        /* Container(
+          color: Theme
+              .of(context)
+              .scaffoldBackgroundColor,
+          child: InkWell(
+            onTap: () {
+              controller.showMeetBottomSheet(meetBottomSheetStyle);
+            },
+            child: Row(
+              children: [
+                Container(
+                  width: 50,
+                  height: 50,
+                  margin: const EdgeInsets.all(10.0),
+                  decoration: createMeetLinkStyle.iconDecoration,
+                  child: Center(child: Icon(
+                    Icons.link, color: createMeetLinkStyle.iconColor,
+                    size: 18,),),
+                ),
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(getTranslated("createNewMeeting"),
+                        style: createMeetLinkStyle.textStyle, maxLines: 1, overflow: TextOverflow.ellipsis,),
+                      Text(getTranslated("createNewMeetingSubtitle"),
+                        style: createMeetLinkStyle.subTitleTextStyle,maxLines: 1, overflow: TextOverflow.ellipsis)
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),*/
         Obx(() {
           return controller.callLogList.isEmpty
               ? const Offstage()
@@ -243,9 +244,8 @@ class CallHistoryView extends StatelessWidget {
                             width: 0.5)),
                     leading: item.groupId.checkNull().isEmpty
                         ? ClipOval(
-                            child: Image.asset(
-                              groupImg,
-                              package: package,
+                            child: AppUtils.assetIcon(
+                              assetName: groupImg,
                               width:
                                   callHistoryItemStyle.profileImageSize.width,
                               height:
@@ -265,9 +265,8 @@ class CallHistoryView extends StatelessWidget {
                                           .profileImageSize.height,
                                       clipOval: true,
                                       errorWidget: ClipOval(
-                                        child: Image.asset(
-                                          groupImg,
-                                          package: package,
+                                        child: AppUtils.assetIcon(
+                                          assetName: groupImg,
                                           width: callHistoryItemStyle
                                               .profileImageSize.width,
                                           height: callHistoryItemStyle
@@ -280,9 +279,8 @@ class CallHistoryView extends StatelessWidget {
                                       unknown: false,
                                     )
                                   : ClipOval(
-                                      child: Image.asset(
-                                        groupImg,
-                                        package: package,
+                                      child: AppUtils.assetIcon(
+                                        assetName: groupImg,
                                         width: callHistoryItemStyle
                                             .profileImageSize.width,
                                         height: callHistoryItemStyle
@@ -381,9 +379,8 @@ class CallHistoryView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.asset(
-                  noCallImage,
-                  package: package,
+                AppUtils.assetIcon(
+                  assetName: noCallImage,
                   width: 150,
                 ),
                 Text(
@@ -431,9 +428,8 @@ class CallHistoryView extends StatelessWidget {
                               : item.toUser)
                   : controller.makeCall(localUserList, callType, item);
             },
-            icon: SvgPicture.asset(
-              videoCallIcon,
-              package: package,
+            icon: AppUtils.svgIcon(
+              icon: videoCallIcon,
               colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
             ),
           )
@@ -448,9 +444,8 @@ class CallHistoryView extends StatelessWidget {
                               : item.toUser)
                   : controller.makeCall(localUserList, callType, item);
             },
-            icon: SvgPicture.asset(
-              audioCallIcon,
-              package: package,
+            icon: AppUtils.svgIcon(
+              icon: audioCallIcon,
               colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
             ));
   }

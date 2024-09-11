@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import '../../../extensions/extensions.dart';
 import '../../../stylesheet/stylesheet.dart';
 
@@ -78,7 +77,7 @@ class TextMessageView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               chatMessage.isMessageStarred.value
-                  ? SvgPicture.asset(starSmallIcon, package: package)
+                  ? AppUtils.svgIcon(icon: starSmallIcon)
                   : const Offstage(),
               const SizedBox(
                 width: 5,
@@ -145,9 +144,8 @@ class CallLinkView extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Image.asset(
-              mirrorflySmall,
-              package: package,
+            AppUtils.assetIcon(
+              assetName: mirrorflySmall,
               width: 24,
             ),
             const SizedBox(
@@ -161,9 +159,8 @@ class CallLinkView extends StatelessWidget {
             const SizedBox(
               width: 8,
             ),
-            SvgPicture.asset(
-              videoCamera,
-              package: package,
+            AppUtils.svgIcon(
+              icon: videoCamera,
               width: 18,
               colorFilter: ColorFilter.mode(
                   callLinkViewStyle.iconColor, BlendMode.srcIn),

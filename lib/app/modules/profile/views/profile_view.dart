@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:get/get.dart';
 import '../../../app_style_config.dart';
@@ -182,8 +181,9 @@ class ProfileView extends NavViewStateful<ProfileController> {
                                             controller.unFocusAll();
                                             bottomSheetView(context);
                                           },
-                                    child: SvgPicture.asset(
-                                      'assets/logos/camera_profile_change.svg',
+                                    child: AppUtils.svgIcon(
+                                      icon:
+                                          'assets/logos/camera_profile_change.svg',
                                       colorFilter: ColorFilter.mode(
                                           AppStyleConfig.profileViewStyle
                                               .cameraIconStyle.iconColor,
@@ -247,7 +247,8 @@ class ProfileView extends NavViewStateful<ProfileController> {
                         decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: getTranslated("enterEmailID"),
-                            icon: SvgPicture.asset('assets/logos/email.svg'),
+                            icon: AppUtils.svgIcon(
+                                icon: 'assets/logos/email.svg'),
                             hintStyle: AppStyleConfig.profileViewStyle
                                 .emailTextFieldStyle.editTextHintStyle),
                         style: AppStyleConfig
@@ -274,7 +275,8 @@ class ProfileView extends NavViewStateful<ProfileController> {
                           decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: getTranslated("enterMobileNumber"),
-                              icon: SvgPicture.asset('assets/logos/phone.svg'),
+                              icon: AppUtils.svgIcon(
+                                  icon: 'assets/logos/phone.svg'),
                               hintStyle: AppStyleConfig.profileViewStyle
                                   .mobileTextFieldStyle.editTextHintStyle),
                           style: AppStyleConfig.profileViewStyle
@@ -306,8 +308,8 @@ class ProfileView extends NavViewStateful<ProfileController> {
                               // style: TextStyle(color: controller.profileStatus.value.isNotEmpty ? textColor : Colors.black38, fontWeight: FontWeight.normal),
                             ),
                             minLeadingWidth: 10,
-                            leading:
-                                SvgPicture.asset('assets/logos/status.svg'),
+                            leading: AppUtils.svgIcon(
+                                icon: 'assets/logos/status.svg'),
                             onTap: () {
                               controller.goToStatus();
                             },

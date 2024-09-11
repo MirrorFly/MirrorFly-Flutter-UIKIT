@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../../app_style_config.dart';
 import '../../../common/app_localizations.dart';
@@ -26,7 +25,7 @@ class ChatSearchView extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: true,
-      onPopInvoked: (didPop) {
+      onPopInvokedWithResult: (didPop, result) {
         controller.searchInit();
         if (didPop) {
           return;
@@ -139,8 +138,7 @@ class ChatSearchView extends StatelessWidget {
                                   controller.forwardSingleMessage(
                                       chatList[index].messageId);
                                 },
-                                icon: SvgPicture.asset(forwardMedia,
-                                    package: package)),
+                                icon: AppUtils.svgIcon(icon: forwardMedia)),
                           ),
                           Container(
                             constraints:
@@ -202,7 +200,7 @@ class ChatSearchView extends StatelessWidget {
                                   controller.forwardSingleMessage(
                                       chatList[index].messageId);
                                 },
-                                icon: SvgPicture.asset(forwardMedia))
+                                icon: AppUtils.svgIcon(icon: forwardMedia))
                           ],
                         ],
                       ),

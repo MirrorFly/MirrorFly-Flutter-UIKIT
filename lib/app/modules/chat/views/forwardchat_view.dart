@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../../common/app_localizations.dart';
 import '../../../data/helper.dart';
@@ -70,10 +69,7 @@ class _ForwardChatViewState extends State<ForwardChatView> {
               visible: controller.isSearchVisible,
               child: IconButton(
                   onPressed: () => controller.onSearchPressed(),
-                  icon: SvgPicture.asset(
-                    searchIcon,
-                    package: package,
-                  )),
+                  icon: AppUtils.svgIcon(icon: searchIcon)),
             )
           ],
         ),

@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import '../common/app_localizations.dart';
-import '../common/constants.dart';
-import '../common/widgets.dart';
-import '../extensions/extensions.dart';
-import '../data/session_management.dart';
+import '../../app/call_modules/audio_level_animation.dart';
+import '../../app/call_modules/call_utils.dart';
+import '../../app/call_modules/outgoing_call/call_controller.dart';
+import '../../app/common/app_localizations.dart';
+import '../../app/common/constants.dart';
+import '../../app/common/widgets.dart';
+import '../../app/data/session_management.dart';
+import '../../app/data/utils.dart';
+import '../../app/extensions/extensions.dart';
 import 'package:mirrorfly_plugin/mirrorfly_view.dart';
 import 'package:mirrorfly_plugin/mirrorflychat.dart';
 
 import '../stylesheet/stylesheet.dart';
-import 'audio_level_animation.dart';
-import 'call_utils.dart';
-import 'outgoing_call/call_controller.dart';
 
 Widget buildProfileImage(ProfileDetails item, {double size = 105}) {
   return ImageNetwork(
@@ -22,9 +22,8 @@ Widget buildProfileImage(ProfileDetails item, {double size = 105}) {
     clipOval: true,
     errorWidget: item.isGroupProfile.checkNull()
         ? ClipOval(
-            child: Image.asset(
-              groupImg,
-              package: package,
+            child: AppUtils.assetIcon(
+              assetName: groupImg,
               height: size,
               width: size,
               fit: BoxFit.cover,
@@ -317,9 +316,8 @@ Widget buildListItem(CallController controller, CallUserTileStyle style) {
                                   radius: 10,
                                   backgroundColor: style.muteActionStyle
                                       .activeBgColor, //AppColors.audioMutedIconBgColor,
-                                  child: SvgPicture.asset(
-                                    callMutedIcon,
-                                    package: package,
+                                  child: AppUtils.svgIcon(
+                                    icon: callMutedIcon,
                                     colorFilter: ColorFilter.mode(
                                         style.muteActionStyle.activeIconColor,
                                         BlendMode.srcIn),
@@ -468,9 +466,8 @@ Widget buildGridItem(CallController controller, CallUserTileStyle style) {
                         radius: 10,
                         backgroundColor: style.muteActionStyle
                             .activeBgColor, //AppColors.audioMutedIconBgColor,
-                        child: SvgPicture.asset(
-                          callMutedIcon,
-                          package: package,
+                        child: AppUtils.svgIcon(
+                          icon: callMutedIcon,
                           colorFilter: ColorFilter.mode(
                               style.muteActionStyle.activeIconColor,
                               BlendMode.srcIn),

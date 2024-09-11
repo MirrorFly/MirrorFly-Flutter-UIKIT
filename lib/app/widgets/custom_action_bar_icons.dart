@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:mirrorfly_plugin/mirrorflychat.dart';
 
 import '../common/constants.dart';
+import '../data/utils.dart';
 
 class CustomActionBarIcons extends StatefulWidget {
   final double availableWidth;
@@ -124,9 +124,8 @@ class _CustomActionBarIconsState extends State<CustomActionBarIcons>
               data: widget.popupMenuThemeData,
               child: PopupMenuButton(
                   key: _menuKey,
-                  icon: SvgPicture.asset(
-                    moreIcon,
-                    package: package,
+                  icon: AppUtils.svgIcon(
+                    icon: moreIcon,
                     width: 3.66,
                     height: 16.31,
                     colorFilter: ColorFilter.mode(

@@ -5,6 +5,7 @@ import '../../extensions/extensions.dart';
 import '../../modules/scanner/scanner_controller.dart';
 
 import '../../common/constants.dart';
+import '../../data/utils.dart';
 
 class WebLoginResultView extends NavViewStateful<ScannerController> {
   const WebLoginResultView({Key? key}) : super(key: key);
@@ -28,9 +29,8 @@ class WebLoginResultView extends NavViewStateful<ScannerController> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image.asset(
-              icQrScannerWebLogin,
-              package: package,
+            AppUtils.assetIcon(
+              assetName: icQrScannerWebLogin,
               fit: BoxFit.cover,
             ),
             FutureBuilder(
@@ -43,8 +43,8 @@ class WebLoginResultView extends NavViewStateful<ScannerController> {
                         itemBuilder: (context, index) {
                           var item = controller.webLogins[index];
                           return ListItem(
-                            leading: Image.asset(
-                              controller.getImageForBrowser(item),
+                            leading: AppUtils.assetIcon(
+                              assetName: controller.getImageForBrowser(item),
                               width: 50,
                               height: 50,
                             ),

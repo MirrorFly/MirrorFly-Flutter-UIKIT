@@ -3,7 +3,8 @@ part of 'utils.dart';
 class NavUtils {
   // Returns the size of the current media query.
   static Size get size =>
-      MediaQuery.of(MirrorflyUikit.globalNavigatorKey!.currentContext!).size;
+      MediaQuery.of(MirrorflyUikit.instance.globalNavigatorKey!.currentContext!)
+          .size;
 
   // Returns the width of the current media query.
   static double get width => size.width;
@@ -13,7 +14,7 @@ class NavUtils {
 
   // Returns the current BuildContext using the navigator key.
   static BuildContext get currentContext =>
-      MirrorflyUikit.globalNavigatorKey!.currentContext!;
+      MirrorflyUikit.instance.globalNavigatorKey!.currentContext!;
 
   // Returns the name of the current route using the MirrorFlyNavigationObserver.
   static String get currentRoute =>

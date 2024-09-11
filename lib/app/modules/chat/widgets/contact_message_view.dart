@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import '../../../extensions/extensions.dart';
 import '../../../stylesheet/stylesheet.dart';
 import 'package:mirrorfly_plugin/mirrorfly.dart'
@@ -44,9 +43,8 @@ class ContactMessageView extends StatelessWidget {
             padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
             child: Row(
               children: [
-                Image.asset(
-                  profileImage,
-                  package: package,
+                AppUtils.assetIcon(
+                  assetName: profileImage,
                   width: contactMessageViewStyle.profileImageSize.width, //35,
                   height: contactMessageViewStyle.profileImageSize.height, //35
                 ),
@@ -88,7 +86,7 @@ class ContactMessageView extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 chatMessage.isMessageStarred.value
-                    ? SvgPicture.asset(starSmallIcon)
+                    ? AppUtils.svgIcon(icon: starSmallIcon)
                     : const Offstage(),
                 const SizedBox(
                   width: 5,

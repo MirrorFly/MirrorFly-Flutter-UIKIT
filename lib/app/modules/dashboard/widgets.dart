@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../common/app_localizations.dart';
 import '../../data/helper.dart';
@@ -253,9 +252,8 @@ class RecentChatItem extends StatelessWidget {
       clipOval: true,
       errorWidget: item.isGroup!
           ? ClipOval(
-              child: Image.asset(
-                groupImg,
-                package: package,
+              child: AppUtils.assetIcon(
+                assetName: groupImg,
                 height: profileImageSize.width,
                 width: profileImageSize.height,
                 fit: BoxFit.cover,
@@ -292,9 +290,7 @@ class RecentChatItem extends StatelessWidget {
 
   Positioned buildEmailIcon() {
     return Positioned(
-        right: 0,
-        bottom: 0,
-        child: SvgPicture.asset(emailContactIcon, package: package));
+        right: 0, bottom: 0, child: AppUtils.svgIcon(icon: emailContactIcon));
   }
 
   Visibility buildArchivedTextVisibility() {
@@ -309,9 +305,9 @@ class RecentChatItem extends StatelessWidget {
             getTranslated("archived"),
             style: const TextStyle(color: buttonBgColor),
           ),
-        ) /*SvgPicture.asset(
+        ) /*AppUtils.svgIcon(icon:
                                       archive,
-                                      package: package,width: 18,
+                                      width: 18,
                                       height: 18,
                                     )*/
         );
@@ -320,9 +316,8 @@ class RecentChatItem extends StatelessWidget {
   Visibility buildMuteIconVisibility() {
     return Visibility(
         visible: !archiveEnabled && item.isMuted! && !isForwardMessage,
-        child: SvgPicture.asset(
-          mute,
-          package: package,
+        child: AppUtils.svgIcon(
+          icon: mute,
           width: 13,
           height: 13,
         ));
@@ -332,9 +327,8 @@ class RecentChatItem extends StatelessWidget {
     return Visibility(
         visible:
             !item.isChatArchived! && item.isChatPinned! && !isForwardMessage,
-        child: SvgPicture.asset(
-          pin,
-          package: package,
+        child: AppUtils.svgIcon(
+          icon: pin,
           width: 18,
           height: 18,
         ));
@@ -378,7 +372,7 @@ class RecentChatItem extends StatelessWidget {
       if (!chat.isMessageSentByMe.checkNull()) {
         return (chat.messageType != Constants.mNotification ||
                 chat.messageTextContent == " added you") ||
-            (forMessageTypeString(chat.messageType,
+            (MessageUtils.forMessageTypeString(chat.messageType,
                     content: chat.messageTextContent.checkNull())
                 .checkNull()
                 .isNotEmpty);
@@ -411,12 +405,12 @@ class RecentChatItem extends StatelessWidget {
                     : const SizedBox.shrink(),
                 chat.isMessageRecalled.value
                     ? const SizedBox.shrink()
-                    : forMessageTypeIcon(
+                    : MessageUtils.forMessageTypeIcon(
                         chat.messageType, chat.mediaChatMessage),
                 SizedBox(
                   width: chat.isMessageRecalled.value
                       ? 0.0
-                      : forMessageTypeString(chat.messageType,
+                      : MessageUtils.forMessageTypeString(chat.messageType,
                                   content:
                                       chat.messageTextContent.checkNull()) !=
                               null
@@ -428,7 +422,8 @@ class RecentChatItem extends StatelessWidget {
                         ? Text(
                             chat.isMessageRecalled.value
                                 ? setRecalledMessageText(chat.isMessageSentByMe)
-                                : forMessageTypeString(chat.messageType,
+                                : MessageUtils.forMessageTypeString(
+                                        chat.messageType,
                                         content: chat
                                             .mediaChatMessage?.mediaCaptionText
                                             .checkNull()) ??
@@ -441,7 +436,7 @@ class RecentChatItem extends StatelessWidget {
                         : spannableText(
                             chat.isMessageRecalled.value
                                 ? setRecalledMessageText(chat.isMessageSentByMe)
-                                : forMessageTypeString(
+                                : MessageUtils.forMessageTypeString(
                                         chat.messageType.checkNull(),
                                         content: chat
                                             .mediaChatMessage?.mediaCaptionText
@@ -637,10 +632,11 @@ class RecentChatMessageItem extends StatelessWidget {
                           ),
                           item.isMessageRecalled.value
                               ? const Offstage()
-                              : forMessageTypeIcon(
+                              : MessageUtils.forMessageTypeIcon(
                                   item.messageType, item.mediaChatMessage),
                           SizedBox(
-                            width: forMessageTypeString(item.messageType,
+                            width: MessageUtils.forMessageTypeString(
+                                        item.messageType,
                                         content: item
                                             .mediaChatMessage?.mediaCaptionText
                                             .checkNull()) !=
@@ -649,7 +645,8 @@ class RecentChatMessageItem extends StatelessWidget {
                                 : 0.0,
                           ),
                           Expanded(
-                            child: forMessageTypeString(item.messageType,
+                            child: MessageUtils.forMessageTypeString(
+                                        item.messageType,
                                         content: item
                                             .mediaChatMessage?.mediaCaptionText
                                             .checkNull()) ==
@@ -661,7 +658,8 @@ class RecentChatMessageItem extends StatelessWidget {
                                     recentChatItemStyle.spanTextColor,
                                   )
                                 : Text(
-                                    forMessageTypeString(item.messageType,
+                                    MessageUtils.forMessageTypeString(
+                                            item.messageType,
                                             content: item.mediaChatMessage
                                                 ?.mediaCaptionText
                                                 .checkNull()) ??
@@ -832,21 +830,18 @@ Widget callLogTime(String time, int? callState, TextStyle? textStyle) {
   return Row(
     children: [
       callState == 0
-          ? SvgPicture.asset(
-              arrowDropDown,
-              package: package,
+          ? AppUtils.svgIcon(
+              icon: arrowDropDown,
               colorFilter: const ColorFilter.mode(Colors.red, BlendMode.srcIn),
             )
           : callState == 1
-              ? SvgPicture.asset(
-                  arrowUpIcon,
-                  package: package,
+              ? AppUtils.svgIcon(
+                  icon: arrowUpIcon,
                   colorFilter:
                       const ColorFilter.mode(Colors.green, BlendMode.srcIn),
                 )
-              : SvgPicture.asset(
-                  arrowDownIcon,
-                  package: package,
+              : AppUtils.svgIcon(
+                  icon: arrowDownIcon,
                   colorFilter:
                       const ColorFilter.mode(Colors.green, BlendMode.srcIn),
                 ),

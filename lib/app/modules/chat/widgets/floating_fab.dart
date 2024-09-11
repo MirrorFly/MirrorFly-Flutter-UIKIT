@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 import '../../../common/constants.dart';
+import '../../../data/utils.dart';
 
 class FloatingFab extends StatefulWidget {
   const FloatingFab(
@@ -97,9 +97,8 @@ class _FloatingFabState extends State<FloatingFab> {
       data: ThemeData(floatingActionButtonTheme: widget.fabTheme),
       child: FloatingActionButton(
         onPressed: widget.onFabTap,
-        child: SvgPicture.asset(
-          meetSchedule,
-          package: package,
+        child: AppUtils.svgIcon(
+          icon: meetSchedule,
           width: widget.fabTheme.iconSize,
           colorFilter: ColorFilter.mode(
               widget.fabTheme.foregroundColor ?? Colors.white, BlendMode.srcIn),

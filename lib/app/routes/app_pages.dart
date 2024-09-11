@@ -1,5 +1,12 @@
 import '../routes/route_settings.dart';
 
+//Need to delete//
+
+// import '../modules/dashboard/bindings/recent_search_binding.dart';
+// import '../modules/dashboard/views/recent_search_view.dart';
+
+// part 'app_routes.dart';
+
 class AppPages {
   AppPages._();
 

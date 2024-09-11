@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import '../../../stylesheet/stylesheet.dart';
 
 import '../../../common/constants.dart';
@@ -37,7 +36,7 @@ class LocationMessageView extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 chatMessage.isMessageStarred.value
-                    ? SvgPicture.asset(starSmallIcon, package: package)
+                    ? AppUtils.svgIcon(icon: starSmallIcon)
                     : const Offstage(),
                 const SizedBox(
                   width: 5,

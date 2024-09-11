@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import '../../../data/utils.dart';
 import '../../../extensions/extensions.dart';
 import '../../../stylesheet/stylesheet.dart';
@@ -133,7 +132,7 @@ class DocumentMessageView extends StatelessWidget {
                   ),
                   const Spacer(),
                   chatMessage.isMessageStarred.value
-                      ? SvgPicture.asset(starSmallIcon)
+                      ? AppUtils.svgIcon(icon: starSmallIcon)
                       : const Offstage(),
                   const SizedBox(
                     width: 5,

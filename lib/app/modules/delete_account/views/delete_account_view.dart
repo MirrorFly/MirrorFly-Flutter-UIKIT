@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
-
 import 'package:get/get.dart';
 import '../../../common/app_localizations.dart';
 import '../../../common/widgets.dart';
@@ -34,9 +32,8 @@ class DeleteAccountView extends NavViewStateful<DeleteAccountController> {
               children: [
                 Row(
                   children: [
-                    SvgPicture.asset(
-                      warningIcon,
-                      package: package,
+                    AppUtils.svgIcon(
+                      icon: warningIcon,
                       fit: BoxFit.contain,
                     ),
                     const SizedBox(width: 15),

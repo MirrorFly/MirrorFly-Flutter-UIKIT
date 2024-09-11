@@ -9,9 +9,9 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_libphonenumber/flutter_libphonenumber.dart'
     as lib_phone_number;
 import 'package:get/get.dart';
+// import 'package:google_cloud_translation/google_cloud_translation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:record/record.dart';
 import '../../../common/de_bouncer.dart';
 import '../../../common/main_controller.dart';
 import '../../../data/permissions.dart';
@@ -23,6 +23,7 @@ import 'package:mirrorfly_plugin/edit_message_params.dart';
 import 'package:mirrorfly_plugin/mirrorflychat.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:record/record.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:tuple/tuple.dart';
@@ -67,6 +68,7 @@ class ChatController extends FullLifeCycleController
   late String audioSavePath;
   late String recordedAudioPath;
   late AudioRecorder record;
+  bool _isDisposed = false;
 
   TextEditingController messageController = TextEditingController();
   TextEditingController editMessageController = TextEditingController();
@@ -137,9 +139,8 @@ class ChatController extends FullLifeCycleController
   RxString editMessageText = ''.obs;
 
   //#metaData
-  List<MessageMetaData> messageMetaData = [
-    MessageMetaData(key: "platform", value: "flutter")
-  ];
+  List<MessageMetaData> messageMetaData =
+      []; // = [MessageMetaData(key: "platform", value: "flutter")];
   final ChatViewArguments? arguments;
 
   var screenWidth = 0.0.obs;
@@ -152,12 +153,12 @@ class ChatController extends FullLifeCycleController
 
     getAvailableFeatures();
 
-    if (arguments!.topicId.isNotEmpty) {
+    if ((arguments?.topicId).checkNull().isNotEmpty) {
       topicId = arguments!.topicId;
       getTopicDetail();
     }
 
-    if (arguments!.chatJid.isNotEmpty) {
+    if ((arguments?.chatJid).checkNull().isNotEmpty) {
       nJid = arguments!.chatJid;
       debugPrint("parameter :${arguments!.chatJid}");
     }
@@ -427,7 +428,7 @@ class ChatController extends FullLifeCycleController
                 toJid: profile.jid.checkNull(),
                 replyMessageId: replyMessageId,
                 topicId: topicId,
-                metaData: messageMetaData, //#metaData
+                // metaData: messageMetaData, //#metaData
                 textMessageParams: TextMessageParams(
                     messageText: messageController.text.trim())),
             flyCallback: (response) {
@@ -586,7 +587,7 @@ class ChatController extends FullLifeCycleController
               toJid: profile.jid.checkNull(),
               replyMessageId: replyMessageId,
               topicId: topicId,
-              metaData: messageMetaData, //#metaData
+              // metaData: messageMetaData, //#metaData
               locationMessageParams: LocationMessageParams(
                   latitude: latitude, longitude: longitude)),
           flyCallback: (response) {
@@ -748,7 +749,7 @@ class ChatController extends FullLifeCycleController
                 toJid: profile.jid.checkNull(),
                 replyMessageId: replyMessageID,
                 topicId: topicId,
-                metaData: messageMetaData, //#metaData
+                // metaData: messageMetaData, //#metaData
                 fileMessageParams:
                     FileMessageParams(file: File(path), caption: caption)),
             flyCallback: (response) {
@@ -859,7 +860,7 @@ class ChatController extends FullLifeCycleController
               toJid: profile.jid.checkNull(),
               replyMessageId: replyMessageID,
               topicId: topicId,
-              metaData: messageMetaData, //#metaData
+              // metaData: messageMetaData, //#metaData
               fileMessageParams:
                   FileMessageParams(file: File(videoPath), caption: caption)),
           flyCallback: (response) {
@@ -933,7 +934,7 @@ class ChatController extends FullLifeCycleController
               toJid: profile.jid.checkNull(),
               replyMessageId: replyMessageId,
               topicId: topicId,
-              metaData: messageMetaData, //#metaData
+              // metaData: messageMetaData, //#metaData
               contactMessageParams: ContactMessageParams(
                   name: contactName, numbers: contactList)),
           flyCallback: (response) {
@@ -985,7 +986,7 @@ class ChatController extends FullLifeCycleController
               toJid: profile.jid.checkNull(),
               replyMessageId: replyMessageId,
               topicId: topicId,
-              metaData: messageMetaData, //#metaData
+              // metaData: messageMetaData, //#metaData
               fileMessageParams: FileMessageParams(file: File(documentPath))),
           flyCallback: (response) {
             if (response.isSuccess) {
@@ -1114,7 +1115,7 @@ class ChatController extends FullLifeCycleController
               isRecorded: isRecorded,
               replyMessageId: replyMessageId,
               topicId: topicId,
-              metaData: messageMetaData, //#metaData
+              // metaData: messageMetaData, //#metaData
               fileMessageParams: FileMessageParams(file: File(filePath))),
           flyCallback: (response) {
             if (response.isSuccess) {
@@ -1564,7 +1565,7 @@ class ChatController extends FullLifeCycleController
                       clearChatHistory(false);
                     },
                     child: Text(
-                      getTranslated("cleatAll").toUpperCase(),
+                      getTranslated("clearAll").toUpperCase(),
                     )),
               ),
               TextButton(
@@ -1918,10 +1919,16 @@ class ChatController extends FullLifeCycleController
   }
 
   Future<void> cancelRecording() async {
+    debugPrint("Cancel Recording called");
+    if (_isDisposed) {
+      debugPrint("Recording is already cancelled");
+      return;
+    }
     var filePath = await record.stop();
     File(filePath!).delete();
     _audioTimer?.cancel();
     record.dispose();
+    _isDisposed = true;
     _audioTimer = null;
     isAudioRecording(Constants.audioRecordDelete);
     Future.delayed(const Duration(milliseconds: 1500), () {
@@ -1954,18 +1961,13 @@ class ChatController extends FullLifeCycleController
       if (microPhonePermissionStatus) {
         isUserTyping(false);
         record = AudioRecorder();
+        _isDisposed = false;
         timerInit("00:00");
         isAudioRecording(Constants.audioRecording);
         startTimer();
         await record.start(const RecordConfig(),
             path:
                 "$audioSavePath/audio_${DateTime.now().millisecondsSinceEpoch}.m4a");
-        // await record.start(
-        //   path: "$audioSavePath/audio_${DateTime.now().millisecondsSinceEpoch}.m4a",
-        //   encoder: AudioEncoder.AAC,
-        //   bitRate: 128000,
-        //   samplingRate: 44100,
-        // );
         Future.delayed(const Duration(seconds: 300), () {
           if (isAudioRecording.value == Constants.audioRecording) {
             stopRecording();
@@ -1983,9 +1985,12 @@ class ChatController extends FullLifeCycleController
     isUserTyping(messageController.text.trim().isNotEmpty);
     _audioTimer?.cancel();
     _audioTimer = null;
-    await AudioRecorder().stop().then((filePath) async {
+    debugPrint("Audio Recording Stopped");
+    await record.stop().then((filePath) async {
+      debugPrint("Audio saved path---> $filePath");
       if (MediaUtils.isMediaExists(filePath)) {
         recordedAudioPath = filePath.checkNull();
+        debugPrint("Audio recordedAudioPath path---> $recordedAudioPath");
       } else {
         debugPrint("File Not Found For Audio");
       }
@@ -1994,18 +1999,19 @@ class ChatController extends FullLifeCycleController
   }
 
   Future<void> deleteRecording() async {
-    var filePath = await record.stop();
-    File(filePath!).delete();
+    File(recordedAudioPath).delete();
     isUserTyping(messageController.text.trim().isNotEmpty);
     isAudioRecording(Constants.audioRecordInitial);
     timerInit("00:00");
     record.dispose();
+    _isDisposed = true;
   }
 
   Future<void> setAudioPath() async {
     Directory? directory = Platform.isAndroid
         ? await getExternalStorageDirectory() //FOR ANDROID
         : await getApplicationSupportDirectory(); //FOR iOS
+    debugPrint("Audio path directory---> $directory");
     if (directory != null) {
       audioSavePath = directory.path;
       debugPrint(audioSavePath);
@@ -2027,6 +2033,7 @@ class ChatController extends FullLifeCycleController
     isAudioRecording(Constants.audioRecordInitial);
     timerInit("00:00");
     record.dispose();
+    _isDisposed = true;
   }
 
   infoPage() {
@@ -3154,27 +3161,27 @@ class ChatController extends FullLifeCycleController
     availableFeatures(features);
     var availableAttachment = <AttachmentIcon>[];
     if (features.isDocumentAttachmentAvailable.checkNull()) {
-      availableAttachment.add(
-          AttachmentIcon(documentImg, getTranslated("attachment_Document")));
+      availableAttachment.add(AttachmentIcon(Constants.attachmentTypeDocument,
+          documentImg, getTranslated("attachment_Document")));
     }
     if (features.isImageAttachmentAvailable.checkNull() ||
         features.isVideoAttachmentAvailable.checkNull()) {
-      availableAttachment
-          .add(AttachmentIcon(cameraImg, getTranslated("attachment_Camera")));
-      availableAttachment
-          .add(AttachmentIcon(galleryImg, getTranslated("attachment_Gallery")));
+      availableAttachment.add(AttachmentIcon(Constants.attachmentTypeCamera,
+          cameraImg, getTranslated("attachment_Camera")));
+      availableAttachment.add(AttachmentIcon(Constants.attachmentTypeGallery,
+          galleryImg, getTranslated("attachment_Gallery")));
     }
     if (features.isAudioAttachmentAvailable.checkNull()) {
-      availableAttachment
-          .add(AttachmentIcon(audioImg, getTranslated("attachment_Audio")));
+      availableAttachment.add(AttachmentIcon(Constants.attachmentTypeAudio,
+          audioImg, getTranslated("attachment_Audio")));
     }
     if (features.isContactAttachmentAvailable.checkNull()) {
-      availableAttachment
-          .add(AttachmentIcon(contactImg, getTranslated("attachment_Contact")));
+      availableAttachment.add(AttachmentIcon(Constants.attachmentTypeContact,
+          contactImg, getTranslated("attachment_Contact")));
     }
     if (features.isLocationAttachmentAvailable.checkNull()) {
-      availableAttachment.add(
-          AttachmentIcon(locationImg, getTranslated("attachment_Location")));
+      availableAttachment.add(AttachmentIcon(Constants.attachmentTypeLocation,
+          locationImg, getTranslated("attachment_Location")));
     }
     availableAttachments(availableAttachment);
   }
@@ -3207,8 +3214,6 @@ class ChatController extends FullLifeCycleController
   void loadLastMessages(ChatMessageModel chatMessageModel) async {
     if (await Mirrorfly.hasNextMessages()) {
       _loadNextMessages(showLoading: false);
-    } else {
-      debugPrint("Next message is not found");
     }
   }
 

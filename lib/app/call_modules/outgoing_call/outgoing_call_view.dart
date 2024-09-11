@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../app_style_config.dart';
 import '../../call_modules/call_utils.dart';
-import '../../call_modules/outgoing_call/outgoing_call_controller.dart';
 import '../../call_modules/call_widgets.dart';
+import '../../call_modules/outgoing_call/outgoing_call_controller.dart';
 import '../../call_modules/ripple_animation_view.dart';
 import '../../common/widgets.dart';
 import '../../data/helper.dart';
+import '../../extensions/extensions.dart';
 import 'package:mirrorfly_plugin/mirrorfly_view.dart';
 import 'package:mirrorfly_plugin/mirrorflychat.dart';
-import '../../extensions/extensions.dart';
 
 import '../../common/constants.dart';
 import '../../data/session_management.dart';
+import '../../data/utils.dart';
 
 class OutGoingCallView extends NavViewStateful<OutgoingCallController> {
   const OutGoingCallView({Key? key}) : super(key: key);
@@ -209,9 +209,8 @@ class OutGoingCallView extends NavViewStateful<OutgoingCallController> {
                                         .actionButtonsStyle
                                         .activeBgColor, //Colors.white,
                                     onPressed: () => controller.muteAudio(),
-                                    child: SvgPicture.asset(
-                                      muteActive,
-                                      package: package,
+                                    child: AppUtils.svgIcon(
+                                      icon: muteActive,
                                       colorFilter: ColorFilter.mode(
                                           AppStyleConfig
                                               .outgoingCallPageStyle
@@ -230,9 +229,8 @@ class OutGoingCallView extends NavViewStateful<OutgoingCallController> {
                                         .actionButtonsStyle
                                         .inactiveBgColor, //Colors.white.withOpacity(0.3),
                                     onPressed: () => controller.muteAudio(),
-                                    child: SvgPicture.asset(
-                                      muteInactive,
-                                      package: package,
+                                    child: AppUtils.svgIcon(
+                                      icon: muteInactive,
                                       colorFilter: ColorFilter.mode(
                                           AppStyleConfig
                                               .outgoingCallPageStyle
@@ -256,9 +254,8 @@ class OutGoingCallView extends NavViewStateful<OutgoingCallController> {
                                 // backgroundColor: controller.cameraSwitch.value ? Colors.white : Colors.white.withOpacity(0.3),
                                 onPressed: () => controller.switchCamera(),
                                 child: controller.cameraSwitch.value
-                                    ? SvgPicture.asset(
-                                        cameraSwitchActive,
-                                        package: package,
+                                    ? AppUtils.svgIcon(
+                                        icon: cameraSwitchActive,
                                         colorFilter: ColorFilter.mode(
                                             AppStyleConfig
                                                 .outgoingCallPageStyle
@@ -266,9 +263,8 @@ class OutGoingCallView extends NavViewStateful<OutgoingCallController> {
                                                 .activeIconColor,
                                             BlendMode.srcIn),
                                       )
-                                    : SvgPicture.asset(
-                                        cameraSwitchInactive,
-                                        package: package,
+                                    : AppUtils.svgIcon(
+                                        icon: cameraSwitchInactive,
                                         colorFilter: ColorFilter.mode(
                                             AppStyleConfig
                                                 .outgoingCallPageStyle
@@ -291,9 +287,8 @@ class OutGoingCallView extends NavViewStateful<OutgoingCallController> {
                               // backgroundColor: controller.videoMuted.value ? Colors.white : Colors.white.withOpacity(0.3),
                               onPressed: () => controller.videoMute(),
                               child: controller.videoMuted.value
-                                  ? SvgPicture.asset(
-                                      videoInactive,
-                                      package: package,
+                                  ? AppUtils.svgIcon(
+                                      icon: videoInactive,
                                       colorFilter: ColorFilter.mode(
                                           AppStyleConfig
                                               .outgoingCallPageStyle
@@ -301,9 +296,8 @@ class OutGoingCallView extends NavViewStateful<OutgoingCallController> {
                                               .activeIconColor,
                                           BlendMode.srcIn),
                                     )
-                                  : SvgPicture.asset(
-                                      videoActive,
-                                      package: package,
+                                  : AppUtils.svgIcon(
+                                      icon: videoActive,
                                       colorFilter: ColorFilter.mode(
                                           AppStyleConfig
                                               .outgoingCallPageStyle
@@ -331,9 +325,8 @@ class OutGoingCallView extends NavViewStateful<OutgoingCallController> {
                               onPressed: () => controller.changeSpeaker(),
                               child: controller.audioOutputType.value ==
                                       AudioDeviceType.receiver
-                                  ? SvgPicture.asset(
-                                      speakerInactive,
-                                      package: package,
+                                  ? AppUtils.svgIcon(
+                                      icon: speakerInactive,
                                       colorFilter: ColorFilter.mode(
                                           AppStyleConfig
                                               .outgoingCallPageStyle
@@ -343,8 +336,8 @@ class OutGoingCallView extends NavViewStateful<OutgoingCallController> {
                                     )
                                   : controller.audioOutputType.value ==
                                           AudioDeviceType.speaker
-                                      ? SvgPicture.asset(speakerActive,
-                                          package: package,
+                                      ? AppUtils.svgIcon(
+                                          icon: speakerActive,
                                           colorFilter: ColorFilter.mode(
                                               AppStyleConfig
                                                   .outgoingCallPageStyle
@@ -353,8 +346,8 @@ class OutGoingCallView extends NavViewStateful<OutgoingCallController> {
                                               BlendMode.srcIn))
                                       : controller.audioOutputType.value ==
                                               AudioDeviceType.bluetooth
-                                          ? SvgPicture.asset(speakerBluetooth,
-                                              package: package,
+                                          ? AppUtils.svgIcon(
+                                              icon: speakerBluetooth,
                                               colorFilter: ColorFilter.mode(
                                                   AppStyleConfig
                                                       .outgoingCallPageStyle
@@ -363,11 +356,15 @@ class OutGoingCallView extends NavViewStateful<OutgoingCallController> {
                                                   BlendMode.srcIn))
                                           : controller.audioOutputType.value ==
                                                   AudioDeviceType.headset
-                                              ? SvgPicture.asset(speakerHeadset,
-                                                  package: package,
+                                              ? AppUtils.svgIcon(
+                                                  icon: speakerHeadset,
                                                   colorFilter: ColorFilter.mode(
-                                                      AppStyleConfig.outgoingCallPageStyle.actionButtonsStyle.activeIconColor, BlendMode.srcIn))
-                                              : SvgPicture.asset(speakerActive, package: package, colorFilter: ColorFilter.mode(AppStyleConfig.outgoingCallPageStyle.actionButtonsStyle.activeIconColor, BlendMode.srcIn)),
+                                                      AppStyleConfig
+                                                          .outgoingCallPageStyle
+                                                          .actionButtonsStyle
+                                                          .activeIconColor,
+                                                      BlendMode.srcIn))
+                                              : AppUtils.svgIcon(icon: speakerActive, colorFilter: ColorFilter.mode(AppStyleConfig.outgoingCallPageStyle.actionButtonsStyle.activeIconColor, BlendMode.srcIn)),
                             ),
                           ],
                         ),
@@ -381,8 +378,7 @@ class OutGoingCallView extends NavViewStateful<OutgoingCallController> {
                           onPressed: () {
                             controller.disconnectOutgoingCall();
                           },
-                          child:
-                              SvgPicture.asset(callEndButton, package: package),
+                          child: AppUtils.svgIcon(icon: callEndButton),
                         )
                         /*ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -393,9 +389,9 @@ class OutGoingCallView extends NavViewStateful<OutgoingCallController> {
                           onPressed: () {
                             controller.disconnectOutgoingCall();
                           },
-                          child: SvgPicture.asset(
+                          child: AppUtils.svgIcon(icon:
                             callEndButton,
-                          package: package,)),*/
+                          )),*/
                         ),
                   ],
                 ),

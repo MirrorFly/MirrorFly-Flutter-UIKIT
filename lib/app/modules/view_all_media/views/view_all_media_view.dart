@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../app_style_config.dart';
 import '../../../common/app_localizations.dart';
@@ -10,6 +9,7 @@ import '../../../data/helper.dart';
 import '../../../data/utils.dart';
 import '../../../extensions/extensions.dart';
 import '../../../stylesheet/stylesheet.dart';
+
 import '../../../common/constants.dart';
 import '../../../model/chat_message_model.dart';
 import '../../../model/group_media_model.dart';
@@ -195,9 +195,8 @@ class ViewAllMediaView extends NavViewStateful<ViewAllMediaController> {
         controller.imageFromBase64String(
             item.mediaChatMessage!.mediaThumbImage, null, null),
         Center(
-          child: SvgPicture.asset(
-            videoWhite,
-            package: package,
+          child: AppUtils.svgIcon(
+            icon: videoWhite,
             colorFilter:
                 ColorFilter.mode(mediaItemStyle.iconColor, BlendMode.srcIn),
           ),
@@ -208,8 +207,8 @@ class ViewAllMediaView extends NavViewStateful<ViewAllMediaController> {
 
   Widget audioItem(ChatMessageModel item, MediaItemStyle mediaItemStyle) {
     return Center(
-      child: SvgPicture.asset(
-        item.mediaChatMessage!.isAudioRecorded ? audioMic1 : audioWhite,
+      child: AppUtils.svgIcon(
+        icon: item.mediaChatMessage!.isAudioRecorded ? audioMic1 : audioWhite,
         colorFilter:
             ColorFilter.mode(mediaItemStyle.iconColor, BlendMode.srcIn),
       ),
@@ -305,9 +304,8 @@ class ViewAllMediaView extends NavViewStateful<ViewAllMediaController> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: SvgPicture.asset(
-                  assetName,
-                  package: package,
+                child: AppUtils.svgIcon(
+                  icon: assetName,
                   width: 20,
                   height: 20,
                 ),
@@ -391,9 +389,8 @@ class ViewAllMediaView extends NavViewStateful<ViewAllMediaController> {
                               width: 70,
                               decoration: linkItemStyle.iconDecoration,
                               child: Center(
-                                child: SvgPicture.asset(
-                                  linkImage,
-                                  package: package,
+                                child: AppUtils.svgIcon(
+                                  icon: linkImage,
                                   colorFilter: ColorFilter.mode(
                                       linkItemStyle.iconColor, BlendMode.srcIn),
                                 ),

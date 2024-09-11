@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import '../../call_modules/group_participants/group_participants_controller.dart';
 import '../../common/app_localizations.dart';
 import '../../common/constants.dart';
 import 'package:mirrorfly_plugin/mirrorflychat.dart';
@@ -8,7 +8,6 @@ import 'package:mirrorfly_plugin/mirrorflychat.dart';
 import '../../data/utils.dart';
 import '../../extensions/extensions.dart';
 import '../../modules/dashboard/dashboard_widgets/contact_item.dart';
-import 'group_participants_controller.dart';
 
 class GroupParticipantsView
     extends NavViewStateful<GroupParticipantsController> {
@@ -51,7 +50,7 @@ class GroupParticipantsView
               visible: controller.isSearchVisible,
               child: IconButton(
                   onPressed: () => controller.onSearchPressed(),
-                  icon: SvgPicture.asset(searchIcon, package: package)),
+                  icon: AppUtils.svgIcon(icon: searchIcon)),
             ),
             Visibility(
               visible: controller.isClearVisible,
@@ -118,11 +117,10 @@ class GroupParticipantsView
                           mainAxisAlignment: MainAxisAlignment.center,
                           // crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            SvgPicture.asset(
-                              controller.callType.value == CallType.audio
+                            AppUtils.svgIcon(
+                              icon: controller.callType.value == CallType.audio
                                   ? audioCallSmallIcon
                                   : videoCallSmallIcon,
-                              package: package,
                             ),
                             const SizedBox(
                               width: 8,

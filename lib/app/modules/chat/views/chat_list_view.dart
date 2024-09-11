@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../../data/utils.dart';
 import '../../../extensions/extensions.dart';
@@ -82,18 +81,24 @@ class _ChatListViewState extends State<ChatListView> {
                   (widget.chatList[index].messageType.toUpperCase() !=
                           Constants.mNotification)
                       ? SwipeTo(
-                          onRightSwipe: (DragUpdateDetails dragUpdateDetails) {
-                            if (!widget
-                                    .chatList[index].isMessageRecalled.value &&
-                                !widget.chatList[index].isMessageDeleted &&
-                                widget.chatList[index].messageStatus.value
-                                        .checkNull()
-                                        .toString() !=
-                                    "N") {
-                              widget.chatController.handleReplyChatMessage(
-                                  widget.chatList[index]);
-                            }
-                          },
+                          onRightSwipe: (widget.chatController.arguments
+                                      ?.enableSwipeToReply)
+                                  .checkNull()
+                              ? (DragUpdateDetails dragUpdateDetails) {
+                                  if (!widget.chatList[index].isMessageRecalled
+                                          .value &&
+                                      !widget
+                                          .chatList[index].isMessageDeleted &&
+                                      widget.chatList[index].messageStatus.value
+                                              .checkNull()
+                                              .toString() !=
+                                          "N") {
+                                    widget.chatController
+                                        .handleReplyChatMessage(
+                                            widget.chatList[index]);
+                                  }
+                                }
+                              : null,
                           animationDuration: const Duration(milliseconds: 300),
                           offsetDx: 0.2,
                           child: GestureDetector(
@@ -179,8 +184,8 @@ class _ChatListViewState extends State<ChatListView> {
                                                       .chatList[index]
                                                       .messageId);
                                             },
-                                            icon: SvgPicture.asset(forwardMedia,
-                                                package: package)),
+                                            icon: AppUtils.svgIcon(
+                                                icon: forwardMedia)),
                                       ),
                                       Container(
                                         constraints: BoxConstraints(
@@ -278,8 +283,8 @@ class _ChatListViewState extends State<ChatListView> {
                                                       .chatList[index]
                                                       .messageId);
                                             },
-                                            icon: SvgPicture.asset(forwardMedia,
-                                                package: package))
+                                            icon: AppUtils.svgIcon(
+                                                icon: forwardMedia))
                                       ],
                                     ],
                                   ),

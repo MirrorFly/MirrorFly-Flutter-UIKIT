@@ -1,5 +1,5 @@
-import 'package:mirrorfly_plugin/mirrorfly.dart';
 import '../extensions/extensions.dart';
+import 'package:mirrorfly_plugin/mirrorfly.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/constants.dart';
@@ -223,10 +223,8 @@ class SessionManagement {
       _preferences.getString("$prefix$key") ?? "";
 
   static bool getLogin() => _preferences.getBool("${prefix}login") ?? false;
-
   static String getUserIdentifier() =>
       _preferences.getString("${prefix}userIdentifier") ?? "";
-
   static String getCurrentChatJID() =>
       _preferences.getString("${prefix}CurrentChatJID") ?? "";
   static String? getName() => _preferences.getString("${prefix}name");
@@ -292,5 +290,5 @@ class SessionManagement {
       DateTime.now().millisecondsSinceEpoch;
   static bool showAlert() =>
       _preferences.getBool('${prefix}show_alert') ?? true;
-  // static String getTopicId() =>  Constants.enableTopic ? Constants.topicId/*_preferences.getString('${prefix}topicId')*/ ?? ("5d3788c1-78ef-4158-a92b-a48f092da0b9") : "";//Mirrorfly Topic
+  // static String getTopicId() =>  Constants.enableTopic ? Constants.topicId/*_preferences.getString('${prefix}topicId')*/ ?? ("5d3788c1-78ef-4158-a92b-a48f092da0b9") : "";
 }

@@ -2,12 +2,11 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import '../common/app_localizations.dart';
 import '../common/constants.dart';
+import '../data/session_management.dart';
 import '../data/utils.dart';
 import '../extensions/extensions.dart';
-import '../data/session_management.dart';
 import 'package:mirrorfly_plugin/mirrorflychat.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -280,9 +279,8 @@ class AppPermission {
       permissions.add(Permission.phone);
     }
     if (!microphone.isGranted ||
-        (Platform.isAndroid &&
-            await Permission.microphone
-                .shouldShowRequestRationale) /*&& !SessionManagement.getBool(Constants.audioRecordPermissionAsked)*/) {
+        (await Permission.microphone
+            .shouldShowRequestRationale) /*&& !SessionManagement.getBool(Constants.audioRecordPermissionAsked)*/) {
       permissions.add(Permission.microphone);
     }
     if (Platform.isAndroid &&
@@ -389,7 +387,6 @@ class AppPermission {
             AppStyleConfig.dialogStyle); //Constants.audioCallPermission);
     if (deniedPopupValue) {
       LogMessage.d("deniedPopupValue", deniedPopupValue);
-      LogMessage.d("deniedPopupValue permissions", permissions);
       var newp = await permissions.request();
       PermissionStatus? microphone_ = newp[Permission.microphone];
       PermissionStatus? phone_ = newp[Permission.phone];
@@ -413,12 +410,6 @@ class AppPermission {
         LogMessage.d("notification_", notification_.isPermanentlyDenied);
         SessionManagement.setBool(Constants.notificationPermissionAsked, true);
       }
-      debugPrint("returning permission ${microphone_?.isGranted ?? true}");
-      debugPrint("returning permission ${phone_?.isGranted ?? true}");
-      debugPrint(
-          "returning permission ${bluetoothConnect_?.isGranted ?? true}");
-      debugPrint("returning permission ${notification_?.isGranted ?? true}");
-
       return (microphone_?.isGranted ?? true) &&
           (phone_?.isGranted ?? true) &&
           (bluetoothConnect_?.isGranted ?? true) &&
@@ -885,7 +876,7 @@ class AppPermission {
       contentPadding: EdgeInsets.zero,
       content: PopScope(
         canPop: false,
-        onPopInvoked: (didPop) {
+        onPopInvokedWithResult: (didPop, result) {
           if (didPop) {
             return;
           }
@@ -900,8 +891,7 @@ class AppPermission {
                   child: CircleAvatar(
                 backgroundColor: buttonBgColor,
                 radius: 30,
-                child: SvgPicture.asset(notificationAlertPermission,
-                    package: package),
+                child: AppUtils.svgIcon(icon: notificationAlertPermission),
               )),
             ),
             Padding(
@@ -970,7 +960,7 @@ class AppPermission {
       contentPadding: EdgeInsets.zero,
       content: PopScope(
         canPop: false,
-        onPopInvoked: (didPop) {
+        onPopInvokedWithResult: (didPop, result) {
           if (didPop) {
             return;
           }
@@ -984,9 +974,8 @@ class AppPermission {
               decoration: dialogStyle.headerContainerDecoration,
               // color: buttonBgColor,
               child: Center(
-                  child: SvgPicture.asset(
-                icon,
-                package: package,
+                  child: AppUtils.svgIcon(
+                icon: icon,
                 colorFilter:
                     ColorFilter.mode(dialogStyle.iconColor, BlendMode.srcIn),
               )),
@@ -1035,7 +1024,7 @@ class AppPermission {
       contentPadding: EdgeInsets.zero,
       content: PopScope(
         canPop: false,
-        onPopInvoked: (didPop) {
+        onPopInvokedWithResult: (didPop, result) {
           if (didPop) {
             return;
           }
@@ -1048,9 +1037,8 @@ class AppPermission {
               padding: const EdgeInsets.symmetric(vertical: 35.0),
               decoration: dialogStyle.headerContainerDecoration,
               child: Center(
-                  child: SvgPicture.asset(
-                icon,
-                package: package,
+                  child: AppUtils.svgIcon(
+                icon: icon,
                 colorFilter:
                     ColorFilter.mode(dialogStyle.iconColor, BlendMode.srcIn),
               )),

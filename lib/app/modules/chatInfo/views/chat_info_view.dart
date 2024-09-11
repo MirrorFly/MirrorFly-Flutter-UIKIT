@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:get/get.dart';
 import '../../../app_style_config.dart';
@@ -228,9 +227,8 @@ class ChatInfoView extends NavViewStateful<ChatInfoController> {
               padding: const EdgeInsets.only(left: 15.0, bottom: 16),
               child: Row(
                 children: [
-                  SvgPicture.asset(
-                    emailIcon,
-                    package: package,
+                  AppUtils.svgIcon(
+                    icon: emailIcon,
                     colorFilter: ColorFilter.mode(
                         AppStyleConfig.chatInfoPageStyle.optionsViewStyle
                             .leadingIconColor,
@@ -274,9 +272,8 @@ class ChatInfoView extends NavViewStateful<ChatInfoController> {
               padding: const EdgeInsets.only(left: 15.0, bottom: 16),
               child: Row(
                 children: [
-                  SvgPicture.asset(
-                    phoneIcon,
-                    package: package,
+                  AppUtils.svgIcon(
+                    icon: phoneIcon,
                     colorFilter: ColorFilter.mode(
                         AppStyleConfig.chatInfoPageStyle.optionsViewStyle
                             .leadingIconColor,
@@ -320,9 +317,8 @@ class ChatInfoView extends NavViewStateful<ChatInfoController> {
               padding: const EdgeInsets.only(left: 15.0, bottom: 16),
               child: Row(
                 children: [
-                  SvgPicture.asset(
-                    statusIcon,
-                    package: package,
+                  AppUtils.svgIcon(
+                    icon: statusIcon,
                     colorFilter: ColorFilter.mode(
                         AppStyleConfig.chatInfoPageStyle.optionsViewStyle
                             .leadingIconColor,
@@ -365,7 +361,7 @@ class ChatInfoView extends NavViewStateful<ChatInfoController> {
           listItemStyle: AppStyleConfig.chatInfoPageStyle.viewAllMediaStyle,
         ),
         /*listItem(
-            leading: SvgPicture.asset(imageOutline,package: package,),
+            leading: AppUtils.svgIcon(icon:imageOutline,),
             title: Text(getTranslated("viewAllMedia"),
                 style: const TextStyle(
                     color: Colors.black,
@@ -378,7 +374,7 @@ class ChatInfoView extends NavViewStateful<ChatInfoController> {
             } //controller.gotoViewAllMedia(),
         ),*/
         /*listItem(
-            leading: SvgPicture.asset(reportUser),
+            leading: AppUtils.svgIcon(icon:reportUser),
             title: Text(getTranslated("report"),
                 style: const TextStyle(
                     color: Colors.red,

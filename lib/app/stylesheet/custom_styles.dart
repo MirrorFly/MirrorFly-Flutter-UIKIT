@@ -16,43 +16,6 @@ class EditTextFieldStyle {
   final TextStyle editTextHintStyle;
 }
 
-class OTPTextFieldStyle {
-  OTPTextFieldStyle(
-      {this.textStyle = const TextStyle(
-          fontWeight: FontWeight.w600, color: Color(0xff181818), fontSize: 16),
-      this.textFieldAlignment = MainAxisAlignment.center,
-      this.spaceBetween = 4,
-      this.fieldWidth = 40,
-      this.fieldStyle = FieldStyle.box,
-      this.outlineBorderRadius = 10,
-      OtpFieldStyle? otpFieldStyle})
-      : otpFieldStyle = otpFieldStyle ?? _defaultOtpFieldStyle;
-
-  final TextStyle textStyle;
-
-  /// Text Field Alignment
-  /// default: MainAxisAlignment.spaceBetween [MainAxisAlignment]
-  final MainAxisAlignment textFieldAlignment;
-
-  /// space between the text fields
-  final double spaceBetween;
-
-  /// Width of the single OTP Field
-  final double fieldWidth;
-
-  /// Text Field Style for field shape.
-  /// default FieldStyle.underline [FieldStyle]
-  final FieldStyle fieldStyle;
-
-  /// The style to use for the text being edited.
-  final double outlineBorderRadius;
-
-  /// Text Field Style
-  final OtpFieldStyle otpFieldStyle;
-
-  static final OtpFieldStyle _defaultOtpFieldStyle = OtpFieldStyle();
-}
-
 class TabItemStyle {
   const TabItemStyle(
       {this.textStyle =

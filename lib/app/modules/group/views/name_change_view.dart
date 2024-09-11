@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../../common/app_localizations.dart';
 import '../../../common/widgets.dart';
@@ -24,7 +23,7 @@ class NameChangeView extends NavView<GroupInfoController> {
       ),
       body: PopScope(
         canPop: false,
-        onPopInvoked: (didPop) {
+        onPopInvokedWithResult: (didPop, result) {
           if (didPop) {
             return;
           }
@@ -82,9 +81,8 @@ class NameChangeView extends NavView<GroupInfoController> {
                                         Icons.keyboard,
                                         color: iconColor,
                                       )
-                                    : SvgPicture.asset(
-                                        smileIcon,
-                                        package: package,
+                                    : AppUtils.svgIcon(
+                                        icon: smileIcon,
                                         width: 18,
                                         height: 18,
                                       ));

@@ -55,7 +55,11 @@ class LocationController extends GetxController {
       }
     }).catchError((er) {
       LogMessage.d("Location", er.toString());
-      Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+      const LocationSettings locationSettings = LocationSettings(
+        accuracy: LocationAccuracy.best,
+        distanceFilter: 100,
+      );
+      Geolocator.getCurrentPosition(locationSettings: locationSettings)
           .then((value) {
         // if (value != null) {
         setLocation(LatLng(value.latitude, value.longitude));

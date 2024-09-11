@@ -1,3 +1,8 @@
+## 2.0.1-beta
+* Android Gradle Issue Fixed 
+* iOS SDK Updated to 5.17.9 
+* Android SDK Updated to 7.13.6
+
 ## 2.0.0
 * Font Customisation Added
 * Localisation feature Added

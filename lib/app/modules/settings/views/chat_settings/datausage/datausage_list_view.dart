@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../../../../common/app_localizations.dart';
 import '../../../../../common/constants.dart';
 
+import '../../../../../data/utils.dart';
 import '../../../../../extensions/extensions.dart';
 import 'datausage_controller.dart';
 
@@ -44,8 +44,8 @@ class DataUsageListView extends NavViewStateful<DataUsageController> {
                           fontSize: 12.0,
                           fontWeight: FontWeight.w600),
                     ),
-                    trailing: SvgPicture.asset(
-                        controller.openMobileData ? arrowUp : arrowDown),
+                    trailing: AppUtils.svgIcon(
+                        icon: controller.openMobileData ? arrowUp : arrowDown),
                     onTap: () {
                       controller.openMobile();
                     },
@@ -85,8 +85,8 @@ class DataUsageListView extends NavViewStateful<DataUsageController> {
                           fontSize: 12.0,
                           fontWeight: FontWeight.w600),
                     ),
-                    trailing: SvgPicture.asset(
-                        controller.openWifiData ? arrowUp : arrowDown),
+                    trailing: AppUtils.svgIcon(
+                        icon: controller.openWifiData ? arrowUp : arrowDown),
                     onTap: () {
                       controller.openWifi();
                     },
@@ -142,8 +142,8 @@ class DataUsageListView extends NavViewStateful<DataUsageController> {
             )),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: SvgPicture.asset(
-                on ? tickRoundBlue : tickRound,
+              child: AppUtils.svgIcon(
+                icon: on ? tickRoundBlue : tickRound,
               ),
             ),
           ],

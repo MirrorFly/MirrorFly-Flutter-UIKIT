@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:get/get.dart';
 import '../../../app_style_config.dart';
 import '../../../common/constants.dart';
-import '../../../data/utils.dart';
 import '../../../extensions/extensions.dart';
 import '../../../modules/dashboard/views/callhistory_view.dart';
 import '../../../modules/dashboard/views/recentchat_view.dart';
@@ -14,6 +12,7 @@ import 'package:mirrorfly_plugin/mirrorflychat.dart';
 
 import '../../../common/app_localizations.dart';
 import '../../../common/app_theme.dart';
+import '../../../data/utils.dart';
 import '../../../widgets/custom_action_bar_icons.dart';
 import '../../dashboard/controllers/dashboard_controller.dart';
 
@@ -38,7 +37,7 @@ class DashboardView extends NavViewStateful<DashboardController> {
           () => PopScope(
             canPop:
                 !(controller.selected.value || controller.isSearching.value),
-            onPopInvoked: (didPop) {
+            onPopInvokedWithResult: (didPop, result) {
               if (didPop) {
                 return;
               }
@@ -184,8 +183,8 @@ class DashboardView extends NavViewStateful<DashboardController> {
                                                 onPressed: () {
                                                   controller.chatInfo();
                                                 },
-                                                icon: SvgPicture.asset(infoIcon,
-                                                    package: package,
+                                                icon: AppUtils.svgIcon(
+                                                    icon: infoIcon,
                                                     colorFilter: ColorFilter.mode(
                                                         Theme.of(context)
                                                                 .appBarTheme
@@ -219,8 +218,8 @@ class DashboardView extends NavViewStateful<DashboardController> {
                                                       : controller
                                                           .deleteCallLog();
                                                 },
-                                                icon: SvgPicture.asset(delete,
-                                                    package: package,
+                                                icon: AppUtils.svgIcon(
+                                                    icon: delete,
                                                     colorFilter: ColorFilter.mode(
                                                         Theme.of(context)
                                                                 .appBarTheme
@@ -255,8 +254,8 @@ class DashboardView extends NavViewStateful<DashboardController> {
                                                 onPressed: () {
                                                   controller.pinChats();
                                                 },
-                                                icon: SvgPicture.asset(pin,
-                                                    package: package,
+                                                icon: AppUtils.svgIcon(
+                                                    icon: pin,
                                                     colorFilter: ColorFilter.mode(
                                                         Theme.of(context)
                                                                 .appBarTheme
@@ -285,8 +284,8 @@ class DashboardView extends NavViewStateful<DashboardController> {
                                                 onPressed: () {
                                                   controller.unPinChats();
                                                 },
-                                                icon: SvgPicture.asset(unpin,
-                                                    package: package,
+                                                icon: AppUtils.svgIcon(
+                                                    icon: unpin,
                                                     colorFilter: ColorFilter.mode(
                                                         Theme.of(context)
                                                                 .appBarTheme
@@ -316,8 +315,8 @@ class DashboardView extends NavViewStateful<DashboardController> {
                                                 onPressed: () {
                                                   controller.muteChats();
                                                 },
-                                                icon: SvgPicture.asset(mute,
-                                                    package: package,
+                                                icon: AppUtils.svgIcon(
+                                                    icon: mute,
                                                     colorFilter: ColorFilter.mode(
                                                         Theme.of(context)
                                                                 .appBarTheme
@@ -347,8 +346,8 @@ class DashboardView extends NavViewStateful<DashboardController> {
                                                 onPressed: () {
                                                   controller.unMuteChats();
                                                 },
-                                                icon: SvgPicture.asset(unMute,
-                                                    package: package,
+                                                icon: AppUtils.svgIcon(
+                                                    icon: unMute,
                                                     colorFilter: ColorFilter.mode(
                                                         Theme.of(context)
                                                                 .appBarTheme
@@ -378,8 +377,8 @@ class DashboardView extends NavViewStateful<DashboardController> {
                                                 onPressed: () {
                                                   controller.archiveChats();
                                                 },
-                                                icon: SvgPicture.asset(archive,
-                                                    package: package,
+                                                icon: AppUtils.svgIcon(
+                                                    icon: archive,
                                                     colorFilter: ColorFilter.mode(
                                                         Theme.of(context)
                                                                 .appBarTheme
@@ -445,9 +444,8 @@ class DashboardView extends NavViewStateful<DashboardController> {
                                                 onPressed: () {
                                                   controller.gotoSearch();
                                                 },
-                                                icon: SvgPicture.asset(
-                                                    searchIcon,
-                                                    package: package,
+                                                icon: AppUtils.svgIcon(
+                                                    icon: searchIcon,
                                                     width: 18,
                                                     height: 18,
                                                     fit: BoxFit.contain,
@@ -658,9 +656,8 @@ class DashboardView extends NavViewStateful<DashboardController> {
         onPressed: () {
           controller.gotoContacts();
         },
-        child: SvgPicture.asset(
-          chatFabIcon,
-          package: package,
+        child: AppUtils.svgIcon(
+          icon: chatFabIcon,
           width: Theme.of(context).floatingActionButtonTheme.iconSize,
           colorFilter: ColorFilter.mode(
               Theme.of(context).floatingActionButtonTheme.foregroundColor ??
@@ -677,9 +674,8 @@ class DashboardView extends NavViewStateful<DashboardController> {
             Theme.of(context).floatingActionButtonTheme.backgroundColor,
         foregroundColor:
             Theme.of(context).floatingActionButtonTheme.foregroundColor,
-        icon: SvgPicture.asset(
-          plusIcon,
-          package: package,
+        icon: AppUtils.svgIcon(
+          icon: plusIcon,
           width: Theme.of(context).floatingActionButtonTheme.iconSize,
           colorFilter: ColorFilter.mode(
               Theme.of(context).floatingActionButtonTheme.foregroundColor ??

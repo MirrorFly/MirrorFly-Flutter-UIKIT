@@ -8,13 +8,15 @@ import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  MirrorflyUikit.instance.initUIKIT(
+  var response = await MirrorflyUikit.instance.initUIKIT(
     navigatorKey: navigatorKey,
     licenseKey: 'LICENSE_KEY',
     iOSContainerID: 'group.com.mirrorfly.flutter',
   );
+
+  debugPrint("init response $response");
 
   /// Use this method to add the locale you want to support in the UIKIT Plugin.
   AppLocalizations.addSupportedLocales(const Locale("hi", "IN"));
@@ -123,8 +125,8 @@ class _DashboardState extends State<Dashboard> {
                         onPressed: () async {
                           if (uniqueId.isNotEmpty) {
                             try {
-                              var response = await MirrorflyUikit.login(
-                                  userIdentifier: uniqueId);
+                              var response = await MirrorflyUikit.instance
+                                  .login(userIdentifier: uniqueId);
                               debugPrint("register user $response");
                               showSnack(response['message']);
                             } catch (e) {
@@ -196,7 +198,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   logoutFromSDK() async {
-    MirrorflyUikit.logoutFromUIKIT().then((value) {
+    MirrorflyUikit.instance.logoutFromUIKIT().then((value) {
       debugPrint("logout user $value");
       showSnack(value['message']);
     }).catchError((er) {});

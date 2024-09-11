@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../../app_style_config.dart';
 import '../../../common/app_localizations.dart';
@@ -42,7 +41,7 @@ class GroupCreationView extends NavViewStateful<GroupCreationController> {
         ),
         body: PopScope(
           canPop: false,
-          onPopInvoked: (didPop) {
+          onPopInvokedWithResult: (didPop, result) {
             if (didPop) {
               return;
             }
@@ -104,8 +103,8 @@ class GroupCreationView extends NavViewStateful<GroupCreationController> {
                                                 .height,
                                             clipOval: true,
                                             errorWidget: ClipOval(
-                                              child: Image.asset(groupImg,
-                                                  package: package,
+                                              child: AppUtils.assetIcon(
+                                                  assetName: groupImg,
                                                   width: AppStyleConfig
                                                       .createGroupPageStyle
                                                       .profileImageSize
@@ -175,8 +174,9 @@ class GroupCreationView extends NavViewStateful<GroupCreationController> {
                                           : () {
                                               controller.choosePhoto();
                                             },
-                                      child: SvgPicture.asset(
-                                        'assets/logos/camera_profile_change.svg',
+                                      child: AppUtils.svgIcon(
+                                        icon:
+                                            'assets/logos/camera_profile_change.svg',
                                         colorFilter: ColorFilter.mode(
                                             AppStyleConfig.createGroupPageStyle
                                                 .cameraIconStyle.iconColor,
@@ -247,9 +247,8 @@ class GroupCreationView extends NavViewStateful<GroupCreationController> {
                                           color: AppStyleConfig
                                               .createGroupPageStyle.emojiColor,
                                         )
-                                      : SvgPicture.asset(
-                                          smileIcon,
-                                          package: package,
+                                      : AppUtils.svgIcon(
+                                          icon: smileIcon,
                                           width: 18,
                                           height: 18,
                                           colorFilter: ColorFilter.mode(

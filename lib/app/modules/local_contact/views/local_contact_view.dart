@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-
 import 'package:get/get.dart';
 import '../../../common/app_localizations.dart';
 import '../../../model/local_contact_model.dart';
@@ -29,6 +27,7 @@ class LocalContactView extends NavViewStateful<LocalContactController> {
               .localContactPageStyle.floatingActionButtonThemeData),
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: false,
           titleSpacing: 0.0,
           title: Obx(() {
             return controller.search.value
@@ -65,9 +64,8 @@ class LocalContactView extends NavViewStateful<LocalContactController> {
             Obx(() => controller.search.value
                 ? const Offstage()
                 : IconButton(
-                    icon: SvgPicture.asset(
-                      searchIcon,
-                      package: package,
+                    icon: AppUtils.svgIcon(
+                      icon: searchIcon,
                       width: 18,
                       height: 18,
                       fit: BoxFit.contain,
@@ -89,7 +87,7 @@ class LocalContactView extends NavViewStateful<LocalContactController> {
         ),
         body: PopScope(
           canPop: false,
-          onPopInvoked: (didPop) {
+          onPopInvokedWithResult: (didPop, result) {
             if (didPop) {
               return;
             }
@@ -158,9 +156,8 @@ class LocalContactView extends NavViewStateful<LocalContactController> {
                               Positioned(
                                   right: 2,
                                   bottom: 2,
-                                  child: SvgPicture.asset(
-                                    closeContactIcon,
-                                    package: package,
+                                  child: AppUtils.svgIcon(
+                                    icon: closeContactIcon,
                                     width: 15,
                                   )),
                             ],
@@ -218,9 +215,8 @@ class LocalContactView extends NavViewStateful<LocalContactController> {
                                       child: Positioned(
                                           right: 0,
                                           bottom: 0,
-                                          child: SvgPicture.asset(
-                                            contactSelectTick,
-                                            package: package,
+                                          child: AppUtils.svgIcon(
+                                            icon: contactSelectTick,
                                             width: 12,
                                           )),
                                     ),

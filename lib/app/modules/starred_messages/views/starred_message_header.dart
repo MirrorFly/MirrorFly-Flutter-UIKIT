@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../common/app_localizations.dart';
 import '../../../data/helper.dart';
-import 'package:mirrorfly_plugin/mirrorflychat.dart';
 import '../../../extensions/extensions.dart';
+import 'package:mirrorfly_plugin/mirrorflychat.dart';
+
 import '../../../common/constants.dart';
 import '../../../common/widgets.dart';
 import '../../../model/chat_message_model.dart';

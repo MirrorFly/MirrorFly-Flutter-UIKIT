@@ -74,7 +74,7 @@ class ProfileController extends GetxController {
     getProfile();
     //profileStatus.value="I'm Mirror fly user";
     // await askStoragePermission();
-    getMetaData();
+    // getMetaData();
   }
 
   Future<void> save({bool frmImage = false}) async {
@@ -405,7 +405,7 @@ class ProfileController extends GetxController {
                 value as MemoryImage;
                 imageBytes = value.bytes;
                 var name = "${DateTime.now().millisecondsSinceEpoch}.jpg";
-                writeImageTemp(value.bytes, name).then((value) {
+                MessageUtils.writeImageTemp(value.bytes, name).then((value) {
                   if (from == Routes.login) {
                     imagePath(value.path);
                     changed(true);
@@ -445,7 +445,7 @@ class ProfileController extends GetxController {
             value as MemoryImage;
             imageBytes = value.bytes;
             var name = "${DateTime.now().millisecondsSinceEpoch}.jpg";
-            writeImageTemp(value.bytes, name).then((value) {
+            MessageUtils.writeImageTemp(value.bytes, name).then((value) {
               if (from == Routes.login) {
                 debugPrint("Profile Controller from login");
                 imagePath(value.path);
