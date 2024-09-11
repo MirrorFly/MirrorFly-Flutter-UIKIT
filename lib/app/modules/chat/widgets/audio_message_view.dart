@@ -1,6 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../../stylesheet/stylesheet.dart';
 import 'package:mirrorfly_plugin/logmessage.dart';
@@ -198,18 +197,16 @@ class _AudioMessageViewState extends State<AudioMessageView>
                     backgroundColor:
                         widget.audioMessageViewStyle.iconStyle.bgColor,
                     child: widget.chatMessage.mediaChatMessage!.isAudioRecorded
-                        ? SvgPicture.asset(
-                            audioMic,
-                            package: package,
+                        ? AppUtils.svgIcon(
+                            icon: audioMic,
                             colorFilter: ColorFilter.mode(
                                 widget
                                     .audioMessageViewStyle.iconStyle.iconColor,
                                 BlendMode.srcIn),
                             height: 13,
                           )
-                        : SvgPicture.asset(
-                            musicIcon,
-                            package: package,
+                        : AppUtils.svgIcon(
+                            icon: musicIcon,
                             colorFilter: ColorFilter.mode(
                                 widget
                                     .audioMessageViewStyle.iconStyle.iconColor,
@@ -299,7 +296,7 @@ class _AudioMessageViewState extends State<AudioMessageView>
               mainAxisSize: MainAxisSize.min,
               children: [
                 widget.chatMessage.isMessageStarred.value
-                    ? SvgPicture.asset(starSmallIcon)
+                    ? AppUtils.svgIcon(icon: starSmallIcon)
                     : const Offstage(),
                 const SizedBox(
                   width: 5,
@@ -346,7 +343,7 @@ class _AudioMessageViewState extends State<AudioMessageView>
       Dialog(
         child: PopScope(
           canPop: true,
-          onPopInvoked: (didPop) {
+          onPopInvokedWithResult: (didPop, result) {
             isPlaying(false);
             player.stop();
             if (didPop) {
@@ -370,23 +367,20 @@ class _AudioMessageViewState extends State<AudioMessageView>
                     ? Stack(
                         alignment: Alignment.center,
                         children: [
-                          SvgPicture.asset(
-                            audioMicBg,
-                            package: package,
+                          AppUtils.svgIcon(
+                            icon: audioMicBg,
                             width: 28,
                             height: 28,
                             fit: BoxFit.contain,
                           ),
-                          SvgPicture.asset(
-                            audioMic1,
-                            package: package,
+                          AppUtils.svgIcon(
+                            icon: audioMic1,
                             fit: BoxFit.contain,
                           ),
                         ],
                       )
-                    : SvgPicture.asset(
-                        musicIcon,
-                        package: package,
+                    : AppUtils.svgIcon(
+                        icon: musicIcon,
                         fit: BoxFit.contain,
                       ),
                 const SizedBox(
@@ -428,14 +422,12 @@ class _AudioMessageViewState extends State<AudioMessageView>
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: isPlaying.value
-                          ? SvgPicture.asset(
-                              pauseIcon,
-                              package: package,
+                          ? AppUtils.svgIcon(
+                              icon: pauseIcon,
                               height: 17,
                             ) //const Icon(Icons.pause)
-                          : SvgPicture.asset(
-                              playIcon,
-                              package: package,
+                          : AppUtils.svgIcon(
+                              icon: playIcon,
                               height: 17,
                             ),
                     ),

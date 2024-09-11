@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import '../../../app_style_config.dart';
 import '../../../common/app_localizations.dart';
@@ -94,7 +93,8 @@ class GalleryPickerView extends NavViewStateful<GalleryPickerController> {
                                 },
                                 child: Container(
                                     height: 30,
-                                    width: 50,
+                                    padding: const EdgeInsets.only(
+                                        left: 8, right: 8),
                                     decoration: AppStyleConfig
                                         .galleryPageStyle.buttonDecoration,
                                     child: Center(

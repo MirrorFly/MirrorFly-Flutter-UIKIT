@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../../common/app_localizations.dart';
 import '../../../common/widgets.dart';
@@ -26,7 +25,7 @@ class StatusListView extends NavViewStateful<StatusListController> {
       ),
       body: PopScope(
         canPop: false,
-        onPopInvoked: (didPop) {
+        onPopInvokedWithResult: (didPop, result) {
           if (didPop) {
             return;
           }
@@ -53,9 +52,8 @@ class StatusListView extends NavViewStateful<StatusListController> {
                           color: textColor,
                           fontSize: 14,
                           fontWeight: FontWeight.normal)),
-                  trailing: SvgPicture.asset(
-                    pencilEditIcon,
-                    package: package,
+                  trailing: AppUtils.svgIcon(
+                    icon: pencilEditIcon,
                     fit: BoxFit.contain,
                   ),
                   onTap: () {
@@ -100,9 +98,8 @@ class StatusListView extends NavViewStateful<StatusListController> {
                                       fontWeight: FontWeight.w500)),
                               trailing:
                                   item.status == controller.selectedStatus.value
-                                      ? SvgPicture.asset(
-                                          tickIcon,
-                                          package: package,
+                                      ? AppUtils.svgIcon(
+                                          icon: tickIcon,
                                           fit: BoxFit.contain,
                                         )
                                       : const SizedBox(),

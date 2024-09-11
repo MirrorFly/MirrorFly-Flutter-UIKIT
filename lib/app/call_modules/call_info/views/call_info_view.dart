@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../../app_style_config.dart';
+import '../../../call_modules/call_info/controllers/call_info_controller.dart';
 import '../../../common/constants.dart';
 import '../../../common/widgets.dart';
 import '../../../data/helper.dart';
 import '../../../data/utils.dart';
+import '../../../extensions/extensions.dart';
 import 'package:mirrorfly_plugin/model/call_constants.dart';
 import 'package:mirrorfly_plugin/model/call_log_model.dart';
 
 import '../../../common/app_localizations.dart';
-import '../../../extensions/extensions.dart';
 import '../../../modules/dashboard/widgets.dart';
 import '../../../widgets/custom_action_bar_icons.dart';
 import '../../call_utils.dart';
-import '../controllers/call_info_controller.dart';
 
 class CallInfoView extends NavViewStateful<CallInfoController> {
   const CallInfoView({super.key});
@@ -76,9 +75,8 @@ class CallInfoView extends NavViewStateful<CallInfoController> {
                                 .checkNull()
                                 .isEmpty
                             ? ClipOval(
-                                child: Image.asset(
-                                  groupImg,
-                                  package: package,
+                                child: AppUtils.assetIcon(
+                                  assetName: groupImg,
                                   height: AppStyleConfig
                                       .callInfoPageStyle
                                       .callHistoryItemStyle
@@ -111,9 +109,8 @@ class CallInfoView extends NavViewStateful<CallInfoController> {
                                               .height,
                                           clipOval: true,
                                           errorWidget: ClipOval(
-                                            child: Image.asset(
-                                              groupImg,
-                                              package: package,
+                                            child: AppUtils.assetIcon(
+                                              assetName: groupImg,
                                               height: AppStyleConfig
                                                   .callInfoPageStyle
                                                   .callHistoryItemStyle
@@ -132,9 +129,8 @@ class CallInfoView extends NavViewStateful<CallInfoController> {
                                           unknown: false,
                                         )
                                       : ClipOval(
-                                          child: Image.asset(
-                                            groupImg,
-                                            package: package,
+                                          child: AppUtils.assetIcon(
+                                            assetName: groupImg,
                                             height: AppStyleConfig
                                                 .callInfoPageStyle
                                                 .callHistoryItemStyle
@@ -301,9 +297,8 @@ class CallInfoView extends NavViewStateful<CallInfoController> {
             onPressed: () {
               controller.makeCall(localUserList, callType, item);
             },
-            icon: SvgPicture.asset(
-              videoCallIcon,
-              package: package,
+            icon: AppUtils.svgIcon(
+              icon: videoCallIcon,
               colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
             ),
           )
@@ -311,9 +306,8 @@ class CallInfoView extends NavViewStateful<CallInfoController> {
             onPressed: () {
               controller.makeCall(localUserList, callType, item);
             },
-            icon: SvgPicture.asset(
-              audioCallIcon,
-              package: package,
+            icon: AppUtils.svgIcon(
+              icon: audioCallIcon,
               colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
             ));
   }

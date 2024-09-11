@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import '../../call_modules/participants/add_participants_controller.dart';
 import '../../common/app_localizations.dart';
 import '../../common/widgets.dart';
 import '../../data/session_management.dart';
 import '../../extensions/extensions.dart';
-import '../../call_modules/participants/add_participants_controller.dart';
 
 import '../../app_style_config.dart';
 import '../../common/app_theme.dart';
@@ -108,9 +107,8 @@ class ParticipantsView extends NavViewStateful<AddParticipantsController> {
                                     }
                                   },
                                   icon: !controller.isSearching.value
-                                      ? SvgPicture.asset(
-                                          searchIcon,
-                                          package: package,
+                                      ? AppUtils.svgIcon(
+                                          icon: searchIcon,
                                           width: 18,
                                           height: 18,
                                           fit: BoxFit.contain,
@@ -251,9 +249,8 @@ class ParticipantsView extends NavViewStateful<AddParticipantsController> {
                                 ? CircleAvatar(
                                     backgroundColor: style.actionStyle
                                         .inactiveBgColor, //AppColors.participantUnMuteColor,
-                                    child: SvgPicture.asset(
-                                      participantMute,
-                                      package: package,
+                                    child: AppUtils.svgIcon(
+                                      icon: participantMute,
                                       colorFilter: ColorFilter.mode(
                                           style.actionStyle.inactiveIconColor,
                                           BlendMode.srcIn),
@@ -261,9 +258,8 @@ class ParticipantsView extends NavViewStateful<AddParticipantsController> {
                                 : CircleAvatar(
                                     backgroundColor: style.actionStyle
                                         .activeBgColor, //Colors.transparent,
-                                    child: SvgPicture.asset(
-                                      participantUnMute,
-                                      package: package,
+                                    child: AppUtils.svgIcon(
+                                      icon: participantUnMute,
                                       colorFilter: ColorFilter.mode(
                                           style.actionStyle.activeIconColor,
                                           BlendMode.srcIn),
@@ -282,16 +278,14 @@ class ParticipantsView extends NavViewStateful<AddParticipantsController> {
                                         .activeBgColor, //Colors.transparent,
                                 child: controller
                                         .callList[index].isVideoMuted.value
-                                    ? SvgPicture.asset(
-                                        participantVideoDisabled,
-                                        package: package,
+                                    ? AppUtils.svgIcon(
+                                        icon: participantVideoDisabled,
                                         colorFilter: ColorFilter.mode(
                                             style.actionStyle.inactiveIconColor,
                                             BlendMode.srcIn),
                                       )
-                                    : SvgPicture.asset(
-                                        participantVideoEnabled,
-                                        package: package,
+                                    : AppUtils.svgIcon(
+                                        icon: participantVideoEnabled,
                                         colorFilter: ColorFilter.mode(
                                             style.actionStyle.activeIconColor,
                                             BlendMode.srcIn),
@@ -311,36 +305,49 @@ class ParticipantsView extends NavViewStateful<AddParticipantsController> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Padding(
-          //   padding: const EdgeInsets.only(top: 10.0,left: 10.0,bottom: 5.0),
-          //   child: Text(getTranslated("meetLink"),style: copyMeetLinkStyle.titleTextStyle,),
-          // ),
-          // Row(
-          //   children: [
-          //     Container(
-          //       width: 50,
-          //       height: 50,
-          //       margin: const EdgeInsets.all(10.0),
-          //       decoration: copyMeetLinkStyle.leadingStyle.iconDecoration,
-          //       child: Center(child: Icon(Icons.link,color: copyMeetLinkStyle.leadingStyle.iconColor,size: 18,),),
-          //     ),
-          //     Expanded(child: Text(controller.meetLink.value,style: copyMeetLinkStyle.linkTextStyle,)),
-          //     IconButton(
-          //       onPressed: () {
-          //         if (controller.meetLink.value.isEmpty) return;
-          //         Clipboard.setData(
-          //             ClipboardData(text: Constants.webChatLogin + controller.meetLink.value));
-          //         toToast(getTranslated("linkCopied"));
-          //       },
-          //       icon: SvgPicture.asset(
-          //           copyIcon,
-          //           package: package,fit: BoxFit.contain,
-          //           colorFilter: ColorFilter.mode(
-          //               copyMeetLinkStyle.copyIconColor, BlendMode.srcIn)
-          //       ),
-          //     ),
-          //   ],
-          // ),
+          Padding(
+            padding: const EdgeInsets.only(top: 10.0, left: 10.0, bottom: 5.0),
+            child: Text(
+              getTranslated("meetLink"),
+              style: copyMeetLinkStyle.titleTextStyle,
+            ),
+          ),
+          Row(
+            children: [
+              Container(
+                width: 50,
+                height: 50,
+                margin: const EdgeInsets.all(10.0),
+                decoration: copyMeetLinkStyle.leadingStyle.iconDecoration,
+                child: Center(
+                  child: Icon(
+                    Icons.link,
+                    color: copyMeetLinkStyle.leadingStyle.iconColor,
+                    size: 18,
+                  ),
+                ),
+              ),
+              Expanded(
+                  child: Text(
+                controller.meetLink.value,
+                style: copyMeetLinkStyle.linkTextStyle,
+              )),
+              IconButton(
+                onPressed: () {
+                  if (controller.meetLink.value.isEmpty) return;
+                  Clipboard.setData(ClipboardData(
+                      text:
+                          Constants.webChatLogin + controller.meetLink.value));
+                  toToast(getTranslated("linkCopied"));
+                },
+                icon: AppUtils.svgIcon(
+                    icon: copyIcon,
+                    fit: BoxFit.contain,
+                    colorFilter: ColorFilter.mode(
+                        copyMeetLinkStyle.copyIconColor, BlendMode.srcIn)),
+              ),
+            ],
+          ),
           const AppDivider(),
           Expanded(
             child: Stack(
@@ -432,9 +439,8 @@ class ParticipantsView extends NavViewStateful<AddParticipantsController> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
-                                        SvgPicture.asset(
-                                          addParticipantsInCall,
-                                          package: package,
+                                        AppUtils.svgIcon(
+                                          icon: addParticipantsInCall,
                                           colorFilter: ColorFilter.mode(
                                               AppStyleConfig
                                                   .addParticipantsPageStyle

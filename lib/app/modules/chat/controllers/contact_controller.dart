@@ -4,9 +4,9 @@ import 'package:get/get.dart';
 import '../../../common/constants.dart';
 import '../../../common/main_controller.dart';
 import '../../../data/helper.dart';
+import '../../../data/session_management.dart';
 import '../../../extensions/extensions.dart';
 import 'package:mirrorfly_plugin/mirrorfly.dart';
-import '../../../data/session_management.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../app_style_config.dart';
@@ -31,6 +31,7 @@ class ContactController extends FullLifeCycleController
   final TextEditingController searchQuery = TextEditingController();
   var _searchText = "";
   var _first = true;
+  var isSearchingNew = false.obs;
 
   var getMaxCallUsersCount = 8;
   ContactListArguments get arguments =>
@@ -112,7 +113,7 @@ class ContactController extends FullLifeCycleController
       if (scrollController.position.extentAfter <= 0 &&
           isPageLoading.value == false) {
         if (scrollable.value) {
-          //isPageLoading.value = true;
+          isPageLoading.value = true;
           LogMessage.d("usersList.length ${usersList.length} ~/ 20",
               (usersList.length ~/ 20));
           pageNum = (usersList.length ~/ 20) + 1;
@@ -140,6 +141,7 @@ class ContactController extends FullLifeCycleController
         pageNum = 1;
       } else {
         isPageLoading(true);
+        isSearchingNew(true);
         _searchText = searchQuery.text.trim();
         pageNum = 1;
       }
@@ -236,6 +238,7 @@ class ContactController extends FullLifeCycleController
               }
             }
             isPageLoading.value = false;
+            isSearchingNew.value = false;
             usersList.refresh();
           } else {
             list.addAll(item.data!);
@@ -299,99 +302,6 @@ class ContactController extends FullLifeCycleController
               flyCallback: callback)
           : Mirrorfly.getRegisteredUsers(
               fetchFromServer: false, flyCallback: callback);
-      /*future.then((data) async {
-        //Mirrorfly.getUserList(pageNum, _searchText).then((data) async {
-        LogMessage.d("userlist", data);
-        var item = userListFromJson(data);
-        var list = <ProfileDetails>[];
-
-        if (groupJid.value.checkNull().isNotEmpty) {
-          await Future.forEach(item.data!, (it) async {
-            await Mirrorfly.isMemberOfGroup(groupJid.value.checkNull(), it.jid.checkNull()).then((value) {
-              LogMessage.d("item", value.toString());
-              if (value == null || !value) {
-                list.add(it);
-              }
-            });
-          });
-          if (_first) {
-            _first = false;
-            mainUsersList(list);
-          }
-          if (fromSearch) {
-            if (!Constants.enableContactSync) {
-              usersList(list);
-              // if(usersList.length==20) pageNum += 1;
-              scrollable.value = list.length == 20;
-            } else {
-              var userlist = mainUsersList.where((p0) => getName(p0).toString().toLowerCase().contains(_searchText.trim().toLowerCase()));
-              usersList(userlist.toList());
-              scrollable(false);
-              /*for (var userDetail in mainUsersList) {
-                  if (userDetail.name.toString().toLowerCase().contains(_searchText.trim().toLowerCase())) {
-                    usersList.add(userDetail);
-                  }
-                }*/
-            }
-          } else {
-            if (!Constants.enableContactSync) {
-              usersList.addAll(list);
-              // if(usersList.length==20) pageNum += 1;
-              scrollable.value = list.length == 20;
-            } else {
-              usersList(list);
-              scrollable(false);
-            }
-          }
-          isPageLoading.value = false;
-          usersList.refresh();
-        } else {
-          list.addAll(item.data!);
-          if (Constants.enableContactSync && fromSearch) {
-            var userlist = mainUsersList.where((p0) => getName(p0).toString().toLowerCase().contains(_searchText.trim().toLowerCase()));
-            usersList(userlist.toList());
-            /*for (var userDetail in mainUsersList) {
-              if (userDetail.name.toString().toLowerCase().contains(_searchText.trim().toLowerCase())) {
-                usersList.add(userDetail);
-              }
-            }*/
-          }
-          if (_first) {
-            _first = false;
-            mainUsersList(list);
-          }
-          if (fromSearch) {
-            if (!Constants.enableContactSync) {
-              usersList(list);
-              // if(usersList.length==20) pageNum += 1;
-              scrollable.value = list.length == 20;
-            } else {
-              var userlist = mainUsersList.where((p0) => getName(p0).toString().toLowerCase().contains(_searchText.trim().toLowerCase()));
-              usersList(userlist.toList());
-              scrollable(false);
-              /*for (var userDetail in mainUsersList) {
-                  if (userDetail.name.toString().toLowerCase().contains(_searchText.trim().toLowerCase())) {
-                    usersList.add(userDetail);
-                  }
-                }*/
-            }
-          } else {
-            if (!Constants.enableContactSync) {
-              usersList.addAll(list);
-              // if(usersList.length==20) pageNum += 1;
-              scrollable.value = list.length == 20;
-            } else {
-              usersList(list);
-              scrollable(false);
-            }
-          }
-          isPageLoading.value = false;
-          usersList.refresh();
-        }
-      }).catchError((error) {
-        debugPrint("Get User list error--> $error");
-        toToast(error.toString());
-      });*/
     } else {
       toToast(getTranslated("noInternetConnection"));
     }

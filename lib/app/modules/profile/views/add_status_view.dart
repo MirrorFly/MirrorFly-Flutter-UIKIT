@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../../common/app_localizations.dart';
 import '../../../common/widgets.dart';
 import '../../../modules/profile/controllers/status_controller.dart';
 
 import '../../../common/constants.dart';
+import '../../../data/utils.dart';
 import '../../../extensions/extensions.dart';
 
 class AddStatusView extends NavView<StatusListController> {
@@ -24,7 +24,7 @@ class AddStatusView extends NavView<StatusListController> {
       ),
       body: PopScope(
         canPop: false,
-        onPopInvoked: (didPop) {
+        onPopInvokedWithResult: (didPop, result) {
           if (didPop) {
             return;
           }
@@ -98,7 +98,7 @@ class AddStatusView extends NavView<StatusListController> {
                                   Icons.keyboard,
                                   color: iconColor,
                                 )
-                              : SvgPicture.asset(smileIcon));
+                              : AppUtils.svgIcon(icon: smileIcon));
                     })
                   ],
                 ),

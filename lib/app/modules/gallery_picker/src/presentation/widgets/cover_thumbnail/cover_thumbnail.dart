@@ -10,10 +10,11 @@ class CoverThumbnail extends StatefulWidget {
   final double thumbnailScale;
   final BoxFit thumbnailFit;
   const CoverThumbnail(
-      {super.key,
+      {Key? key,
       this.thumbnailQuality = 120,
       this.thumbnailScale = 1.0,
-      this.thumbnailFit = BoxFit.cover});
+      this.thumbnailFit = BoxFit.cover})
+      : super(key: key);
 
   @override
   State<CoverThumbnail> createState() => _CoverThumbnailState();

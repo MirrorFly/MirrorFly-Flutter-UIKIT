@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../../common/app_localizations.dart';
 import 'package:video_player/video_player.dart';
@@ -98,11 +97,11 @@ class VideoPreviewView extends NavViewStateful<VideoPreviewController> {
                                 onTap: () {
                                   controller.sendVideoMessage();
                                 },
-                                child: SvgPicture.asset(
-                                    'assets/logos/img_send.svg')),
+                                child: AppUtils.svgIcon(
+                                    icon: 'assets/logos/img_send.svg')),
                           ],
                         ),
-                        // SvgPicture.asset(
+                        // AppUtils.svgIcon(icon:
                         //   rightArrow,
                         //   width: 18,
                         //   height: 18,

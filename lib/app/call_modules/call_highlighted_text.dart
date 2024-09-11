@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../common/constants.dart';
+import '../../app/common/constants.dart';
 
 class CallHighlightedText extends StatelessWidget {
   final String searchString;

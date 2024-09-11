@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import '../../../data/utils.dart';
 import '../../../extensions/extensions.dart';
 import '../../../stylesheet/stylesheet.dart';
@@ -81,9 +80,8 @@ class VideoMessageView extends StatelessWidget {
                 left: 10,
                 child: Row(
                   children: [
-                    SvgPicture.asset(
-                      mVideoIcon,
-                      package: package,
+                    AppUtils.svgIcon(
+                      icon: mVideoIcon,
                       fit: BoxFit.contain,
                       colorFilter:
                           const ColorFilter.mode(Colors.white, BlendMode.srcIn),
@@ -114,7 +112,7 @@ class VideoMessageView extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           chatMessage.isMessageStarred.value
-                              ? SvgPicture.asset(starSmallIcon)
+                              ? AppUtils.svgIcon(icon: starSmallIcon)
                               : const Offstage(),
                           const SizedBox(
                             width: 5,

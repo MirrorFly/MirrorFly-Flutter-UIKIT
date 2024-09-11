@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import '../../../stylesheet/stylesheet.dart';
 
 import '../../../common/constants.dart';
 import '../../../common/widgets.dart';
+import '../../../data/utils.dart';
 
 Widget lockItem(
     {required String title,
@@ -74,8 +74,8 @@ ListItem notificationItem(
         ],
       ),
       dividerPadding: const EdgeInsets.symmetric(horizontal: 16),
-      trailing: SvgPicture.asset(
-        on ? tickRoundBlue : tickRound,
+      trailing: AppUtils.svgIcon(
+        icon: on ? tickRoundBlue : tickRound,
       ),
       onTap: onTap);
 }
@@ -107,8 +107,8 @@ class SettingListItem extends StatelessWidget {
                       padding: const EdgeInsets.all(18.0),
                       child: SizedBox(
                           width: 24,
-                          child: SvgPicture.asset(leading!,
-                              package: package,
+                          child: AppUtils.svgIcon(
+                              icon: leading!,
                               colorFilter: ColorFilter.mode(
                                   listItemStyle.leadingIconColor,
                                   BlendMode.srcIn))),
@@ -124,8 +124,8 @@ class SettingListItem extends StatelessWidget {
               trailing != null
                   ? Padding(
                       padding: const EdgeInsets.all(18.0),
-                      child: SvgPicture.asset(trailing!,
-                          package: package,
+                      child: AppUtils.svgIcon(
+                          icon: trailing!,
                           colorFilter: ColorFilter.mode(
                               listItemStyle.trailingIconColor,
                               BlendMode.srcIn)),
@@ -156,7 +156,7 @@ Widget chatListItem(Widget title, String trailing, Function() onTap) {
             )),
             Padding(
               padding: const EdgeInsets.all(18.0),
-              child: SvgPicture.asset(trailing, package: package),
+              child: AppUtils.svgIcon(icon: trailing),
             ),
           ],
         ),

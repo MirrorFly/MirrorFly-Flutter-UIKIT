@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_plugin/mirrorfly.dart';
@@ -90,8 +89,8 @@ class MeetSheetView extends NavViewStateful<MeetLinkController> {
                         ClipboardData(text: controller.meetLink.value));
                     toToast(getTranslated("linkCopied"));
                   },
-                  icon: SvgPicture.asset(copyIcon,
-                      package: package,
+                  icon: AppUtils.svgIcon(
+                      icon: copyIcon,
                       fit: BoxFit.contain,
                       colorFilter: ColorFilter.mode(
                           meetBottomSheetStyle.copyIconColor, BlendMode.srcIn)),
