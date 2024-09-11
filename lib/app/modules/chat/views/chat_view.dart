@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 // import 'package:grouped_list/grouped_list.dart';
 // import 'package:marquee/marquee.dart';
@@ -8,7 +7,6 @@ import '../../../common/app_localizations.dart';
 import '../../../common/widgets.dart';
 import '../../../data/helper.dart';
 import '../../../extensions/extensions.dart';
-// import '../../../modules/chat/widgets/floating_fab.dart';
 import 'package:mirrorfly_plugin/logmessage.dart';
 
 import '../../../call_modules/ripple_animation_view.dart';
@@ -54,15 +52,15 @@ class ChatView extends NavViewStateful<ChatController> {
             child: Container(
               width: NavUtils.width,
               height: NavUtils.height,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage(chatBgIcon, package: package),
+                  image: AssetImage(chatBgIcon, package: iconPackageName),
                   fit: BoxFit.cover,
                 ),
               ),
               child: PopScope(
                 canPop: false,
-                onPopInvoked: (didPop) {
+                onPopInvokedWithResult: (didPop, result) {
                   if (didPop) {
                     return;
                   }
@@ -162,9 +160,8 @@ class ChatView extends NavViewStateful<ChatController> {
                                         )
                                       : const SizedBox.shrink(),
                                   IconButton(
-                                    icon: Image.asset(
-                                      redirectLastMessage,
-                                      package: package,
+                                    icon: AppUtils.assetIcon(
+                                      assetName: redirectLastMessage,
                                       width: 32,
                                       height: 32,
                                     ),
@@ -312,16 +309,15 @@ class ChatView extends NavViewStateful<ChatController> {
                                                                       controller
                                                                           .profile);
                                                         },
-                                                        child: SvgPicture.asset(
-                                                          sendIcon,
-                                                          package: package,
-                                                          colorFilter: ColorFilter.mode(
-                                                              AppStyleConfig
-                                                                  .chatPageStyle
-                                                                  .messageTypingAreaStyle
-                                                                  .sentIconColor,
-                                                              BlendMode.srcIn),
-                                                        ))
+                                                        child: AppUtils.svgIcon(
+                                                            icon: sendIcon,
+                                                            colorFilter: ColorFilter.mode(
+                                                                AppStyleConfig
+                                                                    .chatPageStyle
+                                                                    .messageTypingAreaStyle
+                                                                    .sentIconColor,
+                                                                BlendMode
+                                                                    .srcIn)))
                                                     : const Offstage();
                                               }),
                                               Obx(() {
@@ -348,10 +344,9 @@ class ChatView extends NavViewStateful<ChatController> {
                                                                 .audioRecordIcon
                                                                 .bgColor, //const Color(0xff3276E2),
                                                             radius: 48 / 2,
-                                                            child: SvgPicture
-                                                                .asset(
-                                                              audioMic,
-                                                              package: package,
+                                                            child: AppUtils
+                                                                .svgIcon(
+                                                              icon: audioMic,
                                                               colorFilter: ColorFilter.mode(
                                                                   AppStyleConfig
                                                                       .chatPageStyle
@@ -444,9 +439,8 @@ class ChatView extends NavViewStateful<ChatController> {
                       color: AppStyleConfig
                           .chatPageStyle.messageTypingAreaStyle.emojiIconColor,
                     )
-                  : SvgPicture.asset(
-                      smileIcon,
-                      package: package,
+                  : AppUtils.svgIcon(
+                      icon: smileIcon,
                       colorFilter: ColorFilter.mode(
                           AppStyleConfig.chatPageStyle.messageTypingAreaStyle
                               .emojiIconColor,
@@ -563,9 +557,8 @@ class ChatView extends NavViewStateful<ChatController> {
             onPressed: () {
               controller.showAttachmentsView(context);
             },
-            icon: SvgPicture.asset(
-              attachIcon,
-              package: package,
+            icon: AppUtils.svgIcon(
+              icon: attachIcon,
               colorFilter: ColorFilter.mode(
                   AppStyleConfig
                       .chatPageStyle.messageTypingAreaStyle.emojiIconColor,
@@ -580,9 +573,8 @@ class ChatView extends NavViewStateful<ChatController> {
             onPressed: () {
               controller.startRecording();
             },
-            icon: SvgPicture.asset(
-              audioMic,
-              package: package,
+            icon: AppUtils.svgIcon(
+              icon: audioMic,
               colorFilter: ColorFilter.mode(
                   AppStyleConfig
                       .chatPageStyle.messageTypingAreaStyle.emojiIconColor,
@@ -761,9 +753,8 @@ class ChatView extends NavViewStateful<ChatController> {
                 isGroup: controller.profile.isGroupProfile.checkNull(),
                 errorWidget: controller.profile.isGroupProfile ?? false
                     ? ClipOval(
-                        child: Image.asset(
-                          groupImg,
-                          package: package,
+                        child: AppUtils.assetIcon(
+                          assetName: groupImg,
                           width: AppStyleConfig.chatPageStyle
                               .chatUserAppBarStyle.profileImageSize.width, //35,
                           height: AppStyleConfig
@@ -854,9 +845,8 @@ class ChatView extends NavViewStateful<ChatController> {
               controller.handleReplyChatMessage(controller.selectedChatList[0]);
               controller.clearChatSelection(controller.selectedChatList[0]);
             },
-            icon: SvgPicture.asset(
-              replyIcon,
-              package: package,
+            icon: AppUtils.svgIcon(
+              icon: replyIcon,
               colorFilter: ColorFilter.mode(
                   AppStyleConfig
                           .chatPageStyle.appBarTheme.actionsIconTheme?.color ??
@@ -884,8 +874,8 @@ class ChatView extends NavViewStateful<ChatController> {
             onPressed: () {
               controller.checkBusyStatusForForward();
             },
-            icon: SvgPicture.asset(forwardIcon,
-                package: package,
+            icon: AppUtils.svgIcon(
+                icon: forwardIcon,
                 colorFilter: ColorFilter.mode(
                     AppStyleConfig.chatPageStyle.appBarTheme.actionsIconTheme
                             ?.color ??
@@ -911,8 +901,8 @@ class ChatView extends NavViewStateful<ChatController> {
             },
             // icon: controller.getOptionStatus('Favourite') ? const Icon(Icons.star_border_outlined)
             // icon: controller.selectedChatList[0].isMessageStarred
-            icon: SvgPicture.asset(favouriteIcon,
-                package: package,
+            icon: AppUtils.svgIcon(
+                icon: favouriteIcon,
                 colorFilter: ColorFilter.mode(
                     AppStyleConfig.chatPageStyle.appBarTheme.actionsIconTheme
                             ?.color ??
@@ -938,8 +928,8 @@ class ChatView extends NavViewStateful<ChatController> {
             },
             // icon: controller.getOptionStatus('Favourite') ? const Icon(Icons.star_border_outlined)
             // icon: controller.selectedChatList[0].isMessageStarred
-            icon: SvgPicture.asset(unFavouriteIcon,
-                package: package,
+            icon: AppUtils.svgIcon(
+                icon: unFavouriteIcon,
                 colorFilter: ColorFilter.mode(
                     AppStyleConfig.chatPageStyle.appBarTheme.actionsIconTheme
                             ?.color ??
@@ -963,8 +953,8 @@ class ChatView extends NavViewStateful<ChatController> {
             onPressed: () {
               controller.deleteMessages();
             },
-            icon: SvgPicture.asset(deleteIcon,
-                package: package,
+            icon: AppUtils.svgIcon(
+                icon: deleteIcon,
                 colorFilter: ColorFilter.mode(
                     AppStyleConfig.chatPageStyle.appBarTheme.actionsIconTheme
                             ?.color ??
@@ -1008,8 +998,8 @@ class ChatView extends NavViewStateful<ChatController> {
               controller.closeKeyBoard();
               controller.copyTextMessages();
             },
-            icon: SvgPicture.asset(copyIcon,
-                package: package,
+            icon: AppUtils.svgIcon(
+                icon: copyIcon,
                 fit: BoxFit.contain,
                 colorFilter: ColorFilter.mode(
                     AppStyleConfig.chatPageStyle.appBarTheme.actionsIconTheme
@@ -1034,8 +1024,8 @@ class ChatView extends NavViewStateful<ChatController> {
             onPressed: () {
               controller.messageInfo();
             },
-            icon: SvgPicture.asset(infoIcon,
-                package: package,
+            icon: AppUtils.svgIcon(
+                icon: infoIcon,
                 fit: BoxFit.contain,
                 colorFilter: ColorFilter.mode(
                     AppStyleConfig.chatPageStyle.appBarTheme.actionsIconTheme
@@ -1058,8 +1048,8 @@ class ChatView extends NavViewStateful<ChatController> {
         CustomAction(
           visibleWidget: IconButton(
             onPressed: () {},
-            icon: SvgPicture.asset(shareIcon,
-                package: package,
+            icon: AppUtils.svgIcon(
+                icon: shareIcon,
                 colorFilter: ColorFilter.mode(
                     AppStyleConfig.chatPageStyle.appBarTheme.actionsIconTheme
                             ?.color ??
@@ -1081,8 +1071,8 @@ class ChatView extends NavViewStateful<ChatController> {
         CustomAction(
           visibleWidget: IconButton(
             onPressed: () {},
-            icon: SvgPicture.asset(shareIcon,
-                package: package,
+            icon: AppUtils.svgIcon(
+                icon: shareIcon,
                 colorFilter: ColorFilter.mode(
                     AppStyleConfig.chatPageStyle.appBarTheme.actionsIconTheme
                             ?.color ??
@@ -1236,8 +1226,8 @@ class ChatView extends NavViewStateful<ChatController> {
                         controller.makeVideoCall();
                       }
                     : null,
-                icon: SvgPicture.asset(videoCallIcon,
-                    package: package,
+                icon: AppUtils.svgIcon(
+                    icon: videoCallIcon,
                     colorFilter: ColorFilter.mode(
                         AppStyleConfig.chatPageStyle.appBarTheme
                                 .actionsIconTheme?.color ??
@@ -1265,8 +1255,8 @@ class ChatView extends NavViewStateful<ChatController> {
                         controller.makeVoiceCall();
                       }
                     : null,
-                icon: SvgPicture.asset(audioCallIcon,
-                    package: package,
+                icon: AppUtils.svgIcon(
+                    icon: audioCallIcon,
                     colorFilter: ColorFilter.mode(
                         AppStyleConfig.chatPageStyle.appBarTheme
                                 .actionsIconTheme?.color ??

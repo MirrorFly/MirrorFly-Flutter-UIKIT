@@ -1,6 +1,6 @@
-import 'package:mirrorfly_plugin/mirrorfly.dart';
 import 'package:get/get.dart';
 import '../../../../../common/constants.dart';
+import 'package:mirrorfly_plugin/mirrorfly.dart';
 
 class DataUsageController extends GetxController {
   var wifi = "Wifi";

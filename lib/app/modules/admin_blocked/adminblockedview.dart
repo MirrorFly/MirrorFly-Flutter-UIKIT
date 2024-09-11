@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import '../../common/app_localizations.dart';
 
 import '../../common/constants.dart';
+import '../../data/utils.dart';
 import '../../routes/route_settings.dart';
 
 class AdminBlockedView extends StatelessWidget {
@@ -12,7 +12,7 @@ class AdminBlockedView extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) {
+      onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
           return;
         }
@@ -28,11 +28,11 @@ class AdminBlockedView extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.only(right: 55.0, left: 55.0),
-                child: Image.asset(icLogo),
+                child: AppUtils.assetIcon(assetName: icLogo),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 20.0),
-                child: SvgPicture.asset(icAdminBlocked, package: package),
+                child: AppUtils.svgIcon(icon: icAdminBlocked),
               ),
               Padding(
                 padding:

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:get/get.dart';
 import '../../../app_style_config.dart';
@@ -37,7 +36,7 @@ class StarredMessagesView extends NavViewStateful<StarredMessagesController> {
         },
         child: PopScope(
           canPop: false,
-          onPopInvoked: (didPop) {
+          onPopInvokedWithResult: (didPop, result) {
             if (didPop) {
               return;
             }
@@ -229,9 +228,8 @@ class StarredMessagesView extends NavViewStateful<StarredMessagesController> {
                       title: Text(getTranslated("starredMessages")),
                       actions: [
                         IconButton(
-                          icon: SvgPicture.asset(
-                            searchIcon,
-                            package: package,
+                          icon: AppUtils.svgIcon(
+                            icon: searchIcon,
                             width: 18,
                             height: 18,
                             fit: BoxFit.contain,
@@ -301,9 +299,8 @@ class StarredMessagesView extends NavViewStateful<StarredMessagesController> {
                   onPressed: () {
                     controller.checkBusyStatusForForward();
                   },
-                  icon: SvgPicture.asset(
-                    forwardIcon,
-                    package: package,
+                  icon: AppUtils.svgIcon(
+                    icon: forwardIcon,
                     colorFilter: ColorFilter.mode(
                         AppStyleConfig.starredMessageListPageStyle.appBarTheme
                                 .actionsIconTheme?.color ??
@@ -326,8 +323,8 @@ class StarredMessagesView extends NavViewStateful<StarredMessagesController> {
                   onPressed: () {
                     controller.favouriteMessage();
                   },
-                  icon: SvgPicture.asset(unFavouriteIcon,
-                      package: package,
+                  icon: AppUtils.svgIcon(
+                      icon: unFavouriteIcon,
                       colorFilter: ColorFilter.mode(
                           AppStyleConfig.starredMessageListPageStyle.appBarTheme
                                   .actionsIconTheme?.color ??
@@ -347,8 +344,8 @@ class StarredMessagesView extends NavViewStateful<StarredMessagesController> {
                   onPressed: () {
                     controller.share();
                   },
-                  icon: SvgPicture.asset(shareIcon,
-                      package: package,
+                  icon: AppUtils.svgIcon(
+                      icon: shareIcon,
                       colorFilter: ColorFilter.mode(
                           AppStyleConfig.starredMessageListPageStyle.appBarTheme
                                   .actionsIconTheme?.color ??
@@ -371,8 +368,8 @@ class StarredMessagesView extends NavViewStateful<StarredMessagesController> {
                     onPressed: () {
                       controller.copyTextMessages();
                     },
-                    icon: SvgPicture.asset(copyIcon,
-                        package: package,
+                    icon: AppUtils.svgIcon(
+                        icon: copyIcon,
                         fit: BoxFit.contain,
                         colorFilter: ColorFilter.mode(
                             AppStyleConfig.starredMessageListPageStyle
@@ -399,8 +396,8 @@ class StarredMessagesView extends NavViewStateful<StarredMessagesController> {
                   onPressed: () {
                     controller.deleteMessages();
                   },
-                  icon: SvgPicture.asset(deleteIcon,
-                      package: package,
+                  icon: AppUtils.svgIcon(
+                      icon: deleteIcon,
                       colorFilter: ColorFilter.mode(
                           AppStyleConfig.starredMessageListPageStyle.appBarTheme
                                   .actionsIconTheme?.color ??

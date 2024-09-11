@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:mirrorfly_uikit_plugin/app/extensions/extensions.dart';
 import '../../../common/app_localizations.dart';
+import '../../../extensions/extensions.dart';
 import '../../../modules/chat/controllers/chat_controller.dart';
 
 import '../../../app_style_config.dart';
@@ -181,9 +180,8 @@ class _EditMessageScreenState extends State<EditMessageScreen> {
                                                         .messageTypingAreaStyle
                                                         .emojiIconColor,
                                                   )
-                                                : SvgPicture.asset(
-                                                    smileIcon,
-                                                    package: package,
+                                                : AppUtils.svgIcon(
+                                                    icon: smileIcon,
                                                     colorFilter: ColorFilter.mode(
                                                         AppStyleConfig
                                                             .chatPageStyle
@@ -254,8 +252,8 @@ class _EditMessageScreenState extends State<EditMessageScreen> {
                                       child: Padding(
                                         padding: const EdgeInsets.only(
                                             left: 8.0, right: 8.0, bottom: 8),
-                                        child: SvgPicture.asset(sendIcon,
-                                            package: package,
+                                        child: AppUtils.svgIcon(
+                                            icon: sendIcon,
                                             colorFilter: ColorFilter.mode(
                                                 AppStyleConfig
                                                     .chatPageStyle

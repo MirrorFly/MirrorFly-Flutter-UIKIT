@@ -1,10 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import '../../../data/utils.dart';
 import '../../../extensions/extensions.dart';
-import 'package:get/get.dart';
 import 'package:mirrorfly_plugin/mirrorfly.dart';
 import 'package:photo_view/photo_view.dart';
 
@@ -34,7 +33,7 @@ class ViewAllMediaPreviewView
               onPressed: () {
                 controller.shareMedia();
               },
-              icon: SvgPicture.asset(shareIcon))
+              icon: AppUtils.svgIcon(icon: shareIcon))
         ],
       ),
       body: SafeArea(
@@ -102,8 +101,8 @@ class ViewAllMediaPreviewView
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      SvgPicture.asset(
-                        data.mediaChatMessage!.isAudioRecorded.checkNull()
+                      AppUtils.svgIcon(
+                        icon: data.mediaChatMessage!.isAudioRecorded.checkNull()
                             ? audioMic1
                             : headsetImg,
                         height: 150,

@@ -54,10 +54,6 @@ Route<dynamic>? mirrorFlyRoute(RouteSettings settings) {
     case '/':
       return MaterialPageRoute(
           builder: (_) => const DashboardView(), settings: settings);
-    // case Routes.login:
-    //   return MaterialPageRoute(builder: (_) => const LoginView(),settings: settings);
-    // case Routes.otp:
-    //   return MaterialPageRoute(builder: (_) => const OtpView(),settings: settings);
     case Routes.dashboard:
       return MaterialPageRoute(
           builder: (_) => const DashboardView(), settings: settings);
@@ -77,8 +73,6 @@ Route<dynamic>? mirrorFlyRoute(RouteSettings settings) {
       return MaterialPageRoute(
           builder: (_) => const ViewAllMediaView(), settings: settings);
 
-    // case Routes.countries:
-    //   return MaterialPageRoute(builder: (_) => const CountryListView(),settings: settings);
     case Routes.profile:
       return MaterialPageRoute(
           builder: (_) => const ProfileView(), settings: settings);
@@ -97,7 +91,6 @@ Route<dynamic>? mirrorFlyRoute(RouteSettings settings) {
               ForwardChatView(forwardMessageIds: arguments['messageIds']),
           settings: settings);
     case Routes.chatSearch:
-      // final arguments = settings.arguments as ChatSearchViewArguments;
       return MaterialPageRoute(
           builder: (_) => ChatSearchView(), settings: settings);
     case Routes.locationSent:
@@ -112,14 +105,6 @@ Route<dynamic>? mirrorFlyRoute(RouteSettings settings) {
     case Routes.blockedList:
       return MaterialPageRoute(
           builder: (_) => const BlockedListView(), settings: settings);
-    // case Routes.notification:
-    //   return MaterialPageRoute(builder: (_) => const NotificationSettingsView(),settings: settings);
-    // case Routes.appLock:
-    //   return MaterialPageRoute(builder: (_) => const AppLockSettingsView(),settings: settings);
-    // case Routes.pin:
-    //   return MaterialPageRoute(builder: (_) => const PinView(),settings: settings);
-    // case Routes.setPin:
-    //   return MaterialPageRoute(builder: (_) => const SetPinView(),settings: settings);
     case Routes.videoPreview:
       return MaterialPageRoute(
           builder: (_) => const VideoPreviewView(), settings: settings);

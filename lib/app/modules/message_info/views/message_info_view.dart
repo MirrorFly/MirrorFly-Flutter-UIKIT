@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../../app_style_config.dart';
 import '../../../common/app_localizations.dart';
@@ -120,8 +119,8 @@ class MessageInfoView extends NavViewStateful<MessageInfoController> {
                 const AppDivider(),
                 ListItem(
                   leading: !controller.visibleDeliveredList.value
-                      ? SvgPicture.asset(icExpand)
-                      : SvgPicture.asset(icCollapse),
+                      ? AppUtils.svgIcon(icon: icExpand)
+                      : AppUtils.svgIcon(icon: icCollapse),
                   title: Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 15.0, vertical: 10.0),
@@ -174,8 +173,8 @@ class MessageInfoView extends NavViewStateful<MessageInfoController> {
                 const AppDivider(),
                 ListItem(
                   leading: !controller.visibleReadList.value
-                      ? SvgPicture.asset(icExpand)
-                      : SvgPicture.asset(icCollapse),
+                      ? AppUtils.svgIcon(icon: icExpand)
+                      : AppUtils.svgIcon(icon: icCollapse),
                   title: Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 15.0, vertical: 10.0),
@@ -288,9 +287,8 @@ class MessageInfoView extends NavViewStateful<MessageInfoController> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset(
-            noChatIcon,
-            package: package,
+          AppUtils.assetIcon(
+            assetName: noChatIcon,
             width: 200,
           ),
           Padding(

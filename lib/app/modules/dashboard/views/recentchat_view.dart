@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../../extensions/extensions.dart';
 import '../../../modules/dashboard/controllers/dashboard_controller.dart';
@@ -114,7 +113,7 @@ class RecentChatView extends StatelessWidget {
                       child: ListItem(
                         leading: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: SvgPicture.asset(archive),
+                          child: AppUtils.svgIcon(icon: archive),
                         ),
                         title: Text(
                           getTranslated("archived"),
@@ -203,7 +202,7 @@ class RecentChatView extends StatelessWidget {
                                       leading: Padding(
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 16.0),
-                                        child: SvgPicture.asset(archive),
+                                        child: AppUtils.svgIcon(icon: archive),
                                       ),
                                       title: Text(
                                         getTranslated("archived"),
@@ -513,9 +512,8 @@ class RecentChatView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset(
-            noChatIcon,
-            package: package,
+          AppUtils.assetIcon(
+            assetName: noChatIcon,
             width: 200,
           ),
           Text(

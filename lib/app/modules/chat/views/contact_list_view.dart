@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../../app_style_config.dart';
 import '../../../common/app_localizations.dart';
@@ -28,7 +27,7 @@ class ContactListView extends NavViewStateful<ContactController> {
           appBarTheme: AppStyleConfig.contactListPageStyle.appBarTheme),
       child: PopScope(
         canPop: false,
-        onPopInvoked: (didPop) {
+        onPopInvokedWithResult: (didPop, result) {
           if (didPop) {
             return;
           }
@@ -95,9 +94,8 @@ class ContactListView extends NavViewStateful<ContactController> {
                   visible: controller.isSearchVisible,
                   child: IconButton(
                       onPressed: () => controller.onSearchPressed(),
-                      icon: SvgPicture.asset(
-                        searchIcon,
-                        package: package,
+                      icon: AppUtils.svgIcon(
+                        icon: searchIcon,
                         colorFilter: ColorFilter.mode(
                             AppStyleConfig.contactListPageStyle.appBarTheme
                                     .actionsIconTheme?.color ??
@@ -181,7 +179,8 @@ class ContactListView extends NavViewStateful<ContactController> {
                               ),
                             ),
                           )),
-                      controller.isPageLoading.value
+                      controller.isPageLoading.value &&
+                              controller.usersList.isEmpty
                           ? const Center(
                               child: Padding(
                               padding: EdgeInsets.all(16.0),
@@ -190,7 +189,8 @@ class ContactListView extends NavViewStateful<ContactController> {
                           : const Offstage(),
                       Column(
                         children: [
-                          controller.isPageLoading.value
+                          controller.isPageLoading.value &&
+                                  controller.usersList.isEmpty
                               ? Expanded(child: Container())
                               : Expanded(
                                   child: ListView.builder(
@@ -259,11 +259,11 @@ class ContactListView extends NavViewStateful<ContactController> {
                                                 MainAxisAlignment.center,
                                             // crossAxisAlignment: CrossAxisAlignment.end,
                                             children: [
-                                              SvgPicture.asset(
-                                                arg.callType == CallType.audio
+                                              AppUtils.svgIcon(
+                                                icon: arg.callType ==
+                                                        CallType.audio
                                                     ? audioCallSmallIcon
                                                     : videoCallSmallIcon,
-                                                package: package,
                                                 colorFilter: ColorFilter.mode(
                                                     AppStyleConfig
                                                         .contactListPageStyle
