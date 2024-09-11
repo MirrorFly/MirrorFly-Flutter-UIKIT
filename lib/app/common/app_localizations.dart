@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import '../extensions/extensions.dart';
 
-
 class AppLocalizations {
-
   Locale locale = defaultLocale;
   static Map<String, dynamic> _localizedStrings = {};
 
@@ -18,15 +16,14 @@ class AppLocalizations {
 
   Future<bool> load() async {
     try {
-      String jsonString = await rootBundle.loadString(
-          'assets/locales/${locale.languageCode}.json');
+      String jsonString = await rootBundle
+          .loadString('assets/locales/${locale.languageCode}.json');
       Map<String, dynamic> jsonMap = json.decode(jsonString);
       debugPrint("language load success ${locale.languageCode}");
       _localizedStrings = jsonMap;
-    }catch(e){
+    } catch (e) {
       debugPrint("language load failed so default en is loaded $e}");
-      String jsonString = await rootBundle.loadString(
-          'assets/locales/en.json');
+      String jsonString = await rootBundle.loadString('assets/locales/en.json');
       Map<String, dynamic> jsonMap = json.decode(jsonString);
 
       _localizedStrings = jsonMap;
@@ -36,11 +33,13 @@ class AppLocalizations {
   }
 
   static String? translate(String key) {
-    return _localizedStrings.containsKey(key) ?  _localizedStrings[key] : null;
+    return _localizedStrings.containsKey(key) ? _localizedStrings[key] : null;
   }
 
   static dynamic translateList(String key) {
-    return _localizedStrings.containsKey(key) ?  List<String>.from(_localizedStrings[key] ?? '') : [];
+    return _localizedStrings.containsKey(key)
+        ? List<String>.from(_localizedStrings[key] ?? '')
+        : [];
   }
 
   // Default language
@@ -58,7 +57,7 @@ class AppLocalizations {
     const Locale('en', 'IN'),
   ];
 
-  static void addSupportedLocales(Locale locale){
+  static void addSupportedLocales(Locale locale) {
     supportedLocales.add(locale);
   }
   // Helper method to get the language from locale
@@ -87,10 +86,12 @@ class AppLocalizations {
   //   return translations;
   // }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate = _DemoLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _DemoLocalizationsDelegate();
 }
 
-class _DemoLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+class _DemoLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
   const _DemoLocalizationsDelegate();
 
   @override
@@ -99,12 +100,13 @@ class _DemoLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations>
     // AppConstants.languages.forEach((language) {
     //   _languageString.add(language.languageCode.checkNull());
     // });
-    return AppLocalizations.supportedLocales.contains(locale);//_languageString.contains(locale.languageCode);
+    return AppLocalizations.supportedLocales
+        .contains(locale); //_languageString.contains(locale.languageCode);
   }
 
   @override
   Future<AppLocalizations> load(Locale locale) async {
-    AppLocalizations localization =  AppLocalizations(locale);
+    AppLocalizations localization = AppLocalizations(locale);
     await localization.load();
     return localization;
   }

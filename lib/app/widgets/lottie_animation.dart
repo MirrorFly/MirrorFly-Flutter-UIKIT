@@ -3,7 +3,13 @@ import 'package:lottie/lottie.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 
 class LottieAnimation extends StatefulWidget {
-  const LottieAnimation({Key? key, required this.lottieJson, required this.showRepeat, required this.width, required this.height}) : super(key: key);
+  const LottieAnimation(
+      {Key? key,
+      required this.lottieJson,
+      required this.showRepeat,
+      required this.width,
+      required this.height})
+      : super(key: key);
 
   final String lottieJson;
   final bool showRepeat;

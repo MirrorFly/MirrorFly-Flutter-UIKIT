@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../extensions/extensions.dart';
 import '../../../stylesheet/stylesheet.dart';
-import 'package:mirrorfly_plugin/mirrorfly.dart' hide ChatMessageModel, ContactChatMessage;
+import 'package:mirrorfly_plugin/mirrorfly.dart'
+    hide ChatMessageModel, ContactChatMessage;
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../common/app_localizations.dart';
@@ -17,12 +18,13 @@ import '../../dashboard/widgets.dart';
 import 'chat_widgets.dart';
 
 class ContactMessageView extends StatelessWidget {
-  const ContactMessageView({Key? key,
-    required this.chatMessage,
-    this.search = "",
-    required this.isSelected,
-  this.contactMessageViewStyle = const ContactMessageViewStyle(),
-  this.decoration = const BoxDecoration()})
+  const ContactMessageView(
+      {Key? key,
+      required this.chatMessage,
+      this.search = "",
+      required this.isSelected,
+      this.contactMessageViewStyle = const ContactMessageViewStyle(),
+      this.decoration = const BoxDecoration()})
       : super(key: key);
   final ChatMessageModel chatMessage;
   final String search;
@@ -41,10 +43,10 @@ class ContactMessageView extends StatelessWidget {
             padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
             child: Row(
               children: [
-                AppUtils.assetIcon(assetName:
-                  profileImage,
-                  width: contactMessageViewStyle.profileImageSize.width,//35,
-                  height: contactMessageViewStyle.profileImageSize.height,//35
+                AppUtils.assetIcon(
+                  assetName: profileImage,
+                  width: contactMessageViewStyle.profileImageSize.width, //35,
+                  height: contactMessageViewStyle.profileImageSize.height, //35
                 ),
                 const SizedBox(
                   width: 12,
@@ -52,21 +54,29 @@ class ContactMessageView extends StatelessWidget {
                 Expanded(
                     child: search.isEmpty
                         ? textMessageSpannableText(
-                        chatMessage.contactChatMessage!.contactName
-                            .checkNull(),contactMessageViewStyle.textMessageViewStyle.textStyle,contactMessageViewStyle.textMessageViewStyle.urlMessageColor,
-                        maxLines: 2)
+                            chatMessage.contactChatMessage!.contactName
+                                .checkNull(),
+                            contactMessageViewStyle
+                                .textMessageViewStyle.textStyle,
+                            contactMessageViewStyle
+                                .textMessageViewStyle.urlMessageColor,
+                            maxLines: 2)
                         : chatSpannedText(
-                        chatMessage.contactChatMessage!.contactName,
-                        search,
-                        contactMessageViewStyle.textMessageViewStyle.textStyle,//const TextStyle(fontSize: 14, color: textHintColor),
-                        maxLines: 2,
-                        spanColor: contactMessageViewStyle.textMessageViewStyle.highlightColor,
-                    urlColor: contactMessageViewStyle.textMessageViewStyle.urlMessageColor) /*,Text(
+                            chatMessage.contactChatMessage!.contactName,
+                            search,
+                            contactMessageViewStyle.textMessageViewStyle
+                                .textStyle, //const TextStyle(fontSize: 14, color: textHintColor),
+                            maxLines: 2,
+                            spanColor: contactMessageViewStyle
+                                .textMessageViewStyle.highlightColor,
+                            urlColor: contactMessageViewStyle
+                                .textMessageViewStyle
+                                .urlMessageColor) /*,Text(
                   chatMessage.contactChatMessage!.contactName,
                   maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                 )*/
-                ),
+                    ),
               ],
             ),
           ),
@@ -76,7 +86,7 @@ class ContactMessageView extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 chatMessage.isMessageStarred.value
-                    ? AppUtils.svgIcon(icon:starSmallIcon)
+                    ? AppUtils.svgIcon(icon: starSmallIcon)
                     : const Offstage(),
                 const SizedBox(
                   width: 5,
@@ -91,7 +101,8 @@ class ContactMessageView extends StatelessWidget {
                 ),
                 Text(
                   getChatTime(context, chatMessage.messageSentTime.toInt()),
-                  style: contactMessageViewStyle.textMessageViewStyle.timeTextStyle,
+                  style: contactMessageViewStyle
+                      .textMessageViewStyle.timeTextStyle,
                   /*style: TextStyle(
                       fontSize: 11,
                       color: chatMessage.isMessageSentByMe
@@ -104,8 +115,11 @@ class ContactMessageView extends StatelessWidget {
               ],
             ),
           ),
-          AppDivider(color: contactMessageViewStyle.dividerColor,),
-          getJidOfContact(chatMessage.contactChatMessage,contactMessageViewStyle.viewTextStyle),
+          AppDivider(
+            color: contactMessageViewStyle.dividerColor,
+          ),
+          getJidOfContact(chatMessage.contactChatMessage,
+              contactMessageViewStyle.viewTextStyle),
         ],
       ),
     );
@@ -116,14 +130,17 @@ class ContactMessageView extends StatelessWidget {
       debugPrint(
           "contactChatMessage.isChatAppUser[i]--> ${contactChatMessage.isChatAppUser[i]}");
       if (contactChatMessage.isChatAppUser[i]) {
-        return await Mirrorfly.getJidFromPhoneNumber(mobileNumber: contactChatMessage.contactPhoneNumbers[i],
-            countryCode: (SessionManagement.getCountryCode() ?? "").replaceAll('+', ''));
+        return await Mirrorfly.getJidFromPhoneNumber(
+            mobileNumber: contactChatMessage.contactPhoneNumbers[i],
+            countryCode:
+                (SessionManagement.getCountryCode() ?? "").replaceAll('+', ''));
       }
     }
     return '';
   }
 
-  Widget getJidOfContact(ContactChatMessage? contactChatMessage,TextStyle? textStyle) {
+  Widget getJidOfContact(
+      ContactChatMessage? contactChatMessage, TextStyle? textStyle) {
     // String? userJid;
     if (contactChatMessage == null ||
         contactChatMessage.contactPhoneNumbers.isEmpty) {
@@ -149,11 +166,11 @@ class ContactMessageView extends StatelessWidget {
                 Expanded(
                     child: Center(
                         child: Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: (userJid != null && userJid.isNotEmpty)
-                              ? Text(getTranslated("message"))
-                              : Text(getTranslated("invite")),
-                        ))),
+                  padding: const EdgeInsets.all(5.0),
+                  child: (userJid != null && userJid.isNotEmpty)
+                      ? Text(getTranslated("message"))
+                      : Text(getTranslated("invite")),
+                ))),
               ],
             ),
           );
@@ -187,9 +204,11 @@ class ContactMessageView extends StatelessWidget {
       ListTile(
         contentPadding: const EdgeInsets.only(left: 10),
         title: Text(getTranslated("copyLink"),
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
+            style:
+                const TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
         onTap: () {
-          Clipboard.setData(ClipboardData(text: getTranslated("applicationLink")));
+          Clipboard.setData(
+              ClipboardData(text: getTranslated("applicationLink")));
           NavUtils.back();
           toToast(getTranslated("linkCopied"));
         },
@@ -197,7 +216,8 @@ class ContactMessageView extends StatelessWidget {
       ListTile(
         contentPadding: const EdgeInsets.only(left: 10),
         title: Text(getTranslated("sendSMS"),
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
+            style:
+                const TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
         onTap: () {
           NavUtils.back();
           sendSMS(contactChatMessage.contactPhoneNumbers[0]);
@@ -207,7 +227,8 @@ class ContactMessageView extends StatelessWidget {
   }
 
   void sendSMS(String contactPhoneNumber) async {
-    Uri sms = Uri.parse('sms:$contactPhoneNumber?body=${getTranslated("smsContent")}');
+    Uri sms = Uri.parse(
+        'sms:$contactPhoneNumber?body=${getTranslated("smsContent")}');
     if (await launchUrl(sms)) {
       //app opened
     } else {
@@ -218,7 +239,7 @@ class ContactMessageView extends StatelessWidget {
   String? encodeQueryParameters(Map<String, String> params) {
     return params.entries
         .map((e) =>
-    '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+            '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
         .join('&');
   }
 }

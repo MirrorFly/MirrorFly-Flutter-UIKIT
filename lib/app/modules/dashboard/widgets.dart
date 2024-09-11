@@ -19,8 +19,11 @@ Widget searchHeader(String? type, String count, BuildContext context) {
     width: NavUtils.size.width,
     padding: const EdgeInsets.all(8),
     color: dividerColor,
-    child: Text.rich(
-        TextSpan(text: type, children: [TextSpan(text: count.isNotEmpty ? " ($count)" : "", style: const TextStyle(fontWeight: FontWeight.bold))])),
+    child: Text.rich(TextSpan(text: type, children: [
+      TextSpan(
+          text: count.isNotEmpty ? " ($count)" : "",
+          style: const TextStyle(fontWeight: FontWeight.bold))
+    ])),
   );
 }
 
@@ -55,8 +58,13 @@ class RecentChatItem extends StatelessWidget {
   final bool isSelected;
   final String typingUserid;
 
-  final titleStyle = const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700, fontFamily: 'sf_ui');
-  final typingStyle = const TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, fontFamily: 'sf_ui', color: buttonBgColor);
+  final titleStyle = const TextStyle(
+      fontSize: 16.0, fontWeight: FontWeight.w700, fontFamily: 'sf_ui');
+  final typingStyle = const TextStyle(
+      fontSize: 14.0,
+      fontWeight: FontWeight.w600,
+      fontFamily: 'sf_ui',
+      color: buttonBgColor);
   final bool archiveEnabled;
   final RecentChatItemStyle recentChatItemStyle;
 
@@ -64,8 +72,8 @@ class RecentChatItem extends StatelessWidget {
   Widget build(BuildContext context) {
     LogMessage.d("RecentChatItem", "build ${item.jid}");
     return InkWell(
-      onLongPress: ()=> onLongPress != null ?  onLongPress!(item) : null,
-      onTap: ()=>onTap(item),
+      onLongPress: () => onLongPress != null ? onLongPress!(item) : null,
+      onTap: () => onTap(item),
       child: Container(
         key: ValueKey(item.jid),
         color: isSelected ? Colors.black12 : Colors.transparent,
@@ -80,7 +88,10 @@ class RecentChatItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      children: [buildRecentChatMessageDetails(), buildRecentChatActions(context)],
+                      children: [
+                        buildRecentChatMessageDetails(),
+                        buildRecentChatActions(context)
+                      ],
                     ),
                     AppDivider(
                       padding: const EdgeInsets.only(top: 8),
@@ -97,7 +108,8 @@ class RecentChatItem extends StatelessWidget {
   }
 
   Expanded buildRecentChatMessageDetails() {
-    LogMessage.d("RecentChatItem", " buildRecentChatMessageDetails build ${item.jid}");
+    LogMessage.d(
+        "RecentChatItem", " buildRecentChatMessageDetails build ${item.jid}");
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,11 +125,17 @@ class RecentChatItem extends StatelessWidget {
                   getRecentName(item),
                   //item.profileName.checkNull(),
                   spanTxt,
-                  recentChatItemStyle.titleTextStyle,recentChatItemStyle.spanTextColor),
+                  recentChatItemStyle.titleTextStyle,
+                  recentChatItemStyle.spanTextColor),
           Row(
             children: [
-              item.isLastMessageSentByMe.checkNull() && !isForwardMessage && !item.isLastMessageRecalledByUser.checkNull()
-                  ? (item.lastMessageType == MessageType.isText && item.lastMessageContent.checkNull().isNotEmpty ||
+              item.isLastMessageSentByMe.checkNull() &&
+                      !isForwardMessage &&
+                      !item.isLastMessageRecalledByUser.checkNull()
+                  ? (item.lastMessageType == MessageType.isText &&
+                                  item.lastMessageContent
+                                      .checkNull()
+                                      .isNotEmpty ||
                               item.lastMessageType != MessageType.isText) &&
                           typingUserid.isEmpty
                       ? buildMessageIndicator()
@@ -159,7 +177,11 @@ class RecentChatItem extends StatelessWidget {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [buildPinIconVisibility(), buildMuteIconVisibility(), buildArchivedTextVisibility()],
+            children: [
+              buildPinIconVisibility(),
+              buildMuteIconVisibility(),
+              buildArchivedTextVisibility()
+            ],
           )
         ],
       ),
@@ -172,7 +194,10 @@ class RecentChatItem extends StatelessWidget {
       child: Text(
         DateTimeUtils.getRecentChatTime(context, item.lastMessageTime),
         textAlign: TextAlign.end,
-        style: returnFormattedCount(item.unreadMessageCount!) != "0" ? recentChatItemStyle.timeTextStyle.copyWith(color: recentChatItemStyle.unreadColor) : recentChatItemStyle.timeTextStyle
+        style: returnFormattedCount(item.unreadMessageCount!) != "0"
+            ? recentChatItemStyle.timeTextStyle
+                .copyWith(color: recentChatItemStyle.unreadColor)
+            : recentChatItemStyle.timeTextStyle
         /* TextStyle(
             fontSize: 12.0,
             fontWeight: FontWeight.w600,
@@ -180,7 +205,8 @@ class RecentChatItem extends StatelessWidget {
             color: returnFormattedCount(item.unreadMessageCount!) != "0"
                 //item.isConversationUnRead!
                 ? buttonBgColor
-                : textColor)*/,
+                : textColor)*/
+        ,
       ),
     );
   }
@@ -189,21 +215,30 @@ class RecentChatItem extends StatelessWidget {
     debugPrint("buildMessageIndicator ${item.nickName}");
     return Padding(
       padding: const EdgeInsets.only(right: 8.0),
-      child: MessageUtils.getMessageIndicatorIcon(item.lastMessageStatus.checkNull(), item.isLastMessageSentByMe.checkNull(), item.lastMessageType.checkNull(),
+      child: MessageUtils.getMessageIndicatorIcon(
+          item.lastMessageStatus.checkNull(),
+          item.isLastMessageSentByMe.checkNull(),
+          item.lastMessageType.checkNull(),
           item.isLastMessageRecalledByUser.checkNull()),
     );
   }
 
   InkWell buildProfileImage(RecentChatItemStyle recentChatItemStyle) {
     return InkWell(
-      onTap: ()=> onAvatarClick != null ? onAvatarClick!(item) : null,
+      onTap: () => onAvatarClick != null ? onAvatarClick!(item) : null,
       child: Container(
-          margin: const EdgeInsets.only(left: 19.0, top: 10, bottom: 10, right: 10),
+          margin:
+              const EdgeInsets.only(left: 19.0, top: 10, bottom: 10, right: 10),
           child: Stack(
             children: [
               buildProfileImageView(recentChatItemStyle.profileImageSize),
-              item.isConversationUnRead! ? buildConvReadIcon(recentChatItemStyle.unreadCountTextStyle,recentChatItemStyle.unreadCountBgColor) : const Offstage(),
-              item.isEmailContact().checkNull() ? buildEmailIcon() : const Offstage(),
+              item.isConversationUnRead!
+                  ? buildConvReadIcon(recentChatItemStyle.unreadCountTextStyle,
+                      recentChatItemStyle.unreadCountBgColor)
+                  : const Offstage(),
+              item.isEmailContact().checkNull()
+                  ? buildEmailIcon()
+                  : const Offstage(),
             ],
           )),
     );
@@ -217,15 +252,15 @@ class RecentChatItem extends StatelessWidget {
       clipOval: true,
       errorWidget: item.isGroup!
           ? ClipOval(
-              child: AppUtils.assetIcon(assetName:
-                groupImg,
+              child: AppUtils.assetIcon(
+                assetName: groupImg,
                 height: profileImageSize.width,
                 width: profileImageSize.height,
                 fit: BoxFit.cover,
               ),
             )
           : ProfileTextImage(
-        radius: profileImageSize.width/2,
+              radius: profileImageSize.width / 2,
               text: getRecentName(
                   item), /* item.profileName.checkNull().isEmpty
                               ? item.nickName.checkNull()
@@ -237,14 +272,16 @@ class RecentChatItem extends StatelessWidget {
     );
   }
 
-  Positioned buildConvReadIcon(TextStyle textStyle,Color bgColor) {
+  Positioned buildConvReadIcon(TextStyle textStyle, Color bgColor) {
     return Positioned(
         right: 0,
         child: CircleAvatar(
           backgroundColor: bgColor,
           radius: 9,
           child: Text(
-            returnFormattedCount(item.unreadMessageCount!) != "0" ? returnFormattedCount(item.unreadMessageCount!) : "",
+            returnFormattedCount(item.unreadMessageCount!) != "0"
+                ? returnFormattedCount(item.unreadMessageCount!)
+                : "",
             style: textStyle,
             // style: const TextStyle(fontSize: 8, color: Colors.white, fontFamily: 'sf_ui'),
           ),
@@ -252,7 +289,8 @@ class RecentChatItem extends StatelessWidget {
   }
 
   Positioned buildEmailIcon() {
-    return Positioned(right: 0, bottom: 0, child: AppUtils.svgIcon(icon:emailContactIcon));
+    return Positioned(
+        right: 0, bottom: 0, child: AppUtils.svgIcon(icon: emailContactIcon));
   }
 
   Visibility buildArchivedTextVisibility() {
@@ -260,7 +298,9 @@ class RecentChatItem extends StatelessWidget {
         visible: item.isChatArchived! && archiveVisible && !isForwardMessage,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 2.0),
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(4.0), border: Border.all(color: buttonBgColor, width: 0.8)),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4.0),
+              border: Border.all(color: buttonBgColor, width: 0.8)),
           child: Text(
             getTranslated("archived"),
             style: const TextStyle(color: buttonBgColor),
@@ -276,8 +316,8 @@ class RecentChatItem extends StatelessWidget {
   Visibility buildMuteIconVisibility() {
     return Visibility(
         visible: !archiveEnabled && item.isMuted! && !isForwardMessage,
-        child: AppUtils.svgIcon(icon:
-          mute,
+        child: AppUtils.svgIcon(
+          icon: mute,
           width: 13,
           height: 13,
         ));
@@ -285,9 +325,10 @@ class RecentChatItem extends StatelessWidget {
 
   Visibility buildPinIconVisibility() {
     return Visibility(
-        visible: !item.isChatArchived! && item.isChatPinned! && !isForwardMessage,
-        child: AppUtils.svgIcon(icon:
-          pin,
+        visible:
+            !item.isChatArchived! && item.isChatPinned! && !isForwardMessage,
+        child: AppUtils.svgIcon(
+          icon: pin,
           width: 18,
           height: 18,
         ));
@@ -329,8 +370,12 @@ class RecentChatItem extends StatelessWidget {
   checkSenderShouldShow(ChatMessageModel chat) {
     if (item.isGroup.checkNull()) {
       if (!chat.isMessageSentByMe.checkNull()) {
-        return (chat.messageType != Constants.mNotification || chat.messageTextContent == " added you") ||
-            (MessageUtils.forMessageTypeString(chat.messageType, content: chat.messageTextContent.checkNull()).checkNull().isNotEmpty);
+        return (chat.messageType != Constants.mNotification ||
+                chat.messageTextContent == " added you") ||
+            (MessageUtils.forMessageTypeString(chat.messageType,
+                    content: chat.messageTextContent.checkNull())
+                .checkNull()
+                .isNotEmpty);
       }
     }
     return false;
@@ -351,39 +396,57 @@ class RecentChatItem extends StatelessWidget {
                     ? Flexible(
                         child: Text(
                           "${chat.senderUserName.checkNull()}:",
-                          style: recentChatItemStyle.subtitleTextStyle,//Theme.of(context).textTheme.titleSmall,
+                          style: recentChatItemStyle
+                              .subtitleTextStyle, //Theme.of(context).textTheme.titleSmall,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       )
                     : const SizedBox.shrink(),
-                chat.isMessageRecalled.value ? const SizedBox.shrink() : MessageUtils.forMessageTypeIcon(chat.messageType, chat.mediaChatMessage),
+                chat.isMessageRecalled.value
+                    ? const SizedBox.shrink()
+                    : MessageUtils.forMessageTypeIcon(
+                        chat.messageType, chat.mediaChatMessage),
                 SizedBox(
                   width: chat.isMessageRecalled.value
                       ? 0.0
-                      : MessageUtils.forMessageTypeString(chat.messageType, content: chat.messageTextContent.checkNull()) != null
+                      : MessageUtils.forMessageTypeString(chat.messageType,
+                                  content:
+                                      chat.messageTextContent.checkNull()) !=
+                              null
                           ? 3.0
                           : 0.0,
                 ),
                 Expanded(
-                  child: spanTxt.isEmpty
-                      ? Text(
-                          chat.isMessageRecalled.value
-                              ? setRecalledMessageText(chat.isMessageSentByMe)
-                              : MessageUtils.forMessageTypeString(chat.messageType, content: chat.mediaChatMessage?.mediaCaptionText.checkNull()) ??
-                                  chat.messageTextContent.checkNull(),
-                          style: recentChatItemStyle.subtitleTextStyle,//Theme.of(context).textTheme.titleSmall,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        )
-                      : spannableText(
-                          chat.isMessageRecalled.value
-                              ? setRecalledMessageText(chat.isMessageSentByMe)
-                              : MessageUtils.forMessageTypeString(chat.messageType.checkNull(), content: chat.mediaChatMessage?.mediaCaptionText.checkNull()) ??
-                                  chat.messageTextContent.checkNull(),
-                          spanTxt,
-                      recentChatItemStyle.subtitleTextStyle,recentChatItemStyle.spanTextColor)//Theme.of(context).textTheme.titleSmall),
-                ),
+                    child: spanTxt.isEmpty
+                        ? Text(
+                            chat.isMessageRecalled.value
+                                ? setRecalledMessageText(chat.isMessageSentByMe)
+                                : MessageUtils.forMessageTypeString(
+                                        chat.messageType,
+                                        content: chat
+                                            .mediaChatMessage?.mediaCaptionText
+                                            .checkNull()) ??
+                                    chat.messageTextContent.checkNull(),
+                            style: recentChatItemStyle
+                                .subtitleTextStyle, //Theme.of(context).textTheme.titleSmall,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          )
+                        : spannableText(
+                            chat.isMessageRecalled.value
+                                ? setRecalledMessageText(chat.isMessageSentByMe)
+                                : MessageUtils.forMessageTypeString(
+                                        chat.messageType.checkNull(),
+                                        content: chat
+                                            .mediaChatMessage?.mediaCaptionText
+                                            .checkNull()) ??
+                                    chat.messageTextContent.checkNull(),
+                            spanTxt,
+                            recentChatItemStyle.subtitleTextStyle,
+                            recentChatItemStyle
+                                .spanTextColor) //Theme.of(context).textTheme.titleSmall),
+                    ),
               ],
             );
           }
@@ -399,7 +462,10 @@ class RecentChatItem extends StatelessWidget {
             future: getProfileDetails(item.jid!),
             builder: (context, profileData) {
               if (profileData.hasData) {
-                return Text(profileData.data?.status ?? "",style: recentChatItemStyle.subtitleTextStyle,);
+                return Text(
+                  profileData.data?.status ?? "",
+                  style: recentChatItemStyle.subtitleTextStyle,
+                );
               }
               return const Text("");
             }));
@@ -433,7 +499,8 @@ class RecentChatItem extends StatelessWidget {
             var str = <String>[];
             var groupsMembersProfileList = memberFromJson(response.data);
             for (var it in groupsMembersProfileList) {
-              if (it.jid.checkNull() != SessionManagement.getUserJID().checkNull()) {
+              if (it.jid.checkNull() !=
+                  SessionManagement.getUserJID().checkNull()) {
                 str.add(it.name.checkNull());
               }
             }
@@ -445,12 +512,20 @@ class RecentChatItem extends StatelessWidget {
   }
 
   String setRecalledMessageText(bool isFromSender) {
-    return (isFromSender) ? getTranslated("youDeletedThisMessage") : getTranslated("thisMessageWasDeleted");
+    return (isFromSender)
+        ? getTranslated("youDeletedThisMessage")
+        : getTranslated("thisMessageWasDeleted");
   }
 }
 
 class RecentChatMessageItem extends StatelessWidget {
-  const RecentChatMessageItem({super.key, required this.profile, required this.item,required this.onTap,this.searchTxt = "", this.recentChatItemStyle = const RecentChatItemStyle()});
+  const RecentChatMessageItem(
+      {super.key,
+      required this.profile,
+      required this.item,
+      required this.onTap,
+      this.searchTxt = "",
+      this.recentChatItemStyle = const RecentChatItemStyle()});
   final ProfileDetails profile;
   final ChatMessageModel item;
   final RecentChatItemStyle recentChatItemStyle;
@@ -461,11 +536,12 @@ class RecentChatMessageItem extends StatelessWidget {
   Widget build(BuildContext context) {
     var unreadMessageCount = "0";
     return InkWell(
-      onTap:()=>onTap,
+      onTap: () => onTap,
       child: Row(
         children: [
           Container(
-              margin: const EdgeInsets.only(left: 19.0, top: 10, bottom: 10, right: 10),
+              margin: const EdgeInsets.only(
+                  left: 19.0, top: 10, bottom: 10, right: 10),
               child: Stack(
                 children: [
                   ImageNetwork(
@@ -475,24 +551,27 @@ class RecentChatMessageItem extends StatelessWidget {
                     clipOval: true,
                     errorWidget: ProfileTextImage(
                       text: profile.getName(),
-                      radius: recentChatItemStyle.profileImageSize.width/2,
+                      radius: recentChatItemStyle.profileImageSize.width / 2,
                     ),
                     isGroup: profile.isGroupProfile.checkNull(),
-                    blocked: profile.isBlockedMe.checkNull() || profile.isAdminBlocked.checkNull(),
-                    unknown: (!profile.isItSavedContact.checkNull() || profile.isDeletedContact()),
+                    blocked: profile.isBlockedMe.checkNull() ||
+                        profile.isAdminBlocked.checkNull(),
+                    unknown: (!profile.isItSavedContact.checkNull() ||
+                        profile.isDeletedContact()),
                   ),
                   unreadMessageCount.toString() != "0"
                       ? Positioned(
-                      right: 0,
-                      child: CircleAvatar(
-                        radius: 9,
-                        backgroundColor: recentChatItemStyle.unreadCountBgColor,
-                        child: Text(
-                          unreadMessageCount.toString(),
-                          style: recentChatItemStyle.unreadCountTextStyle,
-                          // style: const TextStyle(fontSize: 9, color: Colors.white, fontFamily: 'sf_ui'),
-                        ),
-                      ))
+                          right: 0,
+                          child: CircleAvatar(
+                            radius: 9,
+                            backgroundColor:
+                                recentChatItemStyle.unreadCountBgColor,
+                            child: Text(
+                              unreadMessageCount.toString(),
+                              style: recentChatItemStyle.unreadCountTextStyle,
+                              // style: const TextStyle(fontSize: 9, color: Colors.white, fontFamily: 'sf_ui'),
+                            ),
+                          ))
                       : const Offstage(),
                 ],
               )),
@@ -504,7 +583,8 @@ class RecentChatMessageItem extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: Text(profile.getName(), //profile.name.toString(),
+                      child: Text(
+                        profile.getName(), //profile.name.toString(),
                         style: recentChatItemStyle.titleTextStyle,
                         // style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700, fontFamily: 'sf_ui', color: textHintColor),
                       ),
@@ -512,15 +592,19 @@ class RecentChatMessageItem extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(right: 16.0, left: 8),
                       child: Text(
-                        DateTimeUtils.getRecentChatTime(context, item.messageSentTime.toInt()),
-                        textAlign: TextAlign.end,
-                          style: unreadMessageCount != "0" ? recentChatItemStyle.timeTextStyle.copyWith(color: recentChatItemStyle.unreadColor) : recentChatItemStyle.timeTextStyle
-                        /*style: TextStyle(
+                          DateTimeUtils.getRecentChatTime(
+                              context, item.messageSentTime.toInt()),
+                          textAlign: TextAlign.end,
+                          style: unreadMessageCount != "0"
+                              ? recentChatItemStyle.timeTextStyle.copyWith(
+                                  color: recentChatItemStyle.unreadColor)
+                              : recentChatItemStyle.timeTextStyle
+                          /*style: TextStyle(
                             fontSize: 12.0,
                             fontWeight: FontWeight.w600,
                             fontFamily: 'sf_ui',
                             color: unreadMessageCount.toString() != "0" ? buttonBgColor : textColor),*/
-                      ),
+                          ),
                     ),
                   ],
                 ),
@@ -528,56 +612,73 @@ class RecentChatMessageItem extends StatelessWidget {
                   children: [
                     unreadMessageCount.toString() != "0"
                         ? const Padding(
-                      padding: EdgeInsets.only(right: 8.0),
-                      child: CircleAvatar(
-                        radius: 4,
-                        backgroundColor: Colors.green,
-                      ),
-                    )
+                            padding: EdgeInsets.only(right: 8.0),
+                            child: CircleAvatar(
+                              radius: 4,
+                              backgroundColor: Colors.green,
+                            ),
+                          )
                         : const Offstage(),
                     Expanded(
                       child: Row(
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(right: 8.0),
-                            child: MessageUtils.getMessageIndicatorIcon(item.messageStatus.value.checkNull(), item.isMessageSentByMe.checkNull(),
-                                item.messageType.checkNull(), item.isMessageRecalled.value),
+                            child: MessageUtils.getMessageIndicatorIcon(
+                                item.messageStatus.value.checkNull(),
+                                item.isMessageSentByMe.checkNull(),
+                                item.messageType.checkNull(),
+                                item.isMessageRecalled.value),
                           ),
                           item.isMessageRecalled.value
                               ? const Offstage()
-                              : MessageUtils.forMessageTypeIcon(item.messageType, item.mediaChatMessage),
+                              : MessageUtils.forMessageTypeIcon(
+                                  item.messageType, item.mediaChatMessage),
                           SizedBox(
-                            width:
-                            MessageUtils.forMessageTypeString(item.messageType, content: item.mediaChatMessage?.mediaCaptionText.checkNull()) !=
-                                null
+                            width: MessageUtils.forMessageTypeString(
+                                        item.messageType,
+                                        content: item
+                                            .mediaChatMessage?.mediaCaptionText
+                                            .checkNull()) !=
+                                    null
                                 ? 3.0
                                 : 0.0,
                           ),
                           Expanded(
-                            child:
-                            MessageUtils.forMessageTypeString(item.messageType, content: item.mediaChatMessage?.mediaCaptionText.checkNull()) ==
-                                null
+                            child: MessageUtils.forMessageTypeString(
+                                        item.messageType,
+                                        content: item
+                                            .mediaChatMessage?.mediaCaptionText
+                                            .checkNull()) ==
+                                    null
                                 ? spannableText(
-                              item.messageTextContent.toString(),
-                              searchTxt,
-                              recentChatItemStyle.subtitleTextStyle,recentChatItemStyle.spanTextColor,
-                            )
+                                    item.messageTextContent.toString(),
+                                    searchTxt,
+                                    recentChatItemStyle.subtitleTextStyle,
+                                    recentChatItemStyle.spanTextColor,
+                                  )
                                 : Text(
-                              MessageUtils.forMessageTypeString(item.messageType,
-                                  content: item.mediaChatMessage?.mediaCaptionText.checkNull()) ??
-                                  item.messageTextContent.toString(),
-                              // style: Theme.of(context).textTheme.titleSmall,
-                              style: recentChatItemStyle.subtitleTextStyle,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                                    MessageUtils.forMessageTypeString(
+                                            item.messageType,
+                                            content: item.mediaChatMessage
+                                                ?.mediaCaptionText
+                                                .checkNull()) ??
+                                        item.messageTextContent.toString(),
+                                    // style: Theme.of(context).textTheme.titleSmall,
+                                    style:
+                                        recentChatItemStyle.subtitleTextStyle,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                           ),
                         ],
                       ),
                     ),
                   ],
                 ),
-                AppDivider(color: recentChatItemStyle.dividerColor,)
+                AppDivider(
+                  color: recentChatItemStyle.dividerColor,
+                )
               ],
             ),
           )
@@ -587,8 +688,8 @@ class RecentChatMessageItem extends StatelessWidget {
   }
 }
 
-
-Widget spannableText(String text, String spannableText, TextStyle? style,Color? spanTextColor) {
+Widget spannableText(
+    String text, String spannableText, TextStyle? style, Color? spanTextColor) {
   var startIndex = text.toLowerCase().indexOf(spannableText.toLowerCase());
   var endIndex = startIndex + spannableText.length;
   if (startIndex != -1 && endIndex != -1) {
@@ -601,13 +702,21 @@ Widget spannableText(String text, String spannableText, TextStyle? style,Color? 
     return Text.rich(
       TextSpan(
           text: startText,
-          children: [TextSpan(text: colorText, style: TextStyle(color: spanTextColor)/*const TextStyle(color: Colors.blue)*/), TextSpan(text: endText, style: style)],
+          children: [
+            TextSpan(
+                text: colorText,
+                style: TextStyle(
+                    color:
+                        spanTextColor) /*const TextStyle(color: Colors.blue)*/),
+            TextSpan(text: endText, style: style)
+          ],
           style: style),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
     );
   } else {
-    return Text(text, style: style, maxLines: 1, overflow: TextOverflow.ellipsis);
+    return Text(text,
+        style: style, maxLines: 1, overflow: TextOverflow.ellipsis);
   }
 }
 
@@ -642,10 +751,20 @@ bool isCountryCode(String text) {
   return false;
 }
 
-Widget textMessageSpannableText(String message, TextStyle? textStyle,Color urlColor,{int? maxLines,}) {
+Widget textMessageSpannableText(
+  String message,
+  TextStyle? textStyle,
+  Color urlColor, {
+  int? maxLines,
+}) {
   //final GlobalKey textKey = GlobalKey();
-  TextStyle? underlineStyle = textStyle?.copyWith(color: urlColor,decoration: TextDecoration.underline,decorationColor: urlColor);//const TextStyle(decoration: TextDecoration.underline, fontSize: 14, color: Colors.blueAccent);
-  TextStyle? normalStyle = textStyle;//const TextStyle(fontSize: 14, color: textHintColor);
+  TextStyle? underlineStyle = textStyle?.copyWith(
+      color: urlColor,
+      decoration: TextDecoration.underline,
+      decorationColor:
+          urlColor); //const TextStyle(decoration: TextDecoration.underline, fontSize: 14, color: Colors.blueAccent);
+  TextStyle? normalStyle =
+      textStyle; //const TextStyle(fontSize: 14, color: textHintColor);
   var prevValue = "";
   return Text.rich(
     customTextSpan(message, prevValue, normalStyle, underlineStyle),
@@ -654,7 +773,8 @@ Widget textMessageSpannableText(String message, TextStyle? textStyle,Color urlCo
   );
 }
 
-TextSpan customTextSpan(String message, String prevValue, TextStyle? normalStyle, TextStyle? underlineStyle) {
+TextSpan customTextSpan(String message, String prevValue,
+    TextStyle? normalStyle, TextStyle? underlineStyle) {
   return TextSpan(
     children: message.split(" ").map((e) {
       if (isCountryCode(e)) {
@@ -678,17 +798,17 @@ onTapForSpanText(String e) {
   var stringType = spannableTextType(e);
   debugPrint("Text span click");
   if (stringType == "website") {
-    if(e.startsWith(Constants.webChatLogin)){
-      AppUtils.isNetConnected().then((value){
-        if(value) {
+    if (e.startsWith(Constants.webChatLogin)) {
+      AppUtils.isNetConnected().then((value) {
+        if (value) {
           NavUtils.toNamed(Routes.joinCallPreview, arguments: {
             "callLinkId": e.replaceAll(Constants.webChatLogin, "")
           });
-        }else{
+        } else {
           toToast(getTranslated("noInternetConnection"));
         }
       });
-    }else {
+    } else {
       launchInBrowser(e);
     }
     // return;
@@ -706,19 +826,24 @@ onTapForSpanText(String e) {
   // return;
 }
 
-Widget callLogTime(String time, int? callState,TextStyle? textStyle) {
+Widget callLogTime(String time, int? callState, TextStyle? textStyle) {
   return Row(
     children: [
       callState == 0
-          ? AppUtils.svgIcon(icon: arrowDropDown,
+          ? AppUtils.svgIcon(
+              icon: arrowDropDown,
               colorFilter: const ColorFilter.mode(Colors.red, BlendMode.srcIn),
             )
           : callState == 1
-              ? AppUtils.svgIcon(icon: arrowUpIcon,
-                  colorFilter: const ColorFilter.mode(Colors.green, BlendMode.srcIn),
+              ? AppUtils.svgIcon(
+                  icon: arrowUpIcon,
+                  colorFilter:
+                      const ColorFilter.mode(Colors.green, BlendMode.srcIn),
                 )
-              : AppUtils.svgIcon(icon: arrowDownIcon,
-                  colorFilter: const ColorFilter.mode(Colors.green, BlendMode.srcIn),
+              : AppUtils.svgIcon(
+                  icon: arrowDownIcon,
+                  colorFilter:
+                      const ColorFilter.mode(Colors.green, BlendMode.srcIn),
                 ),
       const SizedBox(
         width: 5,
@@ -731,5 +856,3 @@ Widget callLogTime(String time, int? callState,TextStyle? textStyle) {
     ],
   );
 }
-
-

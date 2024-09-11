@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mirrorfly_plugin/mirrorflychat.dart';
@@ -44,40 +43,56 @@ class CallTimeoutController extends GetxController {
   callAgain() async {
     // NavUtils.offNamed(Routes.outGoingCallView, arguments: {"userJid": userJID.value});
     if (await AppUtils.isNetConnected()) {
-      if(callType.value == CallType.audio) {
+      if (callType.value == CallType.audio) {
         if (await AppPermission.askAudioCallPermissions()) {
-          if(users.length==1) {
-            Mirrorfly.makeVoiceCall(toUserJid: users.first!, flyCallBack: (FlyResponse response) {
-              NavUtils.offNamed(
-                  Routes.outGoingCallView, arguments: {"userJid": users});
-            });
-          }else{
+          if (users.length == 1) {
+            Mirrorfly.makeVoiceCall(
+                toUserJid: users.first!,
+                flyCallBack: (FlyResponse response) {
+                  NavUtils.offNamed(Routes.outGoingCallView,
+                      arguments: {"userJid": users});
+                });
+          } else {
             var usersList = <String>[];
-            for (var element in users) {if(element!=null) { usersList.add(element);}}
-            Mirrorfly.makeGroupVoiceCall(toUserJidList: usersList, flyCallBack: (FlyResponse response) {
-              NavUtils.offNamed(
-                  Routes.outGoingCallView, arguments: {"userJid": users});
-            });
+            for (var element in users) {
+              if (element != null) {
+                usersList.add(element);
+              }
+            }
+            Mirrorfly.makeGroupVoiceCall(
+                toUserJidList: usersList,
+                flyCallBack: (FlyResponse response) {
+                  NavUtils.offNamed(Routes.outGoingCallView,
+                      arguments: {"userJid": users});
+                });
           }
         } else {
           debugPrint("permission not given");
         }
-      }else{
+      } else {
         if (await AppPermission.askVideoCallPermissions()) {
-          if(users.length==1) {
-            Mirrorfly.makeVideoCall(toUserJid: users.first!, flyCallBack: (FlyResponse response) {
-              if (response.isSuccess) {
-                NavUtils.offNamed(
-                    Routes.outGoingCallView, arguments: {"userJid": users});
-              }
-            });
-          }else{
+          if (users.length == 1) {
+            Mirrorfly.makeVideoCall(
+                toUserJid: users.first!,
+                flyCallBack: (FlyResponse response) {
+                  if (response.isSuccess) {
+                    NavUtils.offNamed(Routes.outGoingCallView,
+                        arguments: {"userJid": users});
+                  }
+                });
+          } else {
             var usersList = <String>[];
-            for (var element in users) {if(element!=null) { usersList.add(element);}}
-            Mirrorfly.makeGroupVideoCall(toUserJidList: usersList, flyCallBack: (FlyResponse response) {
-              NavUtils.offNamed(
-                  Routes.outGoingCallView, arguments: {"userJid": users});
-            });
+            for (var element in users) {
+              if (element != null) {
+                usersList.add(element);
+              }
+            }
+            Mirrorfly.makeGroupVideoCall(
+                toUserJidList: usersList,
+                flyCallBack: (FlyResponse response) {
+                  NavUtils.offNamed(Routes.outGoingCallView,
+                      arguments: {"userJid": users});
+                });
           }
         } else {
           LogMessage.d("askVideoCallPermissions", "false");
@@ -88,9 +103,10 @@ class CallTimeoutController extends GetxController {
     }
   }
 
-  void userUpdatedHisProfile(String jid){
+  void userUpdatedHisProfile(String jid) {
     updateProfile(jid);
   }
+
   Future<void> updateProfile(String jid) async {
     if (jid.isNotEmpty) {
       var callListIndex = users.indexWhere((element) => element == jid);

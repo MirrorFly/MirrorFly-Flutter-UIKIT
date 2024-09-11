@@ -55,10 +55,10 @@ class MirrorflyUikit {
       bool enableDebugLog = true,
       bool chatHistoryEnable = true,
       bool enableMobileNumberLogin = false,
-        @Deprecated('Enabling local notifications will no longer work. '
-            'Instead, use Mirrorfly.showOrUpdateOrCancelNotification.listen((event) { }); '
-            'to listen for foreground notifications from MirrorFly Plugin.')
-        bool enableLocalNotification = true}) async {
+      @Deprecated('Enabling local notifications will no longer work. '
+          'Instead, use Mirrorfly.showOrUpdateOrCancelNotification.listen((event) { }); '
+          'to listen for foreground notifications from MirrorFly Plugin.')
+      bool enableLocalNotification = true}) async {
     Completer<Map<String, dynamic>> completer = Completer();
 
     this.enableLocalNotification = enableLocalNotification;
@@ -77,14 +77,15 @@ class MirrorflyUikit {
             LogMessage.d("initUIKIT onSuccess", response.message);
             isSDKInitialized = true;
             _initialiseUIKITDependencies();
-            completer
-                .complete(setResponse(true, 'SDK Initialized Successfully', response.message));
+            completer.complete(setResponse(
+                true, 'SDK Initialized Successfully', response.message));
           } else {
             isSDKInitialized = false;
             _initialiseUIKITDependencies();
             LogMessage.d(
                 "initUIKIT onFailure", response.errorMessage.toString());
-            completer.complete(setResponse(false, 'SDK Initialization Failed', response.errorMessage.toString()));
+            completer.complete(setResponse(false, 'SDK Initialization Failed',
+                response.errorMessage.toString()));
           }
         });
 
@@ -109,7 +110,8 @@ class MirrorflyUikit {
   Future<Map> registerUser(
       {required String userIdentifier, String fcmToken = ""}) async {
     if (!isSDKInitialized) {
-      return setResponse(false, 'SDK Not Initialized', 'Try Initialising UIKIT using await MirrorflyUikit.instance.initUIKIT()');
+      return setResponse(false, 'SDK Not Initialized',
+          'Try Initialising UIKIT using await MirrorflyUikit.instance.initUIKIT()');
     }
     if (await AppUtils.isNetConnected()) {
       var value = "";
@@ -130,14 +132,15 @@ class MirrorflyUikit {
           await _setUserJID(userData.data!.username!);
           return setResponse(true, 'Registration Success', '');
         } else {
-          return setResponse(false, 'Registration Failed', userData.message.toString());
+          return setResponse(
+              false, 'Registration Failed', userData.message.toString());
         }
       } catch (e) {
         return setResponse(false, 'Registration Success', '$e');
       }
     } else {
-      return Future.value(
-          setResponse(false, 'Connectivity Issue', 'Check your internet connection and try again'));
+      return Future.value(setResponse(false, 'Connectivity Issue',
+          'Check your internet connection and try again'));
     }
   }
 
@@ -159,7 +162,8 @@ class MirrorflyUikit {
   }) async {
     Completer<Map<String, dynamic>> completer = Completer();
     if (!isSDKInitialized) {
-      completer.complete(setResponse(false, 'SDK Not Initialized', 'Try Initialising UIKIT using await MirrorflyUikit.instance.initUIKIT()'));
+      completer.complete(setResponse(false, 'SDK Not Initialized',
+          'Try Initialising UIKIT using await MirrorflyUikit.instance.initUIKIT()'));
     }
     Mirrorfly.login(
         userIdentifier: userIdentifier.removeAllWhitespace,
@@ -180,22 +184,27 @@ class MirrorflyUikit {
                 await _setUserJID(userData.data!.username!);
                 completer.complete(setResponse(true, 'Login Success', ''));
               } else {
-                completer
-                    .complete(setResponse(false, 'Login Failed', userData.message.toString()));
+                completer.complete(setResponse(
+                    false, 'Login Failed', userData.message.toString()));
               }
             }
           } else {
             // debugPrint("issue===> ${response.errorMessage.toString()}");
             if (response.exception?.code == "403") {
               debugPrint("issue 403 ===> ${response.errorMessage}");
-              completer.complete(setResponse(false, 'Login Failed', response.errorMessage));
+              completer.complete(
+                  setResponse(false, 'Login Failed', response.errorMessage));
             } else if (response.exception?.code == "405") {
               debugPrint("issue 405 ===> ${response.errorMessage}");
-              completer.complete(setResponse(false, 'Login failed. Try using `isForceRegister` with a value of `true`', response.errorMessage));
+              completer.complete(setResponse(
+                  false,
+                  'Login failed. Try using `isForceRegister` with a value of `true`',
+                  response.errorMessage));
             } else {
               // debugPrint("issue else code ===> ${response.exception?.code}");
               debugPrint("issue ===> ${response.errorMessage}");
-              completer.complete(setResponse(false, 'Login Failed', response.errorMessage));
+              completer.complete(
+                  setResponse(false, 'Login Failed', response.errorMessage));
             }
           }
         });
@@ -233,7 +242,8 @@ class MirrorflyUikit {
     return await Mirrorfly.isOnGoingCall();
   }
 
-  Map<String, dynamic> setResponse(bool status, String message, String? details) {
+  Map<String, dynamic> setResponse(
+      bool status, String message, String? details) {
     return {'status': status, 'message': message, 'details': details};
   }
 

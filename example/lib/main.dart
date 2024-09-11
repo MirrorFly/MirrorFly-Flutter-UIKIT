@@ -125,8 +125,8 @@ class _DashboardState extends State<Dashboard> {
                         onPressed: () async {
                           if (uniqueId.isNotEmpty) {
                             try {
-                              var response = await MirrorflyUikit.instance.login(
-                                  userIdentifier: uniqueId);
+                              var response = await MirrorflyUikit.instance
+                                  .login(userIdentifier: uniqueId);
                               debugPrint("register user $response");
                               showSnack(response['message']);
                             } catch (e) {

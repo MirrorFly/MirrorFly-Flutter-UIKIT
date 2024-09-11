@@ -11,8 +11,8 @@ import 'package:mirrorfly_plugin/mirrorfly.dart';
 
 import '../../common/app_localizations.dart';
 
-class JoinCallController extends FullLifeCycleController with FullLifeCycleMixin, CallLinkEventListeners {
-
+class JoinCallController extends FullLifeCycleController
+    with FullLifeCycleMixin, CallLinkEventListeners {
   final _users = <String>[].obs;
   get users => _users;
 
@@ -28,7 +28,7 @@ class JoinCallController extends FullLifeCycleController with FullLifeCycleMixin
   var displayStatus = getTranslated("connectingPleaseWait");
 
   @override
-  void onInit(){
+  void onInit() {
     super.onInit();
     listenMuteEvents();
     Mirrorfly.setCallLinkEventListener(this);
@@ -44,66 +44,71 @@ class JoinCallController extends FullLifeCycleController with FullLifeCycleMixin
     var videoPermission = await AppPermission.askVideoCallPermissions();
     muted(!audioPermission);
     videoMuted(!videoPermission);
-    Mirrorfly.muteAudio(status: muted.value, flyCallBack: (_){});
-    Mirrorfly.muteVideo(status: videoMuted.value, flyCallBack: (_){});
+    Mirrorfly.muteAudio(status: muted.value, flyCallBack: (_) {});
+    Mirrorfly.muteVideo(status: videoMuted.value, flyCallBack: (_) {});
   }
 
   /// listen mute event for Audio and video
-  void listenMuteEvents(){
+  void listenMuteEvents() {
     Mirrorfly.onMuteStatusUpdated.listen((event) {
       LogMessage.d("onMuteStatusUpdated", "$event");
       var muteStatus = jsonDecode(event);
       var muteEvent = muteStatus["muteEvent"].toString();
       // var userJid = muteStatus["userJid"].toString();
-        if (muteEvent == MuteStatus.localAudioMute || muteEvent == MuteStatus.localAudioUnMute) {
-          muted(muteEvent == MuteStatus.localAudioMute);
-        }
-        if (muteEvent == MuteStatus.localVideoMute || muteEvent == MuteStatus.localVideoUnMute) {
-          videoMuted(muteEvent == MuteStatus.localVideoMute);
-        }
+      if (muteEvent == MuteStatus.localAudioMute ||
+          muteEvent == MuteStatus.localAudioUnMute) {
+        muted(muteEvent == MuteStatus.localAudioMute);
+      }
+      if (muteEvent == MuteStatus.localVideoMute ||
+          muteEvent == MuteStatus.localVideoUnMute) {
+        videoMuted(muteEvent == MuteStatus.localVideoMute);
+      }
     });
   }
 
   // initialize the meet or join via link call
   void initializeCall() {
-    Mirrorfly.initializeMeet(callLinkId: callLinkId,userName: SessionManagement.getName().checkNull(),flyCallback: (res){
-      LogMessage.d("initializeMeet", res.toString());
-      if(!res.isSuccess) {
-        subscribeSuccess(false);
-        if(res.hasError){
-          showError(res.exception);
-        }
-      }
-    });
+    Mirrorfly.initializeMeet(
+        callLinkId: callLinkId,
+        userName: SessionManagement.getName().checkNull(),
+        flyCallback: (res) {
+          LogMessage.d("initializeMeet", res.toString());
+          if (!res.isSuccess) {
+            subscribeSuccess(false);
+            if (res.hasError) {
+              showError(res.exception);
+            }
+          }
+        });
   }
 
   // to show error message
-  void showError(FlyException? error){
-    switch(error?.code){
+  void showError(FlyException? error) {
+    switch (error?.code) {
       case "100601":
-      //Call link is not valid
+        //Call link is not valid
         toToast(getTranslated("invalidLink"));
         break;
       case "100602":
-      //Api returned ended status for call
+        //Api returned ended status for call
         toToast(getTranslated("noOneHere"));
         //callEnded
         break;
       case "100603":
-      //Maximum participants already in call
+        //Maximum participants already in call
         toToast(getTranslated("callMembersLimit").replaceFirst("%d", "8"));
         break;
       case "100605":
-      //Server didn't give success response code
+        //Server didn't give success response code
         toToast(getTranslated("wentWrong"));
         //callEnded
         break;
       case "100620":
-      //Couldn't process the link. Please try again.
+        //Couldn't process the link. Please try again.
         toToast(getTranslated("couldNotProcess"));
         break;
       case "100610":
-      //Couldn't process the link.Please try again.
+        //Couldn't process the link.Please try again.
         toToast(getTranslated("couldNotProcess"));
         break;
       default:
@@ -116,7 +121,7 @@ class JoinCallController extends FullLifeCycleController with FullLifeCycleMixin
   /// start video capture
   Future<void> startVideoCapture() async {
     Mirrorfly.startVideoCapture(flyCallback: (res) async {
-      if(!res.isSuccess){
+      if (!res.isSuccess) {
         // await AppPermission.askVideoCallPermissions();
       }
     });
@@ -128,7 +133,7 @@ class JoinCallController extends FullLifeCycleController with FullLifeCycleMixin
 
   Future<void> joinCall() async {
     if (await AppUtils.isNetConnected()) {
-      if(await AppPermission.askAudioCallPermissions()) {
+      if (await AppPermission.askAudioCallPermissions()) {
         if (await AppPermission.askNotificationPermission()) {
           subscribeSuccess(false);
           Mirrorfly.joinCall(flyCallback: (res) {
@@ -143,24 +148,26 @@ class JoinCallController extends FullLifeCycleController with FullLifeCycleMixin
           });
         }
       }
-    }else{
+    } else {
       toToast(getTranslated("noInternetConnection"));
     }
   }
 
   muteAudio() async {
-    if(!muted.value || await AppPermission.askAudioCallPermissions()) {
-      Mirrorfly.muteAudio(status: !muted.value, flyCallBack: (res) {
-        if (res.isSuccess) {
-          muted(!muted.value);
-        }
-      });
+    if (!muted.value || await AppPermission.askAudioCallPermissions()) {
+      Mirrorfly.muteAudio(
+          status: !muted.value,
+          flyCallBack: (res) {
+            if (res.isSuccess) {
+              muted(!muted.value);
+            }
+          });
     }
   }
 
   videoMute() async {
     if (!videoMuted.value || await AppPermission.askVideoCallPermissions()) {
-      if(!videoMuted.value){
+      if (!videoMuted.value) {
         startVideoCapture();
       }
       Mirrorfly.muteVideo(status: !videoMuted.value, flyCallBack: (_) {});
@@ -174,9 +181,7 @@ class JoinCallController extends FullLifeCycleController with FullLifeCycleMixin
   }
 
   @override
-  void onLocalVideoTrackAdded(String userJid) {
-
-  }
+  void onLocalVideoTrackAdded(String userJid) {}
 
   @override
   void onSubscribeSuccess() {
@@ -189,19 +194,13 @@ class JoinCallController extends FullLifeCycleController with FullLifeCycleMixin
   }
 
   @override
-  void onDetached() {
-
-  }
+  void onDetached() {}
 
   @override
-  void onHidden() {
-
-  }
+  void onHidden() {}
 
   @override
-  void onInactive() {
-
-  }
+  void onInactive() {}
 
   var paused = false;
   @override
@@ -211,7 +210,7 @@ class JoinCallController extends FullLifeCycleController with FullLifeCycleMixin
 
   @override
   void onResumed() {
-    if(paused){
+    if (paused) {
       paused = false;
       checkPermission();
     }
@@ -227,5 +226,4 @@ class JoinCallController extends FullLifeCycleController with FullLifeCycleMixin
     //if network connected then reinitialize call
     initializeCall();
   }
-
 }

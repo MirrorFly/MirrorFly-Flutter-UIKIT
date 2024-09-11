@@ -22,7 +22,6 @@ part 'profile_parsing_extension.dart';
 part 'recent_chat_extension.dart';
 part 'scroll_controller_extension.dart';
 
-
 extension FileFormatter on num {
   String readableFileSize({bool base1024 = true}) {
     final base = base1024 ? 1024 : 1000;
@@ -33,15 +32,16 @@ extension FileFormatter on num {
   }
 }
 
-
 extension GetHelper on GetxController {
   T get<T extends GetxController>() {
     if (GetInstance().isRegistered<T>()) {
       LogMessage.d("Creating Controller: ", "$T found, use a old instance.");
       return GetInstance().find<T>();
     } else {
-      LogMessage.d("Creating Controller: ", "$T not found, initializing a new instance.");
-      GetInstance().lazyPut<T>(()=>this as T); // Use the provided factory function to create a new instance
+      LogMessage.d("Creating Controller: ",
+          "$T not found, initializing a new instance.");
+      GetInstance().lazyPut<T>(() => this
+          as T); // Use the provided factory function to create a new instance
       return GetInstance().find<T>();
     }
   }
@@ -60,18 +60,19 @@ abstract class NavView<T extends GetxController> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context);
-
 }
 
 // Abstract class for StatefulWidget
-abstract class NavViewStateful<T extends GetxController> extends StatefulWidget {
+abstract class NavViewStateful<T extends GetxController>
+    extends StatefulWidget {
   final String? tag;
   const NavViewStateful({Key? key, this.tag}) : super(key: key);
 
   T get controller => Get.find<T>(tag: tag);
-  T controllerWithTag(String tag){
-    return Get.find<T>(tag:tag);
+  T controllerWithTag(String tag) {
+    return Get.find<T>(tag: tag);
   }
+
   dynamic get arguments => NavUtils.arguments;
 
   T createController({String? tag});
@@ -94,7 +95,7 @@ class NavViewState<T extends GetxController> extends State<NavViewStateful<T>> {
   void initState() {
     debugPrint("NavViewState key ${widget.tag}");
     // if (NavUtils.previousRoute != Routes.chat || NavUtils.currentRoute != Routes.chat){
-      widget.createController(tag: widget.tag);
+    widget.createController(tag: widget.tag);
     // }
 
     // Get.put<T>(controller);
@@ -112,7 +113,7 @@ class NavViewState<T extends GetxController> extends State<NavViewStateful<T>> {
   }
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return widget.build(context);
   }
 

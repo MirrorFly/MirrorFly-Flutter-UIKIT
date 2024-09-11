@@ -2,7 +2,6 @@ import '../routes/route_settings.dart';
 
 //Need to delete//
 
-
 // import '../modules/dashboard/bindings/recent_search_binding.dart';
 // import '../modules/dashboard/views/recent_search_view.dart';
 
@@ -19,5 +18,4 @@ class AppPages {
   static const adminBlocked = Routes.adminBlocked;
   static const outgoingCall = Routes.outGoingCallView;
   static const onGoingCall = Routes.onGoingCallView;
-
 }

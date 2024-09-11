@@ -18,7 +18,8 @@ import '../../../model/arguments.dart';
 import '../../../model/chat_message_model.dart';
 import '../../../routes/route_settings.dart';
 
-class StarredMessagesController extends FullLifeCycleController with FullLifeCycleMixin {
+class StarredMessagesController extends FullLifeCycleController
+    with FullLifeCycleMixin {
   var starredChatList = List<ChatMessageModel>.empty(growable: true).obs;
   double height = 0.0;
   double width = 0.0;
@@ -27,7 +28,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
   var isListLoading = true.obs;
   var calendar = DateTime.now();
 
- /* @override
+  /* @override
   void onInit() {
     super.onInit();
     //getFavouriteMessages();
@@ -52,39 +53,42 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
     // player.dispose();
   }*/
   getFavouriteMessages() {
-    if(!isSelected.value) {
+    if (!isSelected.value) {
       isListLoading(true);
       Mirrorfly.getFavouriteMessages().then((value) {
-        List<ChatMessageModel> chatMessageModel = chatMessageModelFromJson(
-            value);
+        List<ChatMessageModel> chatMessageModel =
+            chatMessageModelFromJson(value);
         // starredChatList(chatMessageModel.toList());
-        if(Platform.isAndroid){
+        if (Platform.isAndroid) {
           starredChatList(chatMessageModel.toList());
-        }else{
+        } else {
           var list = chatMessageModel.toList().reversed.toList();
           starredChatList(list);
         }
         isListLoading(false);
-        if(isSearch.value){
-          lastInputValue="";
+        if (isSearch.value) {
+          lastInputValue = "";
           startSearch(searchedText.text.toString());
         }
       });
     }
   }
+
   void userUpdatedHisProfile(String jid) {
     if (jid.isNotEmpty) {
       getProfileDetails(jid).then((value) {
-        var messageIndex = starredChatList.indexWhere((element) => element.chatUserJid == jid);
-        if(!messageIndex.isNegative){
+        var messageIndex =
+            starredChatList.indexWhere((element) => element.chatUserJid == jid);
+        if (!messageIndex.isNegative) {
           starredChatList.refresh();
         }
       });
     }
   }
+
   void onMessageStatusUpdated(chatMessageModel) {
     final index = starredChatList.indexWhere(
-            (message) => message.messageId == chatMessageModel.messageId);
+        (message) => message.messageId == chatMessageModel.messageId);
     debugPrint("Message Status Update index of $index");
     if (!index.isNegative) {
       starredChatList[index].messageStatus = chatMessageModel.messageStatus;
@@ -94,7 +98,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
 
   void onMessageEdited(ChatMessageModel editedChatMessage) {
     final index = starredChatList.indexWhere(
-            (message) => message.messageId == editedChatMessage.messageId);
+        (message) => message.messageId == editedChatMessage.messageId);
     debugPrint("Message Edit Update index of $index");
     if (!index.isNegative) {
       starredChatList[index] = editedChatMessage;
@@ -103,49 +107,57 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
 
   void onMediaStatusUpdated(ChatMessageModel chatMessageModel) {
     final index = starredChatList.indexWhere(
-            (message) => message.messageId == chatMessageModel.messageId);
+        (message) => message.messageId == chatMessageModel.messageId);
     if (!index.isNegative) {
-      starredChatList[index].mediaChatMessage?.mediaLocalStoragePath(chatMessageModel.mediaChatMessage!.mediaLocalStoragePath.value);
-      starredChatList[index].mediaChatMessage?.mediaDownloadStatus(chatMessageModel.mediaChatMessage!.mediaDownloadStatus.value);
-      starredChatList[index].mediaChatMessage?.mediaUploadStatus(chatMessageModel.mediaChatMessage!.mediaUploadStatus.value);
+      starredChatList[index].mediaChatMessage?.mediaLocalStoragePath(
+          chatMessageModel.mediaChatMessage!.mediaLocalStoragePath.value);
+      starredChatList[index].mediaChatMessage?.mediaDownloadStatus(
+          chatMessageModel.mediaChatMessage!.mediaDownloadStatus.value);
+      starredChatList[index].mediaChatMessage?.mediaUploadStatus(
+          chatMessageModel.mediaChatMessage!.mediaUploadStatus.value);
     }
 
     if (isSelected.value) {
       var selectedIndex = selectedChatList.indexWhere(
-              (element) => chatMessageModel.messageId == element.messageId);
+          (element) => chatMessageModel.messageId == element.messageId);
       if (!selectedIndex.isNegative) {
-        chatMessageModel.isSelected(true); //selectedChatList[selectedIndex].isSelected;
+        chatMessageModel
+            .isSelected(true); //selectedChatList[selectedIndex].isSelected;
         selectedChatList[selectedIndex] = chatMessageModel;
         selectedChatList.refresh();
         validateForForwardMessage();
         validateForShareMessage();
       }
     }
-    if(isSearch.value){
+    if (isSearch.value) {
       var selectedIndex = searchedStarredMessageList.indexWhere(
-              (element) => chatMessageModel.messageId == element.messageId);
+          (element) => chatMessageModel.messageId == element.messageId);
       if (!selectedIndex.isNegative) {
         searchedStarredMessageList[selectedIndex] = chatMessageModel;
       }
     }
-
   }
 
   void onUploadDownloadProgressChanged(
       String messageId, String progressPercentage) {
     if (messageId.isNotEmpty) {
-      final index =
-      starredChatList.indexWhere((message) => message.messageId == messageId);
-      debugPrint("Media Status Onprogress changed---> onUploadDownloadProgressChanged $index $messageId $progressPercentage");
+      final index = starredChatList
+          .indexWhere((message) => message.messageId == messageId);
+      debugPrint(
+          "Media Status Onprogress changed---> onUploadDownloadProgressChanged $index $messageId $progressPercentage");
       if (!index.isNegative) {
-        starredChatList[index].mediaChatMessage?.mediaProgressStatus (int.parse(progressPercentage));
+        starredChatList[index]
+            .mediaChatMessage
+            ?.mediaProgressStatus(int.parse(progressPercentage));
         starredChatList.refresh();
       }
-      if(isSearch.value){
-        var selectedIndex = searchedStarredMessageList.indexWhere(
-                (message) => message.messageId == messageId);
+      if (isSearch.value) {
+        var selectedIndex = searchedStarredMessageList
+            .indexWhere((message) => message.messageId == messageId);
         if (!selectedIndex.isNegative) {
-          searchedStarredMessageList[selectedIndex].mediaChatMessage?.mediaProgressStatus(int.parse(progressPercentage));
+          searchedStarredMessageList[selectedIndex]
+              .mediaChatMessage
+              ?.mediaProgressStatus(int.parse(progressPercentage));
         }
       }
     }
@@ -190,7 +202,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
   void addChatSelection(ChatMessageModel item) {
     if (item.messageType.toUpperCase() != Constants.mNotification) {
       selectedChatList.add(item);
-      item.isSelected (true);
+      item.isSelected(true);
       starredChatList.refresh();
       validateForForwardMessage();
       validateForShareMessage();
@@ -201,7 +213,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
 
   clearChatSelection(ChatMessageModel item) {
     selectedChatList.remove(item);
-    item.isSelected (false);
+    item.isSelected(false);
     if (selectedChatList.isEmpty) {
       isSelected(false);
       selectedChatList.clear();
@@ -272,26 +284,35 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
   }
 
   showBusyStatusAlert(Function? function) {
-    DialogUtils.showAlert(dialogStyle: AppStyleConfig.dialogStyle,
+    DialogUtils.showAlert(
+        dialogStyle: AppStyleConfig.dialogStyle,
         message: getTranslated("disableBusy"),
         actions: [
-          TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
+          TextButton(
+              style: AppStyleConfig.dialogStyle.buttonStyle,
               onPressed: () {
                 NavUtils.back();
               },
-              child: Text(getTranslated("no"), )),
-          TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
+              child: Text(
+                getTranslated("no"),
+              )),
+          TextButton(
+              style: AppStyleConfig.dialogStyle.buttonStyle,
               onPressed: () async {
                 NavUtils.back();
-                await Mirrorfly.enableDisableBusyStatus(enable: false, flyCallBack: (FlyResponse response) {
-                  if(response.isSuccess) {
-                    if (function != null) {
-                      function();
-                    }
-                  }
-                });
+                await Mirrorfly.enableDisableBusyStatus(
+                    enable: false,
+                    flyCallBack: (FlyResponse response) {
+                      if (response.isSuccess) {
+                        if (function != null) {
+                          function();
+                        }
+                      }
+                    });
               },
-              child: Text(getTranslated("yes"), )),
+              child: Text(
+                getTranslated("yes"),
+              )),
         ]);
   }
 
@@ -322,10 +343,17 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
 
   favouriteMessage() {
     for (var item in selectedChatList) {
-      Mirrorfly.updateFavouriteStatus(messageId: item.messageId,chatUserJid: item.chatUserJid,isFavourite: !item.isMessageStarred.value,chatType: item.messageChatType, flyCallBack: (FlyResponse response) {});
-      starredChatList.removeWhere((element) => item.messageId == element.messageId);
-      if(isSearch.value){
-        searchedStarredMessageList.removeWhere((element) => item.messageId == element.messageId);
+      Mirrorfly.updateFavouriteStatus(
+          messageId: item.messageId,
+          chatUserJid: item.chatUserJid,
+          isFavourite: !item.isMessageStarred.value,
+          chatType: item.messageChatType,
+          flyCallBack: (FlyResponse response) {});
+      starredChatList
+          .removeWhere((element) => item.messageId == element.messageId);
+      if (isSearch.value) {
+        searchedStarredMessageList
+            .removeWhere((element) => item.messageId == element.messageId);
       }
     }
     selectedChatList.clear();
@@ -368,13 +396,17 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
     }*/
     var isMediaDelete = false.obs;
     //var chatType =  profile.isGroupProfile ?? false ? "groupchat" : "chat";
-    DialogUtils.showAlert(dialogStyle: AppStyleConfig.dialogStyle,
+    DialogUtils.showAlert(
+        dialogStyle: AppStyleConfig.dialogStyle,
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              selectedChatList.length > 1 ? getTranslated("deleteSelectedMessages") : getTranslated("deleteSelectedMessage"),
-            style: AppStyleConfig.dialogStyle.contentTextStyle,),
+              selectedChatList.length > 1
+                  ? getTranslated("deleteSelectedMessages")
+                  : getTranslated("deleteSelectedMessage"),
+              style: AppStyleConfig.dialogStyle.contentTextStyle,
+            ),
             isCheckBoxShown
                 ? Column(
                     mainAxisSize: MainAxisSize.min,
@@ -397,7 +429,8 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
                                   });
                             }),
                             Expanded(
-                              child: Text(getTranslated("deleteMediaFromPhone")),
+                              child:
+                                  Text(getTranslated("deleteMediaFromPhone")),
                             ),
                           ],
                         ),
@@ -409,30 +442,41 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
         ),
         message: "",
         actions: [
-          TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
+          TextButton(
+              style: AppStyleConfig.dialogStyle.buttonStyle,
               onPressed: () {
                 NavUtils.back();
               },
-              child: Text(getTranslated("cancel").toUpperCase(), )),
-          TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
+              child: Text(
+                getTranslated("cancel").toUpperCase(),
+              )),
+          TextButton(
+              style: AppStyleConfig.dialogStyle.buttonStyle,
               onPressed: () {
                 NavUtils.back();
-                var messageIds = selectedChatList.map((item) => item.messageId).toList();
-                Mirrorfly.deleteMessagesForMe(jid: selectedChatList[0].chatUserJid,
-                    chatType: selectedChatList[0].messageChatType, messageIds: messageIds,
-                      isMediaDelete: isMediaDelete.value, flyCallBack: (FlyResponse response) {
+                var messageIds =
+                    selectedChatList.map((item) => item.messageId).toList();
+                Mirrorfly.deleteMessagesForMe(
+                    jid: selectedChatList[0].chatUserJid,
+                    chatType: selectedChatList[0].messageChatType,
+                    messageIds: messageIds,
+                    isMediaDelete: isMediaDelete.value,
+                    flyCallBack: (FlyResponse response) {
                       for (var item in messageIds) {
-                        starredChatList.removeWhere((element) => item == element.messageId);
-                        if(isSearch.value){
-                          searchedStarredMessageList
-                              .removeWhere((element) => item == element.messageId);
+                        starredChatList.removeWhere(
+                            (element) => item == element.messageId);
+                        if (isSearch.value) {
+                          searchedStarredMessageList.removeWhere(
+                              (element) => item == element.messageId);
                         }
                       }
                       isSelected(false);
                       selectedChatList.clear();
                     });
               },
-              child: Text(getTranslated("deleteForMe").toUpperCase(), )),
+              child: Text(
+                getTranslated("deleteForMe").toUpperCase(),
+              )),
         ]);
   }
 
@@ -478,8 +522,8 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
       playingChat = chatMessage;
     }*/
   }
-  void onSeekbarChange(double value,ChatMessageModel chatMessage) {
-   /* debugPrint('onSeekbarChange $value');
+  void onSeekbarChange(double value, ChatMessageModel chatMessage) {
+    /* debugPrint('onSeekbarChange $value');
     if (playingChat != null) {
       player.seek(Duration(milliseconds: value.toInt()));
     }else{
@@ -488,33 +532,39 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
     }*/
   }
 
-  RxBool canBeForward=false.obs;
-  validateForForwardMessage(){
+  RxBool canBeForward = false.obs;
+  validateForForwardMessage() {
     for (var value in selectedChatList) {
-      if(value.isMediaMessage()) {
-        if ((value.isMediaDownloaded() || value.isMediaUploaded()) && value.mediaChatMessage!.mediaLocalStoragePath.value.checkNull().isNotEmpty) {
+      if (value.isMediaMessage()) {
+        if ((value.isMediaDownloaded() || value.isMediaUploaded()) &&
+            value.mediaChatMessage!.mediaLocalStoragePath.value
+                .checkNull()
+                .isNotEmpty) {
           canBeForward(true);
         } else {
           canBeForward(false);
           break;
         }
-      }else{
+      } else {
         canBeForward(true);
       }
     }
   }
 
-  RxBool canBeShare=false.obs;
-  validateForShareMessage(){
+  RxBool canBeShare = false.obs;
+  validateForShareMessage() {
     for (var value in selectedChatList) {
-      if(value.isMediaMessage()) {
-        if ((value.isMediaDownloaded() || value.isMediaUploaded()) && MediaUtils.isMediaExists(value.mediaChatMessage!.mediaLocalStoragePath.value.checkNull())) {
+      if (value.isMediaMessage()) {
+        if ((value.isMediaDownloaded() || value.isMediaUploaded()) &&
+            MediaUtils.isMediaExists(value
+                .mediaChatMessage!.mediaLocalStoragePath.value
+                .checkNull())) {
           canBeShare(true);
         } else {
           canBeShare(false);
           break;
         }
-      }else{
+      } else {
         canBeShare(false);
         break;
       }
@@ -525,16 +575,16 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
   var clear = false.obs;
   var searchedText = TextEditingController();
   String lastInputValue = "";
-  void startSearch(String str){
-    if(str.isNotEmpty) {
+  void startSearch(String str) {
+    if (str.isNotEmpty) {
       clear(true);
       if (lastInputValue != str.trim()) {
         starredChatList.clear();
         lastInputValue = str.trim();
         addSearchedMessagesToList(str.trim());
       }
-    }else{
-      lastInputValue='';
+    } else {
+      lastInputValue = '';
       clear(false);
       starredChatList.clear();
       starredChatList.addAll(searchedStarredMessageList);
@@ -542,7 +592,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
     }
   }
 
-  onSearchClick(){
+  onSearchClick() {
     if (isSearch.value) {
       isSearch(false);
     } else {
@@ -552,8 +602,8 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
     }
   }
 
-  clearSearch(){
-    lastInputValue='';
+  clearSearch() {
+    lastInputValue = '';
     isSearch(false);
     clear(false);
     searchedText.clear();
@@ -565,75 +615,83 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
 
   var searchedStarredMessageList = <ChatMessageModel>[];
   Future<void> addSearchedMessagesToList(String filterKey) async {
-    if(starredChatList.isEmpty) {
+    if (starredChatList.isEmpty) {
       for (var message in searchedStarredMessageList) {
         if (isTextMessageContainsFilterKey(message, filterKey)) {
-          if(starredChatList.indexWhere((element) => element.messageId==message.messageId).isNegative) {
+          if (starredChatList
+              .indexWhere((element) => element.messageId == message.messageId)
+              .isNegative) {
             starredChatList.add(message);
             debugPrint('starredChatList ${message.messageId}text');
           }
         } else if (isImageCaptionContainsFilterKey(message, filterKey)) {
-          if(starredChatList.indexWhere((element) => element.messageId==message.messageId).isNegative) {
+          if (starredChatList
+              .indexWhere((element) => element.messageId == message.messageId)
+              .isNegative) {
             starredChatList.add(message);
             debugPrint('starredChatList ${message.messageId}image');
           }
         } else if (isVideoCaptionContainsFilterKey(message, filterKey)) {
-          if(starredChatList.indexWhere((element) => element.messageId==message.messageId).isNegative) {
+          if (starredChatList
+              .indexWhere((element) => element.messageId == message.messageId)
+              .isNegative) {
             starredChatList.add(message);
             debugPrint('starredChatList ${message.messageId}video');
           }
         } else if (Constants.mDocument == message.messageType &&
-            message.mediaChatMessage!
-                .mediaFileName
-                .checkNull()
-                .isNotEmpty &&
+            message.mediaChatMessage!.mediaFileName.checkNull().isNotEmpty &&
             message.mediaChatMessage!.mediaFileName
                 .toLowerCase()
                 .contains(filterKey.toLowerCase())) {
-          if(starredChatList.indexWhere((element) => element.messageId==message.messageId).isNegative) {
+          if (starredChatList
+              .indexWhere((element) => element.messageId == message.messageId)
+              .isNegative) {
             starredChatList.add(message);
             debugPrint('starredChatList ${message.messageId}doc');
           }
         } else if (Constants.mContact == message.messageType &&
-            message.contactChatMessage!
-                .contactName
-                .checkNull()
-                .isNotEmpty &&
+            message.contactChatMessage!.contactName.checkNull().isNotEmpty &&
             message.contactChatMessage!.contactName
                 .toLowerCase()
                 .contains(filterKey.toLowerCase())) {
-          if(starredChatList.indexWhere((element) => element.messageId==message.messageId).isNegative) {
+          if (starredChatList
+              .indexWhere((element) => element.messageId == message.messageId)
+              .isNegative) {
             starredChatList.add(message);
             debugPrint('starredChatList ${message.messageId}contact');
           }
-        } else if (message.senderUserName
-            .checkNull()
-            .isNotEmpty &&
+        } else if (message.senderUserName.checkNull().isNotEmpty &&
             message.senderUserName
                 .toLowerCase()
                 .contains(filterKey.toLowerCase())) {
-          if(starredChatList.indexWhere((element) => element.messageId==message.messageId).isNegative) {
+          if (starredChatList
+              .indexWhere((element) => element.messageId == message.messageId)
+              .isNegative) {
             starredChatList.add(message);
             debugPrint('starredChatList ${message.messageId}sender');
           }
         } else if (message.isMessageSentByMe &&
             "You".toLowerCase().contains(filterKey.toLowerCase())) {
-          if(starredChatList.indexWhere((element) => element.messageId==message.messageId).isNegative) {
+          if (starredChatList
+              .indexWhere((element) => element.messageId == message.messageId)
+              .isNegative) {
             starredChatList.add(message);
             debugPrint('starredChatList ${message.messageId}you');
           }
-        } else if ((message.messageChatType == ChatType.groupChat)){
+        } else if ((message.messageChatType == ChatType.groupChat)) {
           var name = await getProfileDetails(message.chatUserJid.checkNull());
-            if(name.name.checkNull().contains(filterKey.toLowerCase())) {
-              if(starredChatList.indexWhere((element) => element.messageId==message.messageId).isNegative) {
-                starredChatList.add(message);
-                debugPrint('starredChatList ${message.messageId} : group');
-              }
+          if (name.name.checkNull().contains(filterKey.toLowerCase())) {
+            if (starredChatList
+                .indexWhere((element) => element.messageId == message.messageId)
+                .isNegative) {
+              starredChatList.add(message);
+              debugPrint('starredChatList ${message.messageId} : group');
             }
+          }
         }
         starredChatList.refresh();
       }
-    }else{
+    } else {
       starredChatList([]);
       addSearchedMessagesToList(filterKey);
     }
@@ -673,15 +731,24 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
   }
 
   navigateMessage(ChatMessageModel starredChat) {
-    NavUtils.toNamed(Routes.chat,arguments: ChatViewArguments(chatJid: starredChat.chatUserJid,messageId: starredChat.messageId,topicId: starredChat.topicId,));//{'isFromStarred':'true',"chatJid":starredChat.chatUserJid,"messageId":starredChat.messageId,"topicId":starredChat.topicId.checkNull()});
+    NavUtils.toNamed(Routes.chat,
+        arguments: ChatViewArguments(
+          chatJid: starredChat.chatUserJid,
+          messageId: starredChat.messageId,
+          topicId: starredChat.topicId,
+        )); //{'isFromStarred':'true',"chatJid":starredChat.chatUserJid,"messageId":starredChat.messageId,"topicId":starredChat.topicId.checkNull()});
   }
 
   void share() {
     var mediaPaths = <XFile>[];
-    for(var item in selectedChatList){
-      if(item.isMediaMessage()){
-        if((item.isMediaDownloaded() || item.isMediaUploaded()) && item.mediaChatMessage!.mediaLocalStoragePath.value.checkNull().isNotEmpty){
-          mediaPaths.add(XFile(item.mediaChatMessage!.mediaLocalStoragePath.value.checkNull()));
+    for (var item in selectedChatList) {
+      if (item.isMediaMessage()) {
+        if ((item.isMediaDownloaded() || item.isMediaUploaded()) &&
+            item.mediaChatMessage!.mediaLocalStoragePath.value
+                .checkNull()
+                .isNotEmpty) {
+          mediaPaths.add(XFile(
+              item.mediaChatMessage!.mediaLocalStoragePath.value.checkNull()));
         }
       }
     }
@@ -705,7 +772,7 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
   FocusNode searchFocus = FocusNode();
   @override
   void onResumed() {
-    if(isSearch.value) {
+    if (isSearch.value) {
       if (!KeyboardVisibilityController().isVisible) {
         if (searchFocus.hasFocus) {
           searchFocus.unfocus();
@@ -718,9 +785,5 @@ class StarredMessagesController extends FullLifeCycleController with FullLifeCyc
   }
 
   @override
-  void onHidden() {
-
-  }
-
-
+  void onHidden() {}
 }

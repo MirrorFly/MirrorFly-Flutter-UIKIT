@@ -6,7 +6,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:flutter_libphonenumber/flutter_libphonenumber.dart' as lib_phone_number;
+import 'package:flutter_libphonenumber/flutter_libphonenumber.dart'
+    as lib_phone_number;
 import 'package:get/get.dart';
 // import 'package:google_cloud_translation/google_cloud_translation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -42,7 +43,8 @@ import '../../gallery_picker/src/data/models/picked_asset_model.dart';
 import '../widgets/attachment_view.dart';
 import '../widgets/image_cache_manager.dart';
 
-class ChatController extends FullLifeCycleController with FullLifeCycleMixin, GetTickerProviderStateMixin {
+class ChatController extends FullLifeCycleController
+    with FullLifeCycleMixin, GetTickerProviderStateMixin {
   // final translator = Translation(apiKey: Constants.googleTranslateKey);
   // late final BuildContext buildContext;
   late final bool showChatDeliveryIndicator;
@@ -100,10 +102,14 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
 
   set isMemberOfGroup(value) => _isMemberOfGroup.value = value;
 
-  bool get isMemberOfGroup =>
-      profile.isGroupProfile ?? false ? availableFeatures.value.isGroupChatAvailable.checkNull() && _isMemberOfGroup.value : true;
+  bool get isMemberOfGroup => profile.isGroupProfile ?? false
+      ? availableFeatures.value.isGroupChatAvailable.checkNull() &&
+          _isMemberOfGroup.value
+      : true;
 
-  bool get ableToCall => profile.isGroupProfile.checkNull() ? isMemberOfGroup : (!profile.isBlocked.checkNull() && !profile.isAdminBlocked.checkNull());
+  bool get ableToCall => profile.isGroupProfile.checkNull()
+      ? isMemberOfGroup
+      : (!profile.isBlocked.checkNull() && !profile.isAdminBlocked.checkNull());
 
   // var profileDetail = Profile();
 
@@ -133,7 +139,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   RxString editMessageText = ''.obs;
 
   //#metaData
-  List<MessageMetaData> messageMetaData = [];// = [MessageMetaData(key: "platform", value: "flutter")];
+  List<MessageMetaData> messageMetaData =
+      []; // = [MessageMetaData(key: "platform", value: "flutter")];
   final ChatViewArguments? arguments;
 
   var screenWidth = 0.0.obs;
@@ -167,7 +174,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
       if (Platform.isAndroid) {
         unreadMessageTypeMessageId = "M${value.jid}";
       } else if (Platform.isIOS) {
-        unreadMessageTypeMessageId = "M_${getMobileNumberFromJid(value.jid.checkNull())}";
+        unreadMessageTypeMessageId =
+            "M_${getMobileNumberFromJid(value.jid.checkNull())}";
       }
       checkAdminBlocked();
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -241,9 +249,14 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
           curve: Curves.linear,
         );
       }*/
-      if (newScrollController != null && newScrollController!.isAttached && lastVisiblePosition() >= 1) {
+      if (newScrollController != null &&
+          newScrollController!.isAttached &&
+          lastVisiblePosition() >= 1) {
         LogMessage.d("newScrollController", "scrollToBottom");
-        newScrollController?.scrollTo(index: 0, duration: const Duration(milliseconds: 100), curve: Curves.linear);
+        newScrollController?.scrollTo(
+            index: 0,
+            duration: const Duration(milliseconds: 100),
+            curve: Curves.linear);
         unreadCount(0);
       }
     });
@@ -276,7 +289,7 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
 
   @override
   void dispose() {
-    LogMessage.d("dispose","Chat controller");
+    LogMessage.d("dispose", "Chat controller");
     super.dispose();
   }
 
@@ -290,16 +303,20 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
 
   saveUnsentMessage() {
     if (profile.jid.checkNull().isNotEmpty) {
-      Mirrorfly.saveUnsentMessage(jid: profile.jid.checkNull(), message: messageController.text.trim().toString());
+      Mirrorfly.saveUnsentMessage(
+          jid: profile.jid.checkNull(),
+          message: messageController.text.trim().toString());
     }
     if (isReplying.value) {
-      ReplyHashMap.saveReplyId(profile.jid.checkNull(), replyChatMessage.messageId);
+      ReplyHashMap.saveReplyId(
+          profile.jid.checkNull(), replyChatMessage.messageId);
     }
   }
 
   getUnsentMessageOfAJid() async {
     if (profile.jid.checkNull().isNotEmpty) {
-      Mirrorfly.getUnsentMessageOfAJid(jid: profile.jid.checkNull()).then((value) {
+      Mirrorfly.getUnsentMessageOfAJid(jid: profile.jid.checkNull())
+          .then((value) {
         if (value != null) {
           messageController.text = value;
         } else {
@@ -315,13 +332,16 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   getUnsentReplyMessage() {
     var replyMessageId = ReplyHashMap.getReplyId(profile.jid.checkNull());
     if (replyMessageId.isNotEmpty) {
-      var replyChatMessage = chatList.firstWhere((element) => element.messageId == replyMessageId);
+      var replyChatMessage =
+          chatList.firstWhere((element) => element.messageId == replyMessageId);
       handleReplyChatMessage(replyChatMessage);
     }
   }
 
   showAttachmentsView(BuildContext context) async {
-    var busyStatus = !profile.isGroupProfile.checkNull() ? await Mirrorfly.isBusyStatusEnabled() : false;
+    var busyStatus = !profile.isGroupProfile.checkNull()
+        ? await Mirrorfly.isBusyStatusEnabled()
+        : false;
     if (!busyStatus.checkNull()) {
       focusNode.unfocus();
       showBottomSheetAttachment();
@@ -338,7 +358,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
           child: BottomSheet(
               onClosing: () {},
               backgroundColor: Colors.transparent,
-              shape: AppStyleConfig.chatPageStyle.attachmentViewStyle.shapeBorder,
+              shape:
+                  AppStyleConfig.chatPageStyle.attachmentViewStyle.shapeBorder,
               builder: (builder) => AttachmentsSheetView(
                   attachments: availableAttachments,
                   availableFeatures: availableFeatures,
@@ -374,7 +395,9 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
 
   sendMessage(ProfileDetails profile) async {
     removeUnreadSeparator();
-    var busyStatus = !profile.isGroupProfile.checkNull() ? await Mirrorfly.isBusyStatusEnabled() : false;
+    var busyStatus = !profile.isGroupProfile.checkNull()
+        ? await Mirrorfly.isBusyStatusEnabled()
+        : false;
     if (!busyStatus.checkNull()) {
       var replyMessageId = "";
 
@@ -406,7 +429,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
                 replyMessageId: replyMessageId,
                 topicId: topicId,
                 // metaData: messageMetaData, //#metaData
-                textMessageParams: TextMessageParams(messageText: messageController.text.trim())),
+                textMessageParams: TextMessageParams(
+                    messageText: messageController.text.trim())),
             flyCallback: (response) {
               if (response.isSuccess) {
                 LogMessage.d("text message", response.data);
@@ -432,56 +456,71 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   }
 
   showBusyStatusAlert(Function? function) {
-    DialogUtils.showAlert(dialogStyle: AppStyleConfig.dialogStyle,message: getTranslated("disableBusy"), actions: [
-      TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
-          onPressed: () {
-            NavUtils.back();
-          },
-          child: Text(getTranslated("no"))),
-      TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
-          onPressed: () async {
-            NavUtils.back();
-            await Mirrorfly.enableDisableBusyStatus(
-                enable: false,
-                flyCallBack: (FlyResponse response) {
-                  if (response.isSuccess) {
-                    if (function != null) {
-                      function();
-                    }
-                  }
-                });
-          },
-          child: Text(getTranslated("yes"))),
-    ]);
+    DialogUtils.showAlert(
+        dialogStyle: AppStyleConfig.dialogStyle,
+        message: getTranslated("disableBusy"),
+        actions: [
+          TextButton(
+              style: AppStyleConfig.dialogStyle.buttonStyle,
+              onPressed: () {
+                NavUtils.back();
+              },
+              child: Text(getTranslated("no"))),
+          TextButton(
+              style: AppStyleConfig.dialogStyle.buttonStyle,
+              onPressed: () async {
+                NavUtils.back();
+                await Mirrorfly.enableDisableBusyStatus(
+                    enable: false,
+                    flyCallBack: (FlyResponse response) {
+                      if (response.isSuccess) {
+                        if (function != null) {
+                          function();
+                        }
+                      }
+                    });
+              },
+              child: Text(getTranslated("yes"))),
+        ]);
   }
 
   showBlockStatusAlert(Function? function) {
-    DialogUtils.showAlert(dialogStyle: AppStyleConfig.dialogStyle,message: getTranslated("unBlockToSendMsg"), actions: [
-      TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
-          onPressed: () {
-            NavUtils.back();
-          },
-          child: Text(getTranslated("cancel").toUpperCase(), )),
-      TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
-          onPressed: () async {
-            NavUtils.back();
-            Mirrorfly.unblockUser(
-                userJid: profile.jid!,
-                flyCallBack: (FlyResponse response) {
-                  if (response.isSuccess) {
-                    debugPrint(response.toString());
-                    profile.isBlocked = false;
-                    isBlocked(false);
-                    DialogUtils.hideLoading();
-                    toToast(getTranslated("hasUnBlocked").replaceFirst("%d", getName(profile)));
-                    if (function != null) {
-                      function();
-                    }
-                  }
-                });
-          },
-          child: Text(getTranslated("unblock").toUpperCase(), )),
-    ]);
+    DialogUtils.showAlert(
+        dialogStyle: AppStyleConfig.dialogStyle,
+        message: getTranslated("unBlockToSendMsg"),
+        actions: [
+          TextButton(
+              style: AppStyleConfig.dialogStyle.buttonStyle,
+              onPressed: () {
+                NavUtils.back();
+              },
+              child: Text(
+                getTranslated("cancel").toUpperCase(),
+              )),
+          TextButton(
+              style: AppStyleConfig.dialogStyle.buttonStyle,
+              onPressed: () async {
+                NavUtils.back();
+                Mirrorfly.unblockUser(
+                    userJid: profile.jid!,
+                    flyCallBack: (FlyResponse response) {
+                      if (response.isSuccess) {
+                        debugPrint(response.toString());
+                        profile.isBlocked = false;
+                        isBlocked(false);
+                        DialogUtils.hideLoading();
+                        toToast(getTranslated("hasUnBlocked")
+                            .replaceFirst("%d", getName(profile)));
+                        if (function != null) {
+                          function();
+                        }
+                      }
+                    });
+              },
+              child: Text(
+                getTranslated("unblock").toUpperCase(),
+              )),
+        ]);
   }
 
   disableBusyChatAndSend() async {
@@ -491,33 +530,42 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
           sendMessage(profile);
           break;
         case Constants.mImage:
-          sendImageMessage(messageObject!.file!, messageObject!.caption!, messageObject!.replyMessageId!);
+          sendImageMessage(messageObject!.file!, messageObject!.caption!,
+              messageObject!.replyMessageId!);
           break;
         case Constants.mLocation:
-          sendLocationMessage(profile, messageObject!.latitude!, messageObject!.longitude!);
+          sendLocationMessage(
+              profile, messageObject!.latitude!, messageObject!.longitude!);
           break;
         case Constants.mContact:
-          sendContactMessage(messageObject!.contactNumbers!, messageObject!.contactName!);
+          sendContactMessage(
+              messageObject!.contactNumbers!, messageObject!.contactName!);
           break;
         case Constants.mAudio:
-          sendAudioMessage(messageObject!.file!, messageObject!.isAudioRecorded!, messageObject!.audioDuration!);
+          sendAudioMessage(messageObject!.file!,
+              messageObject!.isAudioRecorded!, messageObject!.audioDuration!);
           break;
         case Constants.mDocument:
-          sendDocumentMessage(messageObject!.file!, messageObject!.replyMessageId!);
+          sendDocumentMessage(
+              messageObject!.file!, messageObject!.replyMessageId!);
           break;
         case Constants.mVideo:
-          sendVideoMessage(messageObject!.file!, messageObject!.caption!, messageObject!.replyMessageId!);
+          sendVideoMessage(messageObject!.file!, messageObject!.caption!,
+              messageObject!.replyMessageId!);
           break;
       }
     }
   }
 
-  sendLocationMessage(ProfileDetails profile, double latitude, double longitude) async {
+  sendLocationMessage(
+      ProfileDetails profile, double latitude, double longitude) async {
     if (!availableFeatures.value.isLocationAttachmentAvailable.checkNull()) {
       DialogUtils.showFeatureUnavailable();
       return;
     }
-    var busyStatus = !profile.isGroupProfile.checkNull() ? await Mirrorfly.isBusyStatusEnabled() : false;
+    var busyStatus = !profile.isGroupProfile.checkNull()
+        ? await Mirrorfly.isBusyStatusEnabled()
+        : false;
     if (!busyStatus.checkNull()) {
       var replyMessageId = "";
       if (isReplying.value) {
@@ -540,7 +588,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
               replyMessageId: replyMessageId,
               topicId: topicId,
               // metaData: messageMetaData, //#metaData
-              locationMessageParams: LocationMessageParams(latitude: latitude, longitude: longitude)),
+              locationMessageParams: LocationMessageParams(
+                  latitude: latitude, longitude: longitude)),
           flyCallback: (response) {
             if (response.isSuccess) {
               LogMessage.d("location message", response.data.toString());
@@ -573,7 +622,7 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
       limit: 20,
       topicId: topicId,
       messageId: starredChatMessageId,
-      exclude: true/*starredChatMessageId == null*/,
+      exclude: true /*starredChatMessageId == null*/,
       ascendingOrder: starredChatMessageId != null,
     ) //message
         .then((value) {
@@ -584,7 +633,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
           showLoadingPrevious(false);
           if (response.isSuccess && response.hasData) {
             // LogMessage.d("loadMessages", response.data);
-            List<ChatMessageModel> chatMessageModel = chatMessageModelFromJson(response.data);
+            List<ChatMessageModel> chatMessageModel =
+                chatMessageModelFromJson(response.data);
             chatList(chatMessageModel.reversed.toList());
             showStarredMessage();
             sendReadReceipt(removeUnreadFromList: false);
@@ -601,9 +651,9 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   }
 
   Future<void> _loadPreviousMessages({bool showLoading = true}) async {
-    if(showLoading) {
+    if (showLoading) {
       showLoadingPrevious(await Mirrorfly.hasPreviousMessages());
-    }else{
+    } else {
       showLoadingPrevious(showLoading);
     }
     // showLoadingPrevious(await Mirrorfly.hasPreviousMessages());
@@ -612,7 +662,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
         var chatMessageModel = List<ChatMessageModel>.empty(growable: true).obs;
         chatMessageModel.addAll(chatMessageModelFromJson(response.data));
         if (chatMessageModel.toList().isNotEmpty) {
-          chatList.insertAll(chatList.length, chatMessageModel.reversed.toList());
+          chatList.insertAll(
+              chatList.length, chatMessageModel.reversed.toList());
         } else {
           debugPrint("chat list is empty");
         }
@@ -623,7 +674,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     });
   }
 
-  Future<void> _loadNextMessages({bool showLoading = true, bool removeUnreadFromList = true}) async {
+  Future<void> _loadNextMessages(
+      {bool showLoading = true, bool removeUnreadFromList = true}) async {
     if (showLoading) {
       showLoadingNext(await Mirrorfly.hasNextMessages());
     } else {
@@ -631,7 +683,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     }
     Mirrorfly.loadNextMessages(flyCallback: (FlyResponse response) {
       if (response.isSuccess && response.hasData) {
-        List<ChatMessageModel> chatMessageModel = chatMessageModelFromJson(response.data);
+        List<ChatMessageModel> chatMessageModel =
+            chatMessageModelFromJson(response.data);
         if (chatMessageModel.isNotEmpty) {
           if (chatList.isNotEmpty) {
             chatList.insertAll(0, chatMessageModel.reversed.toList());
@@ -650,10 +703,11 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     Future.delayed(const Duration(milliseconds: 200), () {
       if (starredChatMessageId != null) {
         debugPrint('starredChatMessageId $starredChatMessageId');
-        var chat = chatList.indexWhere((element) => element.messageId == starredChatMessageId);
+        var chat = chatList
+            .indexWhere((element) => element.messageId == starredChatMessageId);
         debugPrint('chat $chat');
         if (!chat.isNegative) {
-          navigateToMessage(chatList[chat],index: chat);
+          navigateToMessage(chatList[chat], index: chat);
           starredChatMessageId = null;
         } else {
           toToast(getTranslated("messageNotFound"));
@@ -663,13 +717,16 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     });
   }
 
-  sendImageMessage(String? path, String? caption, String? replyMessageID) async {
+  sendImageMessage(
+      String? path, String? caption, String? replyMessageID) async {
     if (!availableFeatures.value.isImageAttachmentAvailable.checkNull()) {
       DialogUtils.showFeatureUnavailable();
       return;
     }
     debugPrint("Path ==> $path");
-    var busyStatus = !profile.isGroupProfile.checkNull() ? await Mirrorfly.isBusyStatusEnabled() : false;
+    var busyStatus = !profile.isGroupProfile.checkNull()
+        ? await Mirrorfly.isBusyStatusEnabled()
+        : false;
     if (!busyStatus.checkNull()) {
       if (isReplying.value) {
         replyMessageID = replyChatMessage.messageId;
@@ -693,13 +750,15 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
                 replyMessageId: replyMessageID,
                 topicId: topicId,
                 // metaData: messageMetaData, //#metaData
-                fileMessageParams: FileMessageParams(file: File(path), caption: caption)),
+                fileMessageParams:
+                    FileMessageParams(file: File(path), caption: caption)),
             flyCallback: (response) {
               if (response.isSuccess) {
                 LogMessage.d("image message", response.data.toString());
                 // clearMessage();
                 messageController.text = "";
-                ChatMessageModel chatMessageModel = sendMessageModelFromJson(response.data);
+                ChatMessageModel chatMessageModel =
+                    sendMessageModelFromJson(response.data);
                 // chatList.insert(0, chatMessageModel);
                 scrollToBottom();
                 updateLastMessage(response.data);
@@ -738,14 +797,16 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
       allowedExtensions: ['pdf', 'ppt', 'xls', 'doc', 'docx', 'xlsx', 'txt'],
     );
     if (result != null && File(result.files.single.path!).existsSync()) {
-      if (MediaUtils.checkFileUploadSize(result.files.single.path!, Constants.mDocument)) {
+      if (MediaUtils.checkFileUploadSize(
+          result.files.single.path!, Constants.mDocument)) {
         debugPrint("sendDoc ${result.files.first.extension}");
         Future.delayed(const Duration(seconds: 1), () {
           filePath.value = (result.files.single.path!);
           sendDocumentMessage(filePath.value, "");
         });
       } else {
-          toToast(getTranslated("mediaMaxLimitRestriction").replaceAll("%d", "${MediaUtils.maxDocFileSize}"));
+        toToast(getTranslated("mediaMaxLimitRestriction")
+            .replaceAll("%d", "${MediaUtils.maxDocFileSize}"));
       }
       setOnGoingUserAvail();
     } else {
@@ -758,21 +819,30 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   sendReadReceipt({bool removeUnreadFromList = true}) {
     LogMessage.d("ChatController", "sendReadReceipt");
     markConversationReadNotifyUI();
-    handleUnreadMessageSeparator(remove: true, removeFromList: removeUnreadFromList); //lastVisiblePosition()==0
+    handleUnreadMessageSeparator(
+        remove: true,
+        removeFromList: removeUnreadFromList); //lastVisiblePosition()==0
   }
 
-  sendVideoMessage(String videoPath, String caption, String replyMessageID) async {
+  sendVideoMessage(
+      String videoPath, String caption, String replyMessageID) async {
     if (!availableFeatures.value.isVideoAttachmentAvailable.checkNull()) {
       DialogUtils.showFeatureUnavailable();
       return;
     }
-    var busyStatus = !profile.isGroupProfile.checkNull() ? await Mirrorfly.isBusyStatusEnabled() : false;
+    var busyStatus = !profile.isGroupProfile.checkNull()
+        ? await Mirrorfly.isBusyStatusEnabled()
+        : false;
     if (!busyStatus.checkNull()) {
       if (isReplying.value) {
         replyMessageID = replyChatMessage.messageId;
       }
       isReplying(false);
-      Platform.isIOS ? DialogUtils.showLoading(message: getTranslated("compressingVideo"),dialogStyle: AppStyleConfig.dialogStyle) : null;
+      Platform.isIOS
+          ? DialogUtils.showLoading(
+              message: getTranslated("compressingVideo"),
+              dialogStyle: AppStyleConfig.dialogStyle)
+          : null;
       //old method is deprecated Instead of use below new method
       /*return Mirrorfly.sendVideoMessage(
           profile.jid!, videoPath, caption, replyMessageID,topicId: topicId)
@@ -791,14 +861,16 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
               replyMessageId: replyMessageID,
               topicId: topicId,
               // metaData: messageMetaData, //#metaData
-              fileMessageParams: FileMessageParams(file: File(videoPath), caption: caption)),
+              fileMessageParams:
+                  FileMessageParams(file: File(videoPath), caption: caption)),
           flyCallback: (response) {
             if (response.isSuccess) {
               LogMessage.d("video message", response.data.toString());
               // clearMessage();
               messageController.text = "";
               Platform.isIOS ? DialogUtils.hideLoading() : null;
-              ChatMessageModel chatMessageModel = sendMessageModelFromJson(response.data);
+              ChatMessageModel chatMessageModel =
+                  sendMessageModelFromJson(response.data);
               // chatList.insert(0, chatMessageModel);
               scrollToBottom();
               updateLastMessage(response.data);
@@ -822,7 +894,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   }
 
   checkFile(String mediaLocalStoragePath) {
-    return mediaLocalStoragePath.isNotEmpty && File(mediaLocalStoragePath).existsSync();
+    return mediaLocalStoragePath.isNotEmpty &&
+        File(mediaLocalStoragePath).existsSync();
   }
 
   ChatMessageModel? playingChat;
@@ -833,7 +906,9 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
       return;
     }
     debugPrint("sendingName--> $contactName");
-    var busyStatus = !profile.isGroupProfile.checkNull() ? await Mirrorfly.isBusyStatusEnabled() : false;
+    var busyStatus = !profile.isGroupProfile.checkNull()
+        ? await Mirrorfly.isBusyStatusEnabled()
+        : false;
     debugPrint("sendContactMessage busyStatus--> $busyStatus");
     if (!busyStatus.checkNull()) {
       debugPrint("busy status not enabled");
@@ -860,7 +935,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
               replyMessageId: replyMessageId,
               topicId: topicId,
               // metaData: messageMetaData, //#metaData
-              contactMessageParams: ContactMessageParams(name: contactName, numbers: contactList)),
+              contactMessageParams: ContactMessageParams(
+                  name: contactName, numbers: contactList)),
           flyCallback: (response) {
             if (response.isSuccess) {
               LogMessage.d("contact message", response.data.toString());
@@ -888,7 +964,9 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
       DialogUtils.showFeatureUnavailable();
       return;
     }
-    var busyStatus = !profile.isGroupProfile.checkNull() ? await Mirrorfly.isBusyStatusEnabled() : false;
+    var busyStatus = !profile.isGroupProfile.checkNull()
+        ? await Mirrorfly.isBusyStatusEnabled()
+        : false;
     if (!busyStatus.checkNull()) {
       if (isReplying.value) {
         replyMessageId = replyChatMessage.messageId;
@@ -936,23 +1014,36 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     if (Platform.isIOS) {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
-        allowedExtensions: ['wav', 'aiff', 'alac', 'flac', 'mp3', 'aac', 'wma', 'ogg'],
+        allowedExtensions: [
+          'wav',
+          'aiff',
+          'alac',
+          'flac',
+          'mp3',
+          'aac',
+          'wma',
+          'ogg'
+        ],
       );
       if (result != null && File(result.files.single.path!).existsSync()) {
         debugPrint(result.files.first.extension);
-        if (MediaUtils.checkFileUploadSize(result.files.single.path!, Constants.mAudio)) {
+        if (MediaUtils.checkFileUploadSize(
+            result.files.single.path!, Constants.mAudio)) {
           AudioPlayer player = AudioPlayer();
           // player.setUrl(result.files.single.path!);
-          player.setSourceDeviceFile(result.files.single.path ?? Constants.emptyString);
+          player.setSourceDeviceFile(
+              result.files.single.path ?? Constants.emptyString);
           player.onDurationChanged.listen((Duration duration) {
             LogMessage.d("", 'max duration: ${duration.inMilliseconds}');
             Future.delayed(const Duration(seconds: 1), () {
               filePath.value = (result.files.single.path!);
-              sendAudioMessage(filePath.value, false, duration.inMilliseconds.toString());
+              sendAudioMessage(
+                  filePath.value, false, duration.inMilliseconds.toString());
             });
           });
         } else {
-          toToast(getTranslated("mediaMaxLimitRestriction").replaceAll("%d", "${MediaUtils.maxAudioFileSize}"));
+          toToast(getTranslated("mediaMaxLimitRestriction")
+              .replaceAll("%d", "${MediaUtils.maxAudioFileSize}"));
         }
         setOnGoingUserAvail();
       } else {
@@ -972,11 +1063,13 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
               LogMessage.d("", 'max duration: ${duration.inMilliseconds}');
               Future.delayed(const Duration(seconds: 1), () {
                 filePath.value = (value);
-                sendAudioMessage(filePath.value, false, duration.inMilliseconds.toString());
+                sendAudioMessage(
+                    filePath.value, false, duration.inMilliseconds.toString());
               });
             });
           } else {
-            toToast(getTranslated("mediaMaxLimitRestriction").replaceAll("%d", "${MediaUtils.maxAudioFileSize}"));
+            toToast(getTranslated("mediaMaxLimitRestriction")
+                .replaceAll("%d", "${MediaUtils.maxAudioFileSize}"));
           }
         } else {
           setOnGoingUserAvail();
@@ -993,7 +1086,9 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
       DialogUtils.showFeatureUnavailable();
       return;
     }
-    var busyStatus = !profile.isGroupProfile.checkNull() ? await Mirrorfly.isBusyStatusEnabled() : false;
+    var busyStatus = !profile.isGroupProfile.checkNull()
+        ? await Mirrorfly.isBusyStatusEnabled()
+        : false;
     if (!busyStatus.checkNull()) {
       var replyMessageId = "";
 
@@ -1070,9 +1165,13 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
           LogMessage.d("clearChat response", response.toString());
           if (response.isSuccess) {
             // var chatListrev = chatList.reversed;
-            isStarredExcluded ? chatList.removeWhere((p0) => p0.isMessageStarred.value == false) : chatList.clear();
+            isStarredExcluded
+                ? chatList
+                    .removeWhere((p0) => p0.isMessageStarred.value == false)
+                : chatList.clear();
             cancelReplyMessage();
-            onMessageDeleteNotifyUI(chatJid: profile.jid.checkNull(), changePosition: false);
+            onMessageDeleteNotifyUI(
+                chatJid: profile.jid.checkNull(), changePosition: false);
           } else {
             toToast(getErrorDetails(response));
           }
@@ -1080,7 +1179,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   }
 
   void handleReplyChatMessage(ChatMessageModel chatListItem) {
-    if (!chatListItem.isMessageRecalled.value && !chatListItem.isMessageDeleted) {
+    if (!chatListItem.isMessageRecalled.value &&
+        !chatListItem.isMessageDeleted) {
       debugPrint(chatListItem.messageType);
       if (isReplying.value) {
         isReplying(false);
@@ -1133,18 +1233,24 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   //Report Chat or User
   reportChatOrMessage() {
     Future.delayed(const Duration(milliseconds: 100), () async {
-      var chatMessage = selectedChatList.isNotEmpty ? selectedChatList[0] : null;
-      DialogUtils.showAlert(dialogStyle: AppStyleConfig.dialogStyle,
+      var chatMessage =
+          selectedChatList.isNotEmpty ? selectedChatList[0] : null;
+      DialogUtils.showAlert(
+          dialogStyle: AppStyleConfig.dialogStyle,
           title: getTranslated("report").replaceFirst("%d", getName(profile)),
           message:
               "${selectedChatList.isNotEmpty ? getTranslated("thisMessageForwardToAdmin") : getTranslated("last5MessageForwardToAdmin")} ${getTranslated("contactWillBeNotified")}",
           actions: [
-            TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
+            TextButton(
+                style: AppStyleConfig.dialogStyle.buttonStyle,
                 onPressed: () async {
                   NavUtils.back();
                   if (await AppUtils.isNetConnected()) {
-                    var valid = chatList.where((element) => element.messageType != MessageType.isNotification).toList();
-                    if(valid.isNotEmpty) {
+                    var valid = chatList
+                        .where((element) =>
+                            element.messageType != MessageType.isNotification)
+                        .toList();
+                    if (valid.isNotEmpty) {
                       Mirrorfly.reportUserOrMessages(
                           jid: profile.jid!,
                           type: chatMessage?.messageChatType ?? "chat",
@@ -1154,42 +1260,54 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
                             if (response.isSuccess) {
                               toToast(getTranslated("reportSentSuccess"));
                             } else {
-                              toToast(getTranslated(
-                                  "thereNoMessagesAvailable"));
+                              toToast(
+                                  getTranslated("thereNoMessagesAvailable"));
                             }
                           });
-                    }else{
+                    } else {
                       toToast(getTranslated("thereNoMessagesAvailable"));
                     }
                   } else {
                     toToast(getTranslated("noInternetConnection"));
                   }
                 },
-                child: Text(getTranslated("report").toUpperCase(), )),
-            TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
+                child: Text(
+                  getTranslated("report").toUpperCase(),
+                )),
+            TextButton(
+                style: AppStyleConfig.dialogStyle.buttonStyle,
                 onPressed: () {
                   NavUtils.back();
                 },
-                child: Text(getTranslated("cancel").toUpperCase(), )),
+                child: Text(
+                  getTranslated("cancel").toUpperCase(),
+                )),
           ]);
     });
   }
 
   copyTextMessages() {
     debugPrint('Copy text ==> ${selectedChatList[0].messageTextContent}');
-    Clipboard.setData(ClipboardData(text: selectedChatList[0].messageTextContent ?? ""));
+    Clipboard.setData(
+        ClipboardData(text: selectedChatList[0].messageTextContent ?? ""));
     clearChatSelection(selectedChatList[0]);
     toToast(getTranslated("textCopiedSuccess"));
   }
 
   Map<bool, bool> isMessageCanbeRecalled() {
-    var recallTimeDifference = ((DateTime.now().millisecondsSinceEpoch - 30000) * 1000);
+    var recallTimeDifference =
+        ((DateTime.now().millisecondsSinceEpoch - 30000) * 1000);
     return {
-      selectedChatList
-              .any((element) => element.isMessageSentByMe && !element.isMessageRecalled.value && (element.messageSentTime > recallTimeDifference)):
+      selectedChatList.any((element) =>
+              element.isMessageSentByMe &&
+              !element.isMessageRecalled.value &&
+              (element.messageSentTime > recallTimeDifference)):
           selectedChatList.any((element) =>
               !element.isMessageRecalled.value &&
-              (element.isMediaMessage() && element.mediaChatMessage!.mediaLocalStoragePath.value.checkNull().isNotEmpty))
+              (element.isMediaMessage() &&
+                  element.mediaChatMessage!.mediaLocalStoragePath.value
+                      .checkNull()
+                      .isNotEmpty))
     };
   }
 
@@ -1214,12 +1332,15 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     }
     var isMediaDelete = false.obs;
     var chatType = profile.isGroupProfile ?? false ? "groupchat" : "chat";
-    DialogUtils.showAlert(dialogStyle: AppStyleConfig.dialogStyle,
+    DialogUtils.showAlert(
+        dialogStyle: AppStyleConfig.dialogStyle,
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              selectedChatList.length > 1 ? getTranslated("deleteSelectedMessages") : getTranslated("deleteSelectedMessage"),
+              selectedChatList.length > 1
+                  ? getTranslated("deleteSelectedMessages")
+                  : getTranslated("deleteSelectedMessage"),
               style: const TextStyle(fontSize: 18, color: textColor),
             ),
             isCheckBoxShown
@@ -1229,7 +1350,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
                       InkWell(
                         onTap: () {
                           isMediaDelete(!isMediaDelete.value);
-                          LogMessage.d("isMediaDelete", isMediaDelete.value.toString());
+                          LogMessage.d(
+                              "isMediaDelete", isMediaDelete.value.toString());
                         },
                         child: Row(
                           children: [
@@ -1238,11 +1360,13 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
                                   value: isMediaDelete.value,
                                   onChanged: (value) {
                                     isMediaDelete(!isMediaDelete.value);
-                                    LogMessage.d("isMediaDelete", value.toString());
+                                    LogMessage.d(
+                                        "isMediaDelete", value.toString());
                                   });
                             }),
                             Expanded(
-                              child: Text(getTranslated("deleteMediaFromPhone")),
+                              child:
+                                  Text(getTranslated("deleteMediaFromPhone")),
                             ),
                           ],
                         ),
@@ -1254,15 +1378,20 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
         ),
         message: "",
         actions: [
-          TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
+          TextButton(
+              style: AppStyleConfig.dialogStyle.buttonStyle,
               onPressed: () {
                 NavUtils.back();
               },
-              child: Text(getTranslated("cancel").toUpperCase(), )),
-          TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
+              child: Text(
+                getTranslated("cancel").toUpperCase(),
+              )),
+          TextButton(
+              style: AppStyleConfig.dialogStyle.buttonStyle,
               onPressed: () {
                 NavUtils.back();
-                if (!availableFeatures.value.isDeleteMessageAvailable.checkNull()) {
+                if (!availableFeatures.value.isDeleteMessageAvailable
+                    .checkNull()) {
                   DialogUtils.showFeatureUnavailable();
                   return;
                 }
@@ -1281,12 +1410,16 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
                 isSelected(false);
                 selectedChatList.clear();
               },
-              child: Text(getTranslated("deleteForMe").toUpperCase(), )),
+              child: Text(
+                getTranslated("deleteForMe").toUpperCase(),
+              )),
           isRecallAvailable
-              ? TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
+              ? TextButton(
+                  style: AppStyleConfig.dialogStyle.buttonStyle,
                   onPressed: () {
                     NavUtils.back();
-                    if (!availableFeatures.value.isDeleteMessageAvailable.checkNull()) {
+                    if (!availableFeatures.value.isDeleteMessageAvailable
+                        .checkNull()) {
                       DialogUtils.showFeatureUnavailable();
                       return;
                     }
@@ -1303,8 +1436,10 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
                               chatList.isMessageRecalled(true);
                               chatList.isSelected(false);
                               // this.chatList.refresh();
-                              if (selectedChatList.last.messageId == chatList.messageId) {
-                                onMessageDeleteNotifyUI(chatJid: chatList.chatUserJid);
+                              if (selectedChatList.last.messageId ==
+                                  chatList.messageId) {
+                                onMessageDeleteNotifyUI(
+                                    chatJid: chatList.chatUserJid);
                               }
                             }
                           } else {
@@ -1314,7 +1449,9 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
                           selectedChatList.clear();
                         });
                   },
-                  child: Text(getTranslated("deleteForEveryone").toUpperCase(), ))
+                  child: Text(
+                    getTranslated("deleteForEveryone").toUpperCase(),
+                  ))
               : const SizedBox.shrink(),
         ]);
   }
@@ -1349,7 +1486,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
           isFavourite: !item.isMessageStarred.value,
           chatType: item.messageChatType,
           flyCallBack: (_) {});
-      var msg = chatList.firstWhere((element) => item.messageId == element.messageId);
+      var msg =
+          chatList.firstWhere((element) => item.messageId == element.messageId);
       msg.isMessageStarred(!item.isMessageStarred.value);
       msg.isSelected(false);
     }
@@ -1359,37 +1497,49 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
 
   blockUser() {
     Future.delayed(const Duration(milliseconds: 100), () async {
-      DialogUtils.showAlert(dialogStyle: AppStyleConfig.dialogStyle,message: "${getTranslated("youWantToBlock")} ${getName(profile)}?", actions: [
-        TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
-            onPressed: () {
-              NavUtils.back();
-            },
-            child: Text(getTranslated("cancel").toUpperCase(), )),
-        TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
-            onPressed: () async {
-              await AppUtils.isNetConnected().then((isConnected) {
-                if (isConnected) {
+      DialogUtils.showAlert(
+          dialogStyle: AppStyleConfig.dialogStyle,
+          message: "${getTranslated("youWantToBlock")} ${getName(profile)}?",
+          actions: [
+            TextButton(
+                style: AppStyleConfig.dialogStyle.buttonStyle,
+                onPressed: () {
                   NavUtils.back();
-                  DialogUtils.showLoading(message: getTranslated("blockingUser"),dialogStyle: AppStyleConfig.dialogStyle);
-                  Mirrorfly.blockUser(
-                      userJid: profile.jid!,
-                      flyCallBack: (FlyResponse response) {
-                        debugPrint("$response");
-                        profile.isBlocked = true;
-                        isBlocked(true);
-                        setChatStatus();
-                        profile_.refresh();
-                        saveUnsentMessage();
-                        DialogUtils.hideLoading();
-                      toToast(getTranslated("hasBlocked").replaceFirst("%d", getName(profile)));
-                      });
-                } else {
-                toToast(getTranslated("noInternetConnection"));
-                }
-              });
-            },
-            child: Text(getTranslated("block").toUpperCase(), )),
-      ]);
+                },
+                child: Text(
+                  getTranslated("cancel").toUpperCase(),
+                )),
+            TextButton(
+                style: AppStyleConfig.dialogStyle.buttonStyle,
+                onPressed: () async {
+                  await AppUtils.isNetConnected().then((isConnected) {
+                    if (isConnected) {
+                      NavUtils.back();
+                      DialogUtils.showLoading(
+                          message: getTranslated("blockingUser"),
+                          dialogStyle: AppStyleConfig.dialogStyle);
+                      Mirrorfly.blockUser(
+                          userJid: profile.jid!,
+                          flyCallBack: (FlyResponse response) {
+                            debugPrint("$response");
+                            profile.isBlocked = true;
+                            isBlocked(true);
+                            setChatStatus();
+                            profile_.refresh();
+                            saveUnsentMessage();
+                            DialogUtils.hideLoading();
+                            toToast(getTranslated("hasBlocked")
+                                .replaceFirst("%d", getName(profile)));
+                          });
+                    } else {
+                      toToast(getTranslated("noInternetConnection"));
+                    }
+                  });
+                },
+                child: Text(
+                  getTranslated("block").toUpperCase(),
+                )),
+          ]);
     });
   }
 
@@ -1400,41 +1550,57 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     }
     if (chatList.isNotEmpty) {
       Future.delayed(const Duration(milliseconds: 100), () {
-        var starred = chatList.indexWhere((element) => element.isMessageStarred.value);
-        DialogUtils.showAlert(dialogStyle: AppStyleConfig.dialogStyle,message: getTranslated("youWantToClearChat"), actions: [
-          Visibility(
-            visible: !starred.isNegative,
-            child: TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
-                onPressed: () {
-                  NavUtils.back();
-                  clearChatHistory(false);
-                },
-                child: Text(getTranslated("clearAll").toUpperCase(), )),
-          ),
-          TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
-              onPressed: () {
-                NavUtils.back();
-              },
-              child: Text(getTranslated("cancel").toUpperCase(), )),
-          Visibility(
-            visible: starred.isNegative,
-            child: TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
-                onPressed: () {
-                  NavUtils.back();
-                  clearChatHistory(false);
-                },
-                child: Text(getTranslated("clear").toUpperCase(), )),
-          ),
-          Visibility(
-            visible: !starred.isNegative,
-            child: TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
-                onPressed: () {
-                  NavUtils.back();
-                  clearChatHistory(true);
-                },
-                child: Text(getTranslated("clearExceptStarred"), )),
-          ),
-        ]);
+        var starred =
+            chatList.indexWhere((element) => element.isMessageStarred.value);
+        DialogUtils.showAlert(
+            dialogStyle: AppStyleConfig.dialogStyle,
+            message: getTranslated("youWantToClearChat"),
+            actions: [
+              Visibility(
+                visible: !starred.isNegative,
+                child: TextButton(
+                    style: AppStyleConfig.dialogStyle.buttonStyle,
+                    onPressed: () {
+                      NavUtils.back();
+                      clearChatHistory(false);
+                    },
+                    child: Text(
+                      getTranslated("clearAll").toUpperCase(),
+                    )),
+              ),
+              TextButton(
+                  style: AppStyleConfig.dialogStyle.buttonStyle,
+                  onPressed: () {
+                    NavUtils.back();
+                  },
+                  child: Text(
+                    getTranslated("cancel").toUpperCase(),
+                  )),
+              Visibility(
+                visible: starred.isNegative,
+                child: TextButton(
+                    style: AppStyleConfig.dialogStyle.buttonStyle,
+                    onPressed: () {
+                      NavUtils.back();
+                      clearChatHistory(false);
+                    },
+                    child: Text(
+                      getTranslated("clear").toUpperCase(),
+                    )),
+              ),
+              Visibility(
+                visible: !starred.isNegative,
+                child: TextButton(
+                    style: AppStyleConfig.dialogStyle.buttonStyle,
+                    onPressed: () {
+                      NavUtils.back();
+                      clearChatHistory(true);
+                    },
+                    child: Text(
+                      getTranslated("clearExceptStarred"),
+                    )),
+              ),
+            ]);
       });
     } else {
       toToast(getTranslated("noConversation"));
@@ -1443,36 +1609,47 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
 
   unBlockUser() {
     Future.delayed(const Duration(milliseconds: 100), () {
-      DialogUtils.showAlert(dialogStyle: AppStyleConfig.dialogStyle,message: getTranslated("unBlockUser").replaceFirst("%d", getName(profile)), actions: [
-        TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
-            onPressed: () {
-              NavUtils.back();
-            },
-            child: Text(getTranslated("cancel").toUpperCase(), )),
-        TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
-            onPressed: () async {
-              await AppUtils.isNetConnected().then((isConnected) {
-                if (isConnected) {
+      DialogUtils.showAlert(
+          dialogStyle: AppStyleConfig.dialogStyle,
+          message:
+              getTranslated("unBlockUser").replaceFirst("%d", getName(profile)),
+          actions: [
+            TextButton(
+                style: AppStyleConfig.dialogStyle.buttonStyle,
+                onPressed: () {
                   NavUtils.back();
-                  // DialogUtils.showLoading(message: "Unblocking User");
-                  Mirrorfly.unblockUser(
-                      userJid: profile.jid!,
-                      flyCallBack: (FlyResponse response) {
-                        debugPrint(response.toString());
-                        profile.isBlocked = false;
-                        isBlocked(false);
-                        getUnsentMessageOfAJid();
-                        setChatStatus();
-                        DialogUtils.hideLoading();
-                      toToast(getTranslated("hasUnBlocked").replaceFirst("%d", getName(profile)));
-                      });
-                } else {
-                toToast(getTranslated("noInternetConnection"));
-                }
-              });
-            },
-            child: Text(getTranslated("unblock").toUpperCase(), )),
-      ]);
+                },
+                child: Text(
+                  getTranslated("cancel").toUpperCase(),
+                )),
+            TextButton(
+                style: AppStyleConfig.dialogStyle.buttonStyle,
+                onPressed: () async {
+                  await AppUtils.isNetConnected().then((isConnected) {
+                    if (isConnected) {
+                      NavUtils.back();
+                      // DialogUtils.showLoading(message: "Unblocking User");
+                      Mirrorfly.unblockUser(
+                          userJid: profile.jid!,
+                          flyCallBack: (FlyResponse response) {
+                            debugPrint(response.toString());
+                            profile.isBlocked = false;
+                            isBlocked(false);
+                            getUnsentMessageOfAJid();
+                            setChatStatus();
+                            DialogUtils.hideLoading();
+                            toToast(getTranslated("hasUnBlocked")
+                                .replaceFirst("%d", getName(profile)));
+                          });
+                    } else {
+                      toToast(getTranslated("noInternetConnection"));
+                    }
+                  });
+                },
+                child: Text(
+                  getTranslated("unblock").toUpperCase(),
+                )),
+          ]);
     });
   }
 
@@ -1487,23 +1664,41 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
       if (searchedText.text.trim().isNotEmpty) {
         for (var i = 0; i < chatList.length; i++) {
           if (chatList[i].messageType.toUpperCase() == Constants.mText &&
-              chatList[i].messageTextContent.startsWithTextInWords(searchedText.text.trim())) {
+              chatList[i]
+                  .messageTextContent
+                  .startsWithTextInWords(searchedText.text.trim())) {
             filteredPosition.add(i);
-          } else if (chatList[i].messageType.toUpperCase() == Constants.mImage &&
+          } else if (chatList[i].messageType.toUpperCase() ==
+                  Constants.mImage &&
               chatList[i].mediaChatMessage!.mediaCaptionText.isNotEmpty &&
-              chatList[i].mediaChatMessage!.mediaCaptionText.startsWithTextInWords(searchedText.text.trim())) {
+              chatList[i]
+                  .mediaChatMessage!
+                  .mediaCaptionText
+                  .startsWithTextInWords(searchedText.text.trim())) {
             filteredPosition.add(i);
-          } else if (chatList[i].messageType.toUpperCase() == Constants.mVideo &&
+          } else if (chatList[i].messageType.toUpperCase() ==
+                  Constants.mVideo &&
               chatList[i].mediaChatMessage!.mediaCaptionText.isNotEmpty &&
-              chatList[i].mediaChatMessage!.mediaCaptionText.startsWithTextInWords(searchedText.text.trim())) {
+              chatList[i]
+                  .mediaChatMessage!
+                  .mediaCaptionText
+                  .startsWithTextInWords(searchedText.text.trim())) {
             filteredPosition.add(i);
-          } else if (chatList[i].messageType.toUpperCase() == Constants.mDocument &&
+          } else if (chatList[i].messageType.toUpperCase() ==
+                  Constants.mDocument &&
               chatList[i].mediaChatMessage!.mediaFileName.isNotEmpty &&
-              chatList[i].mediaChatMessage!.mediaFileName.startsWithTextInWords(searchedText.text.trim())) {
+              chatList[i]
+                  .mediaChatMessage!
+                  .mediaFileName
+                  .startsWithTextInWords(searchedText.text.trim())) {
             filteredPosition.add(i);
-          } else if (chatList[i].messageType.toUpperCase() == Constants.mContact &&
+          } else if (chatList[i].messageType.toUpperCase() ==
+                  Constants.mContact &&
               chatList[i].contactChatMessage!.contactName.isNotEmpty &&
-              chatList[i].contactChatMessage!.contactName.startsWithTextInWords(searchedText.text.trim())) {
+              chatList[i]
+                  .contactChatMessage!
+                  .contactName
+                  .startsWithTextInWords(searchedText.text.trim())) {
             filteredPosition.add(i);
           }
         }
@@ -1531,8 +1726,10 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     if (filteredPosition.isNotEmpty) {
       var visiblePos = findTopFirstVisibleItemPosition();
       LogMessage.d("visiblePos", visiblePos.toString());
-      LogMessage.d("visiblePos2", findBottomLastVisibleItemPosition().toString());
-      var g = getNextPosition(findTopFirstVisibleItemPosition(), findBottomLastVisibleItemPosition(), j);
+      LogMessage.d(
+          "visiblePos2", findBottomLastVisibleItemPosition().toString());
+      var g = getNextPosition(findTopFirstVisibleItemPosition(),
+          findBottomLastVisibleItemPosition(), j);
       if (g != null) j = g;
       LogMessage.d("scrollUp", g.toString());
       if (j >= 0 && g != null) {
@@ -1549,7 +1746,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     if (filteredPosition.isNotEmpty) {
       var visiblePos = findTopFirstVisibleItemPosition();
       LogMessage.d("visiblePos", visiblePos.toString());
-      var g = getPreviousPosition(findTopFirstVisibleItemPosition(), findBottomLastVisibleItemPosition(), j);
+      var g = getPreviousPosition(findTopFirstVisibleItemPosition(),
+          findBottomLastVisibleItemPosition(), j);
       if (g != null) j = g;
       LogMessage.d("scrollDown", j.toString());
       if (j >= 0 && g != null) {
@@ -1583,16 +1781,21 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   }
 
   int? getPreviousPosition(int end, int start, int previousPos) {
-    var previousClicked = previousPos; //!previousPos.isNegative ? filteredPosition[previousPos] : -1;
-    debugPrint('start : $start end : $end previousClickedPos : $previousClicked');
+    var previousClicked =
+        previousPos; //!previousPos.isNegative ? filteredPosition[previousPos] : -1;
+    debugPrint(
+        'start : $start end : $end previousClickedPos : $previousClicked');
     debugPrint('previousPos : $previousPos');
     var isNotInTheView = (previousClicked <= end && previousClicked >= start);
     if (previousClicked == filteredPosition.first && isNotInTheView) {
       return null;
     }
     var reversedList = filteredPosition.reversed.toList();
-    var findBetweenOrBelow =
-        reversedList.firstWhere((y) => ((y <= end && y >= start) && !previousClicked.isNegative ? (previousClicked != y) : true) && start > y);
+    var findBetweenOrBelow = reversedList.firstWhere((y) =>
+        ((y <= end && y >= start) && !previousClicked.isNegative
+            ? (previousClicked != y)
+            : true) &&
+        start > y);
     if (!findBetweenOrBelow.isNegative) {
       debugPrint('findBetweenOrBelow : $findBetweenOrBelow}');
     }
@@ -1602,15 +1805,20 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
 
   //returns the position of filtered position
   int? getNextPosition(int end, int start, int previousPos) {
-    var previousClicked = previousPos; //!previousPos.isNegative ? filteredPosition[previousPos] : -1;
-    debugPrint('start : $start end : $end previousClickedPos : $previousClicked');
+    var previousClicked =
+        previousPos; //!previousPos.isNegative ? filteredPosition[previousPos] : -1;
+    debugPrint(
+        'start : $start end : $end previousClickedPos : $previousClicked');
     debugPrint('previousPos : $previousPos');
     var isNotInTheView = (previousClicked <= end && previousClicked >= start);
     if (previousClicked == filteredPosition.last && isNotInTheView) {
       return null;
     }
-    var findBetweenOrAbove =
-        filteredPosition.firstWhere((y) => ((y >= end && y <= start) && !previousClicked.isNegative ? (previousClicked != y) : true) && start < y);
+    var findBetweenOrAbove = filteredPosition.firstWhere((y) =>
+        ((y >= end && y <= start) && !previousClicked.isNegative
+            ? (previousClicked != y)
+            : true) &&
+        start < y);
     if (!findBetweenOrAbove.isNegative) {
       debugPrint('findBetweenOrBelow : $findBetweenOrAbove');
     }
@@ -1624,7 +1832,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     var listen = listener ?? newItemPositionsListener;
     var r = listen?.itemPositions.value
         .where((ItemPosition position) => position.itemLeadingEdge < 1)
-        .reduce((ItemPosition min, ItemPosition position) => position.itemLeadingEdge > min.itemLeadingEdge ? position : min)
+        .reduce((ItemPosition min, ItemPosition position) =>
+            position.itemLeadingEdge > min.itemLeadingEdge ? position : min)
         .index;
     return r!; //< chatList.length ? r + 1 : r;
   }
@@ -1633,7 +1842,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     var listen = listener ?? newItemPositionsListener;
     var r = listen?.itemPositions.value
         .where((ItemPosition position) => position.itemTrailingEdge < 1)
-        .reduce((ItemPosition min, ItemPosition position) => position.itemTrailingEdge < min.itemTrailingEdge ? position : min)
+        .reduce((ItemPosition min, ItemPosition position) =>
+            position.itemTrailingEdge < min.itemTrailingEdge ? position : min)
         .index;
     return r!; // < chatList.length ? r + 1 : r;
   }
@@ -1651,7 +1861,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
                 if (data.mediaAttachmentsUrl != null) {
                   if (data.mediaAttachmentsUrl!.isNotEmpty) {
                     var xfiles = <XFile>[];
-                    data.mediaAttachmentsUrl?.forEach((element) => xfiles.add(XFile(element)));
+                    data.mediaAttachmentsUrl
+                        ?.forEach((element) => xfiles.add(XFile(element)));
                     await Share.shareXFiles(xfiles);
                   }
                 }
@@ -1664,7 +1875,9 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   }
 
   checkBusyStatusForForward() async {
-    var busyStatus = !profile.isGroupProfile.checkNull() ? await Mirrorfly.isBusyStatusEnabled() : false;
+    var busyStatus = !profile.isGroupProfile.checkNull()
+        ? await Mirrorfly.isBusyStatusEnabled()
+        : false;
     if (!busyStatus.checkNull()) {
       forwardMessage();
     } else {
@@ -1707,7 +1920,7 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
 
   Future<void> cancelRecording() async {
     debugPrint("Cancel Recording called");
-    if (_isDisposed){
+    if (_isDisposed) {
       debugPrint("Recording is already cancelled");
       return;
     }
@@ -1715,7 +1928,7 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     File(filePath!).delete();
     _audioTimer?.cancel();
     record.dispose();
-    _isDisposed = true ;
+    _isDisposed = true;
     _audioTimer = null;
     isAudioRecording(Constants.audioRecordDelete);
     Future.delayed(const Duration(milliseconds: 1500), () {
@@ -1731,15 +1944,20 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
       // player.stop();
       chatList.refresh();
     }
-    var busyStatus = !profile.isGroupProfile.checkNull() ? await Mirrorfly.isBusyStatusEnabled() : false;
+    var busyStatus = !profile.isGroupProfile.checkNull()
+        ? await Mirrorfly.isBusyStatusEnabled()
+        : false;
     if (!busyStatus.checkNull()) {
       // var permission = await AppPermission.getStoragePermission();
-      var microPhonePermissionStatus = await AppPermission.checkAndRequestPermissions(
-          permissions: [Permission.microphone],
-          permissionIcon: audioPermission,
-          permissionContent: getTranslated("audioPermissionContent"),
-          permissionPermanentlyDeniedContent: getTranslated("microPhonePermissionDeniedContent"));
-      debugPrint("microPhone Permission Status---> $microPhonePermissionStatus");
+      var microPhonePermissionStatus =
+          await AppPermission.checkAndRequestPermissions(
+              permissions: [Permission.microphone],
+              permissionIcon: audioPermission,
+              permissionContent: getTranslated("audioPermissionContent"),
+              permissionPermanentlyDeniedContent:
+                  getTranslated("microPhonePermissionDeniedContent"));
+      debugPrint(
+          "microPhone Permission Status---> $microPhonePermissionStatus");
       if (microPhonePermissionStatus) {
         isUserTyping(false);
         record = AudioRecorder();
@@ -1747,7 +1965,9 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
         timerInit("00:00");
         isAudioRecording(Constants.audioRecording);
         startTimer();
-        await record.start(const RecordConfig(), path: "$audioSavePath/audio_${DateTime.now().millisecondsSinceEpoch}.m4a");
+        await record.start(const RecordConfig(),
+            path:
+                "$audioSavePath/audio_${DateTime.now().millisecondsSinceEpoch}.m4a");
         Future.delayed(const Duration(seconds: 300), () {
           if (isAudioRecording.value == Constants.audioRecording) {
             stopRecording();
@@ -1833,7 +2053,9 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
         setOnGoingUserAvail();
       });
     } else {
-      NavUtils.toNamed(Routes.chatInfo, arguments: ChatInfoArguments(chatJid:profile.jid.checkNull()))?.then((value) {
+      NavUtils.toNamed(Routes.chatInfo,
+              arguments: ChatInfoArguments(chatJid: profile.jid.checkNull()))
+          ?.then((value) {
         debugPrint("chat info-->$value");
         setOnGoingUserAvail();
       });
@@ -1847,11 +2069,13 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   }
 
   sendUserTypingStatus() {
-    Mirrorfly.sendTypingStatus(toJid: profile.jid.checkNull(), chatType: profile.getChatType());
+    Mirrorfly.sendTypingStatus(
+        toJid: profile.jid.checkNull(), chatType: profile.getChatType());
   }
 
   sendUserTypingGoneStatus() {
-    Mirrorfly.sendTypingGoneStatus(toJid: profile.jid.checkNull(), chatType: profile.getChatType());
+    Mirrorfly.sendTypingGoneStatus(
+        toJid: profile.jid.checkNull(), chatType: profile.getChatType());
   }
 
   var unreadCount = 0.obs;
@@ -1861,7 +2085,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
 
     if (chatMessageModel.chatUserJid == profile.jid) {
       removeUnreadSeparator();
-      final index = chatList.indexWhere((message) => message.messageId == chatMessageModel.messageId);
+      final index = chatList.indexWhere(
+          (message) => message.messageId == chatMessageModel.messageId);
       debugPrint("message received index $index");
       if (index.isNegative) {
         // chatList.insert(0, chatMessageModel);
@@ -1877,7 +2102,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
 
   Future<void> onMessageStatusUpdated(ChatMessageModel chatMessageModel) async {
     if (chatMessageModel.chatUserJid == profile.jid) {
-      final index = chatList.indexWhere((message) => message.messageId == chatMessageModel.messageId);
+      final index = chatList.indexWhere(
+          (message) => message.messageId == chatMessageModel.messageId);
       debugPrint("ChatScreen Message Status Update index of search $index");
       debugPrint("messageID--> $index  ${chatMessageModel.messageId}");
       if (!index.isNegative) {
@@ -1889,9 +2115,11 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
       }
     }
     if (isSelected.value) {
-      var selectedIndex = selectedChatList.indexWhere((element) => chatMessageModel.messageId == element.messageId);
+      var selectedIndex = selectedChatList.indexWhere(
+          (element) => chatMessageModel.messageId == element.messageId);
       if (!selectedIndex.isNegative) {
-        chatMessageModel.isSelected(true); //selectedChatList[selectedIndex].isSelected;
+        chatMessageModel
+            .isSelected(true); //selectedChatList[selectedIndex].isSelected;
         selectedChatList[selectedIndex] = chatMessageModel;
         selectedChatList.refresh();
         getMessageActions();
@@ -1901,21 +2129,27 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
 
   void onMediaStatusUpdated(ChatMessageModel chatMessageModel) {
     if (chatMessageModel.chatUserJid == profile.jid) {
-      final index = chatList.indexWhere((message) => message.messageId == chatMessageModel.messageId);
+      final index = chatList.indexWhere(
+          (message) => message.messageId == chatMessageModel.messageId);
       debugPrint("Media Status Update index of search $index");
       if (index != -1) {
         // chatMessageModel.isSelected=chatList[index].isSelected;
-        chatList[index].mediaChatMessage?.mediaLocalStoragePath(chatMessageModel.mediaChatMessage!.mediaLocalStoragePath.value);
-        chatList[index].mediaChatMessage?.mediaDownloadStatus(chatMessageModel.mediaChatMessage!.mediaDownloadStatus.value);
-        chatList[index].mediaChatMessage?.mediaUploadStatus(chatMessageModel.mediaChatMessage!.mediaUploadStatus.value);
+        chatList[index].mediaChatMessage?.mediaLocalStoragePath(
+            chatMessageModel.mediaChatMessage!.mediaLocalStoragePath.value);
+        chatList[index].mediaChatMessage?.mediaDownloadStatus(
+            chatMessageModel.mediaChatMessage!.mediaDownloadStatus.value);
+        chatList[index].mediaChatMessage?.mediaUploadStatus(
+            chatMessageModel.mediaChatMessage!.mediaUploadStatus.value);
         debugPrint(
             "After Media Status Updated ${chatList[index].mediaChatMessage?.mediaLocalStoragePath} ${chatList[index].mediaChatMessage?.mediaDownloadStatus} ${chatList[index].mediaChatMessage?.mediaUploadStatus}");
       }
     }
     if (isSelected.value) {
-      var selectedIndex = selectedChatList.indexWhere((element) => chatMessageModel.messageId == element.messageId);
+      var selectedIndex = selectedChatList.indexWhere(
+          (element) => chatMessageModel.messageId == element.messageId);
       if (!selectedIndex.isNegative) {
-        chatMessageModel.isSelected(true); //selectedChatList[selectedIndex].isSelected;
+        chatMessageModel
+            .isSelected(true); //selectedChatList[selectedIndex].isSelected;
         selectedChatList[selectedIndex] = chatMessageModel;
         selectedChatList.refresh();
         getMessageActions();
@@ -1938,7 +2172,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
 
   void onLeftFromGroup({required String groupJid, required String userJid}) {
     if (profile.isGroupProfile ?? false) {
-      if (groupJid == profile.jid && userJid == SessionManagement.getUserJID()) {
+      if (groupJid == profile.jid &&
+          userJid == SessionManagement.getUserJID()) {
         //current user leave from the group
         _isMemberOfGroup(false);
       } else if (groupJid == profile.jid) {
@@ -1947,7 +2182,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     }
   }
 
-  void setTypingStatus(String singleOrgroupJid, String userId, String typingStatus) {
+  void setTypingStatus(
+      String singleOrgroupJid, String userId, String typingStatus) {
     if (profile.jid.checkNull() == singleOrgroupJid) {
       var jid = profile.isGroupProfile ?? false ? userId : singleOrgroupJid;
       if (!typingList.contains(jid)) {
@@ -1956,7 +2192,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
       if (typingStatus.toLowerCase() == Constants.composing) {
         if (profile.isGroupProfile ?? false) {
           groupParticipantsName("");
-          getProfileDetails(jid).then((value) => userPresenceStatus("${value.name} typing..."));
+          getProfileDetails(jid)
+              .then((value) => userPresenceStatus("${value.name} typing..."));
         } else {
           //if(!profile.isGroupProfile!){//commented if due to above if condition works
           userPresenceStatus("typing...");
@@ -1973,7 +2210,10 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
 
   memberOfGroup() {
     if (profile.isGroupProfile ?? false) {
-      Mirrorfly.isMemberOfGroup(groupJid: profile.jid.checkNull(), userJid: SessionManagement.getUserJID().checkNull()).then((bool? value) {
+      Mirrorfly.isMemberOfGroup(
+              groupJid: profile.jid.checkNull(),
+              userJid: SessionManagement.getUserJID().checkNull())
+          .then((bool? value) {
         if (value != null) {
           _isMemberOfGroup(value);
         }
@@ -1985,38 +2225,40 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   var typingList = <String>[].obs;
 
   setChatStatus() async {
-      if (profile.isGroupProfile.checkNull()) {
-        debugPrint("value--> show group list");
-        if (typingList.isNotEmpty) {
-          userPresenceStatus("${ProfileDetails(jid: typingList.last).getUsername()} typing...");
-          //"${Member(jid: typingList.last).getUsername()} typing...");
-        } else {
-          getParticipantsNameAsCsv(profile.jid.checkNull());
-        }
+    if (profile.isGroupProfile.checkNull()) {
+      debugPrint("value--> show group list");
+      if (typingList.isNotEmpty) {
+        userPresenceStatus(
+            "${ProfileDetails(jid: typingList.last).getUsername()} typing...");
+        //"${Member(jid: typingList.last).getUsername()} typing...");
       } else {
-        if (!profile.isBlockedMe.checkNull() || !profile.isAdminBlocked.checkNull()) {
-          Mirrorfly.getUserLastSeenTime(
-              jid: profile.jid.toString(),
-              flyCallBack: (FlyResponse response) {
-                debugPrint("date time flutter--->");
-                if (response.isSuccess && response.hasData) {
-                  var lastSeen = convertSecondToLastSeen(response.data);
-                  groupParticipantsName('');
-                  userPresenceStatus(lastSeen.toString());
-                } else {
-                  groupParticipantsName('');
-                  userPresenceStatus("");
-                }
-              });
-        } else {
-          groupParticipantsName('');
-          userPresenceStatus("");
-        }
+        getParticipantsNameAsCsv(profile.jid.checkNull());
       }
-      if (!await AppUtils.isNetConnected()) {
-        debugPrint("setChatStatus method network not connected");
+    } else {
+      if (!profile.isBlockedMe.checkNull() ||
+          !profile.isAdminBlocked.checkNull()) {
+        Mirrorfly.getUserLastSeenTime(
+            jid: profile.jid.toString(),
+            flyCallBack: (FlyResponse response) {
+              debugPrint("date time flutter--->");
+              if (response.isSuccess && response.hasData) {
+                var lastSeen = convertSecondToLastSeen(response.data);
+                groupParticipantsName('');
+                userPresenceStatus(lastSeen.toString());
+              } else {
+                groupParticipantsName('');
+                userPresenceStatus("");
+              }
+            });
+      } else {
+        groupParticipantsName('');
         userPresenceStatus("");
       }
+    }
+    if (!await AppUtils.isNetConnected()) {
+      debugPrint("setChatStatus method network not connected");
+      userPresenceStatus("");
+    }
   }
 
   var groupParticipantsName = ''.obs;
@@ -2031,7 +2273,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
             LogMessage.d("getGroupMembersList-->", response.toString());
             var groupsMembersProfileList = memberFromJson(response.data);
             for (var it in groupsMembersProfileList) {
-              if (it.jid.checkNull() != SessionManagement.getUserJID().checkNull()) {
+              if (it.jid.checkNull() !=
+                  SessionManagement.getUserJID().checkNull()) {
                 str.add(getMemberName(it).checkNull());
               }
             }
@@ -2053,7 +2296,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   // final ImagePicker _picker = ImagePicker();
 
   onCameraClick() async {
-    if (!availableFeatures.value.isImageAttachmentAvailable.checkNull() && !availableFeatures.value.isVideoAttachmentAvailable.checkNull()) {
+    if (!availableFeatures.value.isImageAttachmentAvailable.checkNull() &&
+        !availableFeatures.value.isVideoAttachmentAvailable.checkNull()) {
       DialogUtils.showFeatureUnavailable();
       return;
     }
@@ -2062,7 +2306,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
         permissions: [Permission.camera, Permission.microphone],
         permissionIcon: cameraPermission,
         permissionContent: getTranslated("cameraPermissionContent"),
-        permissionPermanentlyDeniedContent: getTranslated("cameraCapturePermanentlyDeniedContent"));
+        permissionPermanentlyDeniedContent:
+            getTranslated("cameraCapturePermanentlyDeniedContent"));
     debugPrint("Camera Permission Status---> $cameraPermissionStatus");
     if (cameraPermissionStatus) {
       setOnGoingUserGone();
@@ -2071,7 +2316,10 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
         if (photo != null) {
           LogMessage.d("photo", photo.name.toString());
           LogMessage.d("caption text sending-->", messageController.text);
-          var file = PickedAssetModel(path: photo.path, type: !photo.name.endsWith(".mp4") ? "image" : "video", file: File(photo.path));
+          var file = PickedAssetModel(
+              path: photo.path,
+              type: !photo.name.endsWith(".mp4") ? "image" : "video",
+              file: File(photo.path));
           NavUtils.toNamed(Routes.mediaPreview, arguments: {
             "filePath": [file],
             "userName": profile.name!,
@@ -2100,7 +2348,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   }
 
   onGalleryClick() async {
-    if (!availableFeatures.value.isImageAttachmentAvailable.checkNull() && !availableFeatures.value.isVideoAttachmentAvailable.checkNull()) {
+    if (!availableFeatures.value.isImageAttachmentAvailable.checkNull() &&
+        !availableFeatures.value.isVideoAttachmentAvailable.checkNull()) {
       DialogUtils.showFeatureUnavailable();
       return;
     }
@@ -2109,12 +2358,17 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
         permissions: permissions,
         permissionIcon: filePermission,
         permissionContent: getTranslated("filePermissionContent"),
-        permissionPermanentlyDeniedContent: getTranslated("storagePermissionDeniedContent"));
+        permissionPermanentlyDeniedContent:
+            getTranslated("storagePermissionDeniedContent"));
     if (permission) {
       try {
         setOnGoingUserGone();
-        NavUtils.toNamed(Routes.galleryPicker, arguments: {"userName": getName(profile), 'profile': profile, 'caption': messageController.text.trim(), 'userJid': profile.jid})
-            ?.then((value) => setOnGoingUserAvail());
+        NavUtils.toNamed(Routes.galleryPicker, arguments: {
+          "userName": getName(profile),
+          'profile': profile,
+          'caption': messageController.text.trim(),
+          'userJid': profile.jid
+        })?.then((value) => setOnGoingUserAvail());
       } catch (e) {
         debugPrint(e.toString());
       }
@@ -2130,10 +2384,12 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
         permissions: [Permission.contacts],
         permissionIcon: contactPermission,
         permissionContent: getTranslated("contactPermissionContent"),
-        permissionPermanentlyDeniedContent: getTranslated("contactPermissionDeniedContent"));
+        permissionPermanentlyDeniedContent:
+            getTranslated("contactPermissionDeniedContent"));
     if (permission) {
       setOnGoingUserGone();
-      NavUtils.toNamed(Routes.localContact, arguments: {"userJid": profile.jid })?.then((value) => setOnGoingUserAvail());
+      NavUtils.toNamed(Routes.localContact, arguments: {"userJid": profile.jid})
+          ?.then((value) => setOnGoingUserAvail());
     }
   }
 
@@ -2147,7 +2403,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
           permissions: [Permission.location],
           permissionIcon: locationPinPermission,
           permissionContent: getTranslated("locationPermissionContent"),
-          permissionPermanentlyDeniedContent: getTranslated("locationPermissionDeniedContent"));
+          permissionPermanentlyDeniedContent:
+              getTranslated("locationPermissionDeniedContent"));
       if (permission) {
         setOnGoingUserGone();
         NavUtils.toNamed(Routes.locationSent)?.then((value) {
@@ -2205,13 +2462,17 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   bool forwardMessageVisibility(ChatMessageModel chat) {
     if (!chat.isMessageRecalled.value && !chat.isMessageDeleted) {
       if (chat.isMediaMessage()) {
-        if ((chat.mediaChatMessage!.mediaDownloadStatus.value == MediaDownloadStatus.mediaDownloaded.value ||
-                chat.mediaChatMessage!.mediaUploadStatus.value == MediaUploadStatus.mediaUploaded.value) &&
-            (checkFile(chat.mediaChatMessage!.mediaLocalStoragePath.value.checkNull()))) {
+        if ((chat.mediaChatMessage!.mediaDownloadStatus.value ==
+                    MediaDownloadStatus.mediaDownloaded.value ||
+                chat.mediaChatMessage!.mediaUploadStatus.value ==
+                    MediaUploadStatus.mediaUploaded.value) &&
+            (checkFile(chat.mediaChatMessage!.mediaLocalStoragePath.value
+                .checkNull()))) {
           return true;
         }
       } else {
-        if (chat.messageType == Constants.mLocation || chat.messageType == Constants.mContact) {
+        if (chat.messageType == Constants.mLocation ||
+            chat.messageType == Constants.mContact) {
           return true;
         }
       }
@@ -2224,9 +2485,14 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   }
 
   //Forward Message
-  void goToForwardMessage(List<String> messageIds){
+  void goToForwardMessage(List<String> messageIds) {
     setOnGoingUserGone();
-    NavUtils.toNamed(Routes.forwardChat, arguments: {"forward": true, "group": false, "groupJid": "", "messageIds": messageIds})?.then((value) {
+    NavUtils.toNamed(Routes.forwardChat, arguments: {
+      "forward": true,
+      "group": false,
+      "groupJid": "",
+      "messageIds": messageIds
+    })?.then((value) {
       _loadNextMessages(showLoading: false);
       checkAdminBlocked();
       memberOfGroup();
@@ -2292,19 +2558,26 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     //Forward Validation - can be added for forwarding more than one messages
     if (!canBeForwardedSet &&
         ((message.isMessageSentByMe && message.messageStatus.value == "N") ||
-            (message.isMediaMessage() && !checkFile(message.mediaChatMessage!.mediaLocalStoragePath.value)))) {
+            (message.isMediaMessage() &&
+                !checkFile(
+                    message.mediaChatMessage!.mediaLocalStoragePath.value)))) {
       canBeForwarded(false);
       canBeForwardedSet = true;
     }
     //Share Validation
     if (!canBeSharedSet &&
-        (!message.isMediaMessage() || (message.isMediaMessage() && !MediaUtils.isMediaExists(message.mediaChatMessage!.mediaLocalStoragePath.value)))) {
+        (!message.isMediaMessage() ||
+            (message.isMediaMessage() &&
+                !MediaUtils.isMediaExists(
+                    message.mediaChatMessage!.mediaLocalStoragePath.value)))) {
       canBeShared(false);
       canBeSharedSet = true;
     }
     //Starred Validation
     if (!canBeStarredSet && message.isMessageStarred.value ||
-        (message.isMediaMessage() && !checkFile(message.mediaChatMessage!.mediaLocalStoragePath.value))) {
+        (message.isMediaMessage() &&
+            !checkFile(
+                message.mediaChatMessage!.mediaLocalStoragePath.value))) {
       canBeStarred(false);
       canBeStarredSet = true;
     }
@@ -2329,7 +2602,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
         canEditMessage(false);
     }
 
-    canBeStarred(!canBeStarred.value && !canBeUnStarred.value || canBeStarred.value && !canBeUnStarred.value);
+    canBeStarred(!canBeStarred.value && !canBeUnStarred.value ||
+        canBeStarred.value && !canBeUnStarred.value);
 
     if (containsRecalled.value) {
       canBeCopied(false);
@@ -2363,7 +2637,9 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
       if (!message.isMessageSentByMe ||
           message.messageStatus.value == "N" ||
           message.isMessageRecalled.value ||
-          (message.isMediaMessage() && !checkFile(message.mediaChatMessage!.mediaLocalStoragePath.value))) {
+          (message.isMediaMessage() &&
+              !checkFile(
+                  message.mediaChatMessage!.mediaLocalStoragePath.value))) {
         canShowInfo(false);
       }
       //Report validation
@@ -2380,8 +2656,10 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
           (profile.isGroupProfile.checkNull() ? isMemberOfGroup : true) &&
           (message.messageType == Constants.mText ||
               message.messageType == Constants.mAutoText ||
-              (message.messageType == Constants.mImage && message.mediaChatMessage!.mediaCaptionText.isNotEmpty) ||
-              (message.messageType == Constants.mVideo && message.mediaChatMessage!.mediaCaptionText.isNotEmpty))) {
+              (message.messageType == Constants.mImage &&
+                  message.mediaChatMessage!.mediaCaptionText.isNotEmpty) ||
+              (message.messageType == Constants.mVideo &&
+                  message.mediaChatMessage!.mediaCaptionText.isNotEmpty))) {
         canEditMessage(true);
       } else {
         canEditMessage(false);
@@ -2398,7 +2676,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     var now = DateTime.now();
 
     // Calculate the time 15 minutes ago
-    var fifteenMinutesAgo = now.subtract(const Duration(minutes: Constants.editMessageTimeLimit));
+    var fifteenMinutesAgo =
+        now.subtract(const Duration(minutes: Constants.editMessageTimeLimit));
 
     //
     // Convert the epoch time (in microseconds since epoch) to a DateTime
@@ -2410,10 +2689,11 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
 
   void navigateToMessage(ChatMessageModel chatMessage, {int? index}) {
     var messageID = chatMessage.messageId;
-    var chatIndex = index ?? chatList.indexWhere((element) => element.messageId == messageID);
+    var chatIndex = index ??
+        chatList.indexWhere((element) => element.messageId == messageID);
     if (!chatIndex.isNegative) {
       // newScrollController.scrollTo(index: chatIndex+5, duration: const Duration(milliseconds: 1));
-      if(!checkIndexVisibleInViewPort(chatIndex)) {
+      if (!checkIndexVisibleInViewPort(chatIndex)) {
         newScrollController?.jumpTo(index: chatIndex);
       }
       LogMessage.d("newScrollController", "selected $chatIndex");
@@ -2430,18 +2710,24 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     }
   }
 
-  bool checkIndexVisibleInViewPort(int index){
-    return (findTopFirstVisibleItemPosition(listener: newItemPositionsListener) >= index && findBottomLastVisibleItemPosition(listener: newItemPositionsListener) <= index);
+  bool checkIndexVisibleInViewPort(int index) {
+    return (findTopFirstVisibleItemPosition(
+                listener: newItemPositionsListener) >=
+            index &&
+        findBottomLastVisibleItemPosition(listener: newItemPositionsListener) <=
+            index);
   }
 
-  void getMessageFromServerAndNavigateToMessage(ChatMessageModel chatMessage, int? index) {
+  void getMessageFromServerAndNavigateToMessage(
+      ChatMessageModel chatMessage, int? index) {
     Mirrorfly.loadMessages(flyCallback: (FlyResponse response) {
       showLoadingNext(false);
       showLoadingPrevious(false);
       if (response.isSuccess && response.hasData) {
         LogMessage.d("loadMessages", response.data);
         chatList.clear();
-        List<ChatMessageModel> chatMessageModel = chatMessageModelFromJson(response.data);
+        List<ChatMessageModel> chatMessageModel =
+            chatMessageModelFromJson(response.data);
         chatList(chatMessageModel.reversed.toList());
         navigateToMessage(chatMessage, index: index);
         chatLoading(false);
@@ -2460,9 +2746,12 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     var mediaPaths = <XFile>[];
     for (var item in selectedChatList) {
       if (item.isMediaMessage()) {
-        if (MediaUtils.isMediaExists(item.mediaChatMessage!.mediaLocalStoragePath.value)) {
-          mediaPaths.add(XFile(item.mediaChatMessage!.mediaLocalStoragePath.value.checkNull()));
-          debugPrint("mediaPaths ${item.mediaChatMessage!.mediaLocalStoragePath.value.checkNull()}");
+        if (MediaUtils.isMediaExists(
+            item.mediaChatMessage!.mediaLocalStoragePath.value)) {
+          mediaPaths.add(XFile(
+              item.mediaChatMessage!.mediaLocalStoragePath.value.checkNull()));
+          debugPrint(
+              "mediaPaths ${item.mediaChatMessage!.mediaLocalStoragePath.value.checkNull()}");
         }
       }
     }
@@ -2519,7 +2808,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   void markConversationReadNotifyUI() {
     LogMessage.d("setConversationAsRead", "chat");
     if (Get.isRegistered<MainController>()) {
-      Get.find<MainController>().markConversationReadNotifyUI(profile.jid.checkNull());
+      Get.find<MainController>()
+          .markConversationReadNotifyUI(profile.jid.checkNull());
     }
   }
 
@@ -2559,7 +2849,11 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   }
 
   void userCameOnline(jid) {
-    if (jid.isNotEmpty && profile.jid == jid && !profile.isGroupProfile.checkNull() && (!profile.isBlockedMe.checkNull() || !profile.isAdminBlocked.checkNull())) {
+    if (jid.isNotEmpty &&
+        profile.jid == jid &&
+        !profile.isGroupProfile.checkNull() &&
+        (!profile.isBlockedMe.checkNull() ||
+            !profile.isAdminBlocked.checkNull())) {
       debugPrint("userCameOnline : $jid");
       /*Future.delayed(const Duration(milliseconds: 3000), () {
         setChatStatus();
@@ -2569,7 +2863,9 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   }
 
   void userWentOffline(jid) {
-    if (jid.isNotEmpty && profile.jid == jid && !profile.isGroupProfile.checkNull()) {
+    if (jid.isNotEmpty &&
+        profile.jid == jid &&
+        !profile.isGroupProfile.checkNull()) {
       debugPrint("userWentOffline : $jid");
       Future.delayed(const Duration(milliseconds: 3000), () {
         setChatStatus();
@@ -2591,7 +2887,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
 
   void removeUnreadSeparator() async {
     if (!profile.isGroupProfile.checkNull()) {
-      chatList.removeWhere((chatItem) => chatItem.messageType == Constants.mNotification);
+      chatList.removeWhere(
+          (chatItem) => chatItem.messageType == Constants.mNotification);
     }
   }
 
@@ -2603,7 +2900,10 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     userUpdatedHisProfile(jid);
   }
 
-  void onNewMemberAddedToGroup({required String groupJid, required String newMemberJid, required String addedByMemberJid}) {
+  void onNewMemberAddedToGroup(
+      {required String groupJid,
+      required String newMemberJid,
+      required String addedByMemberJid}) {
     if (profile.isGroupProfile.checkNull()) {
       if (profile.jid == groupJid) {
         debugPrint('onNewMemberAddedToGroup $newMemberJid');
@@ -2612,7 +2912,10 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     }
   }
 
-  void onMemberRemovedFromGroup({required String groupJid, required String removedMemberJid, required String removedByMemberJid}) {
+  void onMemberRemovedFromGroup(
+      {required String groupJid,
+      required String removedMemberJid,
+      required String removedByMemberJid}) {
     if (profile.isGroupProfile.checkNull()) {
       if (profile.jid == groupJid) {
         debugPrint('onMemberRemovedFromGroup $removedMemberJid');
@@ -2627,14 +2930,19 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   }
 
   Future<void> saveContact() async {
-    var phone = profile.mobileNumber.checkNull().isNotEmpty ? profile.mobileNumber.checkNull() : getMobileNumberFromJid(profile.jid.checkNull());
-    var userName = profile.nickName.checkNull().isNotEmpty ? profile.nickName.checkNull() : profile.name.checkNull();
+    var phone = profile.mobileNumber.checkNull().isNotEmpty
+        ? profile.mobileNumber.checkNull()
+        : getMobileNumberFromJid(profile.jid.checkNull());
+    var userName = profile.nickName.checkNull().isNotEmpty
+        ? profile.nickName.checkNull()
+        : profile.name.checkNull();
     if (phone.isNotEmpty) {
       lib_phone_number.init();
       var formatNumberSync = lib_phone_number.formatNumberSync(phone);
       var parse = await lib_phone_number.parse(formatNumberSync);
       debugPrint("parse-----> $parse");
-      Mirrorfly.addContact(number: parse["international"], name: userName).then((value) {
+      Mirrorfly.addContact(number: parse["international"], name: userName)
+          .then((value) {
         if (value ?? false) {
           toToast(getTranslated("contactSavedSuccess"));
           if (Constants.enableContactSync) {
@@ -2649,7 +2957,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
 
   void syncContacts() async {
     if (await Permission.contacts.isGranted) {
-      if (await AppUtils.isNetConnected() && !await Mirrorfly.contactSyncStateValue()) {
+      if (await AppUtils.isNetConnected() &&
+          !await Mirrorfly.contactSyncStateValue()) {
         final permission = await Permission.contacts.status;
         if (permission == PermissionStatus.granted) {
           if (SessionManagement.getLogin()) {
@@ -2687,14 +2996,19 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     });
   }
 
-  void onUploadDownloadProgressChanged(String messageId, String progressPercentage) {
+  void onUploadDownloadProgressChanged(
+      String messageId, String progressPercentage) {
     if (messageId.isNotEmpty) {
-      final index = chatList.indexWhere((message) => message.messageId == messageId);
-      debugPrint("Media Status Onprogress changed---> onUploadDownloadProgressChanged $index $messageId $progressPercentage");
+      final index =
+          chatList.indexWhere((message) => message.messageId == messageId);
+      debugPrint(
+          "Media Status Onprogress changed---> onUploadDownloadProgressChanged $index $messageId $progressPercentage");
       if (!index.isNegative) {
         // chatMessageModel.isSelected=chatList[index].isSelected;
         // debugPrint("Media Status Onprogress changed---> flutter conversion ${int.parse(progressPercentage)}");
-        chatList[index].mediaChatMessage?.mediaProgressStatus(int.parse(progressPercentage));
+        chatList[index]
+            .mediaChatMessage
+            ?.mediaProgressStatus(int.parse(progressPercentage));
         // chatList.refresh();
       }
     }
@@ -2706,7 +3020,7 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     if (await AppUtils.isNetConnected()) {
       if (await AppPermission.askAudioCallPermissions()) {
         if (profile.isGroupProfile.checkNull()) {
-          if(isMemberOfGroup) {
+          if (isMemberOfGroup) {
             NavUtils.toNamed(Routes.groupParticipants, arguments: {
               "groupId": profile.jid,
               "callType": CallType.audio
@@ -2724,8 +3038,14 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
                     "callType": CallType.audio
                   })?.then((value) => setOnGoingUserAvail());
                 } else {
-                  DialogUtils.showAlert(dialogStyle: AppStyleConfig.dialogStyle,message: getErrorDetails(response),
-                      actions: [TextButton(onPressed: ()=>NavUtils.back(), child: Text(getTranslated("ok").toUpperCase()))]);
+                  DialogUtils.showAlert(
+                      dialogStyle: AppStyleConfig.dialogStyle,
+                      message: getErrorDetails(response),
+                      actions: [
+                        TextButton(
+                            onPressed: () => NavUtils.back(),
+                            child: Text(getTranslated("ok").toUpperCase()))
+                      ]);
                 }
               });
         }
@@ -2742,7 +3062,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     if (await AppUtils.isNetConnected()) {
       if (await AppPermission.askVideoCallPermissions()) {
         if (profile.isGroupProfile.checkNull()) {
-          NavUtils.toNamed(Routes.groupParticipants, arguments: {"groupId": profile.jid, "callType": CallType.video});
+          NavUtils.toNamed(Routes.groupParticipants,
+              arguments: {"groupId": profile.jid, "callType": CallType.video});
         } else {
           Mirrorfly.makeVideoCall(
               toUserJid: profile.jid.checkNull(),
@@ -2772,13 +3093,17 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
 
       if (Platform.isIOS) {
         ///This is the top constraint changing to bottom constraint and calling nextMessages bcz reversing the list view in display
-        if (firstVisibleItemIndex <= 1 && double.parse(itemPositions.first.itemLeadingEdge.toStringAsFixed(1)) <= 0) {
+        if (firstVisibleItemIndex <= 1 &&
+            double.parse(
+                    itemPositions.first.itemLeadingEdge.toStringAsFixed(1)) <=
+                0) {
           // Scrolled to the Bottom
           debugPrint("reached Bottom yes load next messages");
           _loadNextMessages();
 
           ///This is the bottom constraint changing to Top constraint and calling prevMessages bcz reversing the list view in display
-        } else if (firstVisibleItemIndex + itemPositions.length >= chatList.length) {
+        } else if (firstVisibleItemIndex + itemPositions.length >=
+            chatList.length) {
           // Scrolled to the Top
           _loadPreviousMessages();
           debugPrint("reached Top yes load previous msgs");
@@ -2787,7 +3112,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
         if (firstVisibleItemIndex == 0) {
           debugPrint("reached Bottom yes load next messages");
           _loadNextMessages();
-        } else if (firstVisibleItemIndex + itemPositions.length >= chatList.length) {
+        } else if (firstVisibleItemIndex + itemPositions.length >=
+            chatList.length) {
           debugPrint("reached Top yes load previous msgs");
           _loadPreviousMessages();
         }
@@ -2812,8 +3138,10 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     cancelNotification();
   }
 
-  void onMessageDeleteNotifyUI({required String chatJid, bool changePosition = true}) {
-    Get.find<MainController>().onMessageDeleteNotifyUI(chatJid: chatJid, changePosition: changePosition);
+  void onMessageDeleteNotifyUI(
+      {required String chatJid, bool changePosition = true}) {
+    Get.find<MainController>().onMessageDeleteNotifyUI(
+        chatJid: chatJid, changePosition: changePosition);
   }
 
   void updateLastMessage(dynamic value) {
@@ -2833,20 +3161,27 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     availableFeatures(features);
     var availableAttachment = <AttachmentIcon>[];
     if (features.isDocumentAttachmentAvailable.checkNull()) {
-      availableAttachment.add(AttachmentIcon(Constants.attachmentTypeDocument, documentImg, getTranslated("attachment_Document")));
+      availableAttachment.add(AttachmentIcon(Constants.attachmentTypeDocument,
+          documentImg, getTranslated("attachment_Document")));
     }
-    if (features.isImageAttachmentAvailable.checkNull() || features.isVideoAttachmentAvailable.checkNull()) {
-      availableAttachment.add(AttachmentIcon(Constants.attachmentTypeCamera, cameraImg, getTranslated("attachment_Camera")));
-      availableAttachment.add(AttachmentIcon(Constants.attachmentTypeGallery, galleryImg, getTranslated("attachment_Gallery")));
+    if (features.isImageAttachmentAvailable.checkNull() ||
+        features.isVideoAttachmentAvailable.checkNull()) {
+      availableAttachment.add(AttachmentIcon(Constants.attachmentTypeCamera,
+          cameraImg, getTranslated("attachment_Camera")));
+      availableAttachment.add(AttachmentIcon(Constants.attachmentTypeGallery,
+          galleryImg, getTranslated("attachment_Gallery")));
     }
     if (features.isAudioAttachmentAvailable.checkNull()) {
-      availableAttachment.add(AttachmentIcon(Constants.attachmentTypeAudio, audioImg, getTranslated("attachment_Audio")));
+      availableAttachment.add(AttachmentIcon(Constants.attachmentTypeAudio,
+          audioImg, getTranslated("attachment_Audio")));
     }
     if (features.isContactAttachmentAvailable.checkNull()) {
-      availableAttachment.add(AttachmentIcon(Constants.attachmentTypeContact, contactImg, getTranslated("attachment_Contact")));
+      availableAttachment.add(AttachmentIcon(Constants.attachmentTypeContact,
+          contactImg, getTranslated("attachment_Contact")));
     }
     if (features.isLocationAttachmentAvailable.checkNull()) {
-      availableAttachment.add(AttachmentIcon(Constants.attachmentTypeLocation, locationImg, getTranslated("attachment_Location")));
+      availableAttachment.add(AttachmentIcon(Constants.attachmentTypeLocation,
+          locationImg, getTranslated("attachment_Location")));
     }
     availableAttachments(availableAttachment);
   }
@@ -2888,15 +3223,18 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     }
   }
 
-  void handleUnreadMessageSeparator({bool remove = true, bool removeFromList = false}) {
+  void handleUnreadMessageSeparator(
+      {bool remove = true, bool removeFromList = false}) {
     var tuple3 = findIndexOfUnreadMessageType();
     var isUnreadSeparatorIsAvailable = tuple3.item1;
     LogMessage.d("isUnreadSeparatorIsAvailable", isUnreadSeparatorIsAvailable);
     var separatorPosition = tuple3.item2;
-    debugPrint("handleUnreadMessageSeparator isUnreadSeparatorIsAvailable $isUnreadSeparatorIsAvailable");
+    debugPrint(
+        "handleUnreadMessageSeparator isUnreadSeparatorIsAvailable $isUnreadSeparatorIsAvailable");
     if (isUnreadSeparatorIsAvailable || chatList.isNotEmpty) {
       if (remove) {
-        removeUnreadMessageSeparator(separatorPosition, removeFromList: removeFromList);
+        removeUnreadMessageSeparator(separatorPosition,
+            removeFromList: removeFromList);
       } else {
         displayUnreadMessageSeparator(separatorPosition);
       }
@@ -2904,14 +3242,21 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   }
 
   void displayUnreadMessageSeparator(int separatorPosition) {
-    var shouldNotCount = chatList.sublist(0, separatorPosition + 1).where((it) => it.isMessageSentByMe).length;
-    LogMessage.d("displayUnreadMessageSeparator", "should not count--->$shouldNotCount");
+    var shouldNotCount = chatList
+        .sublist(0, separatorPosition + 1)
+        .where((it) => it.isMessageSentByMe)
+        .length;
+    LogMessage.d(
+        "displayUnreadMessageSeparator", "should not count--->$shouldNotCount");
 
     var defaultUnreadCountResult = 0 + (separatorPosition);
     var shouldNotCountResult = defaultUnreadCountResult - shouldNotCount;
-    LogMessage.d("displayUnreadMessageSeparator", "should Not Count Result--->$shouldNotCountResult");
+    LogMessage.d("displayUnreadMessageSeparator",
+        "should Not Count Result--->$shouldNotCountResult");
 
-    var noOfItemsAfterUnreadMessageSeparator = shouldNotCountResult != 0 ? shouldNotCountResult : chatList.length - separatorPosition - 1;
+    var noOfItemsAfterUnreadMessageSeparator = shouldNotCountResult != 0
+        ? shouldNotCountResult
+        : chatList.length - separatorPosition - 1;
     if (noOfItemsAfterUnreadMessageSeparator != 0) {
       unreadCount(noOfItemsAfterUnreadMessageSeparator);
       var unreadMessageDetails = chatList[separatorPosition];
@@ -2925,7 +3270,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     }
   }
 
-  void removeUnreadMessageSeparator(int separatorPosition, {bool removeFromList = true}) {
+  void removeUnreadMessageSeparator(int separatorPosition,
+      {bool removeFromList = true}) {
     Mirrorfly.markAsReadDeleteUnreadSeparator(jid: profile.jid.checkNull());
     if (removeFromList && !separatorPosition.isNegative) {
       chatList.removeAt(separatorPosition);
@@ -2933,7 +3279,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   }
 
   Tuple3<bool, int, String> findIndexOfUnreadMessageType() {
-    LogMessage.d("TAG", "findIndexOfUnreadMessageType $unreadMessageTypeMessageId");
+    LogMessage.d(
+        "TAG", "findIndexOfUnreadMessageType $unreadMessageTypeMessageId");
     var position = getMessagePosition(unreadMessageTypeMessageId);
     var message = Constants.emptyString;
     var isUnreadSeparatorIsAvailable = false;
@@ -2954,11 +3301,13 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
       LogMessage.d("TAG", e.toString());
       return const Tuple3(false, 0, "");
     }
-    LogMessage.d("findIndexOfUnreadMessageType", "$isUnreadSeparatorIsAvailable, $position, $message");
+    LogMessage.d("findIndexOfUnreadMessageType",
+        "$isUnreadSeparatorIsAvailable, $position, $message");
     return Tuple3(isUnreadSeparatorIsAvailable, position, message);
   }
 
-  int getMessagePosition(String messageId) => chatList.indexWhere((it) => it.messageId == messageId);
+  int getMessagePosition(String messageId) =>
+      chatList.indexWhere((it) => it.messageId == messageId);
 
   int lastVisiblePosition() {
     final itemPositions = newItemPositionsListener?.itemPositions.value;
@@ -2994,7 +3343,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
     if (!position.isNegative) {
       if (newScrollController != null && newScrollController!.isAttached) {
         LogMessage.d("newScrollController", "scrollToPosition");
-        newScrollController?.scrollTo(index: position, duration: const Duration(milliseconds: 100));
+        newScrollController?.scrollTo(
+            index: position, duration: const Duration(milliseconds: 100));
       }
     }
   }
@@ -3009,7 +3359,9 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   }
 
   Future<void> editMessage() async {
-    var busyStatus = !profile.isGroupProfile.checkNull() ? await Mirrorfly.isBusyStatusEnabled() : false;
+    var busyStatus = !profile.isGroupProfile.checkNull()
+        ? await Mirrorfly.isBusyStatusEnabled()
+        : false;
 
     if (!busyStatus.checkNull() && !isBlocked.value) {
       showFullWindowDialog();
@@ -3037,16 +3389,22 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
       isScrollControlled: true,
       enableDrag: false,
     );
-
   }
 
-  Widget emojiLayout({required TextEditingController textEditingController, required bool sendTypingStatus}) {
+  Widget emojiLayout(
+      {required TextEditingController textEditingController,
+      required bool sendTypingStatus}) {
     return Obx(() {
       if (showEmoji.value) {
         return EmojiLayout(
-            textController: textEditingController, //controller.addStatusController,
-            onBackspacePressed: () => sendTypingStatus ? isTyping() : editMessageText(textEditingController.text),
-            onEmojiSelected: (cat, emoji) => sendTypingStatus ? isTyping() : editMessageText(textEditingController.text));
+            textController:
+                textEditingController, //controller.addStatusController,
+            onBackspacePressed: () => sendTypingStatus
+                ? isTyping()
+                : editMessageText(textEditingController.text),
+            onEmojiSelected: (cat, emoji) => sendTypingStatus
+                ? isTyping()
+                : editMessageText(textEditingController.text));
       } else {
         return const SizedBox.shrink();
       }
@@ -3056,15 +3414,20 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   //#editMessage
   void updateSentMessage({required ChatMessageModel chatItem}) {
     if (isWithinLast15Minutes(chatItem.messageSentTime)) {
-      if (chatItem.messageType == Constants.mText || chatItem.messageType == Constants.mAutoText) {
+      if (chatItem.messageType == Constants.mText ||
+          chatItem.messageType == Constants.mAutoText) {
         Mirrorfly.editTextMessage(
-            editMessageParams: EditMessageParams(messageId: chatItem.messageId, editedTextContent: editMessageController.text.trim()),
+            editMessageParams: EditMessageParams(
+                messageId: chatItem.messageId,
+                editedTextContent: editMessageController.text.trim()),
             flyCallback: (FlyResponse response) {
               debugPrint("Edit Message ==> $response");
               if (response.isSuccess) {
                 NavUtils.back();
-                ChatMessageModel editMessage = sendMessageModelFromJson(response.data);
-                final index = chatList.indexWhere((message) => message.messageId == editMessage.messageId);
+                ChatMessageModel editMessage =
+                    sendMessageModelFromJson(response.data);
+                final index = chatList.indexWhere(
+                    (message) => message.messageId == editMessage.messageId);
                 debugPrint("Edit Message Status Update index of search $index");
                 debugPrint("messageID--> $index  ${editMessage.messageId}");
                 if (!index.isNegative) {
@@ -3072,15 +3435,20 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
                 }
               }
             });
-      } else if (chatItem.messageType == Constants.mImage || chatItem.messageType == Constants.mVideo) {
+      } else if (chatItem.messageType == Constants.mImage ||
+          chatItem.messageType == Constants.mVideo) {
         Mirrorfly.editMediaCaption(
-            editMessageParams: EditMessageParams(messageId: chatItem.messageId, editedTextContent: editMessageController.text.trim()),
+            editMessageParams: EditMessageParams(
+                messageId: chatItem.messageId,
+                editedTextContent: editMessageController.text.trim()),
             flyCallback: (FlyResponse response) {
               debugPrint("Edit Media Caption ==> $response");
               if (response.isSuccess) {
                 NavUtils.back();
-                ChatMessageModel editMessage = sendMessageModelFromJson(response.data);
-                final index = chatList.indexWhere((message) => message.messageId == editMessage.messageId);
+                ChatMessageModel editMessage =
+                    sendMessageModelFromJson(response.data);
+                final index = chatList.indexWhere(
+                    (message) => message.messageId == editMessage.messageId);
                 debugPrint("Edit Message Status Update index of search $index");
                 debugPrint("messageID--> $index  ${editMessage.messageId}");
                 if (!index.isNegative) {
@@ -3097,7 +3465,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   //#editMessage
   void onMessageEdited(ChatMessageModel editedChatMessage) {
     if (editedChatMessage.chatUserJid == profile.jid) {
-      final index = chatList.indexWhere((message) => message.messageId == editedChatMessage.messageId);
+      final index = chatList.indexWhere(
+          (message) => message.messageId == editedChatMessage.messageId);
       debugPrint("ChatScreen Edit Message Update index of search $index");
       debugPrint("messageID--> $index  ${editedChatMessage.messageId}");
       if (!index.isNegative) {
@@ -3107,7 +3476,8 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
       }
     }
     if (isSelected.value) {
-      var selectedIndex = selectedChatList.indexWhere((message) => editedChatMessage.messageId == message.messageId);
+      var selectedIndex = selectedChatList.indexWhere(
+          (message) => editedChatMessage.messageId == message.messageId);
       if (!selectedIndex.isNegative) {
         editedChatMessage.isSelected(true);
         selectedChatList[selectedIndex] = editedChatMessage;
@@ -3118,15 +3488,20 @@ class ChatController extends FullLifeCycleController with FullLifeCycleMixin, Ge
   }
 
   //show meet bottom sheet
-  Future<void> showMeetBottomSheet(MeetBottomSheetStyle meetBottomSheetStyle) async {
-    if(await AppUtils.isNetConnected()) {
+  Future<void> showMeetBottomSheet(
+      MeetBottomSheetStyle meetBottomSheetStyle) async {
+    if (await AppUtils.isNetConnected()) {
       DialogUtils.bottomSheet(
-        MeetSheetView(title: getTranslated("instantMeet"),description: getTranslated("copyTheLink"),meetBottomSheetStyle: meetBottomSheetStyle,),
+        MeetSheetView(
+          title: getTranslated("instantMeet"),
+          description: getTranslated("copyTheLink"),
+          meetBottomSheetStyle: meetBottomSheetStyle,
+        ),
         ignoreSafeArea: true,
         backgroundColor: Colors.white,
         barrierColor: Colors.black.withOpacity(0.5),
       );
-    }else{
+    } else {
       toToast(getTranslated("noInternetConnection"));
     }
   }

@@ -19,64 +19,70 @@ class ViewAllMediaView extends NavViewStateful<ViewAllMediaController> {
   const ViewAllMediaView({Key? key}) : super(key: key);
 
   @override
-ViewAllMediaController createController({String? tag}) => Get.put(ViewAllMediaController());
+  ViewAllMediaController createController({String? tag}) =>
+      Get.put(ViewAllMediaController());
 
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: Theme.of(context).copyWith(appBarTheme: AppStyleConfig.viewAllMediaPageStyle.appBarTheme,tabBarTheme: AppStyleConfig.viewAllMediaPageStyle.tabBarTheme),
+      data: Theme.of(context).copyWith(
+          appBarTheme: AppStyleConfig.viewAllMediaPageStyle.appBarTheme,
+          tabBarTheme: AppStyleConfig.viewAllMediaPageStyle.tabBarTheme),
       child: DefaultTabController(
         length: 3,
         child: Scaffold(
           appBar: AppBar(
             title: FutureBuilder(
-              future: getProfileDetails(controller.arguments.chatJid),
-              builder: (context,data) {
-                if(data.data != null) {
-                  return Text(data.data!.getName());
-                }
-                return const Offstage();
-              }
-            ),
+                future: getProfileDetails(controller.arguments.chatJid),
+                builder: (context, data) {
+                  if (data.data != null) {
+                    return Text(data.data!.getName());
+                  }
+                  return const Offstage();
+                }),
             centerTitle: false,
-            bottom: TabBar(
-                indicatorWeight: 2,
-                tabs: [
-                  Center(
-                    child: Container(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Text(
-                          getTranslated("media"),
-                          // style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-                        )),
-                  ),
-                  Center(
-                    child: Container(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Text(getTranslated("docs"),
-                            // style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
-                        )),
-                  ),
-                  Center(
-                    child: Container(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Text(getTranslated("links"),
-                            // style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
-                        )),
-                  ),
-                ]),
+            bottom: TabBar(indicatorWeight: 2, tabs: [
+              Center(
+                child: Container(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(
+                      getTranslated("media"),
+                      // style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                    )),
+              ),
+              Center(
+                child: Container(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(
+                      getTranslated("docs"),
+                      // style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
+                    )),
+              ),
+              Center(
+                child: Container(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(
+                      getTranslated("links"),
+                      // style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
+                    )),
+              ),
+            ]),
           ),
           body: TabBarView(children: [
-            mediaView(context,AppStyleConfig.viewAllMediaPageStyle.groupedMediaItem),
-            docsView(context,AppStyleConfig.viewAllMediaPageStyle.groupedMediaItem),
-            linksView(context,AppStyleConfig.viewAllMediaPageStyle.groupedMediaItem)
+            mediaView(
+                context, AppStyleConfig.viewAllMediaPageStyle.groupedMediaItem),
+            docsView(
+                context, AppStyleConfig.viewAllMediaPageStyle.groupedMediaItem),
+            linksView(
+                context, AppStyleConfig.viewAllMediaPageStyle.groupedMediaItem)
           ]),
         ),
       ),
     );
   }
 
-  Widget mediaView(BuildContext context,GroupedMediaItemStyle groupedMediaItemStyle) {
+  Widget mediaView(
+      BuildContext context, GroupedMediaItemStyle groupedMediaItemStyle) {
     return SafeArea(
       child: Obx(() {
         return controller.medialistdata.isNotEmpty
@@ -93,25 +99,37 @@ ViewAllMediaController createController({String? tag}) => Get.put(ViewAllMediaCo
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.max,
-                            children: [headerItem(header,groupedMediaItemStyle.titleStyle), gridView(header,groupedMediaItemStyle)],
+                            children: [
+                              headerItem(
+                                  header, groupedMediaItemStyle.titleStyle),
+                              gridView(header, groupedMediaItemStyle)
+                            ],
                           );
                         }),
                     const SizedBox(
                       height: 10,
                     ),
-                    Text(getTranslated("mediaCount")
-                        .replaceFirst("%p", "${controller.imageCount}")
-                        .replaceFirst("%v", "${controller.videoCount}")
-                        .replaceFirst("%a", "${controller.audioCount}"),style: AppStyleConfig.viewAllMediaPageStyle.noDataTextStyle,),
+                    Text(
+                      getTranslated("mediaCount")
+                          .replaceFirst("%p", "${controller.imageCount}")
+                          .replaceFirst("%v", "${controller.videoCount}")
+                          .replaceFirst("%a", "${controller.audioCount}"),
+                      style:
+                          AppStyleConfig.viewAllMediaPageStyle.noDataTextStyle,
+                    ),
                   ],
                 ),
               )
-            : Center(child: Text(getTranslated("noMediaFound"),style: AppStyleConfig.viewAllMediaPageStyle.noDataTextStyle,));
+            : Center(
+                child: Text(
+                getTranslated("noMediaFound"),
+                style: AppStyleConfig.viewAllMediaPageStyle.noDataTextStyle,
+              ));
       }),
     );
   }
 
-  Widget gridView(String header,GroupedMediaItemStyle groupedMediaItemStyle) {
+  Widget gridView(String header, GroupedMediaItemStyle groupedMediaItemStyle) {
     return GridView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
@@ -122,11 +140,11 @@ ViewAllMediaController createController({String? tag}) => Get.put(ViewAllMediaCo
         ),
         itemBuilder: (context, gridIndex) {
           var item = controller.medialistdata[header]![gridIndex].chatMessage;
-          return gridItem(item, gridIndex,groupedMediaItemStyle);
+          return gridItem(item, gridIndex, groupedMediaItemStyle);
         });
   }
 
-  Widget headerItem(String header,TextStyle style) {
+  Widget headerItem(String header, TextStyle style) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 13.0, vertical: 8.0),
       child: Text(
@@ -140,17 +158,19 @@ ViewAllMediaController createController({String? tag}) => Get.put(ViewAllMediaCo
     );
   }
 
-  Widget gridItem(ChatMessageModel item, int gridIndex,GroupedMediaItemStyle groupedMediaItemStyle) {
+  Widget gridItem(ChatMessageModel item, int gridIndex,
+      GroupedMediaItemStyle groupedMediaItemStyle) {
     return InkWell(
       child: Container(
           margin: const EdgeInsets.only(right: 3),
           color: item.isAudioMessage()
-              ? groupedMediaItemStyle.mediaAudioItemStyle.bgColor//const Color(0xff97A5C7)
+              ? groupedMediaItemStyle
+                  .mediaAudioItemStyle.bgColor //const Color(0xff97A5C7)
               : Colors.transparent,
           child: item.isAudioMessage()
-              ? audioItem(item,groupedMediaItemStyle.mediaAudioItemStyle)
+              ? audioItem(item, groupedMediaItemStyle.mediaAudioItemStyle)
               : item.isVideoMessage()
-                  ? videoItem(item,groupedMediaItemStyle.mediaVideoItemStyle)
+                  ? videoItem(item, groupedMediaItemStyle.mediaVideoItemStyle)
                   : item.isImageMessage()
                       ? Image.file(
                           File(item
@@ -169,37 +189,50 @@ ViewAllMediaController createController({String? tag}) => Get.put(ViewAllMediaCo
     );
   }
 
-  Widget videoItem(ChatMessageModel item,MediaItemStyle mediaItemStyle) {
+  Widget videoItem(ChatMessageModel item, MediaItemStyle mediaItemStyle) {
     return Stack(
       children: [
         controller.imageFromBase64String(
             item.mediaChatMessage!.mediaThumbImage, null, null),
         Center(
-          child: AppUtils.svgIcon(icon:videoWhite,colorFilter: ColorFilter.mode(mediaItemStyle.iconColor, BlendMode.srcIn),),
+          child: AppUtils.svgIcon(
+            icon: videoWhite,
+            colorFilter:
+                ColorFilter.mode(mediaItemStyle.iconColor, BlendMode.srcIn),
+          ),
         )
       ],
     );
   }
 
-  Widget audioItem(ChatMessageModel item,MediaItemStyle mediaItemStyle) {
+  Widget audioItem(ChatMessageModel item, MediaItemStyle mediaItemStyle) {
     return Center(
-      child: AppUtils.svgIcon(icon:
-          item.mediaChatMessage!.isAudioRecorded ? audioMic1 : audioWhite,
-      colorFilter: ColorFilter.mode(mediaItemStyle.iconColor, BlendMode.srcIn),),
+      child: AppUtils.svgIcon(
+        icon: item.mediaChatMessage!.isAudioRecorded ? audioMic1 : audioWhite,
+        colorFilter:
+            ColorFilter.mode(mediaItemStyle.iconColor, BlendMode.srcIn),
+      ),
     );
   }
 
-  Widget docsView(BuildContext context,GroupedMediaItemStyle groupedMediaItemStyle) {
+  Widget docsView(
+      BuildContext context, GroupedMediaItemStyle groupedMediaItemStyle) {
     return SafeArea(
       child: Obx(() {
         return controller.docslistdata.isNotEmpty
-            ? listView(controller.docslistdata, true,context,groupedMediaItemStyle)
-            : Center(child: Text(getTranslated("noDocsFound"),style: AppStyleConfig.viewAllMediaPageStyle.noDataTextStyle,));
+            ? listView(
+                controller.docslistdata, true, context, groupedMediaItemStyle)
+            : Center(
+                child: Text(
+                getTranslated("noDocsFound"),
+                style: AppStyleConfig.viewAllMediaPageStyle.noDataTextStyle,
+              ));
       }),
     );
   }
 
-  Widget listView(Map<String, List<MessageItem>> list, bool doc,BuildContext context,GroupedMediaItemStyle groupedMediaItemStyle) {
+  Widget listView(Map<String, List<MessageItem>> list, bool doc,
+      BuildContext context, GroupedMediaItemStyle groupedMediaItemStyle) {
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -213,7 +246,7 @@ ViewAllMediaController createController({String? tag}) => Get.put(ViewAllMediaCo
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    headerItem(header,groupedMediaItemStyle.titleStyle),
+                    headerItem(header, groupedMediaItemStyle.titleStyle),
                     ListView.builder(
                         itemCount: list[header]!.length,
                         shrinkWrap: true,
@@ -225,14 +258,19 @@ ViewAllMediaController createController({String? tag}) => Get.put(ViewAllMediaCo
                                   assetName: MessageUtils.getDocAsset(
                                       item.mediaChatMessage!.mediaFileName),
                                   title: item.mediaChatMessage!.mediaFileName,
-                                  subtitle: MediaUtils.fileSize(item
-                                      .mediaChatMessage!.mediaFileSize),
+                                  subtitle: MediaUtils.fileSize(
+                                      item.mediaChatMessage!.mediaFileSize),
                                   //item.mediaChatMessage!.mediaFileSize.readableFileSize(base1024: false),
-                                  date: DateTimeUtils.convertTimeStampToDateString(
-                                      item.messageSentTime.toInt(), "d/MM/yy"),
+                                  date: DateTimeUtils
+                                      .convertTimeStampToDateString(
+                                          item.messageSentTime.toInt(),
+                                          "d/MM/yy"),
                                   path: item.mediaChatMessage!
-                                      .mediaLocalStoragePath.value,documentItemStyle: groupedMediaItemStyle.documentItemStyle)
-                              : linkTile(list[header]![listIndex],groupedMediaItemStyle.linkItemStyle);
+                                      .mediaLocalStoragePath.value,
+                                  documentItemStyle:
+                                      groupedMediaItemStyle.documentItemStyle)
+                              : linkTile(list[header]![listIndex],
+                                  groupedMediaItemStyle.linkItemStyle);
                         }),
                   ],
                 );
@@ -241,8 +279,10 @@ ViewAllMediaController createController({String? tag}) => Get.put(ViewAllMediaCo
             height: 10,
           ),
           doc
-              ? Text(getTranslated("docCount").replaceFirst("%d", "${controller.documentCount}"))
-              : Text(getTranslated("linkCount").replaceFirst("%d", "${controller.linkCount}"))
+              ? Text(getTranslated("docCount")
+                  .replaceFirst("%d", "${controller.documentCount}"))
+              : Text(getTranslated("linkCount")
+                  .replaceFirst("%d", "${controller.linkCount}"))
         ],
       ),
     );
@@ -253,7 +293,8 @@ ViewAllMediaController createController({String? tag}) => Get.put(ViewAllMediaCo
       required String title,
       required String subtitle,
       required String date,
-      required String path,required DocumentItemStyle documentItemStyle}) {
+      required String path,
+      required DocumentItemStyle documentItemStyle}) {
     return InkWell(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -263,8 +304,8 @@ ViewAllMediaController createController({String? tag}) => Get.put(ViewAllMediaCo
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: AppUtils.svgIcon(icon:
-                  assetName,
+                child: AppUtils.svgIcon(
+                  icon: assetName,
                   width: 20,
                   height: 20,
                 ),
@@ -294,8 +335,9 @@ ViewAllMediaController createController({String? tag}) => Get.put(ViewAllMediaCo
               Center(
                   child: Padding(
                 padding: const EdgeInsets.only(right: 20.0),
-                child: Text(date, style: documentItemStyle.dateTextStyle,
-                    // style: const TextStyle(fontSize: 11)
+                child: Text(
+                  date, style: documentItemStyle.dateTextStyle,
+                  // style: const TextStyle(fontSize: 11)
                 ),
               )),
             ],
@@ -312,7 +354,7 @@ ViewAllMediaController createController({String? tag}) => Get.put(ViewAllMediaCo
     );
   }
 
-  Widget linkTile(MessageItem item,LinkItemStyle linkItemStyle) {
+  Widget linkTile(MessageItem item, LinkItemStyle linkItemStyle) {
     return Column(
       children: [
         Container(
@@ -347,7 +389,11 @@ ViewAllMediaController createController({String? tag}) => Get.put(ViewAllMediaCo
                               width: 70,
                               decoration: linkItemStyle.iconDecoration,
                               child: Center(
-                                child: AppUtils.svgIcon(icon:linkImage,colorFilter: ColorFilter.mode(linkItemStyle.iconColor, BlendMode.srcIn),),
+                                child: AppUtils.svgIcon(
+                                  icon: linkImage,
+                                  colorFilter: ColorFilter.mode(
+                                      linkItemStyle.iconColor, BlendMode.srcIn),
+                                ),
                               ),
                             ),
                       Expanded(
@@ -414,11 +460,13 @@ ViewAllMediaController createController({String? tag}) => Get.put(ViewAllMediaCo
     );
   }
 
-  Widget linksView(BuildContext context,GroupedMediaItemStyle groupedMediaItemStyle) {
+  Widget linksView(
+      BuildContext context, GroupedMediaItemStyle groupedMediaItemStyle) {
     return SafeArea(
       child: Obx(() {
         return controller.linklistdata.isNotEmpty
-            ? listView(controller.linklistdata, false,context,groupedMediaItemStyle)
+            ? listView(
+                controller.linklistdata, false, context, groupedMediaItemStyle)
             : Center(child: Text(getTranslated("noLinksFound")));
       }),
     );

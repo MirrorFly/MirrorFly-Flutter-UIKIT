@@ -1,14 +1,17 @@
 part of 'stylesheet.dart';
 
-class GalleryPageStyle{
+class GalleryPageStyle {
   const GalleryPageStyle({
-    this.appBarTheme = const AppBarTheme(backgroundColor: Color(0xffF2F2F2),
+    this.appBarTheme = const AppBarTheme(
+      backgroundColor: Color(0xffF2F2F2),
       shadowColor: Colors.white,
       surfaceTintColor: Colors.white,
       centerTitle: true,
-      titleTextStyle: TextStyle(fontWeight: FontWeight.bold,color: Color(0xff181818),fontSize: 20),
+      titleTextStyle: TextStyle(
+          fontWeight: FontWeight.bold, color: Color(0xff181818), fontSize: 20),
       iconTheme: IconThemeData(color: Color(0xff181818)),
-      actionsIconTheme: IconThemeData(color: Color(0xff181818)),),
+      actionsIconTheme: IconThemeData(color: Color(0xff181818)),
+    ),
     this.buttonDecoration = const BoxDecoration(
       color: Colors.transparent,
       borderRadius: BorderRadius.all(Radius.circular(10)),

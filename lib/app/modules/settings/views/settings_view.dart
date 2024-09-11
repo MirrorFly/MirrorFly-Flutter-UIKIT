@@ -18,7 +18,8 @@ class SettingsView extends NavView<SettingsController> {
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: Theme.of(context).copyWith(appBarTheme: AppStyleConfig.settingsPageStyle.appBarTheme),
+      data: Theme.of(context)
+          .copyWith(appBarTheme: AppStyleConfig.settingsPageStyle.appBarTheme),
       child: Scaffold(
         appBar: AppBar(
           title: Text(getTranslated("settings")),
@@ -27,25 +28,38 @@ class SettingsView extends NavView<SettingsController> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              SettingListItem(title:
-                getTranslated("profile"), leading: profileIcon, trailing: rightArrowIcon,listItemStyle: AppStyleConfig.settingsPageStyle.listItemStyle,
-                      onTap: () =>
-                      NavUtils.toNamed(
-                          Routes.profile, arguments: {"from": Routes.settings})),
-              SettingListItem(title:
-                getTranslated("chats"), leading: chatIcon, trailing: rightArrowIcon,listItemStyle: AppStyleConfig.settingsPageStyle.listItemStyle, onTap: () {
-                NavUtils.toNamed(Routes.chatSettings);
-              }),
-              SettingListItem(title:
-                getTranslated("starredMessages"), leading: staredMsgIcon, trailing: rightArrowIcon,listItemStyle: AppStyleConfig.settingsPageStyle.listItemStyle, onTap: () {
-                NavUtils.toNamed(Routes.starredMessages);
-              }),
-             /* SettingListItem(title:
+              SettingListItem(
+                  title: getTranslated("profile"),
+                  leading: profileIcon,
+                  trailing: rightArrowIcon,
+                  listItemStyle: AppStyleConfig.settingsPageStyle.listItemStyle,
+                  onTap: () => NavUtils.toNamed(Routes.profile,
+                      arguments: {"from": Routes.settings})),
+              SettingListItem(
+                  title: getTranslated("chats"),
+                  leading: chatIcon,
+                  trailing: rightArrowIcon,
+                  listItemStyle: AppStyleConfig.settingsPageStyle.listItemStyle,
+                  onTap: () {
+                    NavUtils.toNamed(Routes.chatSettings);
+                  }),
+              SettingListItem(
+                  title: getTranslated("starredMessages"),
+                  leading: staredMsgIcon,
+                  trailing: rightArrowIcon,
+                  listItemStyle: AppStyleConfig.settingsPageStyle.listItemStyle,
+                  onTap: () {
+                    NavUtils.toNamed(Routes.starredMessages);
+                  }),
+              /* SettingListItem(title:
                   getTranslated("notifications"), leading: notificationIcon, trailing: rightArrowIcon,listItemStyle: AppStyleConfig.settingsPageStyle.listItemStyle, onTap: () =>
                   NavUtils.toNamed(Routes.notification)),*/
-              SettingListItem(title:
-                  getTranslated("blockedContacts"), leading: blockedIcon, trailing: rightArrowIcon,listItemStyle: AppStyleConfig.settingsPageStyle.listItemStyle, onTap: () =>
-                  NavUtils.toNamed(Routes.blockedList)),
+              SettingListItem(
+                  title: getTranslated("blockedContacts"),
+                  leading: blockedIcon,
+                  trailing: rightArrowIcon,
+                  listItemStyle: AppStyleConfig.settingsPageStyle.listItemStyle,
+                  onTap: () => NavUtils.toNamed(Routes.blockedList)),
               /*SettingListItem(title:
                   getTranslated("appLock"), leading: lockIcon, trailing: rightArrowIcon,listItemStyle: AppStyleConfig.settingsPageStyle.listItemStyle, onTap: () =>
                   NavUtils.toNamed(Routes.appLock)),
@@ -110,6 +124,4 @@ class SettingsView extends NavView<SettingsController> {
       ),
     );
   }
-
-
 }

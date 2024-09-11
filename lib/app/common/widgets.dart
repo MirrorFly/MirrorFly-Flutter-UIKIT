@@ -145,15 +145,15 @@ class ImageNetwork extends NavView<MainController> {
                 }
                 return clipOval
                     ? ClipOval(
-                        child: AppUtils.assetIcon(assetName:
-                          getSingleOrGroup(isGroup),
+                        child: AppUtils.assetIcon(
+                          assetName: getSingleOrGroup(isGroup),
                           height: height,
                           width: width,
                           fit: BoxFit.cover,
                         ),
                       )
-                    : AppUtils.assetIcon(assetName:
-                        getSingleOrGroup(isGroup),
+                    : AppUtils.assetIcon(
+                        assetName: getSingleOrGroup(isGroup),
                         height: height,
                         width: width,
                         fit: BoxFit.cover,
@@ -181,8 +181,8 @@ class ImageNetwork extends NavView<MainController> {
                                 image: provider,
                                 fit: BoxFit.fill,
                               )
-                            : AppUtils.assetIcon(assetName:
-                                getSingleOrGroup(isGroup),
+                            : AppUtils.assetIcon(
+                                assetName: getSingleOrGroup(isGroup),
                                 height: height,
                                 width: width,
                                 fit: BoxFit.cover,
@@ -196,8 +196,8 @@ class ImageNetwork extends NavView<MainController> {
                                 image: provider,
                                 fit: BoxFit.fill,
                               )
-                            : AppUtils.assetIcon(assetName:
-                                getSingleOrGroup(isGroup),
+                            : AppUtils.assetIcon(
+                                assetName: getSingleOrGroup(isGroup),
                                 height: height,
                                 width: width,
                                 fit: BoxFit.cover,
@@ -229,15 +229,15 @@ class ImageNetwork extends NavView<MainController> {
     }
     return clipOval
         ? ClipOval(
-            child: AppUtils.assetIcon(assetName:
-              getSingleOrGroup(isGroup),
+            child: AppUtils.assetIcon(
+              assetName: getSingleOrGroup(isGroup),
               height: height,
               width: width,
               fit: BoxFit.cover,
             ),
           )
-        : AppUtils.assetIcon(assetName:
-            getSingleOrGroup(isGroup),
+        : AppUtils.assetIcon(
+            assetName: getSingleOrGroup(isGroup),
             height: height,
             width: width,
             fit: BoxFit.cover,
@@ -481,7 +481,8 @@ class EmojiLayout extends StatelessWidget {
         onEmojiSelected: onEmojiSelected,
         textEditingController: textController,
         config: emoji.Config(
-          bottomActionBarConfig: const emoji.BottomActionBarConfig(enabled: false),
+          bottomActionBarConfig:
+              const emoji.BottomActionBarConfig(enabled: false),
           skinToneConfig: const emoji.SkinToneConfig(
             enabled: true,
             indicatorColor: Colors.grey,
