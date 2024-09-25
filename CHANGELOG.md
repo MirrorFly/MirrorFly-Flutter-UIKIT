@@ -2,7 +2,6 @@
 * Group Fetch added to login
 * Chat Page Background Decoration Added
 * iOS SDK Updated to 5.17.10
-* Android SDK Updated to 7.13.6
 
 ## 2.0.1-beta
 * Android Gradle Issue Fixed 
