@@ -52,7 +52,7 @@ class ChatView extends NavViewStateful<ChatController> {
             child: Container(
               width: NavUtils.width,
               height: NavUtils.height,
-              decoration: BoxDecoration(
+              decoration: AppStyleConfig.chatPageStyle.chatPageBackgroundDecoration ?? BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage(chatBgIcon, package: iconPackageName),
                   fit: BoxFit.cover,

@@ -31,7 +31,8 @@ class ChatPageStyle {
           shape: RoundedRectangleBorder(
               side: BorderSide(color: Color(0xffE8E8E8), width: 1)),
           iconColor: Color(0xff181818)),
-      this.instantScheduleMeetStyle = const InstantScheduleMeetStyle()});
+      this.instantScheduleMeetStyle = const InstantScheduleMeetStyle(),
+      this.chatPageBackgroundDecoration});
   final AppBarTheme appBarTheme;
   final ChatUserAppBarStyle chatUserAppBarStyle;
   final EditTextFieldStyle searchTextFieldStyle;
@@ -43,6 +44,7 @@ class ChatPageStyle {
   final AttachmentViewStyle attachmentViewStyle;
   final PopupMenuThemeData popupMenuThemeData;
   final InstantScheduleMeetStyle instantScheduleMeetStyle;
+  final Decoration? chatPageBackgroundDecoration;
 }
 
 class InstantScheduleMeetStyle {

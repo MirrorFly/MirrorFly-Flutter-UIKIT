@@ -168,8 +168,8 @@ class ChatController extends FullLifeCycleController
       starredChatMessageId = arguments!.messageId;
     }
 
-    if (nJid.contains("@mix")) {
-      await Mirrorfly.getGroupProfile(groupJid: nJid.checkNull(), fetchFromServer: true, flyCallBack: (FlyResponse response) async {
+    if (Mirrorfly.isValidGroupJid(nJid)) {
+      await Mirrorfly.getGroupProfile(groupJid: nJid.checkNull(), fetchFromServer: await AppUtils.isNetConnected(), flyCallBack: (FlyResponse response) async {
         if (response.isSuccess) {
           debugPrint("getGroupProfileDetails--> $response");
           var profile = ProfileDetails.fromJson(json.decode(response.data.toString()));

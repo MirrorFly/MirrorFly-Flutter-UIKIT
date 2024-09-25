@@ -7,15 +7,14 @@ import 'package:mirrorfly_uikit_plugin/app/routes/route_settings.dart';
 import 'package:mirrorfly_uikit_plugin/app/stylesheet/stylesheet.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:mirrorfly_plugin/mirrorfly.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   var response = await MirrorflyUikit.instance.initUIKIT(
     navigatorKey: navigatorKey,
-    licenseKey: 'lKbpoxlB2Yu5zRXS1WSl0Xi7jU99mL',
-    iOSContainerID: 'group.com.mirrorfly.flutter',
+    licenseKey: 'LICENSE_KEY',
+    iOSContainerID: 'CONTAINER_ID(APP_GROUPS)',
   );
 
   debugPrint("init response $response");
@@ -23,7 +22,7 @@ Future<void> main() async {
   /// Use this method to add the locale you want to support in the UIKIT Plugin.
   AppLocalizations.addSupportedLocales(const Locale("hi", "IN"));
   AppStyleConfig.setChatPageStyle(
-      ChatPageStyle(attachmentViewStyle: AttachmentViewStyle()));
+      const ChatPageStyle(attachmentViewStyle: AttachmentViewStyle()));
 
   runApp(const MyApp());
 }
@@ -157,118 +156,10 @@ class _DashboardState extends State<Dashboard> {
                                   arguments: DashboardViewArguments(
                                       didMissedCallNotificationLaunchApp:
                                           false))));
-                      // Mirrorfly.getUserProfile(jid: 'testdoctordedicatedforchat@firstresponsehe-xmpp.mirrorfly.com',fetchFromServer: true, saveAsFriend: true, flyCallback:(FlyResponse response){
-                      //   if(response.isSuccess) {
-                      //     debugPrint("User Profile ${response.data}");
-                      //     Navigator.push(context, MaterialPageRoute(builder: (con) => ChatView(chatViewArguments: ChatViewArguments(chatJid: 'testdoctordedicatedforchat@firstresponsehe-xmpp.mirrorfly.com'))));
-                      //     // Navigator.push(context, MaterialPageRoute(builder: (con) => ChatView(), settings: const RouteSettings(name: 'ChatView', arguments: ChatViewArguments(chatJid: 'testdoctordedicatedforchat@firstresponsehe-xmpp.mirrorfly.com'))));
-                      //   }
-                      // });
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (con) => ChatView(
-                      //             chatViewArguments: const ChatViewArguments(
-                      //                 chatJid:
-                      //                     '918973725802@xmpp-uikit-qa.contus.us'))));
                     },
-                    text: 'chat page',
+                    text: 'Recent chats',
                   ),
                 ),
-                Column(
-                  children: [
-                    buildTextButton(text: "Create Topic", onPressed: () {
-                      Mirrorfly.createTopic(topicName: "lunch", flyCallBack: (FlyResponse response) {
-                        if(response.isSuccess) {
-                          debugPrint("lunch Topic created successfully ${response.data}");
-                        } else {
-                          debugPrint("lunch Topic creation failed");
-                        }
-                      });
-                      // Mirrorfly.createTopic(topicName: "laptop", flyCallBack: (FlyResponse response) {
-                      //   if(response.isSuccess) {
-                      //     debugPrint("laptop Topic created successfully ${response.data}");
-                      //   } else {
-                      //     debugPrint("laptop Topic creation failed");
-                      //   }
-                      // });
-                    }),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    buildTextButton(
-                        text: "Topic : computer",
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (con) => ChatView(
-                                      chatViewArguments: const ChatViewArguments(
-                                          chatJid:
-                                              '918973725802@xmpp-uikit-qa.contus.us',
-                                          topicId: '90b08813-710a-4224-9a0d-5fae65c0a362'/*'bf0d5c32-5f1a-4037-b814-1c013394c730'*/))));
-
-                        }),
-
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    buildTextButton(
-                        text: "GET GROUP INFO",
-                        onPressed: () async {
-                          var groupJid = await Mirrorfly.getGroupJid(groupId: "55983501-60a2-4ea2-952d-779a302f4bd2");
-
-                          debugPrint("Group Jid $groupJid");
-
-                        }),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    buildTextButton(
-                        text: "Open Group",
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (con) => ChatView(
-                                      chatViewArguments: const ChatViewArguments(
-                                          chatJid:
-                                          '14f98552-2e4a-487b-8e23-36c1008346e6@mix.firstresponsehe-xmpp.mirrorfly.com',/*082d1057-a8be-4fa4-9c63-2b25b906152c*/))));
-
-                        }),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    buildTextButton(
-                        text: "Open Group1",
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (con) => ChatView(
-                                      chatViewArguments: const ChatViewArguments(
-                                          chatJid:
-                                          '1681190a-e906-4064-a54c-3b44dc8f219a@mix.firstresponsehe-xmpp.mirrorfly.com',/*082d1057-a8be-4fa4-9c63-2b25b906152c*/))));
-
-                        }),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    buildTextButton(
-                        text: "Open Group1 Created By Us",
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (con) => ChatView(
-                                      chatViewArguments: const ChatViewArguments(
-                                          chatJid:
-                                          '226f56f0-0c9e-44cb-93dd-614acf28d51e@mix.firstresponsehe-xmpp.mirrorfly.com',/*082d1057-a8be-4fa4-9c63-2b25b906152c*/))));
-
-                        }),
-
-                  ],
-                )
               ],
             ),
           ),

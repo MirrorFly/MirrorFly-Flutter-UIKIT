@@ -186,7 +186,7 @@ class MirrorflyUikit {
                 if (fetchAllGroups) {
                   Mirrorfly.getAllGroups(fetchFromServer: true, flyCallBack: (_) {});
                 }
-                completer.complete(setResponse(true, 'Login Success', ''));
+                completer.complete(setResponse(true, 'Login Success', response.data));
               } else {
                 completer.complete(setResponse(
                     false, 'Login Failed', userData.message.toString()));
