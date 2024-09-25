@@ -169,15 +169,19 @@ class ChatController extends FullLifeCycleController
     }
 
     if (Mirrorfly.isValidGroupJid(nJid)) {
-      await Mirrorfly.getGroupProfile(groupJid: nJid.checkNull(), fetchFromServer: await AppUtils.isNetConnected(), flyCallBack: (FlyResponse response) async {
-        if (response.isSuccess) {
-          debugPrint("getGroupProfileDetails--> $response");
-          var profile = ProfileDetails.fromJson(json.decode(response.data.toString()));
-          await initializeProfile(profile);
-        } else {
-          debugPrint("getGroupProfileDetails--> ${response.errorMessage}");
-        }
-      });
+      await Mirrorfly.getGroupProfile(
+          groupJid: nJid.checkNull(),
+          fetchFromServer: await AppUtils.isNetConnected(),
+          flyCallBack: (FlyResponse response) async {
+            if (response.isSuccess) {
+              debugPrint("getGroupProfileDetails--> $response");
+              var profile = ProfileDetails.fromJson(
+                  json.decode(response.data.toString()));
+              await initializeProfile(profile);
+            } else {
+              debugPrint("getGroupProfileDetails--> ${response.errorMessage}");
+            }
+          });
     } else {
       await getProfileDetails(nJid).then((value) async {
         LogMessage.d("chatController getProfileDetails", value.toJson());
@@ -202,7 +206,8 @@ class ChatController extends FullLifeCycleController
     if (Platform.isAndroid) {
       unreadMessageTypeMessageId = "M${profile.jid.checkNull()}";
     } else if (Platform.isIOS) {
-      unreadMessageTypeMessageId = "M_${getMobileNumberFromJid(profile.jid.checkNull())}";
+      unreadMessageTypeMessageId =
+          "M_${getMobileNumberFromJid(profile.jid.checkNull())}";
     }
     checkAdminBlocked();
     WidgetsBinding.instance.addPostFrameCallback((_) {

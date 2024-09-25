@@ -184,9 +184,11 @@ class MirrorflyUikit {
                 SessionManagement.setUserIdentifier(userIdentifier);
                 await _setUserJID(userData.data!.username!);
                 if (fetchAllGroups) {
-                  Mirrorfly.getAllGroups(fetchFromServer: true, flyCallBack: (_) {});
+                  Mirrorfly.getAllGroups(
+                      fetchFromServer: true, flyCallBack: (_) {});
                 }
-                completer.complete(setResponse(true, 'Login Success', response.data));
+                completer.complete(
+                    setResponse(true, 'Login Success', response.data));
               } else {
                 completer.complete(setResponse(
                     false, 'Login Failed', userData.message.toString()));
