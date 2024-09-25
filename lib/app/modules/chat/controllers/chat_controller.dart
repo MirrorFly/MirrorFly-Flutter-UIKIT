@@ -2289,6 +2289,7 @@ class ChatController extends FullLifeCycleController
         jid: jid,
         fetchFromServer: true,
         flyCallBack: (FlyResponse response) {
+          memberOfGroup();
           if (response.isSuccess && response.hasData) {
             var str = <String>[];
             LogMessage.d("getGroupMembersList-->", response.toString());

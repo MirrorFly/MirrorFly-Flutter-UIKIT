@@ -158,7 +158,6 @@ class MirrorflyUikit {
     String fcmToken = "",
     String userType = "d",
     bool isForceRegister = true,
-    bool fetchAllGroups = true,
     List<IdentifierMetaData>? identifierMetaData,
   }) async {
     Completer<Map<String, dynamic>> completer = Completer();
@@ -183,10 +182,6 @@ class MirrorflyUikit {
                     enable: true, flyCallBack: (_) {});
                 SessionManagement.setUserIdentifier(userIdentifier);
                 await _setUserJID(userData.data!.username!);
-                if (fetchAllGroups) {
-                  Mirrorfly.getAllGroups(
-                      fetchFromServer: true, flyCallBack: (_) {});
-                }
                 completer.complete(
                     setResponse(true, 'Login Success', response.data));
               } else {

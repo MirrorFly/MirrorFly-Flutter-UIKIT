@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import '../extensions/extensions.dart';
+import 'constants.dart';
 
 class AppLocalizations {
   Locale locale = defaultLocale;
@@ -23,7 +24,7 @@ class AppLocalizations {
       _localizedStrings = jsonMap;
     } catch (e) {
       debugPrint("language load failed so default en is loaded $e}");
-      String jsonString = await rootBundle.loadString('assets/locales/en.json');
+      String jsonString = await rootBundle.loadString('packages/$iconPackageName/assets/locales/en.json');
       Map<String, dynamic> jsonMap = json.decode(jsonString);
 
       _localizedStrings = jsonMap;
