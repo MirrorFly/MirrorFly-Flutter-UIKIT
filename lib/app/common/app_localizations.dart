@@ -24,7 +24,8 @@ class AppLocalizations {
       _localizedStrings = jsonMap;
     } catch (e) {
       debugPrint("language load failed so default en is loaded $e}");
-      String jsonString = await rootBundle.loadString('packages/$iconPackageName/assets/locales/en.json');
+      String jsonString = await rootBundle
+          .loadString('packages/$iconPackageName/assets/locales/en.json');
       Map<String, dynamic> jsonMap = json.decode(jsonString);
 
       _localizedStrings = jsonMap;
