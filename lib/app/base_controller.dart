@@ -1256,12 +1256,11 @@ class BaseController {
     LogMessage.d('NavUtils.currentRoute', NavUtils.currentRoute);
     DialogUtils.hideLoading();
     if (isLogout &&
-        NavUtils.currentRoute != Routes.login &&
         SessionManagement.getLogin()) {
       var token = SessionManagement.getToken().checkNull();
       SessionManagement.clear().then((value) {
         SessionManagement.setToken(token);
-        NavUtils.offAllNamed(Routes.login);
+        // NavUtils.offAllNamed(Routes.login);
       });
       // DialogUtils.progressLoading();
       // Mirrorfly.logoutOfChatSDK().then((value) {
