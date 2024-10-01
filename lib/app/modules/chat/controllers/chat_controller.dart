@@ -660,7 +660,7 @@ class ChatController extends FullLifeCycleController
             showStarredMessage();
             sendReadReceipt(removeUnreadFromList: false);
             loadPrevORNextMessagesLoad();
-            if (chatList.isNotEmpty && chatList[0].messageTextContent == "#THIS_CHAT_IS_CLOSED") {
+            if (chatList.isNotEmpty && chatList[0].messageTextContent == Constants.chatClosed) {
               isChatClosed(true);
             }else{
               isChatClosed(false);
@@ -714,7 +714,7 @@ class ChatController extends FullLifeCycleController
         if (chatMessageModel.isNotEmpty) {
           if (chatList.isNotEmpty) {
             chatList.insertAll(0, chatMessageModel.reversed.toList());
-            if (chatList.isNotEmpty && chatList[0].messageTextContent == "#THIS_CHAT_IS_CLOSED") {
+            if (chatList.isNotEmpty && chatList[0].messageTextContent == Constants.chatClosed) {
               isChatClosed(true);
             }else{
               isChatClosed(false);

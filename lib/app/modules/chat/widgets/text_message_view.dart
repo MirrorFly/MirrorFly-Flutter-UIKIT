@@ -25,95 +25,97 @@ class TextMessageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(10, 9, 5, 2),
-          child: Row(
-            mainAxisSize: chatMessage.replyParentChatMessage == null
-                ? MainAxisSize.min
-                : MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Flexible(
-                child: search.isEmpty
-                    ? textMessageSpannableText(
-                        chatMessage.messageTextContent ?? "",
-                        textMessageViewStyle.textStyle,
-                        textMessageViewStyle.urlMessageColor)
-                    : chatSpannedText(chatMessage.messageTextContent ?? "",
-                        search, textMessageViewStyle.textStyle,
-                        spanColor: textMessageViewStyle.highlightColor,
-                        urlColor: textMessageViewStyle.urlMessageColor
-                        //const TextStyle(fontSize: 14, color: textHintColor),
-                        ),
-              ),
-              const SizedBox(
-                width: 60,
-              ),
-            ],
-          ),
-        ),
-        if (MessageUtils.getCallLinkFromMessage(
-                chatMessage.messageTextContent.checkNull())
-            .isNotEmpty) ...[
-          Padding(
-            padding: const EdgeInsets.only(bottom: 5.0),
-            child: CallLinkView(
-              message: chatMessage.messageTextContent.checkNull(),
-              callLinkViewStyle: textMessageViewStyle.callLinkViewStyle,
-            ),
-          )
-        ],
-        Padding(
-          padding: const EdgeInsets.only(right: 4.0, bottom: 2),
-          child: Row(
-            mainAxisSize: chatMessage.replyParentChatMessage == null
-                ? MainAxisSize.min
-                : MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              chatMessage.isMessageStarred.value
-                  ? AppUtils.svgIcon(icon: starSmallIcon)
-                  : const Offstage(),
-              const SizedBox(
-                width: 5,
-              ),
-              MessageUtils.getMessageIndicatorIcon(
-                  chatMessage.messageStatus.value,
-                  chatMessage.isMessageSentByMe,
-                  chatMessage.messageType,
-                  chatMessage.isMessageRecalled.value),
-              const SizedBox(
-                width: 5,
-              ),
-              if (chatMessage.isMessageEdited.value) ...[
-                Text(
-                  getTranslated(
-                      "edited"), //style: const TextStyle(fontSize: 11)
-                  style: textMessageViewStyle.timeTextStyle,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 9, 5, 2),
+                child: Row(
+                  mainAxisSize: chatMessage.replyParentChatMessage == null
+                      ? MainAxisSize.min
+                      : MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Flexible(
+                      child: search.isEmpty
+                          ? textMessageSpannableText(
+                              chatMessage.messageTextContent ?? "",
+                              textMessageViewStyle.textStyle,
+                              textMessageViewStyle.urlMessageColor)
+                          : chatSpannedText(
+                              chatMessage.messageTextContent ?? "",
+                              search,
+                              textMessageViewStyle.textStyle,
+                              spanColor: textMessageViewStyle.highlightColor,
+                              urlColor: textMessageViewStyle.urlMessageColor
+                              //const TextStyle(fontSize: 14, color: textHintColor),
+                              ),
+                    ),
+                    const SizedBox(
+                      width: 60,
+                    ),
+                  ],
                 ),
-                const SizedBox(
-                  width: 5,
-                ),
+              ),
+              if (MessageUtils.getCallLinkFromMessage(
+                      chatMessage.messageTextContent.checkNull())
+                  .isNotEmpty) ...[
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 5.0),
+                  child: CallLinkView(
+                    message: chatMessage.messageTextContent.checkNull(),
+                    callLinkViewStyle: textMessageViewStyle.callLinkViewStyle,
+                  ),
+                )
               ],
-              Text(
-                getChatTime(context, chatMessage.messageSentTime.toInt()),
-                style: textMessageViewStyle.timeTextStyle,
-                /*style: TextStyle(
+              Padding(
+                padding: const EdgeInsets.only(right: 4.0, bottom: 2),
+                child: Row(
+                  mainAxisSize: chatMessage.replyParentChatMessage == null
+                      ? MainAxisSize.min
+                      : MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    chatMessage.isMessageStarred.value
+                        ? AppUtils.svgIcon(icon: starSmallIcon)
+                        : const Offstage(),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    MessageUtils.getMessageIndicatorIcon(
+                        chatMessage.messageStatus.value,
+                        chatMessage.isMessageSentByMe,
+                        chatMessage.messageType,
+                        chatMessage.isMessageRecalled.value),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    if (chatMessage.isMessageEdited.value) ...[
+                      Text(
+                        getTranslated(
+                            "edited"), //style: const TextStyle(fontSize: 11)
+                        style: textMessageViewStyle.timeTextStyle,
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                    ],
+                    Text(
+                      getChatTime(context, chatMessage.messageSentTime.toInt()),
+                      style: textMessageViewStyle.timeTextStyle,
+                      /*style: TextStyle(
                     fontSize: 11,
                     color: chatMessage.isMessageSentByMe
                         ? durationTextColor
                         : textHintColor),*/
+                    ),
+                  ],
+                ),
               ),
             ],
-          ),
-        ),
-      ],
-    );
+          );
   }
 }
 

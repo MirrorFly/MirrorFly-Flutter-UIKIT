@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mirrorfly_uikit_plugin/app/extensions/extensions.dart';
 import '../../../stylesheet/stylesheet.dart';
 
 import '../../../common/constants.dart';
@@ -50,8 +51,8 @@ class MessageContent extends StatelessWidget {
             : receiverChatBubbleStyle.textMessageViewStyle,
       );
     } else {
-      if (chatList[index].messageType.toUpperCase() == Constants.mText ||
-          chatList[index].messageType.toUpperCase() == Constants.mAutoText) {
+      if ((chatList[index].messageType.toUpperCase() == Constants.mText ||
+          chatList[index].messageType.toUpperCase() == Constants.mAutoText) && chatMessage.messageTextContent.checkNull() != Constants.chatClosed) {
         return TextMessageView(
           chatMessage: chatMessage,
           search: search,

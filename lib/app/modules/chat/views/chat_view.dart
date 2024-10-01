@@ -674,25 +674,7 @@ class ChatView extends NavViewStateful<ChatController> {
   }
 
   Widget chatClosed(BuildContext context) {
-    return Column(
-      children: [
-        Divider(
-            height: 1,
-            thickness: 0.29,
-            color: AppStyleConfig.chatPageStyle.messageTypingAreaStyle
-                .dividerColor //textBlackColor,
-            ),
-        Padding(
-          padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-          child: Text(
-            getTranslated("chatClosed"),
-            style: AppStyleConfig.chatPageStyle.messageTypingAreaStyle
-                .textFieldStyle.editTextHintStyle,
-            textAlign: TextAlign.center,
-          ),
-        ),
-      ],
-    );
+    return const Offstage();
   }
 
   Widget featureNotAvailable(BuildContext context) {

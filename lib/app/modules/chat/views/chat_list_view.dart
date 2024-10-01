@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../common/app_localizations.dart';
 import '../../../data/utils.dart';
 import '../../../extensions/extensions.dart';
 import '../../../modules/chat/controllers/chat_controller.dart';
@@ -53,11 +54,23 @@ class _ChatListViewState extends State<ChatListView> {
         child: Obx(() {
           return ScrollablePositionedList.separated(
             separatorBuilder: (context, index) {
-              var string = AppUtils.groupedDateMessage(
-                  index, widget.chatList); //Date Labels
-              return string != null
-                  ? NotificationMessageView(chatMessage: string)
-                  : const Offstage();
+              if (widget.chatList[index].messageType.toUpperCase() == Constants.mText && widget.chatList[index].messageTextContent.checkNull() == Constants.chatClosed){
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const Expanded(child: Divider()),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(getTranslated("chatClosed")),
+                    ),
+                    const Expanded(child: Divider())
+                  ],);
+              }
+                var string = AppUtils.groupedDateMessage(
+                    index, widget.chatList); //Date Labels
+                return string != null
+                    ? NotificationMessageView(chatMessage: string)
+                    : const Offstage();
             },
             itemScrollController: widget.chatController.newScrollController,
             itemPositionsListener:
