@@ -227,7 +227,7 @@ class ChatView extends NavViewStateful<ChatController> {
                               .messageTypingAreaStyle.bgColor, //Colors.white,
                           child: controller.isBlocked.value
                               ? userBlocked(context)
-                          : controller.isChatClosed.value ? controller.arguments?.chatClosedWidget ?? chatClosed(context)
+                          : controller.isChatClosed.value ? chatClosed(context)
                               : controller.isMemberOfGroup
                                   ? Column(
                                       mainAxisAlignment: MainAxisAlignment.end,
