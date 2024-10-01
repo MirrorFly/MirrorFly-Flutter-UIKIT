@@ -22,7 +22,7 @@ class ChatViewArguments {
       this.disableAppBar = false,
       this.chatInfoPageRedirect = false,
       this.enableSwipeToReply = true,
-      this.menuActionsEnabled = false, this.chatClosedWidget});
+      this.menuActionsEnabled = false});
 
   final String chatJid;
   final String topicId;
@@ -36,7 +36,6 @@ class ChatViewArguments {
   final bool enableSwipeToReply;
   final bool menuActionsEnabled;
   final bool chatInfoPageRedirect;
-  final Widget? chatClosedWidget;
 }
 
 class ChatSearchViewArguments {
