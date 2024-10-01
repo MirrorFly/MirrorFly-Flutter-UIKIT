@@ -660,6 +660,11 @@ class ChatController extends FullLifeCycleController
             showStarredMessage();
             sendReadReceipt(removeUnreadFromList: false);
             loadPrevORNextMessagesLoad();
+            if (chatList.isNotEmpty && chatList[0].messageTextContent == "#THIS_CHAT_IS_CLOSED") {
+              isChatClosed(true);
+            }else{
+              isChatClosed(false);
+            }
           }
           chatLoading(false);
         });
@@ -709,6 +714,11 @@ class ChatController extends FullLifeCycleController
         if (chatMessageModel.isNotEmpty) {
           if (chatList.isNotEmpty) {
             chatList.insertAll(0, chatMessageModel.reversed.toList());
+            if (chatList.isNotEmpty && chatList[0].messageTextContent == "#THIS_CHAT_IS_CLOSED") {
+              isChatClosed(true);
+            }else{
+              isChatClosed(false);
+            }
           } else {
             chatList(chatMessageModel.reversed.toList());
           }
@@ -3209,6 +3219,8 @@ class ChatController extends FullLifeCycleController
   }
 
   var topic = Topics().obs;
+
+  var isChatClosed = false.obs;
 
   void getTopicDetail() async {
     if (topicId.isNotEmpty) {

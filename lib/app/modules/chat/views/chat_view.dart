@@ -227,6 +227,7 @@ class ChatView extends NavViewStateful<ChatController> {
                               .messageTypingAreaStyle.bgColor, //Colors.white,
                           child: controller.isBlocked.value
                               ? userBlocked(context)
+                          : controller.isChatClosed.value ? controller.arguments?.chatClosedWidget ?? chatClosed(context)
                               : controller.isMemberOfGroup
                                   ? Column(
                                       mainAxisAlignment: MainAxisAlignment.end,
@@ -672,6 +673,28 @@ class ChatView extends NavViewStateful<ChatController> {
     );
   }
 
+  Widget chatClosed(BuildContext context) {
+    return Column(
+      children: [
+        Divider(
+            height: 1,
+            thickness: 0.29,
+            color: AppStyleConfig.chatPageStyle.messageTypingAreaStyle
+                .dividerColor //textBlackColor,
+            ),
+        Padding(
+          padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+          child: Text(
+            getTranslated("chatClosed"),
+            style: AppStyleConfig.chatPageStyle.messageTypingAreaStyle
+                .textFieldStyle.editTextHintStyle,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget featureNotAvailable(BuildContext context) {
     return Column(
       children: [
@@ -711,11 +734,13 @@ class ChatView extends NavViewStateful<ChatController> {
         style: AppStyleConfig.chatPageStyle.chatUserAppBarStyle.titleTextStyle,
       ),
       actions: [
+        (controller.arguments?.menuActionsEnabled).checkNull()
+            ?
         CustomActionBarIcons(
             popupMenuThemeData: AppStyleConfig.chatPageStyle.popupMenuThemeData,
             availableWidth: NavUtils.width / 2, // half the screen width
             actionWidth: 48, // default for IconButtons
-            actions: actionBarItems(context, isSelected: true)),
+            actions: actionBarItems(context, isSelected: true)) : const SizedBox(),
       ],
     );
   }
@@ -788,6 +813,11 @@ class ChatView extends NavViewStateful<ChatController> {
           width: (NavUtils.width) / 1.9,
           child: InkWell(
             highlightColor: Colors.transparent,
+            onTap: (controller.arguments?.chatInfoPageRedirect).checkNull() ? () {
+              LogMessage.d("title clicked",
+                  controller.profile.isGroupProfile.toString());
+              controller.infoPage();
+            } : null,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
@@ -826,14 +856,10 @@ class ChatView extends NavViewStateful<ChatController> {
                 })
               ],
             ),
-            onTap: () {
-              LogMessage.d("title clicked",
-                  controller.profile.isGroupProfile.toString());
-              controller.infoPage();
-            },
           ),
         ),
-        actions: actionBarItems(context, isSelected: false),
+        actions: (controller.arguments?.menuActionsEnabled).checkNull()
+            ? actionBarItems(context, isSelected: false) : const [],
       );
     });
   }

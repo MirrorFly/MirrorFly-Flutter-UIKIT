@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'chat_message_model.dart';
 
 class DashboardViewArguments {
@@ -18,7 +20,9 @@ class ChatViewArguments {
       this.enableCalls = true,
       this.showChatDeliveryIndicator = true,
       this.disableAppBar = false,
-      this.enableSwipeToReply = true});
+      this.chatInfoPageRedirect = false,
+      this.enableSwipeToReply = true,
+      this.menuActionsEnabled = false, this.chatClosedWidget});
 
   final String chatJid;
   final String topicId;
@@ -30,6 +34,9 @@ class ChatViewArguments {
   final bool didNotificationLaunchApp;
   final bool disableAppBar;
   final bool enableSwipeToReply;
+  final bool menuActionsEnabled;
+  final bool chatInfoPageRedirect;
+  final Widget? chatClosedWidget;
 }
 
 class ChatSearchViewArguments {
