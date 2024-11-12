@@ -23,7 +23,7 @@ import 'chat_list_view.dart';
 
 class ChatView extends NavViewStateful<ChatController> {
   ChatView({Key? key, this.chatViewArguments})
-      : super(key: key, tag: chatViewArguments?.chatJid);
+      : super(key: key, tag: (chatViewArguments ?? NavUtils.arguments).chatJid);
   final ChatViewArguments? chatViewArguments;
   @override
   ChatController createController({String? tag}) {
