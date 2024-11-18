@@ -1,4 +1,3 @@
-
 import 'chat_message_model.dart';
 
 class DashboardViewArguments {
