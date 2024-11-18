@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 import 'chat_message_model.dart';
 
