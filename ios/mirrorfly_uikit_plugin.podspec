@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'mirrorfly_uikit_plugin'
-  s.version          = '0.0.12'
+  s.version          = '2.0.2'
   s.summary          = 'A Mirrorfly Flutter UIKIT Plugin'
   s.description      = 'A Mirrorfly Flutter UIKIT plugin to Experience an outstanding real time messaging solution. The powerful communication that adds an extra mileage to build your chat app.'
 

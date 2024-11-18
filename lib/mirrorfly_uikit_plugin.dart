@@ -182,7 +182,8 @@ class MirrorflyUikit {
                     enable: true, flyCallBack: (_) {});
                 SessionManagement.setUserIdentifier(userIdentifier);
                 await _setUserJID(userData.data!.username!);
-                completer.complete(setResponse(true, 'Login Success', ''));
+                completer.complete(
+                    setResponse(true, 'Login Success', response.data));
               } else {
                 completer.complete(setResponse(
                     false, 'Login Failed', userData.message.toString()));
