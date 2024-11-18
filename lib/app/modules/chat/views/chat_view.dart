@@ -23,7 +23,7 @@ import 'chat_list_view.dart';
 
 class ChatView extends NavViewStateful<ChatController> {
   ChatView({Key? key, this.chatViewArguments})
-      : super(key: key, tag: chatViewArguments?.chatJid);
+      : super(key: key, tag: (chatViewArguments ?? NavUtils.arguments).chatJid);
   final ChatViewArguments? chatViewArguments;
   @override
   ChatController createController({String? tag}) {
@@ -52,12 +52,14 @@ class ChatView extends NavViewStateful<ChatController> {
             child: Container(
               width: NavUtils.width,
               height: NavUtils.height,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(chatBgIcon, package: iconPackageName),
-                  fit: BoxFit.cover,
-                ),
-              ),
+              decoration: AppStyleConfig
+                      .chatPageStyle.chatPageBackgroundDecoration ??
+                  BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(chatBgIcon, package: iconPackageName),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
               child: PopScope(
                 canPop: false,
                 onPopInvokedWithResult: (didPop, result) {
@@ -225,140 +227,146 @@ class ChatView extends NavViewStateful<ChatController> {
                               .messageTypingAreaStyle.bgColor, //Colors.white,
                           child: controller.isBlocked.value
                               ? userBlocked(context)
-                              : controller.isMemberOfGroup
-                                  ? Column(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Obx(() {
-                                          if (controller.isReplying.value) {
-                                            return ReplyingMessageHeader(
-                                              chatMessage:
-                                                  controller.replyChatMessage,
-                                              onCancel: () => controller
-                                                  .cancelReplyMessage(),
-                                              onClick: () {
-                                                controller.navigateToMessage(
-                                                    controller
-                                                        .replyChatMessage);
-                                              },
-                                              replyBgColor: AppStyleConfig
-                                                  .chatPageStyle
-                                                  .messageTypingAreaStyle
-                                                  .replyBgColor,
-                                            );
-                                          } else {
-                                            return const Offstage();
-                                          }
-                                        }),
-                                        Divider(
-                                            height: 1,
-                                            thickness: 0.29,
-                                            color: AppStyleConfig
-                                                .chatPageStyle
-                                                .messageTypingAreaStyle
-                                                .dividerColor //textBlackColor,
-                                            ),
-                                        /*const SizedBox(
-                                          height: 10,
-                                        ),*/
-                                        IntrinsicHeight(
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.stretch,
-                                            children: [
-                                              Flexible(
-                                                child: Container(
-                                                  margin:
-                                                      const EdgeInsets.all(10),
-                                                  width: double.infinity,
-                                                  decoration: AppStyleConfig
+                              : controller.isChatClosed.value
+                                  ? chatClosed(context)
+                                  : controller.isMemberOfGroup
+                                      ? Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Obx(() {
+                                              if (controller.isReplying.value) {
+                                                return ReplyingMessageHeader(
+                                                  chatMessage: controller
+                                                      .replyChatMessage,
+                                                  onCancel: () => controller
+                                                      .cancelReplyMessage(),
+                                                  onClick: () {
+                                                    controller.navigateToMessage(
+                                                        controller
+                                                            .replyChatMessage);
+                                                  },
+                                                  replyBgColor: AppStyleConfig
                                                       .chatPageStyle
                                                       .messageTypingAreaStyle
-                                                      .decoration,
-                                                  // decoration: BoxDecoration(
-                                                  //   border: Border.all(
-                                                  //     color: textColor,
-                                                  //   ),
-                                                  //   borderRadius: const BorderRadius.all(Radius.circular(40)),
-                                                  //   color: Colors.white,
-                                                  // ),
-                                                  child: Obx(() {
-                                                    return messageTypingView(
-                                                        context);
-                                                  }),
+                                                      .replyBgColor,
+                                                );
+                                              } else {
+                                                return const Offstage();
+                                              }
+                                            }),
+                                            Divider(
+                                                height: 1,
+                                                thickness: 0.29,
+                                                color: AppStyleConfig
+                                                    .chatPageStyle
+                                                    .messageTypingAreaStyle
+                                                    .dividerColor //textBlackColor,
                                                 ),
-                                              ),
-                                              Obx(() {
-                                                return controller.isUserTyping
-                                                            .value ||
-                                                        controller
+                                            /*const SizedBox(
+                                          height: 10,
+                                        ),*/
+                                            IntrinsicHeight(
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.stretch,
+                                                children: [
+                                                  Flexible(
+                                                    child: Container(
+                                                      margin:
+                                                          const EdgeInsets.all(
+                                                              10),
+                                                      width: double.infinity,
+                                                      decoration: AppStyleConfig
+                                                          .chatPageStyle
+                                                          .messageTypingAreaStyle
+                                                          .decoration,
+                                                      // decoration: BoxDecoration(
+                                                      //   border: Border.all(
+                                                      //     color: textColor,
+                                                      //   ),
+                                                      //   borderRadius: const BorderRadius.all(Radius.circular(40)),
+                                                      //   color: Colors.white,
+                                                      // ),
+                                                      child: Obx(() {
+                                                        return messageTypingView(
+                                                            context);
+                                                      }),
+                                                    ),
+                                                  ),
+                                                  Obx(() {
+                                                    return controller
+                                                                .isUserTyping
+                                                                .value ||
+                                                            controller
+                                                                    .isAudioRecording
+                                                                    .value ==
+                                                                Constants
+                                                                    .audioRecordDone
+                                                        ? InkWell(
+                                                            onTap: () {
+                                                              controller.isAudioRecording
+                                                                          .value ==
+                                                                      Constants
+                                                                          .audioRecordDone
+                                                                  ? controller
+                                                                      .sendRecordedAudioMessage()
+                                                                  : controller.sendMessage(
+                                                                      controller
+                                                                          .profile);
+                                                            },
+                                                            child: AppUtils.svgIcon(
+                                                                icon: sendIcon,
+                                                                colorFilter: ColorFilter.mode(
+                                                                    AppStyleConfig
+                                                                        .chatPageStyle
+                                                                        .messageTypingAreaStyle
+                                                                        .sentIconColor,
+                                                                    BlendMode
+                                                                        .srcIn)))
+                                                        : const Offstage();
+                                                  }),
+                                                  Obx(() {
+                                                    return controller
                                                                 .isAudioRecording
                                                                 .value ==
                                                             Constants
-                                                                .audioRecordDone
-                                                    ? InkWell(
-                                                        onTap: () {
-                                                          controller.isAudioRecording
-                                                                      .value ==
-                                                                  Constants
-                                                                      .audioRecordDone
-                                                              ? controller
-                                                                  .sendRecordedAudioMessage()
-                                                              : controller
-                                                                  .sendMessage(
-                                                                      controller
-                                                                          .profile);
-                                                        },
-                                                        child: AppUtils.svgIcon(
-                                                            icon: sendIcon,
-                                                            colorFilter: ColorFilter.mode(
-                                                                AppStyleConfig
-                                                                    .chatPageStyle
-                                                                    .messageTypingAreaStyle
-                                                                    .sentIconColor,
-                                                                BlendMode
-                                                                    .srcIn)))
-                                                    : const Offstage();
-                                              }),
-                                              Obx(() {
-                                                return controller
-                                                            .isAudioRecording
-                                                            .value ==
-                                                        Constants.audioRecording
-                                                    ? InkWell(
-                                                        onTap: () {
-                                                          controller
-                                                              .stopRecording();
-                                                        },
-                                                        child: RippleWidget(
-                                                          size: 50,
-                                                          rippleColor:
-                                                              AppStyleConfig
+                                                                .audioRecording
+                                                        ? InkWell(
+                                                            onTap: () {
+                                                              controller
+                                                                  .stopRecording();
+                                                            },
+                                                            child: RippleWidget(
+                                                              size: 50,
+                                                              rippleColor: AppStyleConfig
                                                                   .chatPageStyle
                                                                   .messageTypingAreaStyle
                                                                   .rippleColor,
-                                                          child: CircleAvatar(
-                                                            backgroundColor: AppStyleConfig
-                                                                .chatPageStyle
-                                                                .messageTypingAreaStyle
-                                                                .audioRecordIcon
-                                                                .bgColor, //const Color(0xff3276E2),
-                                                            radius: 48 / 2,
-                                                            child: AppUtils
-                                                                .svgIcon(
-                                                              icon: audioMic,
-                                                              colorFilter: ColorFilter.mode(
-                                                                  AppStyleConfig
-                                                                      .chatPageStyle
-                                                                      .messageTypingAreaStyle
-                                                                      .audioRecordIcon
-                                                                      .iconColor,
-                                                                  BlendMode
-                                                                      .srcIn),
+                                                              child:
+                                                                  CircleAvatar(
+                                                                backgroundColor: AppStyleConfig
+                                                                    .chatPageStyle
+                                                                    .messageTypingAreaStyle
+                                                                    .audioRecordIcon
+                                                                    .bgColor, //const Color(0xff3276E2),
+                                                                radius: 48 / 2,
+                                                                child: AppUtils
+                                                                    .svgIcon(
+                                                                  icon:
+                                                                      audioMic,
+                                                                  colorFilter: ColorFilter.mode(
+                                                                      AppStyleConfig
+                                                                          .chatPageStyle
+                                                                          .messageTypingAreaStyle
+                                                                          .audioRecordIcon
+                                                                          .iconColor,
+                                                                      BlendMode
+                                                                          .srcIn),
+                                                                ),
+                                                              ),
                                                             ),
-                                                          ),
-                                                        ),
-                                                        /*child: const Padding(
+                                                            /*child: const Padding(
                                                           padding: EdgeInsets.only(bottom: 8.0),
                                                           child: LottieAnimation(
                                                             lottieJson: audioJson1,
@@ -367,26 +375,27 @@ class ChatView extends NavViewStateful<ChatController> {
                                                             height: 54,
                                                           ),
                                                         )*/
-                                                      )
-                                                    : const Offstage();
-                                              }),
-                                              const SizedBox(
-                                                width: 5,
+                                                          )
+                                                        : const Offstage();
+                                                  }),
+                                                  const SizedBox(
+                                                    width: 5,
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
-                                        ),
-                                        controller.emojiLayout(
-                                            textEditingController:
-                                                controller.messageController,
-                                            sendTypingStatus: true),
-                                      ],
-                                    )
-                                  : !controller.availableFeatures.value
-                                          .isGroupChatAvailable
-                                          .checkNull()
-                                      ? featureNotAvailable(context)
-                                      : userNoLonger(context),
+                                            ),
+                                            controller.emojiLayout(
+                                                textEditingController:
+                                                    controller
+                                                        .messageController,
+                                                sendTypingStatus: true),
+                                          ],
+                                        )
+                                      : !controller.availableFeatures.value
+                                              .isGroupChatAvailable
+                                              .checkNull()
+                                          ? featureNotAvailable(context)
+                                          : userNoLonger(context),
                         );
                       }),
                     ),
@@ -670,6 +679,10 @@ class ChatView extends NavViewStateful<ChatController> {
     );
   }
 
+  Widget chatClosed(BuildContext context) {
+    return const Offstage();
+  }
+
   Widget featureNotAvailable(BuildContext context) {
     return Column(
       children: [
@@ -709,11 +722,14 @@ class ChatView extends NavViewStateful<ChatController> {
         style: AppStyleConfig.chatPageStyle.chatUserAppBarStyle.titleTextStyle,
       ),
       actions: [
-        CustomActionBarIcons(
-            popupMenuThemeData: AppStyleConfig.chatPageStyle.popupMenuThemeData,
-            availableWidth: NavUtils.width / 2, // half the screen width
-            actionWidth: 48, // default for IconButtons
-            actions: actionBarItems(context, isSelected: true)),
+        (controller.arguments?.menuActionsEnabled).checkNull()
+            ? CustomActionBarIcons(
+                popupMenuThemeData:
+                    AppStyleConfig.chatPageStyle.popupMenuThemeData,
+                availableWidth: NavUtils.width / 2, // half the screen width
+                actionWidth: 48, // default for IconButtons
+                actions: actionBarItems(context, isSelected: true))
+            : const SizedBox(),
       ],
     );
   }
@@ -786,6 +802,13 @@ class ChatView extends NavViewStateful<ChatController> {
           width: (NavUtils.width) / 1.9,
           child: InkWell(
             highlightColor: Colors.transparent,
+            onTap: (controller.arguments?.chatInfoPageRedirect).checkNull()
+                ? () {
+                    LogMessage.d("title clicked",
+                        controller.profile.isGroupProfile.toString());
+                    controller.infoPage();
+                  }
+                : null,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
@@ -824,14 +847,11 @@ class ChatView extends NavViewStateful<ChatController> {
                 })
               ],
             ),
-            onTap: () {
-              LogMessage.d("title clicked",
-                  controller.profile.isGroupProfile.toString());
-              controller.infoPage();
-            },
           ),
         ),
-        actions: actionBarItems(context, isSelected: false),
+        actions: (controller.arguments?.menuActionsEnabled).checkNull()
+            ? actionBarItems(context, isSelected: false)
+            : const [],
       );
     });
   }

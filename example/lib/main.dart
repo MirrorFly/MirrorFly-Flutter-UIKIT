@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mirrorfly_uikit_plugin/app/model/arguments.dart';
 import 'package:mirrorfly_uikit_plugin/app/routes/mirrorfly_navigation_observer.dart';
 import 'package:mirrorfly_uikit_plugin/app/routes/route_settings.dart';
+import 'package:mirrorfly_uikit_plugin/app/stylesheet/stylesheet.dart';
 import 'package:mirrorfly_uikit_plugin/mirrorfly_uikit.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -13,13 +14,15 @@ Future<void> main() async {
   var response = await MirrorflyUikit.instance.initUIKIT(
     navigatorKey: navigatorKey,
     licenseKey: 'LICENSE_KEY',
-    iOSContainerID: 'group.com.mirrorfly.flutter',
+    iOSContainerID: 'CONTAINER_ID(APP_GROUPS)',
   );
 
   debugPrint("init response $response");
 
   /// Use this method to add the locale you want to support in the UIKIT Plugin.
   AppLocalizations.addSupportedLocales(const Locale("hi", "IN"));
+  AppStyleConfig.setChatPageStyle(
+      const ChatPageStyle(attachmentViewStyle: AttachmentViewStyle()));
 
   runApp(const MyApp());
 }
@@ -85,78 +88,81 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('Enter Unique Id :'),
-              const SizedBox(
-                height: 10,
-              ),
-              TextField(
-                onChanged: (String text) {
-                  setState(() {
-                    uniqueId = text;
-                  });
-                },
-                keyboardType: TextInputType.text,
-                style: const TextStyle(fontSize: 18),
-                decoration: const InputDecoration(border: OutlineInputBorder()),
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]"))
-                ],
-              ),
-              Center(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    buildTextButton(
-                        onPressed: () {
-                          logoutFromSDK();
-                        },
-                        text: 'Logout'),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    buildTextButton(
-                        onPressed: () async {
-                          if (uniqueId.isNotEmpty) {
-                            try {
-                              var response = await MirrorflyUikit.instance
-                                  .login(userIdentifier: uniqueId);
-                              debugPrint("register user $response");
-                              showSnack(response['message']);
-                            } catch (e) {
-                              showSnack(e.toString());
-                            }
-                          } else {
-                            showSnack('Unique id must not be empty');
-                          }
-                        },
-                        text: 'Register'),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Enter Unique Id :'),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextField(
+                  onChanged: (String text) {
+                    setState(() {
+                      uniqueId = text;
+                    });
+                  },
+                  keyboardType: TextInputType.text,
+                  style: const TextStyle(fontSize: 18),
+                  decoration:
+                      const InputDecoration(border: OutlineInputBorder()),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]"))
                   ],
                 ),
-              ),
-              Center(
-                child: buildTextButton(
-                  onPressed: () async {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (con) => const DashboardView(),
-                            settings: const RouteSettings(
-                                name: 'DashboardView',
-                                arguments: DashboardViewArguments(
-                                    didMissedCallNotificationLaunchApp:
-                                        false))));
-                  },
-                  text: 'chat page',
+                Center(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      buildTextButton(
+                          onPressed: () {
+                            logoutFromSDK();
+                          },
+                          text: 'Logout'),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      buildTextButton(
+                          onPressed: () async {
+                            if (uniqueId.isNotEmpty) {
+                              try {
+                                var response = await MirrorflyUikit.instance
+                                    .login(userIdentifier: uniqueId);
+                                debugPrint("register user $response");
+                                showSnack(response['message']);
+                              } catch (e) {
+                                showSnack(e.toString());
+                              }
+                            } else {
+                              showSnack('Unique id must not be empty');
+                            }
+                          },
+                          text: 'Register'),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                Center(
+                  child: buildTextButton(
+                    onPressed: () async {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (con) => const DashboardView(),
+                              settings: const RouteSettings(
+                                  name: 'DashboardView',
+                                  arguments: DashboardViewArguments(
+                                      didMissedCallNotificationLaunchApp:
+                                          false))));
+                    },
+                    text: 'Recent chats',
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
