@@ -1,3 +1,12 @@
+## 2.0.2
+* Android Gradle Issue Fixed
+* Android SDK Updated to 7.13.8
+* iOS SDK Updated to 5.18.0
+
+## 2.0.1
+* Chat Page Background Decoration Added
+* iOS SDK Updated to 5.17.10
+
 ## 2.0.1-beta
 * Android Gradle Issue Fixed 
 * iOS SDK Updated to 5.17.9 

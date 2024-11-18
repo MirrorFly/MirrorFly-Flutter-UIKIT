@@ -472,4 +472,7 @@ class Constants {
   static const String attachmentTypeAudio = "audio";
   static const String attachmentTypeContact = "contact";
   static const String attachmentTypeLocation = "location";
+
+  //Chat Open/Close Constant Messages
+  static const String chatClosed = "#THIS_CHAT_IS_CLOSED";
 }

@@ -53,6 +53,7 @@
     "youHaveBlocked": "You have blocked",
     "unblock": "UnBlock",
     "youCantSentMessageNoLonger": "You can't send messages to this group because you're no longer a participant.",
+    "chatClosed": "Chat Closed",
     "featureNotAvailable": "You can't send messages to this group because Feature unavailable for your plan.",
     "add": "Add",
     "reply": "Reply",

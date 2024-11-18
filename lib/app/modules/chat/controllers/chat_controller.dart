@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
@@ -167,25 +168,26 @@ class ChatController extends FullLifeCycleController
       starredChatMessageId = arguments!.messageId;
     }
 
-    await getProfileDetails(nJid).then((value) {
-      LogMessage.d("chatController getProfileDetails", value.toJson());
-      profile_(value);
-      //make unreadMessageTypeMessageId
-      if (Platform.isAndroid) {
-        unreadMessageTypeMessageId = "M${value.jid}";
-      } else if (Platform.isIOS) {
-        unreadMessageTypeMessageId =
-            "M_${getMobileNumberFromJid(value.jid.checkNull())}";
-      }
-      checkAdminBlocked();
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        newScrollController = ItemScrollController();
-        newItemPositionsListener = ItemPositionsListener.create();
-        searchScrollController = ItemScrollController();
-        ready();
+    if (Mirrorfly.isValidGroupJid(nJid)) {
+      await Mirrorfly.getGroupProfile(
+          groupJid: nJid.checkNull(),
+          fetchFromServer: await AppUtils.isNetConnected(),
+          flyCallBack: (FlyResponse response) async {
+            if (response.isSuccess) {
+              debugPrint("getGroupProfileDetails--> $response");
+              var profile = ProfileDetails.fromJson(
+                  json.decode(response.data.toString()));
+              await initializeProfile(profile);
+            } else {
+              debugPrint("getGroupProfileDetails--> ${response.errorMessage}");
+            }
+          });
+    } else {
+      await getProfileDetails(nJid).then((value) async {
+        LogMessage.d("chatController getProfileDetails", value.toJson());
+        await initializeProfile(value);
       });
-      // initListeners();
-    });
+    }
 
     setAudioPath();
 
@@ -195,6 +197,25 @@ class ChatController extends FullLifeCycleController
       //chatList.refresh();
     });
     super.onInit();
+  }
+
+  Future<void> initializeProfile(ProfileDetails profile) async {
+    profile_(profile);
+
+    //make unreadMessageTypeMessageId
+    if (Platform.isAndroid) {
+      unreadMessageTypeMessageId = "M${profile.jid.checkNull()}";
+    } else if (Platform.isIOS) {
+      unreadMessageTypeMessageId =
+          "M_${getMobileNumberFromJid(profile.jid.checkNull())}";
+    }
+    checkAdminBlocked();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      newScrollController = ItemScrollController();
+      newItemPositionsListener = ItemPositionsListener.create();
+      searchScrollController = ItemScrollController();
+      ready();
+    });
   }
 
   void getAvailableFeatures() {
@@ -639,6 +660,12 @@ class ChatController extends FullLifeCycleController
             showStarredMessage();
             sendReadReceipt(removeUnreadFromList: false);
             loadPrevORNextMessagesLoad();
+            if (chatList.isNotEmpty &&
+                chatList[0].messageTextContent == Constants.chatClosed) {
+              isChatClosed(true);
+            } else {
+              isChatClosed(false);
+            }
           }
           chatLoading(false);
         });
@@ -688,6 +715,12 @@ class ChatController extends FullLifeCycleController
         if (chatMessageModel.isNotEmpty) {
           if (chatList.isNotEmpty) {
             chatList.insertAll(0, chatMessageModel.reversed.toList());
+            if (chatList.isNotEmpty &&
+                chatList[0].messageTextContent == Constants.chatClosed) {
+              isChatClosed(true);
+            } else {
+              isChatClosed(false);
+            }
           } else {
             chatList(chatMessageModel.reversed.toList());
           }
@@ -2266,8 +2299,9 @@ class ChatController extends FullLifeCycleController
   getParticipantsNameAsCsv(String jid) {
     Mirrorfly.getGroupMembersList(
         jid: jid,
-        fetchFromServer: false,
+        fetchFromServer: true,
         flyCallBack: (FlyResponse response) {
+          memberOfGroup();
           if (response.isSuccess && response.hasData) {
             var str = <String>[];
             LogMessage.d("getGroupMembersList-->", response.toString());
@@ -3187,6 +3221,8 @@ class ChatController extends FullLifeCycleController
   }
 
   var topic = Topics().obs;
+
+  var isChatClosed = false.obs;
 
   void getTopicDetail() async {
     if (topicId.isNotEmpty) {
