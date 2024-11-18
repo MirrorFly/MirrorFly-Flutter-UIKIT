@@ -54,7 +54,10 @@ class _ChatListViewState extends State<ChatListView> {
         child: Obx(() {
           return ScrollablePositionedList.separated(
             separatorBuilder: (context, index) {
-              if (widget.chatList[index].messageType.toUpperCase() == Constants.mText && widget.chatList[index].messageTextContent.checkNull() == Constants.chatClosed){
+              if (widget.chatList[index].messageType.toUpperCase() ==
+                      Constants.mText &&
+                  widget.chatList[index].messageTextContent.checkNull() ==
+                      Constants.chatClosed) {
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -64,13 +67,14 @@ class _ChatListViewState extends State<ChatListView> {
                       child: Text(getTranslated("chatClosed")),
                     ),
                     const Expanded(child: Divider())
-                  ],);
+                  ],
+                );
               }
-                var string = AppUtils.groupedDateMessage(
-                    index, widget.chatList); //Date Labels
-                return string != null
-                    ? NotificationMessageView(chatMessage: string)
-                    : const Offstage();
+              var string = AppUtils.groupedDateMessage(
+                  index, widget.chatList); //Date Labels
+              return string != null
+                  ? NotificationMessageView(chatMessage: string)
+                  : const Offstage();
             },
             itemScrollController: widget.chatController.newScrollController,
             itemPositionsListener:

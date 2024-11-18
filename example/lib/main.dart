@@ -108,7 +108,8 @@ class _DashboardState extends State<Dashboard> {
                   },
                   keyboardType: TextInputType.text,
                   style: const TextStyle(fontSize: 18),
-                  decoration: const InputDecoration(border: OutlineInputBorder()),
+                  decoration:
+                      const InputDecoration(border: OutlineInputBorder()),
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]"))
                   ],

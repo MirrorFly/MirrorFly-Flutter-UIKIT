@@ -52,7 +52,9 @@ class MessageContent extends StatelessWidget {
       );
     } else {
       if ((chatList[index].messageType.toUpperCase() == Constants.mText ||
-          chatList[index].messageType.toUpperCase() == Constants.mAutoText) && chatMessage.messageTextContent.checkNull() != Constants.chatClosed) {
+              chatList[index].messageType.toUpperCase() ==
+                  Constants.mAutoText) &&
+          chatMessage.messageTextContent.checkNull() != Constants.chatClosed) {
         return TextMessageView(
           chatMessage: chatMessage,
           search: search,
