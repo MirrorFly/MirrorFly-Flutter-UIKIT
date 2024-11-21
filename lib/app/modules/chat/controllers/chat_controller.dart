@@ -2097,7 +2097,7 @@ class ChatController extends FullLifeCycleController
 
   gotoSearch() {
     Future.delayed(const Duration(milliseconds: 100), () {
-      NavUtils.toNamed(Routes.chatSearch, arguments: chatList);
+      NavUtils.toNamed(Routes.chatSearch, arguments: arguments);
     });
   }
 
