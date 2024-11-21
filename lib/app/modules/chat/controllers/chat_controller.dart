@@ -99,7 +99,7 @@ class ChatController extends FullLifeCycleController
 
   var selectedChatList = List<ChatMessageModel>.empty(growable: true).obs;
 
-  final _isMemberOfGroup = false.obs;
+  final _isMemberOfGroup = true.obs;
 
   set isMemberOfGroup(value) => _isMemberOfGroup.value = value;
 
@@ -167,7 +167,21 @@ class ChatController extends FullLifeCycleController
     if (arguments?.messageId != null) {
       starredChatMessageId = arguments!.messageId;
     }
+    SessionManagement.setCurrentChatJID(nJid.checkNull());
+    await getChatProfile();
 
+    setAudioPath();
+
+    filteredPosition.bindStream(filteredPosition.stream);
+    ever(filteredPosition, (callback) {
+      lastPosition(callback.length);
+      //chatList.refresh();
+    });
+    super.onInit();
+  }
+
+  var chatProfileCalled = false;
+  Future<void> getChatProfile() async {
     if (Mirrorfly.isValidGroupJid(nJid)) {
       await Mirrorfly.getGroupProfile(
           groupJid: nJid.checkNull(),
@@ -188,18 +202,10 @@ class ChatController extends FullLifeCycleController
         await initializeProfile(value);
       });
     }
-
-    setAudioPath();
-
-    filteredPosition.bindStream(filteredPosition.stream);
-    ever(filteredPosition, (callback) {
-      lastPosition(callback.length);
-      //chatList.refresh();
-    });
-    super.onInit();
   }
 
   Future<void> initializeProfile(ProfileDetails profile) async {
+    chatProfileCalled=true;
     profile_(profile);
 
     //make unreadMessageTypeMessageId
@@ -2912,6 +2918,9 @@ class ChatController extends FullLifeCycleController
     Future.delayed(const Duration(milliseconds: 2000), () {
       setChatStatus();
     });
+    if(!chatProfileCalled){
+      getChatProfile();
+    }
   }
 
   void onDisconnected() {
