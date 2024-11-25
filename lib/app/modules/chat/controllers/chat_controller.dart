@@ -205,7 +205,7 @@ class ChatController extends FullLifeCycleController
   }
 
   Future<void> initializeProfile(ProfileDetails profile) async {
-    chatProfileCalled=true;
+    chatProfileCalled = true;
     profile_(profile);
 
     //make unreadMessageTypeMessageId
@@ -2918,7 +2918,7 @@ class ChatController extends FullLifeCycleController
     Future.delayed(const Duration(milliseconds: 2000), () {
       setChatStatus();
     });
-    if(!chatProfileCalled){
+    if (!chatProfileCalled) {
       getChatProfile();
     }
   }

@@ -1,3 +1,7 @@
+## 2.0.2+1
+* Hot Fix for Android Message loading Issue
+* Android SDK Updated to 7.13.10
+
 ## 2.0.2
 * Android Gradle Issue Fixed
 * Android SDK Updated to 7.13.8

@@ -38,8 +38,11 @@ extension GetHelper on GetxController {
       LogMessage.d("Creating Controller: ", "$T found, use a old instance.");
       return GetInstance().find<T>(tag: tag);
     } else {
-      LogMessage.d("Creating Controller: ", "$T not found, initializing a new instance.");
-      GetInstance().lazyPut<T>(()=>this as T,tag: tag); // Use the provided factory function to create a new instance
+      LogMessage.d("Creating Controller: ",
+          "$T not found, initializing a new instance.");
+      GetInstance().lazyPut<T>(() => this as T,
+          tag:
+              tag); // Use the provided factory function to create a new instance
       return GetInstance().find<T>(tag: tag);
     }
   }

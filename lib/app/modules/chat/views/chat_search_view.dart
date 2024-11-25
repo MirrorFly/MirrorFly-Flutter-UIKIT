@@ -20,7 +20,9 @@ import '../widgets/sender_header.dart';
 class ChatSearchView extends StatelessWidget {
   ChatSearchView({super.key});
 
-  final ChatController controller = ChatController((NavUtils.arguments as ChatViewArguments)).get(tag: (NavUtils.arguments as ChatViewArguments).chatJid);
+  final ChatController controller =
+      ChatController((NavUtils.arguments as ChatViewArguments))
+          .get(tag: (NavUtils.arguments as ChatViewArguments).chatJid);
 
   @override
   Widget build(BuildContext context) {
