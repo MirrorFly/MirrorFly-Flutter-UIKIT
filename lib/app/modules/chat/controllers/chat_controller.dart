@@ -758,20 +758,29 @@ class ChatController extends FullLifeCycleController
 
   sendImageMessage(
       String? path, String? caption, String? replyMessageID) async {
+    LogMessage.d("Message Issue", "sendImageMessage -> ${availableFeatures.value.isImageAttachmentAvailable}");
+    LogMessage.d("Message Issue", "sendImageMessage check null -> ${availableFeatures.value.isImageAttachmentAvailable.checkNull()}");
     if (!availableFeatures.value.isImageAttachmentAvailable.checkNull()) {
+
+      LogMessage.d("Message Issue", "sendImageMessage feature is disabled-> ${availableFeatures.value.isImageAttachmentAvailable}");
       DialogUtils.showFeatureUnavailable();
       return;
+    }else{
+      LogMessage.d("Message Issue", "sendImageMessage feature is enabled and moving further to SDK-> ${availableFeatures.value.isImageAttachmentAvailable}");
     }
-    debugPrint("Path ==> $path");
+    LogMessage.d("Message Issue", "Path ==> $path");
     var busyStatus = !profile.isGroupProfile.checkNull()
         ? await Mirrorfly.isBusyStatusEnabled()
         : false;
     if (!busyStatus.checkNull()) {
+      LogMessage.d("Message Issue", "sendImageMessage busy status condition is passed");
+
       if (isReplying.value) {
         replyMessageID = replyChatMessage.messageId;
       }
       isReplying(false);
       if (File(path!).existsSync()) {
+        LogMessage.d("Message Issue", "File Exists sending to SDK");
         //old method is deprecated Instead of use below new method
         /*return Mirrorfly.sendImageMessage(
             profile.jid!, path, caption, replyMessageID,topicId: topicId)
@@ -3201,6 +3210,7 @@ class ChatController extends FullLifeCycleController
   }
 
   void updateAvailableFeature(AvailableFeatures features) {
+    LogMessage.d("Message Issue", "updateAvailableFeature available feature section -> ${features.toJson()}");
     availableFeatures(features);
     var availableAttachment = <AttachmentIcon>[];
     if (features.isDocumentAttachmentAvailable.checkNull()) {
@@ -3227,6 +3237,7 @@ class ChatController extends FullLifeCycleController
           locationImg, getTranslated("attachment_Location")));
     }
     availableAttachments(availableAttachment);
+    LogMessage.d("Message Issue", "updateAvailableFeature available attachment -> ${availableAttachments.toJson()}");
   }
 
   var topic = Topics().obs;
