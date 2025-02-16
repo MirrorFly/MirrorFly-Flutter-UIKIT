@@ -6,12 +6,10 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import '../../../common/app_localizations.dart';
 import '../../../common/constants.dart';
-import '../../../extensions/extensions.dart';
 import '../../../modules/gallery_picker/controllers/gallery_picker_controller.dart';
 import 'package:mirrorfly_plugin/mirrorfly.dart';
 
 import '../../../app_style_config.dart';
-import '../../../common/main_controller.dart';
 import '../../../data/utils.dart';
 import '../../../routes/route_settings.dart';
 import '../../chat/controllers/chat_controller.dart';
@@ -164,25 +162,25 @@ class MediaPreviewController extends FullLifeCycleController
             message: getTranslated("compressingFiles"),
             dialogStyle: AppStyleConfig.dialogStyle)
         : DialogUtils.progressLoading();
-    var featureNotAvailable = false;
+    // var featureNotAvailable = false;
     try {
       int i = 0;
       await Future.forEach(filePath, (data) async {
         // debugPrint(data.type);
         /// show image
         if (data.type == 'image') {
-          if (!availableFeatures.value.isImageAttachmentAvailable.checkNull()) {
+          /*if (!availableFeatures.value.isImageAttachmentAvailable.checkNull()) {
             featureNotAvailable = true;
             return false;
-          }
+          }*/
           debugPrint("sending image");
           await Get.find<ChatController>(tag: userJid)
               .sendImageMessage(imageCache[i]?.path, captionMessage[i], "");
         } else if (data.type == 'video') {
-          if (!availableFeatures.value.isVideoAttachmentAvailable.checkNull()) {
+          /*if (!availableFeatures.value.isVideoAttachmentAvailable.checkNull()) {
             featureNotAvailable = true;
             return false;
-          }
+          }*/
           debugPrint("sending video");
           await Get.find<ChatController>(tag: userJid)
               .sendVideoMessage(imageCache[i]!.path, captionMessage[i], "");
@@ -190,16 +188,16 @@ class MediaPreviewController extends FullLifeCycleController
         i++;
       });
     } finally {
-      debugPrint("finally $featureNotAvailable");
+      // debugPrint("finally $featureNotAvailable");
       DialogUtils.hideLoading();
-      if (!featureNotAvailable) {
+      // if (!featureNotAvailable) {
         if (previousRoute == Routes.galleryPicker) {
           NavUtils.back();
         }
         NavUtils.back();
-      } else {
-        DialogUtils.showFeatureUnavailable();
-      }
+      // } else {
+      //   DialogUtils.showFeatureUnavailable();
+      // }
     }
   }
 
@@ -255,11 +253,11 @@ class MediaPreviewController extends FullLifeCycleController
   @override
   void onInactive() {}
 
-  var availableFeatures = Get.find<MainController>().availableFeature;
+  // var availableFeatures = Get.find<MainController>().availableFeature;
   void onAvailableFeaturesUpdated(AvailableFeatures features) {
     LogMessage.d(
         "MediaPreview", "onAvailableFeaturesUpdated ${features.toJson()}");
-    availableFeatures(features);
+    // availableFeatures(features);
   }
 
   @override
