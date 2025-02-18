@@ -758,22 +758,26 @@ class ChatController extends FullLifeCycleController
 
   sendImageMessage(
       String? path, String? caption, String? replyMessageID) async {
-    LogMessage.d("Message Issue", "sendImageMessage -> ${availableFeatures.value.isImageAttachmentAvailable}");
-    LogMessage.d("Message Issue", "sendImageMessage check null -> ${availableFeatures.value.isImageAttachmentAvailable.checkNull()}");
+    LogMessage.d("Message Issue",
+        "sendImageMessage -> ${availableFeatures.value.isImageAttachmentAvailable}");
+    LogMessage.d("Message Issue",
+        "sendImageMessage check null -> ${availableFeatures.value.isImageAttachmentAvailable.checkNull()}");
     if (!availableFeatures.value.isImageAttachmentAvailable.checkNull()) {
-
-      LogMessage.d("Message Issue", "sendImageMessage feature is disabled-> ${availableFeatures.value.isImageAttachmentAvailable}");
+      LogMessage.d("Message Issue",
+          "sendImageMessage feature is disabled-> ${availableFeatures.value.isImageAttachmentAvailable}");
       DialogUtils.showFeatureUnavailable();
       return;
-    }else{
-      LogMessage.d("Message Issue", "sendImageMessage feature is enabled and moving further to SDK-> ${availableFeatures.value.isImageAttachmentAvailable}");
+    } else {
+      LogMessage.d("Message Issue",
+          "sendImageMessage feature is enabled and moving further to SDK-> ${availableFeatures.value.isImageAttachmentAvailable}");
     }
     LogMessage.d("Message Issue", "Path ==> $path");
     var busyStatus = !profile.isGroupProfile.checkNull()
         ? await Mirrorfly.isBusyStatusEnabled()
         : false;
     if (!busyStatus.checkNull()) {
-      LogMessage.d("Message Issue", "sendImageMessage busy status condition is passed");
+      LogMessage.d(
+          "Message Issue", "sendImageMessage busy status condition is passed");
 
       if (isReplying.value) {
         replyMessageID = replyChatMessage.messageId;
@@ -2352,7 +2356,8 @@ class ChatController extends FullLifeCycleController
     }
     // if (await AppPermission.askFileCameraAudioPermission()) {
     var cameraPermissionStatus = await AppPermission.checkAndRequestPermissions(
-        permissions: [Permission.camera, Permission.microphone]..addIf(Platform.isAndroid, Permission.notification),
+        permissions: [Permission.camera, Permission.microphone]
+          ..addIf(Platform.isAndroid, Permission.notification),
         permissionIcon: cameraPermission,
         permissionContent: getTranslated("cameraPermissionContent"),
         permissionPermanentlyDeniedContent:
@@ -3210,7 +3215,8 @@ class ChatController extends FullLifeCycleController
   }
 
   void updateAvailableFeature(AvailableFeatures features) {
-    LogMessage.d("Message Issue", "updateAvailableFeature available feature section -> ${features.toJson()}");
+    LogMessage.d("Message Issue",
+        "updateAvailableFeature available feature section -> ${features.toJson()}");
     availableFeatures(features);
     var availableAttachment = <AttachmentIcon>[];
     if (features.isDocumentAttachmentAvailable.checkNull()) {
@@ -3237,7 +3243,8 @@ class ChatController extends FullLifeCycleController
           locationImg, getTranslated("attachment_Location")));
     }
     availableAttachments(availableAttachment);
-    LogMessage.d("Message Issue", "updateAvailableFeature available attachment -> ${availableAttachments.toJson()}");
+    LogMessage.d("Message Issue",
+        "updateAvailableFeature available attachment -> ${availableAttachments.toJson()}");
   }
 
   var topic = Topics().obs;

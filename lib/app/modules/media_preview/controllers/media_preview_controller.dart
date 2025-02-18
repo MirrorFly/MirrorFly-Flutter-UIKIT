@@ -191,10 +191,10 @@ class MediaPreviewController extends FullLifeCycleController
       // debugPrint("finally $featureNotAvailable");
       DialogUtils.hideLoading();
       // if (!featureNotAvailable) {
-        if (previousRoute == Routes.galleryPicker) {
-          NavUtils.back();
-        }
+      if (previousRoute == Routes.galleryPicker) {
         NavUtils.back();
+      }
+      NavUtils.back();
       // } else {
       //   DialogUtils.showFeatureUnavailable();
       // }

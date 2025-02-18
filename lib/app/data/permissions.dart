@@ -817,11 +817,12 @@ class AppPermission {
     if (Platform.isIOS) {
       permissions.addAll([Permission.photos, Permission.storage]);
     } else if (sdkVersion < 33 && Platform.isAndroid) {
-      permissions.addAll([Permission.storage,Permission.notification]);
+      permissions.addAll([Permission.storage, Permission.notification]);
     } else {
       ///[Permission.photos] for Android 33+ gallery access
       ///[Permission.videos] for Android 33+ gallery access
-      permissions.addAll([Permission.photos, Permission.videos,Permission.notification]);
+      permissions.addAll(
+          [Permission.photos, Permission.videos, Permission.notification]);
     }
     LogMessage.d("getGalleryAccessPermissions", permissions.join(","));
     return permissions;
