@@ -2352,7 +2352,7 @@ class ChatController extends FullLifeCycleController
     }
     // if (await AppPermission.askFileCameraAudioPermission()) {
     var cameraPermissionStatus = await AppPermission.checkAndRequestPermissions(
-        permissions: [Permission.camera, Permission.microphone],
+        permissions: [Permission.camera, Permission.microphone]..addIf(Platform.isAndroid, Permission.notification),
         permissionIcon: cameraPermission,
         permissionContent: getTranslated("cameraPermissionContent"),
         permissionPermanentlyDeniedContent:
