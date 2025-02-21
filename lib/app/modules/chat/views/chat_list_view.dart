@@ -193,7 +193,10 @@ class _ChatListViewState extends State<ChatListView> {
                                                 .isMessageSentByMe &&
                                             widget.chatController
                                                 .forwardMessageVisibility(
-                                                    widget.chatList[index]),
+                                                    widget.chatList[index]) &&
+                                            (widget.chatController.arguments
+                                                    ?.isMessageWidgetForwardEnabled)
+                                                .checkNull(),
                                         child: IconButton(
                                             onPressed: () {
                                               widget.chatController

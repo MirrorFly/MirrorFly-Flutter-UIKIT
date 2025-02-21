@@ -8,19 +8,36 @@ class DashboardViewArguments {
 }
 
 class ChatViewArguments {
-  const ChatViewArguments(
-      {required this.chatJid,
-      this.topicId = '',
-      this.didNotificationLaunchApp = false,
-      this.isUser = false,
-      this.messageId,
-      // this.isFromStarred = false,
-      this.enableCalls = true,
-      this.showChatDeliveryIndicator = true,
-      this.disableAppBar = false,
-      this.chatInfoPageRedirect = false,
-      this.enableSwipeToReply = true,
-      this.menuActionsEnabled = false});
+  const ChatViewArguments({
+    required this.chatJid,
+    this.topicId = '',
+    this.didNotificationLaunchApp = false,
+    this.isUser = false,
+    this.messageId,
+    // this.isFromStarred = false,
+    this.enableCalls = true,
+    this.showChatDeliveryIndicator = true,
+    this.disableAppBar = false,
+    this.chatInfoPageRedirect = false,
+    this.enableSwipeToReply = true,
+    this.menuActionsEnabled = false,
+    this.isAppBarForwardEnabled = true,
+    this.isMessageWidgetForwardEnabled = true,
+    this.isAppBarReplyEnabled = true,
+    this.isAppBarStarEnabled = true,
+    this.isAppBarDeleteMessageEnabled = true,
+    this.isAppBarCopyMessageEnabled = true,
+    this.isAppBarMessageInfoEnabled = true,
+    this.isAppBarReportEnabled = true,
+    this.isAppBarClearChatEnabled = true,
+    this.isAppBarBlockEnabled = true,
+    this.isAppBarSearchEnabled = true,
+    this.isAppBarEmailEnabled = true,
+    this.isAppBarEditMessageEnabled = true,
+    this.isAppBarShareEnabled = true,
+    this.isVoiceCallEnabled = true,
+    this.isVideoCallEnabled = true,
+  });
 
   final String chatJid;
   final String topicId;
@@ -34,6 +51,22 @@ class ChatViewArguments {
   final bool enableSwipeToReply;
   final bool menuActionsEnabled;
   final bool chatInfoPageRedirect;
+  final bool isAppBarForwardEnabled;
+  final bool isMessageWidgetForwardEnabled;
+  final bool isAppBarReplyEnabled;
+  final bool isAppBarStarEnabled;
+  final bool isAppBarDeleteMessageEnabled;
+  final bool isAppBarCopyMessageEnabled;
+  final bool isAppBarMessageInfoEnabled;
+  final bool isAppBarReportEnabled;
+  final bool isAppBarClearChatEnabled;
+  final bool isAppBarBlockEnabled;
+  final bool isAppBarSearchEnabled;
+  final bool isAppBarEmailEnabled;
+  final bool isAppBarEditMessageEnabled;
+  final bool isAppBarShareEnabled;
+  final bool isVoiceCallEnabled;
+  final bool isVideoCallEnabled;
 }
 
 class ChatSearchViewArguments {
