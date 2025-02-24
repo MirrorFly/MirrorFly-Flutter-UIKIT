@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'chat_message_model.dart';
 
 class DashboardViewArguments {
@@ -37,7 +39,12 @@ class ChatViewArguments {
     this.isAppBarShareEnabled = true,
     this.isVoiceCallEnabled = true,
     this.isVideoCallEnabled = true,
-  });
+    this.swipeSensitivity = 5,
+    this.showTopicName = true,
+    this.topicTitleColor,
+    this.topicTitleBgColor,
+  }): assert(swipeSensitivity >= 5 && swipeSensitivity <= 20,
+  'swipeSensitivity must be between 5 and 20');
 
   final String chatJid;
   final String topicId;
@@ -67,6 +74,11 @@ class ChatViewArguments {
   final bool isAppBarShareEnabled;
   final bool isVoiceCallEnabled;
   final bool isVideoCallEnabled;
+
+  final int swipeSensitivity;
+  final bool showTopicName;
+  final Color? topicTitleColor;
+  final Color? topicTitleBgColor;
 }
 
 class ChatSearchViewArguments {

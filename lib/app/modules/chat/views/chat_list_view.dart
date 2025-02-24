@@ -98,6 +98,7 @@ class _ChatListViewState extends State<ChatListView> {
                   (widget.chatList[index].messageType.toUpperCase() !=
                           Constants.mNotification)
                       ? SwipeTo(
+                          swipeSensitivity: widget.chatController.arguments?.swipeSensitivity ?? 5,
                           onRightSwipe: (widget.chatController.arguments
                                       ?.enableSwipeToReply)
                                   .checkNull()

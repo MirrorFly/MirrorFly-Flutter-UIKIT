@@ -88,11 +88,14 @@ class ChatView extends NavViewStateful<ChatController> {
                   children: [
                     Obx(() {
                       return Visibility(
-                          visible: controller.topic.value.topicName != null,
+                          visible: controller.topic.value.topicName != null &&
+                              (controller.arguments?.showTopicName).checkNull(),
                           child: Container(
                               width: NavUtils.width,
                               decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor,
+                                color:
+                                    controller.arguments?.topicTitleBgColor ??
+                                        Theme.of(context).primaryColor,
                                 borderRadius: const BorderRadius.only(
                                     bottomLeft: Radius.circular(8),
                                     bottomRight: Radius.circular(8)),
@@ -101,6 +104,12 @@ class ChatView extends NavViewStateful<ChatController> {
                               child: Text(
                                 controller.topic.value.topicName.checkNull(),
                                 textAlign: TextAlign.center,
+                                style: controller.arguments?.topicTitleColor !=
+                                        null
+                                    ? TextStyle(
+                                        color: controller
+                                            .arguments?.topicTitleColor)
+                                    : const TextStyle(color: Colors.black),
                               )));
                     }),
                     Expanded(
