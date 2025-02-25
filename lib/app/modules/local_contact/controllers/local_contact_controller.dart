@@ -61,19 +61,8 @@ class LocalContactController extends GetxController {
     }
   }
 
-  shareContact() async {
-    // var contactList = List<LocalContact>.empty(growable: true);
-    // for (var mobileNumber in contactsSelected) {
-    //   final number = mobileNumber.value;
-    //   contactList.add(number!.replaceAll(RegExp('[+() -]'), ''));
-    // }
-
-    NavUtils.toNamed(Routes.previewContact, arguments: {
-      "contactList": contactsSelected,
-      "shareContactList": contactsSelected,
-      "from": "contact_pick",
-      "userJid": userJid
-    });
+  void shareContact() async {
+    NavUtils.toNamed(Routes.previewContact, arguments: {"contactList" : contactsSelected,"shareContactList" : contactsSelected, "from": "contact_pick", "userJid" : userJid});
   }
 
   name(Contact item) {
