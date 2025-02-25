@@ -46,6 +46,8 @@ class MainController extends FullLifeCycleController
         .then((value) {
       googleMapKey = value;
       LogMessage.d("com.google.android.geo.API_THUMP_KEY", googleMapKey);
+    }).catchError((e){
+      LogMessage.d("API_THUMP_KEY not found", e);
     });
     debugPrint("#Mirrorfly Notification -> Main Controller push init");
 
