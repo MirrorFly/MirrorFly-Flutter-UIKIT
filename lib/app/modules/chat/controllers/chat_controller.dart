@@ -3157,7 +3157,7 @@ class ChatController extends FullLifeCycleController
                 0) {
           // Scrolled to the Bottom
           debugPrint("reached Bottom yes load next messages");
-          _loadNextMessages();
+          _loadNextMessages(showLoading: false);
 
           ///This is the bottom constraint changing to Top constraint and calling prevMessages bcz reversing the list view in display
         } else if (firstVisibleItemIndex + itemPositions.length >=
@@ -3169,7 +3169,7 @@ class ChatController extends FullLifeCycleController
       } else if (Platform.isAndroid) {
         if (firstVisibleItemIndex == 0) {
           debugPrint("reached Bottom yes load next messages");
-          _loadNextMessages();
+          _loadNextMessages(showLoading: false);
         } else if (firstVisibleItemIndex + itemPositions.length >=
             chatList.length) {
           debugPrint("reached Top yes load previous msgs");
