@@ -98,7 +98,9 @@ class _ChatListViewState extends State<ChatListView> {
                   (widget.chatList[index].messageType.toUpperCase() !=
                           Constants.mNotification)
                       ? SwipeTo(
-                          swipeSensitivity: widget.chatController.arguments?.swipeSensitivity ?? 5,
+                          swipeSensitivity: widget
+                                  .chatController.arguments?.swipeSensitivity ??
+                              5,
                           onRightSwipe: (widget.chatController.arguments
                                       ?.enableSwipeToReply)
                                   .checkNull()
@@ -296,7 +298,10 @@ class _ChatListViewState extends State<ChatListView> {
                                               .isMessageSentByMe &&
                                           widget.chatController
                                               .forwardMessageVisibility(
-                                                  widget.chatList[index])) ...[
+                                                  widget.chatList[index]) &&
+                                          (widget.chatController.arguments
+                                                  ?.isMessageWidgetForwardEnabled)
+                                              .checkNull()) ...[
                                         IconButton(
                                             onPressed: () {
                                               widget.chatController
