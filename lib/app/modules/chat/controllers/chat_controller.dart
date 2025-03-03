@@ -692,7 +692,7 @@ class ChatController extends FullLifeCycleController
     // if (showLoading) {
     //   showLoadingPrevious(await Mirrorfly.hasPreviousMessages());
     // } else {
-      showLoadingPrevious(showLoading);
+    showLoadingPrevious(showLoading);
     // }
     // showLoadingPrevious(await Mirrorfly.hasPreviousMessages());
     Mirrorfly.loadPreviousMessages(flyCallback: (FlyResponse response) {
@@ -717,7 +717,7 @@ class ChatController extends FullLifeCycleController
     // if (showLoading) {
     //   showLoadingNext(await Mirrorfly.hasNextMessages());
     // } else {
-      showLoadingNext(showLoading);
+    showLoadingNext(showLoading);
     // }
     Mirrorfly.loadNextMessages(flyCallback: (FlyResponse response) {
       if (response.isSuccess && response.hasData) {
@@ -3281,13 +3281,13 @@ class ChatController extends FullLifeCycleController
 
   void loadLastMessages(ChatMessageModel chatMessageModel) async {
     // if (await Mirrorfly.hasNextMessages()) {
-      _loadNextMessages(showLoading: false);
+    _loadNextMessages(showLoading: false);
     // }
   }
 
   Future<void> loadPrevORNextMessagesLoad({bool? isReplyMessage}) async {
     // if (await Mirrorfly.hasPreviousMessages()) {
-      _loadPreviousMessages(showLoading: false);
+    _loadPreviousMessages(showLoading: false);
     // }
   }
 
