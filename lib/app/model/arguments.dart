@@ -43,8 +43,8 @@ class ChatViewArguments {
     this.showTopicName = true,
     this.topicTitleColor,
     this.topicTitleBgColor,
-  }): assert(swipeSensitivity >= 5 && swipeSensitivity <= 20,
-  'swipeSensitivity must be between 5 and 20');
+  }) : assert(swipeSensitivity >= 5 && swipeSensitivity <= 20,
+            'swipeSensitivity must be between 5 and 20');
 
   final String chatJid;
   final String topicId;

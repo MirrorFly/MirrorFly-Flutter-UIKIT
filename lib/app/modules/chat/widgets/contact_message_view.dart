@@ -194,7 +194,12 @@ class ContactMessageView extends StatelessWidget {
   }
 
   void showInvitePopup(ContactChatMessage contactChatMessage) {
-    NavUtils.toNamed(Routes.previewContact, arguments: {"previewContactList" : chatMessage.contactChatMessage?.contactPhoneNumbers,"contactName" : chatMessage.contactChatMessage?.contactName, "from": "chat", "userJid" : chatMessage.senderUserJid});
+    NavUtils.toNamed(Routes.previewContact, arguments: {
+      "previewContactList": chatMessage.contactChatMessage?.contactPhoneNumbers,
+      "contactName": chatMessage.contactChatMessage?.contactName,
+      "from": "chat",
+      "userJid": chatMessage.senderUserJid
+    });
     /*DialogUtils.showButtonAlert(actions: [
       ListTile(
         contentPadding: const EdgeInsets.only(left: 10),

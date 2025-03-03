@@ -41,13 +41,15 @@ Widget getLocationImage(
               AppUtils.launchWeb(googleUrl);
             },
       child: CachedNetworkImage(
-        imageUrl: AppUtils.getMapImageUrl(locationChatMessage!.latitude,
-            locationChatMessage.longitude),
+        imageUrl: AppUtils.getMapImageUrl(
+            locationChatMessage!.latitude, locationChatMessage.longitude),
         fit: BoxFit.fill,
         width: width,
         height: height,
-        errorWidget: (ct,e,er){
-          return const Center(child: Text("Google map API_THUMP_KEY not found"),);
+        errorWidget: (ct, e, er) {
+          return const Center(
+            child: Text("Google map API_THUMP_KEY not found"),
+          );
         },
       ));
 }
