@@ -689,11 +689,11 @@ class ChatController extends FullLifeCycleController
   }
 
   Future<void> _loadPreviousMessages({bool showLoading = true}) async {
-    if (showLoading) {
-      showLoadingPrevious(await Mirrorfly.hasPreviousMessages());
-    } else {
+    // if (showLoading) {
+    //   showLoadingPrevious(await Mirrorfly.hasPreviousMessages());
+    // } else {
       showLoadingPrevious(showLoading);
-    }
+    // }
     // showLoadingPrevious(await Mirrorfly.hasPreviousMessages());
     Mirrorfly.loadPreviousMessages(flyCallback: (FlyResponse response) {
       if (response.isSuccess && response.hasData) {
@@ -714,11 +714,11 @@ class ChatController extends FullLifeCycleController
 
   Future<void> _loadNextMessages(
       {bool showLoading = true, bool removeUnreadFromList = true}) async {
-    if (showLoading) {
-      showLoadingNext(await Mirrorfly.hasNextMessages());
-    } else {
+    // if (showLoading) {
+    //   showLoadingNext(await Mirrorfly.hasNextMessages());
+    // } else {
       showLoadingNext(showLoading);
-    }
+    // }
     Mirrorfly.loadNextMessages(flyCallback: (FlyResponse response) {
       if (response.isSuccess && response.hasData) {
         List<ChatMessageModel> chatMessageModel =
@@ -3280,15 +3280,15 @@ class ChatController extends FullLifeCycleController
   }
 
   void loadLastMessages(ChatMessageModel chatMessageModel) async {
-    if (await Mirrorfly.hasNextMessages()) {
+    // if (await Mirrorfly.hasNextMessages()) {
       _loadNextMessages(showLoading: false);
-    }
+    // }
   }
 
   Future<void> loadPrevORNextMessagesLoad({bool? isReplyMessage}) async {
-    if (await Mirrorfly.hasPreviousMessages()) {
+    // if (await Mirrorfly.hasPreviousMessages()) {
       _loadPreviousMessages(showLoading: false);
-    }
+    // }
   }
 
   void handleUnreadMessageSeparator(

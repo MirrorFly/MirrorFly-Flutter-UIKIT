@@ -1,10 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/main_controller.dart';
 import '../../../data/utils.dart';
-import '../../../extensions/extensions.dart';
-import 'package:mirrorfly_plugin/mirrorflychat.dart';
 
 import '../../../common/app_localizations.dart';
 import '../../../common/constants.dart';

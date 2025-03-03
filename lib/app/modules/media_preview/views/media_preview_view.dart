@@ -385,7 +385,7 @@ class MediaPreviewView extends NavViewStateful<MediaPreviewController> {
                                           ),
                                         ),
                                         FloatingActionButton(
-                                          heroTag: 'media_play',
+                                            heroTag: 'media_play',
                                             onPressed: () {
                                               controller.sendMedia();
                                             },

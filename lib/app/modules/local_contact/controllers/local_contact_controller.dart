@@ -62,7 +62,12 @@ class LocalContactController extends GetxController {
   }
 
   void shareContact() async {
-    NavUtils.toNamed(Routes.previewContact, arguments: {"contactList" : contactsSelected,"shareContactList" : contactsSelected, "from": "contact_pick", "userJid" : userJid});
+    NavUtils.toNamed(Routes.previewContact, arguments: {
+      "contactList": contactsSelected,
+      "shareContactList": contactsSelected,
+      "from": "contact_pick",
+      "userJid": userJid
+    });
   }
 
   name(Contact item) {
