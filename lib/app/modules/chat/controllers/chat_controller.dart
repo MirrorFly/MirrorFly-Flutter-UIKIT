@@ -99,7 +99,7 @@ class ChatController extends FullLifeCycleController
 
   var selectedChatList = List<ChatMessageModel>.empty(growable: true).obs;
 
-  final _isMemberOfGroup = false.obs;
+  final _isMemberOfGroup = true.obs;
 
   set isMemberOfGroup(value) => _isMemberOfGroup.value = value;
 
@@ -167,7 +167,21 @@ class ChatController extends FullLifeCycleController
     if (arguments?.messageId != null) {
       starredChatMessageId = arguments!.messageId;
     }
+    SessionManagement.setCurrentChatJID(nJid.checkNull());
+    await getChatProfile();
 
+    setAudioPath();
+
+    filteredPosition.bindStream(filteredPosition.stream);
+    ever(filteredPosition, (callback) {
+      lastPosition(callback.length);
+      //chatList.refresh();
+    });
+    super.onInit();
+  }
+
+  var chatProfileCalled = false;
+  Future<void> getChatProfile() async {
     if (Mirrorfly.isValidGroupJid(nJid)) {
       await Mirrorfly.getGroupProfile(
           groupJid: nJid.checkNull(),
@@ -188,18 +202,10 @@ class ChatController extends FullLifeCycleController
         await initializeProfile(value);
       });
     }
-
-    setAudioPath();
-
-    filteredPosition.bindStream(filteredPosition.stream);
-    ever(filteredPosition, (callback) {
-      lastPosition(callback.length);
-      //chatList.refresh();
-    });
-    super.onInit();
   }
 
   Future<void> initializeProfile(ProfileDetails profile) async {
+    chatProfileCalled = true;
     profile_(profile);
 
     //make unreadMessageTypeMessageId
@@ -643,7 +649,12 @@ class ChatController extends FullLifeCycleController
       limit: 20,
       topicId: topicId,
       messageId: starredChatMessageId,
-      exclude: true /*starredChatMessageId == null*/,
+      // exclude: true /*starredChatMessageId == null*/,
+      exclude: Platform.isAndroid
+          ? starredChatMessageId != null
+              ? false
+              : true
+          : true,
       ascendingOrder: starredChatMessageId != null,
     ) //message
         .then((value) {
@@ -678,11 +689,11 @@ class ChatController extends FullLifeCycleController
   }
 
   Future<void> _loadPreviousMessages({bool showLoading = true}) async {
-    if (showLoading) {
-      showLoadingPrevious(await Mirrorfly.hasPreviousMessages());
-    } else {
-      showLoadingPrevious(showLoading);
-    }
+    // if (showLoading) {
+    //   showLoadingPrevious(await Mirrorfly.hasPreviousMessages());
+    // } else {
+    showLoadingPrevious(showLoading);
+    // }
     // showLoadingPrevious(await Mirrorfly.hasPreviousMessages());
     Mirrorfly.loadPreviousMessages(flyCallback: (FlyResponse response) {
       if (response.isSuccess && response.hasData) {
@@ -703,11 +714,11 @@ class ChatController extends FullLifeCycleController
 
   Future<void> _loadNextMessages(
       {bool showLoading = true, bool removeUnreadFromList = true}) async {
-    if (showLoading) {
-      showLoadingNext(await Mirrorfly.hasNextMessages());
-    } else {
-      showLoadingNext(showLoading);
-    }
+    // if (showLoading) {
+    //   showLoadingNext(await Mirrorfly.hasNextMessages());
+    // } else {
+    showLoadingNext(showLoading);
+    // }
     Mirrorfly.loadNextMessages(flyCallback: (FlyResponse response) {
       if (response.isSuccess && response.hasData) {
         List<ChatMessageModel> chatMessageModel =
@@ -752,20 +763,33 @@ class ChatController extends FullLifeCycleController
 
   sendImageMessage(
       String? path, String? caption, String? replyMessageID) async {
+    LogMessage.d("Message Issue",
+        "sendImageMessage -> ${availableFeatures.value.isImageAttachmentAvailable}");
+    LogMessage.d("Message Issue",
+        "sendImageMessage check null -> ${availableFeatures.value.isImageAttachmentAvailable.checkNull()}");
     if (!availableFeatures.value.isImageAttachmentAvailable.checkNull()) {
+      LogMessage.d("Message Issue",
+          "sendImageMessage feature is disabled-> ${availableFeatures.value.isImageAttachmentAvailable}");
       DialogUtils.showFeatureUnavailable();
       return;
+    } else {
+      LogMessage.d("Message Issue",
+          "sendImageMessage feature is enabled and moving further to SDK-> ${availableFeatures.value.isImageAttachmentAvailable}");
     }
-    debugPrint("Path ==> $path");
+    LogMessage.d("Message Issue", "Path ==> $path");
     var busyStatus = !profile.isGroupProfile.checkNull()
         ? await Mirrorfly.isBusyStatusEnabled()
         : false;
     if (!busyStatus.checkNull()) {
+      LogMessage.d(
+          "Message Issue", "sendImageMessage busy status condition is passed");
+
       if (isReplying.value) {
         replyMessageID = replyChatMessage.messageId;
       }
       isReplying(false);
       if (File(path!).existsSync()) {
+        LogMessage.d("Message Issue", "File Exists sending to SDK");
         //old method is deprecated Instead of use below new method
         /*return Mirrorfly.sendImageMessage(
             profile.jid!, path, caption, replyMessageID,topicId: topicId)
@@ -2097,7 +2121,7 @@ class ChatController extends FullLifeCycleController
 
   gotoSearch() {
     Future.delayed(const Duration(milliseconds: 100), () {
-      NavUtils.toNamed(Routes.chatSearch, arguments: chatList);
+      NavUtils.toNamed(Routes.chatSearch, arguments: arguments);
     });
   }
 
@@ -2337,7 +2361,8 @@ class ChatController extends FullLifeCycleController
     }
     // if (await AppPermission.askFileCameraAudioPermission()) {
     var cameraPermissionStatus = await AppPermission.checkAndRequestPermissions(
-        permissions: [Permission.camera, Permission.microphone],
+        permissions: [Permission.camera, Permission.microphone]
+          ..addIf(Platform.isAndroid, Permission.notification),
         permissionIcon: cameraPermission,
         permissionContent: getTranslated("cameraPermissionContent"),
         permissionPermanentlyDeniedContent:
@@ -2912,6 +2937,9 @@ class ChatController extends FullLifeCycleController
     Future.delayed(const Duration(milliseconds: 2000), () {
       setChatStatus();
     });
+    if (!chatProfileCalled) {
+      getChatProfile();
+    }
   }
 
   void onDisconnected() {
@@ -3133,7 +3161,7 @@ class ChatController extends FullLifeCycleController
                 0) {
           // Scrolled to the Bottom
           debugPrint("reached Bottom yes load next messages");
-          _loadNextMessages();
+          _loadNextMessages(showLoading: false);
 
           ///This is the bottom constraint changing to Top constraint and calling prevMessages bcz reversing the list view in display
         } else if (firstVisibleItemIndex + itemPositions.length >=
@@ -3145,7 +3173,7 @@ class ChatController extends FullLifeCycleController
       } else if (Platform.isAndroid) {
         if (firstVisibleItemIndex == 0) {
           debugPrint("reached Bottom yes load next messages");
-          _loadNextMessages();
+          _loadNextMessages(showLoading: false);
         } else if (firstVisibleItemIndex + itemPositions.length >=
             chatList.length) {
           debugPrint("reached Top yes load previous msgs");
@@ -3192,6 +3220,8 @@ class ChatController extends FullLifeCycleController
   }
 
   void updateAvailableFeature(AvailableFeatures features) {
+    LogMessage.d("Message Issue",
+        "updateAvailableFeature available feature section -> ${features.toJson()}");
     availableFeatures(features);
     var availableAttachment = <AttachmentIcon>[];
     if (features.isDocumentAttachmentAvailable.checkNull()) {
@@ -3218,6 +3248,8 @@ class ChatController extends FullLifeCycleController
           locationImg, getTranslated("attachment_Location")));
     }
     availableAttachments(availableAttachment);
+    LogMessage.d("Message Issue",
+        "updateAvailableFeature available attachment -> ${availableAttachments.toJson()}");
   }
 
   var topic = Topics().obs;
@@ -3248,15 +3280,15 @@ class ChatController extends FullLifeCycleController
   }
 
   void loadLastMessages(ChatMessageModel chatMessageModel) async {
-    if (await Mirrorfly.hasNextMessages()) {
-      _loadNextMessages(showLoading: false);
-    }
+    // if (await Mirrorfly.hasNextMessages()) {
+    _loadNextMessages(showLoading: false);
+    // }
   }
 
   Future<void> loadPrevORNextMessagesLoad({bool? isReplyMessage}) async {
-    if (await Mirrorfly.hasPreviousMessages()) {
-      _loadPreviousMessages(showLoading: false);
-    }
+    // if (await Mirrorfly.hasPreviousMessages()) {
+    _loadPreviousMessages(showLoading: false);
+    // }
   }
 
   void handleUnreadMessageSeparator(

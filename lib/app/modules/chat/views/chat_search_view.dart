@@ -7,6 +7,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../../../common/constants.dart';
 import '../../../data/utils.dart';
+import '../../../model/arguments.dart';
 import '../../../model/chat_message_model.dart';
 import '../../../stylesheet/stylesheet.dart';
 import '../controllers/chat_controller.dart';
@@ -19,7 +20,9 @@ import '../widgets/sender_header.dart';
 class ChatSearchView extends StatelessWidget {
   ChatSearchView({super.key});
 
-  final ChatController controller = ChatController(null).get();
+  final ChatController controller =
+      ChatController((NavUtils.arguments as ChatViewArguments))
+          .get(tag: (NavUtils.arguments as ChatViewArguments).chatJid);
 
   @override
   Widget build(BuildContext context) {
