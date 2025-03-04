@@ -1,3 +1,18 @@
+## 2.0.3
+* Chat View Options Enable/Disable Feature
+* MirrorFly Plugin Updated to 1.1.1
+* Available Feature issue fix in Preview
+* Contact Preview added
+* Swipe to Reply sensitivity Option Added
+* SDK Updates
+
+## 2.0.2+2
+* Hot Fix for media file sharing issue
+
+## 2.0.2+1
+* Hot Fix for Android Message loading Issue
+* Android SDK Updated to 7.13.10
+
 ## 2.0.2
 * Android Gradle Issue Fixed
 * Android SDK Updated to 7.13.8
