@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../../../extensions/extensions.dart';
 import '../../../stylesheet/stylesheet.dart';
 import 'package:mirrorfly_plugin/mirrorfly.dart'
@@ -169,7 +168,7 @@ class ContactMessageView extends StatelessWidget {
                   padding: const EdgeInsets.all(5.0),
                   child: (userJid != null && userJid.isNotEmpty)
                       ? Text(getTranslated("message"))
-                      : Text(getTranslated("invite")),
+                      : Text(getTranslated("view")),
                 ))),
               ],
             ),
@@ -194,8 +193,14 @@ class ContactMessageView extends StatelessWidget {
     }
   }
 
-  showInvitePopup(ContactChatMessage contactChatMessage) {
-    DialogUtils.showButtonAlert(actions: [
+  void showInvitePopup(ContactChatMessage contactChatMessage) {
+    NavUtils.toNamed(Routes.previewContact, arguments: {
+      "previewContactList": chatMessage.contactChatMessage?.contactPhoneNumbers,
+      "contactName": chatMessage.contactChatMessage?.contactName,
+      "from": "chat",
+      "userJid": chatMessage.senderUserJid
+    });
+    /*DialogUtils.showButtonAlert(actions: [
       ListTile(
         contentPadding: const EdgeInsets.only(left: 10),
         title: Text(getTranslated("inviteFriend"),
@@ -223,7 +228,7 @@ class ContactMessageView extends StatelessWidget {
           sendSMS(contactChatMessage.contactPhoneNumbers[0]);
         },
       ),
-    ]);
+    ]);*/
   }
 
   void sendSMS(String contactPhoneNumber) async {

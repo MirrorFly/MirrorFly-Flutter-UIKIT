@@ -114,7 +114,7 @@ Goto Project -> Target -> Signing & Capabilities -> Click `+ Capability` at the 
 
 ```yaml
 dependencies:
-  mirrorfly_uikit_plugin: ^2.0.2
+  mirrorfly_uikit_plugin: ^2.0.3
 ```
 
 - Run `flutter pub get` command in your project directory.

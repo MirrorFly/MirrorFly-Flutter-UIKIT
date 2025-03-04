@@ -594,7 +594,7 @@ class BaseController {
   }
 
   static void onAvailableFeaturesUpdated(dynamic value) {
-    LogMessage.d("onAvailableFeaturesUpdated", value);
+    LogMessage.d("Base Controller onAvailableFeaturesUpdated", value);
     var features = availableFeaturesFromJson(value.toString());
     if (Get.isRegistered<MainController>()) {
       Get.find<MainController>().onAvailableFeatures(features);
