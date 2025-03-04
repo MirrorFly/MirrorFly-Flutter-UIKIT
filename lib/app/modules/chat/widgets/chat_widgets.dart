@@ -1,8 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../../../data/utils.dart';
-import '../../../extensions/extensions.dart';
-import 'package:mirrorfly_plugin/mirrorflychat.dart';
 
 import '../../../common/app_localizations.dart';
 import '../../../common/constants.dart';
@@ -38,19 +36,18 @@ Widget getLocationImage(
                   locationChatMessage!.latitude, locationChatMessage.longitude);
               AppUtils.launchWeb(googleUrl);
             },
-      child: FutureBuilder(
-          future: Mirrorfly.getValueFromManifestOrInfoPlist(
-              androidManifestKey: "com.google.android.geo.API_THUMP_KEY",
-              iOSPlistKey: "API_THUMP_KEY"),
-          builder: (context, snap) {
-            return CachedNetworkImage(
-              imageUrl: AppUtils.getMapImageUrl(locationChatMessage!.latitude,
-                  locationChatMessage.longitude, snap.data.checkNull()),
-              fit: BoxFit.fill,
-              width: width,
-              height: height,
-            );
-          }));
+      child: CachedNetworkImage(
+        imageUrl: AppUtils.getMapImageUrl(
+            locationChatMessage!.latitude, locationChatMessage.longitude),
+        fit: BoxFit.fill,
+        width: width,
+        height: height,
+        errorWidget: (ct, e, er) {
+          return const Center(
+            child: Text("Google map API_THUMP_KEY not found"),
+          );
+        },
+      ));
 }
 
 Widget chatSpannedText(String text, String spannableText, TextStyle? style,
