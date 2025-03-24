@@ -145,9 +145,9 @@ class CameraPickController extends GetxController with WidgetsBindingObserver {
     }
 
     try {
-      await cameraController?.startVideoRecording();
       startTimer();
       isRecording(true);
+      await cameraController?.startVideoRecording();
     } on CameraException catch (e) {
       LogMessage.d("startVideoRecording", "$e");
       _showCameraException(e);
