@@ -39,10 +39,12 @@ class VideoMessageView extends StatelessWidget {
                   chatMessage.mediaChatMessage!.mediaDownloadStatus.value ==
                       MediaUploadStatus.isMediaUploaded ||
                   chatMessage.isMessageSentByMe)) {
-            NavUtils.toNamed(Routes.videoPlay, arguments: {
-              "filePath":
-                  chatMessage.mediaChatMessage!.mediaLocalStoragePath.value,
-            });
+            /*NavUtils.toNamed(Routes.videoPlay, arguments: {
+              "filePath": chatMessage.mediaChatMessage!.mediaLocalStoragePath.value,
+            });*/
+            // openVideoFile(videoPath: chatMessage.mediaChatMessage!.mediaLocalStoragePath.value);
+            AppUtils.openDocument(chatMessage.mediaChatMessage!.mediaLocalStoragePath.value);
+
           } else {
             debugPrint("file is video but condition failed");
           }
