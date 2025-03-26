@@ -145,35 +145,54 @@ class ContactMessageView extends StatelessWidget {
         contactChatMessage.contactPhoneNumbers.isEmpty) {
       return const Offstage();
     }
-    return FutureBuilder(
-        future: getUserJid(contactChatMessage),
-        builder: (context, snapshot) {
-          if (snapshot.hasError || !snapshot.hasData) {
-            return const Offstage();
-          }
-          var userJid = snapshot.data;
-          debugPrint("getJidOfContact--> $userJid");
-          return InkWell(
-            onTap: () {
-              (userJid != null && userJid.isNotEmpty)
-                  ? sendToChatPage(userJid)
-                  : showInvitePopup(contactChatMessage);
-            },
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                    child: Center(
-                        child: Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: (userJid != null && userJid.isNotEmpty)
-                      ? Text(getTranslated("message"))
-                      : Text(getTranslated("view")),
-                ))),
-              ],
-            ),
-          );
-        });
+    if (Constants.enableContactSync) {
+      return FutureBuilder(
+          future: getUserJid(contactChatMessage),
+          builder: (context, snapshot) {
+            if (snapshot.hasError || !snapshot.hasData) {
+              return const Offstage();
+            }
+            var userJid = snapshot.data;
+            debugPrint("getJidOfContact--> $userJid");
+            return InkWell(
+              onTap: () {
+                (userJid != null && userJid.isNotEmpty)
+                    ? sendToChatPage(userJid)
+                    : showInvitePopup(contactChatMessage);
+              },
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                      child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: (userJid != null && userJid.isNotEmpty)
+                                ? Text(getTranslated("message"))
+                                : Text(getTranslated("view")),
+                          ))),
+                ],
+              ),
+            );
+          });
+    }else{
+      return InkWell(
+        onTap: () {
+          showInvitePopup(contactChatMessage);
+        },
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+                child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Text(getTranslated("view")),
+                    ))),
+          ],
+        ),
+      );
+    }
   }
 
   sendToChatPage(String userJid) {
