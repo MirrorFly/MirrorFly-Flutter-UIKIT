@@ -1,3 +1,11 @@
+## 2.0.4
+* Bug fixes 
+* Input filter added for chat text input field
+* Android SDK updated to 7.13.17 
+* iOS SDK updated to 5.18.10 
+* Video player migrated from internal player to device's native player 
+* Contact sync optimized
+
 ## 2.0.3
 * Chat View Options Enable/Disable Feature
 * MirrorFly Plugin Updated to 1.1.1

@@ -40,6 +40,17 @@ class MainController extends FullLifeCycleController
   Future<void> onInit() async {
     super.onInit();
 
+    debugPrint("#Mirrorfly Notification -> Main Controller push init");
+
+    BaseController.initListeners();
+
+    startNetworkListen();
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    debugPrint("#Mirrorfly Notification -> Main Controller push onReady");
     Mirrorfly.getValueFromManifestOrInfoPlist(
             androidManifestKey: "com.google.android.geo.API_THUMP_KEY",
             iOSPlistKey: "API_THUMP_KEY")
@@ -49,23 +60,14 @@ class MainController extends FullLifeCycleController
     }).catchError((e) {
       LogMessage.d("API_THUMP_KEY not found", e);
     });
-    debugPrint("#Mirrorfly Notification -> Main Controller push init");
 
-    BaseController.initListeners();
     mediaEndpoint(SessionManagement.getMediaEndPoint().checkNull());
     getMediaEndpoint();
     currentAuthToken(SessionManagement.getAuthToken().checkNull());
     getCurrentAuthToken();
-    //getAuthToken();
-    startNetworkListen();
 
     getAvailableFeatures();
 
-    // NotificationService notificationService = NotificationService();
-    // await notificationService.init();
-    // _isAndroidPermissionGranted();
-    // _requestPermissions();
-    // _configureSelectNotificationSubject();
     unreadMissedCallCount();
     _removeBadge();
   }
