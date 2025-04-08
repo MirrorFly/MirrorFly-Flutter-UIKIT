@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:flutter/services.dart';
+
 import 'chat_message_model.dart';
 
 class DashboardViewArguments {
@@ -43,6 +45,7 @@ class ChatViewArguments {
     this.showTopicName = true,
     this.topicTitleColor,
     this.topicTitleBgColor,
+    this.messageTextFieldInputFormatters,
   }) : assert(swipeSensitivity >= 5 && swipeSensitivity <= 20,
             'swipeSensitivity must be between 5 and 20');
 
@@ -79,6 +82,8 @@ class ChatViewArguments {
   final bool showTopicName;
   final Color? topicTitleColor;
   final Color? topicTitleBgColor;
+
+  final List<TextInputFormatter>? messageTextFieldInputFormatters;
 }
 
 class ChatSearchViewArguments {
