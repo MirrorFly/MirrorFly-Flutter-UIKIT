@@ -559,6 +559,7 @@ class ChatView extends NavViewStateful<ChatController> {
                   ? true
                   : false,
               controller: controller.messageController,
+              inputFormatters: controller.arguments?.messageTextFieldInputFormatters,
               focusNode: controller.focusNode,
               decoration: InputDecoration(
                   hintText: getTranslated("startTypingPlaceholder"),
