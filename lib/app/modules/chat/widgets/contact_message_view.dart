@@ -166,16 +166,16 @@ class ContactMessageView extends StatelessWidget {
                   Expanded(
                       child: Center(
                           child: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: (userJid != null && userJid.isNotEmpty)
-                                ? Text(getTranslated("message"))
-                                : Text(getTranslated("view")),
-                          ))),
+                    padding: const EdgeInsets.all(5.0),
+                    child: (userJid != null && userJid.isNotEmpty)
+                        ? Text(getTranslated("message"))
+                        : Text(getTranslated("view")),
+                  ))),
                 ],
               ),
             );
           });
-    }else{
+    } else {
       return InkWell(
         onTap: () {
           showInvitePopup(contactChatMessage);
@@ -186,9 +186,9 @@ class ContactMessageView extends StatelessWidget {
             Expanded(
                 child: Center(
                     child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Text(getTranslated("view")),
-                    ))),
+              padding: const EdgeInsets.all(5.0),
+              child: Text(getTranslated("view")),
+            ))),
           ],
         ),
       );

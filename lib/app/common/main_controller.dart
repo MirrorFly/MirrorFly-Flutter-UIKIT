@@ -45,7 +45,6 @@ class MainController extends FullLifeCycleController
     BaseController.initListeners();
 
     startNetworkListen();
-
   }
 
   @override
@@ -53,8 +52,8 @@ class MainController extends FullLifeCycleController
     super.onReady();
     debugPrint("#Mirrorfly Notification -> Main Controller push onReady");
     Mirrorfly.getValueFromManifestOrInfoPlist(
-        androidManifestKey: "com.google.android.geo.API_THUMP_KEY",
-        iOSPlistKey: "API_THUMP_KEY")
+            androidManifestKey: "com.google.android.geo.API_THUMP_KEY",
+            iOSPlistKey: "API_THUMP_KEY")
         .then((value) {
       googleMapKey = value;
       LogMessage.d("com.google.android.geo.API_THUMP_KEY", googleMapKey);

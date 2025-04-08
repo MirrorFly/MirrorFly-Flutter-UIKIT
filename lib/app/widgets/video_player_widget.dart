@@ -56,7 +56,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     super.dispose();
   }
 
- /* void _playPause() {
+  /* void _playPause() {
     setState(() {
       if (_controller.value.isPlaying) {
         _controller.pause();
@@ -120,22 +120,18 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   }
 
   Widget _playIcon(String videoPath) {
-
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Spacer(),
-          FloatingActionButton(
-            onPressed: ()=> AppUtils.openDocument(videoPath),
-            backgroundColor: buttonBgColor,
-            child: const Icon(
-              Icons.play_arrow,
-              color: Colors.white,
-            ),
-          ),
-          const Spacer(),
-        ]
-    );
+    return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      const Spacer(),
+      FloatingActionButton(
+        onPressed: () => AppUtils.openDocument(videoPath),
+        backgroundColor: buttonBgColor,
+        child: const Icon(
+          Icons.play_arrow,
+          color: Colors.white,
+        ),
+      ),
+      const Spacer(),
+    ]);
   }
 
   /*Widget _buildControls() {

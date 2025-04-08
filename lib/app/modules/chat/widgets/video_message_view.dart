@@ -42,8 +42,8 @@ class VideoMessageView extends StatelessWidget {
               "filePath": chatMessage.mediaChatMessage!.mediaLocalStoragePath.value,
             });*/
             // openVideoFile(videoPath: chatMessage.mediaChatMessage!.mediaLocalStoragePath.value);
-            AppUtils.openDocument(chatMessage.mediaChatMessage!.mediaLocalStoragePath.value);
-
+            AppUtils.openDocument(
+                chatMessage.mediaChatMessage!.mediaLocalStoragePath.value);
           } else {
             debugPrint("file is video but condition failed");
           }
