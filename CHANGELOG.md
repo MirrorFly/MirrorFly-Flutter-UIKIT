@@ -1,3 +1,8 @@
+## [2.0.5] Feature Updates
+* Bug Fixes
+* Android SDK updated to 7.13.20
+* iOS SDK updated to 5.18.12
+
 ## 2.0.4
 * Bug fixes 
 * Input filter added for chat text input field
