@@ -3,7 +3,10 @@ allprojects {
         google()
         mavenCentral()
         maven {
-            url "https://repo.mirrorfly.com/release"
+            url "https://repo.mirrorfly.com/internal"
+        }
+        maven {
+            url "https://repo.mirrorfly.com/snapshot"
         }
     }
 }
