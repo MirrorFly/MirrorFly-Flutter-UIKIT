@@ -25,6 +25,11 @@ class ParticipantsView extends NavViewStateful<AddParticipantsController> {
       Get.put(AddParticipantsController());
 
   @override
+  void onInit() {
+    controller.intiTab();
+    super.onInit();
+  }
+  @override
   Widget build(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(
@@ -97,7 +102,7 @@ class ParticipantsView extends NavViewStateful<AddParticipantsController> {
                                 ]),
                             actions: [
                               Visibility(
-                                visible: controller.currentTab.value == 1,
+                                visible:controller.currentTab.value==1 && !controller.joinViaLink,
                                 child: IconButton(
                                   onPressed: () {
                                     if (controller.isSearching.value) {
@@ -194,7 +199,7 @@ class ParticipantsView extends NavViewStateful<AddParticipantsController> {
   Widget callParticipantsView(
       BuildContext context, ParticipantItemStyle style) {
     return Obx(() {
-      return ListView.builder(
+      return controller.callList.length > 1 ? ListView.builder(
           shrinkWrap: true,
           itemCount: controller.callList.length,
           physics: const AlwaysScrollableScrollPhysics(),
@@ -295,7 +300,10 @@ class ParticipantsView extends NavViewStateful<AddParticipantsController> {
                       ],
                     ),
                   );
-          });
+          }): Center(child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20.0),
+        child: Text(getTranslated("noContactsFound"),),
+      ),);
     });
   }
 
@@ -353,17 +361,11 @@ class ParticipantsView extends NavViewStateful<AddParticipantsController> {
             child: Stack(
               children: [
                 Visibility(
-                    visible: !controller.isPageLoading.value &&
-                        controller.usersList.isEmpty,
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20.0),
-                        child: Text(
-                          getTranslated("noContactsFound"),
-                          style: noData,
-                        ),
-                      ),
-                    )),
+                    visible: !controller.joinViaLink && !controller.isPageLoading.value && controller.usersList.isEmpty,
+                    child: Center(child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20.0),
+                      child: Text(getTranslated("noContactsFound"),style: noData,),
+                    ),)),
                 controller.isPageLoading.value
                     ? const Center(
                         child: Padding(

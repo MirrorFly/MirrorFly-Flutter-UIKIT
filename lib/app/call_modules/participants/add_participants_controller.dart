@@ -33,57 +33,78 @@ class AddParticipantsController extends GetxController
   bool get isCheckBoxVisible => true;
   TabController? tabController;
   var getMaxCallUsersCount = 8;
+  var joinViaLink = false;
   @override
   Future<void> onInit() async {
     super.onInit();
+    if (NavUtils.arguments != null) {
+      joinViaLink = NavUtils.arguments?["joinViaLink"] ?? false;
+    }
     getCallLink();
     groupId(await Mirrorfly.getCallGroupJid());
-    tabController = TabController(length: 2, vsync: this);
+
     getMaxCallUsersCount = (await Mirrorfly.getMaxCallUsersCount()) ?? 8;
     // callList = Get.find<CallController>().callList;
     scrollController.addListener(_scrollListener);
-    tabController?.animation?.addListener(() {
-      LogMessage.d("DefaultTabController", "${tabController?.index}");
 
-      // Current animation value. It ranges from 0 to (tabsCount - 1)
-      final animationValue = tabController?.animation!.value;
-      LogMessage.d("animationValue", "$animationValue");
-      // Simple rounding gives us understanding of what tab is showing
-      final currentTabIndex = animationValue?.round();
-      LogMessage.d("currentTabIndex", "$currentTabIndex");
-      currentTab(currentTabIndex);
-      if (currentTabIndex == 0) {
-        getBackFromSearch();
-      }
-      // currentOffset equals 0 when tabs are not swiped
-      // currentOffset ranges from -0.5 to 0.5
-      // final currentOffset = currentTabIndex! - animationValue!;
-      // for (int i = 0; i < tabsCount; i++) {
-      //   if (i == currentTabIndex) {
-      // //     // For current tab bringing currentOffset to range from 0.0 to 1.0
-      //     tabScales[i] = (0.5 - currentOffset.abs()) / 0.5;
-      //   } else {
-      // //     // For other tabs setting scale to 0.0
-      //     tabScales[i] = 0.0;
-      //   }
-      // }
-    });
-    if (groupId.isEmpty) {
-      if (await AppUtils.isNetConnected() || Constants.enableContactSync) {
-        isPageLoading(true);
-        fetchUsers(false);
+
+    if(!joinViaLink) {
+      if (groupId.isEmpty) {
+        if (await AppUtils.isNetConnected() || Constants.enableContactSync) {
+          isPageLoading(true);
+          fetchUsers(false);
+        } else {
+          toToast(getTranslated("noInternetConnection"));
+        }
       } else {
-        toToast(getTranslated("noInternetConnection"));
+        getGroupMembers();
       }
-    } else {
-      getGroupMembers();
+    }else{
+      LogMessage.d("addParticipants", "joinViaLink $joinViaLink so no need to load users");
     }
+  }
+  void intiTab(){
+    tabController = TabController(length: 2, vsync: this);
+    // Future.delayed(const Duration(seconds: 1),(){
+      tabController?.addListener(() {
+        LogMessage.d("DefaultTabController", "${tabController?.index}");
+
+        // Current animation value. It ranges from 0 to (tabsCount - 1)
+        final animationValue = tabController?.animation!.value;
+        LogMessage.d("animationValue", "$animationValue");
+        // Simple rounding gives us understanding of what tab is showing
+        final currentTabIndex = animationValue?.round();
+        LogMessage.d("currentTabIndex", "$currentTabIndex");
+        currentTab(currentTabIndex);
+        if (currentTabIndex == 0) {
+          getBackFromSearch();
+        }
+        // currentOffset equals 0 when tabs are not swiped
+        // currentOffset ranges from -0.5 to 0.5
+        // final currentOffset = currentTabIndex! - animationValue!;
+        // for (int i = 0; i < tabsCount; i++) {
+        //   if (i == currentTabIndex) {
+        // //     // For current tab bringing currentOffset to range from 0.0 to 1.0
+        //     tabScales[i] = (0.5 - currentOffset.abs()) / 0.5;
+        //   } else {
+        // //     // For other tabs setting scale to 0.0
+        //     tabScales[i] = 0.0;
+        //   }
+        // }
+      });
+    // });
+  }
+
+  @override
+  void dispose() {
+    tabController?.dispose();
+    super.dispose();
   }
 
   ///get ongoing call link
   var meetLink = "".obs;
-  void getCallLink() {
-    Mirrorfly.getCallLink().then((value) {
+  void getCallLink(){
+    Mirrorfly.getCallLink().then((value){
       meetLink(value);
     });
   }
@@ -167,13 +188,11 @@ class AddParticipantsController extends GetxController
   }
 
   _scrollListener() {
-    if (scrollController.hasClients) {
-      if (scrollController.position.extentAfter <= 0 &&
-          isPageLoading.value == false) {
+    if (scrollController.hasClients && !joinViaLink) {
+      if (scrollController.position.extentAfter <= 0 && isPageLoading.value == false) {
         if (scrollable.value) {
           //isPageLoading.value = true;
-          LogMessage.d("usersList.length ${usersList.length} ~/ 20",
-              (usersList.length ~/ 20));
+          LogMessage.d("usersList.length ${usersList.length} ~/ 20", (usersList.length ~/ 20));
           pageNum = (usersList.length ~/ 20) + 1;
           fetchUsers(false);
         }

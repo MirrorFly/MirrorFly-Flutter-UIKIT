@@ -60,6 +60,7 @@ class CallTimeoutController extends GetxController {
               }
             }
             Mirrorfly.makeGroupVoiceCall(
+                groupId: groupId.value,
                 toUserJidList: usersList,
                 flyCallBack: (FlyResponse response) {
                   NavUtils.offNamed(Routes.outGoingCallView,
@@ -88,6 +89,7 @@ class CallTimeoutController extends GetxController {
               }
             }
             Mirrorfly.makeGroupVideoCall(
+                groupId: groupId.value,
                 toUserJidList: usersList,
                 flyCallBack: (FlyResponse response) {
                   NavUtils.offNamed(Routes.outGoingCallView,

@@ -1,15 +1,17 @@
-import 'dart:convert';
+import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_plugin/mirrorfly.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+import '../../common/app_localizations.dart';
 import '../../common/constants.dart';
 import '../../data/permissions.dart';
 import '../../data/session_management.dart';
 import '../../data/utils.dart';
 import '../../extensions/extensions.dart';
 import '../../routes/route_settings.dart';
-import 'package:mirrorfly_plugin/mirrorfly.dart';
-
-import '../../common/app_localizations.dart';
 
 class JoinCallController extends FullLifeCycleController
     with FullLifeCycleMixin, CallLinkEventListeners {
@@ -25,45 +27,49 @@ class JoinCallController extends FullLifeCycleController
   var callLinkId = "";
 
   var subscribeSuccess = false.obs;
+
+  var audioPermissionGranted = false.obs;
+  var videoPermissionGranted = false.obs;
+  var meetInitialised = false.obs;
+
   var displayStatus = getTranslated("connectingPleaseWait");
 
   @override
   void onInit() {
     super.onInit();
-    listenMuteEvents();
     Mirrorfly.setCallLinkEventListener(this);
     callLinkId = NavUtils.arguments["callLinkId"].toString();
-    initializeCall();
-    checkPermission();
-    startVideoCapture();
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    checkPermission().then((v) {
+      // Future.delayed(const Duration(milliseconds: 500), (){
+      initializeCall();
+      // });
+    });
   }
 
   /// check permission and set Mute Status
-  Future<void> checkPermission() async {
+  Future<bool> checkPermission() async {
     var audioPermission = await AppPermission.askAudioCallPermissions();
-    var videoPermission = await AppPermission.askVideoCallPermissions();
+    var videoPermission = await AppPermission.checkAndRequestPermissions(
+        permissions: [Permission.camera],
+        permissionIcon: cameraPermission,
+        permissionContent:
+            getTranslated("callPermissionContent").replaceAll("%d", "Camera"),
+        permissionPermanentlyDeniedContent:
+            getTranslated("callPermissionDeniedContent")
+                .replaceAll("%d", "Camera"));
     muted(!audioPermission);
     videoMuted(!videoPermission);
-    Mirrorfly.muteAudio(status: muted.value, flyCallBack: (_) {});
-    Mirrorfly.muteVideo(status: videoMuted.value, flyCallBack: (_) {});
-  }
+    audioPermissionGranted(audioPermission);
+    videoPermissionGranted(videoPermission);
+    // Mirrorfly.muteAudio(status: muted.value, flyCallBack: (_){});
+    // Mirrorfly.muteVideo(status: videoMuted.value, flyCallBack: (_){});
 
-  /// listen mute event for Audio and video
-  void listenMuteEvents() {
-    Mirrorfly.onMuteStatusUpdated.listen((event) {
-      LogMessage.d("onMuteStatusUpdated", "$event");
-      var muteStatus = jsonDecode(event);
-      var muteEvent = muteStatus["muteEvent"].toString();
-      // var userJid = muteStatus["userJid"].toString();
-      if (muteEvent == MuteStatus.localAudioMute ||
-          muteEvent == MuteStatus.localAudioUnMute) {
-        muted(muteEvent == MuteStatus.localAudioMute);
-      }
-      if (muteEvent == MuteStatus.localVideoMute ||
-          muteEvent == MuteStatus.localVideoUnMute) {
-        videoMuted(muteEvent == MuteStatus.localVideoMute);
-      }
-    });
+    return audioPermission && videoPermission;
   }
 
   // initialize the meet or join via link call
@@ -78,51 +84,79 @@ class JoinCallController extends FullLifeCycleController
             if (res.hasError) {
               showError(res.exception);
             }
+          } else {
+            meetInitialised(true);
+            startVideoCapture();
           }
+          // checkPermission().then((v){
+          //   startVideoCapture();
+          // });
         });
   }
 
+  RxString callEnded = "".obs;
+  bool invalidLink = false;
+  String callEndedMessage = "";
   // to show error message
   void showError(FlyException? error) {
+    disposePreview();
+    invalidLink = false;
     switch (error?.code) {
       case "100601":
         //Call link is not valid
-        toToast(getTranslated("invalidLink"));
+        callEnded(getTranslated("invalidLink"));
+        invalidLink = true;
+        callEndedMessage = getTranslated("invalidLink");
+        // toToast(getTranslated("invalidLink"));
         break;
       case "100602":
         //Api returned ended status for call
-        toToast(getTranslated("noOneHere"));
+        callEnded(getTranslated("callEnded"));
+        callEndedMessage = getTranslated("noOneHere");
+        // toToast(getTranslated("noOneHere"));
         //callEnded
         break;
       case "100603":
         //Maximum participants already in call
+        //   callEnded(getTranslated("callEnded"));
+        //   callEndedMessage = (getTranslated("callMembersLimit").replaceFirst("%d", "8"));
         toToast(getTranslated("callMembersLimit").replaceFirst("%d", "8"));
+        NavUtils.back();
         break;
       case "100605":
         //Server didn't give success response code
-        toToast(getTranslated("wentWrong"));
+        callEnded(getTranslated("callEnded"));
+        callEndedMessage = (getTranslated("wentWrong"));
+        // toToast(getTranslated("wentWrong"));
         //callEnded
         break;
       case "100620":
         //Couldn't process the link. Please try again.
-        toToast(getTranslated("couldNotProcess"));
+        callEnded(getTranslated("callEnded"));
+        callEndedMessage = (getTranslated("couldNotProcess"));
+        // toToast(getTranslated("couldNotProcess"));
         break;
       case "100610":
         //Couldn't process the link.Please try again.
-        toToast(getTranslated("couldNotProcess"));
+        callEnded(getTranslated("callEnded"));
+        callEndedMessage = (getTranslated("couldNotProcess"));
+        // toToast(getTranslated("couldNotProcess"));
         break;
       default:
-        toToast(error?.message ?? "Error");
+        callEnded(getTranslated("callEnded"));
+        callEndedMessage = (error?.message ?? "Error");
+        // toToast(error?.message ?? "Error");
         break;
     }
-    NavUtils.back();
+    // NavUtils.back();
   }
 
   /// start video capture
+  var videoCaptureStarted = false;
   Future<void> startVideoCapture() async {
     Mirrorfly.startVideoCapture(flyCallback: (res) async {
-      if (!res.isSuccess) {
-        // await AppPermission.askVideoCallPermissions();
+      if (res.isSuccess) {
+        videoCaptureStarted = true;
       }
     });
   }
@@ -143,7 +177,7 @@ class JoinCallController extends FullLifeCycleController
                   arguments: {"userJid": users, "joinViaLink": true});
             } else {
               subscribeSuccess(true);
-              toToast(res.errorMessage);
+              showError(res.exception);
             }
           });
         }
@@ -166,9 +200,22 @@ class JoinCallController extends FullLifeCycleController
   }
 
   videoMute() async {
-    if (!videoMuted.value || await AppPermission.askVideoCallPermissions()) {
-      if (!videoMuted.value) {
+    var videoPermission = await AppPermission.checkAndRequestPermissions(
+        permissions: [Permission.camera],
+        permissionIcon: cameraPermission,
+        permissionContent:
+            getTranslated("callPermissionContent").replaceAll("%d", "Camera"),
+        permissionPermanentlyDeniedContent:
+            getTranslated("callPermissionDeniedContent")
+                .replaceAll("%d", "Camera"));
+    if (!videoMuted.value || videoPermission) {
+      debugPrint(
+          "Start Video Capture initialization $videoCaptureStarted ${videoMuted.value}");
+      if (videoMuted.value && !videoCaptureStarted) {
         startVideoCapture();
+      } else {
+        debugPrint(
+            "Start Video Capture is already initialized, skipping the initialization");
       }
       Mirrorfly.muteVideo(status: !videoMuted.value, flyCallBack: (_) {});
       videoMuted(!videoMuted.value);
@@ -209,21 +256,34 @@ class JoinCallController extends FullLifeCycleController
   }
 
   @override
-  void onResumed() {
+  Future<void> onResumed() async {
     if (paused) {
       paused = false;
+      // if(!connected && !(await AppUtils.isNetConnected())){
+      //   displayStatus = getTranslated("noInternetConnection");
+      // }
       checkPermission();
     }
   }
 
+  var connected = false;
   void onDisconnected() {
+    debugPrint("#MirrorFlyCall Method call OnDisConnected");
+    connected = false;
     displayStatus = getTranslated("noInternetConnection");
     subscribeSuccess(false);
+    if (meetInitialised.value) {
+      disposePreview();
+      meetInitialised(false);
+    }
   }
 
   void onConnected() {
+    connected = true;
     displayStatus = getTranslated("connectingPleaseWait");
     //if network connected then reinitialize call
-    initializeCall();
+    if (audioPermissionGranted.value && videoPermissionGranted.value) {
+      initializeCall();
+    }
   }
 }

@@ -1,19 +1,18 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_plugin/mirrorfly.dart';
+
 import '../../call_modules/call_utils.dart';
 import '../../common/app_localizations.dart';
 import '../../common/constants.dart';
 import '../../data/helper.dart';
-import '../../extensions/extensions.dart';
-import '../../model/call_user_list.dart';
-import 'package:mirrorfly_plugin/mirrorfly.dart';
-
 import '../../data/permissions.dart';
 import '../../data/session_management.dart';
 import '../../data/utils.dart';
+import '../../extensions/extensions.dart';
+import '../../model/call_user_list.dart';
 import '../../routes/route_settings.dart';
 
 class OutgoingCallController extends GetxController
@@ -141,7 +140,7 @@ class OutgoingCallController extends GetxController
                 debugPrint("audio item name ${audioItem.name}");
                 return Obx(() {
                   return ListTile(
-                    contentPadding: const EdgeInsets.only(left: 10),
+                    contentPadding: const EdgeInsets.only(left: 10,right: 10),
                     title: Text(audioItem.name ?? "",
                         style: const TextStyle(
                             fontSize: 14, fontWeight: FontWeight.normal)),
@@ -192,9 +191,9 @@ class OutgoingCallController extends GetxController
 
   switchCamera() async {
     //The below code is commented. The Camera switch not worked in iOS so uncommented and Nested in Platform Check
-    if (Platform.isIOS) {
-      cameraSwitch(!cameraSwitch.value);
-    }
+    // if(Platform.isIOS) {
+    //   cameraSwitch(!cameraSwitch.value);
+    // }
     await Mirrorfly.switchCamera();
   }
 
@@ -230,12 +229,29 @@ class OutgoingCallController extends GetxController
   }
 
   void userDisconnection(String callMode, String userJid, String callType) {
+    debugPrint("Call List ${callList.toJson()}");
     this.callMode(callMode);
     this.callType(callType);
-    debugPrint("Current Route ${NavUtils.currentRoute}");
-    if (NavUtils.currentRoute == Routes.outGoingCallView &&
+    debugPrint("Current Route ${NavUtils.currentRoute} callList.length ${callList.length}");
+    final bool isUserJidExistsInCallList = callList.firstWhereOrNull((t) => t.userJid?.value == userJid) != null;
+    ///
+    /// The below code - *NavUtils.currentRoute == Routes.outGoingCallView
+    /// is commented bcz, when the app goes background when call is connected and then disconnected in few seconds
+    /// the Ongoing Call View is presented but Call Controller is not created & Outgoing call controller is not disposed.
+    /// In that time, Only Outgoing call controller exists with Ongoing call view.
+    /// So, the disconnection status pushed to this controller and the below commented logic restricts the call screen to dismiss
+    ///
+    if (/*NavUtils.currentRoute == Routes.outGoingCallView &&*/
         callList.length < 2) {
-      NavUtils.back();
+      debugPrint("Pop back at userDisconnection is called");
+      if (NavUtils.canPop) {
+        NavUtils.back();
+      }
+    } else if (isUserJidExistsInCallList){
+      debugPrint("User JID $userJid exists at call list, so removing the user");
+      removeUser(callMode, userJid, callType);
+    }else{
+      debugPrint("User JID $userJid does not exists at call list");
     }
   }
 
@@ -312,7 +328,7 @@ class OutgoingCallController extends GetxController
     Mirrorfly.disconnectCall(flyCallBack: (FlyResponse response) {
       if (response.isSuccess) {
         callList.clear();
-        NavUtils.back();
+        // NavUtils.back();
       }
     });
   }
