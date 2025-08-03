@@ -160,8 +160,8 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                                               ? 0.3
                                               : 1.0,
                                           child: MemberItem(
-                                            name: getName(
-                                                item), //item.name.checkNull(),
+                                            name: getName(item),
+                                            //item.name.checkNull(),
                                             image: item.image.checkNull(),
                                             status: data.data.checkNull(),
                                             searchTxt: controller

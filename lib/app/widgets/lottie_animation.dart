@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 
 class LottieAnimation extends StatefulWidget {
   const LottieAnimation(
@@ -40,7 +39,6 @@ class _LottieAnimationState extends State<LottieAnimation>
   Widget build(BuildContext context) {
     return Container(
       child: Lottie.asset(
-        package: iconPackageName,
         widget.lottieJson,
         controller: controller,
         onLoaded: (composition) {

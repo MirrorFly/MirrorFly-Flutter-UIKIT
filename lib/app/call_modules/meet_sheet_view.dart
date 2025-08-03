@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:mirror_fly_demo/app/modules/chat/controllers/chat_controller.dart';
 import 'package:mirrorfly_plugin/mirrorfly.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/chat/controllers/chat_controller.dart';
 
 import '../common/app_localizations.dart';
 import '../common/constants.dart';

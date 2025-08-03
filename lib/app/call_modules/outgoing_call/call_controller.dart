@@ -1,9 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_in_app_pip/flutter_in_app_pip.dart';
 import 'package:get/get.dart';
-import 'package:mirror_fly_demo/app/call_modules/pip_view/pip_view.dart';
 import 'package:mirrorfly_plugin/mirrorfly.dart';
 
 import '../../app_style_config.dart';
@@ -1224,4 +1222,34 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       callList.swap(index, itemToReplace);
     }
   }
+
+  // void goToPIP() {
+  //   if(NavUtils.canPop) {
+  //     NavUtils.back();
+  //   } else {
+  //     NavUtils.offNamed(NavUtils.defaultRouteName);
+  //   }
+  //   startPIP();
+  // }
+
+  // void startPIP(){
+  //   PictureInPicture.startPiP(pipWidget: ClipRRect(
+  //       borderRadius: const BorderRadius.all(Radius.circular(13)),
+  //       child: PIPView(
+  //         style: AppStyleConfig.ongoingCallPageStyle.pipViewStyle,
+  //         pipTag: "pipView",)));
+  //   PictureInPicture.updatePiPParams(
+  //     pipParams: PiPParams(
+  //       pipWindowWidth: AppUtils.getSizeFromAspectRatio(NavUtils.width, NavUtils.height).width * 0.8,//taking 80 percent of the width
+  //       pipWindowHeight: AppUtils.getSizeFromAspectRatio(NavUtils.width, NavUtils.height).height * 0.8,//taking 80 percent of the height
+  //       bottomSpace: 20,
+  //       leftSpace: 20,
+  //       rightSpace: 20,
+  //       topSpace: 20,
+  //       movable: true,
+  //       resizable: true,
+  //       initialCorner: PIPViewCorner.bottomRight,
+  //     ),
+  //   );
+  // }
 }

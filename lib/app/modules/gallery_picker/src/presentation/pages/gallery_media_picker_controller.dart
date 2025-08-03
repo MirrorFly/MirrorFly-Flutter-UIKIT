@@ -8,7 +8,9 @@ mixin PhotoDataController on ChangeNotifier {
   /// current gallery album
   final currentAlbumNotifier = ValueNotifier<AssetPathEntity?>(null);
   AssetPathEntity? _current;
+
   AssetPathEntity? get currentAlbum => _current;
+
   set currentAlbum(AssetPathEntity? current) {
     if (_current != current) {
       _current = current;
@@ -56,13 +58,16 @@ class GalleryMediaPickerController extends ChangeNotifier
     with PhotoDataController {
   /// Notification when max is modified.
   final maxNotifier = ValueNotifier(0);
+
   int get max => maxNotifier.value;
+
   set max(int value) => maxNotifier.value = value;
   final onPickMax = ChangeNotifier();
 
   /// In single-select mode, when you click an unselected item, the old one is automatically cleared and the new one is selected.
   bool get singlePickMode => _singlePickMode;
   bool _singlePickMode = false;
+
   set singlePickMode(bool singlePickMode) {
     _singlePickMode = singlePickMode;
     if (singlePickMode) {
@@ -77,6 +82,7 @@ class GalleryMediaPickerController extends ChangeNotifier
   /// notify changes
   final pickedNotifier = ValueNotifier<List<AssetEntity>>([]);
   List<AssetEntity> picked = [];
+
   void pickEntity(AssetEntity entity) {
     if (singlePickMode) {
       if (picked.contains(entity)) {
@@ -123,6 +129,7 @@ class GalleryMediaPickerController extends ChangeNotifier
   /// metadata map
   final pickedFileNotifier = ValueNotifier<List<PickedAssetModel>>([]);
   List<PickedAssetModel> pickedFile = [];
+
   void pickPath(PickedAssetModel path) {
     if (singlePickMode) {
       if (pickedFile.where((element) => element.id == path.id).isNotEmpty) {
@@ -154,6 +161,7 @@ class GalleryMediaPickerController extends ChangeNotifier
 
   /// get assets album count
   int _assetCount = 0;
+
   get assetCount => _assetCount;
   final assetCountNotifier = ValueNotifier<int>(0);
 

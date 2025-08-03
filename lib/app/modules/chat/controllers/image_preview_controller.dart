@@ -32,7 +32,7 @@ class ImagePreviewController extends GetxController {
     if (File(filePath.value).existsSync()) {
       // if(await AppUtils.isNetConnected()) {
       var response = await Get.find<ChatController>()
-          .sendImageMessage(filePath.value, caption.text, "");
+          .sendImageMessage(filePath.value, caption.text, "", []);
       // debugPrint("Preview View ==> $response");
       if (response != null) {
         NavUtils.back();

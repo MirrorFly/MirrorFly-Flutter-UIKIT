@@ -33,6 +33,7 @@ class ChatPageStyle {
           iconColor: Color(0xff181818)),
       this.instantScheduleMeetStyle = const InstantScheduleMeetStyle(),
       this.chatPageBackgroundDecoration});
+
   final AppBarTheme appBarTheme;
   final ChatUserAppBarStyle chatUserAppBarStyle;
   final EditTextFieldStyle searchTextFieldStyle;
@@ -48,21 +49,26 @@ class ChatPageStyle {
 }
 
 class InstantScheduleMeetStyle {
-  const InstantScheduleMeetStyle(
-      {this.meetFabStyle = const FloatingActionButtonThemeData(
-          backgroundColor: AppColor.primaryColor,
-          foregroundColor: Colors.white,
-          elevation: 12,
-          iconSize: 24,
-          shape: CircleBorder()),
-      this.meetBottomSheetStyle = const MeetBottomSheetStyle()});
+  const InstantScheduleMeetStyle({
+    this.meetFabStyle = const FloatingActionButtonThemeData(
+        backgroundColor: AppColor.primaryColor,
+        foregroundColor: Colors.white,
+        elevation: 12,
+        iconSize: 24,
+        shape: CircleBorder()),
+    this.meetBottomSheetStyle = const MeetBottomSheetStyle(),
+    this.iconMeet,
+  });
+
   final FloatingActionButtonThemeData meetFabStyle;
   final MeetBottomSheetStyle meetBottomSheetStyle;
+  final UIKitIcon? iconMeet;
 }
 
 class AttachmentViewStyle {
   final Color bgColor;
   final ShapeBorder shapeBorder;
+
   final IconStyle documentStyle;
   final IconStyle cameraStyle;
   final IconStyle galleryStyle;
@@ -70,24 +76,38 @@ class AttachmentViewStyle {
   final IconStyle contactStyle;
   final IconStyle locationStyle;
   final TextStyle textStyle;
-  const AttachmentViewStyle(
-      {this.bgColor = const Color(0xff242A3F),
-      this.shapeBorder = const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(15))),
-      this.documentStyle = const IconStyle(
-          iconColor: Colors.white, bgColor: Color(0xff34B197)), //Document
-      this.cameraStyle = const IconStyle(
-          iconColor: Colors.white, bgColor: Color(0xffEF5B5A)), //Camera
-      this.galleryStyle = const IconStyle(
-          iconColor: Colors.white, bgColor: Color(0xff3093DF)), //Gallery
-      this.audioStyle = const IconStyle(
-          iconColor: Colors.white, bgColor: Color(0xffF37627)), //Audio
-      this.contactStyle = const IconStyle(
-          iconColor: Colors.white, bgColor: Color(0xff46BF69)), //Contact
-      this.locationStyle = const IconStyle(
-          iconColor: Colors.white, bgColor: Color(0xffB66AE6)), //Location
-      this.textStyle = const TextStyle(
-          fontWeight: FontWeight.normal, color: Colors.white, fontSize: 9)});
+  final UIKitIcon? iconDocument;
+  final UIKitIcon? iconCamera;
+  final UIKitIcon? iconGallery;
+  final UIKitIcon? iconAudio;
+  final UIKitIcon? iconContact;
+  final UIKitIcon? iconLocation;
+
+  const AttachmentViewStyle({
+    this.bgColor = const Color(0xff242A3F),
+    this.shapeBorder = const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(15))),
+    this.documentStyle = const IconStyle(
+        iconColor: Colors.white, bgColor: Color(0xff34B197)), //Document
+    this.cameraStyle = const IconStyle(
+        iconColor: Colors.white, bgColor: Color(0xffEF5B5A)), //Camera
+    this.galleryStyle = const IconStyle(
+        iconColor: Colors.white, bgColor: Color(0xff3093DF)), //Gallery
+    this.audioStyle = const IconStyle(
+        iconColor: Colors.white, bgColor: Color(0xffF37627)), //Audio
+    this.contactStyle = const IconStyle(
+        iconColor: Colors.white, bgColor: Color(0xff46BF69)), //Contact
+    this.locationStyle = const IconStyle(
+        iconColor: Colors.white, bgColor: Color(0xffB66AE6)), //Location
+    this.textStyle = const TextStyle(
+        fontWeight: FontWeight.normal, color: Colors.white, fontSize: 9),
+    this.iconDocument,
+    this.iconCamera,
+    this.iconGallery,
+    this.iconAudio,
+    this.iconContact,
+    this.iconLocation,
+  });
 }
 
 class ChatUserAppBarStyle {
@@ -97,10 +117,53 @@ class ChatUserAppBarStyle {
         fontWeight: FontWeight.w600, color: Color(0xff181818), fontSize: 16),
     this.subtitleTextStyle = const TextStyle(
         fontWeight: FontWeight.w300, color: Color(0xff959595), fontSize: 10),
+    this.iconAudioCall,
+    this.iconVideoCall,
+    this.iconMoreOptions,
+    this.iconBack,
+    this.iconReply,
+    this.iconForward,
+    this.iconFavourites,
+    this.iconUnFavourite,
+    this.iconDelete,
+    this.iconClose,
+    this.iconReport,
+    this.iconCopy,
+    this.iconEdit,
+    this.iconInfo,
+    this.iconShare,
+    this.iconBlock,
+    this.iconUnBlock,
+    this.iconSearch,
+    this.iconEmail,
+    this.iconShortCut,
+    this.iconClear,
   });
+
   final Size profileImageSize;
   final TextStyle titleTextStyle;
   final TextStyle subtitleTextStyle;
+  final UIKitIcon? iconAudioCall;
+  final UIKitIcon? iconVideoCall;
+  final UIKitIcon? iconMoreOptions;
+  final UIKitIcon? iconBack;
+  final UIKitIcon? iconReply;
+  final UIKitIcon? iconForward;
+  final UIKitIcon? iconFavourites;
+  final UIKitIcon? iconUnFavourite;
+  final UIKitIcon? iconDelete;
+  final UIKitIcon? iconClose;
+  final UIKitIcon? iconReport;
+  final UIKitIcon? iconCopy;
+  final UIKitIcon? iconShare;
+  final UIKitIcon? iconInfo;
+  final UIKitIcon? iconEdit;
+  final UIKitIcon? iconBlock;
+  final UIKitIcon? iconUnBlock;
+  final UIKitIcon? iconSearch;
+  final UIKitIcon? iconEmail;
+  final UIKitIcon? iconShortCut;
+  final UIKitIcon? iconClear;
 }
 
 class SenderChatBubbleStyle {
@@ -281,7 +344,9 @@ class SenderChatBubbleStyle {
             bottomLeft: Radius.circular(10)),
         color: Color(0xffE2E8F7),
         border: Border.fromBorderSide(BorderSide(color: Color(0xffe2eafc)))),
+    this.iconForward,
   });
+
   final TextMessageViewStyle textMessageViewStyle;
   final ImageMessageViewStyle imageMessageViewStyle;
   final VideoMessageViewStyle videoMessageViewStyle;
@@ -291,6 +356,7 @@ class SenderChatBubbleStyle {
   final LocationMessageViewStyle locationMessageViewStyle;
   final ReplyHeaderMessageViewStyle replyHeaderMessageViewStyle;
   final Decoration decoration;
+  final UIKitIcon? iconForward;
 }
 
 class ReceiverChatBubbleStyle {
@@ -481,7 +547,9 @@ class ReceiverChatBubbleStyle {
             bottomRight: Radius.circular(10)),
         color: Colors.white,
         border: Border.fromBorderSide(BorderSide(color: Color(0xffE3E7F0)))),
+    this.iconForward,
   });
+
   final TextStyle participantNameTextStyle; // for Group participant name
   final TextMessageViewStyle textMessageViewStyle;
   final ImageMessageViewStyle imageMessageViewStyle;
@@ -492,4 +560,5 @@ class ReceiverChatBubbleStyle {
   final LocationMessageViewStyle locationMessageViewStyle;
   final ReplyHeaderMessageViewStyle replyHeaderMessageViewStyle;
   final Decoration decoration;
+  final UIKitIcon? iconForward;
 }

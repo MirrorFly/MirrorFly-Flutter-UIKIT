@@ -23,7 +23,9 @@ class GroupCreationController extends GetxController {
   var loading = false.obs;
 
   final _count = 25.obs;
+
   set count(value) => _count.value = value;
+
   get count => _count.value.toString();
 
   // group name
@@ -154,6 +156,7 @@ class GroupCreationController extends GetxController {
   }
 
   final ImagePicker _picker = ImagePicker();
+
   camera() async {
     final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
     if (photo != null) {

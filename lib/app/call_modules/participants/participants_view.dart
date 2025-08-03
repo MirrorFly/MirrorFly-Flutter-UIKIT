@@ -29,6 +29,7 @@ class ParticipantsView extends NavViewStateful<AddParticipantsController> {
     controller.intiTab();
     super.onInit();
   }
+
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -102,7 +103,8 @@ class ParticipantsView extends NavViewStateful<AddParticipantsController> {
                                 ]),
                             actions: [
                               Visibility(
-                                visible:controller.currentTab.value==1 && !controller.joinViaLink,
+                                visible: controller.currentTab.value == 1 &&
+                                    !controller.joinViaLink,
                                 child: IconButton(
                                   onPressed: () {
                                     if (controller.isSearching.value) {
@@ -201,109 +203,122 @@ class ParticipantsView extends NavViewStateful<AddParticipantsController> {
     return Obx(() {
       return controller.callList.length > 1 ? ListView.builder(
           shrinkWrap: true,
-          itemCount: controller.callList.length,
-          physics: const AlwaysScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            debugPrint("call list length ${controller.callList.length}");
-            return SessionManagement.getUserJID() ==
-                    controller.callList[index].userJid!.value.checkNull()
-                ? const Offstage()
-                : Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                      children: [
-                        FutureBuilder(
-                            future: getProfileDetails(controller
-                                .callList[index].userJid!.value
-                                .checkNull()),
-                            builder: (ctx, snap) {
-                              return snap.hasData && snap.data != null
-                                  ? buildProfileImage(snap.data!,
-                                      size: style.profileImageSize.width)
-                                  : const Offstage();
-                            }),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              FutureBuilder(
-                                  future: CallUtils.getNameOfJid(controller
-                                      .callList[index].userJid!.value
-                                      .checkNull()),
-                                  builder: (ctx, snap) {
-                                    return snap.hasData && snap.data != null
-                                        ? Text(
-                                            snap.data!,
-                                            maxLines: 1,
-                                            style: style.textStyle,
-                                            // style: Theme.of(context).textTheme.titleMedium,
-                                            overflow: TextOverflow.ellipsis,
+              itemCount: controller.callList.length,
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                debugPrint("call list length ${controller.callList.length}");
+                return SessionManagement.getUserJID() ==
+                        controller.callList[index].userJid!.value.checkNull()
+                    ? const Offstage()
+                    : Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          children: [
+                            FutureBuilder(
+                                future: getProfileDetails(controller
+                                    .callList[index].userJid!.value
+                                    .checkNull()),
+                                builder: (ctx, snap) {
+                                  return snap.hasData && snap.data != null
+                                      ? buildProfileImage(snap.data!,
+                                          size: style.profileImageSize.width)
+                                      : const Offstage();
+                                }),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  FutureBuilder(
+                                      future: CallUtils.getNameOfJid(controller
+                                          .callList[index].userJid!.value
+                                          .checkNull()),
+                                      builder: (ctx, snap) {
+                                        return snap.hasData && snap.data != null
+                                            ? Text(
+                                                snap.data!,
+                                                maxLines: 1,
+                                                style: style.textStyle,
+                                                // style: Theme.of(context).textTheme.titleMedium,
+                                                overflow: TextOverflow.ellipsis,
+                                              )
+                                            : const Offstage();
+                                      }),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: Obx(() {
+                                return controller
+                                        .callList[index].isAudioMuted.value
+                                    ? CircleAvatar(
+                                        backgroundColor:
+                                            style.actionStyle.inactiveBgColor,
+                                        //AppColors.participantUnMuteColor,
+                                        child: AppUtils.svgIcon(
+                                          icon: participantMute,
+                                          colorFilter: ColorFilter.mode(
+                                              style.actionStyle
+                                                  .inactiveIconColor,
+                                              BlendMode.srcIn),
+                                        ))
+                                    : CircleAvatar(
+                                        backgroundColor:
+                                            style.actionStyle.activeBgColor,
+                                        //Colors.transparent,
+                                        child: AppUtils.svgIcon(
+                                          icon: participantUnMute,
+                                          colorFilter: ColorFilter.mode(
+                                              style.actionStyle.activeIconColor,
+                                              BlendMode.srcIn),
+                                        ));
+                              }),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: Obx(() {
+                                return CircleAvatar(
+                                    backgroundColor: controller
+                                            .callList[index].isVideoMuted.value
+                                        ? style.actionStyle
+                                            .inactiveBgColor //AppColors.participantUnMuteColor
+                                        : style.actionStyle.activeBgColor,
+                                    //Colors.transparent,
+                                    child: controller
+                                            .callList[index].isVideoMuted.value
+                                        ? AppUtils.svgIcon(
+                                            icon: participantVideoDisabled,
+                                            colorFilter: ColorFilter.mode(
+                                                style.actionStyle
+                                                    .inactiveIconColor,
+                                                BlendMode.srcIn),
                                           )
-                                        : const Offstage();
-                                  }),
-                            ],
-                          ),
+                                        : AppUtils.svgIcon(
+                                            icon: participantVideoEnabled,
+                                            colorFilter: ColorFilter.mode(
+                                                style.actionStyle
+                                                    .activeIconColor,
+                                                BlendMode.srcIn),
+                                          ));
+                              }),
+                            ),
+                          ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Obx(() {
-                            return controller.callList[index].isAudioMuted.value
-                                ? CircleAvatar(
-                                    backgroundColor: style.actionStyle
-                                        .inactiveBgColor, //AppColors.participantUnMuteColor,
-                                    child: AppUtils.svgIcon(
-                                      icon: participantMute,
-                                      colorFilter: ColorFilter.mode(
-                                          style.actionStyle.inactiveIconColor,
-                                          BlendMode.srcIn),
-                                    ))
-                                : CircleAvatar(
-                                    backgroundColor: style.actionStyle
-                                        .activeBgColor, //Colors.transparent,
-                                    child: AppUtils.svgIcon(
-                                      icon: participantUnMute,
-                                      colorFilter: ColorFilter.mode(
-                                          style.actionStyle.activeIconColor,
-                                          BlendMode.srcIn),
-                                    ));
-                          }),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Obx(() {
-                            return CircleAvatar(
-                                backgroundColor: controller
-                                        .callList[index].isVideoMuted.value
-                                    ? style.actionStyle
-                                        .inactiveBgColor //AppColors.participantUnMuteColor
-                                    : style.actionStyle
-                                        .activeBgColor, //Colors.transparent,
-                                child: controller
-                                        .callList[index].isVideoMuted.value
-                                    ? AppUtils.svgIcon(
-                                        icon: participantVideoDisabled,
-                                        colorFilter: ColorFilter.mode(
-                                            style.actionStyle.inactiveIconColor,
-                                            BlendMode.srcIn),
-                                      )
-                                    : AppUtils.svgIcon(
-                                        icon: participantVideoEnabled,
-                                        colorFilter: ColorFilter.mode(
-                                            style.actionStyle.activeIconColor,
-                                            BlendMode.srcIn),
-                                      ));
-                          }),
-                        ),
-                      ],
-                    ),
-                  );
-          }): Center(child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20.0),
-        child: Text(getTranslated("noContactsFound"),),
-      ),);
+                      );
+              })
+          : Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                child: Text(
+                  getTranslated("noContactsFound"),
+                ),
+              ),
+            );
     });
   }
 
@@ -361,11 +376,18 @@ class ParticipantsView extends NavViewStateful<AddParticipantsController> {
             child: Stack(
               children: [
                 Visibility(
-                    visible: !controller.joinViaLink && !controller.isPageLoading.value && controller.usersList.isEmpty,
-                    child: Center(child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20.0),
-                      child: Text(getTranslated("noContactsFound"),style: noData,),
-                    ),)),
+                    visible: !controller.joinViaLink &&
+                        !controller.isPageLoading.value &&
+                        controller.usersList.isEmpty,
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20.0),
+                        child: Text(
+                          getTranslated("noContactsFound"),
+                          style: noData,
+                        ),
+                      ),
+                    )),
                 controller.isPageLoading.value
                     ? const Center(
                         child: Padding(
@@ -407,7 +429,7 @@ class ParticipantsView extends NavViewStateful<AddParticipantsController> {
                                       onCheckBoxChange: (value) {
                                         controller.onListItemPressed(item);
                                       },
-                                      onListItemPressed: () {
+                                      onListItemPressed: (profile) {
                                         controller.onListItemPressed(item);
                                       },
                                       contactItemStyle: style,

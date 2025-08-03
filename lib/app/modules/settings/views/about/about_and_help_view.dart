@@ -9,6 +9,7 @@ import 'about_us_view.dart';
 
 class AboutAndHelpView extends StatelessWidget {
   const AboutAndHelpView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = const TextStyle(

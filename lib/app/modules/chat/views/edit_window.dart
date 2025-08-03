@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_plugin/logmessage.dart';
+import 'package:mirrorfly_uikit_plugin/app/data/mention_utils.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/mention_list_view.dart';
+import 'package:mirrorfly_uikit_plugin/mention_text_field/src/mention_tag_decoration.dart';
+import 'package:mirrorfly_uikit_plugin/mention_text_field/src/mention_tag_text_field.dart';
 import '../../../common/app_localizations.dart';
 import '../../../extensions/extensions.dart';
 import '../../../modules/chat/controllers/chat_controller.dart';
@@ -25,9 +30,19 @@ class EditMessageScreen extends StatefulWidget {
 
 class _EditMessageScreenState extends State<EditMessageScreen> {
   FocusNode textFocusNode = FocusNode();
+
+  String? get messageToEdit =>
+      ((widget.chatItem.messageType == Constants.mText ||
+                  widget.chatItem.messageType == Constants.mAutoText)
+              ? widget.chatItem.messageTextContent
+              : widget.chatItem.mediaChatMessage?.mediaCaptionText)
+          ?.replaceAll("@[?]", Constants.mentionEscape);
+  final tag = "editWindow";
+
   @override
   void initState() {
     super.initState();
+    setEditMessageText();
     widget.chatController.setOnGoingUserGone();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       textFocusNode.requestFocus();
@@ -37,6 +52,19 @@ class _EditMessageScreenState extends State<EditMessageScreen> {
         widget.chatController.showEmoji(false);
       } else {}
     });
+  }
+
+  void setEditMessageText() async {
+    var messageToEdit = (widget.chatItem.messageType == Constants.mText ||
+            widget.chatItem.messageType == Constants.mAutoText)
+        ? widget.chatItem.messageTextContent
+        : widget.chatItem.mediaChatMessage?.mediaCaptionText;
+    var profileDetails = await MentionUtils.getProfileDetailsOfUsername(
+        widget.chatItem.mentionedUsersIds ?? []);
+    widget.chatController.editMessageController
+        .setCustomText(messageToEdit ?? "", profileDetails);
+    LogMessage.d("setEditMessageText",
+        widget.chatController.editMessageController.getTags);
   }
 
   @override
@@ -144,19 +172,41 @@ class _EditMessageScreenState extends State<EditMessageScreen> {
               ),
               Align(
                 alignment: Alignment.bottomCenter,
-                child: Container(
+                child: /*ChatInputField(
+                  messageTypingAreaStyle: AppStyleConfig.chatPageStyle.messageTypingAreaStyle,
+                  controller: widget.chatController,
+                  chatTaggerController: widget.chatController.editMessageController,
+                  onChanged: (text)=>widget.chatController.editMessageText(text),
+                  focusNode: textFocusNode,
+                )*/
+                    Container(
                   color: AppStyleConfig.chatPageStyle.messageTypingAreaStyle
                       .bgColor, //Colors.white,
                   padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
                   child: Column(
                     children: [
+                      MentionUsersList(
+                        tag,
+                        groupJid: widget.chatController.profile.jid.checkNull(),
+                        mentionUserBgDecoration: AppStyleConfig.chatPageStyle
+                            .messageTypingAreaStyle.mentionUserBgDecoration,
+                        mentionUserStyle: AppStyleConfig.chatPageStyle
+                            .messageTypingAreaStyle.mentionUserStyle,
+                        chatTaggerController:
+                            widget.chatController.messageController,
+                        onListItemPressed: (profile) {
+                          widget.chatController.onUserTagClicked(profile,
+                              widget.chatController.editMessageController, tag);
+                        },
+                      ),
                       IntrinsicHeight(
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Flexible(
                               child: Container(
-                                  padding: const EdgeInsets.only(left: 10),
+                                  padding: const EdgeInsets.only(
+                                      left: 10, right: 10),
                                   margin: const EdgeInsets.only(
                                       left: 10, right: 10, bottom: 10),
                                   width: double.infinity,
@@ -195,13 +245,41 @@ class _EditMessageScreenState extends State<EditMessageScreen> {
                                       ),
                                       Expanded(
                                         child: Scrollbar(
-                                          thumbVisibility:
-                                              true, // Always show the scrollbar, optional
-                                          thickness:
-                                              4.0, // Set the thickness of the scrollbar
+                                          thumbVisibility: true,
+                                          // Always show the scrollbar, optional
+                                          thickness: 4.0,
+                                          // Set the thickness of the scrollbar
                                           radius: const Radius.circular(20),
-                                          child: TextField(
+                                          child: MentionTagTextField(
+                                            mentionTagDecoration:
+                                                const MentionTagDecoration(
+                                                    mentionStart: ['@'],
+                                                    mentionBreak: ' ',
+                                                    allowDecrement: false,
+                                                    allowEmbedding: false,
+                                                    showMentionStartSymbol:
+                                                        false,
+                                                    maxWords: null,
+                                                    mentionTextStyle: TextStyle(
+                                                        color:
+                                                            Colors.blueAccent,
+                                                        backgroundColor: Colors
+                                                            .transparent)),
                                             focusNode: textFocusNode,
+                                            onMention: (query) {
+                                              debugPrint("query : $query");
+                                              if (query != null) {
+                                                final searchInput =
+                                                    query.substring(1);
+                                                widget.chatController
+                                                    .filterMentionUsers(
+                                                        '@', searchInput, tag);
+                                              } else {
+                                                widget.chatController
+                                                    .filterMentionUsers(
+                                                        '@', null, tag);
+                                              }
+                                            },
                                             onChanged: (text) {
                                               widget.chatController
                                                   .editMessageText(text);
@@ -210,7 +288,8 @@ class _EditMessageScreenState extends State<EditMessageScreen> {
                                                 .chatPageStyle
                                                 .messageTypingAreaStyle
                                                 .textFieldStyle
-                                                .editTextStyle, //const TextStyle(fontWeight: FontWeight.w400),
+                                                .editTextStyle,
+                                            //const TextStyle(fontWeight: FontWeight.w400),
                                             // style: const TextStyle(fontWeight: FontWeight.w400),
                                             keyboardType:
                                                 TextInputType.multiline,

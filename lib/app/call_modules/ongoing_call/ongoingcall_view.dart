@@ -252,21 +252,21 @@ class OnGoingCallView extends NavViewStateful<CallController> {
                               child: buildToolbar(context),
                             );
                           }),
-                          Positioned(
-                            left: 0,
-                            top: 0,
-                            child: IconButton(
-                              splashRadius: 24,
-                              onPressed: () {
-                                controller.goToPIP();
-                              },
-                              icon: Icon(
-                                Icons.keyboard_arrow_down,
-                                color: AppStyleConfig
-                                    .ongoingCallPageStyle.actionIconColor,
-                              ),
-                            ),
-                          ),
+                          // Positioned(
+                          //   left: 0,
+                          //   top: 0,
+                          //   child: IconButton(
+                          //     splashRadius: 24,
+                          //     onPressed: () {
+                          //       controller.goToPIP();
+                          //     },
+                          //     icon: Icon(
+                          //       Icons.keyboard_arrow_down,
+                          //       color: AppStyleConfig
+                          //           .ongoingCallPageStyle.actionIconColor,
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),

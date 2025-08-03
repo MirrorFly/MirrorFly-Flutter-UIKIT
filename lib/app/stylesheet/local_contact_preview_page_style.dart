@@ -37,6 +37,7 @@ class LocalContactPreviewPageStyle {
           elevation: 12,
           iconSize: 21,
           shape: CircleBorder())});
+
   final AppBarTheme appBarTheme;
   final LocalContactItem contactItemStyle;
   final FloatingActionButtonThemeData floatingActionButtonThemeData;

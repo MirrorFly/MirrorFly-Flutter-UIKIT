@@ -1,70 +1,122 @@
+import 'dart:io';
+
+// import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/routes/route_settings.dart';
+import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 import '../../common/constants.dart';
 import 'package:mirrorfly_plugin/mirrorfly.dart';
-// import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 import '../../app_style_config.dart';
 import '../../common/app_localizations.dart';
+import '../../data/session_management.dart';
 import '../../data/utils.dart';
-import '../../routes/route_settings.dart';
 
 class ScannerController extends GetxController {
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  // QRViewController? controller;
+  final qrKeyNotifier = ValueNotifier(GlobalKey(debugLabel: 'QR'));
+  QRViewController? controller;
 
-  final loginQr = <String>[];
+  var loginQr = <String>[];
   final _webLogins = <WebLogin>[].obs;
 
   set webLogins(value) => _webLogins.value = value;
 
   List<WebLogin> get webLogins => _webLogins;
 
-  // void onQRViewCreated(QRViewController controller) {
-  //   this.controller = controller;
-  //   controller.resumeCamera();
-  //   controller.scannedDataStream.listen((scanData) {
-  //     loginWebChatViaQRCode(scanData.code);
-  //   });
-  // }
+  bool gotScannedData = true;
 
-  @override
-  void dispose() {
-    // if (controller != null) {
-    //   controller!.dispose();
-    // }
-    super.dispose();
+  void onQRViewCreated(QRViewController controller) {
+    this.controller = controller;
+    controller.scannedDataStream.listen((scanData) {
+      debugPrint("scanData ${scanData.code}");
+      processScannedData(scanData);
+    });
+  }
+
+  Future<void> processScannedData(scanData) async {
+    if (await AppUtils.isNetConnected()) {
+      controller?.pauseCamera();
+      if (gotScannedData) {
+        gotScannedData = false;
+        DialogUtils.showLoading(
+            message: getTranslated("pleaseWait"),
+            dialogStyle: AppStyleConfig.dialogStyle);
+        loginWebChatViaQRCode(scanData.code);
+      } else {
+        debugPrint("gotScannedData $gotScannedData");
+      }
+    } else {
+      DialogUtils.hideLoading();
+      controller?.resumeCamera();
+      gotScannedData = true;
+      toToast(getTranslated("noInternetConnection"));
+    }
   }
 
   @override
   void refresh() {
     super.refresh();
-    // if (controller != null) {
-    //   /*if (Platform.isAndroid) {
-    //     controller!.pauseCamera();
-    //   } else {
-    //     controller!.resumeCamera();
-    //   }*/
-    // }
+    debugPrint("ScannerController ->refresh qr controller");
+    if (controller != null) {
+      if (Platform.isAndroid) {
+        controller?.pauseCamera();
+      } else {
+        controller?.resumeCamera();
+      }
+    }
   }
 
   loginWebChatViaQRCode(String? barcode) async {
     LogMessage.d("barcode", barcode.toString());
     if (barcode != null) {
-      if (await AppUtils.isNetConnected()) {
-        // controller!.pauseCamera();
-        /*Mirrorfly.loginWebChatViaQRCode(barcode).then((value) {
-          if (value != null) {
-            SessionManagement.setWebChatLogin(value);
-            NavUtils.back();
-          } else {
+      Mirrorfly.loginWebChatViaQRCode(
+          barcode: barcode,
+          flyCallBack: (FlyResponse response) {
+            DialogUtils.hideLoading();
+            if (response.isSuccess) {
+              SessionManagement.setWebChatLogin(true);
+              NavUtils.back(result: true);
+            } else {
+              gotScannedData = true;
+              controller?.resumeCamera();
+              toToast(response.errorMessage);
+            }
+          });
+    }
+  }
 
-          }
-        }).catchError((er) {
-          controller!.resumeCamera();
-        });*/
+  @override
+  void dispose() {
+    super.dispose();
+    debugPrint('ScannerController camera dispose:');
+  }
+
+  focusGained(bool isFocusGained) {
+    debugPrint('ScannerController focusGained: $isFocusGained');
+    if (controller != null) {
+      if (isFocusGained) {
+        debugPrint('ScannerController camera resumeCamera:');
+        safeResumeCamera();
       } else {
-        toToast(getTranslated("noInternetConnection"));
+        debugPrint('ScannerController camera stopCamera:');
+      }
+    }
+  }
+
+  void recreateQRView() {
+    qrKeyNotifier.value = GlobalKey(debugLabel: 'QR');
+  }
+
+  void safeResumeCamera() async {
+    try {
+      await controller?.resumeCamera();
+    } catch (e) {
+      if (e is CameraException && e.code == '404') {
+        debugPrint("QR view lost, recreating...");
+        recreateQRView();
+      } else {
+        debugPrint("Camera resume error: $e");
       }
     }
   }
@@ -83,14 +135,6 @@ class ScannerController extends GetxController {
     } else {
       toToast(getTranslated("noInternetConnection"));
     }
-  }
-
-  webLoginDetailsCleared() {
-    /*Mirrorfly.webLoginDetailsCleared().then((value) {
-      if (value != null && value) {
-        //SessionManagement.setWebChatLogin(false);
-      }
-    });*/
   }
 
   getWebLoginDetails() {

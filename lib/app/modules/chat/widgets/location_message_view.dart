@@ -18,6 +18,7 @@ class LocationMessageView extends StatelessWidget {
   final ChatMessageModel chatMessage;
   final bool isSelected;
   final LocationMessageViewStyle locationMessageViewStyle;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -36,7 +37,8 @@ class LocationMessageView extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 chatMessage.isMessageStarred.value
-                    ? AppUtils.svgIcon(icon: starSmallIcon)
+                    ? locationMessageViewStyle.iconFavourites ??
+                        AppUtils.svgIcon(icon: starSmallIcon)
                     : const Offstage(),
                 const SizedBox(
                   width: 5,

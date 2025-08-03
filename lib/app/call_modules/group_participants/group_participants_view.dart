@@ -65,39 +65,43 @@ class GroupParticipantsView
             children: [
               Expanded(
                 child: Obx(() {
-                  return controller.usersList.isEmpty ? Center(child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20.0),
-                    child: Text(getTranslated("noContactsFound")),
-                  ),) : ListView.builder(
-                      itemCount: controller.usersList.length,
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      itemBuilder: (BuildContext context, int index) {
-                        if (index >= controller.usersList.length &&
-                            controller.usersList.isNotEmpty) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        } else if (controller.usersList.isNotEmpty) {
-                          var item = controller.usersList[index];
-                          return ContactItem(
-                            item: item,
-                            onAvatarClick: () {
-                              controller.showProfilePopup(item.obs);
-                            },
-                            spanTxt: controller.searchQuery.text,
-                            isCheckBoxVisible: true,
-                            checkValue: controller.selectedUsersJIDList
-                                .contains(item.jid),
-                            onCheckBoxChange: (value) {
-                              controller.onListItemPressed(item);
-                            },
-                            onListItemPressed: () {
-                              controller.onListItemPressed(item);
-                            },
-                          );
-                        } else {
-                          return const SizedBox();
-                        }
-                      });
+                  return controller.usersList.isEmpty
+                      ? Center(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 20.0),
+                            child: Text(getTranslated("noContactsFound")),
+                          ),
+                        )
+                      : ListView.builder(
+                          itemCount: controller.usersList.length,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          itemBuilder: (BuildContext context, int index) {
+                            if (index >= controller.usersList.length &&
+                                controller.usersList.isNotEmpty) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            } else if (controller.usersList.isNotEmpty) {
+                              var item = controller.usersList[index];
+                              return ContactItem(
+                                item: item,
+                                onAvatarClick: () {
+                                  controller.showProfilePopup(item.obs);
+                                },
+                                spanTxt: controller.searchQuery.text,
+                                isCheckBoxVisible: true,
+                                checkValue: controller.selectedUsersJIDList
+                                    .contains(item.jid),
+                                onCheckBoxChange: (value) {
+                                  controller.onListItemPressed(item);
+                                },
+                                onListItemPressed: (profile) {
+                                  controller.onListItemPressed(item);
+                                },
+                              );
+                            } else {
+                              return const SizedBox();
+                            }
+                          });
                 }),
               ),
               Obx(() {

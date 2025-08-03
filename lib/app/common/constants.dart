@@ -4,10 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mirrorfly_plugin/mirrorflychat.dart';
 
-// Icon Package Name
-
-String? iconPackageName = 'mirrorfly_uikit_plugin/lib';
-
 //Colors
 const Color appBarColor = Color(0xffF2F2F2);
 const Color iconColor = Color(0xff181818);
@@ -41,6 +37,10 @@ const Color chatBgColor = Color(0xffD0D8EB);
 const Color previewTextColor = Color(0xff7f7f7f);
 const Color callsSubText = Color(0Xff737373);
 const Color notificationAlertBg = Color(0xffEFF4FD);
+
+const Color backUpDbColor = Color(0xffFFFFFF);
+const Color backupPhoneColor = Color(0xff3276E2);
+const Color backupTimerColor = Color(0xffC4D1E0);
 
 class AppColors {
   static const Color callerBackground = Color(0xff152134);
@@ -201,6 +201,7 @@ const String zipImage = 'assets/logos/zip.svg';
 const String rarImage = 'assets/logos/rar.svg';
 const String mImageIcon = 'assets/logos/image.svg';
 const String mLocationIcon = 'assets/logos/location_chat.svg';
+const String mMeetIcon = 'assets/logos/schedule_icon.svg';
 const String mVideoIcon = 'assets/logos/ic_video.svg';
 const String mAudioIcon = 'assets/logos/noun_Audio_3408360.svg';
 const String mAudioRecordIcon = 'assets/logos/record_reply_preview.svg';
@@ -290,7 +291,7 @@ const String forwardMedia = "assets/logos/forward_media.svg";
 const String arrowDown = "assets/logos/arrow_down.svg";
 const String arrowUp = "assets/logos/arrow_up.svg";
 
-const String mediaBg = "assets/logos/ic_baloon.svg";
+const String mediaBg = "assets/logos/ic_baloon.png";
 
 //contact sync
 const String syncIcon = "assets/logos/sync.svg";
@@ -300,6 +301,27 @@ const String emailContactIcon = "assets/logos/emailcontact_icon.svg";
 
 const String icBioBackground = "assets/logos/ic_bio_background.png";
 const String icDeleteIcon = "assets/logos/ic_delete_icon.svg";
+const String icJoinCallMirrorflyLogo =
+    "assets/calls/ic_join_call_mirrorfly_logo.svg";
+const String icJoinCallEnded = "assets/calls/ic_join_call_ended.svg";
+
+//Backup Restore
+const String backupTimer = "assets/backup_restore/backup_timer.svg";
+const String backupDatabase = "assets/backup_restore/database.svg";
+const String backupSmartPhone = "assets/backup_restore/smartphone.svg";
+
+const String backupAnimation1 = "assets/backup_restore/backup_animation_1.png";
+const String backupAnimation2 = "assets/backup_restore/backup_animation_2.png";
+const String backupAnimation3 = "assets/backup_restore/backup_animation_3.png";
+const String backupAnimation4 = "assets/backup_restore/backup_animation_4.png";
+const String backupAnimation5 = "assets/backup_restore/backup_animation_5.png";
+const String backupAnimation6 = "assets/backup_restore/backup_animation_6.png";
+
+const String backupHistoryIcon = "assets/backup_restore/backup_history.png";
+const String addAccountUser = "assets/backup_restore/add_account_user.svg";
+
+const String restoreCloud = "assets/backup_restore/restore_cloud.png";
+const String restoreSetting = "assets/backup_restore/restore_settings.png";
 
 //About us
 const String titleContactMsg =
@@ -330,19 +352,34 @@ toToast(String text) {
 }
 
 class Constants {
+  static bool isUIKIT = true;
+  static bool useDeprecatedInit = false;
+  static const bool isBackupFeatureEnabled = true;
+
+  // Dummy OTP View
+  static const bool isOTPViewEnabled = false;
+  static ChatBuilder chatBuilder = ChatBuilder(
+      domainBaseUrl: "",
+      licenseKey: 'ckIjaccWBoMNvxdbql8LJ2dmKqT5bp',
+      iOSContainerID: 'group.com.mirrorfly.flutter',
+      chatHistoryEnable: true,
+      enableDebugLog: true,
+      storageFolderName: "Mirrorfly Flutter",
+      isTrialLicenceKey: false);
+  static bool enablePrivateStorage = false;
+  static const String webChatLogin = 'https://YOUR_WEB_APP_URL';
+
   static MetaDataUserList?
       metaDataUserList; // = MetaDataUserList(key: "platform", value: ["flutter"]);
   static const bool enableContactSync = false;
   static const bool enableTopic = false;
-  static const String topicId = enableTopic
-      ? "5d3788c1-78ef-4158-a92b-a48f092da0b9"
-      : ""; //Mirrorfly Topic id
+  static const String topicId = enableTopic ? "XXX" : ""; //Mirrorfly Topic id
   static const String packageName = "com.contus.flycommons.";
   static const String package = 'com.mirrorfly.uikit_flutter';
   static const String emptyString = "";
-  static const String webChatLogin = 'https://webchat-uikit-qa.contus.us/';
   static const maxNameLength = 26;
   static const callNotificationId = 124;
+  static const getMaxCallUsersCount = 8;
 
   static const appSession = 'app_session';
   static const changedPinAt = 'pin_changed_at';
@@ -351,6 +388,7 @@ class Constants {
   static const sessionLockTime = 32; //in Seconds
   static const pinExpiry = 31; //in Days
   static const pinAlert = pinExpiry - 5; //in Days
+  static const String mentionEscape = '‡';
 
   static const mobileImageMaxWidth = 250;
   static const mobileImageMinWidth = 210;
@@ -371,6 +409,8 @@ class Constants {
   static const cameraPermissionAsked = "camera_permission_asked_before";
   static const readPhoneStatePermissionAsked = "read_phone_state_asked_before";
   static const bluetoothPermissionAsked = "bluetooth_permission_asked_before";
+
+  static const deletedMessage = "This message was deleted";
 
   static const List<int> defaultColorList = [
     0Xff9068BE,
@@ -429,6 +469,8 @@ class Constants {
   static const String mFile = "FILE";
   static const String mNotification = "NOTIFICATION";
 
+  static const String mMeet = "MEET";
+
   static const String composing = "composing";
   static const String gone = "Gone";
 
@@ -472,7 +514,23 @@ class Constants {
   static const String attachmentTypeAudio = "audio";
   static const String attachmentTypeContact = "contact";
   static const String attachmentTypeLocation = "location";
+  static const String meetScheduleOn = "Meet Scheduled on ";
+
+  //Backup State
+  static const String backupAccountSelected = "account_selected";
+  static const String backupSkipped = "backup_skip";
+  static const String backupCompleted = "backup_completed";
+
+  static const String backupEncryptedFileFormat = "crypto7";
+  static const String backupRawFileFormat = "txt";
+
+  static const int pipWidgetWidth = 135;
+  static const int pipWidgetHeight = 300;
 
   //Chat Open/Close Constant Messages
   static const String chatClosed = "#THIS_CHAT_IS_CLOSED";
 }
+
+
+// Icon Package Name
+String? iconPackageName = Constants.isUIKIT ? 'mirrorfly_uikit_plugin/lib' : null;

@@ -1,6 +1,6 @@
-import 'dart:ui';
-
-import 'package:flutter/services.dart';
+import 'package:flutter/services.dart' show TextInputFormatter;
+import 'package:flutter/material.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 
 import 'chat_message_model.dart';
 
@@ -12,7 +12,7 @@ class DashboardViewArguments {
 }
 
 class ChatViewArguments {
-  const ChatViewArguments({
+  ChatViewArguments({
     required this.chatJid,
     this.topicId = '',
     this.didNotificationLaunchApp = false,
@@ -24,7 +24,7 @@ class ChatViewArguments {
     this.disableAppBar = false,
     this.chatInfoPageRedirect = false,
     this.enableSwipeToReply = true,
-    this.menuActionsEnabled = false,
+    // this.menuActionsEnabled,
     this.isAppBarForwardEnabled = true,
     this.isMessageWidgetForwardEnabled = true,
     this.isAppBarReplyEnabled = true,
@@ -47,7 +47,7 @@ class ChatViewArguments {
     this.topicTitleBgColor,
     this.messageTextFieldInputFormatters,
   }) : assert(swipeSensitivity >= 5 && swipeSensitivity <= 20,
-            'swipeSensitivity must be between 5 and 20');
+  'swipeSensitivity must be between 5 and 20');
 
   final String chatJid;
   final String topicId;
@@ -59,7 +59,7 @@ class ChatViewArguments {
   final bool didNotificationLaunchApp;
   final bool disableAppBar;
   final bool enableSwipeToReply;
-  final bool menuActionsEnabled;
+  bool menuActionsEnabled = !Constants.isUIKIT;
   final bool chatInfoPageRedirect;
   final bool isAppBarForwardEnabled;
   final bool isMessageWidgetForwardEnabled;
@@ -89,9 +89,9 @@ class ChatViewArguments {
 class ChatSearchViewArguments {
   const ChatSearchViewArguments(
       {required this.chatJid,
-      required this.chatList,
-      this.showChatDeliveryIndicator = true,
-      this.disableAppBar = false});
+        required this.chatList,
+        this.showChatDeliveryIndicator = true,
+        this.disableAppBar = false});
 
   final String chatJid;
   final List<ChatMessageModel> chatList;
@@ -102,11 +102,11 @@ class ChatSearchViewArguments {
 class ContactListArguments {
   const ContactListArguments(
       {this.messageIds = const [],
-      this.topicId = "",
-      this.callType = "",
-      this.forMakeCall = false,
-      this.groupJid = "",
-      this.forGroup = false});
+        this.topicId = "",
+        this.callType = "",
+        this.forMakeCall = false,
+        this.groupJid = "",
+        this.forGroup = false});
   final List<String> messageIds;
   final String groupJid;
   final String topicId;
@@ -118,6 +118,7 @@ class ContactListArguments {
 class ChatInfoArguments {
   final String chatJid;
   final bool disableAppbar;
+
   const ChatInfoArguments({required this.chatJid, this.disableAppbar = false});
 }
 

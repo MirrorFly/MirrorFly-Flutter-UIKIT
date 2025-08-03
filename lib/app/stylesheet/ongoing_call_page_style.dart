@@ -11,6 +11,7 @@ class OngoingCallPageStyle {
   final CallUserTileStyle gridCallUserTileStyle;
   final ActionButtonStyle actionButtonsStyle;
   final ButtonStyle disconnectButtonStyle;
+  final PIPViewStyle pipViewStyle;
 
   const OngoingCallPageStyle(
       {this.actionIconColor = Colors.white,
@@ -44,7 +45,8 @@ class OngoingCallPageStyle {
         borderRadius: BorderRadius.all(Radius.circular(12)),
       ),
       this.actionButtonsStyle = const ActionButtonStyle(),
-      this.disconnectButtonStyle = const ButtonStyle()});
+      this.disconnectButtonStyle = const ButtonStyle(),
+      this.pipViewStyle = const PIPViewStyle()});
 }
 
 class CallUserTileStyle {
@@ -69,4 +71,36 @@ class CallUserTileStyle {
     this.callStatusTextStyle = const TextStyle(
         fontWeight: FontWeight.w300, color: Colors.white, fontSize: 14),
   });
+}
+
+class PIPViewStyle {
+  final double width;
+  final double height;
+  final BorderRadiusGeometry borderRadius;
+  final CallUserTileStyle userTileStyle;
+  final IconStyle closeIconStyle;
+  final TextStyle countStyle;
+  final Color countBgColor;
+
+  const PIPViewStyle(
+      {this.width = 135,
+      this.height = 270,
+      this.borderRadius = const BorderRadius.all(Radius.circular(13)),
+      this.userTileStyle = const CallUserTileStyle(
+          borderRadius: BorderRadius.zero,
+          backgroundColor: Color(0xff0D2852),
+          profileImageSize: 80,
+          nameTextStyle: TextStyle(
+              fontWeight: FontWeight.normal, color: Colors.white, fontSize: 10),
+          speakingIndicatorStyle: ActionButtonStyle(
+              activeBgColor: Color(0xff3ABF87), activeIconColor: Colors.white),
+          callStatusTextStyle: TextStyle(
+              fontWeight: FontWeight.w300, color: Colors.white, fontSize: 10)),
+      this.countStyle = const TextStyle(
+        fontWeight: FontWeight.normal,
+        color: Colors.white,
+        fontSize: 8,
+      ),
+      this.countBgColor = AppColor.primaryColor,
+      this.closeIconStyle = const IconStyle(iconColor: Colors.white)});
 }

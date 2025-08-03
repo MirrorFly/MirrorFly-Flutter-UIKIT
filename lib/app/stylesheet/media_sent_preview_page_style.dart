@@ -35,6 +35,7 @@ class MediaSentPreviewPageStyle {
       fontSize: 13,
     ),
   });
+
   final AppBarTheme appBarTheme;
   final Color scaffoldBackgroundColor;
   final ChatUserAppBarStyle chatUserAppBarStyle;

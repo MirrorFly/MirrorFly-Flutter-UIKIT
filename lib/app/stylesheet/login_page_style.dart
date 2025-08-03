@@ -45,20 +45,28 @@ class LoginPageStyle {
 
   // AppBar text style
   final TextStyle appBarTextStyle;
+
   // Body title text style
   final TextStyle bodyTitleStyle;
+
   // Body description text style
   final TextStyle bodyDescriptionStyle;
+
   // Selected country text style
   final TextStyle selectedCountryTextStyle;
+
   // Selected country code text style
   final TextStyle selectedCountryCodeTextStyle;
+
   // Edit text field style
   final EditTextFieldStyle editTextFieldStyle;
+
   // Footer headline text style
   final TextStyle footerHeadlineStyle;
+
   // Terms text style
   final TextStyle termsTextStyle;
+
   // Login button style
   final ButtonStyle loginButtonStyle;
 }

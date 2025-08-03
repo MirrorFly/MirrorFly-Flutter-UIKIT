@@ -19,6 +19,7 @@ class VideoPreviewController extends GetxController {
   TextEditingController caption = TextEditingController();
 
   var seekTo = const Duration(seconds: 0).obs;
+
   @override
   Future<void> onInit() async {
     super.onInit();
@@ -65,7 +66,7 @@ class VideoPreviewController extends GetxController {
   sendVideoMessage() async {
     // if(await AppUtils.isNetConnected()) {
     var response = await Get.find<ChatController>()
-        .sendVideoMessage(videoPath, caption.text, "");
+        .sendVideoMessage(videoPath, caption.text, "", []);
     debugPrint("Preview View ==> $response");
     if (response != null) {
       NavUtils.back();

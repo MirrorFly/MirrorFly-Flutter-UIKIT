@@ -38,10 +38,8 @@ class CallHistoryView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        /* Container(
-          color: Theme
-              .of(context)
-              .scaffoldBackgroundColor,
+        Container(
+          color: Theme.of(context).scaffoldBackgroundColor,
           child: InkWell(
             onTap: () {
               controller.showMeetBottomSheet(meetBottomSheetStyle);
@@ -53,25 +51,35 @@ class CallHistoryView extends StatelessWidget {
                   height: 50,
                   margin: const EdgeInsets.all(10.0),
                   decoration: createMeetLinkStyle.iconDecoration,
-                  child: Center(child: Icon(
-                    Icons.link, color: createMeetLinkStyle.iconColor,
-                    size: 18,),),
+                  child: Center(
+                    child: Icon(
+                      Icons.link,
+                      color: createMeetLinkStyle.iconColor,
+                      size: 18,
+                    ),
+                  ),
                 ),
                 Flexible(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(getTranslated("createNewMeeting"),
-                        style: createMeetLinkStyle.textStyle, maxLines: 1, overflow: TextOverflow.ellipsis,),
+                      Text(
+                        getTranslated("createNewMeeting"),
+                        style: createMeetLinkStyle.textStyle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                       Text(getTranslated("createNewMeetingSubtitle"),
-                        style: createMeetLinkStyle.subTitleTextStyle,maxLines: 1, overflow: TextOverflow.ellipsis)
+                          style: createMeetLinkStyle.subTitleTextStyle,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis)
                     ],
                   ),
                 )
               ],
             ),
           ),
-        ),*/
+        ),
         Obx(() {
           return controller.callLogList.isEmpty
               ? const Offstage()

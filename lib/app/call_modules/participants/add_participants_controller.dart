@@ -30,10 +30,12 @@ class AddParticipantsController extends GetxController
   var selectedUsersJIDList = List<String>.empty(growable: true).obs;
 
   var currentTab = 0.obs;
+
   bool get isCheckBoxVisible => true;
   TabController? tabController;
   var getMaxCallUsersCount = 8;
   var joinViaLink = false;
+
   @override
   Future<void> onInit() async {
     super.onInit();
@@ -47,8 +49,7 @@ class AddParticipantsController extends GetxController
     // callList = Get.find<CallController>().callList;
     scrollController.addListener(_scrollListener);
 
-
-    if(!joinViaLink) {
+    if (!joinViaLink) {
       if (groupId.isEmpty) {
         if (await AppUtils.isNetConnected() || Constants.enableContactSync) {
           isPageLoading(true);
@@ -59,39 +60,41 @@ class AddParticipantsController extends GetxController
       } else {
         getGroupMembers();
       }
-    }else{
-      LogMessage.d("addParticipants", "joinViaLink $joinViaLink so no need to load users");
+    } else {
+      LogMessage.d("addParticipants",
+          "joinViaLink $joinViaLink so no need to load users");
     }
   }
-  void intiTab(){
+
+  void intiTab() {
     tabController = TabController(length: 2, vsync: this);
     // Future.delayed(const Duration(seconds: 1),(){
-      tabController?.addListener(() {
-        LogMessage.d("DefaultTabController", "${tabController?.index}");
+    tabController?.addListener(() {
+      LogMessage.d("DefaultTabController", "${tabController?.index}");
 
-        // Current animation value. It ranges from 0 to (tabsCount - 1)
-        final animationValue = tabController?.animation!.value;
-        LogMessage.d("animationValue", "$animationValue");
-        // Simple rounding gives us understanding of what tab is showing
-        final currentTabIndex = animationValue?.round();
-        LogMessage.d("currentTabIndex", "$currentTabIndex");
-        currentTab(currentTabIndex);
-        if (currentTabIndex == 0) {
-          getBackFromSearch();
-        }
-        // currentOffset equals 0 when tabs are not swiped
-        // currentOffset ranges from -0.5 to 0.5
-        // final currentOffset = currentTabIndex! - animationValue!;
-        // for (int i = 0; i < tabsCount; i++) {
-        //   if (i == currentTabIndex) {
-        // //     // For current tab bringing currentOffset to range from 0.0 to 1.0
-        //     tabScales[i] = (0.5 - currentOffset.abs()) / 0.5;
-        //   } else {
-        // //     // For other tabs setting scale to 0.0
-        //     tabScales[i] = 0.0;
-        //   }
-        // }
-      });
+      // Current animation value. It ranges from 0 to (tabsCount - 1)
+      final animationValue = tabController?.animation!.value;
+      LogMessage.d("animationValue", "$animationValue");
+      // Simple rounding gives us understanding of what tab is showing
+      final currentTabIndex = animationValue?.round();
+      LogMessage.d("currentTabIndex", "$currentTabIndex");
+      currentTab(currentTabIndex);
+      if (currentTabIndex == 0) {
+        getBackFromSearch();
+      }
+      // currentOffset equals 0 when tabs are not swiped
+      // currentOffset ranges from -0.5 to 0.5
+      // final currentOffset = currentTabIndex! - animationValue!;
+      // for (int i = 0; i < tabsCount; i++) {
+      //   if (i == currentTabIndex) {
+      // //     // For current tab bringing currentOffset to range from 0.0 to 1.0
+      //     tabScales[i] = (0.5 - currentOffset.abs()) / 0.5;
+      //   } else {
+      // //     // For other tabs setting scale to 0.0
+      //     tabScales[i] = 0.0;
+      //   }
+      // }
+    });
     // });
   }
 
@@ -103,8 +106,9 @@ class AddParticipantsController extends GetxController
 
   ///get ongoing call link
   var meetLink = "".obs;
-  void getCallLink(){
-    Mirrorfly.getCallLink().then((value){
+
+  void getCallLink() {
+    Mirrorfly.getCallLink().then((value) {
       meetLink(value);
     });
   }
@@ -189,10 +193,12 @@ class AddParticipantsController extends GetxController
 
   _scrollListener() {
     if (scrollController.hasClients && !joinViaLink) {
-      if (scrollController.position.extentAfter <= 0 && isPageLoading.value == false) {
+      if (scrollController.position.extentAfter <= 0 &&
+          isPageLoading.value == false) {
         if (scrollable.value) {
           //isPageLoading.value = true;
-          LogMessage.d("usersList.length ${usersList.length} ~/ 20", (usersList.length ~/ 20));
+          LogMessage.d("usersList.length ${usersList.length} ~/ 20",
+              (usersList.length ~/ 20));
           pageNum = (usersList.length ~/ 20) + 1;
           fetchUsers(false);
         }
@@ -341,6 +347,7 @@ class AddParticipantsController extends GetxController
 
   var groupCallMembersCount = 0.obs;
   var callType = CallType.audio.obs;
+
   makeCall() async {
     if (selectedUsersJIDList.isEmpty) {
       return;
@@ -373,6 +380,7 @@ class AddParticipantsController extends GetxController
   var _searchText = "";
   var _first = true;
   var groupJid = "".obs;
+
   fetchUsers(bool fromSearch, {bool server = false}) async {
     if (Constants.enableContactSync) {
       var granted = await Permission.contacts.isGranted;
@@ -641,6 +649,7 @@ class AddParticipantsController extends GetxController
   }
 
   var availableFeatures = Get.find<MainController>().availableFeature;
+
   void onAvailableFeaturesUpdated(AvailableFeatures features) {
     LogMessage.d(
         "GroupParticipants", "onAvailableFeaturesUpdated ${features.toJson()}");

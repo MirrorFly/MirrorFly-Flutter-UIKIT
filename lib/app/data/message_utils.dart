@@ -249,6 +249,12 @@ class MessageUtils {
           icon: mLocationIcon,
           fit: BoxFit.contain,
         );
+      case Constants.mMeet:
+        return AppUtils.svgIcon(
+          icon: mMeetIcon,
+          colorFilter: const ColorFilter.mode(textColor, BlendMode.srcIn),
+          fit: BoxFit.contain,
+        );
       default:
         return const SizedBox();
     }
@@ -271,8 +277,22 @@ class MessageUtils {
         return "Contact";
       case Constants.mLocation:
         return "Location";
+      case Constants.mMeet:
+        return "Meet";
       default:
         return null;
+    }
+  }
+
+  static String getMeetMessage(int timestamp, {bool isScheduleOn = true}) {
+    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
+    String formattedDate = DateFormat("MMM d, yyyy h:mm a").format(dateTime);
+    formattedDate = formattedDate.replaceAll("AM", "am").replaceAll("PM", "pm");
+    String message = getTranslated("scheduleOn") + formattedDate;
+    if (isScheduleOn) {
+      return message;
+    } else {
+      return formattedDate;
     }
   }
 

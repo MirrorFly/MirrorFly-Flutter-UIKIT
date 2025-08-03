@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_plugin/mirrorfly_view.dart';
+import 'package:mirrorfly_plugin/mirrorflychat.dart';
+
 import '../../app/call_modules/audio_level_animation.dart';
 import '../../app/call_modules/call_utils.dart';
 import '../../app/call_modules/outgoing_call/call_controller.dart';
@@ -9,9 +12,6 @@ import '../../app/common/widgets.dart';
 import '../../app/data/session_management.dart';
 import '../../app/data/utils.dart';
 import '../../app/extensions/extensions.dart';
-import 'package:mirrorfly_plugin/mirrorfly_view.dart';
-import 'package:mirrorfly_plugin/mirrorflychat.dart';
-
 import '../stylesheet/stylesheet.dart';
 
 Widget buildProfileImage(ProfileDetails item, {double size = 105}) {
@@ -297,6 +297,7 @@ Widget buildListItem(CallController controller, CallUserTileStyle style) {
                         viewBgColor: style
                             .backgroundColor, //AppColors.callerTitleBackground,
                         profileSize: style.profileImageSize,
+                        // mirror: !(controller.callList[index].userJid?.value == SessionManagement.getUserJID() && controller.currentCameraPosition.value == CameraPosition.backCamera),
                         onClick: () {
                           //swap View
                           controller.swap(index);
@@ -448,6 +449,7 @@ Widget buildGridItem(CallController controller, CallUserTileStyle style) {
                 viewBgColor:
                     style.backgroundColor, //AppColors.callerTitleBackground,
                 profileSize: style.profileImageSize,
+                // mirror: controller.callList[index].userJid?.value == SessionManagement.getUserJID(),
                 onClick: () {
                   // if(controller.callType.value==CallType.video) {
                   controller.isVisible(!controller.isVisible.value);

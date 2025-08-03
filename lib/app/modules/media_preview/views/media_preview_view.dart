@@ -1,7 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/mention_list_view.dart';
+import 'package:mirrorfly_uikit_plugin/app/routes/route_settings.dart';
+import 'package:mirrorfly_uikit_plugin/mention_text_field/src/mention_tag_decoration.dart';
+import 'package:mirrorfly_uikit_plugin/mention_text_field/src/mention_tag_text_field.dart' show MentionTagTextField;
 import '../../../app_style_config.dart';
 import '../../../common/app_localizations.dart';
 import '../../../common/constants.dart';
@@ -120,7 +125,7 @@ class MediaPreviewView extends NavViewStateful<MediaPreviewController> {
                 if (didPop) {
                   return;
                 }
-                NavUtils.back(result: "back");
+                NavUtils.back();
               },
               child: GestureDetector(
                 onTap: () => controller.hideKeyBoard(),
@@ -270,6 +275,19 @@ class MediaPreviewView extends NavViewStateful<MediaPreviewController> {
                                 );
                         }),
                       ),
+                      MentionUsersList(
+                        Routes.galleryPicker,
+                        groupJid: controller.profile.jid.checkNull(),
+                        mentionUserBgDecoration: AppStyleConfig.chatPageStyle
+                            .messageTypingAreaStyle.mentionUserBgDecoration,
+                        mentionUserStyle: AppStyleConfig.chatPageStyle
+                            .messageTypingAreaStyle.mentionUserStyle,
+                        chatTaggerController: controller.caption,
+                        onListItemPressed: (profile) {
+                          controller.onUserTagClicked(profile,
+                              controller.caption, Routes.galleryPicker);
+                        },
+                      ),
                       SizedBox(
                         width: NavUtils.size.width,
                         child: Column(
@@ -318,7 +336,18 @@ class MediaPreviewView extends NavViewStateful<MediaPreviewController> {
                                                       controller.showAdd
                                                   ? InkWell(
                                                       onTap: () {
-                                                        NavUtils.back();
+                                                        NavUtils.back(result: {
+                                                          "from": controller
+                                                              .pickerType,
+                                                          "filePath": controller
+                                                              .filePath,
+                                                          "captionMessage":
+                                                              controller
+                                                                  .captionMessage,
+                                                          "captionMessageMentions":
+                                                              controller
+                                                                  .captionMessageMentions
+                                                        });
                                                       },
                                                       child: AppUtils.svgIcon(
                                                         icon: previewAddImg,
@@ -352,21 +381,50 @@ class MediaPreviewView extends NavViewStateful<MediaPreviewController> {
                                           child: Focus(
                                             onFocusChange: (isFocus) =>
                                                 controller.isFocused(isFocus),
-                                            child: TextFormField(
+                                            child: MentionTagTextField(
+                                              // key: textFieldKey,
+                                              onMention: (query) {
+                                                debugPrint("query : $query");
+                                                if (query != null) {
+                                                  final searchInput =
+                                                      query.substring(1);
+                                                  controller.filterMentionUsers(
+                                                      '@',
+                                                      searchInput,
+                                                      Routes.galleryPicker);
+                                                } else {
+                                                  controller.filterMentionUsers(
+                                                      '@',
+                                                      null,
+                                                      Routes.galleryPicker);
+                                                }
+                                              },
+                                              onChanged: (value) {
+                                                controller
+                                                    .updateCaptionsArray();
+                                              },
+                                              mentionTagDecoration:
+                                                  const MentionTagDecoration(
+                                                      mentionStart: ['@'],
+                                                      mentionBreak: ' ',
+                                                      allowDecrement: false,
+                                                      allowEmbedding: false,
+                                                      showMentionStartSymbol:
+                                                          false,
+                                                      maxWords: null,
+                                                      mentionTextStyle: TextStyle(
+                                                          color:
+                                                              Colors.blueAccent,
+                                                          backgroundColor: Colors
+                                                              .transparent)),
                                               focusNode:
                                                   controller.captionFocusNode,
                                               controller: controller.caption,
-                                              onChanged:
-                                                  controller.onCaptionTyped,
                                               style: AppStyleConfig
                                                   .mediaSentPreviewPageStyle
                                                   .textFieldStyle
                                                   .editTextStyle,
-                                              // style: const TextStyle(
-                                              //   color: Colors.white,
-                                              //   fontSize: 15,
-                                              // ),
-                                              maxLines: 6,
+                                              maxLines: 4,
                                               minLines: 1,
                                               decoration: InputDecoration(
                                                 border: InputBorder.none,
@@ -385,7 +443,6 @@ class MediaPreviewView extends NavViewStateful<MediaPreviewController> {
                                           ),
                                         ),
                                         FloatingActionButton(
-                                            heroTag: 'media_play',
                                             onPressed: () {
                                               controller.sendMedia();
                                             },
@@ -393,100 +450,122 @@ class MediaPreviewView extends NavViewStateful<MediaPreviewController> {
                                       ],
                                     ),
                                   ),
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.keyboard_arrow_right,
-                                        color: AppStyleConfig
-                                            .mediaSentPreviewPageStyle
-                                            .iconColor,
-                                        // color: Colors.white,
-                                        size: 13,
-                                      ),
-                                      Text(
-                                        controller.userName,
-                                        style: AppStyleConfig
-                                            .mediaSentPreviewPageStyle
-                                            .nameTextStyle,
-                                        // style: const TextStyle(
-                                        //     color: previewTextColor, fontSize: 13),
-                                      ),
-                                    ],
-                                  ),
+                                  KeyboardVisibilityBuilder(
+                                      builder: (cxt, isKeyboardVisible) {
+                                    return isKeyboardVisible
+                                        ? const Offstage()
+                                        : Row(
+                                            children: [
+                                              Icon(
+                                                Icons.keyboard_arrow_right,
+                                                color: AppStyleConfig
+                                                    .mediaSentPreviewPageStyle
+                                                    .iconColor,
+                                                // color: Colors.white,
+                                                size: 13,
+                                              ),
+                                              Text(
+                                                controller.userName,
+                                                style: AppStyleConfig
+                                                    .mediaSentPreviewPageStyle
+                                                    .nameTextStyle,
+                                                // style: const TextStyle(
+                                                //     color: previewTextColor, fontSize: 13),
+                                              ),
+                                            ],
+                                          );
+                                  }),
                                 ],
                               ),
                             ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Obx(() {
-                              return controller.filePath.length > 1
-                                  ? SizedBox(
-                                      height: 45,
-                                      child: ListView.builder(
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: controller.filePath.length,
-                                          itemBuilder: (context, index) {
-                                            return Stack(
-                                              children: [
-                                                Obx(() {
-                                                  return InkWell(
-                                                    onTap: () {
-                                                      controller
-                                                          .currentPageIndex(
-                                                              index);
-                                                      controller
-                                                          .pageViewController
-                                                          .animateToPage(index,
-                                                              duration:
-                                                                  const Duration(
-                                                                      milliseconds:
+                            KeyboardVisibilityBuilder(
+                                builder: (cxt, isKeyboardVisible) {
+                              return isKeyboardVisible
+                                  ? const Offstage()
+                                  : Column(
+                                      children: [
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Obx(() {
+                                          return controller.filePath.length > 1
+                                              ? SizedBox(
+                                                  height: 45,
+                                                  child: ListView.builder(
+                                                      scrollDirection:
+                                                          Axis.horizontal,
+                                                      itemCount: controller
+                                                          .filePath.length,
+                                                      itemBuilder:
+                                                          (context, index) {
+                                                        return Stack(
+                                                          children: [
+                                                            Obx(() {
+                                                              return InkWell(
+                                                                onTap: () {
+                                                                  controller
+                                                                      .currentPageIndex(
+                                                                          index);
+                                                                  controller.pageViewController.animateToPage(
+                                                                      index,
+                                                                      duration: const Duration(
+                                                                          milliseconds:
+                                                                              1),
+                                                                      curve: Curves
+                                                                          .easeIn);
+                                                                },
+                                                                child:
+                                                                    Container(
+                                                                  width: 45,
+                                                                  height: 45,
+                                                                  decoration: controller
+                                                                              .currentPageIndex
+                                                                              .value ==
+                                                                          index
+                                                                      ? BoxDecoration(
+                                                                          border:
+                                                                              Border.all(
+                                                                          color:
+                                                                              Colors.blue,
+                                                                          width:
+                                                                              1,
+                                                                        ))
+                                                                      : null,
+                                                                  margin: const EdgeInsets
+                                                                      .symmetric(
+                                                                      horizontal:
                                                                           1),
-                                                              curve: Curves
-                                                                  .easeIn);
-                                                    },
-                                                    child: Container(
-                                                      width: 45,
-                                                      height: 45,
-                                                      decoration: controller
-                                                                  .currentPageIndex
-                                                                  .value ==
-                                                              index
-                                                          ? BoxDecoration(
-                                                              border:
-                                                                  Border.all(
-                                                              color:
-                                                                  Colors.blue,
-                                                              width: 1,
-                                                            ))
-                                                          : null,
-                                                      margin: const EdgeInsets
-                                                          .symmetric(
-                                                          horizontal: 1),
-                                                      child: Image.memory(
-                                                          controller
-                                                              .filePath[index]
-                                                              .thumbnail!),
-                                                    ),
-                                                  );
-                                                }),
-                                                controller.filePath[index]
-                                                            .type ==
-                                                        "image"
-                                                    ? const Offstage()
-                                                    : Positioned(
-                                                        bottom: 4,
-                                                        left: 4,
-                                                        child: AppUtils.svgIcon(
-                                                          icon: videoCamera,
-                                                          width: 5,
-                                                          height: 5,
-                                                        )),
-                                              ],
-                                            );
-                                          }),
-                                    )
-                                  : const Offstage();
+                                                                  child: Image.memory(controller
+                                                                      .filePath[
+                                                                          index]
+                                                                      .thumbnail!),
+                                                                ),
+                                                              );
+                                                            }),
+                                                            controller
+                                                                        .filePath[
+                                                                            index]
+                                                                        .type ==
+                                                                    "image"
+                                                                ? const Offstage()
+                                                                : Positioned(
+                                                                    bottom: 4,
+                                                                    left: 4,
+                                                                    child: AppUtils
+                                                                        .svgIcon(
+                                                                      icon:
+                                                                          videoCamera,
+                                                                      width: 5,
+                                                                      height: 5,
+                                                                    )),
+                                                          ],
+                                                        );
+                                                      }),
+                                                )
+                                              : const Offstage();
+                                        }),
+                                      ],
+                                    );
                             }),
                             emojiLayout(),
                           ],

@@ -28,8 +28,8 @@ class OutGoingCallView extends NavViewStateful<OutgoingCallController> {
       decoration: AppStyleConfig.outgoingCallPageStyle.backgroundDecoration,
       child: SafeArea(
         child: Scaffold(
-          backgroundColor: Colors
-              .transparent, //AppStyleConfig.outgoingCallPageStyle.scaffoldBackgroundColor,//AppColors.callerBackground,
+          backgroundColor: Colors.transparent,
+          //AppStyleConfig.outgoingCallPageStyle.scaffoldBackgroundColor,//AppColors.callerBackground,
           body: InkWell(
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,
@@ -101,7 +101,8 @@ class OutGoingCallView extends NavViewStateful<OutgoingCallController> {
                                   builder: (ctx, snap) {
                                     return snap.hasData && snap.data != null
                                         ? Text(
-                                            snap.data!, //controller.calleeNames.length>3 ? "${controller.calleeNames.take(3).join(",")} and (+${controller.calleeNames.length - 3 })" : controller.calleeNames.join(","),
+                                            snap.data!,
+                                            //controller.calleeNames.length>3 ? "${controller.calleeNames.take(3).join(",")} and (+${controller.calleeNames.length - 3 })" : controller.calleeNames.join(","),
                                             style: AppStyleConfig
                                                 .outgoingCallPageStyle
                                                 .callerNameTextStyle
@@ -207,7 +208,8 @@ class OutGoingCallView extends NavViewStateful<OutgoingCallController> {
                                     backgroundColor: AppStyleConfig
                                         .outgoingCallPageStyle
                                         .actionButtonsStyle
-                                        .activeBgColor, //Colors.white,
+                                        .activeBgColor,
+                                    //Colors.white,
                                     onPressed: () => controller.muteAudio(),
                                     child: AppUtils.svgIcon(
                                       icon: muteActive,
@@ -227,7 +229,8 @@ class OutGoingCallView extends NavViewStateful<OutgoingCallController> {
                                     backgroundColor: AppStyleConfig
                                         .outgoingCallPageStyle
                                         .actionButtonsStyle
-                                        .inactiveBgColor, //Colors.white.withOpacity(0.3),
+                                        .inactiveBgColor,
+                                    //Colors.white.withOpacity(0.3),
                                     onPressed: () => controller.muteAudio(),
                                     child: AppUtils.svgIcon(
                                       icon: muteInactive,
@@ -318,10 +321,9 @@ class OutGoingCallView extends NavViewStateful<OutgoingCallController> {
                                       .outgoingCallPageStyle
                                       .actionButtonsStyle
                                       .inactiveBgColor //Colors.white.withOpacity(0.3)
-                                  : AppStyleConfig
-                                      .outgoingCallPageStyle
-                                      .actionButtonsStyle
-                                      .activeBgColor, //Colors.white,
+                                  : AppStyleConfig.outgoingCallPageStyle
+                                      .actionButtonsStyle.activeBgColor,
+                              //Colors.white,
                               onPressed: () => controller.changeSpeaker(),
                               child: controller.audioOutputType.value ==
                                       AudioDeviceType.receiver

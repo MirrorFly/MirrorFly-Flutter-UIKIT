@@ -53,6 +53,7 @@ class ContactController extends FullLifeCycleController
       fetchUsers(false);
     } else {
       toToast(getTranslated("noInternetConnection"));
+      isPageLoading(false);
     }
     //Mirrorfly.syncContacts(true);
     //Mirrorfly.getRegisteredUsers(true).then((value) => LogMessage.d("registeredUsers", value.toString()));

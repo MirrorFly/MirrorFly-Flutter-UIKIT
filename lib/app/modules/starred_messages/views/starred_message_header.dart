@@ -23,6 +23,7 @@ class StarredMessageHeader extends StatelessWidget {
   final StarredMessagesController
       controller; // = StarredMessagesController().get();
   final StarredMessageUserHeaderStyle style;
+
   @override
   Widget build(BuildContext context) {
     return Container(

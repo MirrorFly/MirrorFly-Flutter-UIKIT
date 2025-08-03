@@ -178,6 +178,18 @@ class SessionManagement {
     await _preferences.setBool('${prefix}show_alert', false);
   }
 
+  static void setBackUpState(String backUpState) async {
+    await _preferences.setString("${prefix}backUpState", backUpState);
+  }
+
+  static void setBackUpFrequency(String backUpState) async {
+    await _preferences.setString("${prefix}backUpFrequency", backUpState);
+  }
+
+  static void setBackUpAccount(String backUpAccount) async {
+    await _preferences.setString("${prefix}backUpAccount", backUpAccount);
+  }
+
   static Future clear() async {
     // await _preferences.clear();
     final keys = _preferences.getKeys();
@@ -212,83 +224,141 @@ class SessionManagement {
     });
   }
 
+  static Future setCalenderId(String id) async =>
+      await _preferences.setString("calenderId", id);
+
+  static Future setCalenderName(String id) async =>
+      await _preferences.setString("calenderName", id);
+
+  static Future getCalenderId(String key) async =>
+      _preferences.get("calenderId") ?? "";
+
+  static Future getCalenderName(String key) async =>
+      _preferences.get("calenderName") ?? "";
+
   static Future setBool(String key, bool value) async =>
       await _preferences.setBool("$prefix$key", value);
+
   static Future setString(String key, String value) async =>
       await _preferences.setString("$prefix$key", value);
 
   static bool getBool(String key) =>
       _preferences.getBool("$prefix$key") ?? false;
+
   static String getString(String key) =>
       _preferences.getString("$prefix$key") ?? "";
 
   static bool getLogin() => _preferences.getBool("${prefix}login") ?? false;
+
   static String getUserIdentifier() =>
       _preferences.getString("${prefix}userIdentifier") ?? "";
+
   static String getCurrentChatJID() =>
       _preferences.getString("${prefix}CurrentChatJID") ?? "";
+
   static String? getName() => _preferences.getString("${prefix}name");
+
   static String? getMobileNumber() =>
       _preferences.getString("${prefix}mobileNumber");
+
   static String? getCountryCode() =>
       _preferences.getString("${prefix}country_code") ?? "+91";
+
   static String? getUsername() => _preferences.getString("${prefix}username");
+
   static String? getPassword() => _preferences.getString("${prefix}password");
+
   static String? getUserJID() =>
       _preferences.getString("${prefix}user_jid").toString();
+
   static String? getUserImage() => _preferences.getString("${prefix}image");
+
   static String? getToken() =>
       _preferences.getString("${prefix}firebase_token");
+
   static String? getAuthToken() => _preferences.getString("${prefix}token");
+
   static String? getMediaEndPoint() =>
       _preferences.getString("${prefix}media_endpoint");
+
   static String? getNotificationUri() =>
       _preferences.getString("${prefix}notification_uri");
+
   static String? getSummaryChannelId() => _preferences
       .getString("$prefix${Constants.packageName}summary_channel.id");
+
   static bool getWebLogin() =>
       _preferences.getBool("${prefix}web_chat_login") ?? false;
+
   static bool getNotificationSound() =>
       _preferences.getBool("$prefix${Constants.package}notification_sound") ??
       true;
+
   static bool getNotificationPopup() =>
       _preferences.getBool("$prefix${Constants.package}notification_popup") ??
       false;
+
   static bool getVibration() =>
       _preferences.getBool("$prefix${Constants.package}vibration") ?? false;
+
   static bool getMuteNotification() =>
       _preferences.getBool("${prefix}mute_notification") ?? false;
+
   static String getPin() => _preferences.getString("${prefix}pin") ?? "";
+
   static String getChangePinNext() =>
       _preferences.getString("${prefix}change_pin_next") ?? "";
+
   static bool getEnablePin() =>
       _preferences.getBool("${prefix}enable_pin") ?? false;
+
   static bool getEnableBio() =>
       _preferences.getBool("${prefix}enable_bio") ?? false;
+
   static bool? synced() => _preferences.getBool("${prefix}synced");
+
   static bool adminBlocked() =>
       _preferences.getBool("${prefix}admin_blocked") ?? false;
+
   static bool isGoogleTranslationEnable() =>
       _preferences.getBool("${prefix}TranslateLanguageChecked") ?? false;
+
   static bool isAutoDownloadEnable() =>
       _preferences.getBool("${prefix}MediaAutoDownload") ?? false;
+
   static String getTranslationLanguage() =>
       _preferences.getString("${prefix}LanguageName") ?? "English";
+
   static String getTranslationLanguageCode() =>
       _preferences.getString("${prefix}LanguageCode") ?? "en";
+
   static bool isInitialContactSyncDone() =>
       _preferences.getBool("${prefix}is_initial_contact_sync_done") ?? false;
+
   static bool isContactSyncDone() =>
       _preferences.getBool("${prefix}is_contact_sync_done") ?? false;
+
   static bool isTrailLicence() =>
       _preferences.getBool("${prefix}IS_TRIAL_LICENSE") ?? true;
+
   static int appLastSession() =>
       _preferences.getInt("$prefix${Constants.appSession}") ??
       DateTime.now().millisecondsSinceEpoch;
+
   static int lastPinChangedAt() =>
       _preferences.getInt("$prefix${Constants.changedPinAt}") ??
       DateTime.now().millisecondsSinceEpoch;
+
   static bool showAlert() =>
       _preferences.getBool('${prefix}show_alert') ?? true;
+
   // static String getTopicId() =>  Constants.enableTopic ? Constants.topicId/*_preferences.getString('${prefix}topicId')*/ ?? ("5d3788c1-78ef-4158-a92b-a48f092da0b9") : "";
+  static String getBackUpState() =>
+      _preferences.getString('${prefix}backUpState') ?? "";
+
+  static String getBackUpAccount() =>
+      _preferences.getString('${prefix}backUpAccount') ?? "";
+
+  static String getBackUpFrequency() =>
+      _preferences.getString('${prefix}backUpFrequency') ?? "";
 }

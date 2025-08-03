@@ -13,8 +13,8 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   var response = await MirrorflyUikit.instance.initUIKIT(
     navigatorKey: navigatorKey,
-    licenseKey: 'LICENSE_KEY',
-    iOSContainerID: 'CONTAINER_ID(APP_GROUPS)',
+    licenseKey: 'ckIjaccWBoMNvxdbql8LJ2dmKqT5bp',
+    iOSContainerID: 'com.mirrorflyflutter)',
   );
 
   debugPrint("init response $response");

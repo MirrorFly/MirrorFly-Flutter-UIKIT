@@ -13,9 +13,27 @@ class GroupChatInfoPageStyle {
         elevation: 0,
         actionsIconTheme: IconThemeData(color: Color(0xff181818))),
     this.silverAppbarTitleStyle = const TextStyle(
-        fontWeight: FontWeight.w600, color: Colors.white, fontSize: 18),
+        fontWeight: FontWeight.w600,
+        color: Colors.white,
+        fontSize: 18,
+        shadows: [
+          Shadow(
+            offset: Offset(1, 1), // Shadow position
+            blurRadius: 4, // Shadow blur radius
+            color: Color(0x7F2E2E2E), // Shadow color
+          ),
+        ]),
     this.silverAppBarSubTitleStyle = const TextStyle(
-        fontWeight: FontWeight.w300, color: Colors.white, fontSize: 10),
+        fontWeight: FontWeight.w300,
+        color: Colors.white,
+        fontSize: 10,
+        shadows: [
+          Shadow(
+            offset: Offset(1, 1), // Shadow position
+            blurRadius: 4, // Shadow blur radius
+            color: Color(0x7F2E2E2E), // Shadow color
+          ),
+        ]),
     this.silverAppBarIconColor = Colors.white,
     this.muteNotificationStyle = const MuteNotificationStyle(
       textStyle: TextStyle(
@@ -70,6 +88,7 @@ class GroupChatInfoPageStyle {
             fontSize: 14),
         dividerColor: Color(0xffFAFAFA)),
   });
+
   final AppBarTheme appBarTheme;
   final TextStyle silverAppbarTitleStyle;
   final TextStyle silverAppBarSubTitleStyle;

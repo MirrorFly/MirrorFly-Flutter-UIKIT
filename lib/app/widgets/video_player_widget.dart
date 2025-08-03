@@ -21,8 +21,10 @@ class VideoPlayerWidget extends StatefulWidget {
 class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   late VideoPlayerController _controller;
   late Future<void> _initializeVideoPlayerFuture;
+
   // bool _isPlaying = false;
   bool isStopped = false;
+
   // double _sliderValue = 0.0;
 
   @override
@@ -31,7 +33,8 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     _controller = VideoPlayerController.file(File(widget.videoPath))
       ..addListener(() {
         setState(() {
-          // _sliderValue = _controller.value.position.inSeconds.toDouble();
+          // _sliderValue =
+          //     _controller.value.position.inSeconds.toDouble();
           isStopped = _controller.value.isCompleted;
         });
       });
@@ -56,7 +59,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     super.dispose();
   }
 
-  /* void _playPause() {
+  /*void _playPause() {
     setState(() {
       if (_controller.value.isPlaying) {
         _controller.pause();
@@ -133,8 +136,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
       const Spacer(),
     ]);
   }
-
-  /*Widget _buildControls() {
+/*Widget _buildControls() {
     final position = _controller.value.position;
     final duration = _controller.value.duration;
 
@@ -151,10 +153,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
           children: [
             IconButton(
               onPressed: _rewind,
-              icon: const Icon(
-                Icons.fast_rewind,
-                color: buttonBgColor,
-              ),
+              icon: const Icon(Icons.fast_rewind, color: buttonBgColor,),
             ),
             const SizedBox(width: 16),
             FloatingActionButton(
@@ -168,35 +167,35 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
             const SizedBox(width: 16),
             IconButton(
               onPressed: _forward,
-              icon: const Icon(
-                Icons.fast_forward,
-                color: buttonBgColor,
-              ),
+              icon: const Icon(Icons.fast_forward, color: buttonBgColor,),
             ),
           ],
         ),
         const SizedBox(height: 16),
-        Row(
-          children: [
-            Text(
-              formatDuration(position),
-              style: const TextStyle(fontSize: 16, color: buttonBgColor),
-            ),
-            Expanded(
-              child: Slider(
-                min: 0.0,
-                max: _controller.value.duration.inSeconds.toDouble(),
-                value: _sliderValue,
-                onChanged: _onSliderChanged,
-                thumbColor: buttonBgColor,
-                activeColor: buttonBgColor,
+        Padding(
+          padding: const EdgeInsets.only(left: 10,right: 10),
+          child: Row(
+            children: [
+              Text(
+                formatDuration(position),
+                style: const TextStyle(fontSize: 16, color: buttonBgColor),
               ),
-            ),
-            Text(
-              formatDuration(duration),
-              style: const TextStyle(fontSize: 16, color: buttonBgColor),
-            ),
-          ],
+              Expanded(
+                child: Slider(
+                  min: 0.0,
+                  max: _controller.value.duration.inSeconds.toDouble(),
+                  value: _sliderValue,
+                  onChanged: _onSliderChanged,
+                  thumbColor: buttonBgColor,
+                  activeColor: buttonBgColor,
+                ),
+              ),
+              Text(
+                formatDuration(duration),
+                style: const TextStyle(fontSize: 16, color: buttonBgColor),
+              ),
+            ],
+          ),
         ),
       ],
     );

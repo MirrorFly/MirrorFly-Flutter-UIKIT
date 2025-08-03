@@ -19,14 +19,12 @@ class CallInfoView extends NavViewStateful<CallInfoController> {
   const CallInfoView({super.key});
 
   @override
-  CallInfoController createController({String? tag}) =>
-      Get.put(CallInfoController());
+CallInfoController createController({String? tag}) => Get.put(CallInfoController());
 
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: Theme.of(context)
-          .copyWith(appBarTheme: AppStyleConfig.callInfoPageStyle.appBarTheme),
+      data: Theme.of(context).copyWith(appBarTheme: AppStyleConfig.callInfoPageStyle.appBarTheme),
       child: Scaffold(
         appBar: AppBar(
           title: Text(
@@ -36,8 +34,7 @@ class CallInfoView extends NavViewStateful<CallInfoController> {
             CustomActionBarIcons(
               availableWidth: NavUtils.width / 2, // half the screen width
               actionWidth: 48,
-              popupMenuThemeData:
-                  AppStyleConfig.callInfoPageStyle.popupMenuThemeData,
+              popupMenuThemeData: AppStyleConfig.callInfoPageStyle.popupMenuThemeData,
               actions: [
                 CustomAction(
                   visibleWidget: IconButton(
@@ -46,8 +43,7 @@ class CallInfoView extends NavViewStateful<CallInfoController> {
                     child: Text(getTranslated("removeFromCallLog")),
                     onTap: () {
                       NavUtils.back();
-                      controller.itemDeleteCallLog(
-                          [controller.callLogData.roomId.checkNull()]);
+                      controller.itemDeleteCallLog([controller.callLogData.roomId.checkNull()]);
                     },
                   ),
                   showAsAction: ShowAsAction.never,
@@ -71,56 +67,29 @@ class CallInfoView extends NavViewStateful<CallInfoController> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Obx(() => ListTile(
-                        leading: controller.callLogData.groupId
-                                .checkNull()
-                                .isEmpty
+                        leading: controller.callLogData.groupId.checkNull().isEmpty
                             ? ClipOval(
-                                child: AppUtils.assetIcon(
-                                  assetName: groupImg,
-                                  height: AppStyleConfig
-                                      .callInfoPageStyle
-                                      .callHistoryItemStyle
-                                      .profileImageSize
-                                      .height,
-                                  width: AppStyleConfig
-                                      .callInfoPageStyle
-                                      .callHistoryItemStyle
-                                      .profileImageSize
-                                      .width,
+                                child: AppUtils.assetIcon(assetName:
+                                  groupImg,
+                                  height: AppStyleConfig.callInfoPageStyle.callHistoryItemStyle.profileImageSize.height,
+                                  width: AppStyleConfig.callInfoPageStyle.callHistoryItemStyle.profileImageSize.width,
                                   fit: BoxFit.cover,
                                 ),
                               )
                             : FutureBuilder(
-                                future: getProfileDetails(
-                                    controller.callLogData.groupId.checkNull()),
+                                future: getProfileDetails(controller.callLogData.groupId.checkNull()),
                                 builder: (context, snap) {
                                   return snap.hasData && snap.data != null
                                       ? ImageNetwork(
                                           url: snap.data!.image.checkNull(),
-                                          width: AppStyleConfig
-                                              .callInfoPageStyle
-                                              .callHistoryItemStyle
-                                              .profileImageSize
-                                              .width,
-                                          height: AppStyleConfig
-                                              .callInfoPageStyle
-                                              .callHistoryItemStyle
-                                              .profileImageSize
-                                              .height,
+                                          width: AppStyleConfig.callInfoPageStyle.callHistoryItemStyle.profileImageSize.width,
+                                          height: AppStyleConfig.callInfoPageStyle.callHistoryItemStyle.profileImageSize.height,
                                           clipOval: true,
                                           errorWidget: ClipOval(
-                                            child: AppUtils.assetIcon(
-                                              assetName: groupImg,
-                                              height: AppStyleConfig
-                                                  .callInfoPageStyle
-                                                  .callHistoryItemStyle
-                                                  .profileImageSize
-                                                  .height,
-                                              width: AppStyleConfig
-                                                  .callInfoPageStyle
-                                                  .callHistoryItemStyle
-                                                  .profileImageSize
-                                                  .width,
+                                            child: AppUtils.assetIcon(assetName:
+                                              groupImg,
+                                              height: AppStyleConfig.callInfoPageStyle.callHistoryItemStyle.profileImageSize.height,
+                                              width: AppStyleConfig.callInfoPageStyle.callHistoryItemStyle.profileImageSize.width,
                                               fit: BoxFit.cover,
                                             ),
                                           ),
@@ -129,35 +98,22 @@ class CallInfoView extends NavViewStateful<CallInfoController> {
                                           unknown: false,
                                         )
                                       : ClipOval(
-                                          child: AppUtils.assetIcon(
-                                            assetName: groupImg,
-                                            height: AppStyleConfig
-                                                .callInfoPageStyle
-                                                .callHistoryItemStyle
-                                                .profileImageSize
-                                                .height,
-                                            width: AppStyleConfig
-                                                .callInfoPageStyle
-                                                .callHistoryItemStyle
-                                                .profileImageSize
-                                                .width,
+                                          child: AppUtils.assetIcon(assetName:
+                                            groupImg,
+                                            height: AppStyleConfig.callInfoPageStyle.callHistoryItemStyle.profileImageSize.height,
+                                            width: AppStyleConfig.callInfoPageStyle.callHistoryItemStyle.profileImageSize.width,
                                             fit: BoxFit.cover,
                                           ),
                                         );
                                 }),
-                        title: controller.callLogData.groupId
-                                .checkNull()
-                                .isEmpty
+                        title: controller.callLogData.groupId.checkNull().isEmpty
                             ? FutureBuilder(
-                                future: CallUtils.getCallLogUserNames(
-                                    controller.callLogData.userList!,
-                                    controller.callLogData),
+                                future: CallUtils.getCallLogUserNames(controller.callLogData.userList!, controller.callLogData),
                                 builder: (context, snap) {
                                   if (snap.hasData) {
                                     return Text(
                                       snap.data.checkNull(),
-                                      style: AppStyleConfig.callInfoPageStyle
-                                          .callHistoryItemStyle.titleTextStyle,
+                                      style: AppStyleConfig.callInfoPageStyle.callHistoryItemStyle.titleTextStyle,
                                       // style: const TextStyle(color: Colors.black),
                                     );
                                   } else {
@@ -165,14 +121,12 @@ class CallInfoView extends NavViewStateful<CallInfoController> {
                                   }
                                 })
                             : FutureBuilder(
-                                future: getProfileDetails(
-                                    controller.callLogData.groupId.checkNull()),
+                                future: getProfileDetails(controller.callLogData.groupId.checkNull()),
                                 builder: (context, snap) {
                                   if (snap.hasData) {
                                     return Text(
                                       snap.data!.name.checkNull(),
-                                      style: AppStyleConfig.callInfoPageStyle
-                                          .callHistoryItemStyle.titleTextStyle,
+                                      style: AppStyleConfig.callInfoPageStyle.callHistoryItemStyle.titleTextStyle,
                                       // style: const TextStyle(color: Colors.black),
                                     );
                                   } else {
@@ -182,9 +136,7 @@ class CallInfoView extends NavViewStateful<CallInfoController> {
                         subtitle: SizedBox(
                           child: callLogTime(
                               "${DateTimeUtils.getCallLogDate(microSeconds: controller.callLogData.callTime!)}  ${getChatTime(context, controller.callLogData.callTime)}",
-                              controller.callLogData.callState,
-                              AppStyleConfig.callInfoPageStyle
-                                  .callHistoryItemStyle.durationTextStyle),
+                              controller.callLogData.callState,AppStyleConfig.callInfoPageStyle.callHistoryItemStyle.durationTextStyle),
                         ),
                         trailing: SizedBox(
                           child: Row(
@@ -192,30 +144,21 @@ class CallInfoView extends NavViewStateful<CallInfoController> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                getCallLogDuration(
-                                    controller.callLogData.startTime!,
-                                    controller.callLogData.endTime!),
-                                style: AppStyleConfig.callInfoPageStyle
-                                    .callHistoryItemStyle.subtitleTextStyle,
+                                getCallLogDuration(controller.callLogData.startTime!, controller.callLogData.endTime!),
+                                style: AppStyleConfig.callInfoPageStyle.callHistoryItemStyle.subtitleTextStyle,
                                 // style: const TextStyle(color: Colors.black),
                               ),
                               const SizedBox(
                                 width: 8,
                               ),
-                              groupCallIcon(
-                                  controller.callLogData.callType,
-                                  controller.callLogData,
-                                  controller.callLogData.callMode,
-                                  controller.callLogData.userList,
-                                  AppStyleConfig.callInfoPageStyle
-                                      .callHistoryItemStyle.iconColor),
+                              groupCallIcon(controller.callLogData.callType, controller.callLogData, controller.callLogData.callMode,
+                                  controller.callLogData.userList,AppStyleConfig.callInfoPageStyle.callHistoryItemStyle.iconColor),
                             ],
                           ),
                         ),
                       )),
                   Divider(
-                    color: AppStyleConfig
-                        .callInfoPageStyle.callHistoryItemStyle.dividerColor,
+                    color: AppStyleConfig.callInfoPageStyle.callHistoryItemStyle.dividerColor,
                     height: 1,
                   ),
                   const SizedBox(
@@ -227,8 +170,7 @@ class CallInfoView extends NavViewStateful<CallInfoController> {
                       itemCount: controller.callLogData.userList!.length,
                       itemBuilder: (context, index) {
                         var item = controller.callLogData.userList![index];
-                        var style =
-                            AppStyleConfig.callInfoPageStyle.contactItemStyle;
+                        var style = AppStyleConfig.callInfoPageStyle.contactItemStyle;
                         return ListTile(
                           leading: FutureBuilder(
                               future: getProfileDetails(item),
@@ -239,15 +181,8 @@ class CallInfoView extends NavViewStateful<CallInfoController> {
                                         width: style.profileImageSize.width,
                                         height: style.profileImageSize.height,
                                         clipOval: true,
-                                        errorWidget: getName(snap.data!)
-                                                .checkNull()
-                                                .isNotEmpty
-                                            ? ProfileTextImage(
-                                                text: getName(snap.data!),
-                                                radius: style.profileImageSize
-                                                        .height /
-                                                    2,
-                                              )
+                                        errorWidget: getName(snap.data!).checkNull().isNotEmpty
+                                            ? ProfileTextImage(text: getName(snap.data!),radius: style.profileImageSize.height/2,)
                                             : const Icon(
                                                 Icons.person,
                                                 color: Colors.white,
@@ -280,11 +215,9 @@ class CallInfoView extends NavViewStateful<CallInfoController> {
     );
   }
 
-  Widget groupCallIcon(String? callType, CallLogData item, String? callMode,
-      List<String>? userList, Color iconColor) {
+  Widget groupCallIcon(String? callType, CallLogData item, String? callMode, List<String>? userList,Color iconColor) {
     List<String>? localUserList = [];
-    if (item.callState == CallState.missedCall ||
-        item.callState == CallState.incomingCall) {
+    if (item.callState == CallState.missedCall || item.callState == CallState.incomingCall) {
       localUserList.addAll(item.userList!);
       if (!item.userList!.contains(item.fromUser)) {
         localUserList.add(item.fromUser!);
@@ -297,8 +230,8 @@ class CallInfoView extends NavViewStateful<CallInfoController> {
             onPressed: () {
               controller.makeCall(localUserList, callType, item);
             },
-            icon: AppUtils.svgIcon(
-              icon: videoCallIcon,
+            icon: AppUtils.svgIcon(icon:
+              videoCallIcon,
               colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
             ),
           )
@@ -306,8 +239,8 @@ class CallInfoView extends NavViewStateful<CallInfoController> {
             onPressed: () {
               controller.makeCall(localUserList, callType, item);
             },
-            icon: AppUtils.svgIcon(
-              icon: audioCallIcon,
+            icon: AppUtils.svgIcon(icon:
+              audioCallIcon,
               colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
             ));
   }

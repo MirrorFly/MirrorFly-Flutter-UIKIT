@@ -143,22 +143,6 @@ class StarredMessagesView extends NavViewStateful<StarredMessagesController> {
                                     .senderChatBubbleStyle.decoration
                                 : AppStyleConfig.starredMessageListPageStyle
                                     .receiverChatBubbleStyle.decoration,
-                            /*decoration: BoxDecoration(
-                                  borderRadius: starredChatList[index].isMessageSentByMe
-                                      ? const BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      topRight: Radius.circular(10),
-                                      bottomLeft: Radius.circular(10))
-                                      : const BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      topRight: Radius.circular(10),
-                                      bottomRight: Radius.circular(10)),
-                                  color: (starredChatList[index].isMessageSentByMe
-                                      ? chatSentBgColor
-                                      : Colors.white),
-                                  border: starredChatList[index].isMessageSentByMe
-                                      ? Border.all(color: chatSentBgColor)
-                                      : Border.all(color: chatBorderColor)),*/
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [

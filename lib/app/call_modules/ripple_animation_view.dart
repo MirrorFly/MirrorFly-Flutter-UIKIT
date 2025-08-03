@@ -14,6 +14,7 @@ class RipplesAnimation extends StatefulWidget {
   final Color color;
   final Widget child;
   final VoidCallback onPressed;
+
   @override
   RipplesAnimationState createState() => RipplesAnimationState();
 }
@@ -21,6 +22,7 @@ class RipplesAnimation extends StatefulWidget {
 class RipplesAnimationState extends State<RipplesAnimation>
     with TickerProviderStateMixin {
   late AnimationController _controller;
+
   @override
   void initState() {
     super.initState();
@@ -88,6 +90,7 @@ class CirclePainter extends CustomPainter {
   }) : super(repaint: _animation);
   final Color color;
   final Animation<double> _animation;
+
   void circle(Canvas canvas, Rect rect, double value) {
     var strokeColor = Colors.white;
     var dashWidth = 2.0;
@@ -139,6 +142,7 @@ class RippleWidget extends StatefulWidget {
     required this.rippleColor,
     this.child,
   });
+
   final double size;
   final Color rippleColor;
   final Widget? child;

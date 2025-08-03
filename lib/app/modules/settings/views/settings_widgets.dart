@@ -25,10 +25,12 @@ Widget lockItem(
           const SizedBox(
             height: 4,
           ),
-          Text(
-            subtitle,
-            style: const TextStyle(fontSize: 13, color: textColor),
-          ),
+          subtitle.isEmpty
+              ? const Offstage()
+              : Text(
+                  subtitle,
+                  style: const TextStyle(fontSize: 13, color: textColor),
+                ),
         ],
       ),
       trailing: trailing ??
@@ -88,6 +90,7 @@ class SettingListItem extends StatelessWidget {
       this.trailing,
       required this.onTap,
       required this.listItemStyle});
+
   final String title;
   final String? leading;
   final String? trailing;

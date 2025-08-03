@@ -6,6 +6,7 @@ class MirrorFlyNavigationObserver extends NavigatorObserver {
 
   static Route<dynamic>? get current =>
       routeStack.isNotEmpty ? routeStack.last : null;
+
   static Route<dynamic>? get previous =>
       routeStack.length > 1 ? routeStack[routeStack.length - 2] : null;
 

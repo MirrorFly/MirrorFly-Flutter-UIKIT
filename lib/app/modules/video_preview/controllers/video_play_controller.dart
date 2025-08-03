@@ -6,9 +6,11 @@ import '../../../data/utils.dart';
 
 class VideoPlayController extends GetxController {
   var videoPath = "".obs;
+
   // late VideoPlayerController videoPlayerController;
   var isInitialized = false.obs;
   var isPlaying = false.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -29,15 +31,15 @@ class VideoPlayController extends GetxController {
     // videoPlayerController.dispose();
   }
 
-  // togglePlay() {
-  //   if(videoPlayerController.value.isPlaying){
-  //     // videoPlayerController.pause();
-  //     isPlaying(false);
-  //   }else{
-  //
-  //     isPlaying(true);
-  //     // videoPlayerController.play();
-  //
-  //   }
-  // }
+// togglePlay() {
+//   if(videoPlayerController.value.isPlaying){
+//     // videoPlayerController.pause();
+//     isPlaying(false);
+//   }else{
+//
+//     isPlaying(true);
+//     // videoPlayerController.play();
+//
+//   }
+// }
 }

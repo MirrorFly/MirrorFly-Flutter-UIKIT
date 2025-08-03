@@ -36,8 +36,7 @@ class CameraPickView extends NavViewStateful<CameraPickController> {
                         onPointerUp: (_) => controller.pointers--,
                         child: AspectRatio(
                           aspectRatio: NavUtils.width /
-                              (NavUtils.height -
-                                  MediaQuery.of(context).viewPadding.top),
+                              (NavUtils.height - (NavUtils.safeAreaPadding)),
                           child: CameraPreview(
                             controller.cameraController!,
                             child: LayoutBuilder(builder: (BuildContext context,

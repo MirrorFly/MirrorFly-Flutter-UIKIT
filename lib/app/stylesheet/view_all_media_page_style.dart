@@ -22,6 +22,7 @@ class ViewAllMediaPageStyle {
       this.noDataTextStyle = const TextStyle(
           fontWeight: FontWeight.w600, color: Color(0xff767676), fontSize: 14),
       this.groupedMediaItem = const GroupedMediaItemStyle()});
+
   final AppBarTheme appBarTheme;
   final TabBarTheme tabBarTheme;
   final TabItemStyle tabItemStyle;
@@ -34,7 +35,8 @@ class GroupedMediaItemStyle {
       {this.titleStyle = const TextStyle(
           fontWeight: FontWeight.w500, color: Color(0xff323232), fontSize: 14),
       this.mediaImageItemStyle = const MediaItemStyle(),
-      this.mediaVideoItemStyle = const MediaItemStyle(),
+      this.mediaVideoItemStyle = const MediaItemStyle(
+          iconColor: AppColor.primaryColor, bgColor: Colors.white),
       this.mediaAudioItemStyle =
           const MediaItemStyle(bgColor: Color(0xff97A5C7)),
       this.documentItemStyle = const DocumentItemStyle(
@@ -73,6 +75,7 @@ class GroupedMediaItemStyle {
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(8),
                   bottomLeft: Radius.circular(8))))});
+
   final TextStyle titleStyle;
   final MediaItemStyle mediaImageItemStyle;
   final MediaItemStyle mediaVideoItemStyle;
@@ -84,6 +87,7 @@ class GroupedMediaItemStyle {
 class MediaItemStyle {
   const MediaItemStyle(
       {this.iconColor = Colors.white, this.bgColor = Colors.transparent});
+
   final Color bgColor;
   final Color iconColor;
 }
@@ -99,6 +103,7 @@ class DocumentItemStyle {
       this.dateTextStyle = const TextStyle(
           fontWeight: FontWeight.w300, color: Color(0xff757575), fontSize: 10),
       this.dividerColor = const Color(0xffFAFAFA)});
+
   final TextStyle titleTextStyle;
   final TextStyle sizeTextStyle;
   final TextStyle dateTextStyle;
@@ -126,6 +131,7 @@ class LinkItemStyle {
           color: Color(0xff97A5C7),
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(6), bottomLeft: Radius.circular(6)))});
+
   final TextStyle titleTextStyle;
   final TextStyle descriptionTextStyle;
   final TextStyle linkTextStyle;

@@ -23,6 +23,7 @@ class GroupParticipantsController extends GetxController {
 
   var groupId = "".obs;
   var callType = "".obs;
+
   @override
   Future<void> onInit() async {
     super.onInit();
@@ -61,11 +62,14 @@ class GroupParticipantsController extends GetxController {
       _search.value &&
       lastInputValue
           .value.isNotEmpty /*&& !isForward.value && isCreateGroup.value*/;
+
   bool get isSearchVisible => !_search.value;
   FocusNode searchFocus = FocusNode();
 
   final _search = false.obs;
+
   set search(bool value) => _search.value = value;
+
   bool get search => _search.value;
 
   var _searchText = "";
@@ -286,6 +290,7 @@ class GroupParticipantsController extends GetxController {
 
   //Call Functions End Here
   var availableFeatures = Get.find<MainController>().availableFeature;
+
   void onAvailableFeaturesUpdated(AvailableFeatures features) {
     LogMessage.d(
         "GroupParticipants", "onAvailableFeaturesUpdated ${features.toJson()}");

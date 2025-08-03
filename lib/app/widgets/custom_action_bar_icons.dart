@@ -28,6 +28,7 @@ class _CustomActionBarIconsState extends State<CustomActionBarIcons>
   // AppLifecycleState? _appLifecycleState;
   final GlobalKey _menuKey = GlobalKey();
   BuildContext? _context;
+
   @override
   void initState() {
     super.initState();
@@ -124,6 +125,7 @@ class _CustomActionBarIconsState extends State<CustomActionBarIcons>
               data: widget.popupMenuThemeData,
               child: PopupMenuButton(
                   key: _menuKey,
+                  routeSettings: const RouteSettings(name: '/PopupMenu'),
                   icon: AppUtils.svgIcon(
                     icon: moreIcon,
                     width: 3.66,

@@ -191,7 +191,7 @@ class BusyStatusController extends GetxController with WidgetsBindingObserver {
           TextButton(
               style: AppStyleConfig.dialogStyle.buttonStyle,
               onPressed: () {
-                Navigator.pop(context);
+                NavUtils.back();
               },
               child: Text(getTranslated("no"))),
           TextButton(
