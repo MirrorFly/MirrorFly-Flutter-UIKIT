@@ -345,26 +345,11 @@ class AppPermission {
     }
   }
 
-  static Future<Map<String, dynamic>>
-  checkAndRequestNotificationPermission() async {
-    final status = await Permission.notification.status;
-
-    if (status.isGranted) {
-      return {"status": true, "message": "Granted"};
-    }
-
-    final result = await Permission.notification.request();
-
-    if (result.isGranted) {
-      return {"status": true, "message": "Granted"};
-    } else if (result.isPermanentlyDenied) {
-      return {
-        "status": false,
-        "message": "Permanently denied, enable it via application settings"
-      };
-    } else {
-      return {"status": false, "message": "Denied"};
-    }
+  static Future<bool> checkPermission(
+      Permission permissionToCheck) async {
+    final status = await permissionToCheck.status;
+    return (status == PermissionStatus.granted ||
+        status == PermissionStatus.limited);
   }
 
   static Future<bool> askAudioCallPermissions() async {
@@ -788,74 +773,59 @@ class AppPermission {
     return status1;
   }
 
-  static Future<bool> checkPermission(Permission permission,
-      String permissionIcon, String permissionContent) async {
-    var status = await permission.status;
-    debugPrint("checkPermission $permission status $status");
-    if (status == PermissionStatus.granted) {
-      debugPrint("permission granted opening");
-      return true;
-    } else if (status == PermissionStatus.denied ||
-        (Platform.isAndroid && await permission.shouldShowRequestRationale)) {
-      LogMessage.d('denied', 'permission');
-      var popupValue = await customPermissionDialog(
-          icon: permissionIcon,
-          content: permissionContent,
-          dialogStyle: AppStyleConfig.dialogStyle);
-      if (popupValue) {
-        var newp = await AppPermission.requestPermission(permission);
-        isShowing = false;
-        return newp.isGranted;
-      } else {
-        isShowing = false;
-        return false;
-      }
-    } else if (status == PermissionStatus.denied) {
-      LogMessage.d('denied', 'permission');
-      var popupValue = await customPermissionDialog(
-          icon: permissionIcon,
-          content: permissionContent,
-          dialogStyle: AppStyleConfig.dialogStyle);
-      if (popupValue) {
-        // return AppPermission.requestPermission(permission);/*.then((value) {
-        var newp = await AppPermission.requestPermission(permission);
-        /*if(newp.isPermanentlyDenied) {
-          // savePermissionAsked(permission);
-          var deniedPopupValue = await customPermissionDialog(
-              icon: permissionIcon,
-              content: getPermissionAlertMessage(
-                  permission.toString().replaceAll("Permission.", "")));
-          if (deniedPopupValue) {
-            openAppSettings();
-            return false;
-          } else {
-            return false;
-          }
-        }else{
-          return newp.isGranted;
-        }*/
-        isShowing = false;
-        return newp.isGranted;
-      } else {
-        isShowing = false;
-        return false;
-      }
-    } else {
-      var deniedPopupValue = await customPermissionDialog(
-          icon: permissionIcon,
-          content: getPermissionAlertMessage(
-              permission.toString().replaceAll("Permission.", "")),
-          dialogStyle: AppStyleConfig.dialogStyle);
-      if (deniedPopupValue) {
-        openAppSettings();
-        isShowing = false;
-        return false;
-      } else {
-        isShowing = false;
-        return false;
-      }
-    }
-  }
+  // static Future<bool> checkPermission(Permission permission,
+  //     String permissionIcon, String permissionContent) async {
+  //   var status = await permission.status;
+  //   debugPrint("checkPermission $permission status $status");
+  //   if (status == PermissionStatus.granted) {
+  //     debugPrint("permission granted opening");
+  //     return true;
+  //   } else if (status == PermissionStatus.denied ||
+  //       (Platform.isAndroid && await permission.shouldShowRequestRationale)) {
+  //     LogMessage.d('denied', 'permission');
+  //     var popupValue = await customPermissionDialog(
+  //         icon: permissionIcon,
+  //         content: permissionContent,
+  //         dialogStyle: AppStyleConfig.dialogStyle);
+  //     if (popupValue) {
+  //       var newp = await AppPermission.requestPermission(permission);
+  //       isShowing = false;
+  //       return newp.isGranted;
+  //     } else {
+  //       isShowing = false;
+  //       return false;
+  //     }
+  //   } else if (status == PermissionStatus.denied) {
+  //     LogMessage.d('denied', 'permission');
+  //     var popupValue = await customPermissionDialog(
+  //         icon: permissionIcon,
+  //         content: permissionContent,
+  //         dialogStyle: AppStyleConfig.dialogStyle);
+  //     if (popupValue) {
+  //       // return AppPermission.requestPermission(permission);/*.then((value) {
+  //       var newp = await AppPermission.requestPermission(permission);
+  //       isShowing = false;
+  //       return newp.isGranted;
+  //     } else {
+  //       isShowing = false;
+  //       return false;
+  //     }
+  //   } else {
+  //     var deniedPopupValue = await customPermissionDialog(
+  //         icon: permissionIcon,
+  //         content: getPermissionAlertMessage(
+  //             permission.toString().replaceAll("Permission.", "")),
+  //         dialogStyle: AppStyleConfig.dialogStyle);
+  //     if (deniedPopupValue) {
+  //       openAppSettings();
+  //       isShowing = false;
+  //       return false;
+  //     } else {
+  //       isShowing = false;
+  //       return false;
+  //     }
+  //   }
+  // }
 
   /// This [checkAndRequestPermissions] is used to Check and Request List of Permission .
   ///
