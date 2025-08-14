@@ -441,6 +441,27 @@ class ChatController extends FullLifeCycleController
     }
   }
 
+  void checkForAndroidNotificationProgressPermission(AttachmentType type) async {
+    if (Platform.isIOS || await AppPermission.checkPermission(Permission.notification)) {
+      switch (type) {
+        case AttachmentType.camera:
+          NavUtils.back();
+          onCameraClick();
+        case AttachmentType.gallery:
+          NavUtils.back();
+          onGalleryClick();
+        case AttachmentType.audio:
+          NavUtils.back();
+          onAudioClick();
+        case AttachmentType.document:
+          NavUtils.back();
+          documentPickUpload();
+      }
+    } else {
+      toToast(getTranslated("notificationPermissionNotGranted"));
+    }
+  }
+
   showBottomSheetAttachment() {
     DialogUtils.bottomSheet(
       Container(
@@ -454,20 +475,16 @@ class ChatController extends FullLifeCycleController
                   attachments: availableAttachments,
                   availableFeatures: availableFeatures,
                   onDocument: () {
-                    NavUtils.back();
-                    documentPickUpload();
+                    checkForAndroidNotificationProgressPermission(AttachmentType.document);
                   },
                   onCamera: () {
-                    NavUtils.back();
-                    onCameraClick();
+                    checkForAndroidNotificationProgressPermission(AttachmentType.camera);
                   },
                   onGallery: () {
-                    NavUtils.back();
-                    onGalleryClick();
+                    checkForAndroidNotificationProgressPermission(AttachmentType.gallery);
                   },
                   onAudio: () {
-                    NavUtils.back();
-                    onAudioClick();
+                    checkForAndroidNotificationProgressPermission(AttachmentType.audio);
                   },
                   onContact: () {
                     NavUtils.back();
@@ -4007,4 +4024,11 @@ class ChatController extends FullLifeCycleController
       toToast(getTranslated("noInternetConnection"));
     }
   }
+}
+
+enum AttachmentType {
+  camera,
+  gallery,
+  audio,
+  document,
 }
