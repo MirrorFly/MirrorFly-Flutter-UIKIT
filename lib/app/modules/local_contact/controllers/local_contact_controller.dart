@@ -1,3 +1,4 @@
+// import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:get/get.dart';
@@ -45,7 +46,6 @@ class LocalContactController extends GetxController {
   }
 
   onSearchTextChanged(String text) async {
-    debugPrint("ontextChanged--> $text");
     searchList.clear();
     if (searchTextController.text.trim().isEmpty) {
       searchList.addAll(contactList);
@@ -61,7 +61,13 @@ class LocalContactController extends GetxController {
     }
   }
 
-  void shareContact() async {
+  shareContact() async {
+    // var contactList = List<LocalContact>.empty(growable: true);
+    // for (var mobileNumber in contactsSelected) {
+    //   final number = mobileNumber.value;
+    //   contactList.add(number!.replaceAll(RegExp('[+() -]'), ''));
+    // }
+
     NavUtils.toNamed(Routes.previewContact, arguments: {
       "contactList": contactsSelected,
       "shareContactList": contactsSelected,
@@ -73,6 +79,10 @@ class LocalContactController extends GetxController {
   name(Contact item) {
     return item.displayName;
   }
+
+  // isValidContactNumber(List<Item> phones){
+  //   return phones.isNotEmpty;
+  // }
 
   void contactSelected(LocalContact localContact) {
     if (contactsSelected.contains(localContact)) {

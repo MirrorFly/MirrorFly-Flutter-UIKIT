@@ -11,7 +11,9 @@ import '../../../../data/utils.dart';
 
 class BlockedListController extends GetxController {
   final _blockedUsers = <ProfileDetails>[].obs;
+
   set blockedUsers(value) => _blockedUsers.value = value;
+
   List<ProfileDetails> get blockedUsers => _blockedUsers;
 
   @override

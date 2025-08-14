@@ -5,6 +5,7 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
+import 'package:mirrorfly_plugin/mirrorflychat.dart';
 import '../extensions/extensions.dart';
 
 NotificationMessageModel notificationModelFromJson(String str) =>
@@ -79,6 +80,8 @@ class ChatMessage {
     required this.messageStatus,
     required this.messageTextContent,
     required this.messageType,
+    this.metaData = const [],
+    this.mentionedUsersIds,
     required this.replyParentChatMessage,
     required this.senderNickName,
     required this.senderUserJid,
@@ -106,6 +109,10 @@ class ChatMessage {
   RxString messageStatus;
   String? messageTextContent;
   String messageType;
+  List<MessageMetaData> metaData;
+
+  /// A list of userid associated with the mentioned Users.
+  List<String>? mentionedUsersIds;
   ReplyParentChatMessage? replyParentChatMessage;
   String senderNickName;
   String senderUserJid;
@@ -137,6 +144,13 @@ class ChatMessage {
       messageStatus: json["messageStatus"].toString().obs,
       messageTextContent: json["messageTextContent"],
       messageType: json["messageType"],
+      metaData: json["metaData"] == null
+          ? []
+          : List<MessageMetaData>.from(
+              json["metaData"]!.map((x) => MessageMetaData.fromJson(x))),
+      mentionedUsersIds: json["mentionedUsersIds"] == null
+          ? []
+          : List<String>.from(json["mentionedUsersIds"].map((x) => x)),
       replyParentChatMessage: json["replyParentChatMessage"] == null
           ? null
           : ReplyParentChatMessage.fromJson(json["replyParentChatMessage"]),
@@ -172,6 +186,10 @@ class ChatMessage {
         "messageStatus": messageStatus.value,
         "messageTextContent": messageTextContent,
         "messageType": messageType,
+        "metaData": metaData,
+        "mentionedUsersIds": mentionedUsersIds == null
+            ? null
+            : List<String>.from(mentionedUsersIds!.map((x) => x)),
         "replyParentChatMessage":
             replyParentChatMessage ?? replyParentChatMessage?.toJson(),
         "senderNickName": senderNickName,
@@ -264,6 +282,7 @@ class MediaChatMessage {
     required this.isPlaying,
     required this.currentPos,
   });
+
   bool isAudioRecorded;
   String mediaCaptionText;
   RxInt mediaDownloadStatus;

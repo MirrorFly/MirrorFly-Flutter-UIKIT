@@ -18,6 +18,7 @@ class GalleryPageStyle {
       border: Border.fromBorderSide(BorderSide(color: Colors.blue, width: 1.5)),
     ),
   });
+
   final AppBarTheme appBarTheme;
   final Decoration buttonDecoration;
 }

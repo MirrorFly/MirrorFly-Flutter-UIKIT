@@ -30,6 +30,7 @@ class LocalContactPageStyle {
           elevation: 12,
           iconSize: 21,
           shape: CircleBorder())});
+
   final AppBarTheme appBarTheme;
   final EditTextFieldStyle searchTextFieldStyle;
   final TextStyle noDataTextStyle;

@@ -21,6 +21,7 @@ class SettingsPageStyle {
           leadingIconColor: Color(0xff181818),
           trailingIconColor: Color(0xff767676),
           dividerColor: Color(0xffEBEBEB))});
+
   final AppBarTheme appBarTheme;
   final ListItemStyle listItemStyle;
 }
@@ -36,6 +37,7 @@ class ListItemStyle {
       this.leadingIconColor = const Color(0xff181818),
       this.trailingIconColor = const Color(0xff767676),
       this.dividerColor = const Color(0xffEBEBEB)});
+
   final TextStyle titleTextStyle;
   final TextStyle descriptionTextStyle;
   final Color leadingIconColor;

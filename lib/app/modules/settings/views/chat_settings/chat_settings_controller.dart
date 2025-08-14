@@ -18,15 +18,19 @@ class ChatSettingsController extends GetxController {
   final lastSeenPreference = false.obs;
   final busyStatusPreference = false.obs;
   final busyStatus = "".obs;
+
   bool get archiveEnabled => _archiveEnabled.value;
 
   final _autoDownloadEnabled = false.obs;
+
   bool get autoDownloadEnabled => _autoDownloadEnabled.value;
 
   final _translationEnabled = false.obs;
+
   bool get translationEnabled => _translationEnabled.value;
 
   final _translationLanguage = "English".obs;
+
   String get translationLanguage => _translationLanguage.value;
 
   @override

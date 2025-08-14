@@ -27,8 +27,8 @@ class LocalContactView extends NavViewStateful<LocalContactController> {
               .localContactPageStyle.floatingActionButtonThemeData),
       child: Scaffold(
         appBar: AppBar(
-          centerTitle: false,
           titleSpacing: 0.0,
+          centerTitle: false,
           title: Obx(() {
             return controller.search.value
                 ? TextField(

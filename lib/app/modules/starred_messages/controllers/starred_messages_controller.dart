@@ -6,6 +6,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../../common/app_localizations.dart';
+import '../../../common/main_controller.dart';
 import '../../../data/helper.dart';
 import '../../../extensions/extensions.dart';
 import 'package:mirrorfly_plugin/mirrorflychat.dart';
@@ -17,6 +18,7 @@ import '../../../data/utils.dart';
 import '../../../model/arguments.dart';
 import '../../../model/chat_message_model.dart';
 import '../../../routes/route_settings.dart';
+import '../../chat/widgets/custom_text_view.dart';
 
 class StarredMessagesController extends FullLifeCycleController
     with FullLifeCycleMixin {
@@ -86,12 +88,23 @@ class StarredMessagesController extends FullLifeCycleController
     }
   }
 
-  void onMessageStatusUpdated(chatMessageModel) {
+  void onMessageStatusUpdated(ChatMessageModel chatMessageModel) {
     final index = starredChatList.indexWhere(
         (message) => message.messageId == chatMessageModel.messageId);
     debugPrint("Message Status Update index of $index");
     if (!index.isNegative) {
       starredChatList[index].messageStatus = chatMessageModel.messageStatus;
+      starredChatList.refresh();
+    }
+  }
+
+  Future<void> onMessageDeleted({required String messageId}) async {
+    final int indexToBeReplaced =
+        starredChatList.indexWhere((message) => message.messageId == messageId);
+    debugPrint(
+        "#StarredMessageController onMessageDeleted index to replace $indexToBeReplaced");
+    if (!indexToBeReplaced.isNegative) {
+      starredChatList[indexToBeReplaced].isMessageRecalled.value = true;
       starredChatList.refresh();
     }
   }
@@ -472,6 +485,7 @@ class StarredMessagesController extends FullLifeCycleController
                       }
                       isSelected(false);
                       selectedChatList.clear();
+                      updateRecentChatListHistory();
                     });
               },
               child: Text(
@@ -482,6 +496,7 @@ class StarredMessagesController extends FullLifeCycleController
 
   // AudioPlayer player = AudioPlayer();
   ChatMessageModel? playingChat;
+
   playAudio(ChatMessageModel chatMessage) async {
     /*setPlayingChat(chatMessage);
     if (!playingChat!.mediaChatMessage!.isPlaying) {
@@ -522,6 +537,7 @@ class StarredMessagesController extends FullLifeCycleController
       playingChat = chatMessage;
     }*/
   }
+
   void onSeekbarChange(double value, ChatMessageModel chatMessage) {
     /* debugPrint('onSeekbarChange $value');
     if (playingChat != null) {
@@ -533,6 +549,7 @@ class StarredMessagesController extends FullLifeCycleController
   }
 
   RxBool canBeForward = false.obs;
+
   validateForForwardMessage() {
     for (var value in selectedChatList) {
       if (value.isMediaMessage()) {
@@ -552,6 +569,7 @@ class StarredMessagesController extends FullLifeCycleController
   }
 
   RxBool canBeShare = false.obs;
+
   validateForShareMessage() {
     for (var value in selectedChatList) {
       if (value.isMediaMessage()) {
@@ -575,6 +593,7 @@ class StarredMessagesController extends FullLifeCycleController
   var clear = false.obs;
   var searchedText = TextEditingController();
   String lastInputValue = "";
+
   void startSearch(String str) {
     if (str.isNotEmpty) {
       clear(true);
@@ -614,6 +633,7 @@ class StarredMessagesController extends FullLifeCycleController
   }
 
   var searchedStarredMessageList = <ChatMessageModel>[];
+
   Future<void> addSearchedMessagesToList(String filterKey) async {
     if (starredChatList.isEmpty) {
       for (var message in searchedStarredMessageList) {
@@ -703,31 +723,44 @@ class StarredMessagesController extends FullLifeCycleController
 
   bool isVideoCaptionContainsFilterKey(
       ChatMessageModel message, String filterKey) {
+    var content = (message.mentionedUsersIds != null &&
+            message.mentionedUsersIds!.isNotEmpty)
+        ? (CustomTextViewManager.getCustomText(
+                (message.mediaChatMessage?.mediaCaptionText).checkNull() +
+                    message.mentionedUsersIds!.join(",") +
+                    (Key("message_view+${message.messageId}")).toString()))
+            ?.toPlainText()
+        : message.messageTextContent;
     return Constants.mVideo == message.messageType &&
-        message.mediaChatMessage!.mediaCaptionText.checkNull().isNotEmpty &&
-        message.mediaChatMessage!.mediaCaptionText
-            .checkNull()
-            .toLowerCase()
-            .contains(filterKey.toLowerCase());
+        content.checkNull().toLowerCase().contains(filterKey.toLowerCase());
   }
 
   bool isImageCaptionContainsFilterKey(
       ChatMessageModel message, String filterKey) {
+    var content = (message.mentionedUsersIds != null &&
+            message.mentionedUsersIds!.isNotEmpty)
+        ? (CustomTextViewManager.getCustomText(
+                (message.mediaChatMessage?.mediaCaptionText).checkNull() +
+                    message.mentionedUsersIds!.join(",") +
+                    (Key("message_view+${message.messageId}")).toString()))
+            ?.toPlainText()
+        : message.messageTextContent;
     return Constants.mImage == message.messageType &&
-        message.mediaChatMessage!.mediaCaptionText.checkNull().isNotEmpty &&
-        message.mediaChatMessage!.mediaCaptionText
-            .checkNull()
-            .toLowerCase()
-            .contains(filterKey.toLowerCase());
+        content.checkNull().toLowerCase().contains(filterKey.toLowerCase());
   }
 
   bool isTextMessageContainsFilterKey(
       ChatMessageModel message, String filterKey) {
+    var content = (message.mentionedUsersIds != null &&
+            message.mentionedUsersIds!.isNotEmpty)
+        ? (CustomTextViewManager.getCustomText(
+                message.messageTextContent.checkNull() +
+                    message.mentionedUsersIds!.join(",") +
+                    (Key("message_view+${message.messageId}")).toString()))
+            ?.toPlainText()
+        : message.messageTextContent;
     return Constants.mText == message.messageType &&
-        message.messageTextContent
-            .checkNull()
-            .toLowerCase()
-            .contains(filterKey.toLowerCase());
+        content.checkNull().toLowerCase().contains(filterKey.toLowerCase());
   }
 
   navigateMessage(ChatMessageModel starredChat) {
@@ -770,6 +803,7 @@ class StarredMessagesController extends FullLifeCycleController
   void onPaused() {}
 
   FocusNode searchFocus = FocusNode();
+
   @override
   void onResumed() {
     if (isSearch.value) {
@@ -786,4 +820,10 @@ class StarredMessagesController extends FullLifeCycleController
 
   @override
   void onHidden() {}
+
+  void updateRecentChatListHistory() {
+    if (Get.isRegistered<MainController>()) {
+      Get.find<MainController>().updateRecentChatListHistory();
+    }
+  }
 }

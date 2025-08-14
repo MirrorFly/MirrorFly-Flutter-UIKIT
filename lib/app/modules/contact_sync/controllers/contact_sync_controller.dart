@@ -51,6 +51,7 @@ class ContactSyncController extends GetxController
 
   Rx<bool> syncing = false.obs;
   Rx<String> textContactSync = ''.obs;
+
   openContactPermission() async {
     if (!await Mirrorfly.contactSyncStateValue()) {
       var contactPermissionHandle =

@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import '../../../extensions/extensions.dart';
-import '../../../stylesheet/stylesheet.dart';
-
 import '../../../common/app_localizations.dart';
 import '../../../common/constants.dart';
 import '../../../data/helper.dart';
 import '../../../data/utils.dart';
+import '../../../extensions/extensions.dart';
 import '../../../model/chat_message_model.dart';
 import '../../../routes/route_settings.dart';
-import '../../dashboard/widgets.dart';
-import 'chat_widgets.dart';
+import '../../../stylesheet/stylesheet.dart';
+import 'custom_text_view.dart' show CustomTextView;
 
 class TextMessageView extends StatelessWidget {
   const TextMessageView(
@@ -38,18 +36,38 @@ class TextMessageView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Flexible(
-                child: search.isEmpty
-                    ? textMessageSpannableText(
-                        chatMessage.messageTextContent ?? "",
-                        textMessageViewStyle.textStyle,
-                        textMessageViewStyle.urlMessageColor)
-                    : chatSpannedText(chatMessage.messageTextContent ?? "",
-                        search, textMessageViewStyle.textStyle,
-                        spanColor: textMessageViewStyle.highlightColor,
-                        urlColor: textMessageViewStyle.urlMessageColor
-                        //const TextStyle(fontSize: 14, color: textHintColor),
-                        ),
-              ),
+                  child: GestureDetector(
+                onTap: (MessageUtils.getCallLinkFromMessage(
+                            chatMessage.messageTextContent.checkNull())
+                        .isNotEmpty)
+                    ? () async {
+                        if (await AppUtils.isNetConnected()) {
+                          var link = MessageUtils.getCallLinkFromMessage(
+                              chatMessage.messageTextContent.checkNull());
+                          if (link.isNotEmpty) {
+                            NavUtils.toNamed(Routes.joinCallPreview,
+                                arguments: {
+                                  "callLinkId": link.replaceAll(
+                                      Constants.webChatLogin, "")
+                                });
+                          }
+                        } else {
+                          toToast(getTranslated("noInternetConnection"));
+                        }
+                      }
+                    : null,
+                child: CustomTextView(
+                  key: Key("message_view+${chatMessage.messageId}"),
+                  text: chatMessage.messageTextContent.checkNull(),
+                  defaultTextStyle: textMessageViewStyle.textStyle,
+                  linkColor: textMessageViewStyle.urlMessageColor,
+                  mentionUserTextColor: textMessageViewStyle.mentionUserColor,
+                  searchQueryTextColor: textMessageViewStyle.highlightColor,
+                  searchQueryString: search,
+                  mentionUserIds: chatMessage.mentionedUsersIds ?? [],
+                  mentionedMeBgColor: textMessageViewStyle.mentionedMeBgColor,
+                ),
+              )),
               const SizedBox(
                 width: 60,
               ),
@@ -77,7 +95,8 @@ class TextMessageView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               chatMessage.isMessageStarred.value
-                  ? AppUtils.svgIcon(icon: starSmallIcon)
+                  ? textMessageViewStyle.iconFavourites ??
+                      AppUtils.svgIcon(icon: starSmallIcon)
                   : const Offstage(),
               const SizedBox(
                 width: 5,
@@ -120,6 +139,7 @@ class TextMessageView extends StatelessWidget {
 class CallLinkView extends StatelessWidget {
   const CallLinkView(
       {super.key, required this.message, required this.callLinkViewStyle});
+
   final String message;
   final CallLinkViewStyle callLinkViewStyle;
 

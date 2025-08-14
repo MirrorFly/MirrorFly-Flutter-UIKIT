@@ -1,20 +1,19 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_plugin/mirrorfly.dart';
+
+import '../../app_style_config.dart';
 import '../../call_modules/call_utils.dart';
 import '../../common/app_localizations.dart';
 import '../../common/constants.dart';
 import '../../data/helper.dart';
-import '../../extensions/extensions.dart';
-import '../../model/call_user_list.dart';
-import 'package:mirrorfly_plugin/mirrorfly.dart';
-
-import '../../app_style_config.dart';
 import '../../data/permissions.dart';
 import '../../data/session_management.dart';
 import '../../data/utils.dart';
+import '../../extensions/extensions.dart';
+import '../../model/call_user_list.dart';
 import '../../routes/route_settings.dart';
 
 class CallController extends GetxController with GetTickerProviderStateMixin {
@@ -72,12 +71,17 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   var groupId = ''.obs;
 
   TabController? tabController;
-  var getMaxCallUsersCount = 8;
+
 
   var joinViaLink = false;
+
+  var isCallDisconnectedClicked = false;
+  // static const EventChannel _eventChannel = EventChannel('fl_pip/foreground');
+  var myJid  = SessionManagement.getUserJID();
   @override
   Future<void> onInit() async {
     super.onInit();
+    // startListening();
     enterFullScreen();
     tabController = TabController(length: 2, vsync: this);
     // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
@@ -128,6 +132,11 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
         pinnedUserJid(callUserList.first.userJid!.value);
         pinnedUser(callUserList.first);
       }
+      Mirrorfly.isCallConversionRequestAvailable().then((value){
+        if(value.checkNull()){
+          videoCallConversionRequest(callList.where((item)=>item.userJid!.value != myJid).first.userJid!.value);
+        }
+      });
     });
 
     await Mirrorfly.getCallType().then((value) => callType(value));
@@ -156,6 +165,20 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       }
     });
   }
+
+  /*void startListening() {
+    _eventChannel.receiveBroadcastStream().listen(
+          (event) {
+        print("Received event: $event");
+      },
+      onError: (error) {
+        print("Error: $error");
+      },
+      onDone: () {
+        print("Stream closed");
+      },
+    );
+  }*/
 
   var calleeNames = <String>[].obs;
   Future outGoingUsers() async {
@@ -206,28 +229,31 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
                 var audioItem = availableAudioList[index];
                 debugPrint("audio item name ${audioItem.name}");
                 return Obx(() {
-                  return ListTile(
-                    contentPadding: const EdgeInsets.only(left: 10),
-                    title: Text(audioItem.name ?? "",
-                        style: const TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.normal)),
-                    trailing: audioItem.type == audioOutputType.value
-                        ? const Icon(
-                            Icons.check_outlined,
-                            color: Colors.green,
-                          )
-                        : const SizedBox.shrink(),
-                    onTap: () {
-                      if (audioOutputType.value != audioItem.type) {
-                        NavUtils.back();
-                        debugPrint("selected audio item ${audioItem.type}");
-                        audioOutputType(audioItem.type);
-                        Mirrorfly.routeAudioTo(routeType: audioItem.type ?? "");
-                      } else {
-                        LogMessage.d("routeAudioOption",
-                            "clicked on same audio type selected");
-                      }
-                    },
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 18.0, right: 18.0),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.only(left: 10),
+                      title: Text(audioItem.name ?? "",
+                          style: const TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.normal)),
+                      trailing: audioItem.type == audioOutputType.value
+                          ? const Icon(
+                              Icons.check_outlined,
+                              color: Colors.green,
+                            )
+                          : const SizedBox.shrink(),
+                      onTap: () {
+                        if (audioOutputType.value != audioItem.type) {
+                          NavUtils.back();
+                          debugPrint("selected audio item ${audioItem.type}");
+                          audioOutputType(audioItem.type);
+                          Mirrorfly.routeAudioTo(routeType: audioItem.type ?? "");
+                        } else {
+                          LogMessage.d("routeAudioOption",
+                              "clicked on same audio type selected");
+                        }
+                      },
+                    ),
                   );
                 });
               });
@@ -273,9 +299,9 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
 
   switchCamera() async {
     //The below code is commented. The Camera switch not worked in iOS so uncommented and Nested in Platform Check
-    if (Platform.isIOS) {
-      cameraSwitch(!cameraSwitch.value);
-    }
+    // if (Platform.isIOS) {
+    //   cameraSwitch(!cameraSwitch.value);
+    // }
     await Mirrorfly.switchCamera();
   }
 
@@ -290,6 +316,10 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   void disconnectCall() {
     // BaseController baseController = ConcreteController();
     // baseController.stopTimer();
+    if (isCallDisconnectedClicked) {
+      return;
+    }
+    isCallDisconnectedClicked = true;
     isCallTimerEnabled = false;
     callTimer("Disconnected");
     if (callList.isNotEmpty) {
@@ -311,22 +341,32 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
         debugPrint("#Disconnect current route is ongoing call view");
         // Future.delayed(const Duration(seconds: 1), () {
         //   debugPrint("#Disconnect call controller back called from Ongoing Screen");
-        NavUtils.back();
+        if (NavUtils.canPop) {
+          NavUtils.back();
+        }
         // });
       } else if (NavUtils.currentRoute == Routes.participants) {
-        NavUtils.back();
+        if (NavUtils.canPop) {
+          NavUtils.back();
+        }
         // Future.delayed(const Duration(seconds: 1), () {
         debugPrint(
-            "#Disconnect call controller back called from Participant Screen");
-        NavUtils.back();
+            "#Disconnect Event #Disconnect call controller back called from Participant Screen");
+        if (NavUtils.canPop) {
+          NavUtils.back();
+        }
         // });
       } else if (NavUtils.currentRoute == Routes.outGoingCallView) {
-        NavUtils.back();
+        if (NavUtils.canPop) {
+          NavUtils.back();
+        }
       }
     } else {
       debugPrint("#Disconnect previous route is empty");
       // NavUtils.offNamed(getInitialRoute());
-      NavUtils.offNamed(NavUtils.defaultRouteName);
+      if (NavUtils.currentRoute != Routes.dashboard) {
+        NavUtils.offNamed(NavUtils.defaultRouteName);
+      }
     }
   }
 
@@ -422,12 +462,15 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
           callTimer("Disconnected");
           Future.delayed(const Duration(seconds: 1), () {
             NavUtils.back();
+            isCallDisconnectedClicked = false;
           });
         } else if (NavUtils.currentRoute == Routes.outGoingCallView) {
           NavUtils.back();
+          isCallDisconnectedClicked = false;
         }
       } else {
         NavUtils.offNamed(NavUtils.defaultRouteName);
+        isCallDisconnectedClicked = false;
       }
     }
   }
@@ -794,7 +837,6 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   }
 
   void onCameraSwitch() {
-    LogMessage.d("onCameraSwitch", cameraSwitch.value);
     cameraSwitch(!cameraSwitch.value);
   }
 
@@ -1018,7 +1060,8 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
   }
 
   void openParticipantScreen() {
-    NavUtils.toNamed(Routes.participants);
+    NavUtils.toNamed(Routes.participants,
+        arguments: {"joinViaLink": joinViaLink});
   }
 
   void onUserInvite(String callMode, String userJid, String callType) {
@@ -1051,7 +1094,7 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     var indexValid =
         callList.indexWhere((element) => element.userJid?.value == userJid);
     LogMessage.d("callController", "indexValid : $indexValid jid : $userJid");
-    if (indexValid.isNegative && callList.length != getMaxCallUsersCount) {
+    if (indexValid.isNegative && callList.length != Constants.getMaxCallUsersCount) {
       callList.insert(
           callList.length - 1,
           CallUserList(
@@ -1078,9 +1121,9 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
           var indexValid =
               callList.indexWhere((element) => element.userJid?.value == jid);
           LogMessage.d("callController",
-              "indexValid : $indexValid jid : $jid callList.length ${callList.length} getMaxCallUsersCount : $getMaxCallUsersCount");
+              "indexValid : $indexValid jid : $jid callList.length ${callList.length} getMaxCallUsersCount : ${Constants.getMaxCallUsersCount}");
           if (indexValid.isNegative &&
-              callList.length != getMaxCallUsersCount) {
+              callList.length != Constants.getMaxCallUsersCount) {
             callList.insert(
                 callList.length - 1,
                 CallUserList(
@@ -1179,4 +1222,34 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
       callList.swap(index, itemToReplace);
     }
   }
+
+  // void goToPIP() {
+  //   if(NavUtils.canPop) {
+  //     NavUtils.back();
+  //   } else {
+  //     NavUtils.offNamed(NavUtils.defaultRouteName);
+  //   }
+  //   startPIP();
+  // }
+
+  // void startPIP(){
+  //   PictureInPicture.startPiP(pipWidget: ClipRRect(
+  //       borderRadius: const BorderRadius.all(Radius.circular(13)),
+  //       child: PIPView(
+  //         style: AppStyleConfig.ongoingCallPageStyle.pipViewStyle,
+  //         pipTag: "pipView",)));
+  //   PictureInPicture.updatePiPParams(
+  //     pipParams: PiPParams(
+  //       pipWindowWidth: AppUtils.getSizeFromAspectRatio(NavUtils.width, NavUtils.height).width * 0.8,//taking 80 percent of the width
+  //       pipWindowHeight: AppUtils.getSizeFromAspectRatio(NavUtils.width, NavUtils.height).height * 0.8,//taking 80 percent of the height
+  //       bottomSpace: 20,
+  //       leftSpace: 20,
+  //       rightSpace: 20,
+  //       topSpace: 20,
+  //       movable: true,
+  //       resizable: true,
+  //       initialCorner: PIPViewCorner.bottomRight,
+  //     ),
+  //   );
+  // }
 }

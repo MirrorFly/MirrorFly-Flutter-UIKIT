@@ -9,6 +9,7 @@ import 'contact_message_view.dart';
 import 'document_message_view.dart';
 import 'image_message_view.dart';
 import 'location_message_view.dart';
+import 'meet_message_view.dart';
 import 'notification_message_view.dart';
 import 'recalled_message_view.dart';
 import 'text_message_view.dart';
@@ -95,6 +96,14 @@ class MessageContent extends StatelessWidget {
           decoration: chatList[index].isMessageSentByMe
               ? senderChatBubbleStyle.decoration
               : receiverChatBubbleStyle.decoration,
+        );
+      } else if (chatList[index].messageType.toUpperCase() == Constants.mMeet) {
+        return MeetMessageView(
+          chatMessage: chatMessage,
+          search: search,
+          textMessageViewStyle: chatList[index].isMessageSentByMe
+              ? senderChatBubbleStyle.textMessageViewStyle
+              : receiverChatBubbleStyle.textMessageViewStyle,
         );
       } else {
         if (chatList[index].mediaChatMessage == null) {

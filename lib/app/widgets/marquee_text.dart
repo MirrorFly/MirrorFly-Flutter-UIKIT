@@ -535,9 +535,11 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   bool _running = false;
   bool _isOnPause = false;
   int _roundCounter = 0;
+
   bool get isDone => widget.numberOfRounds == null
       ? false
       : widget.numberOfRounds == _roundCounter;
+
   bool get showFading =>
       !widget.showFadingOnlyWhenScrolling ? true : !_isOnPause;
 

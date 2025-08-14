@@ -5,6 +5,7 @@ class CallInfoPageStyle {
   final PopupMenuThemeData popupMenuThemeData;
   final CallHistoryItemStyle callHistoryItemStyle;
   final ContactItemStyle contactItemStyle;
+
   const CallInfoPageStyle(
       {this.appBarTheme = const AppBarTheme(
         color: Colors.white,

@@ -2,17 +2,17 @@ part of 'utils.dart';
 
 class AppUtils {
   AppUtils._();
+
   static Future<bool> isNetConnected() async {
     final bool isConnected = await InternetConnectionChecker().hasConnection;
     return isConnected;
   }
 
   static String getMapImageUrl(
-    double latitude,
-    double longitude,
-  ) {
-    var googleMapKey = Get.find<MainController>()
-        .googleMapKey; //Env.googleMapKey;//Constants.googleMapKey;
+      double latitude, double longitude, String googleMapKey) {
+    // var googleMapKey = Get
+    //     .find<MainController>()
+    //     .googleMapKey; //Env.googleMapKey;//Constants.googleMapKey;
     return ("https://maps.googleapis.com/maps/api/staticmap?center=$latitude,$longitude&zoom=13&size=300x200&markers=color:red|$latitude,$longitude&key=$googleMapKey");
   }
 

@@ -10,6 +10,7 @@ class AboutUsView extends StatelessWidget {
       TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.w400);
   static const TextStyle textMsgStyle =
       TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w400);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

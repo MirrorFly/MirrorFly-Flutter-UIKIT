@@ -1,13 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
-CallLogModel callLogListFromJson(String str) =>
-    CallLogModel.fromJson(json.decode(str));
+CallLogModel callLogListFromJson(String str) => CallLogModel.fromJson(json.decode(str));
 
 String callLogListToJson(CallLogModel data) => json.encode(data.toJson());
 
-CallLogData callLogDataListFromJson(String str) =>
-    CallLogData.fromJson(json.decode(str));
+CallLogData callLogDataListFromJson(String str) => CallLogData.fromJson(json.decode(str));
 
 String callLogDataListToJson(CallLogData data) => json.encode(data.toJson());
 
@@ -21,14 +19,14 @@ class CallLogModel {
     if (json['data'] != null) {
       data = <CallLogData>[];
       json['data'].forEach((v) {
-        data!.add(CallLogData.fromJson(v));
+        data!.add( CallLogData.fromJson(v));
       });
     }
     totalPages = json['total_pages'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
+    final Map<String, dynamic> data =  <String, dynamic>{};
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
@@ -60,30 +58,27 @@ class CallLogData {
 
   CallLogData(
       {this.callMode,
-      this.callState,
-      this.callTime,
-      this.callType,
-      this.callerDevice,
-      this.endTime,
-      this.fromUser,
-      this.groupId,
-      this.isCarbonAnswered,
-      this.isDeleted,
-      this.isDisplay,
-      this.isSync,
-      this.roomId,
-      this.rowId,
-      this.sessionStatus,
-      this.startTime,
-      this.toUser,
-      this.userList,
-      this.nickName});
+        this.callState,
+        this.callTime,
+        this.callType,
+        this.callerDevice,
+        this.endTime,
+        this.fromUser,
+        this.groupId,
+        this.isCarbonAnswered,
+        this.isDeleted,
+        this.isDisplay,
+        this.isSync,
+        this.roomId,
+        this.rowId,
+        this.sessionStatus,
+        this.startTime,
+        this.toUser,
+        this.userList,this.nickName});
 
   CallLogData.fromJson(Map<String, dynamic> json) {
     callMode = json['callMode'];
-    callState = Platform.isAndroid
-        ? json['callState']
-        : getCallState(stateValue: json['callState']);
+    callState = Platform.isAndroid ? json['callState'] : getCallState(stateValue: json['callState']);
     callTime = json['callTime'];
     callType = json['callType'];
     callerDevice = json['callerDevice'];
@@ -104,7 +99,7 @@ class CallLogData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
+    final Map<String, dynamic> data =  <String, dynamic>{};
     data['callMode'] = callMode;
     data['callState'] = callState;
     data['callTime'] = callTime;
@@ -128,15 +123,11 @@ class CallLogData {
   }
 
   int getCallState({required String stateValue}) {
-    switch (stateValue) {
-      case "MissedCall":
-        return 2;
-      case "OutgoingCall":
-        return 1;
-      case "IncomingCall":
-        return 0;
-      default:
-        return 1;
+    switch(stateValue){
+      case "MissedCall": return 2;
+      case "OutgoingCall": return 1;
+      case "IncomingCall": return 0;
+      default: return 1;
     }
   }
 }

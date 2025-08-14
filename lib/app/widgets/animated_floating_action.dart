@@ -10,6 +10,7 @@ class AnimatedFloatingAction extends StatefulWidget {
   final Color? foregroundColor;
   final Function() audioCallOnPressed;
   final Function() videoCallOnPressed;
+
   // final List<Widget> icons;
 
   const AnimatedFloatingAction(
@@ -30,6 +31,7 @@ class AnimatedFloatingActionState extends State<AnimatedFloatingAction>
   bool isOpened = false;
   late AnimationController _animationController;
   late Animation<Color?> _buttonColor;
+
   // late Animation<double> _animateIcon;
   late Animation<double> _translateButton;
   final Curve _curve = Curves.easeOut;

@@ -53,6 +53,7 @@ class ContactController extends FullLifeCycleController
       fetchUsers(false);
     } else {
       toToast(getTranslated("noInternetConnection"));
+      isPageLoading(false);
     }
     //Mirrorfly.syncContacts(true);
     //Mirrorfly.getRegisteredUsers(true).then((value) => LogMessage.d("registeredUsers", value.toString()));
@@ -454,10 +455,7 @@ class ContactController extends FullLifeCycleController
       LogMessage.d('Contact Sync', "[Contact Sync] refreshContacts()");
       if (await AppUtils.isNetConnected()) {
         if (!await Mirrorfly.contactSyncStateValue()) {
-          var contactPermissionHandle = await AppPermission.checkPermission(
-              Permission.contacts,
-              contactPermission,
-              getTranslated("contactSyncPermissionContent"));
+          var contactPermissionHandle = await AppPermission.checkPermission(Permission.contacts);
           if (contactPermissionHandle) {
             progressSpinner(true);
             Mirrorfly.syncContacts(

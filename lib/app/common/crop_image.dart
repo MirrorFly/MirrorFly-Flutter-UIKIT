@@ -131,8 +131,8 @@ class _CropImageState extends State<CropImage> {
       ),
     );
   }
-  // Future<void> _cropImage() async {
-  /*final scale = cropKey.currentState!.scale;
+// Future<void> _cropImage() async {
+/*final scale = cropKey.currentState!.scale;
     final area = cropKey.currentState!.area;
     if (area == null) {
       // cannot crop, widget is not setup
@@ -157,5 +157,5 @@ class _CropImageState extends State<CropImage> {
     _lastCropped = file;
 
     debugPrint('$file');*/
-  // }
+// }
 }

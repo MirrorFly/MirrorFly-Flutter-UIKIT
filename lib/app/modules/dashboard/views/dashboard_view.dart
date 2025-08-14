@@ -25,7 +25,6 @@ class DashboardView extends NavViewStateful<DashboardController> {
 
   @override
   Widget build(BuildContext context) {
-    // Mirrorfly.setEventListener(this);
     return FocusDetector(
         onFocusGained: () {
           debugPrint('onFocusGained');
@@ -183,15 +182,19 @@ class DashboardView extends NavViewStateful<DashboardController> {
                                                 onPressed: () {
                                                   controller.chatInfo();
                                                 },
-                                                icon: AppUtils.svgIcon(
-                                                    icon: infoIcon,
-                                                    colorFilter: ColorFilter.mode(
-                                                        Theme.of(context)
-                                                                .appBarTheme
-                                                                .actionsIconTheme
-                                                                ?.color ??
-                                                            Colors.black,
-                                                        BlendMode.srcIn)),
+                                                icon: AppStyleConfig
+                                                        .dashBoardPageStyle
+                                                        .recentChatAppBarStyle
+                                                        .iconInfo ??
+                                                    AppUtils.svgIcon(
+                                                        icon: infoIcon,
+                                                        colorFilter: ColorFilter.mode(
+                                                            Theme.of(context)
+                                                                    .appBarTheme
+                                                                    .actionsIconTheme
+                                                                    ?.color ??
+                                                                Colors.black,
+                                                            BlendMode.srcIn)),
                                                 tooltip: 'Info',
                                               ),
                                               overflowWidget: Text(
@@ -218,15 +221,19 @@ class DashboardView extends NavViewStateful<DashboardController> {
                                                       : controller
                                                           .deleteCallLog();
                                                 },
-                                                icon: AppUtils.svgIcon(
-                                                    icon: delete,
-                                                    colorFilter: ColorFilter.mode(
-                                                        Theme.of(context)
-                                                                .appBarTheme
-                                                                .actionsIconTheme
-                                                                ?.color ??
-                                                            Colors.black,
-                                                        BlendMode.srcIn)),
+                                                icon: AppStyleConfig
+                                                        .dashBoardPageStyle
+                                                        .recentChatAppBarStyle
+                                                        .iconDelete ??
+                                                    AppUtils.svgIcon(
+                                                        icon: delete,
+                                                        colorFilter: ColorFilter.mode(
+                                                            Theme.of(context)
+                                                                    .appBarTheme
+                                                                    .actionsIconTheme
+                                                                    ?.color ??
+                                                                Colors.black,
+                                                            BlendMode.srcIn)),
                                                 tooltip: 'Delete',
                                               ),
                                               overflowWidget: Text(
@@ -254,15 +261,19 @@ class DashboardView extends NavViewStateful<DashboardController> {
                                                 onPressed: () {
                                                   controller.pinChats();
                                                 },
-                                                icon: AppUtils.svgIcon(
-                                                    icon: pin,
-                                                    colorFilter: ColorFilter.mode(
-                                                        Theme.of(context)
-                                                                .appBarTheme
-                                                                .actionsIconTheme
-                                                                ?.color ??
-                                                            Colors.black,
-                                                        BlendMode.srcIn)),
+                                                icon: AppStyleConfig
+                                                        .dashBoardPageStyle
+                                                        .recentChatAppBarStyle
+                                                        .iconPin ??
+                                                    AppUtils.svgIcon(
+                                                        icon: pin,
+                                                        colorFilter: ColorFilter.mode(
+                                                            Theme.of(context)
+                                                                    .appBarTheme
+                                                                    .actionsIconTheme
+                                                                    ?.color ??
+                                                                Colors.black,
+                                                            BlendMode.srcIn)),
                                                 tooltip: 'Pin',
                                               ),
                                               overflowWidget: Text(
@@ -284,15 +295,19 @@ class DashboardView extends NavViewStateful<DashboardController> {
                                                 onPressed: () {
                                                   controller.unPinChats();
                                                 },
-                                                icon: AppUtils.svgIcon(
-                                                    icon: unpin,
-                                                    colorFilter: ColorFilter.mode(
-                                                        Theme.of(context)
-                                                                .appBarTheme
-                                                                .actionsIconTheme
-                                                                ?.color ??
-                                                            Colors.black,
-                                                        BlendMode.srcIn)),
+                                                icon: AppStyleConfig
+                                                        .dashBoardPageStyle
+                                                        .recentChatAppBarStyle
+                                                        .iconUnPin ??
+                                                    AppUtils.svgIcon(
+                                                        icon: unpin,
+                                                        colorFilter: ColorFilter.mode(
+                                                            Theme.of(context)
+                                                                    .appBarTheme
+                                                                    .actionsIconTheme
+                                                                    ?.color ??
+                                                                Colors.black,
+                                                            BlendMode.srcIn)),
                                                 tooltip: 'UnPin',
                                               ),
                                               overflowWidget: Text(
@@ -315,15 +330,19 @@ class DashboardView extends NavViewStateful<DashboardController> {
                                                 onPressed: () {
                                                   controller.muteChats();
                                                 },
-                                                icon: AppUtils.svgIcon(
-                                                    icon: mute,
-                                                    colorFilter: ColorFilter.mode(
-                                                        Theme.of(context)
-                                                                .appBarTheme
-                                                                .actionsIconTheme
-                                                                ?.color ??
-                                                            Colors.black,
-                                                        BlendMode.srcIn)),
+                                                icon: AppStyleConfig
+                                                        .dashBoardPageStyle
+                                                        .recentChatAppBarStyle
+                                                        .iconMute ??
+                                                    AppUtils.svgIcon(
+                                                        icon: mute,
+                                                        colorFilter: ColorFilter.mode(
+                                                            Theme.of(context)
+                                                                    .appBarTheme
+                                                                    .actionsIconTheme
+                                                                    ?.color ??
+                                                                Colors.black,
+                                                            BlendMode.srcIn)),
                                                 tooltip: 'Mute',
                                               ),
                                               overflowWidget: Text(
@@ -346,15 +365,19 @@ class DashboardView extends NavViewStateful<DashboardController> {
                                                 onPressed: () {
                                                   controller.unMuteChats();
                                                 },
-                                                icon: AppUtils.svgIcon(
-                                                    icon: unMute,
-                                                    colorFilter: ColorFilter.mode(
-                                                        Theme.of(context)
-                                                                .appBarTheme
-                                                                .actionsIconTheme
-                                                                ?.color ??
-                                                            Colors.black,
-                                                        BlendMode.srcIn)),
+                                                icon: AppStyleConfig
+                                                        .dashBoardPageStyle
+                                                        .recentChatAppBarStyle
+                                                        .iconUnMute ??
+                                                    AppUtils.svgIcon(
+                                                        icon: unMute,
+                                                        colorFilter: ColorFilter.mode(
+                                                            Theme.of(context)
+                                                                    .appBarTheme
+                                                                    .actionsIconTheme
+                                                                    ?.color ??
+                                                                Colors.black,
+                                                            BlendMode.srcIn)),
                                                 tooltip: 'UnMute',
                                               ),
                                               overflowWidget: Text(
@@ -377,15 +400,19 @@ class DashboardView extends NavViewStateful<DashboardController> {
                                                 onPressed: () {
                                                   controller.archiveChats();
                                                 },
-                                                icon: AppUtils.svgIcon(
-                                                    icon: archive,
-                                                    colorFilter: ColorFilter.mode(
-                                                        Theme.of(context)
-                                                                .appBarTheme
-                                                                .actionsIconTheme
-                                                                ?.color ??
-                                                            Colors.black,
-                                                        BlendMode.srcIn)),
+                                                icon: AppStyleConfig
+                                                        .dashBoardPageStyle
+                                                        .archivedTileStyle
+                                                        .iconArchive ??
+                                                    AppUtils.svgIcon(
+                                                        icon: archive,
+                                                        colorFilter: ColorFilter.mode(
+                                                            Theme.of(context)
+                                                                    .appBarTheme
+                                                                    .actionsIconTheme
+                                                                    ?.color ??
+                                                                Colors.black,
+                                                            BlendMode.srcIn)),
                                                 tooltip: 'Archive',
                                               ),
                                               overflowWidget: Text(
@@ -444,18 +471,22 @@ class DashboardView extends NavViewStateful<DashboardController> {
                                                 onPressed: () {
                                                   controller.gotoSearch();
                                                 },
-                                                icon: AppUtils.svgIcon(
-                                                    icon: searchIcon,
-                                                    width: 18,
-                                                    height: 18,
-                                                    fit: BoxFit.contain,
-                                                    colorFilter: ColorFilter.mode(
-                                                        Theme.of(context)
-                                                                .appBarTheme
-                                                                .actionsIconTheme
-                                                                ?.color ??
-                                                            Colors.black,
-                                                        BlendMode.srcIn)),
+                                                icon: AppStyleConfig
+                                                        .dashBoardPageStyle
+                                                        .recentChatAppBarStyle
+                                                        .iconSearch ??
+                                                    AppUtils.svgIcon(
+                                                        icon: searchIcon,
+                                                        width: 18,
+                                                        height: 18,
+                                                        fit: BoxFit.contain,
+                                                        colorFilter: ColorFilter.mode(
+                                                            Theme.of(context)
+                                                                    .appBarTheme
+                                                                    .actionsIconTheme
+                                                                    ?.color ??
+                                                                Colors.black,
+                                                            BlendMode.srcIn)),
                                                 tooltip: 'Search',
                                               ),
                                               overflowWidget: Text(
@@ -573,14 +604,25 @@ class DashboardView extends NavViewStateful<DashboardController> {
                                                 controller.gotoSettings();
                                               },
                                             ),
-                                            /*CustomAction(
-                                              visibleWidget: const Icon(Icons.web),
-                                              overflowWidget: Text(getTranslated("web"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
+                                            CustomAction(
+                                              visibleWidget:
+                                                  const Icon(Icons.web),
+                                              overflowWidget: Text(
+                                                  getTranslated("web"),
+                                                  style: AppStyleConfig
+                                                      .dashBoardPageStyle
+                                                      .popupMenuThemeData
+                                                      .textStyle),
                                               showAsAction:
-                                                  controller.selected.value || controller.isSearching.value ? ShowAsAction.gone : ShowAsAction.never,
+                                                  controller.selected.value ||
+                                                          controller
+                                                              .isSearching.value
+                                                      ? ShowAsAction.gone
+                                                      : ShowAsAction.never,
                                               keyValue: 'Web',
-                                              onItemClick: () => controller.webLogin(),
-                                            ),*/
+                                              onItemClick: () =>
+                                                  controller.webLogin(),
+                                            ),
                                           ]),
                                     ],
                                   );

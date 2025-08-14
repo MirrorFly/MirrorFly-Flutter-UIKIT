@@ -1,5 +1,9 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../../extensions/extensions.dart';
 import 'package:mirrorfly_plugin/mirrorfly.dart' hide ChatMessageModel;
 
@@ -19,6 +23,7 @@ class MediaMessageOverlay extends StatelessWidget {
     this.progress,
     this.downloadUploadViewStyle = const DownloadUploadViewStyle(),
   });
+
   final ChatMessageModel chatMessage;
   final Function()? onAudio;
   final Function()? onVideo;
@@ -98,7 +103,9 @@ class MediaMessageOverlay extends StatelessWidget {
                 .mediaChatMessage!.mediaLocalStoragePath.value
                 .checkNull())) {
               if (chatMessage.mediaChatMessage!.mediaUploadStatus.value ==
-                  MediaUploadStatus.isMediaUploaded) {
+                      MediaUploadStatus.isMediaUploaded ||
+                  chatMessage.mediaChatMessage!.mediaUploadStatus.value ==
+                      MediaUploadStatus.isMediaUploadedNotAvailable) {
                 status = MediaDownloadStatus
                     .isMediaNotDownloaded; // for uploaded and deleted in local
               } else {
@@ -106,7 +113,17 @@ class MediaMessageOverlay extends StatelessWidget {
                 //status = MediaDownloadStatus.isMediaNotDownloaded;
               }
             } else {
-              status = chatMessage.mediaChatMessage!.mediaUploadStatus.value;
+              status = MediaUploadStatus.isMediaNotUploaded;
+
+              /// the below code is commented,
+              /// As the file is sent by me
+              /// and it is available in media local storage path
+              /// and also available in device storage.
+              /// But in iOS SDK, the media upload status is changed to not uploaded,
+              /// -- when messages are backed up in iCloud and restored, the media will show as Download(which is correct)
+              /// -- and after download, if we fetch the message list again, the status will be not uploaded
+              /// -- even though it is downloaded and available in our device storage. So given the static status as above.
+              // status = chatMessage.mediaChatMessage!.mediaUploadStatus.value;
             }
           } else {
             status = chatMessage.mediaChatMessage!.mediaUploadStatus.value;
@@ -188,7 +205,12 @@ class MediaMessageOverlay extends StatelessWidget {
 
 void uploadMedia(String messageId) async {
   if (await AppUtils.isNetConnected()) {
-    Mirrorfly.uploadMedia(messageId: messageId);
+    if (Platform.isIOS || await AppPermission.checkPermission(
+            Permission.notification)) {
+      Mirrorfly.uploadMedia(messageId: messageId);
+    } else {
+      log("Notification permission is not granted !");
+    }
   } else {
     toToast(getTranslated("noInternetConnection"));
   }
@@ -203,7 +225,11 @@ void downloadMedia(String messageId) async {
         deniedContent: getTranslated("writeStoragePermissionDeniedContent"));
     if (permission) {
       debugPrint("media permission granted");
-      Mirrorfly.downloadMedia(messageId: messageId);
+      if (Platform.isIOS || await AppPermission.checkPermission(Permission.notification)) {
+        Mirrorfly.downloadMedia(messageId: messageId);
+      } else {
+        log("Notification permission is not granted !");
+      }
     } else {
       debugPrint("storage permission not granted");
     }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/chat/widgets/custom_text_view.dart';
 import '../../../extensions/extensions.dart';
 import '../../../stylesheet/stylesheet.dart';
 import 'package:mirrorfly_plugin/mirrorfly.dart'
@@ -13,8 +14,6 @@ import '../../../data/session_management.dart';
 import '../../../data/utils.dart';
 import '../../../model/chat_message_model.dart';
 import '../../../routes/route_settings.dart';
-import '../../dashboard/widgets.dart';
-import 'chat_widgets.dart';
 
 class ContactMessageView extends StatelessWidget {
   const ContactMessageView(
@@ -51,31 +50,23 @@ class ContactMessageView extends StatelessWidget {
                   width: 12,
                 ),
                 Expanded(
-                    child: search.isEmpty
-                        ? textMessageSpannableText(
-                            chatMessage.contactChatMessage!.contactName
-                                .checkNull(),
-                            contactMessageViewStyle
-                                .textMessageViewStyle.textStyle,
-                            contactMessageViewStyle
-                                .textMessageViewStyle.urlMessageColor,
-                            maxLines: 2)
-                        : chatSpannedText(
-                            chatMessage.contactChatMessage!.contactName,
-                            search,
-                            contactMessageViewStyle.textMessageViewStyle
-                                .textStyle, //const TextStyle(fontSize: 14, color: textHintColor),
-                            maxLines: 2,
-                            spanColor: contactMessageViewStyle
-                                .textMessageViewStyle.highlightColor,
-                            urlColor: contactMessageViewStyle
-                                .textMessageViewStyle
-                                .urlMessageColor) /*,Text(
-                  chatMessage.contactChatMessage!.contactName,
+                    child: CustomTextView(
+                  key: Key("message_view+${chatMessage.messageId}"),
+                  text: chatMessage.contactChatMessage!.contactName.checkNull(),
+                  defaultTextStyle:
+                      contactMessageViewStyle.textMessageViewStyle.textStyle,
+                  linkColor: contactMessageViewStyle
+                      .textMessageViewStyle.urlMessageColor,
+                  mentionUserTextColor: contactMessageViewStyle
+                      .textMessageViewStyle.mentionUserColor,
+                  searchQueryTextColor: contactMessageViewStyle
+                      .textMessageViewStyle.highlightColor,
+                  searchQueryString: search,
+                  mentionUserIds: chatMessage.mentionedUsersIds ?? [],
                   maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                )*/
-                    ),
+                  mentionedMeBgColor: contactMessageViewStyle
+                      .textMessageViewStyle.mentionedMeBgColor,
+                )),
               ],
             ),
           ),
@@ -85,7 +76,8 @@ class ContactMessageView extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 chatMessage.isMessageStarred.value
-                    ? AppUtils.svgIcon(icon: starSmallIcon)
+                    ? contactMessageViewStyle.iconFavourites ??
+                        AppUtils.svgIcon(icon: starSmallIcon)
                     : const Offstage(),
                 const SizedBox(
                   width: 5,
@@ -228,11 +220,9 @@ class ContactMessageView extends StatelessWidget {
       ListTile(
         contentPadding: const EdgeInsets.only(left: 10),
         title: Text(getTranslated("copyLink"),
-            style:
-                const TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
         onTap: () {
-          Clipboard.setData(
-              ClipboardData(text: getTranslated("applicationLink")));
+          Clipboard.setData(ClipboardData(text: getTranslated("applicationLink")));
           NavUtils.back();
           toToast(getTranslated("linkCopied"));
         },
@@ -240,8 +230,7 @@ class ContactMessageView extends StatelessWidget {
       ListTile(
         contentPadding: const EdgeInsets.only(left: 10),
         title: Text(getTranslated("sendSMS"),
-            style:
-                const TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
         onTap: () {
           NavUtils.back();
           sendSMS(contactChatMessage.contactPhoneNumbers[0]);

@@ -30,19 +30,46 @@ class AddParticipantsController extends GetxController
   var selectedUsersJIDList = List<String>.empty(growable: true).obs;
 
   var currentTab = 0.obs;
+
   bool get isCheckBoxVisible => true;
   TabController? tabController;
   var getMaxCallUsersCount = 8;
+  var joinViaLink = false;
+
   @override
   Future<void> onInit() async {
     super.onInit();
+    if (NavUtils.arguments != null) {
+      joinViaLink = NavUtils.arguments?["joinViaLink"] ?? false;
+    }
     getCallLink();
     groupId(await Mirrorfly.getCallGroupJid());
-    tabController = TabController(length: 2, vsync: this);
+
     getMaxCallUsersCount = (await Mirrorfly.getMaxCallUsersCount()) ?? 8;
     // callList = Get.find<CallController>().callList;
     scrollController.addListener(_scrollListener);
-    tabController?.animation?.addListener(() {
+
+    if (!joinViaLink) {
+      if (groupId.isEmpty) {
+        if (await AppUtils.isNetConnected() || Constants.enableContactSync) {
+          isPageLoading(true);
+          fetchUsers(false);
+        } else {
+          toToast(getTranslated("noInternetConnection"));
+        }
+      } else {
+        getGroupMembers();
+      }
+    } else {
+      LogMessage.d("addParticipants",
+          "joinViaLink $joinViaLink so no need to load users");
+    }
+  }
+
+  void intiTab() {
+    tabController = TabController(length: 2, vsync: this);
+    // Future.delayed(const Duration(seconds: 1),(){
+    tabController?.addListener(() {
       LogMessage.d("DefaultTabController", "${tabController?.index}");
 
       // Current animation value. It ranges from 0 to (tabsCount - 1)
@@ -68,20 +95,18 @@ class AddParticipantsController extends GetxController
       //   }
       // }
     });
-    if (groupId.isEmpty) {
-      if (await AppUtils.isNetConnected() || Constants.enableContactSync) {
-        isPageLoading(true);
-        fetchUsers(false);
-      } else {
-        toToast(getTranslated("noInternetConnection"));
-      }
-    } else {
-      getGroupMembers();
-    }
+    // });
+  }
+
+  @override
+  void dispose() {
+    tabController?.dispose();
+    super.dispose();
   }
 
   ///get ongoing call link
   var meetLink = "".obs;
+
   void getCallLink() {
     Mirrorfly.getCallLink().then((value) {
       meetLink(value);
@@ -167,7 +192,7 @@ class AddParticipantsController extends GetxController
   }
 
   _scrollListener() {
-    if (scrollController.hasClients) {
+    if (scrollController.hasClients && !joinViaLink) {
       if (scrollController.position.extentAfter <= 0 &&
           isPageLoading.value == false) {
         if (scrollable.value) {
@@ -322,6 +347,7 @@ class AddParticipantsController extends GetxController
 
   var groupCallMembersCount = 0.obs;
   var callType = CallType.audio.obs;
+
   makeCall() async {
     if (selectedUsersJIDList.isEmpty) {
       return;
@@ -354,6 +380,7 @@ class AddParticipantsController extends GetxController
   var _searchText = "";
   var _first = true;
   var groupJid = "".obs;
+
   fetchUsers(bool fromSearch, {bool server = false}) async {
     if (Constants.enableContactSync) {
       var granted = await Permission.contacts.isGranted;
@@ -622,6 +649,7 @@ class AddParticipantsController extends GetxController
   }
 
   var availableFeatures = Get.find<MainController>().availableFeature;
+
   void onAvailableFeaturesUpdated(AvailableFeatures features) {
     LogMessage.d(
         "GroupParticipants", "onAvailableFeaturesUpdated ${features.toJson()}");

@@ -8,6 +8,7 @@ class ImageViewController extends GetxController {
   var imageName = ''.obs;
   var imagePath = ''.obs;
   var imageUrl = ''.obs;
+
   @override
   void onInit() {
     super.onInit();

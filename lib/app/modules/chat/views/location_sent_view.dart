@@ -9,6 +9,7 @@ import '../controllers/location_controller.dart';
 
 class LocationSentView extends NavViewStateful<LocationController> {
   const LocationSentView({super.key, this.enableAppBar = true});
+
   final bool enableAppBar;
 
   @override
@@ -97,6 +98,7 @@ class LocationSentView extends NavViewStateful<LocationController> {
                     Padding(
                       padding: const EdgeInsets.only(right: 16.0),
                       child: FloatingActionButton.small(
+                        heroTag: "locationSent",
                         onPressed: () {
                           if (controller.location.value.latitude != 0) {
                             //sent Location Message

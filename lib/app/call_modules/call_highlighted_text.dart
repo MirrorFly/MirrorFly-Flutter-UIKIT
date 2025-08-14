@@ -42,8 +42,7 @@ class CallHighlightedText extends StatelessWidget {
         final slice = content.substring(match.start, match.end);
         parts.add(TextSpan(
           text: slice,
-          style: const TextStyle(
-              fontWeight: FontWeight.bold, color: buttonBgColor),
+          style: const TextStyle(fontWeight: FontWeight.bold, color: buttonBgColor),
         ));
         matchIndex += 1;
         i = match.end;

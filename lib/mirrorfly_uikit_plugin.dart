@@ -6,6 +6,7 @@ import 'package:mirrorfly_plugin/mirrorflychat.dart';
 import 'package:mirrorfly_uikit_plugin/app/extensions/extensions.dart';
 import 'package:mirrorfly_uikit_plugin/app/model/reply_hash_map.dart';
 
+import 'app/common/constants.dart';
 import 'app/common/main_controller.dart';
 import 'app/data/session_management.dart';
 import 'app/data/utils.dart';
@@ -55,6 +56,8 @@ class MirrorflyUikit {
       bool enableDebugLog = true,
       bool chatHistoryEnable = true,
       bool enableMobileNumberLogin = false,
+      bool isBackupFeatureEnabled = false,
+      String webChatLoginUrl = '',
       @Deprecated('Enabling local notifications will no longer work. '
           'Instead, use Mirrorfly.showOrUpdateOrCancelNotification.listen((event) { }); '
           'to listen for foreground notifications from MirrorFly Plugin.')
@@ -64,6 +67,8 @@ class MirrorflyUikit {
     this.enableLocalNotification = enableLocalNotification;
 
     globalNavigatorKey = navigatorKey;
+    Constants.isBackupFeatureEnabled = isBackupFeatureEnabled;
+    Constants.webChatLogin = webChatLoginUrl;
 
     Mirrorfly.initializeSDK(
         licenseKey: licenseKey,

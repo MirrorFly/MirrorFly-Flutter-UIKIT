@@ -13,8 +13,10 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   var response = await MirrorflyUikit.instance.initUIKIT(
     navigatorKey: navigatorKey,
-    licenseKey: 'LICENSE_KEY',
-    iOSContainerID: 'CONTAINER_ID(APP_GROUPS)',
+    licenseKey: 'YOUR_LICENSE_KEY_HERE',
+    iOSContainerID: 'YOUR_IOS_CONTAINER_ID_HERE',
+    isBackupFeatureEnabled: false,
+    webChatLoginUrl: "YOUR_WEB_CHAT_LOGIN_URL_HERE",
   );
 
   debugPrint("init response $response");

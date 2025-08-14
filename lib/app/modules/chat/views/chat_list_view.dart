@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../common/app_localizations.dart';
+import 'package:mirrorfly_uikit_plugin/app/common/app_localizations.dart';
 import '../../../data/utils.dart';
 import '../../../extensions/extensions.dart';
 import '../../../modules/chat/controllers/chat_controller.dart';
@@ -180,7 +180,7 @@ class _ChatListViewState extends State<ChatListView> {
                                     ? widget.chatSelectedColor
                                     : Colors.transparent,
                                 margin: const EdgeInsets.only(
-                                    left: 14, right: 14, top: 5, bottom: 10),
+                                    left: 10, right: 14, top: 5, bottom: 10),
                                 child: Align(
                                   alignment:
                                       (widget.chatList[index].isMessageSentByMe

@@ -17,6 +17,7 @@ class ArchivedChatsPageStyle {
           fontWeight: FontWeight.w600,
           color: Color(0xff181818),
           fontSize: 14)});
+
   final AppBarTheme appBarTheme;
   final RecentChatItemStyle recentChatItemStyle;
   final TextStyle noDataTextStyle;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mirrorfly_uikit_plugin/app/modules/backup_restore/views/restore_view.dart';
 import '../model/arguments.dart';
 
 import '../call_modules/call_info/views/call_info_view.dart';
@@ -10,6 +11,7 @@ import '../call_modules/outgoing_call/outgoing_call_view.dart';
 import '../call_modules/participants/participants_view.dart';
 import '../modules/admin_blocked/adminblockedview.dart';
 import '../modules/archived_chats/archived_chat_list_view.dart';
+import '../modules/backup_restore/views/backup_view.dart';
 import '../modules/busy_status/views/add_busy_status_view.dart';
 import '../modules/busy_status/views/busy_status_view.dart';
 import '../modules/camera_pick/views/camera_pick_view.dart';
@@ -34,12 +36,11 @@ import '../modules/preview_contact/views/preview_contact_view.dart';
 import '../modules/profile/views/add_status_view.dart';
 import '../modules/profile/views/profile_view.dart';
 import '../modules/profile/views/status_list_view.dart';
-import '../modules/scanner/scanner_view.dart';
-import '../modules/scanner/web_login_result_view.dart';
 import '../modules/settings/views/blocked/blocked_list_view.dart';
 import '../modules/settings/views/chat_settings/chat_settings_view.dart';
 import '../modules/settings/views/chat_settings/datausage/datausage_list_view.dart';
 import '../modules/settings/views/chat_settings/language/language_list_view.dart';
+import '../modules/settings/views/notification/notification_settings_view.dart';
 import '../modules/settings/views/settings_view.dart';
 import '../modules/starred_messages/views/starred_messages_view.dart';
 import '../modules/video_preview/views/video_player_view.dart';
@@ -54,15 +55,20 @@ Route<dynamic>? mirrorFlyRoute(RouteSettings settings) {
     case '/':
       return MaterialPageRoute(
           builder: (_) => const DashboardView(), settings: settings);
+    // case Routes.login:
+    //   return MaterialPageRoute(
+    //       builder: (_) => const LoginView(), settings: settings);
+    // case Routes.otp:
+    //   return MaterialPageRoute(builder: (_) => const OtpView(),settings: settings);
     case Routes.dashboard:
       return MaterialPageRoute(
           builder: (_) => const DashboardView(), settings: settings);
-    case Routes.scanner:
-      return MaterialPageRoute(
-          builder: (_) => const ScannerView(), settings: settings);
-    case Routes.webLoginResult:
-      return MaterialPageRoute(
-          builder: (_) => const WebLoginResultView(), settings: settings);
+    // case Routes.scanner:
+    //   return MaterialPageRoute(
+    //       builder: (_) => const ScannerView(), settings: settings);
+    // case Routes.webLoginResult:
+    //   return MaterialPageRoute(
+    //       builder: (_) => const WebLoginResultView(), settings: settings);
     case Routes.createGroup:
       return MaterialPageRoute(
           builder: (_) => const GroupCreationView(), settings: settings);
@@ -73,6 +79,9 @@ Route<dynamic>? mirrorFlyRoute(RouteSettings settings) {
       return MaterialPageRoute(
           builder: (_) => const ViewAllMediaView(), settings: settings);
 
+    // case Routes.countries:
+    //   return MaterialPageRoute(
+    //       builder: (_) => const CountryListView(), settings: settings);
     case Routes.profile:
       return MaterialPageRoute(
           builder: (_) => const ProfileView(), settings: settings);
@@ -94,8 +103,14 @@ Route<dynamic>? mirrorFlyRoute(RouteSettings settings) {
       return MaterialPageRoute(
           builder: (_) => ChatSearchView(), settings: settings);
     case Routes.locationSent:
-      return MaterialPageRoute(
-          builder: (_) => const LocationSentView(), settings: settings);
+      // MaterialPageRoute changed to PageRouteBuilder due to animation issue on the locationSent and chat page return
+      return PageRouteBuilder(
+        settings: settings,
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            LocationSentView(),
+        transitionDuration: const Duration(milliseconds: 300),
+        reverseTransitionDuration: Duration.zero, // disables animation on pop
+      );
     case Routes.contacts:
       return MaterialPageRoute(
           builder: (_) => const ContactListView(), settings: settings);
@@ -105,6 +120,18 @@ Route<dynamic>? mirrorFlyRoute(RouteSettings settings) {
     case Routes.blockedList:
       return MaterialPageRoute(
           builder: (_) => const BlockedListView(), settings: settings);
+    case Routes.notification:
+      return MaterialPageRoute(
+          builder: (_) => const NotificationSettingsView(), settings: settings);
+    // case Routes.appLock:
+    //   return MaterialPageRoute(
+    //       builder: (_) => const AppLockSettingsView(), settings: settings);
+    // case Routes.pin:
+    //   return MaterialPageRoute(
+    //       builder: (_) => const PinView(), settings: settings);
+    // case Routes.setPin:
+    //   return MaterialPageRoute(
+    //       builder: (_) => const SetPinView(), settings: settings);
     case Routes.videoPreview:
       return MaterialPageRoute(
           builder: (_) => const VideoPreviewView(), settings: settings);
@@ -176,6 +203,12 @@ Route<dynamic>? mirrorFlyRoute(RouteSettings settings) {
     case Routes.addProfileStatus:
       return MaterialPageRoute(
           builder: (_) => const AddStatusView(), settings: settings);
+    case Routes.restoreBackup:
+      return MaterialPageRoute(
+          builder: (_) => const RestoreView(), settings: settings);
+    case Routes.backUpView:
+      return MaterialPageRoute(
+          builder: (_) => const BackupView(), settings: settings);
 
     //calls
     case Routes.joinCallPreview:
@@ -199,11 +232,17 @@ Route<dynamic>? mirrorFlyRoute(RouteSettings settings) {
     case Routes.callInfo:
       return MaterialPageRoute(
           builder: (_) => const CallInfoView(), settings: settings);
+    // case Routes.pipView:
+    //   return MaterialPageRoute(
+    //       builder: (_) =>
+    //           PIPView(style: AppStyleConfig.ongoingCallPageStyle.pipViewStyle),
+    //       settings: settings);
     default:
       if (settings.name!.startsWith(Routes.dashboard)) {
         return MaterialPageRoute(
             builder: (_) => const DashboardView(), settings: settings);
-      } /*else if (settings.name!.startsWith(Routes.chat)) {
+      }
+      /*else if (settings.name!.startsWith(Routes.chat)) {
         final parameters = jsonDecode(jsonEncode(Uri.parse(settings.name!).queryParameters));
         LogMessage.d("parameters", parameters);
         LogMessage.d("parameters chatJid", parameters['chatJid']);

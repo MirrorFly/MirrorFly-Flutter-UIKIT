@@ -46,17 +46,22 @@ class _ImageMessageViewState extends State<ImageMessageView> {
           Stack(
             alignment: Alignment.center,
             children: [
-              ClipRRect(
-                borderRadius: widget.imageMessageViewStyle.imageBorderRadius,
-                child: Obx(() {
-                  return getImage(
-                      mediaMessage.mediaLocalStoragePath,
-                      mediaMessage.mediaThumbImage,
-                      context,
-                      mediaMessage.mediaFileName,
-                      widget.isSelected,
-                      widget.chatMessage.messageId);
-                }),
+              SizedBox(
+                width: NavUtils.width * 0.60,
+                height: NavUtils.height * 0.4,
+                child: ClipRRect(
+                  borderRadius: widget.imageMessageViewStyle.imageBorderRadius,
+                  child: Obx(() {
+                    return getImage(
+                        mediaMessage.mediaLocalStoragePath,
+                        mediaMessage.mediaThumbImage,
+                        context,
+                        mediaMessage.mediaFileName,
+                        widget.isSelected,
+                        widget.chatMessage.messageId,
+                        widget.chatMessage);
+                  }),
+                ),
               ),
               MediaMessageOverlay(
                 chatMessage: widget.chatMessage,
@@ -67,36 +72,48 @@ class _ImageMessageViewState extends State<ImageMessageView> {
                   ? Positioned(
                       bottom: 8,
                       right: 10,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          widget.chatMessage.isMessageStarred.value
-                              ? AppUtils.svgIcon(icon: starSmallIcon)
-                              : const SizedBox.shrink(),
-                          const SizedBox(
-                            width: 5,
+                      child: Container(
+                        padding: const EdgeInsets.only(left: 30, top: 30),
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage(mediaBg),
+                            fit: BoxFit.fill,
                           ),
-                          MessageUtils.getMessageIndicatorIcon(
-                              widget.chatMessage.messageStatus.value,
-                              widget.chatMessage.isMessageSentByMe,
-                              widget.chatMessage.messageType,
-                              widget.chatMessage.isMessageRecalled.value),
-                          const SizedBox(
-                            width: 4,
-                          ),
-                          Stack(
-                            children: [
-                              // AppUtils.assetIcon(assetName:cornerShadow,width: 40,height: 20,fit: BoxFit.fitHeight,),
-                              Text(
-                                getChatTime(context,
-                                    widget.chatMessage.messageSentTime.toInt()),
-                                style:
-                                    widget.imageMessageViewStyle.timeTextStyle,
-                                // style: TextStyle(fontSize: 11, color: widget.chatMessage.isMessageSentByMe ? durationTextColor : textButtonColor),
-                              ),
-                            ],
-                          ),
-                        ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            widget.chatMessage.isMessageStarred.value
+                                ? widget.imageMessageViewStyle.iconFavourites ??
+                                    AppUtils.svgIcon(icon: starSmallIcon)
+                                : const SizedBox.shrink(),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            MessageUtils.getMessageIndicatorIcon(
+                                widget.chatMessage.messageStatus.value,
+                                widget.chatMessage.isMessageSentByMe,
+                                widget.chatMessage.messageType,
+                                widget.chatMessage.isMessageRecalled.value),
+                            const SizedBox(
+                              width: 4,
+                            ),
+                            Stack(
+                              children: [
+                                // AppUtils.assetIcon(assetName:cornerShadow,width: 40,height: 20,fit: BoxFit.fitHeight,),
+                                Text(
+                                  getChatTime(
+                                      context,
+                                      widget.chatMessage.messageSentTime
+                                          .toInt()),
+                                  style: widget
+                                      .imageMessageViewStyle.timeTextStyle,
+                                  // style: TextStyle(fontSize: 11, color: widget.chatMessage.isMessageSentByMe ? durationTextColor : textButtonColor),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     )
                   : const Offstage(),
@@ -127,10 +144,15 @@ getImage(
     BuildContext context,
     String mediaFileName,
     bool isSelected,
-    String messageId) {
+    String messageId,
+    ChatMessageModel chatMessage) {
   debugPrint(
       "getImage mediaLocalStoragePath : $mediaLocalStoragePath -- $mediaFileName");
-  if (MediaUtils.isMediaExists(mediaLocalStoragePath.value)) {
+  // chatMessage.isMediaDownloading() conditional check is for the media download or uploaded in android once
+  // after deleting it from local, the isMediaExists returns true but the file is empty,
+  // error Image error builder, so we added.
+  if (MediaUtils.isMediaExists(mediaLocalStoragePath.value) &&
+      !chatMessage.isMediaDownloading()) {
     return InkWell(
         onTap: isSelected
             ? null

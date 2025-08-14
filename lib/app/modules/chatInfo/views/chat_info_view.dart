@@ -44,6 +44,15 @@ class ChatInfoView extends NavViewStateful<ChatInfoController> {
                         floating: false,
                         leading: IconButton(
                           icon: Icon(Icons.arrow_back,
+                              shadows: [
+                                Shadow(
+                                  color: Colors.black.withOpacity(0.9),
+                                  // Shadow color
+                                  offset: const Offset(2, 2),
+                                  // Shadow position
+                                  blurRadius: 5, // Shadow blur
+                                ),
+                              ],
                               color: controller.isSliverAppBarExpanded
                                   ? AppStyleConfig
                                       .chatInfoPageStyle.silverAppBarIconColor
@@ -238,14 +247,17 @@ class ChatInfoView extends NavViewStateful<ChatInfoController> {
                     width: 10,
                   ),
                   Obx(() {
-                    return Text(
-                      controller.profile.email.checkNull(),
-                      style: AppStyleConfig.chatInfoPageStyle.optionsViewStyle
-                          .descriptionTextStyle,
-                      /*style: const TextStyle(
-                            fontSize: 13,
-                            color: textColor,
-                            fontWeight: FontWeight.w500)*/
+                    return Flexible(
+                      child: Text(
+                        controller.profile.email.checkNull(),
+                        style: AppStyleConfig.chatInfoPageStyle.optionsViewStyle
+                            .descriptionTextStyle,
+                        overflow: TextOverflow.ellipsis,
+                        /*style: const TextStyle(
+                              fontSize: 13,
+                              color: textColor,
+                              fontWeight: FontWeight.w500)*/
+                      ),
                     );
                   }),
                 ],

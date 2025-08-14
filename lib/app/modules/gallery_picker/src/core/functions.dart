@@ -66,6 +66,7 @@ class GalleryFunctions {
         requestOption: const PermissionRequestOption(
             iosAccessLevel: IosAccessLevel.readWrite));
     if (result.isAuth) {*/
+
     /// load "recent" album
     provider.setAssetCount();
     PhotoManager.startChangeNotify();
@@ -84,6 +85,7 @@ class GalleryFunctions {
   }
 
   static var i = 0;
+
   static _refreshPathList(setState, GalleryMediaPickerController provider) {
     PhotoManager.getAssetPathList(type: RequestType.common).then((pathList) {
       /// don't delete setState

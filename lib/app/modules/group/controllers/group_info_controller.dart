@@ -26,27 +26,37 @@ class GroupInfoController extends GetxController {
   ScrollController scrollController = ScrollController();
   var groupMembers = <ProfileDetails>[].obs;
   final _mute = false.obs;
+
   set mute(value) => _mute.value = value;
+
   bool get mute => _mute.value;
 
   final _isAdmin = false.obs;
+
   set isAdmin(value) => _isAdmin.value = value;
+
   bool get isAdmin => _isAdmin.value;
 
   final _isMemberOfGroup = true.obs;
+
   set isMemberOfGroup(value) => _isMemberOfGroup.value = value;
+
   bool get isMemberOfGroup =>
       availableFeatures.value.isGroupChatAvailable.checkNull() &&
       _isMemberOfGroup.value;
 
   var profile_ = ProfileDetails().obs;
+
   //set profile(value) => _profile.value = value;
   ProfileDetails get profile => profile_.value;
 
   final _isSliverAppBarExpanded = true.obs;
+
   set isSliverAppBarExpanded(value) => _isSliverAppBarExpanded.value = value;
+
   bool get isSliverAppBarExpanded => _isSliverAppBarExpanded.value;
   final muteable = false.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -222,9 +232,10 @@ class GroupInfoController extends GetxController {
       if (muteable.value) {
         LogMessage.d("change", value.toString());
         _mute(value);
-        Mirrorfly.updateChatMuteStatus(
-            jid: profile.jid.checkNull(), muteStatus: value);
-        notifyDashboardUI();
+        // Mirrorfly.updateChatMuteStatus(jid:profile.jid.checkNull(), muteStatus: value);
+        Mirrorfly.updateChatMuteStatusList(
+            jidList: [profile.jid.checkNull()], muteStatus: value);
+        // notifyDashboardUI();
       }
     } else {
       toToast(getTranslated("youAreNoLonger"));
@@ -248,11 +259,8 @@ class GroupInfoController extends GetxController {
   }
 
   void sortGroupMembers(List<ProfileDetails> list) {
-    list.sort((a, b) => (a.jid == SessionManagement.getUserJID())
-        ? 1
-        : (b.jid == SessionManagement.getUserJID())
-            ? -1
-            : 0);
+    list.sort((a, b) =>
+        a.getName().toLowerCase().compareTo(b.getName().toLowerCase()));
     groupMembers.value = (list);
     groupMembers.refresh();
   }
@@ -339,6 +347,7 @@ class GroupInfoController extends GetxController {
   }
 
   var leavedGroup = false.obs;
+
   exitFromGroup() async {
     if (!availableFeatures.value.isGroupChatAvailable.checkNull()) {
       DialogUtils.showFeatureUnavailable();
@@ -416,6 +425,7 @@ class GroupInfoController extends GetxController {
   }
 
   var imagePath = "".obs;
+
   Future imagePicker(BuildContext context) async {
     if (await AppUtils.isNetConnected()) {
       FilePickerResult? result = await FilePicker.platform
@@ -440,6 +450,7 @@ class GroupInfoController extends GetxController {
   }
 
   final ImagePicker _picker = ImagePicker();
+
   camera() async {
     if (!availableFeatures.value.isGroupChatAvailable.checkNull()) {
       DialogUtils.showFeatureUnavailable();
@@ -794,6 +805,28 @@ class GroupInfoController extends GetxController {
     if (jid == SessionManagement.getUserJID().checkNull()) {
       groupAdmin();
       memberOfGroup();
+    }
+  }
+
+  void onSuperAdminDeleteGroup(
+      {required String groupJid, required String groupName}) {
+    LogMessage.d("Group Info Controller",
+        "onSuperAdminDeleteGroup groupJid $groupJid, groupName $groupName");
+    if (Get.isRegistered<DashboardController>()) {
+      LogMessage.d("DashboardController found", "Deleting Groups");
+      Get.find<DashboardController>()
+          .deleteGroup(groupJid: groupJid, groupName: groupName);
+    }
+    NavUtils.popUntil((route) => !(route.navigator?.canPop() ?? false));
+  }
+
+  void onChatMuteStatusUpdated({bool? muteStatus, List<String>? jidList}) {
+    LogMessage.d("GroupInfoController onChatMuteStatusUpdated",
+        "muteStatus : $muteStatus, jidList: $jidList");
+    if (muteStatus == null || jidList == null) return;
+    if (jidList.contains(profile.jid)) {
+      profile.isMuted = muteStatus;
+      _mute(muteStatus);
     }
   }
 }

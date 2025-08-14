@@ -57,6 +57,7 @@ class StatusListView extends NavViewStateful<StatusListController> {
                     fit: BoxFit.contain,
                   ),
                   onTap: () {
+                    controller.onChanged();
                     NavUtils.toNamed(Routes.addProfileStatus, arguments: {
                       "status": controller.selectedStatus.value
                     })?.then((value) {

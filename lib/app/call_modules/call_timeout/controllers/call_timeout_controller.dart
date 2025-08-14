@@ -11,12 +11,15 @@ import '../../../routes/route_settings.dart';
 class CallTimeoutController extends GetxController {
   var callType = ''.obs;
   var callMode = ''.obs;
+
   // var userJID = ''.obs;
   var calleeName = ''.obs;
+
   // Rx<Profile> profile = Profile().obs;
 
   var users = <String?>[].obs;
   var groupId = ''.obs;
+
   @override
   Future<void> onInit() async {
     super.onInit();
@@ -60,6 +63,7 @@ class CallTimeoutController extends GetxController {
               }
             }
             Mirrorfly.makeGroupVoiceCall(
+                groupJid: groupId.value,
                 toUserJidList: usersList,
                 flyCallBack: (FlyResponse response) {
                   NavUtils.offNamed(Routes.outGoingCallView,
@@ -88,6 +92,7 @@ class CallTimeoutController extends GetxController {
               }
             }
             Mirrorfly.makeGroupVideoCall(
+                groupJid: groupId.value,
                 toUserJidList: usersList,
                 flyCallBack: (FlyResponse response) {
                   NavUtils.offNamed(Routes.outGoingCallView,

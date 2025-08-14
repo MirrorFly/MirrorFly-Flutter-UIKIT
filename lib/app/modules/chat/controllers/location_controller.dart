@@ -16,6 +16,7 @@ class LocationController extends GetxController {
     target: LatLng(20.42796133580664, 80.885749655962),
     zoom: 14.4746,
   ).obs;
+
   // on below line we have created the list of markers
 
   Rx<Marker> marker = const Marker(

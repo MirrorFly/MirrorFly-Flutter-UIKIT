@@ -1,108 +1,91 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mirrorfly_uikit_plugin/app/stylesheet/stylesheet.dart';
 
 import '../../../common/constants.dart';
 import '../../../data/utils.dart';
+import '../controllers/chat_controller.dart';
 
 class FloatingFab extends StatefulWidget {
   const FloatingFab(
       {super.key,
-      required this.parentWidgetHeight,
-      required this.parentWidgetWidth,
       required this.onFabTap,
-      required this.fabTheme});
+      required this.fabTheme,
+      required this.controller});
 
-  final RxDouble parentWidgetHeight;
-  final RxDouble parentWidgetWidth;
   final Function() onFabTap;
-  final FloatingActionButtonThemeData fabTheme;
+  final InstantScheduleMeetStyle fabTheme;
+  final ChatController controller;
 
   @override
   State<FloatingFab> createState() => _FloatingFabState();
 }
 
 class _FloatingFabState extends State<FloatingFab> {
-  Rx<Offset> position = const Offset(10, 15).obs;
-  Rx<Offset> startPosition =
-      const Offset(0, 0).obs; // Initial position when dragging starts
-  RxBool isDragging = false.obs;
-  late double screenHeight;
-
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      return AnimatedPositioned(
-        duration: isDragging.value
-            ? Duration.zero
-            : const Duration(milliseconds: 250),
-        right: position.value.dx,
-        bottom: position.value.dy,
-        child: GestureDetector(
-          onPanStart: (details) {
-            isDragging(true);
-            // startPosition = position;
-          },
-          onPanUpdate: (details) {
-            if (!isDragging.value) return;
+      final double screenHeight = widget.controller.screenHeight.value;
+      final double screenWidth = widget.controller.screenWidth.value;
+      final Offset position = widget.controller.fabPosition.value;
 
-            position(Offset(position.value.dx - details.delta.dx,
-                position.value.dy - details.delta.dy));
-          },
-          onPanEnd: (details) {
-            if (!isDragging.value) return;
-            // setState(() {
-            isDragging(false);
-            // });
-            updatePosition(position.value);
-          },
-          child: buildFab(),
-        ),
-      );
+      if (screenHeight <= 0 || screenWidth <= 0) {
+        return const SizedBox.shrink();
+      }
+      final double safeBottom =
+          screenHeight - widget.controller.fabHeight.value;
+      final double clampedY =
+          position.dy.clamp(widget.controller.safeTop.value, safeBottom);
+      final double clampedX = position.dx.clamp(
+          widget.controller.margin.value,
+          screenWidth -
+              widget.controller.fabHeight.value -
+              widget.controller.margin.value);
+      return (widget.controller.screenHeight.value == 0.0)
+          ? const SizedBox()
+          : AnimatedPositioned(
+              duration: widget.controller.isDraggingFab.value
+                  ? Duration.zero
+                  : const Duration(milliseconds: 250),
+              right: screenWidth - widget.controller.fabHeight.value - clampedX,
+              top: clampedY,
+              child: GestureDetector(
+                onPanStart: (details) => widget.controller.isDraggingFab(true),
+                onPanUpdate: (details) {
+                  if (!widget.controller.isDraggingFab.value) return;
+                  final newX = (position.dx + details.delta.dx).clamp(
+                      widget.controller.margin.value,
+                      screenWidth -
+                          widget.controller.fabHeight.value -
+                          widget.controller.margin.value);
+                  final newY = (position.dy + details.delta.dy)
+                      .clamp(widget.controller.safeTop.value, safeBottom);
+                  widget.controller.fabPosition(Offset(newX, newY));
+                },
+                onPanEnd: (details) {
+                  widget.controller.isDraggingFab(false);
+                  widget.controller
+                      .updateFabPosition(widget.controller.fabPosition.value);
+                },
+                child: buildFab(),
+              ),
+            );
     });
-  }
-
-  void updatePosition(Offset newOffset) {
-    double fabWidth = 56.0;
-    double fabHeight = 56.0;
-
-    debugPrint("screenWidth ${widget.parentWidgetWidth}");
-    debugPrint("screenHeight ${widget.parentWidgetHeight}");
-
-    // Calculate the new position based on drag offset
-    double newX =
-        newOffset.dx.clamp(0.0, widget.parentWidgetWidth.value - fabWidth);
-    double newY = newOffset.dy
-        .clamp(0.0, widget.parentWidgetHeight.value - fabHeight - 16);
-
-    // Snap to the closest side (left or right)
-    if (newX < widget.parentWidgetWidth.value / 2) {
-      newX = 5; // Snap to the left
-    } else {
-      newX = widget.parentWidgetWidth.value - fabWidth - 5; // Snap to the right
-    }
-
-    // Ensure the FAB stays within vertical bounds
-    newY = newY.clamp(5, widget.parentWidgetHeight.value - fabHeight - 16);
-
-    // position = Offset(widget.controller.screenWidth.value - newX - fabWidth, widget.controller.screenHeight.value - newY - fabHeight);
-
-    debugPrint("newX $newX");
-    debugPrint("newY $newY");
-    // Update the position
-    position(Offset(newX, newY));
   }
 
   Widget buildFab() {
     return Theme(
-      data: ThemeData(floatingActionButtonTheme: widget.fabTheme),
+      data: ThemeData(floatingActionButtonTheme: widget.fabTheme.meetFabStyle),
       child: FloatingActionButton(
         onPressed: widget.onFabTap,
-        child: AppUtils.svgIcon(
-          icon: meetSchedule,
-          width: widget.fabTheme.iconSize,
-          colorFilter: ColorFilter.mode(
-              widget.fabTheme.foregroundColor ?? Colors.white, BlendMode.srcIn),
-        ),
+        child: widget.fabTheme.iconMeet ??
+            AppUtils.svgIcon(
+              icon: meetSchedule,
+              width: widget.fabTheme.meetFabStyle.iconSize,
+              colorFilter: ColorFilter.mode(
+                  widget.fabTheme.meetFabStyle.foregroundColor ?? Colors.white,
+                  BlendMode.srcIn),
+            ),
       ),
     );
   }

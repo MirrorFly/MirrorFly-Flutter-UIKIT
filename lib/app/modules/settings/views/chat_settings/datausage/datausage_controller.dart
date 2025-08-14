@@ -7,27 +7,37 @@ class DataUsageController extends GetxController {
   var mobile = "Mobile";
 
   final _openMobileData = false.obs;
+
   bool get openMobileData => _openMobileData.value;
 
   final _openWifiData = false.obs;
+
   bool get openWifiData => _openWifiData.value;
 
   final _autoDownloadMobilePhoto = false.obs;
+
   bool get autoDownloadMobilePhoto => _autoDownloadMobilePhoto.value;
   final _autoDownloadMobileVideo = false.obs;
+
   bool get autoDownloadMobileVideo => _autoDownloadMobileVideo.value;
   final _autoDownloadMobileAudio = false.obs;
+
   bool get autoDownloadMobileAudio => _autoDownloadMobileAudio.value;
   final _autoDownloadMobileDocument = false.obs;
+
   bool get autoDownloadMobileDocument => _autoDownloadMobileDocument.value;
 
   final _autoDownloadWifiPhoto = false.obs;
+
   bool get autoDownloadWifiPhoto => _autoDownloadWifiPhoto.value;
   final _autoDownloadWifiVideo = false.obs;
+
   bool get autoDownloadWifiVideo => _autoDownloadWifiVideo.value;
   final _autoDownloadWifiAudio = false.obs;
+
   bool get autoDownloadWifiAudio => _autoDownloadWifiAudio.value;
   final _autoDownloadWifiDocument = false.obs;
+
   bool get autoDownloadWifiDocument => _autoDownloadWifiDocument.value;
 
   @override
@@ -63,14 +73,20 @@ class DataUsageController extends GetxController {
   }
 
   setAutoDownloadMobilePhoto(bool value) => _autoDownloadMobilePhoto(value);
+
   setAutoDownloadMobileAudio(bool value) => _autoDownloadMobileAudio(value);
+
   setAutoDownloadMobileVideo(bool value) => _autoDownloadMobileVideo(value);
+
   setAutoDownloadMobileDocument(bool value) =>
       _autoDownloadMobileDocument(value);
 
   setAutoDownloadWifiPhoto(bool value) => _autoDownloadWifiPhoto(value);
+
   setAutoDownloadWifiAudio(bool value) => _autoDownloadWifiAudio(value);
+
   setAutoDownloadWifiVideo(bool value) => _autoDownloadWifiVideo(value);
+
   setAutoDownloadWifiDocument(bool value) => _autoDownloadWifiDocument(value);
 
   void onClick(String from, String type) {

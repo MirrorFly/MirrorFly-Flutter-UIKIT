@@ -46,6 +46,27 @@ class CallTimeoutView extends NavViewStateful<CallTimeoutController> {
                         height: 16,
                       ),
                       Obx(() {
+                        return controller.groupId.isNotEmpty
+                            ? Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 30.0, right: 30.0, bottom: 16.0),
+                                child: FutureBuilder(
+                                    future: getProfileDetails(
+                                        controller.groupId.value),
+                                    builder: (ctx, snap) {
+                                      return snap.hasData && snap.data != null
+                                          ? Text(
+                                              snap.data!.getName(),
+                                              style: AppStyleConfig
+                                                  .callAgainPageStyle
+                                                  .callerNameTextStyle,
+                                              overflow: TextOverflow.ellipsis,
+                                            )
+                                          : const Offstage();
+                                    }))
+                            : const Offstage();
+                      }),
+                      Obx(() {
                         return Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 30.0),
@@ -146,8 +167,9 @@ class CallTimeoutView extends NavViewStateful<CallTimeoutController> {
                   left: 0,
                   right: 0,
                   child: Container(
-                    decoration: AppStyleConfig.callAgainPageStyle
-                        .bottomActionsContainerDecoration, //AppColors.bottomCallOptionBackground,
+                    decoration: AppStyleConfig
+                        .callAgainPageStyle.bottomActionsContainerDecoration,
+                    //AppColors.bottomCallOptionBackground,
                     width: NavUtils.width,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -224,7 +246,8 @@ class CallTimeoutView extends NavViewStateful<CallTimeoutController> {
                                           backgroundColor: AppStyleConfig
                                               .callAgainPageStyle
                                               .callAgainActionStyle
-                                              .activeBgColor, //AppColors.callAgainButtonBackground,
+                                              .activeBgColor,
+                                          //AppColors.callAgainButtonBackground,
                                           onPressed: () {
                                             controller.callAgain();
                                           },

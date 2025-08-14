@@ -16,6 +16,7 @@ import '../controllers/profile_controller.dart';
 
 class ProfileView extends NavViewStateful<ProfileController> {
   const ProfileView({Key? key}) : super(key: key);
+
   @override
   ProfileController createController({String? tag}) =>
       Get.put(ProfileController());
@@ -265,25 +266,22 @@ class ProfileView extends NavViewStateful<ProfileController> {
                             .profileViewStyle.mobileTextFieldStyle.titleStyle,
                         // style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
                       ),
-                      Obx(() {
-                        return TextField(
-                          cursorColor: buttonBgColor,
-                          controller: controller.profileMobile,
-                          onChanged: (value) =>
-                              controller.onMobileChange(value),
-                          enabled: controller.mobileEditAccess.value,
-                          decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: getTranslated("enterMobileNumber"),
-                              icon: AppUtils.svgIcon(
-                                  icon: 'assets/logos/phone.svg'),
-                              hintStyle: AppStyleConfig.profileViewStyle
-                                  .mobileTextFieldStyle.editTextHintStyle),
-                          style: AppStyleConfig.profileViewStyle
-                              .mobileTextFieldStyle.editTextStyle,
-                          // style: const TextStyle(fontWeight: FontWeight.normal, color: textColor),
-                        );
-                      }),
+                      TextField(
+                        cursorColor: buttonBgColor,
+                        controller: controller.profileMobile,
+                        onChanged: (value) => controller.onMobileChange(value),
+                        enabled: false,
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: getTranslated("enterMobileNumber"),
+                            icon: AppUtils.svgIcon(
+                                icon: 'assets/logos/phone.svg'),
+                            hintStyle: AppStyleConfig.profileViewStyle
+                                .mobileTextFieldStyle.editTextHintStyle),
+                        style: AppStyleConfig.profileViewStyle
+                            .mobileTextFieldStyle.editTextStyle,
+                        // style: const TextStyle(fontWeight: FontWeight.normal, color: textColor),
+                      ),
                       const AppDivider(),
                       const SizedBox(
                         height: 20,

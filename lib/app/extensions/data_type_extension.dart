@@ -31,7 +31,7 @@ extension StringParsing on String? {
   bool startsWithTextInWords(String text) {
     return !this!.toLowerCase().contains(text.toLowerCase())
         ? false
-        : this!.toLowerCase().startsWith(text.toLowerCase());
+        : true /*this!.toLowerCase().startsWith(text.toLowerCase())*/;
     //checkIndexes(text)>-1;
     /*return when {
       this.indexOf(text, ignoreCase = true) <= -1 -> false
@@ -41,8 +41,12 @@ extension StringParsing on String? {
 }
 
 extension BooleanParsing on bool? {
-  //check null
+  //cheeck null
   bool checkNull() {
     return this ?? false;
+  }
+
+  bool isNull() {
+    return this == null ? true : false;
   }
 }

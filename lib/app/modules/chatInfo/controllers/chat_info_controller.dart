@@ -14,6 +14,7 @@ import '../../../routes/route_settings.dart';
 
 class ChatInfoController extends GetxController {
   var profile_ = ProfileDetails().obs;
+
   ProfileDetails get profile => profile_.value;
   var mute = false.obs;
   var nameController = TextEditingController();
@@ -22,11 +23,14 @@ class ChatInfoController extends GetxController {
 
   var silverBarHeight = 20.0;
   final _isSliverAppBarExpanded = true.obs;
+
   set isSliverAppBarExpanded(value) => _isSliverAppBarExpanded.value = value;
+
   bool get isSliverAppBarExpanded => _isSliverAppBarExpanded.value;
 
   final muteable = false.obs;
   var userPresenceStatus = ''.obs;
+
   ChatInfoArguments get argument => NavUtils.arguments as ChatInfoArguments;
 
   @override
@@ -67,9 +71,10 @@ class ChatInfoController extends GetxController {
     if (muteable.value) {
       LogMessage.d("change", value.toString());
       mute(value);
-      Mirrorfly.updateChatMuteStatus(
-          jid: profile.jid.checkNull(), muteStatus: value);
-      notifyDashboardUI();
+      // Mirrorfly.updateChatMuteStatus(jid: profile.jid.checkNull(), muteStatus: value);
+      Mirrorfly.updateChatMuteStatusList(
+          jidList: [profile.jid.checkNull()], muteStatus: value);
+      // notifyDashboardUI();
     }
   }
 
@@ -198,6 +203,16 @@ class ChatInfoController extends GetxController {
     if (Get.isRegistered<DashboardController>()) {
       Get.find<DashboardController>()
           .chatMuteChangesNotifyUI(profile.jid.checkNull());
+    }
+  }
+
+  void onChatMuteStatusUpdated({bool? muteStatus, List<String>? jidList}) {
+    LogMessage.d("ChatInfo onChatMuteStatusUpdated",
+        "muteStatus : $muteStatus, jidList: $jidList");
+    if (muteStatus == null || jidList == null) return;
+    if (jidList.contains(profile.jid)) {
+      profile.isMuted = muteStatus;
+      mute(muteStatus);
     }
   }
 }

@@ -16,6 +16,8 @@ import '../stylesheet/stylesheet.dart';
 class AppPermission {
   AppPermission._();
 
+  static bool isShowing = false;
+
   static Future<bool> getStoragePermission(
       {String? permissionContent, String? deniedContent}) async {
     var sdkVersion = 0;
@@ -28,16 +30,19 @@ class AppPermission {
     if (sdkVersion < 33 && Platform.isAndroid) {
       final permission = await Permission.storage.status;
       if (permission != PermissionStatus.granted &&
+          permission != PermissionStatus.limited &&
           permission != PermissionStatus.permanentlyDenied) {
         const newPermission = Permission.storage;
         var deniedPopupValue = await mirrorFlyPermissionDialog(
             icon: filePermission,
             content:
-                permissionContent ?? getTranslated("filePermissionContent"),
+            permissionContent ?? getTranslated("filePermissionContent"),
             dialogStyle: AppStyleConfig.dialogStyle);
         if (deniedPopupValue) {
+          isShowing = true;
           var newp = await newPermission.request();
-          if (newp.isGranted) {
+          if (newp.isGranted || newp.isLimited) {
+            isShowing = false;
             return true;
           } else {
             var popupValue = await customPermissionDialog(
@@ -46,16 +51,33 @@ class AppPermission {
                 dialogStyle: AppStyleConfig.dialogStyle);
             if (popupValue) {
               openAppSettings();
+              isShowing = false;
               return false;
             } else {
+              isShowing = false;
               return false;
             }
           }
         } else {
+          isShowing = false;
           return newPermission.status.isGranted;
         }
+      } else if (permission == PermissionStatus.permanentlyDenied) {
+        LogMessage.d(
+            "mirrorfly permission", "Photo permission permanently denied");
+        var popupValue = await customPermissionDialog(
+          icon: filePermission,
+          content: deniedContent ?? getPermissionAlertMessage("storage"),
+          dialogStyle: AppStyleConfig.dialogStyle,
+        );
+        if (popupValue) {
+          await openAppSettings();
+        }
+        isShowing = false;
+        return false;
       } else {
-        return permission.isGranted;
+        isShowing = false;
+        return (permission.isGranted || permission.isLimited);
       }
     } else if (Platform.isIOS) {
       final photos = await Permission.photos.status;
@@ -67,21 +89,26 @@ class AppPermission {
         // Permission.audio
       ];
       if ((photos != PermissionStatus.granted &&
-              photos != PermissionStatus.permanentlyDenied) ||
+          photos != PermissionStatus.permanentlyDenied &&
+          photos != PermissionStatus.limited) ||
           (storage != PermissionStatus.granted &&
-              storage != PermissionStatus.permanentlyDenied)) {
+              storage != PermissionStatus.permanentlyDenied &&
+              storage != PermissionStatus.limited)) {
         LogMessage.d("showing mirrorfly popup", "");
         var deniedPopupValue = await mirrorFlyPermissionDialog(
             icon: filePermission,
             content:
-                permissionContent ?? getTranslated("filePermissionContent"),
+            permissionContent ?? getTranslated("filePermissionContent"),
             dialogStyle: AppStyleConfig.dialogStyle);
         if (deniedPopupValue) {
+          isShowing = true;
           var newp = await newPermission.request();
           PermissionStatus? photo = newp[Permission.photos];
           PermissionStatus? storage = newp[Permission.storage];
           // var audio = await newPermission[2].isGranted;
-          if (photo!.isGranted && storage!.isGranted) {
+          if ((photo!.isGranted || photo!.isLimited) &&
+              (storage!.isGranted || storage!.isLimited)) {
+            isShowing = false;
             return true;
           } else if (photo.isPermanentlyDenied ||
               storage!.isPermanentlyDenied) {
@@ -91,20 +118,37 @@ class AppPermission {
                 dialogStyle: AppStyleConfig.dialogStyle);
             if (popupValue) {
               openAppSettings();
-              return false;
-            } else {
-              return false;
             }
+            isShowing = false;
+            return false;
           } else {
+            isShowing = false;
             return false;
           }
         } else {
-          return false; //PermissionStatus.denied;
+          isShowing = false;
+          return false;
         }
+      } else if (photos == PermissionStatus.permanentlyDenied ||
+          storage == PermissionStatus.permanentlyDenied) {
+        LogMessage.d(
+            "mirrorfly permission", "Photo permission permanently denied");
+        var popupValue = await customPermissionDialog(
+          icon: filePermission,
+          content: deniedContent ?? getPermissionAlertMessage("storage"),
+          dialogStyle: AppStyleConfig.dialogStyle,
+        );
+        if (popupValue) {
+          await openAppSettings();
+        }
+        isShowing = false;
+        return false;
       } else {
+        isShowing = false;
         LogMessage.d("showing mirrorfly popup",
             "${photos.isGranted} ${storage.isGranted}");
-        return (photos.isGranted && storage.isGranted);
+        return ((photos.isGranted || photos.isLimited) &&
+            (storage.isGranted || storage.isLimited));
         // ? photos
         // : photos;
       }
@@ -125,10 +169,13 @@ class AppPermission {
       // Permission.audio
     ];
     if ((photos != PermissionStatus.granted &&
-            photos != PermissionStatus.permanentlyDenied) ||
+        photos != PermissionStatus.limited &&
+        photos != PermissionStatus.permanentlyDenied) ||
         (videos != PermissionStatus.granted &&
+            videos != PermissionStatus.limited &&
             videos != PermissionStatus.permanentlyDenied) ||
         (mediaLibrary != PermissionStatus.granted &&
+            mediaLibrary != PermissionStatus.limited &&
             mediaLibrary != PermissionStatus.permanentlyDenied)) {
       LogMessage.d("showing mirrorfly popup", "");
       var deniedPopupValue = await mirrorFlyPermissionDialog(
@@ -136,12 +183,16 @@ class AppPermission {
           content: getTranslated("filePermissionContent"),
           dialogStyle: AppStyleConfig.dialogStyle);
       if (deniedPopupValue) {
+        isShowing = true;
         var newp = await newPermission.request();
         PermissionStatus? photo = newp[Permission.photos];
         PermissionStatus? video = newp[Permission.videos];
         PermissionStatus? mediaLibrary = newp[Permission.mediaLibrary];
         // var audio = await newPermission[2].isGranted;
-        if (photo!.isGranted && video!.isGranted && mediaLibrary!.isGranted) {
+        if ((photo!.isGranted || photo!.isLimited) &&
+            (video!.isGranted || video!.isLimited) &&
+            (mediaLibrary!.isGranted || mediaLibrary!.isLimited)) {
+          isShowing = false;
           return true;
         } else if (photo.isPermanentlyDenied ||
             video!.isPermanentlyDenied ||
@@ -152,20 +203,41 @@ class AppPermission {
               dialogStyle: AppStyleConfig.dialogStyle);
           if (popupValue) {
             openAppSettings();
+            isShowing = false;
             return false;
           } else {
+            isShowing = false;
             return false;
           }
         } else {
+          isShowing = false;
           return false;
         }
       } else {
+        isShowing = false;
         return false; //PermissionStatus.denied;
       }
+    } else if (photos.isPermanentlyDenied ||
+        videos.isPermanentlyDenied ||
+        mediaLibrary.isPermanentlyDenied) {
+      isShowing = true;
+      var popupValue = await customPermissionDialog(
+        icon: filePermission,
+        content: getPermissionAlertMessage("storage"),
+        dialogStyle: AppStyleConfig.dialogStyle,
+      );
+      isShowing = false;
+      if (popupValue) {
+        openAppSettings();
+      }
+      return false;
     } else {
+      isShowing = false;
       LogMessage.d("showing mirrorfly popup",
           "${photos.isGranted} ${videos.isGranted} ${mediaLibrary.isGranted}");
-      return (photos.isGranted && videos.isGranted && mediaLibrary.isGranted);
+      return ((photos.isGranted || photos.isLimited) &&
+          (videos.isGranted || videos.isLimited) &&
+          (mediaLibrary.isGranted || mediaLibrary.isLimited));
       // ? photos
       // : photos;
     }
@@ -189,10 +261,10 @@ class AppPermission {
           "SessionManagement.getBool(Constants.notificationPermissionAsked) notification",
           (SessionManagement.getBool(Constants.notificationPermissionAsked)));
       var alreadyAsked =
-          (SessionManagement.getBool(Constants.notificationPermissionAsked));
+      (SessionManagement.getBool(Constants.notificationPermissionAsked));
       LogMessage.d("alreadyAsked notification", alreadyAsked);
       var dialogContent2 =
-          getTranslated("notificationPermissionMessageContent");
+      getTranslated("notificationPermissionMessageContent");
       if (shouldShowRequestRationale) {
         LogMessage.d("shouldShowRequestRationale", shouldShowRequestRationale);
         return requestNotificationPermissions(
@@ -210,8 +282,10 @@ class AppPermission {
                 .dialogStyle); //getPermissionAlertMessage("audio_call"));
         if (popupValue) {
           openAppSettings();
+          isShowing = false;
           return false;
         } else {
+          isShowing = false;
           return false;
         }
       } else {
@@ -230,46 +304,59 @@ class AppPermission {
                   .dialogStyle); //getPermissionAlertMessage("audio_call"));
           if (popupValue) {
             openAppSettings();
+            isShowing = false;
             return false;
           } else {
+            isShowing = false;
             return false;
           }
         }
       }
     } else {
+      isShowing = false;
       return true;
     }
   }
 
   static Future<bool> requestNotificationPermissions(
       {required String icon,
-      required String title,
-      required String message,
-      required List<Permission> permissions,
-      bool showFromRational = false}) async {
+        required String title,
+        required String message,
+        required List<Permission> permissions,
+        bool showFromRational = false}) async {
     var deniedPopupValue = await notificationPermissionDialog(
         icon: icon,
         title: title,
         message: message); //Constants.audioCallPermission);
     if (deniedPopupValue) {
       LogMessage.d("deniedPopupValue", deniedPopupValue);
+      isShowing = true;
       var newp = await permissions.request();
       PermissionStatus? notification_ = newp[Permission.notification];
       if (notification_ != null) {
         LogMessage.d("notification_", notification_.isPermanentlyDenied);
         SessionManagement.setBool(Constants.notificationPermissionAsked, true);
       }
+      isShowing = false;
       return (notification_?.isGranted ?? true);
     } else {
+      isShowing = false;
       return false;
     }
+  }
+
+  static Future<bool> checkPermission(
+      Permission permissionToCheck) async {
+    final status = await permissionToCheck.status;
+    return (status == PermissionStatus.granted ||
+        status == PermissionStatus.limited);
   }
 
   static Future<bool> askAudioCallPermissions() async {
     final microphone = await Permission.microphone.status; //RECORD_AUDIO
     final phone = await Permission.phone.status; //READ_PHONE_STATE
     final bluetoothConnect =
-        await Permission.bluetoothConnect.status; //BLUETOOTH_CONNECT
+    await Permission.bluetoothConnect.status; //BLUETOOTH_CONNECT
     final notification = await Permission.notification.status; //NOTIFICATION
     var permissions = <Permission>[];
     if (Platform.isAndroid &&
@@ -306,10 +393,10 @@ class AppPermission {
         (Platform.isAndroid ? !bluetoothConnect.isGranted : false) ||
         (Platform.isAndroid ? !notification.isGranted : false)) {
       var shouldShowRequestRationale =
-          ((await Permission.microphone.shouldShowRequestRationale) ||
-              (await Permission.phone.shouldShowRequestRationale) ||
-              (await Permission.bluetoothConnect.shouldShowRequestRationale) ||
-              (await Permission.notification.shouldShowRequestRationale));
+      ((await Permission.microphone.shouldShowRequestRationale) ||
+          (await Permission.phone.shouldShowRequestRationale) ||
+          (await Permission.bluetoothConnect.shouldShowRequestRationale) ||
+          (await Permission.notification.shouldShowRequestRationale));
       LogMessage.d(
           "shouldShowRequestRationale audio", shouldShowRequestRationale);
       LogMessage.d(
@@ -317,16 +404,16 @@ class AppPermission {
           (SessionManagement.getBool(Constants.audioRecordPermissionAsked)));
       LogMessage.d("permissions audio", (permissions.toString()));
       var alreadyAsked =
-          ((SessionManagement.getBool(Constants.audioRecordPermissionAsked) ||
-                  (Platform.isAndroid &&
-                      SessionManagement.getBool(
-                          Constants.readPhoneStatePermissionAsked)) ||
-                  (Platform.isAndroid &&
-                      SessionManagement.getBool(
-                          Constants.bluetoothPermissionAsked))) &&
-              (Platform.isAndroid &&
-                  SessionManagement.getBool(
-                      Constants.notificationPermissionAsked)));
+      ((SessionManagement.getBool(Constants.audioRecordPermissionAsked) ||
+          (Platform.isAndroid &&
+              SessionManagement.getBool(
+                  Constants.readPhoneStatePermissionAsked)) ||
+          (Platform.isAndroid &&
+              SessionManagement.getBool(
+                  Constants.bluetoothPermissionAsked))) &&
+          (Platform.isAndroid &&
+              SessionManagement.getBool(
+                  Constants.notificationPermissionAsked)));
       LogMessage.d("alreadyAsked audio", alreadyAsked);
       var permissionName = getPermissionDisplayName(permissions);
       LogMessage.d("permissionName", permissionName);
@@ -334,12 +421,33 @@ class AppPermission {
           .replaceAll("%d", permissionName);
       var dialogContent2 = getTranslated("callPermissionDeniedContent")
           .replaceAll("%d", permissionName);
+
+      var isAnyPermissionPermanentlyDenied = microphone.isPermanentlyDenied ||
+          (Platform.isAndroid &&
+              (bluetoothConnect.isPermanentlyDenied ||
+                  phone.isPermanentlyDenied ||
+                  notification.isPermanentlyDenied));
       if (shouldShowRequestRationale) {
         LogMessage.d("shouldShowRequestRationale", shouldShowRequestRationale);
         return requestAudioCallPermissions(
             content: dialogContent,
             permissions: permissions,
             showFromRational: true);
+      } else if (isAnyPermissionPermanentlyDenied) {
+        var popupValue = await customPermissionDialog(
+            icon: audioPermission,
+            content: dialogContent2,
+            dialogStyle: AppStyleConfig
+                .dialogStyle); //getPermissionAlertMessage("audio_call"));
+        LogMessage.d("requestAudioCallPermissions popupValue", popupValue);
+        if (popupValue) {
+          openAppSettings();
+          isShowing = false;
+          return false;
+        } else {
+          isShowing = false;
+          return false;
+        }
       } else if (alreadyAsked) {
         LogMessage.d("alreadyAsked", alreadyAsked);
         var popupValue = await customPermissionDialog(
@@ -349,12 +457,15 @@ class AppPermission {
                 .dialogStyle); //getPermissionAlertMessage("audio_call"));
         if (popupValue) {
           openAppSettings();
+          isShowing = false;
           return false;
         } else {
+          isShowing = false;
           return false;
         }
       } else {
         if (permissions.isNotEmpty) {
+          LogMessage.d("requestAudioCallPermissions", permissions);
           return requestAudioCallPermissions(
               content: dialogContent, permissions: permissions);
         } else {
@@ -363,30 +474,35 @@ class AppPermission {
               content: dialogContent2,
               dialogStyle: AppStyleConfig
                   .dialogStyle); //getPermissionAlertMessage("audio_call"));
+          LogMessage.d("requestAudioCallPermissions popupValue", popupValue);
           if (popupValue) {
             openAppSettings();
+            isShowing = false;
             return false;
           } else {
+            isShowing = false;
             return false;
           }
         }
       }
     } else {
+      isShowing = false;
       return true;
     }
   }
 
   static Future<bool> requestAudioCallPermissions(
       {required String content,
-      required List<Permission> permissions,
-      bool showFromRational = false}) async {
+        required List<Permission> permissions,
+        bool showFromRational = false}) async {
     var deniedPopupValue = await mirrorFlyPermissionDialog(
         icon: audioPermission,
         content: content,
         dialogStyle:
-            AppStyleConfig.dialogStyle); //Constants.audioCallPermission);
+        AppStyleConfig.dialogStyle); //Constants.audioCallPermission);
     if (deniedPopupValue) {
       LogMessage.d("deniedPopupValue", deniedPopupValue);
+      isShowing = true;
       var newp = await permissions.request();
       PermissionStatus? microphone_ = newp[Permission.microphone];
       PermissionStatus? phone_ = newp[Permission.phone];
@@ -410,21 +526,24 @@ class AppPermission {
         LogMessage.d("notification_", notification_.isPermanentlyDenied);
         SessionManagement.setBool(Constants.notificationPermissionAsked, true);
       }
+      isShowing = false;
       return (microphone_?.isGranted ?? true) &&
           (phone_?.isGranted ?? true) &&
           (bluetoothConnect_?.isGranted ?? true) &&
           (notification_?.isGranted ?? true);
     } else {
+      isShowing = false;
       return false;
     }
   }
 
   static Future<bool> askVideoCallPermissions() async {
+    isShowing = true;
     if (Platform.isAndroid) {
       final microphone = await Permission.microphone.status; //RECORD_AUDIO
       final phone = await Permission.phone.status; //READ_PHONE_STATE
       final bluetoothConnect =
-          await Permission.bluetoothConnect.status; //BLUETOOTH_CONNECT
+      await Permission.bluetoothConnect.status; //BLUETOOTH_CONNECT
       final camera = await Permission.camera.status; //CAMERA
       final notification = await Permission.notification.status; //NOTIFICATION
       var permissions = <Permission>[];
@@ -459,7 +578,7 @@ class AppPermission {
           (bluetoothConnect != PermissionStatus.granted) ||
           (notification != PermissionStatus.granted)) {
         var shouldShowRequestRationale = ((await Permission
-                .camera.shouldShowRequestRationale) ||
+            .camera.shouldShowRequestRationale) ||
             (await Permission.microphone.shouldShowRequestRationale) ||
             (await Permission.phone.shouldShowRequestRationale) ||
             (await Permission.bluetoothConnect.shouldShowRequestRationale) ||
@@ -470,13 +589,13 @@ class AppPermission {
             "SessionManagement.getBool(Constants.cameraPermissionAsked) video",
             SessionManagement.getBool(Constants.cameraPermissionAsked));
         var alreadyAsked = ((SessionManagement.getBool(
-                    Constants.cameraPermissionAsked) ||
-                SessionManagement.getBool(
-                    Constants.audioRecordPermissionAsked) ||
-                SessionManagement.getBool(
-                    Constants.readPhoneStatePermissionAsked) ||
-                SessionManagement.getBool(
-                    Constants.bluetoothPermissionAsked)) &&
+            Constants.cameraPermissionAsked) ||
+            SessionManagement.getBool(
+                Constants.audioRecordPermissionAsked) ||
+            SessionManagement.getBool(
+                Constants.readPhoneStatePermissionAsked) ||
+            SessionManagement.getBool(
+                Constants.bluetoothPermissionAsked)) &&
             SessionManagement.getBool(Constants.notificationPermissionAsked));
         LogMessage.d("alreadyAsked video", alreadyAsked);
         var permissionName = getPermissionDisplayName(permissions);
@@ -496,8 +615,10 @@ class AppPermission {
                   .dialogStyle); //getPermissionAlertMessage("video_call"));
           if (popupValue) {
             openAppSettings();
+            isShowing = false;
             return false;
           } else {
+            isShowing = false;
             return false;
           }
         } else {
@@ -512,13 +633,16 @@ class AppPermission {
                     .dialogStyle); //getPermissionAlertMessage("video_call"));
             if (popupValue) {
               openAppSettings();
+              isShowing = false;
               return false;
             } else {
+              isShowing = false;
               return false;
             }
           }
         }
       } else {
+        isShowing = false;
         return true;
       }
     } else {
@@ -528,14 +652,15 @@ class AppPermission {
 
   static Future<bool> requestVideoCallPermissions(
       {required String content,
-      required List<Permission> permissions,
-      bool showFromRational = false}) async {
+        required List<Permission> permissions,
+        bool showFromRational = false}) async {
     var deniedPopupValue = await mirrorFlyPermissionDialog(
         icon: recordAudioVideoPermission,
         content: content,
         dialogStyle:
-            AppStyleConfig.dialogStyle); //Constants.videoCallPermission);
+        AppStyleConfig.dialogStyle); //Constants.videoCallPermission);
     if (deniedPopupValue) {
+      isShowing = true;
       var newp = await permissions.request();
       PermissionStatus? microphone_ = newp[Permission.microphone];
       PermissionStatus? phone_ = newp[Permission.phone];
@@ -559,12 +684,14 @@ class AppPermission {
       if (notification_ != null /*&&notification_.isPermanentlyDenied*/) {
         SessionManagement.setBool(Constants.notificationPermissionAsked, true);
       }
+      isShowing = false;
       return (camera_?.isGranted ?? true) &&
           (microphone_?.isGranted ?? true) &&
           (phone_?.isGranted ?? true) &&
           (bluetoothConnect_?.isGranted ?? true) &&
           (notification_?.isGranted ?? true);
     } else {
+      isShowing = false;
       return false;
     }
   }
@@ -577,7 +704,7 @@ class AppPermission {
       Permission.camera,
     ];
     if ((microphone != PermissionStatus.granted &&
-            microphone != PermissionStatus.permanentlyDenied) ||
+        microphone != PermissionStatus.permanentlyDenied) ||
         (camera != PermissionStatus.granted &&
             camera != PermissionStatus.permanentlyDenied)) {
       var permissionPopupValue = await mirrorFlyPermissionDialog(
@@ -585,11 +712,14 @@ class AppPermission {
           content: getTranslated("videoCallPermissionContent"),
           dialogStyle: AppStyleConfig.dialogStyle);
       if (permissionPopupValue) {
+        isShowing = true;
         var newp = await newPermission.request();
         PermissionStatus? speech_ = newp[Permission.microphone];
         PermissionStatus? camera_ = newp[Permission.camera];
+        isShowing = false;
         return (speech_!.isGranted && camera_!.isGranted);
       } else {
+        isShowing = false;
         return false;
       }
     } else if ((microphone == PermissionStatus.permanentlyDenied) ||
@@ -600,11 +730,14 @@ class AppPermission {
           dialogStyle: AppStyleConfig.dialogStyle);
       if (popupValue) {
         openAppSettings();
+        isShowing = false;
         return false;
       } else {
+        isShowing = false;
         return false;
       }
     } else {
+      isShowing = false;
       return (microphone.isGranted && camera.isGranted);
     }
   }
@@ -613,9 +746,12 @@ class AppPermission {
     final permission = await Permission.manageExternalStorage.status;
     if (permission != PermissionStatus.granted &&
         permission != PermissionStatus.permanentlyDenied) {
+      isShowing = true;
       final newPermission = await Permission.manageExternalStorage.request();
+      isShowing = false;
       return newPermission;
     } else {
+      isShowing = false;
       return permission;
     }
   }
@@ -628,74 +764,68 @@ class AppPermission {
     if (status1 == PermissionStatus.denied &&
         status1 != PermissionStatus.permanentlyDenied) {
       LogMessage.d('permission.request', status1.toString());
+      isShowing = true;
       final status = await permission.request();
+      isShowing = false;
       return status;
     }
+    isShowing = false;
     return status1;
   }
 
-  static Future<bool> checkPermission(Permission permission,
-      String permissionIcon, String permissionContent) async {
-    var status = await permission.status;
-    debugPrint("checkPermission $permission status $status");
-    if (status == PermissionStatus.granted) {
-      debugPrint("permission granted opening");
-      return true;
-    } else if (status == PermissionStatus.denied ||
-        (Platform.isAndroid && await permission.shouldShowRequestRationale)) {
-      LogMessage.d('denied', 'permission');
-      var popupValue = await customPermissionDialog(
-          icon: permissionIcon,
-          content: permissionContent,
-          dialogStyle: AppStyleConfig.dialogStyle);
-      if (popupValue) {
-        var newp = await AppPermission.requestPermission(permission);
-        return newp.isGranted;
-      } else {
-        return false;
-      }
-    } else if (status == PermissionStatus.denied) {
-      LogMessage.d('denied', 'permission');
-      var popupValue = await customPermissionDialog(
-          icon: permissionIcon,
-          content: permissionContent,
-          dialogStyle: AppStyleConfig.dialogStyle);
-      if (popupValue) {
-        // return AppPermission.requestPermission(permission);/*.then((value) {
-        var newp = await AppPermission.requestPermission(permission);
-        /*if(newp.isPermanentlyDenied) {
-          // savePermissionAsked(permission);
-          var deniedPopupValue = await customPermissionDialog(
-              icon: permissionIcon,
-              content: getPermissionAlertMessage(
-                  permission.toString().replaceAll("Permission.", "")));
-          if (deniedPopupValue) {
-            openAppSettings();
-            return false;
-          } else {
-            return false;
-          }
-        }else{
-          return newp.isGranted;
-        }*/
-        return newp.isGranted;
-      } else {
-        return false;
-      }
-    } else {
-      var deniedPopupValue = await customPermissionDialog(
-          icon: permissionIcon,
-          content: getPermissionAlertMessage(
-              permission.toString().replaceAll("Permission.", "")),
-          dialogStyle: AppStyleConfig.dialogStyle);
-      if (deniedPopupValue) {
-        openAppSettings();
-        return false;
-      } else {
-        return false;
-      }
-    }
-  }
+  // static Future<bool> checkPermission(Permission permission,
+  //     String permissionIcon, String permissionContent) async {
+  //   var status = await permission.status;
+  //   debugPrint("checkPermission $permission status $status");
+  //   if (status == PermissionStatus.granted) {
+  //     debugPrint("permission granted opening");
+  //     return true;
+  //   } else if (status == PermissionStatus.denied ||
+  //       (Platform.isAndroid && await permission.shouldShowRequestRationale)) {
+  //     LogMessage.d('denied', 'permission');
+  //     var popupValue = await customPermissionDialog(
+  //         icon: permissionIcon,
+  //         content: permissionContent,
+  //         dialogStyle: AppStyleConfig.dialogStyle);
+  //     if (popupValue) {
+  //       var newp = await AppPermission.requestPermission(permission);
+  //       isShowing = false;
+  //       return newp.isGranted;
+  //     } else {
+  //       isShowing = false;
+  //       return false;
+  //     }
+  //   } else if (status == PermissionStatus.denied) {
+  //     LogMessage.d('denied', 'permission');
+  //     var popupValue = await customPermissionDialog(
+  //         icon: permissionIcon,
+  //         content: permissionContent,
+  //         dialogStyle: AppStyleConfig.dialogStyle);
+  //     if (popupValue) {
+  //       // return AppPermission.requestPermission(permission);/*.then((value) {
+  //       var newp = await AppPermission.requestPermission(permission);
+  //       isShowing = false;
+  //       return newp.isGranted;
+  //     } else {
+  //       isShowing = false;
+  //       return false;
+  //     }
+  //   } else {
+  //     var deniedPopupValue = await customPermissionDialog(
+  //         icon: permissionIcon,
+  //         content: getPermissionAlertMessage(
+  //             permission.toString().replaceAll("Permission.", "")),
+  //         dialogStyle: AppStyleConfig.dialogStyle);
+  //     if (deniedPopupValue) {
+  //       openAppSettings();
+  //       isShowing = false;
+  //       return false;
+  //     } else {
+  //       isShowing = false;
+  //       return false;
+  //     }
+  //   }
+  // }
 
   /// This [checkAndRequestPermissions] is used to Check and Request List of Permission .
   ///
@@ -706,9 +836,10 @@ class AppPermission {
   ///
   static Future<bool> checkAndRequestPermissions(
       {required List<Permission> permissions,
-      required String permissionIcon,
-      required String permissionContent,
-      required String permissionPermanentlyDeniedContent}) async {
+        required String permissionIcon,
+        required String permissionContent,
+        required String permissionPermanentlyDeniedContent}) async {
+    isShowing = true;
     var permissionStatusList = await permissions.status();
     var hasDeniedPermission = permissionStatusList.values
         .where((element) => element.isDenied)
@@ -734,9 +865,10 @@ class AppPermission {
             content: permissionContent,
             dialogStyle: AppStyleConfig.dialogStyle);
         if (popupValue) {
+          isShowing = true;
           var afterAskRationale = await permissions.request();
           var hasGrantedPermissionAfterAsk =
-              afterAskRationale.values.where((element) => element.isGranted);
+          afterAskRationale.values.where((element) => element.isGranted);
           LogMessage.d("checkAndRequestPermissions",
               "rationale hasGrantedPermissionAfterAsk : $hasGrantedPermissionAfterAsk hasPermanentlyDeniedPermission : $hasPermanentlyDeniedPermission");
           if (hasPermanentlyDeniedPermission) {
@@ -744,11 +876,13 @@ class AppPermission {
                 permissions: permissions,
                 permissionIcon: permissionIcon,
                 permissionPermanentlyDeniedContent:
-                    permissionPermanentlyDeniedContent);
+                permissionPermanentlyDeniedContent);
           } else {
+            isShowing = false;
             return (hasGrantedPermissionAfterAsk.length >= permissions.length);
           }
         }
+        isShowing = false;
         return popupValue;
       } else {
         // Request permissions without showing rationale
@@ -757,9 +891,10 @@ class AppPermission {
             content: permissionContent,
             dialogStyle: AppStyleConfig.dialogStyle);
         if (popupValue) {
+          isShowing = true;
           var afterAsk = await permissions.request();
           var hasGrantedPermissionAfterAsk =
-              afterAsk.values.where((element) => element.isGranted);
+          afterAsk.values.where((element) => element.isGranted);
           LogMessage.d("checkAndRequestPermissions",
               "hasGrantedPermissionAfterAsk : $hasGrantedPermissionAfterAsk hasPermanentlyDeniedPermission : $hasPermanentlyDeniedPermission");
           if (hasPermanentlyDeniedPermission) {
@@ -767,12 +902,14 @@ class AppPermission {
                 permissions: permissions,
                 permissionIcon: permissionIcon,
                 permissionPermanentlyDeniedContent:
-                    permissionPermanentlyDeniedContent);
+                permissionPermanentlyDeniedContent);
           } else {
+            isShowing = false;
             return (hasGrantedPermissionAfterAsk.length >= permissions.length);
           }
         } else {
           //user clicked not now in popup
+          isShowing = false;
           return popupValue;
         }
       }
@@ -781,17 +918,18 @@ class AppPermission {
           permissions: permissions,
           permissionIcon: permissionIcon,
           permissionPermanentlyDeniedContent:
-              permissionPermanentlyDeniedContent);
+          permissionPermanentlyDeniedContent);
     } else {
       // Permissions are already granted, proceed with your logic
+      isShowing = false;
       return true;
     }
   }
 
   static Future<bool> showPermanentlyDeniedPopup(
       {required List<Permission> permissions,
-      required String permissionIcon,
-      required String permissionPermanentlyDeniedContent}) async {
+        required String permissionIcon,
+        required String permissionPermanentlyDeniedContent}) async {
     // var permissionStatusList = await permissions.permanentlyDeniedPermissions();
     // var strings = permissionStatusList.keys.toList().join(",");
     // Permissions are permanently denied, navigate to app settings page
@@ -801,7 +939,9 @@ class AppPermission {
         dialogStyle: AppStyleConfig.dialogStyle);
     if (popupValue) {
       openAppSettings();
+      isShowing = false;
     }
+    isShowing = false;
     return false;
   }
 
@@ -817,12 +957,11 @@ class AppPermission {
     if (Platform.isIOS) {
       permissions.addAll([Permission.photos, Permission.storage]);
     } else if (sdkVersion < 33 && Platform.isAndroid) {
-      permissions.addAll([Permission.storage, Permission.notification]);
+      permissions.add(Permission.storage);
     } else {
       ///[Permission.photos] for Android 33+ gallery access
       ///[Permission.videos] for Android 33+ gallery access
-      permissions.addAll(
-          [Permission.photos, Permission.videos, Permission.notification]);
+      permissions.addAll([Permission.photos, Permission.videos]);
     }
     LogMessage.d("getGalleryAccessPermissions", permissions.join(","));
     return permissions;
@@ -864,15 +1003,15 @@ class AppPermission {
         permissionAlertMessage = getTranslated("permissionContent")
             .replaceFirst("%d", permissionName.toUpperCase())
             .replaceFirst("%", permissionName.toUpperCase());
-      // "MirrorFly need the ${permissionName.toUpperCase()} Permission. But they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"${permissionName.toUpperCase()}\"";
+    // "MirrorFly need the ${permissionName.toUpperCase()} Permission. But they have been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"${permissionName.toUpperCase()}\"";
     }
     return permissionAlertMessage;
   }
 
   static Future<bool> notificationPermissionDialog(
       {required String icon,
-      required String title,
-      required String message}) async {
+        required String title,
+        required String message}) async {
     return await DialogUtils.createDialog(AlertDialog(
       contentPadding: EdgeInsets.zero,
       content: PopScope(
@@ -890,10 +1029,10 @@ class AppPermission {
               padding: const EdgeInsets.symmetric(vertical: 35.0),
               child: Center(
                   child: CircleAvatar(
-                backgroundColor: buttonBgColor,
-                radius: 30,
-                child: AppUtils.svgIcon(icon: notificationAlertPermission),
-              )),
+                    backgroundColor: buttonBgColor,
+                    radius: 30,
+                    child: AppUtils.svgIcon(icon: notificationAlertPermission),
+                  )),
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -955,8 +1094,8 @@ class AppPermission {
 
   static Future<bool> mirrorFlyPermissionDialog(
       {required String icon,
-      required String content,
-      DialogStyle dialogStyle = const DialogStyle()}) async {
+        required String content,
+        DialogStyle dialogStyle = const DialogStyle()}) async {
     return await DialogUtils.createDialog(AlertDialog(
       contentPadding: EdgeInsets.zero,
       content: PopScope(
@@ -976,10 +1115,10 @@ class AppPermission {
               // color: buttonBgColor,
               child: Center(
                   child: AppUtils.svgIcon(
-                icon: icon,
-                colorFilter:
+                    icon: icon,
+                    colorFilter:
                     ColorFilter.mode(dialogStyle.iconColor, BlendMode.srcIn),
-              )),
+                  )),
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -1019,8 +1158,9 @@ class AppPermission {
 
   static Future<bool> customPermissionDialog(
       {required String icon,
-      required String content,
-      DialogStyle dialogStyle = const DialogStyle()}) async {
+        required String content,
+        DialogStyle dialogStyle = const DialogStyle()}) async {
+    isShowing = true;
     return await DialogUtils.createDialog(AlertDialog(
       contentPadding: EdgeInsets.zero,
       content: PopScope(
@@ -1039,10 +1179,10 @@ class AppPermission {
               decoration: dialogStyle.headerContainerDecoration,
               child: Center(
                   child: AppUtils.svgIcon(
-                icon: icon,
-                colorFilter:
+                    icon: icon,
+                    colorFilter:
                     ColorFilter.mode(dialogStyle.iconColor, BlendMode.srcIn),
-              )),
+                  )),
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),

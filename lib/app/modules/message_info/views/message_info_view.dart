@@ -15,6 +15,7 @@ import '../controllers/message_info_controller.dart';
 
 class MessageInfoView extends NavViewStateful<MessageInfoController> {
   const MessageInfoView({super.key, this.appbar});
+
   final PreferredSizeWidget? appbar;
 
   @override
@@ -129,8 +130,9 @@ class MessageInfoView extends NavViewStateful<MessageInfoController> {
                           .replaceAll(
                               "%d", "${controller.messageDeliveredList.length}")
                           .replaceAll("%s", "${controller.statusCount.value}"),
-                      style: AppStyleConfig.messageInfoPageStyle
-                          .deliveredTitleStyle, //const TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
+                      style: AppStyleConfig
+                          .messageInfoPageStyle.deliveredTitleStyle,
+                      //const TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
                       textAlign: TextAlign.left,
                     ),
                   ),
@@ -183,8 +185,8 @@ class MessageInfoView extends NavViewStateful<MessageInfoController> {
                           .replaceAll(
                               "%d", "${controller.messageReadList.length}")
                           .replaceAll("%s", "${controller.statusCount.value}"),
-                      style: AppStyleConfig.messageInfoPageStyle
-                          .readTitleStyle, //const TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
+                      style: AppStyleConfig.messageInfoPageStyle.readTitleStyle,
+                      //const TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
                       textAlign: TextAlign.left,
                     ),
                   ),

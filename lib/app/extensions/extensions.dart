@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:mirrorfly_uikit_plugin/app/model/arguments.dart' show ChatViewArguments;
+import 'package:mirrorfly_uikit_plugin/mention_text_field/src/mention_tag_text_editing_controller.dart' show MentionTagTextEditingController;
 import '../common/constants.dart';
 import '../data/helper.dart';
+import '../data/mention_utils.dart';
 import '../data/session_management.dart';
 import '../model/chat_message_model.dart';
 import 'package:mirrorfly_plugin/mirrorflychat.dart';
@@ -90,35 +92,148 @@ abstract class NavViewStateful<T extends GetxController>
 }
 
 class NavViewState<T extends GetxController> extends State<NavViewStateful<T>> {
-  // late T controller;
 
   @override
   void initState() {
     debugPrint("NavViewState key ${widget.tag}");
-    // if (NavUtils.previousRoute != Routes.chat || NavUtils.currentRoute != Routes.chat){
     widget.createController(tag: widget.tag);
-    // }
-
-    // Get.put<T>(controller);
     super.initState();
     widget.onInit();
     LogMessage.d("NavViewState : initState", T.toString());
+    // LogMessage.d("NavViewState : isRegistered", {Get.isRegistered<T>()});
+    // LogMessage.d("NavViewState : isRegistered tag", {Get.isRegistered<T>(tag: widget.tag)});
+
   }
 
   @override
   void dispose() {
     widget.onDispose();
-    Get.delete<T>(tag: widget.tag);
+    // LogMessage.d("NavViewState : dispose isRegistered", {Get.isRegistered<T>()});
+    // LogMessage.d("NavViewState : dispose isRegistered tag", {Get.isRegistered<T>(tag: widget.tag)});
+
+    ///
+    /// If the tag is different, it means we are navigating to a different chat
+    /// controller so we can safely dispose the existing controller.
+    ///
+    /// If the tag is the same, it means the app was backgrounded and brought
+    /// back via notification *to the same chat*, so we **should not dispose**
+    /// the controller to prevent 'controller not found' or unregistered errors.
+    ///
+
+    final dynamic navArgs = NavUtils.arguments;
+    final ChatViewArguments? nextArgs = navArgs is ChatViewArguments ? navArgs : null;
+    LogMessage.d("NavViewState: ", "nextArgs?.chatJid: ${nextArgs?.chatJid}" );
+    final bool isSameTag = widget.tag == nextArgs?.chatJid;
+    LogMessage.d("NavViewState: ", "widget.tag: ${widget.tag}" );
+
+    if (widget.tag != null) {
+      bool isControllerAvailable = Get.isRegistered<T>(tag: widget.tag);
+      LogMessage.d("NavViewState: ",
+          "isControllerAvailable: ${T.toString()} with key: ${widget.tag} : $isControllerAvailable");
+      if (!isSameTag && isControllerAvailable) {
+        LogMessage.d("NavViewState: ",
+            "dispose controller: ${T.toString()} with key: ${widget.tag}");
+        Get.delete<T>(tag: widget.tag);
+        SessionManagement.setCurrentChatJID(
+            nextArgs?.chatJid ?? Constants.emptyString);
+      } else {
+        LogMessage.d("NavViewState: ",
+            "isSameTag ==> no need to dispose the controller || $T controller not registered");
+      }
+    } else {
+      LogMessage.d("NavViewState: ", "dispose controller ${T.toString()}");
+      Get.delete<T>();
+    }
     super.dispose();
-    LogMessage.d("NavViewState : dispose key: ${widget.tag}", T.toString());
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return widget.build(context);
   }
 
-  // Widget buildPage(BuildContext context);
+}
+
+extension Regexparesing on RegExp {
+  Iterable<RegExpMatch> matcher(String text){
+    return allMatches(text);
+  }
+  List<RegExpMatch> findMatchedPosition(String text){
+    var list = <RegExpMatch>[];
+    allMatches(text).forEach((match) {
+      list.add(match);
+    });
+    return list;
+  }
+}
+extension RegexpMatcharesing on RegExpMatch {
+  String string(){
+    return "groupNames : $groupNames, pattern : $pattern, start : $start, end : $end, input : $input";
+  }
+}
+
+extension MentionTagTextEditingControllerExtension on MentionTagTextEditingController{
+  String get formattedText {
+    const replaceString = "@[?]";
+    debugPrint(text);
+
+    return text.replaceAll(Constants.mentionEscape, replaceString);
+  }
+
+  List<String> get getTags {
+    var tags = mentions;
+    // // Sort tags by startIndex to avoid overlapping replacements
+    // tags.sort((a, b) => a.startIndex.compareTo(b.startIndex));
+    return List<String>.from(tags.map((item)=>item));
+  }
+
+  /*setCustomText(String content,List<ProfileDetails> profileDetails){
+    var allMatches = MentionUtils.mentionRegex.allMatches(content).toList();
+    debugPrint("setText : $allMatches");
+    int index = 0;
+    int lastMatchEnd = 0;
+    text="";
+    setText = text;
+    for (var currentMatch in allMatches) {
+      text += content.substring(lastMatchEnd,currentMatch.start+1);
+      // _rebuild(text);
+      setText = text;
+      String id = profileDetails[index].jid.checkNull().split("@")[0];
+      String name = profileDetails[index].getName();
+      addMention(label: name,data: id,stylingWidget: Text('@${name}',style: const TextStyle(color: Colors.blueAccent),));
+      lastMatchEnd = currentMatch.end;
+      index++;
+    }
+    if (lastMatchEnd < content.length) {
+      text += content.substring(lastMatchEnd);
+      setText = text;
+      // _rebuild(text);
+    }
+    print("setText : $text $getText");
+
+  }*/
+
+  List<(String, Object?, Widget?)> getInitialMentions(String content,List<ProfileDetails> profileDetails){
+    List<(String, Object?, Widget?)> tuples = [];
+    var allMatches = MentionUtils.mentionRegex.allMatches(content).toList();
+    int index = 0;
+    int lastMatchEnd = 0;
+    var text="";
+    for (var currentMatch in allMatches) {
+      text += content.substring(lastMatchEnd,currentMatch.start+1);
+      String id = profileDetails[index].jid.checkNull().split("@")[0];
+      String name = profileDetails[index].getName();
+      tuples.add((name,id,Text('@$name',style: const TextStyle(color: Colors.blueAccent),)));
+      lastMatchEnd = currentMatch.end;
+      index++;
+    }
+    if (lastMatchEnd < content.length) {
+      text += content.substring(lastMatchEnd);
+    }
+    debugPrint("getInitialMentions : $content , $text , $tuples");
+    initialMentions = tuples;
+    return tuples;
+  }
 }
 
 /*

@@ -33,6 +33,7 @@ class LocationSentPageStyle {
           elevation: 12,
           iconSize: 21,
           shape: CircleBorder())});
+
   final AppBarTheme appBarTheme;
   final TextStyle titleStyle;
   final TextStyle addressLine1Style;

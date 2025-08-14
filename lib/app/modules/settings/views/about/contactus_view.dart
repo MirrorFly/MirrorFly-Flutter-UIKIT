@@ -17,6 +17,7 @@ class ContactusView extends StatelessWidget {
   final TextEditingController description = TextEditingController();
   final titleFocus = FocusNode();
   final descFocus = FocusNode();
+
   @override
   Widget build(BuildContext context) {
     return FocusDetector(
