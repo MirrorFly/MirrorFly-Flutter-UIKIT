@@ -1,3 +1,9 @@
+## [3.0.0] Feature Updates
+* Updated Android Compile SDK to 35
+* Bug Fixes
+* Android SDK updated to 7.13.28
+* iOS SDK updated to 5.18.18
+
 ## [2.0.5] Feature Updates
 * Bug Fixes
 * Android SDK updated to 7.13.20
