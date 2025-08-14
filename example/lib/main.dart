@@ -15,6 +15,8 @@ Future<void> main() async {
     navigatorKey: navigatorKey,
     licenseKey: 'ckIjaccWBoMNvxdbql8LJ2dmKqT5bp',
     iOSContainerID: 'com.mirrorflyflutter)',
+    isBackupFeatureEnabled: false,
+    webChatLoginUrl: "Your web chat login URL here",
   );
 
   debugPrint("init response $response");

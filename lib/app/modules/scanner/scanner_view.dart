@@ -37,10 +37,10 @@ class ScannerView extends NavViewStateful<ScannerController> {
             Container(
               padding: const EdgeInsets.all(16),
               color: Colors.white,
-              child: const Center(
+              child: Center(
                 child: Text(
                   "Visit ${Constants.webChatLogin} on your computer and scan the QR code",
-                  style: TextStyle(fontSize: 17),
+                  style: const TextStyle(fontSize: 17),
                 ),
               ),
             ),

@@ -87,9 +87,9 @@ class WebLoginResultView extends NavViewStateful<WebLoginController> {
                     ],
                   ),
                   onTap: () => controller.logoutWeb()),
-              const Text(
+               Text(
                 "Visit ${Constants.webChatLogin}",
-                style: TextStyle(color: textColor, fontSize: 14),
+                style: const TextStyle(color: textColor, fontSize: 14),
               ),
               const SizedBox(
                 height: 10,

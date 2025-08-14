@@ -353,27 +353,14 @@ toToast(String text) {
 
 class Constants {
   static bool isUIKIT = true;
-  static bool useDeprecatedInit = false;
-  static const bool isBackupFeatureEnabled = true;
-
-  // Dummy OTP View
-  static const bool isOTPViewEnabled = false;
-  static ChatBuilder chatBuilder = ChatBuilder(
-      domainBaseUrl: "",
-      licenseKey: 'ckIjaccWBoMNvxdbql8LJ2dmKqT5bp',
-      iOSContainerID: 'group.com.mirrorfly.flutter',
-      chatHistoryEnable: true,
-      enableDebugLog: true,
-      storageFolderName: "Mirrorfly Flutter",
-      isTrialLicenceKey: false);
-  static bool enablePrivateStorage = false;
-  static const String webChatLogin = 'https://YOUR_WEB_APP_URL';
+  static bool isBackupFeatureEnabled = false;
+  static String webChatLogin = '';
 
   static MetaDataUserList?
       metaDataUserList; // = MetaDataUserList(key: "platform", value: ["flutter"]);
   static const bool enableContactSync = false;
   static const bool enableTopic = false;
-  static const String topicId = enableTopic ? "XXX" : ""; //Mirrorfly Topic id
+  static const String topicId = enableTopic ? "" : "";
   static const String packageName = "com.contus.flycommons.";
   static const String package = 'com.mirrorfly.uikit_flutter';
   static const String emptyString = "";
