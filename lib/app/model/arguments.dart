@@ -46,8 +46,9 @@ class ChatViewArguments {
     this.topicTitleColor,
     this.topicTitleBgColor,
     this.messageTextFieldInputFormatters,
+    this.isScheduleMeetEnabled = false,
   }) : assert(swipeSensitivity >= 5 && swipeSensitivity <= 20,
-  'swipeSensitivity must be between 5 and 20'),isFloatingFabVisible =  (Constants.isUIKIT ? false : true);
+  'swipeSensitivity must be between 5 and 20');
 
   final String chatJid;
   final String topicId;
@@ -84,7 +85,7 @@ class ChatViewArguments {
   final Color? topicTitleBgColor;
 
   final List<TextInputFormatter>? messageTextFieldInputFormatters;
-  final bool isFloatingFabVisible;
+  final bool isScheduleMeetEnabled;
 }
 
 class ChatSearchViewArguments {
