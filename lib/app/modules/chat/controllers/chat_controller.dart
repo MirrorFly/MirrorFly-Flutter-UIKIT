@@ -70,6 +70,7 @@ class ChatController extends FullLifeCycleController
   var isUserTyping = false.obs;
   var isAudioRecording = Constants.audioRecordInitial.obs;
   Timer? _audioTimer;
+  Timer? _recordingTimer;
   var timerInit = "00:00".obs;
   DateTime? startTime;
 
@@ -2241,6 +2242,7 @@ class ChatController extends FullLifeCycleController
     _isDisposed = true;
     _audioTimer = null;
     isAudioRecording(Constants.audioRecordDelete);
+    _recordingTimer?.cancel();
     Future.delayed(const Duration(milliseconds: 1500), () {
       isAudioRecording(Constants.audioRecordInitial);
       isUserTyping(messageController.text.trim().isNotEmpty);
@@ -2278,7 +2280,7 @@ class ChatController extends FullLifeCycleController
         await record.start(const RecordConfig(),
             path:
                 "$audioSavePath/audio_${DateTime.now().millisecondsSinceEpoch}.m4a");
-        Future.delayed(const Duration(seconds: 300), () {
+        _recordingTimer = Timer(const Duration(seconds: 60),(){
           if (isAudioRecording.value == Constants.audioRecording) {
             stopRecording();
           }
@@ -2291,6 +2293,7 @@ class ChatController extends FullLifeCycleController
   }
 
   Future<void> stopRecording() async {
+    _recordingTimer?.cancel();
     isAudioRecording(Constants.audioRecordDone);
     isUserTyping(messageController.text.trim().isNotEmpty);
     _audioTimer?.cancel();
