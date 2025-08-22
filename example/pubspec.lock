@@ -984,17 +984,19 @@ packages:
   mirrorfly_plugin:
     dependency: transitive
     description:
-      path: "../../p078-mirrorfly-flutter-plugin"
-      relative: true
-    source: path
-    version: "1.6.0+1"
+      path: "."
+      ref: "bugfix/frh_android_duplicate_message"
+      resolved-ref: "2d8712366015c3982a229a0c888f04f113cf5023"
+      url: "https://github.com/MirrorFly/MirrorFly-Flutter-plugin.git"
+    source: git
+    version: "1.7.0"
   mirrorfly_uikit_plugin:
     dependency: "direct main"
     description:
       path: ".."
       relative: true
     source: path
-    version: "2.0.5"
+    version: "3.0.0"
   nested:
     dependency: transitive
     description:
