@@ -284,7 +284,7 @@ class ChatController extends FullLifeCycleController
       vsync: this,
       duration: const Duration(milliseconds: 600),
     );
-    memberOfGroup();
+    // memberOfGroup();
     setChatStatus();
     focusNode.addListener(() {
       if (focusNode.hasFocus) {
@@ -2280,7 +2280,7 @@ class ChatController extends FullLifeCycleController
         await record.start(const RecordConfig(),
             path:
                 "$audioSavePath/audio_${DateTime.now().millisecondsSinceEpoch}.m4a");
-        _recordingTimer = Timer(const Duration(seconds: 60),(){
+        _recordingTimer = Timer(const Duration(seconds: 300),(){
           if (isAudioRecording.value == Constants.audioRecording) {
             stopRecording();
           }
@@ -2661,7 +2661,7 @@ class ChatController extends FullLifeCycleController
   getParticipantsNameAsCsv(String jid) {
     Mirrorfly.getGroupMembersList(
         jid: jid,
-        fetchFromServer: false,
+        fetchFromServer: true,
         flyCallBack: (FlyResponse response) {
           if (response.isSuccess && response.hasData) {
             var str = <String>[];
@@ -2677,6 +2677,7 @@ class ChatController extends FullLifeCycleController
               return a.toLowerCase().compareTo(b.toLowerCase());
             });
             groupParticipantsName(str.join(", "));
+            memberOfGroup();
           }
         });
   }

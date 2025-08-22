@@ -31,7 +31,7 @@ class ChatInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      return Container(
+      return !controller.chatLoading.value ? Container(
         color: messageTypingAreaStyle.bgColor, //Colors.white,
         child: controller.isMemberOfGroup.isNull() ? const Offstage() : controller.isBlocked.value
             ? userBlocked(context)
@@ -145,7 +145,7 @@ class ChatInputField extends StatelessWidget {
             .isGroupChatAvailable.checkNull()
             ? featureNotAvailable(context)
             : userNoLonger(context),
-      );
+      ):const Offstage();
     });
   }
 
@@ -178,13 +178,14 @@ class ChatInputField extends StatelessWidget {
                 messageTypingAreaStyle.emojiIconColor, BlendMode.srcIn),))
         ],
         if(controller.isAudioRecording.value == Constants.audioRecordDelete)...[
-          const Padding(
-            padding: EdgeInsets.all(12.0),
+          Padding(
+            padding: const EdgeInsets.all(12.0),
             child: LottieAnimation(
               lottieJson: deleteDustbin,
               showRepeat: false,
               width: 24,
               height: 24,
+              package: iconPackageName,
             ),
           )
         ],
@@ -266,6 +267,7 @@ class ChatInputField extends StatelessWidget {
                     }
                   },
                   onChanged: onChanged,
+                  textCapitalization: TextCapitalization.sentences,
                   style: messageTypingAreaStyle
                       .textFieldStyle.editTextStyle,
                   //const TextStyle(fontWeight: FontWeight.w400),
