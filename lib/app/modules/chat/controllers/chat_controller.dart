@@ -2249,7 +2249,7 @@ class ChatController extends FullLifeCycleController
     });
   }
 
-  startRecording() async {
+  startRecording({required int audioDurationInSec}) async {
     if (playingChat != null) {
       playingChat!.mediaChatMessage!.isPlaying = false;
       playingChat = null;
@@ -2280,7 +2280,7 @@ class ChatController extends FullLifeCycleController
         await record.start(const RecordConfig(),
             path:
                 "$audioSavePath/audio_${DateTime.now().millisecondsSinceEpoch}.m4a");
-        _recordingTimer = Timer(const Duration(seconds: 300),(){
+        _recordingTimer = Timer(Duration(seconds: audioDurationInSec),(){
           if (isAudioRecording.value == Constants.audioRecording) {
             stopRecording();
           }
@@ -2288,7 +2288,7 @@ class ChatController extends FullLifeCycleController
       }
     } else {
       //show busy status popup
-      showBusyStatusAlert(startRecording);
+      showBusyStatusAlert(() => startRecording(audioDurationInSec: audioDurationInSec));
     }
   }
 

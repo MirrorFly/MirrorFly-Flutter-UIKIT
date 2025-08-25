@@ -47,6 +47,7 @@ class ChatViewArguments {
     this.topicTitleBgColor,
     this.messageTextFieldInputFormatters,
     this.isScheduleMeetEnabled = false,
+    this.audioDurationInSec = 300,
   }) : assert(swipeSensitivity >= 5 && swipeSensitivity <= 20,
   'swipeSensitivity must be between 5 and 20');
 
@@ -86,6 +87,7 @@ class ChatViewArguments {
 
   final List<TextInputFormatter>? messageTextFieldInputFormatters;
   final bool isScheduleMeetEnabled;
+  final int audioDurationInSec;
 }
 
 class ChatSearchViewArguments {

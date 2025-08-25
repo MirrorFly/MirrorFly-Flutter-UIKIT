@@ -228,6 +228,7 @@ class ChatView extends NavViewStateful<ChatController> {
                       chatTaggerController: controller.messageController,
                       onChanged: (text) => controller.isTyping(text),
                       focusNode: controller.focusNode,
+                      audioDurationInSec: controller.arguments!.audioDurationInSec,
                     ),
                   ),
                 ],

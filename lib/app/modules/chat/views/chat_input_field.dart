@@ -18,7 +18,7 @@ import 'mention_list_view.dart';
 
 class ChatInputField extends StatelessWidget {
   const ChatInputField(
-      {Key? key, required this.messageTypingAreaStyle, required this.controller, required this.chatTaggerController, this.onChanged, this.focusNode, required this.jid})
+      {Key? key, required this.messageTypingAreaStyle, required this.controller, required this.chatTaggerController, this.onChanged, this.focusNode, required this.jid,required this.audioDurationInSec })
       : super(key: key);
   final MessageTypingAreaStyle messageTypingAreaStyle;
   final ChatController controller;
@@ -27,6 +27,7 @@ class ChatInputField extends StatelessWidget {
   final FocusNode? focusNode;
   final String jid;
   final tag = "chatView";
+  final int audioDurationInSec; // 5 minutes
 
   @override
   Widget build(BuildContext context) {
@@ -304,7 +305,7 @@ class ChatInputField extends StatelessWidget {
                 .checkNull())...[
           IconButton(
             onPressed: () {
-              controller.startRecording();
+              controller.startRecording(audioDurationInSec:audioDurationInSec);
             },
             icon: messageTypingAreaStyle.iconRecord ?? AppUtils.svgIcon(
               icon: audioMic,
