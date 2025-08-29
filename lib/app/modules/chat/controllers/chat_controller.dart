@@ -18,7 +18,8 @@ import 'package:intl/intl.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/controllers/schedule_calender.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/mention_list_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/dashboard/controllers/dashboard_controller.dart';
-import 'package:mirrorfly_uikit_plugin/mention_text_field/src/mention_tag_text_editing_controller.dart' show MentionTagTextEditingController;
+import 'package:mirrorfly_uikit_plugin/mention_text_field/src/mention_tag_text_editing_controller.dart'
+    show MentionTagTextEditingController;
 import '../../../common/constants.dart';
 import '../../../common/de_bouncer.dart';
 import '../../../common/main_controller.dart';
@@ -2236,6 +2237,7 @@ class ChatController extends FullLifeCycleController
       return;
     }
     var filePath = await record.stop();
+    debugPrint("audio file path $filePath");
     File(filePath!).delete();
     _audioTimer?.cancel();
     record.dispose();
@@ -2280,15 +2282,19 @@ class ChatController extends FullLifeCycleController
         await record.start(const RecordConfig(),
             path:
                 "$audioSavePath/audio_${DateTime.now().millisecondsSinceEpoch}.m4a");
-        _recordingTimer = Timer(Duration(seconds: audioDurationInSec),(){
+        debugPrint(
+            "audio duration in sec ---> $audioDurationInSec ${isAudioRecording.value}");
+        _recordingTimer = Timer(Duration(seconds: audioDurationInSec), () {
           if (isAudioRecording.value == Constants.audioRecording) {
+            debugPrint("audio duration stop");
             stopRecording();
           }
         });
       }
     } else {
       //show busy status popup
-      showBusyStatusAlert(() => startRecording(audioDurationInSec: audioDurationInSec));
+      showBusyStatusAlert(
+          () => startRecording(audioDurationInSec: audioDurationInSec));
     }
   }
 
@@ -2312,6 +2318,7 @@ class ChatController extends FullLifeCycleController
   }
 
   Future<void> deleteRecording() async {
+    debugPrint("Audio saved path---> $recordedAudioPath");
     File(recordedAudioPath).delete();
     isUserTyping(messageController.text.trim().isNotEmpty);
     isAudioRecording(Constants.audioRecordInitial);
