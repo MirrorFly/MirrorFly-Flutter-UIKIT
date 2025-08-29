@@ -2229,7 +2229,7 @@ class ChatController extends FullLifeCycleController
         String min = minDur < 10 ? "0$minDur" : minDur.toString();
         String sec = secDur < 10 ? "0$secDur" : secDur.toString();
         timerInit("$min:$sec");
-        if(timer.tick ==  audioDurationInSec && isAudioRecording.value == Constants.audioRecording){
+        if(timer.tick >=  audioDurationInSec && isAudioRecording.value == Constants.audioRecording){
             debugPrint("audio duration stop");
             stopRecording();
         }
