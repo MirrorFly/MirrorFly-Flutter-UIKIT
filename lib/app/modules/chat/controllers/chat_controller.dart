@@ -71,7 +71,6 @@ class ChatController extends FullLifeCycleController
   var isUserTyping = false.obs;
   var isAudioRecording = Constants.audioRecordInitial.obs;
   Timer? _audioTimer;
-  Timer? _recordingTimer;
   var timerInit = "00:00".obs;
   DateTime? startTime;
 
@@ -2214,10 +2213,14 @@ class ChatController extends FullLifeCycleController
     focusNode.unfocus();
   }
 
-  void startTimer() {
+  void startTimer({required int audioDurationInSec}) {
     showOrHideTagListView(false, "chatView");
     const oneSec = Duration(seconds: 1);
     startTime = DateTime.now();
+    if (_audioTimer != null){
+      debugPrint("audio duration timer is not null, so cancelling the existing timer");
+      _audioTimer?.cancel();
+    }
     _audioTimer = Timer.periodic(
       oneSec,
       (Timer timer) {
@@ -2226,6 +2229,10 @@ class ChatController extends FullLifeCycleController
         String min = minDur < 10 ? "0$minDur" : minDur.toString();
         String sec = secDur < 10 ? "0$secDur" : secDur.toString();
         timerInit("$min:$sec");
+        if(timer.tick ==  audioDurationInSec && isAudioRecording.value == Constants.audioRecording){
+            debugPrint("audio duration stop");
+            stopRecording();
+        }
       },
     );
   }
@@ -2244,7 +2251,6 @@ class ChatController extends FullLifeCycleController
     _isDisposed = true;
     _audioTimer = null;
     isAudioRecording(Constants.audioRecordDelete);
-    _recordingTimer?.cancel();
     Future.delayed(const Duration(milliseconds: 1500), () {
       isAudioRecording(Constants.audioRecordInitial);
       isUserTyping(messageController.text.trim().isNotEmpty);
@@ -2278,22 +2284,12 @@ class ChatController extends FullLifeCycleController
         _isDisposed = false;
         timerInit("00:00");
         isAudioRecording(Constants.audioRecording);
-        startTimer();
+        startTimer(audioDurationInSec: audioDurationInSec);
         await record.start(const RecordConfig(),
             path:
                 "$audioSavePath/audio_${DateTime.now().millisecondsSinceEpoch}.m4a");
         debugPrint(
             "audio duration in sec ---> $audioDurationInSec ${isAudioRecording.value}");
-        if (_recordingTimer != null){
-          debugPrint("audio duration timer is not null, so cancelling the existing timer");
-          _recordingTimer?.cancel();
-        }
-        _recordingTimer = Timer(Duration(seconds: audioDurationInSec), () {
-          if (isAudioRecording.value == Constants.audioRecording) {
-            debugPrint("audio duration stop");
-            stopRecording();
-          }
-        });
       }
     } else {
       //show busy status popup
@@ -2303,7 +2299,6 @@ class ChatController extends FullLifeCycleController
   }
 
   Future<void> stopRecording() async {
-    _recordingTimer?.cancel();
     isAudioRecording(Constants.audioRecordDone);
     isUserTyping(messageController.text.trim().isNotEmpty);
     _audioTimer?.cancel();
