@@ -2284,6 +2284,10 @@ class ChatController extends FullLifeCycleController
                 "$audioSavePath/audio_${DateTime.now().millisecondsSinceEpoch}.m4a");
         debugPrint(
             "audio duration in sec ---> $audioDurationInSec ${isAudioRecording.value}");
+        if (_recordingTimer != null){
+          debugPrint("audio duration timer is not null, so cancelling the existing timer");
+          _recordingTimer?.cancel();
+        }
         _recordingTimer = Timer(Duration(seconds: audioDurationInSec), () {
           if (isAudioRecording.value == Constants.audioRecording) {
             debugPrint("audio duration stop");

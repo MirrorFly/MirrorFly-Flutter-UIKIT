@@ -57,7 +57,7 @@ class MirrorflyUikit {
       bool chatHistoryEnable = true,
       bool enableMobileNumberLogin = false,
       bool isBackupFeatureEnabled = false,
-      String webChatLoginUrl = '',
+      String webChatLoginUrl = 'https://your-webchat-domain-url.com/',
       @Deprecated('Enabling local notifications will no longer work. '
           'Instead, use Mirrorfly.showOrUpdateOrCancelNotification.listen((event) { }); '
           'to listen for foreground notifications from MirrorFly Plugin.')
