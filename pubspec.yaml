@@ -64,7 +64,7 @@ dependencies:
   mirrorfly_plugin:
     git:
       url: https://github.com/MirrorFly/MirrorFly-Flutter-plugin.git
-      ref: bugfix/frh_message_mismatch_previous_load_message
+      ref: bugfix/frh_sent_message_missing_receiver_side
 
   device_calendar: ^4.3.3
   qr_code_scanner_plus: ^2.0.10+1
