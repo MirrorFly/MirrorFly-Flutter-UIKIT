@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:audio_session/audio_session.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -169,6 +170,8 @@ class ChatController extends FullLifeCycleController
   RxDouble fabHeight = 60.0.obs;
   RxDouble margin = 16.0.obs;
   RxDouble safeTop = 10.0.obs;
+  late  final session;
+  var chatProfileCalled = false;
 
   void updateFabPosition(Offset newOffset) {
     double fabWidth = 56.0;
@@ -207,6 +210,7 @@ class ChatController extends FullLifeCycleController
     }
     SessionManagement.setCurrentChatJID(nJid.checkNull());
     await getChatProfile();
+    session = await AudioSession.instance;
 
     setAudioPath();
 
@@ -218,7 +222,6 @@ class ChatController extends FullLifeCycleController
     super.onInit();
   }
 
-  var chatProfileCalled = false;
   Future<void> getChatProfile() async {
     if (Mirrorfly.isValidGroupJid(nJid)) {
       await Mirrorfly.getGroupProfile(
@@ -350,6 +353,7 @@ class ChatController extends FullLifeCycleController
     saveUnsentMessage();
     setOnGoingUserGone();
     ImageCacheManager.disposeCache();
+    SessionManagement.setCurrentChatJID(Constants.emptyString);
     super.onClose();
   }
 
@@ -2258,43 +2262,52 @@ class ChatController extends FullLifeCycleController
   }
 
   startRecording({required int audioDurationInSec}) async {
-    if (playingChat != null) {
-      playingChat!.mediaChatMessage!.isPlaying = false;
-      playingChat = null;
-      // player.stop();
-      chatList.refresh();
-    }
-    var busyStatus = !profile.isGroupProfile.checkNull()
-        ? await Mirrorfly.isBusyStatusEnabled()
-        : false;
-    if (!busyStatus.checkNull()) {
-      // var permission = await AppPermission.getStoragePermission();
-      var microPhonePermissionStatus =
-          await AppPermission.checkAndRequestPermissions(
-              permissions: [Permission.microphone],
-              permissionIcon: audioPermission,
-              permissionContent: getTranslated("audioPermissionContent"),
-              permissionPermanentlyDeniedContent:
-                  getTranslated("microPhonePermissionDeniedContent"));
-      debugPrint(
-          "microPhone Permission Status---> $microPhonePermissionStatus");
-      if (microPhonePermissionStatus) {
-        isUserTyping(false);
-        record = AudioRecorder();
-        _isDisposed = false;
-        timerInit("00:00");
-        isAudioRecording(Constants.audioRecording);
-        startTimer(audioDurationInSec: audioDurationInSec);
-        await record.start(const RecordConfig(),
-            path:
-                "$audioSavePath/audio_${DateTime.now().millisecondsSinceEpoch}.m4a");
+    await session.configure(const AudioSessionConfiguration.speech());
+    if (await session.setActive(true)) {
+      debugPrint('#ListenBackgroundMusic os accepted your request');
+      if (playingChat != null) {
+        playingChat!.mediaChatMessage!.isPlaying = false;
+        playingChat = null;
+        // player.stop();
+        chatList.refresh();
+      }
+      var busyStatus = !profile.isGroupProfile.checkNull()
+          ? await Mirrorfly.isBusyStatusEnabled()
+          : false;
+      if (!busyStatus.checkNull()) {
+        // var permission = await AppPermission.getStoragePermission();
+        var microPhonePermissionStatus =
+        await AppPermission.checkAndRequestPermissions(
+            permissions: [Permission.microphone],
+            permissionIcon: audioPermission,
+            permissionContent: getTranslated("audioPermissionContent"),
+            permissionPermanentlyDeniedContent:
+            getTranslated("microPhonePermissionDeniedContent"));
         debugPrint(
-            "audio duration in sec ---> $audioDurationInSec ${isAudioRecording.value}");
+            "microPhone Permission Status---> $microPhonePermissionStatus");
+        if (microPhonePermissionStatus) {
+          isUserTyping(false);
+          record = AudioRecorder();
+          _isDisposed = false;
+          timerInit("00:00");
+          isAudioRecording(Constants.audioRecording);
+          startTimer(audioDurationInSec: audioDurationInSec);
+          await record.start(const RecordConfig(),
+              path:
+              "$audioSavePath/audio_${DateTime
+                  .now()
+                  .millisecondsSinceEpoch}.m4a");
+          debugPrint(
+              "audio duration in sec ---> $audioDurationInSec ${isAudioRecording
+                  .value}");
+        }
+      } else {
+        //show busy status popup
+        showBusyStatusAlert(
+                () => startRecording(audioDurationInSec: audioDurationInSec));
       }
     } else {
-      //show busy status popup
-      showBusyStatusAlert(
-          () => startRecording(audioDurationInSec: audioDurationInSec));
+      debugPrint('#ListenBackgroundMusic os does not accepted your request ');
     }
   }
 
@@ -3179,6 +3192,11 @@ class ChatController extends FullLifeCycleController
   @override
   void onPaused() {
     LogMessage.d("LifeCycle", "chat onPaused");
+
+    var id = SessionManagement.getCurrentChatJID();
+    final bool isAvaialbe = Get.isRegistered<ChatController>(tag: id);
+    LogMessage.d("LifeCycle", "chat onPaused, current chatJid: $id, isAvaialbe: $isAvaialbe, hasPaused: $hasPaused");
+
     hasPaused = true;
     setOnGoingUserGone();
     saveUnsentMessage();
@@ -3191,33 +3209,42 @@ class ChatController extends FullLifeCycleController
 
     ///when notification drawer was dragged then app goes inactive,when closes the drawer its trigger onResume
     ///so that this checking hasPaused added, this will invoke only when app is opened from background state.
-    if (hasPaused) {
-      hasPaused = false;
-      cancelNotification();
-      setChatStatus();
-      getAvailableFeatures();
 
-      //to avoid calling without initializedMessageList
-      if (initializedMessageList) {
-        /// we loading next messages instead of load message because the new messages received will be available in load next message
-        _loadNextMessages();
-      }
-      if (!KeyboardVisibilityController().isVisible) {
-        if (focusNode.hasFocus) {
-          focusNode.unfocus();
-          Future.delayed(const Duration(milliseconds: 100), () {
-            focusNode.requestFocus();
-          });
-        }
-        if (searchfocusNode.hasFocus) {
-          searchfocusNode.unfocus();
-          Future.delayed(const Duration(milliseconds: 100), () {
-            searchfocusNode.requestFocus();
-          });
-        }
-      }
-      setOnGoingUserAvail();
-    }
+    /// We've commented the below - REASON:- onResume is triggered multiple times
+    /// when we go background and comes foreground whether we are in chat or dashboard screen
+    /// so to resolve temporarily we've moved this code to onConnected() so when goes
+    /// background xmpp disconnected and when comes foreground it will call onConnected()
+
+    /// Need to check why the onResume() even called after the current controller
+    /// with the tag is already disposed
+
+    // if (hasPaused) {
+    //   hasPaused = false;
+    //   cancelNotification();
+    //   setChatStatus();
+    //   getAvailableFeatures();
+    //
+    //   //to avoid calling without initializedMessageList
+    //   if (initializedMessageList) {
+    //     /// we loading next messages instead of load message because the new messages received will be available in load next message
+    //     _loadNextMessages();
+    //   }
+    //   if (!KeyboardVisibilityController().isVisible) {
+    //     if (focusNode.hasFocus) {
+    //       focusNode.unfocus();
+    //       Future.delayed(const Duration(milliseconds: 100), () {
+    //         focusNode.requestFocus();
+    //       });
+    //     }
+    //     if (searchfocusNode.hasFocus) {
+    //       searchfocusNode.unfocus();
+    //       Future.delayed(const Duration(milliseconds: 100), () {
+    //         searchfocusNode.requestFocus();
+    //       });
+    //     }
+    //   }
+    //   setOnGoingUserAvail();
+    // }
   }
 
   void markConversationReadNotifyUI() {
@@ -3236,6 +3263,9 @@ class ChatController extends FullLifeCycleController
   @override
   void onInactive() {
     LogMessage.d("LifeCycle", "chat onInactive");
+    if(_audioTimer?.isActive.checkNull() == true){
+      stopRecording();
+    }
     final isAttached = newScrollController?.isAttached ?? false;
     if (isAttached) {
       newScrollController = null;
@@ -3298,8 +3328,38 @@ class ChatController extends FullLifeCycleController
     Future.delayed(const Duration(milliseconds: 2000), () {
       setChatStatus();
     });
+
+    getAvailableFeatures();
+
     if (!chatProfileCalled) {
-      getChatProfile();
+      LogMessage.d("#chatcontroller", '#onConnected #chatprofile #called');
+      getChatProfile(); // loads all the message via ready
+    } else {
+      // load only last message
+      LogMessage.d("#chatcontroller", '#onConnected #chatprofile #already called');
+      cancelNotification();
+      setChatStatus();
+
+      //to avoid calling without initializedMessageList
+      if (initializedMessageList) {
+        /// we loading next messages instead of load message because the new messages received will be available in load next message
+        _loadNextMessages();
+      }
+      if (!KeyboardVisibilityController().isVisible) {
+        if (focusNode.hasFocus) {
+          focusNode.unfocus();
+          Future.delayed(const Duration(milliseconds: 100), () {
+            focusNode.requestFocus();
+          });
+        }
+        if (searchfocusNode.hasFocus) {
+          searchfocusNode.unfocus();
+          Future.delayed(const Duration(milliseconds: 100), () {
+            searchfocusNode.requestFocus();
+          });
+        }
+      }
+      setOnGoingUserAvail();
     }
   }
 
@@ -3607,7 +3667,6 @@ class ChatController extends FullLifeCycleController
 
   void setOnGoingUserGone() {
     Mirrorfly.setOnGoingChatUser(jid: Constants.emptyString);
-    SessionManagement.setCurrentChatJID(Constants.emptyString);
   }
 
   void setOnGoingUserAvail() {
