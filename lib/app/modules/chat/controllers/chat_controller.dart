@@ -3329,6 +3329,8 @@ class ChatController extends FullLifeCycleController
       setChatStatus();
     });
 
+    getAvailableFeatures();
+
     if (!chatProfileCalled) {
       LogMessage.d("#chatcontroller", '#onConnected #chatprofile #called');
       getChatProfile(); // loads all the message via ready
@@ -3337,7 +3339,6 @@ class ChatController extends FullLifeCycleController
       LogMessage.d("#chatcontroller", '#onConnected #chatprofile #already called');
       cancelNotification();
       setChatStatus();
-      getAvailableFeatures();
 
       //to avoid calling without initializedMessageList
       if (initializedMessageList) {
