@@ -140,6 +140,7 @@ class DashboardController extends FullLifeCycleController
     Mirrorfly.syncCallLogs().then((isSuccess) {
       debugPrint("#MirrorflyCall syncCallLogs isSuccess $isSuccess");
     });
+    SessionManagement.setCurrentChatJID(Constants.emptyString);
     super.onInit();
   }
 
