@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mirrorfly_plugin/mirrorflychat.dart';
-import 'package:mirrorfly_uikit_plugin/app/data/helper.dart' show getProfileDetails;
-import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart' show SessionManagement;
+import 'package:mirrorfly_uikit_plugin/app/data/helper.dart'
+    show getProfileDetails;
+import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart'
+    show SessionManagement;
 import 'package:mirrorfly_uikit_plugin/app/data/textutils.dart';
 import 'package:mirrorfly_uikit_plugin/app/extensions/extensions.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/widgets/custom_text_view.dart';
@@ -35,15 +37,15 @@ class MentionUtils {
   /// [mentionStyle] - The style for mentions.
   /// Returns a [TextSpan] containing the entire styled text.
   static TextSpan replaceMentionedUserText(
-      Key? key,
-      String text,
-      List<String> mentionUserIds,
-      List<ProfileDetails> profileDetails,
-      TextStyle? defaultStyle,
-      TextStyle? underlineStyle,
-      TextStyle? mentionStyle,
-      Color mentionedMeBgColor,
-      ) {
+    Key? key,
+    String text,
+    List<String> mentionUserIds,
+    List<ProfileDetails> profileDetails,
+    TextStyle? defaultStyle,
+    TextStyle? underlineStyle,
+    TextStyle? mentionStyle,
+    Color mentionedMeBgColor,
+  ) {
     if (text.isEmpty) {
       return const TextSpan(children: []);
     }
@@ -55,18 +57,27 @@ class MentionUtils {
       if (TextUtils.hasMatch(word, mentionRegex.pattern)) {
         // debugPrint("formatMentionTextSpan ${profileDetails[index].getName()} $index $word");
         var mentionSpans = formatMentionTextSpan(
-            word, profileDetails, defaultStyle, key != null ? underlineStyle : null, mentionStyle,mentionedMeBgColor,index);
+            word,
+            profileDetails,
+            defaultStyle,
+            key != null ? underlineStyle : null,
+            mentionStyle,
+            mentionedMeBgColor,
+            index);
         spans.addAll(mentionSpans);
         index++;
       } else {
-        spans.addAll(TextUtils.getTextSpan(word, defaultStyle, key != null ? underlineStyle : null));
+        spans.addAll(TextUtils.getTextSpan(
+            word, defaultStyle, key != null ? underlineStyle : null));
         spans.add(const TextSpan(text: " "));
       }
     }
     var result = TextSpan(children: spans);
     var list = mentionUserIds.join(",");
-    if(defaultStyle!=null && underlineStyle != null && mentionStyle != null) {
-      CustomTextViewManager.setCustomText(text + list+key.toString(), result);
+    if (defaultStyle != null &&
+        underlineStyle != null &&
+        mentionStyle != null) {
+      CustomTextViewManager.setCustomText(text + list + key.toString(), result);
     }
     return result;
   }
@@ -86,8 +97,7 @@ class MentionUtils {
       TextStyle? underlineStyle,
       TextStyle? mentionStyle,
       Color mentionedMeBgColor,
-      int index
-      ) {
+      int index) {
     // int index = 0;
     List<TextSpan> spans = [];
     int lastMatchEnd = 0;
@@ -99,11 +109,15 @@ class MentionUtils {
       }
 
       // Add the mention text with style and recognizer.
-      if (index < replacements.length && replacements.length>index) {
+      if (index < replacements.length && replacements.length > index) {
         //debugPrint("replacements[index].getName() ${replacements[index].toJson()} $index");
         spans.addAll(TextUtils.parseEachLetterIntoTextSpan(
           "@${replacements[index].name} ",
-          mentionStyle?.copyWith(backgroundColor: replacements[index].jid == SessionManagement.getUserJID() ? mentionedMeBgColor : Colors.transparent),
+          mentionStyle?.copyWith(
+              backgroundColor:
+                  replacements[index].jid == SessionManagement.getUserJID()
+                      ? mentionedMeBgColor
+                      : Colors.transparent),
           // recognizer: TapGestureRecognizer()
           //   ..onTap = () {
           //     debugPrint('Tapped on: ${replacements[index]}');
@@ -131,9 +145,9 @@ class MentionUtils {
   /// [mentionedUsers] - List of usernames to retrieve profile details for.
   /// Returns a [Future] containing a list of [ProfileDetails].
   static Future<List<ProfileDetails>> getProfileDetailsOfUsername(
-      List<String> mentionedUsers,
-      ) async {
-    if(mentionedUsers.isEmpty){
+    List<String> mentionedUsers,
+  ) async {
+    if (mentionedUsers.isEmpty) {
       return [];
     }
     var profileDetails = <ProfileDetails>[];
@@ -145,16 +159,14 @@ class MentionUtils {
     return profileDetails;
   }
 
-  static String getMentionedText(String content,List<ProfileDetails> profileDetails){
+  static String getMentionedText(
+      String content, List<ProfileDetails> profileDetails) {
     debugPrint("setText : $content");
     var reformedText = content;
-    for(var profile in profileDetails){
-      reformedText = reformedText.replaceFirst(
-          "@[?]", "@${(SessionManagement.getUserJID()==profile.jid.checkNull()) ? profile.name : profile.getName()}");
+    for (var profile in profileDetails) {
+      reformedText = reformedText.replaceFirst("@[?]",
+          "@${(SessionManagement.getUserJID() == profile.jid.checkNull()) ? profile.name : profile.getName()}");
     }
     return reformedText;
-
   }
-
 }
-

@@ -170,7 +170,7 @@ class ChatController extends FullLifeCycleController
   RxDouble fabHeight = 60.0.obs;
   RxDouble margin = 16.0.obs;
   RxDouble safeTop = 10.0.obs;
-  late  final session;
+  late final session;
   var chatProfileCalled = false;
 
   void updateFabPosition(Offset newOffset) {
@@ -446,8 +446,10 @@ class ChatController extends FullLifeCycleController
     }
   }
 
-  void checkForAndroidNotificationProgressPermission(AttachmentType type) async {
-    if (Platform.isIOS || await AppPermission.checkPermission(Permission.notification)) {
+  void checkForAndroidNotificationProgressPermission(
+      AttachmentType type) async {
+    if (Platform.isIOS ||
+        await AppPermission.checkPermission(Permission.notification)) {
       switch (type) {
         case AttachmentType.camera:
           NavUtils.back();
@@ -480,16 +482,20 @@ class ChatController extends FullLifeCycleController
                   attachments: availableAttachments,
                   availableFeatures: availableFeatures,
                   onDocument: () {
-                    checkForAndroidNotificationProgressPermission(AttachmentType.document);
+                    checkForAndroidNotificationProgressPermission(
+                        AttachmentType.document);
                   },
                   onCamera: () {
-                    checkForAndroidNotificationProgressPermission(AttachmentType.camera);
+                    checkForAndroidNotificationProgressPermission(
+                        AttachmentType.camera);
                   },
                   onGallery: () {
-                    checkForAndroidNotificationProgressPermission(AttachmentType.gallery);
+                    checkForAndroidNotificationProgressPermission(
+                        AttachmentType.gallery);
                   },
                   onAudio: () {
-                    checkForAndroidNotificationProgressPermission(AttachmentType.audio);
+                    checkForAndroidNotificationProgressPermission(
+                        AttachmentType.audio);
                   },
                   onContact: () {
                     NavUtils.back();
@@ -2238,8 +2244,9 @@ class ChatController extends FullLifeCycleController
     showOrHideTagListView(false, "chatView");
     const oneSec = Duration(seconds: 1);
     startTime = DateTime.now();
-    if (_audioTimer != null){
-      debugPrint("audio duration timer is not null, so cancelling the existing timer");
+    if (_audioTimer != null) {
+      debugPrint(
+          "audio duration timer is not null, so cancelling the existing timer");
       _audioTimer?.cancel();
     }
     _audioTimer = Timer.periodic(
@@ -2250,9 +2257,10 @@ class ChatController extends FullLifeCycleController
         String min = minDur < 10 ? "0$minDur" : minDur.toString();
         String sec = secDur < 10 ? "0$secDur" : secDur.toString();
         timerInit("$min:$sec");
-        if(timer.tick >=  audioDurationInSec && isAudioRecording.value == Constants.audioRecording){
-            debugPrint("audio duration stop");
-            stopRecording();
+        if (timer.tick >= audioDurationInSec &&
+            isAudioRecording.value == Constants.audioRecording) {
+          debugPrint("audio duration stop");
+          stopRecording();
         }
       },
     );
@@ -2294,12 +2302,12 @@ class ChatController extends FullLifeCycleController
       if (!busyStatus.checkNull()) {
         // var permission = await AppPermission.getStoragePermission();
         var microPhonePermissionStatus =
-        await AppPermission.checkAndRequestPermissions(
-            permissions: [Permission.microphone],
-            permissionIcon: audioPermission,
-            permissionContent: getTranslated("audioPermissionContent"),
-            permissionPermanentlyDeniedContent:
-            getTranslated("microPhonePermissionDeniedContent"));
+            await AppPermission.checkAndRequestPermissions(
+                permissions: [Permission.microphone],
+                permissionIcon: audioPermission,
+                permissionContent: getTranslated("audioPermissionContent"),
+                permissionPermanentlyDeniedContent:
+                    getTranslated("microPhonePermissionDeniedContent"));
         debugPrint(
             "microPhone Permission Status---> $microPhonePermissionStatus");
         if (microPhonePermissionStatus) {
@@ -2311,17 +2319,14 @@ class ChatController extends FullLifeCycleController
           startTimer(audioDurationInSec: audioDurationInSec);
           await record.start(const RecordConfig(),
               path:
-              "$audioSavePath/audio_${DateTime
-                  .now()
-                  .millisecondsSinceEpoch}.m4a");
+                  "$audioSavePath/audio_${DateTime.now().millisecondsSinceEpoch}.m4a");
           debugPrint(
-              "audio duration in sec ---> $audioDurationInSec ${isAudioRecording
-                  .value}");
+              "audio duration in sec ---> $audioDurationInSec ${isAudioRecording.value}");
         }
       } else {
         //show busy status popup
         showBusyStatusAlert(
-                () => startRecording(audioDurationInSec: audioDurationInSec));
+            () => startRecording(audioDurationInSec: audioDurationInSec));
       }
     } else {
       debugPrint('#ListenBackgroundMusic os does not accepted your request ');
@@ -3212,7 +3217,8 @@ class ChatController extends FullLifeCycleController
 
     var id = SessionManagement.getCurrentChatJID();
     final bool isAvaialbe = Get.isRegistered<ChatController>(tag: id);
-    LogMessage.d("LifeCycle", "chat onPaused, current chatJid: $id, isAvaialbe: $isAvaialbe, hasPaused: $hasPaused");
+    LogMessage.d("LifeCycle",
+        "chat onPaused, current chatJid: $id, isAvaialbe: $isAvaialbe, hasPaused: $hasPaused");
 
     hasPaused = true;
     setOnGoingUserGone();
@@ -3280,7 +3286,7 @@ class ChatController extends FullLifeCycleController
   @override
   void onInactive() {
     LogMessage.d("LifeCycle", "chat onInactive");
-    if(_audioTimer?.isActive.checkNull() == true){
+    if (_audioTimer?.isActive.checkNull() == true) {
       stopRecording();
     }
     final isAttached = newScrollController?.isAttached ?? false;
@@ -3353,7 +3359,8 @@ class ChatController extends FullLifeCycleController
       getChatProfile(); // loads all the message via ready
     } else {
       // load only last message
-      LogMessage.d("#chatcontroller", '#onConnected #chatprofile #already called');
+      LogMessage.d(
+          "#chatcontroller", '#onConnected #chatprofile #already called');
       cancelNotification();
       setChatStatus();
 
@@ -3770,15 +3777,11 @@ class ChatController extends FullLifeCycleController
   }
 
   void loadLastMessages(ChatMessageModel chatMessageModel) async {
-
     _loadNextMessages(showLoading: false);
-
   }
 
   Future<void> loadPrevORNextMessagesLoad({bool? isReplyMessage}) async {
-
-      _loadPreviousMessages(showLoading: false);
-
+    _loadPreviousMessages(showLoading: false);
   }
 
   void handleUnreadMessageSeparator(

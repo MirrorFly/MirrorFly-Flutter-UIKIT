@@ -204,29 +204,26 @@ class _GalleryMediaPickerState extends State<GalleryMediaPicker> {
                           animation: widget.provider.currentAlbumNotifier,
                           builder: (BuildContext context, child) =>
                               GalleryGridView(
-                                  path: widget.provider.currentAlbum,
-                                  thumbnailQuality:
-                                      widget.thumbnailQuality ?? 200,
-                                  provider: widget.provider,
-                                  padding: widget.gridPadding,
-                                  childAspectRatio:
-                                      widget.childAspectRatio ?? 0.5,
-                                  crossAxisCount: widget.crossAxisCount ?? 3,
-                                  gridViewBackgroundColor:
-                                      widget.gridViewBackgroundColor,
-                                  gridViewController: widget.gridViewController,
-                                  gridViewPhysics: widget.gridViewPhysics,
-                                  imageBackgroundColor:
-                                      widget.imageBackgroundColor,
-                                  selectedBackgroundColor:
-                                      widget.selectedBackgroundColor,
-                                  selectedCheckColor: widget.selectedCheckColor,
-                                  thumbnailBoxFix: widget.thumbnailBoxFix,
-                                  selectedCheckBackgroundColor:
-                                      widget.selectedCheckBackgroundColor,
-                                  onAssetRemove: (asset, index) {
-                                    widget.provider.removeEntity(asset);
-                                  },
+                            path: widget.provider.currentAlbum,
+                            thumbnailQuality: widget.thumbnailQuality ?? 200,
+                            provider: widget.provider,
+                            padding: widget.gridPadding,
+                            childAspectRatio: widget.childAspectRatio ?? 0.5,
+                            crossAxisCount: widget.crossAxisCount ?? 3,
+                            gridViewBackgroundColor:
+                                widget.gridViewBackgroundColor,
+                            gridViewController: widget.gridViewController,
+                            gridViewPhysics: widget.gridViewPhysics,
+                            imageBackgroundColor: widget.imageBackgroundColor,
+                            selectedBackgroundColor:
+                                widget.selectedBackgroundColor,
+                            selectedCheckColor: widget.selectedCheckColor,
+                            thumbnailBoxFix: widget.thumbnailBoxFix,
+                            selectedCheckBackgroundColor:
+                                widget.selectedCheckBackgroundColor,
+                            onAssetRemove: (asset, index) {
+                              widget.provider.removeEntity(asset);
+                            },
                             onAssetItemClick: (asset, index) async {
                               final File? file = await asset.file;
                               final String fileType = asset.typeInt == 1
@@ -234,22 +231,21 @@ class _GalleryMediaPickerState extends State<GalleryMediaPicker> {
                                   : Constants.mVideo;
                               if (file != null) {
                                 try {
-                                  final bool isValidSize = await MediaUtils
-                                      .checkFileUploadSize(
-                                      file.path,
-                                      fileType);
+                                  final bool isValidSize =
+                                      await MediaUtils.checkFileUploadSize(
+                                          file.path, fileType);
                                   debugPrint(
                                       "#gallery media picker: isValidSize: $isValidSize");
                                   if (isValidSize) {
                                     debugPrint(
-                                        "#gallery media picker: item processed1 ${DateTime
-                                            .now()} ${file.lengthSync()}");
+                                        "#gallery media picker: item processed1 ${DateTime.now()} ${file.lengthSync()}");
                                     widget.provider.pickEntity(asset);
                                     widget.provider.pickPath(PickedAssetModel(
                                       id: asset.id,
                                       // path: file.path,
-                                      type:
-                                      asset.typeInt == 1 ? 'image' : 'video',
+                                      type: asset.typeInt == 1
+                                          ? 'image'
+                                          : 'video',
                                       asset: asset,
                                       videoDuration: asset.videoDuration,
                                       createDateTime: asset.createDateTime,
@@ -266,8 +262,8 @@ class _GalleryMediaPickerState extends State<GalleryMediaPicker> {
                                       title: asset.title,
                                       size: asset.size,
                                     ));
-                                    widget.pathList!(
-                                        widget.provider.pickedFile);
+                                    widget
+                                        .pathList!(widget.provider.pickedFile);
                                   } else {
                                     debugPrint(
                                         "#gallery media picker Error: failed to select the $fileType");

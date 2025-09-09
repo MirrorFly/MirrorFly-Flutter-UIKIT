@@ -113,21 +113,24 @@ class MentionTagTextEditingController extends TextEditingController {
     }
   }
 
-  setCustomText(String content,List<ProfileDetails> profileDetails){
+  setCustomText(String content, List<ProfileDetails> profileDetails) {
     debugPrint("setText : $content");
     super.text = "";
     _mentions.clear();
     var reformedText = content;
-    for(var profile in profileDetails){
+    for (var profile in profileDetails) {
       String id = profile.jid.checkNull().split("@")[0];
       String name = profile.getName();
-      _mentions.add(MentionTagElement(mentionSymbol: '@', mention: name,data: id,stylingWidget: Text('@$name',style: mentionTagDecoration.mentionTextStyle)));
-      reformedText = reformedText.replaceFirst(
-          "@[?]", Constants.mentionEscape);
+      _mentions.add(MentionTagElement(
+          mentionSymbol: '@',
+          mention: name,
+          data: id,
+          stylingWidget:
+              Text('@$name', style: mentionTagDecoration.mentionTextStyle)));
+      reformedText = reformedText.replaceFirst("@[?]", Constants.mentionEscape);
     }
     super.text = reformedText;
     debugPrint("setText : $text , $getText");
-
   }
 
   String _temp = '';
@@ -222,7 +225,7 @@ class MentionTagTextEditingController extends TextEditingController {
 
   String? getMention(String value) {
     final indexCursor = selection.base.offset;
-    if(indexCursor.isNegative){
+    if (indexCursor.isNegative) {
       return null;
     }
 
@@ -348,26 +351,32 @@ class MentionTagTextEditingController extends TextEditingController {
     final List<MentionTagElement> tempList = List.from(_mentions);
 
     return TextSpan(
-      style: style,
-      // children: buildTextSpanChildren(res,style,mentionTagDecoration,tempList)
-      children: res.map((e) {
-        if (e == Constants.mentionEscape) {
-          final mention = tempList.removeAt(0);
+        style: style,
+        // children: buildTextSpanChildren(res,style,mentionTagDecoration,tempList)
+        children: res.map((e) {
+          if (e == Constants.mentionEscape) {
+            final mention = tempList.removeAt(0);
 
-          return WidgetSpan(
-            alignment: PlaceholderAlignment.middle,
-            child: mention.stylingWidget ??
-                Text(
-                  mention.mention,
-                  style: mentionTagDecoration.mentionTextStyle,
-                ),
-          );
-        }
-        return TextSpan(children: TextUtils.parseEachLetterIntoTextSpan(e,style), style: style);
-      }).toList()
-    );
+            return WidgetSpan(
+              alignment: PlaceholderAlignment.middle,
+              child: mention.stylingWidget ??
+                  Text(
+                    mention.mention,
+                    style: mentionTagDecoration.mentionTextStyle,
+                  ),
+            );
+          }
+          return TextSpan(
+              children: TextUtils.parseEachLetterIntoTextSpan(e, style),
+              style: style);
+        }).toList());
   }
-  List<WidgetSpan> buildTextSpanChildren(List<String> res, TextStyle? style, MentionTagDecoration mentionTagDecoration, List<MentionTagElement> tempList) {
+
+  List<WidgetSpan> buildTextSpanChildren(
+      List<String> res,
+      TextStyle? style,
+      MentionTagDecoration mentionTagDecoration,
+      List<MentionTagElement> tempList) {
     List<WidgetSpan> children = [];
 
     for (var e in res) {
@@ -379,9 +388,11 @@ class MentionTagTextEditingController extends TextEditingController {
             mentionTagDecoration.mentionTextStyle,
           ));
         } else {
-          children.add(WidgetSpan(alignment: PlaceholderAlignment.middle,child: mention.stylingWidget!));
+          children.add(WidgetSpan(
+              alignment: PlaceholderAlignment.middle,
+              child: mention.stylingWidget!));
         }
-      }else {
+      } else {
         children.addAll(TextUtils.parseEachLetterIntoWidgetSpan(e, style));
       }
     }

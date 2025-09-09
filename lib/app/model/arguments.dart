@@ -49,7 +49,7 @@ class ChatViewArguments {
     this.isScheduleMeetEnabled = false,
     this.audioDurationInSec = 300,
   }) : assert(swipeSensitivity >= 5 && swipeSensitivity <= 20,
-  'swipeSensitivity must be between 5 and 20');
+            'swipeSensitivity must be between 5 and 20');
 
   final String chatJid;
   final String topicId;
@@ -93,9 +93,9 @@ class ChatViewArguments {
 class ChatSearchViewArguments {
   const ChatSearchViewArguments(
       {required this.chatJid,
-        required this.chatList,
-        this.showChatDeliveryIndicator = true,
-        this.disableAppBar = false});
+      required this.chatList,
+      this.showChatDeliveryIndicator = true,
+      this.disableAppBar = false});
 
   final String chatJid;
   final List<ChatMessageModel> chatList;
@@ -106,11 +106,11 @@ class ChatSearchViewArguments {
 class ContactListArguments {
   const ContactListArguments(
       {this.messageIds = const [],
-        this.topicId = "",
-        this.callType = "",
-        this.forMakeCall = false,
-        this.groupJid = "",
-        this.forGroup = false});
+      this.topicId = "",
+      this.callType = "",
+      this.forMakeCall = false,
+      this.groupJid = "",
+      this.forGroup = false});
   final List<String> messageIds;
   final String groupJid;
   final String topicId;

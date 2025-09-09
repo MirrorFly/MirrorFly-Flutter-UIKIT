@@ -5,13 +5,13 @@ class UIKitIcon extends StatelessWidget {
   const UIKitIcon.assetIcon({
     Key? key,
     required this.icon,
-  }) : svgPicture = null,
+  })  : svgPicture = null,
         super(key: key);
 
   const UIKitIcon.svgIcon({
     Key? key,
     required this.svgPicture,
-  }) : icon = null,
+  })  : icon = null,
         super(key: key);
 
   final SvgPicture? svgPicture;
@@ -28,4 +28,3 @@ class UIKitIcon extends StatelessWidget {
     }
   }
 }
-

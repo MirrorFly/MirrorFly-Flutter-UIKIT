@@ -96,184 +96,171 @@ class OnGoingCallView extends NavViewStateful<CallController> {
                                                 CallStatus.onHold,
                                                 style: TextStyle(color: Colors.white),
                                               ):  const Offstage(),*/
-                                            if (controller.callList.length > 1 &&
-                                                getTileCallStatus(
-                                                        controller.callList
-                                                            .firstWhere((y) =>
-                                                                y.userJid!
-                                                                    .value ==
-                                                                controller
-                                                                    .pinnedUserJid
-                                                                    .value)
-                                                            .callStatus
-                                                            ?.value,
-                                                        controller
-                                                            .pinnedUserJid.value
-                                                            .checkNull(),
-                                                        controller
-                                                            .isOneToOneCall)
-                                                    .isNotEmpty &&
-                                                controller
-                                                    .layoutSwitch.value) ...[
-                                              Text(
-                                                getTileCallStatus(
-                                                    controller.callList
-                                                        .firstWhere((y) =>
-                                                            y.userJid!.value ==
-                                                            controller
-                                                                .pinnedUserJid
-                                                                .value)
-                                                        .callStatus
-                                                        ?.value,
-                                                    controller
-                                                        .pinnedUserJid.value
-                                                        .checkNull(),
-                                                    controller.isOneToOneCall),
-                                        style: AppStyleConfig
-                                            .ongoingCallPageStyle
-                                            .pinnedCallUserTileStyle
-                                            .callStatusTextStyle,
-                                                // style: const TextStyle(color: Colors.white),
-                                              ),
-                                              const SizedBox(
-                                                height: 10,
-                                              )
-                                            ],
-                                            if (controller.callList.length >
-                                                    1 &&
+                                    if (controller.callList.length > 1 &&
+                                        getTileCallStatus(
                                                 controller.callList
                                                     .firstWhere((y) =>
                                                         y.userJid!.value ==
                                                         controller.pinnedUserJid
                                                             .value)
-                                                    .isAudioMuted
-                                                    .value &&
-                                                controller
-                                                    .layoutSwitch.value) ...[
-                                              CircleAvatar(
-                                                backgroundColor: AppStyleConfig
-                                                    .ongoingCallPageStyle
-                                                    .pinnedCallUserTileStyle
-                                                    .muteActionStyle
-                                                    .activeBgColor,
-                                                //AppColors.audioMutedIconBgColor,
-                                                child: AppUtils.svgIcon(
-                                                  icon: callMutedIcon,
-                                                  colorFilter: ColorFilter.mode(
-                                                      AppStyleConfig
-                                                          .ongoingCallPageStyle
-                                                          .pinnedCallUserTileStyle
-                                                          .muteActionStyle
-                                                          .activeIconColor,
-                                                      BlendMode.srcIn),
-                                                ),
-                                              )
-                                            ],
-                                          ],
-                                        ));
-                                  }),
-                                ],
-                              )),
-                          Column(
-                            children: [
-                              Obx(() {
-                                return AnimatedSize(
-                                  duration: const Duration(milliseconds: 500),
-                                  curve: Curves.easeInOut,
-                                  child: SizedBox(
-                                    height:
-                                        controller.isVisible.value ? 60 : 0.0,
-                                  ),
-                                );
-                              }),
-                              Obx(() {
-                                return !controller.layoutSwitch.value
+                                                    .callStatus
+                                                    ?.value,
+                                                controller.pinnedUserJid.value
+                                                    .checkNull(),
+                                                controller.isOneToOneCall)
+                                            .isNotEmpty &&
+                                        controller.layoutSwitch.value) ...[
+                                      Text(
+                                        getTileCallStatus(
+                                            controller.callList
+                                                .firstWhere((y) =>
+                                                    y.userJid!.value ==
+                                                    controller
+                                                        .pinnedUserJid.value)
+                                                .callStatus
+                                                ?.value,
+                                            controller.pinnedUserJid.value
+                                                .checkNull(),
+                                            controller.isOneToOneCall),
+                                        style: AppStyleConfig
+                                            .ongoingCallPageStyle
+                                            .pinnedCallUserTileStyle
+                                            .callStatusTextStyle,
+                                        // style: const TextStyle(color: Colors.white),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      )
+                                    ],
+                                    if (controller.callList.length > 1 &&
+                                        controller.callList
+                                            .firstWhere((y) =>
+                                                y.userJid!.value ==
+                                                controller.pinnedUserJid.value)
+                                            .isAudioMuted
+                                            .value &&
+                                        controller.layoutSwitch.value) ...[
+                                      CircleAvatar(
+                                        backgroundColor: AppStyleConfig
+                                            .ongoingCallPageStyle
+                                            .pinnedCallUserTileStyle
+                                            .muteActionStyle
+                                            .activeBgColor,
+                                        //AppColors.audioMutedIconBgColor,
+                                        child: AppUtils.svgIcon(
+                                          icon: callMutedIcon,
+                                          colorFilter: ColorFilter.mode(
+                                              AppStyleConfig
+                                                  .ongoingCallPageStyle
+                                                  .pinnedCallUserTileStyle
+                                                  .muteActionStyle
+                                                  .activeIconColor,
+                                              BlendMode.srcIn),
+                                        ),
+                                      )
+                                    ],
+                                  ],
+                                ));
+                          }),
+                        ],
+                      )),
+                  Column(
+                    children: [
+                      Obx(() {
+                        return AnimatedSize(
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.easeInOut,
+                          child: SizedBox(
+                            height: controller.isVisible.value ? 60 : 0.0,
+                          ),
+                        );
+                      }),
+                      Obx(() {
+                        return !controller.layoutSwitch.value
                             ? Expanded(
                                 child: buildGridItem(
                                     controller,
                                     AppStyleConfig.ongoingCallPageStyle
                                         .gridCallUserTileStyle))
-                                    : const Offstage();
-                              }),
-                            ],
+                            : const Offstage();
+                      }),
+                    ],
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Obx(() {
+                        return (controller.callList.length >= 2)
+                            ? Align(
+                                alignment: Alignment.bottomRight,
+                                child: controller.layoutSwitch.value
+                                    ? buildListItem(
+                                        controller,
+                                        AppStyleConfig.ongoingCallPageStyle
+                                            .listCallUserTileStyle)
+                                    : const Offstage(),
+                              )
+                            : const Offstage();
+                      }),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      Obx(() {
+                        return AnimatedSize(
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.easeInOut,
+                          child: SizedBox(
+                            height: controller.isVisible.value ? 135 : 0.0,
                           ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Obx(() {
-                                return (controller.callList.length >= 2)
-                                    ? Align(
-                                        alignment: Alignment.bottomRight,
-                                        child: controller.layoutSwitch.value
-                                            ? buildListItem(
-                                                controller,
-                                                AppStyleConfig
-                                                    .ongoingCallPageStyle
-                                                    .listCallUserTileStyle)
-                                            : const Offstage(),
-                                      )
-                                    : const Offstage();
-                              }),
-                              const SizedBox(
-                                height: 25,
-                              ),
-                              Obx(() {
-                                return AnimatedSize(
-                                  duration: const Duration(milliseconds: 500),
-                                  curve: Curves.easeInOut,
-                                  child: SizedBox(
-                                    height:
-                                        controller.isVisible.value ? 135 : 0.0,
-                                  ),
-                                );
-                              })
-                            ],
-                          ),
-                          Obx(() {
-                            return AnimatedPositioned(
-                              duration: const Duration(milliseconds: 500),
-                              curve: Curves.easeInOut,
-                              bottom: controller.isVisible.value ? 0.0 : -170,
-                              left: 0.0,
-                              right: 0.0,
+                        );
+                      })
+                    ],
+                  ),
+                  Obx(() {
+                    return AnimatedPositioned(
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
+                      bottom: controller.isVisible.value ? 0.0 : -170,
+                      left: 0.0,
+                      right: 0.0,
                       child: buildCallOptions(AppStyleConfig
                           .ongoingCallPageStyle.actionButtonsStyle),
-                            );
-                          }),
-                          Obx(() {
-                            return AnimatedPositioned(
-                              duration: const Duration(milliseconds: 500),
-                              curve: Curves.easeInOut,
-                              top: controller.isVisible.value ? null : -72,
-                              left: 0.0,
-                              right: 0.0,
-                              height: 72,
-                              child: buildToolbar(context),
-                            );
-                          }),
-                          // Positioned(
-                          //   left: 0,
-                          //   top: 0,
-                          //   child: IconButton(
-                          //     splashRadius: 24,
-                          //     onPressed: () {
-                          //       controller.goToPIP();
-                          //     },
-                          //     icon: Icon(
-                          //       Icons.keyboard_arrow_down,
-                          //       color: AppStyleConfig
-                          //           .ongoingCallPageStyle.actionIconColor,
-                          //     ),
-                          //   ),
-                          // ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                    );
+                  }),
+                  Obx(() {
+                    return AnimatedPositioned(
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
+                      top: controller.isVisible.value ? null : -72,
+                      left: 0.0,
+                      right: 0.0,
+                      height: 72,
+                      child: buildToolbar(context),
+                    );
+                  }),
+                  // Positioned(
+                  //   left: 0,
+                  //   top: 0,
+                  //   child: IconButton(
+                  //     splashRadius: 24,
+                  //     onPressed: () {
+                  //       controller.goToPIP();
+                  //     },
+                  //     icon: Icon(
+                  //       Icons.keyboard_arrow_down,
+                  //       color: AppStyleConfig
+                  //           .ongoingCallPageStyle.actionIconColor,
+                  //     ),
+                  //   ),
+                  // ),
+                ],
               ),
-            );
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget buildToolbar(BuildContext context) {

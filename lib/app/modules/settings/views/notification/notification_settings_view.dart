@@ -9,11 +9,13 @@ import '../../../../data/utils.dart';
 import '../../../../extensions/extensions.dart';
 import 'notification_not_working_view.dart';
 
-class NotificationSettingsView extends NavViewStateful<NotificationAlertController> {
+class NotificationSettingsView
+    extends NavViewStateful<NotificationAlertController> {
   const NotificationSettingsView({Key? key}) : super(key: key);
 
   @override
-NotificationAlertController createController({String? tag}) => Get.put(NotificationAlertController());
+  NotificationAlertController createController({String? tag}) =>
+      Get.put(NotificationAlertController());
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +72,7 @@ NotificationAlertController createController({String? tag}) => Get.put(Notificat
           ],
         ),
         dividerPadding: const EdgeInsets.symmetric(horizontal: 16),
-        trailing: AppUtils.svgIcon(icon:rightArrowIcon),
+        trailing: AppUtils.svgIcon(icon: rightArrowIcon),
         onTap: onTap);
   }
 }

@@ -9,14 +9,12 @@ import 'package:mirrorfly_uikit_plugin/app/data/utils.dart';
 import 'package:mirrorfly_uikit_plugin/app/routes/route_settings.dart';
 
 class WebLoginController extends GetxController {
-
   var loginQr = <String>[];
   final _webLogins = <WebLogin>[].obs;
 
   set webLogins(value) => _webLogins.value = value;
 
   List<WebLogin> get webLogins => _webLogins;
-
 
   @override
   void dispose() {
@@ -26,25 +24,23 @@ class WebLoginController extends GetxController {
     super.dispose();
   }
 
-
   logoutWebUser() async {
-    if(await AppUtils.isNetConnected()) {
+    if (await AppUtils.isNetConnected()) {
       DialogUtils.progressLoading();
       Mirrorfly.logoutWebUser().then((value) {
         if (value != null && value) {
           // SessionManagement.setWebChatLogin(false);
           // NavUtils.back();
           toToast(getTranslated("qaWebLogoutSuccess"));
-        }else{
+        } else {
           DialogUtils.hideLoading();
           toToast(getTranslated("qaWebLogoutFailure"));
         }
       });
-    }else{
+    } else {
       toToast(getTranslated("noInternetConnection"));
     }
   }
-
 
   getWebLoginDetails() {
     loginQr.clear();
@@ -81,33 +77,42 @@ class WebLoginController extends GetxController {
 
   addLogin() async {
     if (await AppUtils.isNetConnected()) {
-    NavUtils.toNamed(Routes.scanner)?.then((value) {
-      getWebLoginDetails();
-    });
+      NavUtils.toNamed(Routes.scanner)?.then((value) {
+        getWebLoginDetails();
+      });
     } else {
-    toToast(getTranslated("noInternetConnection"));
+      toToast(getTranslated("noInternetConnection"));
     }
   }
 
   logoutWeb() {
-    DialogUtils.showAlert(dialogStyle: AppStyleConfig.dialogStyle,message: getTranslated("logoutConfirmation"), actions: [
-      TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
-          onPressed: () {
-            NavUtils.back();
-          },
-          child: Text(getTranslated("no").toUpperCase(), )),
-      TextButton(style: AppStyleConfig.dialogStyle.buttonStyle,
-          onPressed: () {
-            NavUtils.back();
-            logoutWebUser();
-          },
-          child: Text(getTranslated("yes").toUpperCase(), )),
-    ]);
+    DialogUtils.showAlert(
+        dialogStyle: AppStyleConfig.dialogStyle,
+        message: getTranslated("logoutConfirmation"),
+        actions: [
+          TextButton(
+              style: AppStyleConfig.dialogStyle.buttonStyle,
+              onPressed: () {
+                NavUtils.back();
+              },
+              child: Text(
+                getTranslated("no").toUpperCase(),
+              )),
+          TextButton(
+              style: AppStyleConfig.dialogStyle.buttonStyle,
+              onPressed: () {
+                NavUtils.back();
+                logoutWebUser();
+              },
+              child: Text(
+                getTranslated("yes").toUpperCase(),
+              )),
+        ]);
   }
 
   void onWebLogout(List<String> socketIdList) {
-    var webLoginIndex = _webLogins.indexWhere((webLogin) =>
-        socketIdList.contains(webLogin.qrUniqeToken));
+    var webLoginIndex = _webLogins
+        .indexWhere((webLogin) => socketIdList.contains(webLogin.qrUniqeToken));
     if (!webLoginIndex.isNegative) {
       _webLogins.removeWhere((e) => socketIdList.contains(e.qrUniqeToken));
       loginQr.removeWhere((e) => socketIdList.contains(e));

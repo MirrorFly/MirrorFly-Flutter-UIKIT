@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/chat/widgets/custom_text_view.dart' show CustomTextView;
+import 'package:mirrorfly_uikit_plugin/app/modules/chat/widgets/custom_text_view.dart'
+    show CustomTextView;
 import '../../../extensions/extensions.dart';
 import '../../../stylesheet/stylesheet.dart';
 import 'package:mirrorfly_plugin/mirrorfly.dart';

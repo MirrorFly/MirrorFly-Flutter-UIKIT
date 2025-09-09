@@ -1304,7 +1304,8 @@ class BaseController {
     if (Get.isRegistered<ChatController>(tag: controllerTag)) {
       Get.find<ChatController>(tag: controllerTag).onConnected();
     } else {
-      LogMessage.d('onConnected', "ChatController not found with tag: $controllerTag");
+      LogMessage.d(
+          'onConnected', "ChatController not found with tag: $controllerTag");
     }
     if (Get.isRegistered<ChatInfoController>()) {
       Get.find<ChatInfoController>().onConnected();

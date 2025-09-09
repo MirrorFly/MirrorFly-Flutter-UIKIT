@@ -6,7 +6,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mirrorfly_plugin/logmessage.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_localizations.dart';
 import 'package:mirrorfly_uikit_plugin/app/extensions/extensions.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/backup_restore/backup_utils/backup_restore_manager.dart' show BackupFile, BackupRestoreManager;
+import 'package:mirrorfly_uikit_plugin/app/modules/backup_restore/backup_utils/backup_restore_manager.dart'
+    show BackupFile, BackupRestoreManager;
 
 import '../../../app_style_config.dart';
 import '../../../common/constants.dart';
@@ -30,7 +31,6 @@ class RestoreController extends GetxController
     backupAnimation5,
     backupAnimation6,
   ];
-
 
   var selectedBackupFrequency = "Monthly".obs;
 
@@ -70,12 +70,14 @@ class RestoreController extends GetxController
 
     fetchingBackupDetails(true);
 
-    LogMessage.d(
-        "Restore Controller", " => onInit Method called");
+    LogMessage.d("Restore Controller", " => onInit Method called");
 
-    var previousBackupEmail = SessionManagement.getBackUpAccount().isEmpty ? (BackupRestoreManager.instance.getGoogleAccountSignedIn?.email).checkNull() : SessionManagement.getBackUpAccount();
+    var previousBackupEmail = SessionManagement.getBackUpAccount().isEmpty
+        ? (BackupRestoreManager.instance.getGoogleAccountSignedIn?.email)
+            .checkNull()
+        : SessionManagement.getBackUpAccount();
 
-    if (previousBackupEmail.isNotEmpty){
+    if (previousBackupEmail.isNotEmpty) {
       isAccountSelected(true);
       backUpEmailId(previousBackupEmail);
     }
@@ -92,7 +94,6 @@ class RestoreController extends GetxController
     } else {
       mobileNumber = "";
     }
-
 
     animationController = AnimationController(
       vsync: this,
@@ -119,21 +120,22 @@ class RestoreController extends GetxController
 
   @override
   void onClose() {
-    if(animationController != null){
-    animationController?.dispose();
+    if (animationController != null) {
+      animationController?.dispose();
     }
     super.onClose();
   }
 
   void skipBackup() {
-    if(animationController != null){
+    if (animationController != null) {
       animationController?.stop();
     }
 
     if (backupDownloadStarted.value) {
-     BackupRestoreManager.instance.cancelRemoteDownload();
+      BackupRestoreManager.instance.cancelRemoteDownload();
       backupDownloadStarted(false);
-      LogMessage.d("Restore Controller", "Backup Download cancelled while skip");
+      LogMessage.d(
+          "Restore Controller", "Backup Download cancelled while skip");
     } else if (backupRestoreStarted.value) {
       BackupRestoreManager.instance.cancelRestore();
       backupRestoreStarted(false);
@@ -151,7 +153,7 @@ class RestoreController extends GetxController
   }
 
   void nextScreen() {
-    if(animationController != null){
+    if (animationController != null) {
       animationController?.stop();
     }
     SessionManagement.setBackUpAccount(backUpEmailId.value);
@@ -162,11 +164,11 @@ class RestoreController extends GetxController
 
   void updateAutoBackupOption(bool isEnabled) {
     LogMessage.d("Restore Controller", "Auto Backup Toggle => $isEnabled");
-    if (Platform.isAndroid && backUpEmailId.value == ''){
+    if (Platform.isAndroid && backUpEmailId.value == '') {
       toToast(getTranslated("autoBackupAndroidError"));
       return;
     }
-    if (Platform.isIOS && !driveAccessible.value){
+    if (Platform.isIOS && !driveAccessible.value) {
       toToast(getTranslated("autoBackupIOSError"));
       return;
     }
@@ -175,16 +177,18 @@ class RestoreController extends GetxController
 
   Future<void> checkForBackUpFiles() async {
     fetchingBackupDetails(true);
-    await BackupRestoreManager.instance.checkBackUpFiles().then((backupFileDetails) {
-      LogMessage.d(
-          "Restore Controller", "Backup file Available => ${backupFileDetails?.toJson()}");
-      if(backupFileDetails != null) {
+    await BackupRestoreManager.instance
+        .checkBackUpFiles()
+        .then((backupFileDetails) {
+      LogMessage.d("Restore Controller",
+          "Backup file Available => ${backupFileDetails?.toJson()}");
+      if (backupFileDetails != null) {
         isBackupFound(backupFileDetails.fileId?.isNotEmpty);
         backupFile(backupFileDetails);
         fetchingBackupDetails(false);
       }
       DialogUtils.hideLoading();
-    }).catchError((onError){
+    }).catchError((onError) {
       DialogUtils.hideLoading();
     });
   }
@@ -199,13 +203,13 @@ class RestoreController extends GetxController
       if (permission) {
         backupDownloadStarted(true);
         isBackupAnimationRunning(true);
-        if(animationController != null) {
+        if (animationController != null) {
           animationController?.forward();
         }
-        BackupRestoreManager.instance.downloadAndroidBackupFile(
-            backupFile.value).listen((progress) {
-          LogMessage.d(
-              "Restore Controller",
+        BackupRestoreManager.instance
+            .downloadAndroidBackupFile(backupFile.value)
+            .listen((progress) {
+          LogMessage.d("Restore Controller",
               "Backup file Download Progress=> $progress");
           remoteDownloadProgress((progress / 100));
           // backupDownloadStarted(false);
@@ -213,32 +217,34 @@ class RestoreController extends GetxController
           String backUpPath = BackupRestoreManager.instance.remoteBackupPath;
           backupDownloadStarted(false);
           backupRestoreStarted(true);
-          BackupRestoreManager.instance.restoreBackup(
-              backupFilePath: backUpPath);
+          BackupRestoreManager.instance
+              .restoreBackup(backupFilePath: backUpPath);
         }, onError: (error) {
           LogMessage.d(
               "Restore Controller", "Backup file Download Failed=> $error");
           backupDownloadStarted(false);
           backupRestoreStarted(false);
         });
-      }else{
+      } else {
         toToast(getTranslated("backupPermissionDeniedToast"));
       }
-
     } else {
       if (backupFile.value.iCloudRelativePath != null) {
         backupDownloadStarted(false);
         backupRestoreStarted(true);
-        BackupRestoreManager.instance.startIcloudFileDownload(
-            relativePath: backupFile.value.iCloudRelativePath ?? '').listen((progress){
+        BackupRestoreManager.instance
+            .startIcloudFileDownload(
+                relativePath: backupFile.value.iCloudRelativePath ?? '')
+            .listen((progress) {
           remoteDownloadProgress((progress / 100));
         }, onDone: () {
           String backUpPath = BackupRestoreManager.instance.remoteBackupPath;
-          LogMessage.d(
-              "Restore Controller", "Backup file Downloaded => Restoring the messages==> ${backupFile.toJson()}");
+          LogMessage.d("Restore Controller",
+              "Backup file Downloaded => Restoring the messages==> ${backupFile.toJson()}");
           backupDownloadStarted(false);
           backupRestoreStarted(true);
-          BackupRestoreManager.instance.restoreBackup(backupFilePath: backUpPath);
+          BackupRestoreManager.instance
+              .restoreBackup(backupFilePath: backUpPath);
         });
 
         // LogMessage.d("Restore Controller", "download backup url: ${backupFile.value.filePath}");
@@ -251,10 +257,9 @@ class RestoreController extends GetxController
           LogMessage.d("Restore Controller", "download full backup url: $fullFilePath");
           BackupRestoreManager.instance.restoreBackup(backupFilePath: fullFilePath);
         });*/
-
-      }else{
-        LogMessage.d(
-            "Restore Controller", "Backup file Download => Backup file relative path is not found ==> ${backupFile.toJson()}");
+      } else {
+        LogMessage.d("Restore Controller",
+            "Backup file Download => Backup file relative path is not found ==> ${backupFile.toJson()}");
         backupDownloadStarted(false);
         backupRestoreStarted(false);
       }
@@ -262,7 +267,9 @@ class RestoreController extends GetxController
   }
 
   showBackupFrequency() async {
-    selectedBackupFrequency(await backupUtils.showBackupOptionList(selectedValue: selectedBackupFrequency.value, listValue: backupFrequency));
+    selectedBackupFrequency(await backupUtils.showBackupOptionList(
+        selectedValue: selectedBackupFrequency.value,
+        listValue: backupFrequency));
   }
 
   Future<void> pickAccount() async {
@@ -271,8 +278,7 @@ class RestoreController extends GetxController
       return;
     }
     var accounts = await BackupRestoreManager.instance.selectGoogleAccount();
-    LogMessage.d(
-        "Restore Controller", "pick Account => $accounts");
+    LogMessage.d("Restore Controller", "pick Account => $accounts");
     if (accounts != null) {
       /*backUpEmailId(accounts.email);
       isAccountSelected(true);
@@ -284,30 +290,30 @@ class RestoreController extends GetxController
         });
       }*/
       initialiseBackUpProcess();
-    }else{
-      LogMessage.d(
-          "Restore Controller", "Account selection cancelled by user");
+    } else {
+      LogMessage.d("Restore Controller", "Account selection cancelled by user");
     }
   }
 
   switchAccount() async {
     var newAccount = await BackupRestoreManager.instance.switchGoogleAccount();
-    LogMessage.d(
-        "Restore Controller", "New Switched Account => $newAccount");
+    LogMessage.d("Restore Controller", "New Switched Account => $newAccount");
 
-    backUpEmailId(newAccount?.email ?? BackupRestoreManager.instance.getGoogleAccountSignedIn?.email);
-
+    backUpEmailId(newAccount?.email ??
+        BackupRestoreManager.instance.getGoogleAccountSignedIn?.email);
   }
 
   Future<void> checkCloudAccess() async {
-    await BackupRestoreManager.instance.checkDriveAccess().then((isDriveAccessible) {
+    await BackupRestoreManager.instance
+        .checkDriveAccess()
+        .then((isDriveAccessible) {
       LogMessage.d(
-          "Restore Controller",
-          "Drive Access Status => $isDriveAccessible");
+          "Restore Controller", "Drive Access Status => $isDriveAccessible");
       driveAccessible(isDriveAccessible);
 
       if (Platform.isAndroid) {
-        GoogleSignInAccount? googleSignInAccount = BackupRestoreManager.instance.getGoogleAccountSignedIn;
+        GoogleSignInAccount? googleSignInAccount =
+            BackupRestoreManager.instance.getGoogleAccountSignedIn;
         if (googleSignInAccount != null) {
           isAccountSelected(true);
           backUpEmailId(googleSignInAccount.email);
@@ -316,40 +322,39 @@ class RestoreController extends GetxController
         }
       }
       checkForBackUpFiles();
-    }).catchError((er){
+    }).catchError((er) {
       DialogUtils.hideLoading();
     });
   }
 
   Future<void> initialiseBackUpProcess() async {
     DialogUtils.showLoading(dialogStyle: AppStyleConfig.dialogStyle);
-    await BackupRestoreManager.instance.initialize(
-        iCloudContainerID: "iCloud.com.mirrorfly.uikitflutter").then((isSuccess) {
+    await BackupRestoreManager.instance
+        .initialize(iCloudContainerID: "iCloud.com.mirrorfly.uikitflutter")
+        .then((isSuccess) {
       if (isSuccess) {
         checkCloudAccess();
-      }else {
+      } else {
         LogMessage.d(
             "Restore Controller", "Sign In to Drive to access the drive");
         DialogUtils.hideLoading();
       }
-    }).catchError((onError){
-      LogMessage.d(
-          "Restore Controller", "Sign In to Drive to access the drive $onError");
+    }).catchError((onError) {
+      LogMessage.d("Restore Controller",
+          "Sign In to Drive to access the drive $onError");
       DialogUtils.hideLoading();
     });
   }
 
   void restoreBackupProgress(progress) {
-    LogMessage.d(
-        "Restore Controller", "Restore Progress $progress");
+    LogMessage.d("Restore Controller", "Restore Progress $progress");
     remoteRestoreProgress(double.parse(progress.toString()));
   }
 
   void restoreSuccess(event) {
     // backupRestoreStarted(false);
-    LogMessage.d(
-        "Restore Controller", "Restore Success $event");
-    if(animationController != null){
+    LogMessage.d("Restore Controller", "Restore Success $event");
+    if (animationController != null) {
       animationController?.stop();
       currentIndex(0);
     }
@@ -363,6 +368,4 @@ class RestoreController extends GetxController
     backupRestoreStarted(false);
     toToast(event);
   }
-
 }
-

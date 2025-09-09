@@ -173,7 +173,7 @@ class AddBusyStatusView extends NavViewStateful<BusyStatusController> {
       if (controller.showEmoji.value) {
         return EmojiLayout(
             textController:
-            TextEditingController(), //controller.addStatusController,
+                TextEditingController(), //controller.addStatusController,
             onBackspacePressed: () {
               controller.onEmojiBackPressed();
             },

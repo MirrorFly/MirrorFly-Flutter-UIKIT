@@ -141,7 +141,8 @@ class MeetSheetView extends NavViewStateful<MeetLinkController> {
                         child: Text(
                       getTranslated("scheduleMeeting"),
                       style: meetBottomSheetStyle
-                          .scheduleMeetToggleStyle.textStyle.copyWith(fontWeight: FontWeight.bold),
+                          .scheduleMeetToggleStyle.textStyle
+                          .copyWith(fontWeight: FontWeight.bold),
                     )),
                     Obx(() {
                       return FlutterSwitch(
@@ -227,25 +228,29 @@ class MeetSheetView extends NavViewStateful<MeetLinkController> {
                   width: double.infinity,
                   child: ElevatedButton(
                       onPressed: () {
-                        if (!controller.scheduleTime.value.isAfter(DateTime.now().subtract(Duration(seconds: DateTime.now().second)))) {
+                        if (!controller.scheduleTime.value.isAfter(
+                            DateTime.now().subtract(
+                                Duration(seconds: DateTime.now().second)))) {
                           toToast(getTranslated("dateError"));
-                        }else{
-                          if (Get.isRegistered<ChatController>(tag:SessionManagement.getCurrentChatJID())) {
+                        } else {
+                          if (Get.isRegistered<ChatController>(
+                              tag: SessionManagement.getCurrentChatJID())) {
                             /// Assigning the controller values here due to the
                             /// controller will be destroyed/closed when NavUtils.back() is called.
                             /// Moving NavUtils.back() will create bottom sheet to stay too long in screen
                             /// Hence QA clicked two times and the meet is scheduled two times (#FLUTTER-1804)
                             final meetLink = controller.meetId.value;
-                            final scheduleTime = controller.scheduleTime
-                                .value.millisecondsSinceEpoch;
+                            final scheduleTime = controller
+                                .scheduleTime.value.millisecondsSinceEpoch;
                             NavUtils.back();
-                            Future.delayed(const Duration(milliseconds: 400), ()
-                            {
+                            Future.delayed(const Duration(milliseconds: 400),
+                                () {
                               Get.find<ChatController>(
-                                  tag: SessionManagement.getCurrentChatJID())
+                                      tag:
+                                          SessionManagement.getCurrentChatJID())
                                   .sendMeetMessage(
-                                  link: meetLink,
-                                  scheduledDateTime: scheduleTime);
+                                      link: meetLink,
+                                      scheduledDateTime: scheduleTime);
                             });
                           }
                         }
@@ -293,7 +298,8 @@ class MeetLinkController extends GetxController {
 
   Future<void> joinCall() async {
     if (await AppUtils.isNetConnected()) {
-      if (meetLink.isNotEmpty && await AppPermission.askVideoCallPermissions()) {
+      if (meetLink.isNotEmpty &&
+          await AppPermission.askVideoCallPermissions()) {
         NavUtils.offNamed(Routes.joinCallPreview, arguments: {
           "callLinkId": meetLink.replaceAll(Constants.webChatLogin, "")
         });
@@ -311,7 +317,7 @@ class MeetLinkController extends GetxController {
     DateTime? dateValue = await showDatePicker(
       context: context,
       currentDate: scheduleTime.value,
-      initialDate:scheduleTime.value,
+      initialDate: scheduleTime.value,
       firstDate: DateTime.now(),
       lastDate: lastSelectableDate,
     );
@@ -335,7 +341,6 @@ class MeetLinkController extends GetxController {
 
       scheduleTime(finalDateTime);
     }
-
   }
 
   Future<void> scheduleToggle(bool value) async {

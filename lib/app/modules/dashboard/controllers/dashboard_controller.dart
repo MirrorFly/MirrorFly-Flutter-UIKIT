@@ -201,7 +201,7 @@ class DashboardController extends FullLifeCycleController
       });
     } else {
       NavUtils.toNamed(Routes.chatInfo,
-          arguments: ChatInfoArguments(chatJid: profile.jid.checkNull()))
+              arguments: ChatInfoArguments(chatJid: profile.jid.checkNull()))
           ?.then((value) {});
     }
   }
@@ -245,14 +245,14 @@ class DashboardController extends FullLifeCycleController
 
     Constants.enableTopic
         ? Mirrorfly.getRecentChatListHistoryByTopic(
-        firstSet: recentChatPage == 1,
-        limit: chatLimit,
-        topicId: topicId.value,
-        flyCallback: callback)
+            firstSet: recentChatPage == 1,
+            limit: chatLimit,
+            topicId: topicId.value,
+            flyCallback: callback)
         : Mirrorfly.getRecentChatListHistory(
-        firstSet: recentChatPage == 1,
-        limit: chatLimit,
-        flyCallback: callback);
+            firstSet: recentChatPage == 1,
+            limit: chatLimit,
+            flyCallback: callback);
     /*LogMessage.d("", "recent chats");
     Mirrorfly.getRecentChatList().then((value) async {
       // String recentList = value.replaceAll('\n', '\\n');
@@ -284,7 +284,7 @@ class DashboardController extends FullLifeCycleController
       ///So to avoid the controller delete after new controller created with same jid, added this delay.
       Future.delayed(
           const Duration(milliseconds: 200),
-              () => NavUtils.toNamed(Routes.chat,
+          () => NavUtils.toNamed(Routes.chat,
               arguments: ChatViewArguments(
                   chatJid: jid,
                   topicId: topicId.value,
@@ -325,8 +325,8 @@ class DashboardController extends FullLifeCycleController
     return (equalsWithYesterday(calendar, getTranslated("today")))
         ? hourTime
         : (equalsWithYesterday(calendar, getTranslated("yesterday")))
-        ? getTranslated("yesterday").toUpperCase()
-        : time;
+            ? getTranslated("yesterday").toUpperCase()
+            : time;
   }
 
   String manipulateMessageTime(BuildContext context, DateTime messageDate) {
@@ -340,11 +340,11 @@ class DashboardController extends FullLifeCycleController
   String setDateHourFormat(int format, int hours) {
     var dateHourFormat = (format == 12)
         ? (hours < 10)
-        ? "hh:mm aa"
-        : "h:mm aa"
+            ? "hh:mm aa"
+            : "h:mm aa"
         : (hours < 10)
-        ? "HH:mm"
-        : "H:mm";
+            ? "HH:mm"
+            : "H:mm";
     return dateHourFormat;
   }
 
@@ -395,8 +395,8 @@ class DashboardController extends FullLifeCycleController
 
   Future<bool> updateRecentChat(
       {required String jid,
-        bool changePosition = true,
-        bool newInsertable = false}) async {
+      bool changePosition = true,
+      bool newInsertable = false}) async {
     //updateArchiveRecentChat(jid);
     var recent = await getRecentChatOfJid(jid);
     final index = recentChats.indexWhere((chat) => chat.jid == jid);
@@ -414,7 +414,7 @@ class DashboardController extends FullLifeCycleController
             recentChats.replaceRange(index, index + 1, [recent]);
           } else {
             var lastPinnedChat =
-            recentChats.lastIndexWhere((element) => element.isChatPinned!);
+                recentChats.lastIndexWhere((element) => element.isChatPinned!);
             var nxtIndex = lastPinnedChat.isNegative ? 0 : (lastPinnedChat + 1);
             LogMessage.d("updateRecentChat", "next Index $nxtIndex");
             recentChats.removeAt(index);
@@ -449,7 +449,7 @@ class DashboardController extends FullLifeCycleController
           archivedChats.insert(0, recent);
         } else {
           var lastPinnedChat =
-          archivedChats.lastIndexWhere((element) => element.isChatPinned!);
+              archivedChats.lastIndexWhere((element) => element.isChatPinned!);
           var nxtIndex = lastPinnedChat.isNegative ? 0 : (lastPinnedChat + 1);
           if (archivedChats[index].isChatPinned!) {
             archivedChats.removeAt(index);
@@ -479,7 +479,7 @@ class DashboardController extends FullLifeCycleController
     Mirrorfly.isArchivedSettingsEnabled().then((value) {
       if (value.checkNull()) {
         var archiveIndex =
-        archivedChats.indexWhere((element) => recent.jid == element.jid);
+            archivedChats.indexWhere((element) => recent.jid == element.jid);
         if (!archiveIndex.isNegative) {
           archivedChats.removeAt(archiveIndex);
           archivedChats.insert(0, recent);
@@ -490,7 +490,7 @@ class DashboardController extends FullLifeCycleController
         }
       } else {
         var archiveIndex =
-        archivedChats.indexWhere((element) => recent.jid == element.jid);
+            archivedChats.indexWhere((element) => recent.jid == element.jid);
         if (!archiveIndex.isNegative) {
           archivedChats.removeAt(archiveIndex);
           /*var lastPinnedChat = recentChats.lastIndexWhere((element) =>
@@ -518,11 +518,11 @@ class DashboardController extends FullLifeCycleController
   webLogin() async {
     if (SessionManagement.getWebLogin()) {
       Future.delayed(const Duration(milliseconds: 100),
-              () => NavUtils.toNamed(Routes.webLoginResult));
+          () => NavUtils.toNamed(Routes.webLoginResult));
     } else {
       if (await AppUtils.isNetConnected()) {
         Future.delayed(const Duration(milliseconds: 100),
-                () => NavUtils.toNamed(Routes.scanner));
+            () => NavUtils.toNamed(Routes.scanner));
       } else {
         toToast(getTranslated("noInternetConnection"));
       }
@@ -541,17 +541,17 @@ class DashboardController extends FullLifeCycleController
 
   gotoCreateGroup() {
     Future.delayed(const Duration(milliseconds: 100),
-            () => NavUtils.toNamed(Routes.createGroup));
+        () => NavUtils.toNamed(Routes.createGroup));
   }
 
   gotoSettings() {
     Future.delayed(const Duration(milliseconds: 100),
-            () => NavUtils.toNamed(Routes.settings));
+        () => NavUtils.toNamed(Routes.settings));
   }
 
   chatInfo() {
     var chatIndex = recentChats.indexWhere((element) =>
-    selectedChats.first == element.jid); //selectedChatsPosition[index];
+        selectedChats.first == element.jid); //selectedChatsPosition[index];
     var item = recentChats[chatIndex];
     DialogUtils.progressLoading();
     clearAllChatSelection();
@@ -561,13 +561,13 @@ class DashboardController extends FullLifeCycleController
         var profile = value; //profiledata(value.toString());
         if (item.isGroup!) {
           Future.delayed(const Duration(milliseconds: 100),
-                  () => NavUtils.toNamed(Routes.groupInfo, arguments: profile));
+              () => NavUtils.toNamed(Routes.groupInfo, arguments: profile));
         } else {
           Future.delayed(
               const Duration(milliseconds: 100),
-                  () => NavUtils.toNamed(Routes.chatInfo,
+              () => NavUtils.toNamed(Routes.chatInfo,
                   arguments:
-                  ChatInfoArguments(chatJid: profile.jid.checkNull())));
+                      ChatInfoArguments(chatJid: profile.jid.checkNull())));
         }
       }
     });
@@ -714,8 +714,8 @@ class DashboardController extends FullLifeCycleController
       if (item.getChatType() == ChatType.groupChat) {
         LogMessage.d("isGroup", item.isGroup!.toString());
         Mirrorfly.isMemberOfGroup(
-            groupJid: item.jid.checkNull(),
-            userJid: SessionManagement.getUserJID().checkNull())
+                groupJid: item.jid.checkNull(),
+                userJid: SessionManagement.getUserJID().checkNull())
             .then((value) => delete(!value!));
       }
     } else {
@@ -749,7 +749,7 @@ class DashboardController extends FullLifeCycleController
         selected(false);
         for (var index = 0; index < selectedChats.length; index++) {
           var selectedChat = recentChats.indexWhere((p0) =>
-          p0.jid == selectedChats[index] && p0.isChatPinned.checkNull());
+              p0.jid == selectedChats[index] && p0.isChatPinned.checkNull());
           if (selectedChat.isNegative) {
             LogMessage.d(
                 "pinChat", "$selectedChat selected chat is have to pinned");
@@ -902,7 +902,7 @@ class DashboardController extends FullLifeCycleController
     Mirrorfly.updateRecentChatPinStatus(
         jid: selectedChats[index], pinStatus: true);
     var chatIndex = recentChats.indexWhere((element) =>
-    selectedChats[index] == element.jid); //selectedChatsPosition[index];
+        selectedChats[index] == element.jid); //selectedChatsPosition[index];
     //recentChats[chatIndex].isChatPinned=(true);
     var change = recentChats[chatIndex];
     change.isChatPinned = true;
@@ -914,10 +914,10 @@ class DashboardController extends FullLifeCycleController
     Mirrorfly.updateRecentChatPinStatus(
         jid: selectedChats[index], pinStatus: false);
     var chatIndex = recentChats.indexWhere((element) =>
-    selectedChats[index] == element.jid); //selectedChatsPosition[index];
+        selectedChats[index] == element.jid); //selectedChatsPosition[index];
     //recentChats[chatIndex].isChatPinned=(false);
     var lastPinnedChat =
-    recentChats.lastIndexWhere((element) => element.isChatPinned!);
+        recentChats.lastIndexWhere((element) => element.isChatPinned!);
     LogMessage.d("lastPinnedChat", lastPinnedChat.toString());
     var nxtIndex = lastPinnedChat.isNegative ? chatIndex : (lastPinnedChat);
     var change = recentChats[chatIndex];
@@ -1005,7 +1005,7 @@ class DashboardController extends FullLifeCycleController
     Mirrorfly.setChatArchived(
         jid: selectedChats[index], isArchived: true, flyCallBack: (_) {});
     var chatIndex = recentChats.indexWhere((element) =>
-    selectedChats[index] == element.jid); //selectedChatsPosition[index];
+        selectedChats[index] == element.jid); //selectedChatsPosition[index];
     recentChats[chatIndex].isChatArchived = (true);
     //getArchivedChatsList();
     if (archivedChats.isEmpty) {
@@ -1022,7 +1022,7 @@ class DashboardController extends FullLifeCycleController
       return;
     }
     var chatIndex = recentChats.indexWhere((element) =>
-    selectedChats[index] == element.jid); //selectedChatsPosition[index];
+        selectedChats[index] == element.jid); //selectedChatsPosition[index];
     DialogUtils.showAlert(
         dialogStyle: AppStyleConfig.dialogStyle,
         message: getTranslated("deleteChatWith")
@@ -1114,7 +1114,7 @@ class DashboardController extends FullLifeCycleController
 
   Future<void> onMessageDeleted({required String messageId}) async {
     final int indexToBeReplaced =
-    recentChats.indexWhere((message) => message.lastMessageId == messageId);
+        recentChats.indexWhere((message) => message.lastMessageId == messageId);
     debugPrint(
         "#Dashboard onMessageDeleted index to replace $indexToBeReplaced");
     if (!indexToBeReplaced.isNegative) {
@@ -1125,7 +1125,7 @@ class DashboardController extends FullLifeCycleController
 
   Future<void> onMessageStatusUpdated(ChatMessageModel chatMessageModel) async {
     final index = recentChats.indexWhere(
-            (message) => message.lastMessageId == chatMessageModel.messageId);
+        (message) => message.lastMessageId == chatMessageModel.messageId);
     debugPrint("Message Status Update index of search $index");
     if (!index.isNegative) {
       // updateRecentChat(chatMessageModel.chatUserJid);
@@ -1175,7 +1175,7 @@ class DashboardController extends FullLifeCycleController
 
   String typingUser(String jid) {
     var index =
-    typingAndGoneStatus.indexWhere((it) => it.singleOrgroupJid == jid);
+        typingAndGoneStatus.indexWhere((it) => it.singleOrgroupJid == jid);
     if (index.isNegative) {
       return "";
     } else {
@@ -1190,7 +1190,7 @@ class DashboardController extends FullLifeCycleController
     LogMessage.d("setTypingStatus",
         "singleOrgroupJid : $singleOrgroupJid, userId : $userId, typingStatus: $typingStatus");
     var index = typingAndGoneStatus.indexWhere(
-            (it) => it.singleOrgroupJid == singleOrgroupJid && it.userId == userId);
+        (it) => it.singleOrgroupJid == singleOrgroupJid && it.userId == userId);
     if (typingStatus.toLowerCase() == Constants.composing) {
       if (index.isNegative) {
         typingAndGoneStatus.insert(0, Triple(singleOrgroupJid, userId, true));
@@ -1217,12 +1217,12 @@ class DashboardController extends FullLifeCycleController
   Future<void> updateRecentChatAdapter(String jid) async {
     if (jid.isNotEmpty) {
       var index = recentChats.indexWhere((element) =>
-      element.jid == jid); // { it.jid ?: Constants.EMPTY_STRING == jid }
+          element.jid == jid); // { it.jid ?: Constants.EMPTY_STRING == jid }
       debugPrint("updateRecentChatAdapter $index");
       if (!index.isNegative) {
         var recent = await getRecentChatOfJid(jid);
         var updatedIndex = recentChats.indexWhere((element) =>
-        element.jid == jid); // { it.jid ?: Constants.EMPTY_STRING == jid }
+            element.jid == jid); // { it.jid ?: Constants.EMPTY_STRING == jid }
         debugPrint(
             "updateRecentChatAdapter getRecentChatOfJid ${recent?.toJson().toString()}");
         if (recent != null) {
@@ -1367,19 +1367,19 @@ class DashboardController extends FullLifeCycleController
                       "filter chat list--> ${!filteredRecentChatList.indexWhere((recentChatItem) => recentChatItem.jid == element.jid.checkNull()).isNegative}");
                   return !filteredRecentChatList
                       .indexWhere((recentChatItem) =>
-                  recentChatItem.jid == element.jid.checkNull())
+                          recentChatItem.jid == element.jid.checkNull())
                       .isNegative;
                 });
                 _userList(list.data);
               } else {
                 _userList(list.data!
                     .where((element) =>
-                (element.nickName.checkNull().toLowerCase().contains(
-                    search.text.trim().toString().toLowerCase())) &&
-                    !filteredRecentChatList
-                        .indexWhere((recentChatItem) =>
-                    recentChatItem.jid != element.jid.checkNull())
-                        .isNegative)
+                        (element.nickName.checkNull().toLowerCase().contains(
+                            search.text.trim().toString().toLowerCase())) &&
+                        !filteredRecentChatList
+                            .indexWhere((recentChatItem) =>
+                                recentChatItem.jid != element.jid.checkNull())
+                            .isNegative)
                     .toList());
                 // scrollable(false);
               }
@@ -1397,12 +1397,12 @@ class DashboardController extends FullLifeCycleController
 
       (!Constants.enableContactSync)
           ? Mirrorfly.getUserList(
-          page: pageNum,
-          search: search.text.trim().toString(),
-          metaDataUserList: Constants.metaDataUserList, //#metaData
-          flyCallback: callback)
+              page: pageNum,
+              search: search.text.trim().toString(),
+              metaDataUserList: Constants.metaDataUserList, //#metaData
+              flyCallback: callback)
           : Mirrorfly.getRegisteredUsers(
-          fetchFromServer: true, flyCallback: callback);
+              fetchFromServer: true, flyCallback: callback);
       /*future.then((value) {
         // Mirrorfly.getUserList(pageNum, search.text.trim().toString()).then((value) {
         if (value.isNotEmpty) {
@@ -1452,9 +1452,9 @@ class DashboardController extends FullLifeCycleController
       for (var recentChat in recentChatListWithArchived) {
         if (recentChat.profileName != null &&
             recentChat
-                .getName()
-                .toLowerCase()
-                .contains(search.text.trim().toString().toLowerCase()) ==
+                    .getName()
+                    .toLowerCase()
+                    .contains(search.text.trim().toString().toLowerCase()) ==
                 true) {
           recentChatList.add(recentChat);
         }
@@ -1477,11 +1477,11 @@ class DashboardController extends FullLifeCycleController
             // var i = 0.obs;
             for (var message in result) {
               var searchMessageItem = RecentSearch(
-                  jid: message.chatUserJid,
-                  mid: message.messageId,
-                  searchType: Constants.typeSearchMessage,
-                  chatType: message.messageChatType.toString(),
-                  isSearch: true)
+                      jid: message.chatUserJid,
+                      mid: message.messageId,
+                      searchType: Constants.typeSearchMessage,
+                      chatType: message.messageChatType.toString(),
+                      isSearch: true)
                   .obs;
               mRecentSearchList.insert(0, searchMessageItem);
               // i++;
@@ -1497,7 +1497,7 @@ class DashboardController extends FullLifeCycleController
   Future<Map<ProfileDetails?, ChatMessageModel?>?> getProfileAndMessage(
       String jid, String mid) async {
     var value =
-    await getProfileDetails(jid); //Mirrorfly.getProfileLocal(jid, false);
+        await getProfileDetails(jid); //Mirrorfly.getProfileLocal(jid, false);
     var value2 = await Mirrorfly.getMessageOfId(messageId: mid);
     if (value.jid != null && value2 != null) {
       var data = value; //profileDataFromJson(value);
@@ -1586,7 +1586,7 @@ class DashboardController extends FullLifeCycleController
   Future<void> updateRecentChatAdapterSearch(String jid) async {
     if (jid.isNotEmpty) {
       var filterIndex =
-      filteredRecentChatList.indexWhere((element) => element.jid == jid);
+          filteredRecentChatList.indexWhere((element) => element.jid == jid);
       if (!filterIndex.isNegative) {
         var recent = await getRecentChatOfJid(jid);
         if (recent != null) {
@@ -1608,7 +1608,7 @@ class DashboardController extends FullLifeCycleController
           debugPrint("get profile detail dashboard $value");
           profile_(value);
           var updateIndex =
-          _userList.indexWhere((element) => element.jid == jid);
+              _userList.indexWhere((element) => element.jid == jid);
           _userList[updateIndex] = value;
         });
       }
@@ -1656,7 +1656,7 @@ class DashboardController extends FullLifeCycleController
       profile_(value);
       debugPrint("dashboard controller profile update received");
       showQuickProfilePopup(
-        // chatItem: chatItem,
+          // chatItem: chatItem,
           chatTap: () {
             NavUtils.back();
             if (selected.value) {
@@ -1686,12 +1686,12 @@ class DashboardController extends FullLifeCycleController
               callType: callType));
     } else {
       var contactPermissionHandle =
-      await AppPermission.checkAndRequestPermissions(
-          permissions: [Permission.contacts],
-          permissionIcon: contactPermission,
-          permissionContent: getTranslated("contactPermissionContent"),
-          permissionPermanentlyDeniedContent:
-          getTranslated("contactPermissionDeniedContent"));
+          await AppPermission.checkAndRequestPermissions(
+              permissions: [Permission.contacts],
+              permissionIcon: contactPermission,
+              permissionContent: getTranslated("contactPermissionContent"),
+              permissionPermanentlyDeniedContent:
+                  getTranslated("contactPermissionDeniedContent"));
       if (contactPermissionHandle) {
         NavUtils.toNamed(Routes.contacts,
             arguments: ContactListArguments(
@@ -1820,14 +1820,14 @@ class DashboardController extends FullLifeCycleController
 
     Constants.enableTopic
         ? Mirrorfly.getRecentChatListHistoryByTopic(
-        firstSet: recentChatPage == 1,
-        limit: chatLimit,
-        topicId: topicId.value,
-        flyCallback: callback)
+            firstSet: recentChatPage == 1,
+            limit: chatLimit,
+            topicId: topicId.value,
+            flyCallback: callback)
         : Mirrorfly.getRecentChatListHistory(
-        firstSet: recentChatPage == 1,
-        limit: chatLimit,
-        flyCallback: callback);
+            firstSet: recentChatPage == 1,
+            limit: chatLimit,
+            flyCallback: callback);
   }
 
   var topicId = Constants.topicId.obs;
@@ -2119,7 +2119,7 @@ class DashboardController extends FullLifeCycleController
     if (callLog.callMode == CallMode.groupCall) {
       if (callLog.groupId.checkNull().isEmpty) {
         var name =
-        await CallUtils.getCallLogUserNames(callLog.userList!, callLog);
+            await CallUtils.getCallLogUserNames(callLog.userList!, callLog);
         callLog.nickName = name;
         return callLog;
       } else {
@@ -2179,7 +2179,7 @@ class DashboardController extends FullLifeCycleController
 
   _itemDeleteCallLog(int index) {
     var logIndex = callLogList.indexWhere((element) =>
-    selectedCallLogs[index] ==
+        selectedCallLogs[index] ==
         element.roomId); //selectedChatsPosition[index];
     DialogUtils.showAlert(
         dialogStyle: AppStyleConfig.dialogStyle,
@@ -2243,7 +2243,7 @@ class DashboardController extends FullLifeCycleController
                       if (response.isSuccess) {
                         for (var logItem in selectedCallLogs) {
                           var chatIndex = callLogList.indexWhere(
-                                  (element) => logItem == element.roomId);
+                              (element) => logItem == element.roomId);
                           callLogList.removeAt(chatIndex);
                         }
                         delete(false);
@@ -2299,14 +2299,14 @@ class DashboardController extends FullLifeCycleController
     var result = await NavUtils.toNamed(Routes.callInfo, arguments: item);
     if (result != null) {
       var chatIndex =
-      callLogList.indexWhere((element) => item.roomId == element.roomId);
+          callLogList.indexWhere((element) => item.roomId == element.roomId);
       callLogList.removeAt(chatIndex);
     }
   }
 
   void onMessageEdited(ChatMessageModel editedChatMessage) {
     final index = recentChats.indexWhere(
-            (message) => message.lastMessageId == editedChatMessage.messageId);
+        (message) => message.lastMessageId == editedChatMessage.messageId);
     debugPrint("Message Status Update index of search $index");
     if (!index.isNegative) {
       recentChats[index].lastMessageContent =
@@ -2368,7 +2368,7 @@ class DashboardController extends FullLifeCycleController
         "groupJid -> $groupJid , groupName-> $groupName");
 
     var chatIndex =
-    recentChats.indexWhere((element) => groupJid == element.jid);
+        recentChats.indexWhere((element) => groupJid == element.jid);
 
     if (!chatIndex.isNegative) {
       LogMessage.d("Dashboard Controller", "chat found chatIndex-> $chatIndex");
@@ -2396,7 +2396,7 @@ class MyController extends GetxController {
 
   String typingUser(String jid) {
     var index =
-    typingAndGoneStatus.indexWhere((it) => it.singleOrgroupJid == jid);
+        typingAndGoneStatus.indexWhere((it) => it.singleOrgroupJid == jid);
     if (index.isNegative) {
       return "";
     } else {
@@ -2409,7 +2409,7 @@ class MyController extends GetxController {
   void setTypingStatus(
       String singleOrgroupJid, String userId, String typingStatus) {
     var index = typingAndGoneStatus.indexWhere(
-            (it) => it.singleOrgroupJid == singleOrgroupJid && it.userId == userId);
+        (it) => it.singleOrgroupJid == singleOrgroupJid && it.userId == userId);
     if (typingStatus.toLowerCase() == Constants.composing) {
       if (index.isNegative) {
         typingAndGoneStatus.insert(0, Triple(singleOrgroupJid, userId, true));

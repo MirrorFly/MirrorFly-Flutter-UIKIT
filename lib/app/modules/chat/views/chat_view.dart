@@ -28,11 +28,12 @@ class ChatView extends NavViewStateful<ChatController> {
   @override
   ChatController createController({String? tag}) {
     if (!Get.isRegistered<ChatController>(tag: tag)) {
-      final arguments = chatViewArguments ?? NavUtils.arguments as ChatViewArguments;
-      LogMessage.d("ChatView: ", "createController with tag: $tag}" );
+      final arguments =
+          chatViewArguments ?? NavUtils.arguments as ChatViewArguments;
+      LogMessage.d("ChatView: ", "createController with tag: $tag}");
       return Get.put(ChatController(arguments), tag: tag);
     } else {
-      LogMessage.d("ChatView: ", "existing controller with tag: $tag}" );
+      LogMessage.d("ChatView: ", "existing controller with tag: $tag}");
       return Get.find<ChatController>(tag: tag);
     }
   }
@@ -83,12 +84,13 @@ class ChatView extends NavViewStateful<ChatController> {
                 children: [
                   Obx(() {
                     return Visibility(
-                      visible: controller.topic.value.topicName != null&&
+                      visible: controller.topic.value.topicName != null &&
                           (controller.arguments?.showTopicName).checkNull(),
                       child: Container(
                         width: NavUtils.width,
                         decoration: BoxDecoration(
-                          color: controller.arguments?.topicTitleBgColor ?? Theme.of(context).primaryColor,
+                          color: controller.arguments?.topicTitleBgColor ??
+                              Theme.of(context).primaryColor,
                           borderRadius: const BorderRadius.only(
                             bottomLeft: Radius.circular(8),
                             bottomRight: Radius.circular(8),
@@ -98,12 +100,10 @@ class ChatView extends NavViewStateful<ChatController> {
                         child: Text(
                           controller.topic.value.topicName.checkNull(),
                           textAlign: TextAlign.center,
-                    style: controller.arguments?.topicTitleColor !=
-                    null
-                    ? TextStyle(
-                    color: controller
-                        .arguments?.topicTitleColor)
-                        : const TextStyle(color: Colors.black),
+                          style: controller.arguments?.topicTitleColor != null
+                              ? TextStyle(
+                                  color: controller.arguments?.topicTitleColor)
+                              : const TextStyle(color: Colors.black),
                         ),
                       ),
                     );
@@ -115,33 +115,45 @@ class ChatView extends NavViewStateful<ChatController> {
                           return controller.chatLoading.value
                               ? const Center(child: CircularProgressIndicator())
                               : LayoutBuilder(
-                            builder: (context, constraints) {
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                controller.screenWidth(constraints.maxWidth);
-                                controller.screenHeight(constraints.maxHeight);
+                                  builder: (context, constraints) {
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback((_) {
+                                      controller
+                                          .screenWidth(constraints.maxWidth);
+                                      controller
+                                          .screenHeight(constraints.maxHeight);
 
-                                if (controller.fabPosition.value == Offset.zero) {
-                                  final safeBottom = constraints.maxHeight - controller.fabHeight.value - controller.margin.value;
-                                  final defaultY = safeBottom;
-                                  final defaultX = constraints.maxWidth - controller.fabHeight.value - controller.margin.value;
+                                      if (controller.fabPosition.value ==
+                                          Offset.zero) {
+                                        final safeBottom =
+                                            constraints.maxHeight -
+                                                controller.fabHeight.value -
+                                                controller.margin.value;
+                                        final defaultY = safeBottom;
+                                        final defaultX = constraints.maxWidth -
+                                            controller.fabHeight.value -
+                                            controller.margin.value;
 
-                                  controller.fabPosition(Offset(defaultX, defaultY));
-                                }
+                                        controller.fabPosition(
+                                            Offset(defaultX, defaultY));
+                                      }
+                                    });
 
-                              });
-
-                              return ChatListView(
-                                chatController: controller,
-                                chatList: controller.chatList,
-                                senderChatStyle: chatStyle.senderChatBubbleStyle,
-                                receiverChatStyle: chatStyle.receiverChatBubbleStyle,
-                                chatSelectedColor: chatStyle.chatSelectionBgColor,
-                                notificationMessageViewStyle: chatStyle.notificationMessageViewStyle,
-                              );
-                            },
-                          );
+                                    return ChatListView(
+                                      chatController: controller,
+                                      chatList: controller.chatList,
+                                      senderChatStyle:
+                                          chatStyle.senderChatBubbleStyle,
+                                      receiverChatStyle:
+                                          chatStyle.receiverChatBubbleStyle,
+                                      chatSelectedColor:
+                                          chatStyle.chatSelectionBgColor,
+                                      notificationMessageViewStyle: chatStyle
+                                          .notificationMessageViewStyle,
+                                    );
+                                  },
+                                );
                         }),
-
                         Obx(() {
                           return Visibility(
                             visible: controller.showHideRedirectToLatest.value,
@@ -153,12 +165,15 @@ class ChatView extends NavViewStateful<ChatController> {
                                 children: [
                                   controller.unreadCount.value != 0
                                       ? CircleAvatar(
-                                    radius: 8,
-                                    child: Text(
-                                      returnFormattedCount(controller.unreadCount.value),
-                                      style: const TextStyle(fontSize: 9, color: Colors.white),
-                                    ),
-                                  )
+                                          radius: 8,
+                                          child: Text(
+                                            returnFormattedCount(
+                                                controller.unreadCount.value),
+                                            style: const TextStyle(
+                                                fontSize: 9,
+                                                color: Colors.white),
+                                          ),
+                                        )
                                       : const SizedBox.shrink(),
                                   IconButton(
                                     icon: AppUtils.assetIcon(
@@ -166,7 +181,7 @@ class ChatView extends NavViewStateful<ChatController> {
                                       width: 32,
                                       height: 32,
                                     ),
-                                    onPressed:() {
+                                    onPressed: () {
                                       controller.scrollToEnd();
                                     },
                                   ),
@@ -176,43 +191,54 @@ class ChatView extends NavViewStateful<ChatController> {
                           );
                         }),
                         Obx(() {
-                          return controller.ableToScheduleMeet && !(controller.profile.isAdminBlocked.checkNull() || controller.profile.isBlocked.checkNull()||controller.isBlocked.value) && !controller.profile.isDeletedContact()&& controller.arguments!.isScheduleMeetEnabled ? FloatingFab(
-                            fabTheme: chatStyle
-                                .instantScheduleMeetStyle,
-                            onFabTap: ()async{
-                              await controller.setMeetBottomSheet();
-                            },
-                            controller: controller,
-                          ) : const Offstage();
+                          return controller.ableToScheduleMeet &&
+                                  !(controller.profile.isAdminBlocked
+                                          .checkNull() ||
+                                      controller.profile.isBlocked
+                                          .checkNull() ||
+                                      controller.isBlocked.value) &&
+                                  !controller.profile.isDeletedContact() &&
+                                  controller.arguments!.isScheduleMeetEnabled
+                              ? FloatingFab(
+                                  fabTheme: chatStyle.instantScheduleMeetStyle,
+                                  onFabTap: () async {
+                                    await controller.setMeetBottomSheet();
+                                  },
+                                  controller: controller,
+                                )
+                              : const Offstage();
                         }),
-
                         if (Constants.enableContactSync) ...[
                           Obx(() {
-                            return !controller.profile.isItSavedContact.checkNull()
+                            return !controller.profile.isItSavedContact
+                                    .checkNull()
                                 ? Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const SizedBox(width: 8),
-                                buttonNotSavedContact(
-                                  text: getTranslated("add"),
-                                  onClick: controller.saveContact,
-                                ),
-                                const SizedBox(width: 8),
-                                buttonNotSavedContact(
-                                  text: controller.profile.isBlocked.checkNull()
-                                      ? getTranslated("unblock")
-                                      : getTranslated("block"),
-                                  onClick: () {
-                                    if (controller.profile.isBlocked.checkNull()) {
-                                      controller.unBlockUser();
-                                    } else {
-                                      controller.blockUser();
-                                    }
-                                  },
-                                ),
-                                const SizedBox(width: 8),
-                              ],
-                            )
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const SizedBox(width: 8),
+                                      buttonNotSavedContact(
+                                        text: getTranslated("add"),
+                                        onClick: controller.saveContact,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      buttonNotSavedContact(
+                                        text: controller.profile.isBlocked
+                                                .checkNull()
+                                            ? getTranslated("unblock")
+                                            : getTranslated("block"),
+                                        onClick: () {
+                                          if (controller.profile.isBlocked
+                                              .checkNull()) {
+                                            controller.unBlockUser();
+                                          } else {
+                                            controller.blockUser();
+                                          }
+                                        },
+                                      ),
+                                      const SizedBox(width: 8),
+                                    ],
+                                  )
                                 : const SizedBox.shrink();
                           }),
                         ],
@@ -228,7 +254,8 @@ class ChatView extends NavViewStateful<ChatController> {
                       chatTaggerController: controller.messageController,
                       onChanged: (text) => controller.isTyping(text),
                       focusNode: controller.focusNode,
-                      audioDurationInSec: controller.arguments!.audioDurationInSec,
+                      audioDurationInSec:
+                          controller.arguments!.audioDurationInSec,
                     ),
                   ),
                 ],
@@ -240,10 +267,8 @@ class ChatView extends NavViewStateful<ChatController> {
     );
   }
 
-
-
   Widget buttonNotSavedContact(
-      {required String text, required Function()? onClick}) =>
+          {required String text, required Function()? onClick}) =>
       Expanded(
         child: InkWell(
           onTap: onClick,
@@ -263,20 +288,23 @@ class ChatView extends NavViewStateful<ChatController> {
     return AppBar(
       // leadingWidth: 25,
       leading: IconButton(
-        icon: chatStyle.chatUserAppBarStyle.iconClose ?? const Icon(Icons.clear),
+        icon:
+            chatStyle.chatUserAppBarStyle.iconClose ?? const Icon(Icons.clear),
         onPressed: () {
           controller.clearAllChatSelection();
         },
       ),
-      title: Text(controller.selectedChatList.length.toString(),
-        style: chatStyle.chatUserAppBarStyle.titleTextStyle,),
+      title: Text(
+        controller.selectedChatList.length.toString(),
+        style: chatStyle.chatUserAppBarStyle.titleTextStyle,
+      ),
       actions: [
         (controller.arguments?.menuActionsEnabled).checkNull()
             ? CustomActionBarIcons(
-            popupMenuThemeData: chatStyle.popupMenuThemeData,
-            availableWidth: NavUtils.width / 2, // half the screen width
-            actionWidth: 48, // default for IconButtons
-            actions: actionBarItems(context, isSelected: true))
+                popupMenuThemeData: chatStyle.popupMenuThemeData,
+                availableWidth: NavUtils.width / 2, // half the screen width
+                actionWidth: 48, // default for IconButtons
+                actions: actionBarItems(context, isSelected: true))
             : const SizedBox(),
       ],
     );
@@ -303,39 +331,39 @@ class ChatView extends NavViewStateful<ChatController> {
               const SizedBox(
                 width: 10,
               ),
-              chatStyle.chatUserAppBarStyle.iconBack ?? const Icon(Icons.arrow_back),
+              chatStyle.chatUserAppBarStyle.iconBack ??
+                  const Icon(Icons.arrow_back),
               const SizedBox(
                 width: 10,
               ),
               ImageNetwork(
                 url: controller.profile.image.checkNull(),
-                width: chatStyle.chatUserAppBarStyle
-                    .profileImageSize.width,
+                width: chatStyle.chatUserAppBarStyle.profileImageSize.width,
                 //35,
-                height: chatStyle.chatUserAppBarStyle
-                    .profileImageSize.height,
+                height: chatStyle.chatUserAppBarStyle.profileImageSize.height,
                 //35,
                 clipOval: true,
                 isGroup: controller.profile.isGroupProfile.checkNull(),
                 errorWidget: controller.profile.isGroupProfile ?? false
                     ? ClipOval(
-                        child: AppUtils.assetIcon(assetName: groupImg,
-                    width: chatStyle.chatUserAppBarStyle
-                        .profileImageSize.width, //35,
-                    height: chatStyle.chatUserAppBarStyle
-                        .profileImageSize.height, //35,
-                    fit: BoxFit.cover,
-                  ),
-                )
+                        child: AppUtils.assetIcon(
+                          assetName: groupImg,
+                          width: chatStyle
+                              .chatUserAppBarStyle.profileImageSize.width, //35,
+                          height: chatStyle.chatUserAppBarStyle.profileImageSize
+                              .height, //35,
+                          fit: BoxFit.cover,
+                        ),
+                      )
                     : ProfileTextImage(
-                  text: controller.profile.getName(),
-                  /*controller.profile.name.checkNull().isEmpty
+                        text: controller.profile.getName(),
+                        /*controller.profile.name.checkNull().isEmpty
                             ? controller.profile.nickName.checkNull().isEmpty
                                 ? controller.profile.mobileNumber.checkNull()
                                 : controller.profile.nickName.checkNull()
                             : controller.profile.name.checkNull(),*/
-                  radius: 18,
-                ),
+                        radius: 18,
+                      ),
                 blocked: controller.profile.isBlockedMe.checkNull() ||
                     controller.profile.isAdminBlocked.checkNull(),
                 unknown: (!controller.profile.isItSavedContact.checkNull() ||
@@ -366,27 +394,27 @@ class ChatView extends NavViewStateful<ChatController> {
                       ? controller.profile.nickName.checkNull()
                       : controller.profile.name.checkNull(),*/
                   overflow: TextOverflow.fade,
-                  style: chatStyle.chatUserAppBarStyle
-                      .titleTextStyle,
+                  style: chatStyle.chatUserAppBarStyle.titleTextStyle,
                 ),
                 Obx(() {
                   return controller.groupParticipantsName.isNotEmpty
                       ? SizedBox(
-                      width: NavUtils.width * 0.90,
-                      height: 15,
-                      child: Marquee(text: "${controller
-                          .groupParticipantsName}",
-                        style: chatStyle.chatUserAppBarStyle
-                            .subtitleTextStyle,
-                        blankSpace: 25,))
+                          width: NavUtils.width * 0.90,
+                          height: 15,
+                          child: Marquee(
+                            text: "${controller.groupParticipantsName}",
+                            style:
+                                chatStyle.chatUserAppBarStyle.subtitleTextStyle,
+                            blankSpace: 25,
+                          ))
                       : controller.subtitle.isNotEmpty
-                      ? Text(
-                    controller.subtitle,
-                    style: chatStyle.chatUserAppBarStyle
-                        .subtitleTextStyle, //const TextStyle(fontSize: 12),
-                    overflow: TextOverflow.fade,
-                  )
-                      : const SizedBox();
+                          ? Text(
+                              controller.subtitle,
+                              style: chatStyle.chatUserAppBarStyle
+                                  .subtitleTextStyle, //const TextStyle(fontSize: 12),
+                              overflow: TextOverflow.fade,
+                            )
+                          : const SizedBox();
                 })
               ],
             ),
@@ -402,281 +430,281 @@ class ChatView extends NavViewStateful<ChatController> {
   actionBarItems(BuildContext context, {bool isSelected = false}) {
     if (isSelected) {
       return [
-      if ((controller.arguments?.isAppBarReplyEnabled).checkNull()) ...[
-    CustomAction(
-          visibleWidget: IconButton(
-            onPressed: () {
+        if ((controller.arguments?.isAppBarReplyEnabled).checkNull()) ...[
+          CustomAction(
+            visibleWidget: IconButton(
+              onPressed: () {
+                controller
+                    .handleReplyChatMessage(controller.selectedChatList[0]);
+                controller.clearChatSelection(controller.selectedChatList[0]);
+              },
+              icon: chatStyle.chatUserAppBarStyle.iconReply ??
+                  AppUtils.svgIcon(
+                    icon: replyIcon,
+                    colorFilter: ColorFilter.mode(
+                        chatStyle.appBarTheme.actionsIconTheme?.color ??
+                            Colors.black,
+                        BlendMode.srcIn),
+                  ),
+              tooltip: 'Reply',
+            ),
+            overflowWidget: Text(getTranslated("reply"),
+                style: chatStyle.popupMenuThemeData.textStyle),
+            showAsAction: (controller.canBeReplied.value &&
+                    controller.availableFeatures.value.isClearChatAvailable
+                        .checkNull())
+                ? ShowAsAction.always
+                : ShowAsAction.gone,
+            keyValue: 'Reply',
+            onItemClick: () {
+              controller.closeKeyBoard();
               controller.handleReplyChatMessage(controller.selectedChatList[0]);
               controller.clearChatSelection(controller.selectedChatList[0]);
             },
-            icon: chatStyle.chatUserAppBarStyle.iconReply ??
-                AppUtils.svgIcon(icon:replyIcon,
-                  colorFilter: ColorFilter.mode(chatStyle.appBarTheme.actionsIconTheme?.color ??
-    Colors.black,
-    BlendMode.srcIn),),
-            tooltip: 'Reply',
           ),
-          overflowWidget: Text(getTranslated("reply"),
-              style: chatStyle.popupMenuThemeData.textStyle),
-          showAsAction: (controller.canBeReplied.value &&
-              controller.availableFeatures.value.isClearChatAvailable
-                  .checkNull())
-              ? ShowAsAction.always
-              : ShowAsAction.gone,
-          keyValue: 'Reply',
-          onItemClick: () {
-            controller.closeKeyBoard();
-            controller.handleReplyChatMessage(controller.selectedChatList[0]);
-            controller.clearChatSelection(controller.selectedChatList[0]);
-          },
-        ),
-    ],
-    if ((controller.arguments?.isAppBarForwardEnabled).checkNull()) ...[
-    CustomAction(
-          visibleWidget: IconButton(
-            onPressed: () {
+        ],
+        if ((controller.arguments?.isAppBarForwardEnabled).checkNull()) ...[
+          CustomAction(
+            visibleWidget: IconButton(
+              onPressed: () {
+                controller.checkBusyStatusForForward();
+              },
+              icon: chatStyle.chatUserAppBarStyle.iconForward ??
+                  AppUtils.svgIcon(
+                      icon: forwardIcon,
+                      colorFilter: ColorFilter.mode(
+                          chatStyle.appBarTheme.actionsIconTheme?.color ??
+                              Colors.black,
+                          BlendMode.srcIn)),
+              tooltip: 'Forward',
+            ),
+            overflowWidget: Text(getTranslated("forward"),
+                style: chatStyle.popupMenuThemeData.textStyle),
+            showAsAction: controller.canBeForwarded.value
+                ? ShowAsAction.always
+                : ShowAsAction.gone,
+            keyValue: 'Forward',
+            onItemClick: () {
+              controller.closeKeyBoard();
               controller.checkBusyStatusForForward();
             },
-            icon: chatStyle.chatUserAppBarStyle.iconForward ??
-    AppUtils.svgIcon(
-    icon:forwardIcon,
-    colorFilter: ColorFilter.mode(chatStyle.appBarTheme.actionsIconTheme?.color ??
-    Colors.black,
-    BlendMode.srcIn)),
-            tooltip: 'Forward',
           ),
-
-          overflowWidget: Text(getTranslated("forward"),
-              style: chatStyle.popupMenuThemeData.textStyle),
-          showAsAction: controller.canBeForwarded.value
-              ? ShowAsAction.always
-              : ShowAsAction.gone,
-          keyValue: 'Forward',
-          onItemClick: () {
-            controller.closeKeyBoard();
-            controller.checkBusyStatusForForward();
-          },
-        ),
-
-    ],
-
-    if ((controller.arguments?.isAppBarStarEnabled).checkNull()) ...[
-    CustomAction(
-          visibleWidget: IconButton(
-            onPressed: () {
+        ],
+        if ((controller.arguments?.isAppBarStarEnabled).checkNull()) ...[
+          CustomAction(
+            visibleWidget: IconButton(
+              onPressed: () {
+                controller.favouriteMessage();
+              },
+              // icon: controller.getOptionStatus('Favourite') ? const Icon(Icons.star_border_outlined)
+              // icon: controller.selectedChatList[0].isMessageStarred
+              icon: chatStyle.chatUserAppBarStyle.iconFavourites ??
+                  AppUtils.svgIcon(
+                      icon: favouriteIcon,
+                      colorFilter: ColorFilter.mode(
+                          chatStyle.appBarTheme.actionsIconTheme?.color ??
+                              Colors.black,
+                          BlendMode.srcIn)),
+              tooltip: 'Favourite',
+            ),
+            overflowWidget: Text(getTranslated("favourite"),
+                style: chatStyle.popupMenuThemeData.textStyle),
+            showAsAction: controller.canBeStarred.value
+                ? ShowAsAction.always
+                : ShowAsAction.gone,
+            keyValue: 'favourite',
+            onItemClick: () {
+              controller.closeKeyBoard();
               controller.favouriteMessage();
             },
-            // icon: controller.getOptionStatus('Favourite') ? const Icon(Icons.star_border_outlined)
-            // icon: controller.selectedChatList[0].isMessageStarred
-            icon: chatStyle.chatUserAppBarStyle.iconFavourites ??
-    AppUtils.svgIcon(icon:favouriteIcon,
-    colorFilter: ColorFilter.mode(chatStyle.appBarTheme.actionsIconTheme?.color ?? Colors.black,
-    BlendMode.srcIn)),
-            tooltip: 'Favourite',
           ),
-          overflowWidget: Text(getTranslated("favourite"),
-              style: chatStyle.popupMenuThemeData.textStyle),
-          showAsAction: controller.canBeStarred.value
-              ? ShowAsAction.always
-              : ShowAsAction.gone,
-          keyValue: 'favourite',
-          onItemClick: () {
-            controller.closeKeyBoard();
-            controller.favouriteMessage();
-          },
-        ),
-    ],
-    if ((controller.arguments?.isAppBarStarEnabled).checkNull()) ...[
-    CustomAction(
-          visibleWidget: IconButton(
-            onPressed: () {
+        ],
+        if ((controller.arguments?.isAppBarStarEnabled).checkNull()) ...[
+          CustomAction(
+            visibleWidget: IconButton(
+              onPressed: () {
+                controller.favouriteMessage();
+              },
+              // icon: controller.getOptionStatus('Favourite') ? const Icon(Icons.star_border_outlined)
+              // icon: controller.selectedChatList[0].isMessageStarred
+              icon: chatStyle.chatUserAppBarStyle.iconUnFavourite ??
+                  AppUtils.svgIcon(
+                      icon: unFavouriteIcon,
+                      colorFilter: ColorFilter.mode(
+                          chatStyle.appBarTheme.actionsIconTheme?.color ??
+                              Colors.black,
+                          BlendMode.srcIn)),
+              tooltip: 'unFavourite',
+            ),
+            overflowWidget: Text(getTranslated("unFavourite"),
+                style: chatStyle.popupMenuThemeData.textStyle),
+            showAsAction: controller.canBeUnStarred.value
+                ? ShowAsAction.always
+                : ShowAsAction.gone,
+            keyValue: 'favourite',
+            onItemClick: () {
+              controller.closeKeyBoard();
               controller.favouriteMessage();
             },
-            // icon: controller.getOptionStatus('Favourite') ? const Icon(Icons.star_border_outlined)
-            // icon: controller.selectedChatList[0].isMessageStarred
-            icon: chatStyle.chatUserAppBarStyle.iconUnFavourite ??
-    AppUtils.svgIcon(icon:unFavouriteIcon,
-    colorFilter: ColorFilter.mode(chatStyle.appBarTheme.actionsIconTheme?.color ??
-    Colors.black, BlendMode.srcIn)),
-            tooltip: 'unFavourite',
           ),
-          overflowWidget: Text(getTranslated("unFavourite"),
-              style: chatStyle.popupMenuThemeData.textStyle),
-          showAsAction: controller.canBeUnStarred.value
-              ? ShowAsAction.always
-              : ShowAsAction.gone,
-          keyValue: 'favourite',
-          onItemClick: () {
-            controller.closeKeyBoard();
-            controller.favouriteMessage();
-          },
-        ),
-    ],
-
-    if ((controller.arguments?.isAppBarDeleteMessageEnabled)
-        .checkNull()) ...[
-    CustomAction(
-          visibleWidget: IconButton(
-            onPressed: () {
+        ],
+        if ((controller.arguments?.isAppBarDeleteMessageEnabled)
+            .checkNull()) ...[
+          CustomAction(
+            visibleWidget: IconButton(
+              onPressed: () {
+                controller.deleteMessages();
+              },
+              icon: chatStyle.chatUserAppBarStyle.iconDelete ??
+                  AppUtils.svgIcon(
+                      icon: deleteIcon,
+                      colorFilter: ColorFilter.mode(
+                          chatStyle.appBarTheme.actionsIconTheme?.color ??
+                              Colors.black,
+                          BlendMode.srcIn)),
+              tooltip: 'Delete',
+            ),
+            overflowWidget: Text(getTranslated("delete"),
+                style: chatStyle.popupMenuThemeData.textStyle),
+            showAsAction: controller
+                    .availableFeatures.value.isDeleteMessageAvailable
+                    .checkNull()
+                ? ShowAsAction.always
+                : ShowAsAction.gone,
+            keyValue: 'Delete',
+            onItemClick: () {
+              controller.closeKeyBoard();
               controller.deleteMessages();
             },
-            icon: chatStyle.chatUserAppBarStyle.iconDelete ??
-    AppUtils.svgIcon(
-    icon:deleteIcon,
-    colorFilter: ColorFilter.mode(chatStyle.appBarTheme.actionsIconTheme?.color ??
-    Colors.black,
-    BlendMode.srcIn)),
-            tooltip: 'Delete',
           ),
-          overflowWidget: Text(getTranslated("delete"),
-              style: chatStyle.popupMenuThemeData.textStyle),
-          showAsAction: controller.availableFeatures.value
-              .isDeleteMessageAvailable.checkNull()
-              ? ShowAsAction.always
-              : ShowAsAction.gone,
-          keyValue: 'Delete',
-          onItemClick: () {
-            controller.closeKeyBoard();
-            controller.deleteMessages();
-          },
-        ),
-
-    ],
-    if ((controller.arguments?.isAppBarReportEnabled).checkNull()) ...[
-
-    CustomAction(
-          visibleWidget: IconButton(
+        ],
+        if ((controller.arguments?.isAppBarReportEnabled).checkNull()) ...[
+          CustomAction(
+            visibleWidget: IconButton(
+                onPressed: () {
+                  controller.reportChatOrMessage();
+                },
+                icon: chatStyle.chatUserAppBarStyle.iconReport ??
+                    const Icon(Icons.report_problem_rounded)),
+            overflowWidget: Text(getTranslated("report"),
+                style: chatStyle.popupMenuThemeData.textStyle),
+            showAsAction: controller.canShowReport.value
+                ? ShowAsAction.never
+                : ShowAsAction.gone,
+            keyValue: 'Report',
+            onItemClick: () {
+              controller.closeKeyBoard();
+              controller.reportChatOrMessage();
+            },
+          ),
+        ],
+        if ((controller.arguments?.isAppBarCopyMessageEnabled).checkNull()) ...[
+          CustomAction(
+            visibleWidget: IconButton(
               onPressed: () {
-                controller.reportChatOrMessage();
+                controller.closeKeyBoard();
+                controller.copyTextMessages();
               },
-              icon: chatStyle.chatUserAppBarStyle.iconReport ??
-    const Icon(Icons.report_problem_rounded)),
-          overflowWidget: Text(getTranslated("report"),
-              style: chatStyle.popupMenuThemeData.textStyle),
-          showAsAction: controller.canShowReport.value
-              ? ShowAsAction.never
-              : ShowAsAction.gone,
-          keyValue: 'Report',
-          onItemClick: () {
-            controller.closeKeyBoard();
-            controller.reportChatOrMessage();
-          },
-        ),
-
-    ],
-    if ((controller.arguments?.isAppBarCopyMessageEnabled).checkNull()) ...[
-
-    CustomAction(
-          visibleWidget: IconButton(
-            onPressed: () {
+              icon: chatStyle.chatUserAppBarStyle.iconCopy ??
+                  AppUtils.svgIcon(
+                      icon: copyIcon,
+                      fit: BoxFit.contain,
+                      colorFilter: ColorFilter.mode(
+                          chatStyle.appBarTheme.actionsIconTheme?.color ??
+                              Colors.black,
+                          BlendMode.srcIn)),
+              tooltip: 'Copy',
+            ),
+            overflowWidget: Text(getTranslated("copy"),
+                style: chatStyle.popupMenuThemeData.textStyle),
+            showAsAction: controller.canBeCopied.value
+                ? ShowAsAction.never
+                : ShowAsAction.gone,
+            keyValue: 'Copy',
+            onItemClick: () {
               controller.closeKeyBoard();
               controller.copyTextMessages();
             },
-            icon: chatStyle.chatUserAppBarStyle.iconCopy ??
-    AppUtils.svgIcon(icon:
-                copyIcon,
-                fit: BoxFit.contain,
-                colorFilter: ColorFilter.mode(
-                    chatStyle.appBarTheme.actionsIconTheme
-                        ?.color ?? Colors.black, BlendMode.srcIn)
-            ),
-            tooltip: 'Copy',
           ),
-          overflowWidget: Text(getTranslated("copy"),
-              style: chatStyle.popupMenuThemeData.textStyle),
-          showAsAction: controller.canBeCopied.value
-              ? ShowAsAction.never
-              : ShowAsAction.gone,
-          keyValue: 'Copy',
-          onItemClick: () {
-            controller.closeKeyBoard();
-            controller.copyTextMessages();
-          },
-        ),
-
-    ],
-    if ((controller.arguments?.isAppBarMessageInfoEnabled).checkNull()) ...[
-
-    CustomAction(
-          visibleWidget: IconButton(
-            onPressed: () {
+        ],
+        if ((controller.arguments?.isAppBarMessageInfoEnabled).checkNull()) ...[
+          CustomAction(
+            visibleWidget: IconButton(
+              onPressed: () {
+                controller.messageInfo();
+              },
+              icon: chatStyle.chatUserAppBarStyle.iconInfo ??
+                  AppUtils.svgIcon(
+                      icon: infoIcon,
+                      fit: BoxFit.contain,
+                      colorFilter: ColorFilter.mode(
+                          chatStyle.appBarTheme.actionsIconTheme?.color ??
+                              Colors.black,
+                          BlendMode.srcIn)),
+              tooltip: 'Message Info',
+            ),
+            overflowWidget: Text(getTranslated("messageInfo"),
+                style: chatStyle.popupMenuThemeData.textStyle),
+            showAsAction: controller.canShowInfo.value
+                ? ShowAsAction.never
+                : ShowAsAction.gone,
+            keyValue: 'MessageInfo',
+            onItemClick: () {
+              controller.closeKeyBoard();
               controller.messageInfo();
             },
-            icon: chatStyle.chatUserAppBarStyle.iconInfo ??
-    AppUtils.svgIcon(icon:
-                infoIcon,
-                fit: BoxFit.contain,
-                colorFilter: ColorFilter.mode(
-                    chatStyle.appBarTheme.actionsIconTheme
-                        ?.color ??
-    Colors.black,
-    BlendMode.srcIn)
+          ),
+        ],
+        if ((controller.arguments?.isAppBarShareEnabled).checkNull()) ...[
+          CustomAction(
+            visibleWidget: IconButton(
+              onPressed: () {},
+              icon: chatStyle.chatUserAppBarStyle.iconShare ??
+                  AppUtils.svgIcon(
+                      icon: shareIcon,
+                      colorFilter: ColorFilter.mode(
+                          chatStyle.appBarTheme.actionsIconTheme?.color ??
+                              Colors.black,
+                          BlendMode.srcIn)),
+              tooltip: 'Share',
             ),
-            tooltip: 'Message Info',
+            overflowWidget: Text(getTranslated("share"),
+                style: chatStyle.popupMenuThemeData.textStyle),
+            showAsAction: controller.canBeShared.value
+                ? ShowAsAction.never
+                : ShowAsAction.gone,
+            keyValue: 'Share',
+            onItemClick: () {
+              controller.closeKeyBoard();
+              controller.share();
+            },
           ),
-          overflowWidget: Text(getTranslated("messageInfo"),
-              style: chatStyle.popupMenuThemeData.textStyle),
-          showAsAction: controller.canShowInfo.value
-              ? ShowAsAction.never
-              : ShowAsAction.gone,
-          keyValue: 'MessageInfo',
-          onItemClick: () {
-            controller.closeKeyBoard();
-            controller.messageInfo();
-          },
-        ),
-
-    ],
-    if ((controller.arguments?.isAppBarShareEnabled).checkNull()) ...[
-
-    CustomAction(
-          visibleWidget: IconButton(
-            onPressed: () {},
-            icon: chatStyle.chatUserAppBarStyle.iconShare ??
-    AppUtils.svgIcon(icon:shareIcon,
-    colorFilter: ColorFilter.mode(chatStyle.appBarTheme.actionsIconTheme?.color ??
-    Colors.black,
-    BlendMode.srcIn)),
-            tooltip: 'Share',
+        ],
+        if ((controller.arguments?.isAppBarEditMessageEnabled).checkNull()) ...[
+          CustomAction(
+            visibleWidget: IconButton(
+              onPressed: () {},
+              icon: chatStyle.chatUserAppBarStyle.iconEdit ??
+                  AppUtils.svgIcon(
+                      icon: shareIcon,
+                      colorFilter: ColorFilter.mode(
+                          chatStyle.appBarTheme.actionsIconTheme?.color ??
+                              Colors.black,
+                          BlendMode.srcIn)),
+              tooltip: 'Edit Message',
+            ),
+            overflowWidget: Text(getTranslated("editMessage"),
+                style: chatStyle.popupMenuThemeData.textStyle),
+            showAsAction: controller.canEditMessage.value
+                ? ShowAsAction.never
+                : ShowAsAction.gone,
+            keyValue: 'Edit Message',
+            onItemClick: () {
+              controller.closeKeyBoard();
+              controller.editMessage();
+            },
           ),
-          overflowWidget: Text(getTranslated("share"),
-              style: chatStyle.popupMenuThemeData.textStyle),
-          showAsAction: controller.canBeShared.value
-              ? ShowAsAction.never
-              : ShowAsAction.gone,
-          keyValue: 'Share',
-          onItemClick: () {
-            controller.closeKeyBoard();
-            controller.share();
-          },
-        ),
-
-
-    ],
-    if ((controller.arguments?.isAppBarEditMessageEnabled).checkNull()) ...[
-
-    CustomAction(
-          visibleWidget: IconButton(
-            onPressed: () {},
-            icon: chatStyle.chatUserAppBarStyle.iconEdit ??
-    AppUtils.svgIcon(icon:shareIcon,
-    colorFilter: ColorFilter.mode(chatStyle.appBarTheme.actionsIconTheme?.color ??
-    Colors.black,
-    BlendMode.srcIn)),
-            tooltip: 'Edit Message',
-          ),
-          overflowWidget: Text(getTranslated("editMessage"),
-              style: chatStyle.popupMenuThemeData.textStyle),
-          showAsAction: controller.canEditMessage.value
-              ? ShowAsAction.never
-              : ShowAsAction.gone,
-          keyValue: 'Edit Message',
-          onItemClick: () {
-            controller.closeKeyBoard();
-            controller.editMessage();
-          },
-        ),
-    ],
+        ],
       ];
     } else {
       return [
@@ -686,179 +714,203 @@ class ChatView extends NavViewStateful<ChatController> {
           actionWidth: 48, // default for IconButtons
           actions: [
             if ((controller.arguments?.isAppBarClearChatEnabled)
-            .checkNull()) ...[
-            CustomAction(
-              visibleWidget: IconButton(
-                onPressed: () {
+                .checkNull()) ...[
+              CustomAction(
+                visibleWidget: IconButton(
+                  onPressed: () {
+                    controller.clearUserChatHistory();
+                  },
+                  icon: chatStyle.chatUserAppBarStyle.iconClear ??
+                      const Icon(Icons.clear_rounded),
+                ),
+                overflowWidget: Text(getTranslated("clearChat"),
+                    style: chatStyle.popupMenuThemeData.textStyle),
+                showAsAction: controller
+                        .availableFeatures.value.isClearChatAvailable
+                        .checkNull()
+                    ? ShowAsAction.never
+                    : ShowAsAction.gone,
+                keyValue: 'Clear Chat',
+                onItemClick: () {
+                  controller.closeKeyBoard();
+                  debugPrint("Clear chat tap");
                   controller.clearUserChatHistory();
                 },
-                icon: chatStyle.chatUserAppBarStyle.iconClear ?? const Icon(Icons.clear_rounded ),
               ),
-              overflowWidget: Text(getTranslated("clearChat"),
-                  style: chatStyle.popupMenuThemeData
-                      .textStyle),
-              showAsAction: controller.availableFeatures.value
-                  .isClearChatAvailable.checkNull()
-                  ? ShowAsAction.never
-                  : ShowAsAction.gone,
-              keyValue: 'Clear Chat',
-              onItemClick: () {
-                controller.closeKeyBoard();
-                debugPrint("Clear chat tap");
-                controller.clearUserChatHistory();
-              },
-            ),
-    ],
-    if ((controller.arguments?.isAppBarReportEnabled).checkNull()) ...[
-    CustomAction(
-              visibleWidget: IconButton(
-                onPressed: () {
+            ],
+            if ((controller.arguments?.isAppBarReportEnabled).checkNull()) ...[
+              CustomAction(
+                visibleWidget: IconButton(
+                  onPressed: () {
+                    controller.reportChatOrMessage();
+                  },
+                  icon: chatStyle.chatUserAppBarStyle.iconReport ??
+                      const Icon(Icons.report_problem_rounded),
+                ),
+                overflowWidget: Text(getTranslated("report"),
+                    style: chatStyle.popupMenuThemeData.textStyle),
+                showAsAction: ShowAsAction.never,
+                keyValue: 'Report',
+                onItemClick: () {
+                  controller.closeKeyBoard();
                   controller.reportChatOrMessage();
                 },
-                icon: chatStyle.chatUserAppBarStyle.iconReport ?? const Icon(Icons.report_problem_rounded),
               ),
-              overflowWidget: Text(getTranslated("report"),
-                  style: chatStyle.popupMenuThemeData
-                      .textStyle),
-              showAsAction: ShowAsAction.never,
-              keyValue: 'Report',
-              onItemClick: () {
-                controller.closeKeyBoard();
-                controller.reportChatOrMessage();
-              },
-            ),
-    ],
-    if ((controller.arguments?.isAppBarBlockEnabled).checkNull()) ...[
-    controller.isBlocked.value
-                ? CustomAction(
-              visibleWidget: IconButton(
-                onPressed: () {
-                  controller.unBlockUser();
+            ],
+            if ((controller.arguments?.isAppBarBlockEnabled).checkNull()) ...[
+              controller.isBlocked.value
+                  ? CustomAction(
+                      visibleWidget: IconButton(
+                        onPressed: () {
+                          controller.unBlockUser();
+                        },
+                        icon: chatStyle.chatUserAppBarStyle.iconUnBlock ??
+                            const Icon(Icons.block),
+                      ),
+                      overflowWidget: Text(getTranslated("unblock"),
+                          style: chatStyle.popupMenuThemeData.textStyle),
+                      showAsAction: ShowAsAction.never,
+                      keyValue: 'Unblock',
+                      onItemClick: () {
+                        debugPrint('onItemClick unblock');
+                        controller.unBlockUser();
+                      },
+                    )
+                  : CustomAction(
+                      visibleWidget: IconButton(
+                        onPressed: () {
+                          controller.blockUser();
+                        },
+                        icon: chatStyle.chatUserAppBarStyle.iconBlock ??
+                            const Icon(Icons.block),
+                      ),
+                      overflowWidget: Text(getTranslated("block"),
+                          style: chatStyle.popupMenuThemeData.textStyle),
+                      showAsAction: controller.profile.isGroupProfile ?? false
+                          ? ShowAsAction.gone
+                          : ShowAsAction.never,
+                      keyValue: 'Block',
+                      onItemClick: () {
+                        controller.closeKeyBoard();
+                        controller.blockUser();
+                      },
+                    ),
+            ],
+            if ((controller.arguments?.isAppBarSearchEnabled).checkNull()) ...[
+              CustomAction(
+                visibleWidget: IconButton(
+                  onPressed: () {},
+                  icon: chatStyle.chatUserAppBarStyle.iconSearch ??
+                      const Icon(Icons.search),
+                ),
+                overflowWidget: Text(getTranslated("search"),
+                    style: chatStyle.popupMenuThemeData.textStyle),
+                showAsAction: ShowAsAction.never,
+                keyValue: 'Search',
+                onItemClick: () {
+                  controller.closeKeyBoard();
+                  controller.gotoSearch();
                 },
-                icon: chatStyle.chatUserAppBarStyle.iconUnBlock ?? const Icon(Icons.block),
               ),
-              overflowWidget: Text(getTranslated("unblock"),
-                  style: chatStyle.popupMenuThemeData
-                      .textStyle),
-              showAsAction: ShowAsAction.never,
-              keyValue: 'Unblock',
-              onItemClick: () {
-                debugPrint('onItemClick unblock');
-                controller.unBlockUser();
-              },
-            )
-                : CustomAction(
-              visibleWidget: IconButton(
-                onPressed: () {
-                  controller.blockUser();
-                },
-                icon: chatStyle.chatUserAppBarStyle.iconBlock ?? const Icon(Icons.block),
-              ),
-              overflowWidget: Text(getTranslated("block"),
-                  style: chatStyle.popupMenuThemeData
-                      .textStyle),
-              showAsAction: controller.profile.isGroupProfile ?? false
-                  ? ShowAsAction.gone
-                  : ShowAsAction.never,
-              keyValue: 'Block',
-              onItemClick: () {
-                controller.closeKeyBoard();
-                controller.blockUser();
-              },
-            ),
-    ],
-    if ((controller.arguments?.isAppBarSearchEnabled).checkNull()) ...[
-    CustomAction(
-              visibleWidget: IconButton(
-                onPressed: () {},
-                icon: chatStyle.chatUserAppBarStyle.iconSearch ?? const Icon(Icons.search),
-              ),
-              overflowWidget: Text(getTranslated("search"),
-                  style: chatStyle.popupMenuThemeData
-                      .textStyle),
-              showAsAction: ShowAsAction.never,
-              keyValue: 'Search',
-              onItemClick: () {
-                controller.closeKeyBoard();
-                controller.gotoSearch();
-              },
-            ),
-    ],
-    if ((controller.arguments?.isAppBarEmailEnabled).checkNull()) ...[
-    CustomAction(
-              visibleWidget: IconButton(
-                onPressed: () {},
-                icon: chatStyle.chatUserAppBarStyle.iconEmail ?? const Icon(Icons.email_outlined),
-              ),
-              overflowWidget: GestureDetector(
-                onTap: () {
+            ],
+            if ((controller.arguments?.isAppBarEmailEnabled).checkNull()) ...[
+              CustomAction(
+                visibleWidget: IconButton(
+                  onPressed: () {},
+                  icon: chatStyle.chatUserAppBarStyle.iconEmail ??
+                      const Icon(Icons.email_outlined),
+                ),
+                overflowWidget: GestureDetector(
+                  onTap: () {
+                    controller.closeKeyBoard();
+                    controller.exportChat();
+                  },
+                  child: Text(getTranslated("emailChat"),
+                      style: chatStyle.popupMenuThemeData.textStyle),
+                ),
+                showAsAction: ShowAsAction.never,
+                keyValue: 'EmailChat',
+                onItemClick: () {
                   controller.closeKeyBoard();
                   controller.exportChat();
                 },
-                child: Text(getTranslated("emailChat"),
-                    style: chatStyle.popupMenuThemeData
-                        .textStyle),
               ),
-              showAsAction: ShowAsAction.never,
-              keyValue: 'EmailChat',
-              onItemClick: () {
-                controller.closeKeyBoard();
-                controller.exportChat();
-              },
-            ),
             ],
             CustomAction(
               visibleWidget: IconButton(
                 onPressed: () {},
-                icon: chatStyle.chatUserAppBarStyle.iconShortCut ?? const Icon(Icons.shortcut),
+                icon: chatStyle.chatUserAppBarStyle.iconShortCut ??
+                    const Icon(Icons.shortcut),
               ),
               overflowWidget: Text(getTranslated("addChatShortcut"),
-                  style: chatStyle.popupMenuThemeData
-                      .textStyle),
+                  style: chatStyle.popupMenuThemeData.textStyle),
               showAsAction: ShowAsAction.gone,
               keyValue: 'Shortcut',
               onItemClick: () {
                 controller.closeKeyBoard();
               },
             ),
-    if ((controller.arguments?.isVideoCallEnabled).checkNull()) ...[
-    CustomAction(
-              visibleWidget: IconButton(
-                onPressed: controller.ableToCall ? () {
-                  controller.makeVideoCall();
-                } : null,
+            if ((controller.arguments?.isVideoCallEnabled).checkNull()) ...[
+              CustomAction(
+                visibleWidget: IconButton(
+                  onPressed: controller.ableToCall
+                      ? () {
+                          controller.makeVideoCall();
+                        }
+                      : null,
                   icon: chatStyle.chatUserAppBarStyle.iconVideoCall ??
-    AppUtils.svgIcon(icon:videoCallIcon,
-    colorFilter: ColorFilter.mode(chatStyle.appBarTheme.actionsIconTheme?.color ??
-    Colors.black,
-    BlendMode.srcIn)),
-              ),
+                      AppUtils.svgIcon(
+                          icon: videoCallIcon,
+                          colorFilter: ColorFilter.mode(
+                              chatStyle.appBarTheme.actionsIconTheme?.color ??
+                                  Colors.black,
+                              BlendMode.srcIn)),
+                ),
                 overflowWidget: Text(getTranslated("videoCall"),
-    style:chatStyle.popupMenuThemeData.textStyle),
-                showAsAction: controller.isVideoCallAvailable  && (controller.arguments?.enableCalls).checkNull() ? ShowAsAction.always : ShowAsAction.gone,
-              keyValue: 'Video Call',
-              onItemClick: controller.ableToCall ? () {
-                controller.makeVideoCall();
-              } : null,
-            ),
-            ],
-    if ((controller.arguments?.isVoiceCallEnabled).checkNull()) ...[
-    CustomAction(
-              visibleWidget: IconButton(
-                onPressed: controller.ableToCall ? () {
-                  controller.makeVoiceCall();
-                } : null,
-                  icon: chatStyle.chatUserAppBarStyle.iconAudioCall ?? AppUtils.svgIcon(icon:audioCallIcon,colorFilter: ColorFilter.mode(chatStyle.appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)),
+                    style: chatStyle.popupMenuThemeData.textStyle),
+                showAsAction: controller.isVideoCallAvailable &&
+                        (controller.arguments?.enableCalls).checkNull()
+                    ? ShowAsAction.always
+                    : ShowAsAction.gone,
+                keyValue: 'Video Call',
+                onItemClick: controller.ableToCall
+                    ? () {
+                        controller.makeVideoCall();
+                      }
+                    : null,
               ),
-                overflowWidget: Text(getTranslated("audioCall"),style:chatStyle.popupMenuThemeData.textStyle),
-                showAsAction: controller.isAudioCallAvailable  && (controller.arguments?.enableCalls).checkNull() ? ShowAsAction.always : ShowAsAction.gone,
-              keyValue: 'Audio Call',
-              onItemClick: controller.ableToCall ? () {
-                controller.makeVoiceCall();
-              } : null,
-            ),
+            ],
+            if ((controller.arguments?.isVoiceCallEnabled).checkNull()) ...[
+              CustomAction(
+                visibleWidget: IconButton(
+                  onPressed: controller.ableToCall
+                      ? () {
+                          controller.makeVoiceCall();
+                        }
+                      : null,
+                  icon: chatStyle.chatUserAppBarStyle.iconAudioCall ??
+                      AppUtils.svgIcon(
+                          icon: audioCallIcon,
+                          colorFilter: ColorFilter.mode(
+                              chatStyle.appBarTheme.actionsIconTheme?.color ??
+                                  Colors.black,
+                              BlendMode.srcIn)),
+                ),
+                overflowWidget: Text(getTranslated("audioCall"),
+                    style: chatStyle.popupMenuThemeData.textStyle),
+                showAsAction: controller.isAudioCallAvailable &&
+                        (controller.arguments?.enableCalls).checkNull()
+                    ? ShowAsAction.always
+                    : ShowAsAction.gone,
+                keyValue: 'Audio Call',
+                onItemClick: controller.ableToCall
+                    ? () {
+                        controller.makeVoiceCall();
+                      }
+                    : null,
+              ),
+            ],
           ],
-    ],
         ),
       ];
     }
@@ -867,8 +919,7 @@ class ChatView extends NavViewStateful<ChatController> {
   getAppBar(BuildContext context) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(55.0),
-      child:
-      Obx(() {
+      child: Obx(() {
         return Container(
           child: controller.isSelected.value
               ? selectedAppBar(context)

@@ -140,7 +140,7 @@ class OutgoingCallController extends GetxController
                 debugPrint("audio item name ${audioItem.name}");
                 return Obx(() {
                   return ListTile(
-                    contentPadding: const EdgeInsets.only(left: 10,right: 10),
+                    contentPadding: const EdgeInsets.only(left: 10, right: 10),
                     title: Text(audioItem.name ?? "",
                         style: const TextStyle(
                             fontSize: 14, fontWeight: FontWeight.normal)),
@@ -232,8 +232,11 @@ class OutgoingCallController extends GetxController
     debugPrint("Call List ${callList.toJson()}");
     this.callMode(callMode);
     this.callType(callType);
-    debugPrint("Current Route ${NavUtils.currentRoute} callList.length ${callList.length}");
-    final bool isUserJidExistsInCallList = callList.firstWhereOrNull((t) => t.userJid?.value == userJid) != null;
+    debugPrint(
+        "Current Route ${NavUtils.currentRoute} callList.length ${callList.length}");
+    final bool isUserJidExistsInCallList =
+        callList.firstWhereOrNull((t) => t.userJid?.value == userJid) != null;
+
     ///
     /// The below code - *NavUtils.currentRoute == Routes.outGoingCallView
     /// is commented bcz, when the app goes background when call is connected and then disconnected in few seconds
@@ -247,10 +250,10 @@ class OutgoingCallController extends GetxController
       if (NavUtils.canPop) {
         NavUtils.back();
       }
-    } else if (isUserJidExistsInCallList){
+    } else if (isUserJidExistsInCallList) {
       debugPrint("User JID $userJid exists at call list, so removing the user");
       removeUser(callMode, userJid, callType);
-    }else{
+    } else {
       debugPrint("User JID $userJid does not exists at call list");
     }
   }

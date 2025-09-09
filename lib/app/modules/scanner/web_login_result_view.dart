@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/app_localizations.dart' show getTranslated;
-import 'package:mirrorfly_uikit_plugin/app/modules/scanner/web_login_controller.dart' show WebLoginController;
+import 'package:mirrorfly_uikit_plugin/app/common/app_localizations.dart'
+    show getTranslated;
+import 'package:mirrorfly_uikit_plugin/app/modules/scanner/web_login_controller.dart'
+    show WebLoginController;
 import '../../common/widgets.dart';
 import '../../extensions/extensions.dart';
 
@@ -87,7 +89,7 @@ class WebLoginResultView extends NavViewStateful<WebLoginController> {
                     ],
                   ),
                   onTap: () => controller.logoutWeb()),
-               Text(
+              Text(
                 "Visit ${Constants.webChatLogin}",
                 style: const TextStyle(color: textColor, fontSize: 14),
               ),

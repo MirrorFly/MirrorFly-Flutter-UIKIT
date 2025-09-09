@@ -6,7 +6,7 @@ class LottieAnimation extends StatefulWidget {
       {Key? key,
       required this.lottieJson,
       required this.showRepeat,
-        required this.package,
+      required this.package,
       required this.width,
       required this.height})
       : super(key: key);
