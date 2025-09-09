@@ -176,7 +176,7 @@ class ChatView extends NavViewStateful<ChatController> {
                           );
                         }),
                         Obx(() {
-                          return controller.ableToScheduleMeet && !(controller.profile.isAdminBlocked.checkNull() || controller.profile.isBlocked.checkNull()||controller.isBlocked.value) && !controller.profile.isDeletedContact() ? FloatingFab(
+                          return controller.ableToScheduleMeet && !(controller.profile.isAdminBlocked.checkNull() || controller.profile.isBlocked.checkNull()||controller.isBlocked.value) && !controller.profile.isDeletedContact()&& controller.arguments!.isScheduleMeetEnabled ? FloatingFab(
                             fabTheme: chatStyle
                                 .instantScheduleMeetStyle,
                             onFabTap: ()async{
@@ -228,6 +228,7 @@ class ChatView extends NavViewStateful<ChatController> {
                       chatTaggerController: controller.messageController,
                       onChanged: (text) => controller.isTyping(text),
                       focusNode: controller.focusNode,
+                      audioDurationInSec: controller.arguments!.audioDurationInSec,
                     ),
                   ),
                 ],

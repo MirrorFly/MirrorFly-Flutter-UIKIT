@@ -6,6 +6,7 @@ class LottieAnimation extends StatefulWidget {
       {Key? key,
       required this.lottieJson,
       required this.showRepeat,
+        required this.package,
       required this.width,
       required this.height})
       : super(key: key);
@@ -14,6 +15,7 @@ class LottieAnimation extends StatefulWidget {
   final bool showRepeat;
   final double width;
   final double height;
+  final String? package;
 
   @override
   State<LottieAnimation> createState() => _LottieAnimationState();
@@ -40,6 +42,7 @@ class _LottieAnimationState extends State<LottieAnimation>
     return Container(
       child: Lottie.asset(
         widget.lottieJson,
+        package: widget.package,
         controller: controller,
         onLoaded: (composition) {
           controller

@@ -18,7 +18,7 @@ import 'mention_list_view.dart';
 
 class ChatInputField extends StatelessWidget {
   const ChatInputField(
-      {Key? key, required this.messageTypingAreaStyle, required this.controller, required this.chatTaggerController, this.onChanged, this.focusNode, required this.jid})
+      {Key? key, required this.messageTypingAreaStyle, required this.controller, required this.chatTaggerController, this.onChanged, this.focusNode, required this.jid,required this.audioDurationInSec })
       : super(key: key);
   final MessageTypingAreaStyle messageTypingAreaStyle;
   final ChatController controller;
@@ -27,11 +27,12 @@ class ChatInputField extends StatelessWidget {
   final FocusNode? focusNode;
   final String jid;
   final tag = "chatView";
+  final int audioDurationInSec; // 5 minutes
 
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      return Container(
+      return !controller.chatLoading.value ? Container(
         color: messageTypingAreaStyle.bgColor, //Colors.white,
         child: controller.isMemberOfGroup.isNull() ? const Offstage() : controller.isBlocked.value
             ? userBlocked(context)
@@ -145,7 +146,7 @@ class ChatInputField extends StatelessWidget {
             .isGroupChatAvailable.checkNull()
             ? featureNotAvailable(context)
             : userNoLonger(context),
-      );
+      ):const Offstage();
     });
   }
 
@@ -178,13 +179,14 @@ class ChatInputField extends StatelessWidget {
                 messageTypingAreaStyle.emojiIconColor, BlendMode.srcIn),))
         ],
         if(controller.isAudioRecording.value == Constants.audioRecordDelete)...[
-          const Padding(
-            padding: EdgeInsets.all(12.0),
+          Padding(
+            padding: const EdgeInsets.all(12.0),
             child: LottieAnimation(
               lottieJson: deleteDustbin,
               showRepeat: false,
               width: 24,
               height: 24,
+              package: iconPackageName,
             ),
           )
         ],
@@ -266,6 +268,7 @@ class ChatInputField extends StatelessWidget {
                     }
                   },
                   onChanged: onChanged,
+                  textCapitalization: TextCapitalization.sentences,
                   style: messageTypingAreaStyle
                       .textFieldStyle.editTextStyle,
                   //const TextStyle(fontWeight: FontWeight.w400),
@@ -302,7 +305,7 @@ class ChatInputField extends StatelessWidget {
                 .checkNull())...[
           IconButton(
             onPressed: () {
-              controller.startRecording();
+              controller.startRecording(audioDurationInSec:audioDurationInSec);
             },
             icon: messageTypingAreaStyle.iconRecord ?? AppUtils.svgIcon(
               icon: audioMic,
