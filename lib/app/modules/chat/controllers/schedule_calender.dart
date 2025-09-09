@@ -38,7 +38,9 @@ class ScheduleCalender {
       return;
     }
     if (!(calendarsResult.isSuccess &&
-        calendarsResult.data?.isNotEmpty == true)) return;
+        calendarsResult.data?.isNotEmpty == true)) {
+      return;
+    }
     List<Calendar> writableCalendars = calendarsResult.data!
         .where((c) => !(c.isReadOnly ?? false) && c.name != "Holidays in India")
         .toList();

@@ -1,6 +1,5 @@
 import 'package:flutter/services.dart' show TextInputFormatter;
 import 'package:flutter/material.dart';
-import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
 
 import 'chat_message_model.dart';
 

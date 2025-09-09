@@ -107,7 +107,7 @@ Route<dynamic>? mirrorFlyRoute(RouteSettings settings) {
       return PageRouteBuilder(
         settings: settings,
         pageBuilder: (context, animation, secondaryAnimation) =>
-            LocationSentView(),
+            const LocationSentView(),
         transitionDuration: const Duration(milliseconds: 300),
         reverseTransitionDuration: Duration.zero, // disables animation on pop
       );

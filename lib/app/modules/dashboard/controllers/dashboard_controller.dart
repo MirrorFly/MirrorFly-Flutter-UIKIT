@@ -975,7 +975,6 @@ class DashboardController extends FullLifeCycleController
       for (var element in selectedChatsPosition) {
         recentChats[element].isConversationUnRead = false;
         recentChats[element].unreadMessageCount = 0;
-        var jid = recentChats[element].jid;
         // NotificationBuilder.clearConversationOnNotification(jid.checkNull());
       }
       clearAllChatSelection();
