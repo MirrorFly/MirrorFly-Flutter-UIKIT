@@ -277,8 +277,9 @@ class RestoreView extends NavViewStateful<RestoreController> {
                 )
               : Obx(() {
                   return Text(
-                      controller.driveAccessible.value ?
-                    getTranslated("restoreDescIos") : getTranslated("iCloudNotLoggedIn"),
+                    controller.driveAccessible.value
+                        ? getTranslated("restoreDescIos")
+                        : getTranslated("iCloudNotLoggedIn"),
                     textAlign: TextAlign.center,
                   );
                 }),
@@ -420,7 +421,9 @@ class RestoreView extends NavViewStateful<RestoreController> {
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: LinearProgressIndicator(
-            value:controller.backupDownloadStarted.value?controller.remoteDownloadProgress/100 :controller.remoteRestoreProgress.value / 100,
+            value: controller.backupDownloadStarted.value
+                ? controller.remoteDownloadProgress / 100
+                : controller.remoteRestoreProgress.value / 100,
           ),
         ),
         Obx(() {
@@ -428,8 +431,7 @@ class RestoreView extends NavViewStateful<RestoreController> {
               ? Text(
                   "${getTranslated("downloadingBackup")} (${controller.remoteDownloadProgress}%)")
               : Text(
-              "${getTranslated(controller.restoreCompleted.value ? 'restoreCompleted' : 'restoringMessages')} (${controller.remoteRestoreProgress}%)"
-          );
+                  "${getTranslated(controller.restoreCompleted.value ? 'restoreCompleted' : 'restoringMessages')} (${controller.remoteRestoreProgress}%)");
         }),
         const SizedBox(
           height: 25,

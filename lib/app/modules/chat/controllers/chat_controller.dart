@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:audio_session/audio_session.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,8 @@ import 'package:intl/intl.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/controllers/schedule_calender.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/mention_list_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/dashboard/controllers/dashboard_controller.dart';
-import 'package:mirrorfly_uikit_plugin/mention_text_field/src/mention_tag_text_editing_controller.dart' show MentionTagTextEditingController;
+import 'package:mirrorfly_uikit_plugin/mention_text_field/src/mention_tag_text_editing_controller.dart'
+    show MentionTagTextEditingController;
 import '../../../common/constants.dart';
 import '../../../common/de_bouncer.dart';
 import '../../../common/main_controller.dart';
@@ -168,6 +170,8 @@ class ChatController extends FullLifeCycleController
   RxDouble fabHeight = 60.0.obs;
   RxDouble margin = 16.0.obs;
   RxDouble safeTop = 10.0.obs;
+  late final session;
+  var chatProfileCalled = false;
 
   void updateFabPosition(Offset newOffset) {
     double fabWidth = 56.0;
@@ -206,6 +210,7 @@ class ChatController extends FullLifeCycleController
     }
     SessionManagement.setCurrentChatJID(nJid.checkNull());
     await getChatProfile();
+    session = await AudioSession.instance;
 
     setAudioPath();
 
@@ -217,7 +222,6 @@ class ChatController extends FullLifeCycleController
     super.onInit();
   }
 
-  var chatProfileCalled = false;
   Future<void> getChatProfile() async {
     if (Mirrorfly.isValidGroupJid(nJid)) {
       await Mirrorfly.getGroupProfile(
@@ -283,7 +287,7 @@ class ChatController extends FullLifeCycleController
       vsync: this,
       duration: const Duration(milliseconds: 600),
     );
-    memberOfGroup();
+    // memberOfGroup();
     setChatStatus();
     focusNode.addListener(() {
       if (focusNode.hasFocus) {
@@ -349,6 +353,7 @@ class ChatController extends FullLifeCycleController
     saveUnsentMessage();
     setOnGoingUserGone();
     ImageCacheManager.disposeCache();
+    SessionManagement.setCurrentChatJID(Constants.emptyString);
     super.onClose();
   }
 
@@ -441,6 +446,29 @@ class ChatController extends FullLifeCycleController
     }
   }
 
+  void checkForAndroidNotificationProgressPermission(
+      AttachmentType type) async {
+    if (Platform.isIOS ||
+        await AppPermission.checkPermission(Permission.notification)) {
+      switch (type) {
+        case AttachmentType.camera:
+          NavUtils.back();
+          onCameraClick();
+        case AttachmentType.gallery:
+          NavUtils.back();
+          onGalleryClick();
+        case AttachmentType.audio:
+          NavUtils.back();
+          onAudioClick();
+        case AttachmentType.document:
+          NavUtils.back();
+          documentPickUpload();
+      }
+    } else {
+      toToast(getTranslated("notificationPermissionNotGranted"));
+    }
+  }
+
   showBottomSheetAttachment() {
     DialogUtils.bottomSheet(
       Container(
@@ -454,20 +482,20 @@ class ChatController extends FullLifeCycleController
                   attachments: availableAttachments,
                   availableFeatures: availableFeatures,
                   onDocument: () {
-                    NavUtils.back();
-                    documentPickUpload();
+                    checkForAndroidNotificationProgressPermission(
+                        AttachmentType.document);
                   },
                   onCamera: () {
-                    NavUtils.back();
-                    onCameraClick();
+                    checkForAndroidNotificationProgressPermission(
+                        AttachmentType.camera);
                   },
                   onGallery: () {
-                    NavUtils.back();
-                    onGalleryClick();
+                    checkForAndroidNotificationProgressPermission(
+                        AttachmentType.gallery);
                   },
                   onAudio: () {
-                    NavUtils.back();
-                    onAudioClick();
+                    checkForAndroidNotificationProgressPermission(
+                        AttachmentType.audio);
                   },
                   onContact: () {
                     NavUtils.back();
@@ -2212,10 +2240,15 @@ class ChatController extends FullLifeCycleController
     focusNode.unfocus();
   }
 
-  void startTimer() {
+  void startTimer({required int audioDurationInSec}) {
     showOrHideTagListView(false, "chatView");
     const oneSec = Duration(seconds: 1);
     startTime = DateTime.now();
+    if (_audioTimer != null) {
+      debugPrint(
+          "audio duration timer is not null, so cancelling the existing timer");
+      _audioTimer?.cancel();
+    }
     _audioTimer = Timer.periodic(
       oneSec,
       (Timer timer) {
@@ -2224,6 +2257,11 @@ class ChatController extends FullLifeCycleController
         String min = minDur < 10 ? "0$minDur" : minDur.toString();
         String sec = secDur < 10 ? "0$secDur" : secDur.toString();
         timerInit("$min:$sec");
+        if (timer.tick >= audioDurationInSec &&
+            isAudioRecording.value == Constants.audioRecording) {
+          debugPrint("audio duration stop");
+          stopRecording();
+        }
       },
     );
   }
@@ -2235,6 +2273,7 @@ class ChatController extends FullLifeCycleController
       return;
     }
     var filePath = await record.stop();
+    debugPrint("audio file path $filePath");
     File(filePath!).delete();
     _audioTimer?.cancel();
     record.dispose();
@@ -2247,46 +2286,50 @@ class ChatController extends FullLifeCycleController
     });
   }
 
-  startRecording() async {
-    if (playingChat != null) {
-      playingChat!.mediaChatMessage!.isPlaying = false;
-      playingChat = null;
-      // player.stop();
-      chatList.refresh();
-    }
-    var busyStatus = !profile.isGroupProfile.checkNull()
-        ? await Mirrorfly.isBusyStatusEnabled()
-        : false;
-    if (!busyStatus.checkNull()) {
-      // var permission = await AppPermission.getStoragePermission();
-      var microPhonePermissionStatus =
-          await AppPermission.checkAndRequestPermissions(
-              permissions: [Permission.microphone],
-              permissionIcon: audioPermission,
-              permissionContent: getTranslated("audioPermissionContent"),
-              permissionPermanentlyDeniedContent:
-                  getTranslated("microPhonePermissionDeniedContent"));
-      debugPrint(
-          "microPhone Permission Status---> $microPhonePermissionStatus");
-      if (microPhonePermissionStatus) {
-        isUserTyping(false);
-        record = AudioRecorder();
-        _isDisposed = false;
-        timerInit("00:00");
-        isAudioRecording(Constants.audioRecording);
-        startTimer();
-        await record.start(const RecordConfig(),
-            path:
-                "$audioSavePath/audio_${DateTime.now().millisecondsSinceEpoch}.m4a");
-        Future.delayed(const Duration(seconds: 300), () {
-          if (isAudioRecording.value == Constants.audioRecording) {
-            stopRecording();
-          }
-        });
+  startRecording({required int audioDurationInSec}) async {
+    await session.configure(const AudioSessionConfiguration.speech());
+    if (await session.setActive(true)) {
+      debugPrint('#ListenBackgroundMusic os accepted your request');
+      if (playingChat != null) {
+        playingChat!.mediaChatMessage!.isPlaying = false;
+        playingChat = null;
+        // player.stop();
+        chatList.refresh();
+      }
+      var busyStatus = !profile.isGroupProfile.checkNull()
+          ? await Mirrorfly.isBusyStatusEnabled()
+          : false;
+      if (!busyStatus.checkNull()) {
+        // var permission = await AppPermission.getStoragePermission();
+        var microPhonePermissionStatus =
+            await AppPermission.checkAndRequestPermissions(
+                permissions: [Permission.microphone],
+                permissionIcon: audioPermission,
+                permissionContent: getTranslated("audioPermissionContent"),
+                permissionPermanentlyDeniedContent:
+                    getTranslated("microPhonePermissionDeniedContent"));
+        debugPrint(
+            "microPhone Permission Status---> $microPhonePermissionStatus");
+        if (microPhonePermissionStatus) {
+          isUserTyping(false);
+          record = AudioRecorder();
+          _isDisposed = false;
+          timerInit("00:00");
+          isAudioRecording(Constants.audioRecording);
+          startTimer(audioDurationInSec: audioDurationInSec);
+          await record.start(const RecordConfig(),
+              path:
+                  "$audioSavePath/audio_${DateTime.now().millisecondsSinceEpoch}.m4a");
+          debugPrint(
+              "audio duration in sec ---> $audioDurationInSec ${isAudioRecording.value}");
+        }
+      } else {
+        //show busy status popup
+        showBusyStatusAlert(
+            () => startRecording(audioDurationInSec: audioDurationInSec));
       }
     } else {
-      //show busy status popup
-      showBusyStatusAlert(startRecording);
+      debugPrint('#ListenBackgroundMusic os does not accepted your request ');
     }
   }
 
@@ -2309,6 +2352,7 @@ class ChatController extends FullLifeCycleController
   }
 
   Future<void> deleteRecording() async {
+    debugPrint("Audio saved path---> $recordedAudioPath");
     File(recordedAudioPath).delete();
     isUserTyping(messageController.text.trim().isNotEmpty);
     isAudioRecording(Constants.audioRecordInitial);
@@ -2658,7 +2702,7 @@ class ChatController extends FullLifeCycleController
   getParticipantsNameAsCsv(String jid) {
     Mirrorfly.getGroupMembersList(
         jid: jid,
-        fetchFromServer: false,
+        fetchFromServer: true,
         flyCallBack: (FlyResponse response) {
           if (response.isSuccess && response.hasData) {
             var str = <String>[];
@@ -2674,6 +2718,7 @@ class ChatController extends FullLifeCycleController
               return a.toLowerCase().compareTo(b.toLowerCase());
             });
             groupParticipantsName(str.join(", "));
+            memberOfGroup();
           }
         });
   }
@@ -3169,6 +3214,12 @@ class ChatController extends FullLifeCycleController
   @override
   void onPaused() {
     LogMessage.d("LifeCycle", "chat onPaused");
+
+    var id = SessionManagement.getCurrentChatJID();
+    final bool isAvaialbe = Get.isRegistered<ChatController>(tag: id);
+    LogMessage.d("LifeCycle",
+        "chat onPaused, current chatJid: $id, isAvaialbe: $isAvaialbe, hasPaused: $hasPaused");
+
     hasPaused = true;
     setOnGoingUserGone();
     saveUnsentMessage();
@@ -3181,33 +3232,42 @@ class ChatController extends FullLifeCycleController
 
     ///when notification drawer was dragged then app goes inactive,when closes the drawer its trigger onResume
     ///so that this checking hasPaused added, this will invoke only when app is opened from background state.
-    if (hasPaused) {
-      hasPaused = false;
-      cancelNotification();
-      setChatStatus();
-      getAvailableFeatures();
 
-      //to avoid calling without initializedMessageList
-      if (initializedMessageList) {
-        /// we loading next messages instead of load message because the new messages received will be available in load next message
-        _loadNextMessages();
-      }
-      if (!KeyboardVisibilityController().isVisible) {
-        if (focusNode.hasFocus) {
-          focusNode.unfocus();
-          Future.delayed(const Duration(milliseconds: 100), () {
-            focusNode.requestFocus();
-          });
-        }
-        if (searchfocusNode.hasFocus) {
-          searchfocusNode.unfocus();
-          Future.delayed(const Duration(milliseconds: 100), () {
-            searchfocusNode.requestFocus();
-          });
-        }
-      }
-      setOnGoingUserAvail();
-    }
+    /// We've commented the below - REASON:- onResume is triggered multiple times
+    /// when we go background and comes foreground whether we are in chat or dashboard screen
+    /// so to resolve temporarily we've moved this code to onConnected() so when goes
+    /// background xmpp disconnected and when comes foreground it will call onConnected()
+
+    /// Need to check why the onResume() even called after the current controller
+    /// with the tag is already disposed
+
+    // if (hasPaused) {
+    //   hasPaused = false;
+    //   cancelNotification();
+    //   setChatStatus();
+    //   getAvailableFeatures();
+    //
+    //   //to avoid calling without initializedMessageList
+    //   if (initializedMessageList) {
+    //     /// we loading next messages instead of load message because the new messages received will be available in load next message
+    //     _loadNextMessages();
+    //   }
+    //   if (!KeyboardVisibilityController().isVisible) {
+    //     if (focusNode.hasFocus) {
+    //       focusNode.unfocus();
+    //       Future.delayed(const Duration(milliseconds: 100), () {
+    //         focusNode.requestFocus();
+    //       });
+    //     }
+    //     if (searchfocusNode.hasFocus) {
+    //       searchfocusNode.unfocus();
+    //       Future.delayed(const Duration(milliseconds: 100), () {
+    //         searchfocusNode.requestFocus();
+    //       });
+    //     }
+    //   }
+    //   setOnGoingUserAvail();
+    // }
   }
 
   void markConversationReadNotifyUI() {
@@ -3226,6 +3286,9 @@ class ChatController extends FullLifeCycleController
   @override
   void onInactive() {
     LogMessage.d("LifeCycle", "chat onInactive");
+    if (_audioTimer?.isActive.checkNull() == true) {
+      stopRecording();
+    }
     final isAttached = newScrollController?.isAttached ?? false;
     if (isAttached) {
       newScrollController = null;
@@ -3288,8 +3351,39 @@ class ChatController extends FullLifeCycleController
     Future.delayed(const Duration(milliseconds: 2000), () {
       setChatStatus();
     });
+
+    getAvailableFeatures();
+
     if (!chatProfileCalled) {
-      getChatProfile();
+      LogMessage.d("#chatcontroller", '#onConnected #chatprofile #called');
+      getChatProfile(); // loads all the message via ready
+    } else {
+      // load only last message
+      LogMessage.d(
+          "#chatcontroller", '#onConnected #chatprofile #already called');
+      cancelNotification();
+      setChatStatus();
+
+      //to avoid calling without initializedMessageList
+      if (initializedMessageList) {
+        /// we loading next messages instead of load message because the new messages received will be available in load next message
+        _loadNextMessages();
+      }
+      if (!KeyboardVisibilityController().isVisible) {
+        if (focusNode.hasFocus) {
+          focusNode.unfocus();
+          Future.delayed(const Duration(milliseconds: 100), () {
+            focusNode.requestFocus();
+          });
+        }
+        if (searchfocusNode.hasFocus) {
+          searchfocusNode.unfocus();
+          Future.delayed(const Duration(milliseconds: 100), () {
+            searchfocusNode.requestFocus();
+          });
+        }
+      }
+      setOnGoingUserAvail();
     }
   }
 
@@ -3597,7 +3691,6 @@ class ChatController extends FullLifeCycleController
 
   void setOnGoingUserGone() {
     Mirrorfly.setOnGoingChatUser(jid: Constants.emptyString);
-    SessionManagement.setCurrentChatJID(Constants.emptyString);
   }
 
   void setOnGoingUserAvail() {
@@ -3684,15 +3777,11 @@ class ChatController extends FullLifeCycleController
   }
 
   void loadLastMessages(ChatMessageModel chatMessageModel) async {
-
     _loadNextMessages(showLoading: false);
-
   }
 
   Future<void> loadPrevORNextMessagesLoad({bool? isReplyMessage}) async {
-
-      _loadPreviousMessages(showLoading: false);
-
+    _loadPreviousMessages(showLoading: false);
   }
 
   void handleUnreadMessageSeparator(
@@ -4007,4 +4096,11 @@ class ChatController extends FullLifeCycleController
       toToast(getTranslated("noInternetConnection"));
     }
   }
+}
+
+enum AttachmentType {
+  camera,
+  gallery,
+  audio,
+  document,
 }

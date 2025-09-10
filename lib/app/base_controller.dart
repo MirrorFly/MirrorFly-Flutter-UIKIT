@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -1303,6 +1302,9 @@ class BaseController {
     LogMessage.d('onConnected', result.toString());
     if (Get.isRegistered<ChatController>(tag: controllerTag)) {
       Get.find<ChatController>(tag: controllerTag).onConnected();
+    } else {
+      LogMessage.d(
+          'onConnected', "ChatController not found with tag: $controllerTag");
     }
     if (Get.isRegistered<ChatInfoController>()) {
       Get.find<ChatInfoController>().onConnected();

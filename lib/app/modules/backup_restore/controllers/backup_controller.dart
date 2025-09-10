@@ -6,7 +6,8 @@ import 'package:get/get.dart';
 import 'package:mirrorfly_plugin/logmessage.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/app_localizations.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/constants.dart';
-import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart' show SessionManagement;
+import 'package:mirrorfly_uikit_plugin/app/data/session_management.dart'
+    show SessionManagement;
 import 'package:mirrorfly_uikit_plugin/app/extensions/extensions.dart';
 
 import '../../../app_style_config.dart';
@@ -15,7 +16,7 @@ import '../../../data/utils.dart';
 import '../backup_utils/backup_restore_manager.dart';
 import '../backup_utils/backup_utils.dart';
 
-class BackupController extends FullLifeCycleController with FullLifeCycleMixin{
+class BackupController extends FullLifeCycleController with FullLifeCycleMixin {
   bool get isAndroid => Platform.isAndroid;
 
   var driveAccessible = false.obs;
@@ -56,7 +57,6 @@ class BackupController extends FullLifeCycleController with FullLifeCycleMixin{
   var backupTotalSize = "0 KB".obs;
 
   var backUpEmailId = ''.obs;
-
 
   @override
   Future<void> onInit() async {
@@ -115,7 +115,7 @@ class BackupController extends FullLifeCycleController with FullLifeCycleMixin{
         isBackupFound(backupFileDetails.fileId?.isNotEmpty);
         backUpFoundDate(backupFileDetails.fileCreatedDate);
         backUpFoundSize(backupFileDetails.fileSize);
-      }else{
+      } else {
         isBackupFound(false);
         backUpFoundDate('');
         backUpFoundSize('');
@@ -201,7 +201,8 @@ class BackupController extends FullLifeCycleController with FullLifeCycleMixin{
             "Backup selected file path => ${result.files.single.path}");
         isRestoreStarted(true);
         // Mirrorfly.restoreBackup(backupPath: result.files.single.path ?? "");
-        backupRestoreManager.restoreBackup(backupFilePath: result.files.single.path ?? "");
+        backupRestoreManager.restoreBackup(
+            backupFilePath: result.files.single.path ?? "");
       } else {
         LogMessage.d("Backup Controller", "Restore file is not Selected");
       }
@@ -243,8 +244,8 @@ class BackupController extends FullLifeCycleController with FullLifeCycleMixin{
       // }
       // DialogUtils.showLoading(dialogStyle: AppStyleConfig.dialogStyle, title: "Fetching Backup Details");
       // Future.delayed(const Duration(seconds: 3),(){
-        checkForBackUpFiles();
-        // DialogUtils.hideLoading();
+      checkForBackUpFiles();
+      // DialogUtils.hideLoading();
       // });
 
       // BackupRestoreManager.instance.completeWorkManagerTask();
@@ -252,7 +253,7 @@ class BackupController extends FullLifeCycleController with FullLifeCycleMixin{
       isRemoteBackupStarted(false);
       isRemoteUploadStarted(false);
       LogMessage.d("Backup Controller", "Upload Backup File Error => $error");
-    },cancelOnError: true);
+    }, cancelOnError: true);
   }
 
   void serverUploadSuccess() {
@@ -389,15 +390,13 @@ class BackupController extends FullLifeCycleController with FullLifeCycleMixin{
   }
 
   void cancelLocalProcess() {
-
-    if(isLocalBackupStarted.value) {
+    if (isLocalBackupStarted.value) {
       backupRestoreManager.cancelBackup();
     }
 
-    if (isRestoreStarted.value){
+    if (isRestoreStarted.value) {
       backupRestoreManager.cancelRestore();
     }
-
   }
 
   void cancelRemoteProcess() {
@@ -405,7 +404,7 @@ class BackupController extends FullLifeCycleController with FullLifeCycleMixin{
       backupRestoreManager.cancelBackup();
     }
 
-    if (isRemoteUploadStarted.value){
+    if (isRemoteUploadStarted.value) {
       backupRestoreManager.cancelRemoteBackupUpload();
     }
 
@@ -415,31 +414,25 @@ class BackupController extends FullLifeCycleController with FullLifeCycleMixin{
   }
 
   @override
-  void onDetached() {
-
-  }
+  void onDetached() {}
 
   @override
-  void onHidden() {
-
-  }
+  void onHidden() {}
 
   @override
-  void onInactive() {
-
-  }
+  void onInactive() {}
 
   @override
-  void onPaused() {
-
-  }
+  void onPaused() {}
 
   @override
   void onResumed() {
-    if (driveAccessible.value || backUpEmailId.isNotEmpty || isBackupFound.value){
+    if (driveAccessible.value ||
+        backUpEmailId.isNotEmpty ||
+        isBackupFound.value) {
       backupRestoreManager.checkIfAccountIsValid().then((isValid) {
         LogMessage.d("Backup Controller", "checkIfAccountIsValid => $isValid");
-        if (!isValid){
+        if (!isValid) {
           driveAccessible(false);
           isBackupFound(false);
           backUpEmailId('');
@@ -449,6 +442,4 @@ class BackupController extends FullLifeCycleController with FullLifeCycleMixin{
       });
     }
   }
-
-
 }

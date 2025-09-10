@@ -76,6 +76,7 @@ class ChatMessageModel {
   String? messageTextContent;
   String messageType;
   List<MessageMetaData> metaData;
+
   /// A list of userid associated with the mentioned Users.
   List<String>? mentionedUsersIds;
   ReplyParentChatMessage? replyParentChatMessage;
@@ -109,7 +110,9 @@ class ChatMessageModel {
               : MessageCustomField.fromJson(json["messageCustomField"]),
           messageId: json["messageId"],
           messageSentTime: json["messageSentTime"],
-          meetChatMessage:json['meetChatMessage'] == null ? null: MeetChatMessage.fromJson(json['meetChatMessage']),
+          meetChatMessage: json['meetChatMessage'] == null
+              ? null
+              : MeetChatMessage.fromJson(json['meetChatMessage']),
           messageStatus: json["messageStatus"].toString().obs,
           isMessageEdited: json["isMessageEdited"].toString().toBool().obs,
           messageTextContent: json["messageTextContent"],
@@ -118,8 +121,9 @@ class ChatMessageModel {
               ? []
               : List<MessageMetaData>.from(
                   json["metaData"]!.map((x) => MessageMetaData.fromJson(x))),
-          mentionedUsersIds: json["mentionedUsersIds"] == null ? []  : List<String>.from(json["mentionedUsersIds"].map((x) => x)),
-
+          mentionedUsersIds: json["mentionedUsersIds"] == null
+              ? []
+              : List<String>.from(json["mentionedUsersIds"].map((x) => x)),
           replyParentChatMessage: json["replyParentChatMessage"] == null
               ? null
               : ReplyParentChatMessage.fromJson(json["replyParentChatMessage"]),
@@ -159,7 +163,7 @@ class ChatMessageModel {
         "metaData": metaData,
         "mentionedUsersIds": mentionedUsersIds == null
             ? null
-         : List<String>.from(mentionedUsersIds!.map((x) => x)),
+            : List<String>.from(mentionedUsersIds!.map((x) => x)),
         "replyParentChatMessage":
             replyParentChatMessage ?? replyParentChatMessage?.toJson(),
         "senderNickName": senderNickName,
@@ -346,6 +350,7 @@ class ReplyParentChatMessage {
   LocationChatMessage? locationChatMessage;
   ContactChatMessage? contactChatMessage;
   MediaChatMessage? mediaChatMessage;
+
   /// A list of userid associated with the mentioned Users.
   MeetChatMessage? meetChatMessage;
   List<String>? mentionedUsersIds;
@@ -372,8 +377,12 @@ class ReplyParentChatMessage {
         mediaChatMessage: json["mediaChatMessage"] == null
             ? null
             : MediaChatMessage.fromJson(json["mediaChatMessage"]),
-        meetChatMessage:json['meetChatMessage'] == null ? null: MeetChatMessage.fromJson(json['meetChatMessage']),
-        mentionedUsersIds: json["mentionedUsersIds"] == null ? []  : List<String>.from(json["mentionedUsersIds"].map((x) => x)),
+        meetChatMessage: json['meetChatMessage'] == null
+            ? null
+            : MeetChatMessage.fromJson(json['meetChatMessage']),
+        mentionedUsersIds: json["mentionedUsersIds"] == null
+            ? []
+            : List<String>.from(json["mentionedUsersIds"].map((x) => x)),
       );
 
   Map<String, dynamic> toJson() => {

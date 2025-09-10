@@ -5,11 +5,13 @@ import '../../../../extensions/extensions.dart';
 import '../settings_widgets.dart';
 import 'notification_alert_controller.dart';
 
-class NotificationAlertView extends NavViewStateful<NotificationAlertController> {
+class NotificationAlertView
+    extends NavViewStateful<NotificationAlertController> {
   const NotificationAlertView({Key? key}) : super(key: key);
 
   @override
-NotificationAlertController createController({String? tag}) => Get.put(NotificationAlertController());
+  NotificationAlertController createController({String? tag}) =>
+      Get.put(NotificationAlertController());
 
   @override
   Widget build(BuildContext context) {
@@ -34,13 +36,13 @@ NotificationAlertController createController({String? tag}) => Get.put(Notificat
             notificationItem(
                 title: "Vibration",
                 subtitle:
-                "Vibrate when a new message arrives while application is running",
+                    "Vibrate when a new message arrives while application is running",
                 on: controller.displayVibrationPreference,
                 onTap: () => controller.vibration()),
             notificationItem(
                 title: "Mute Notification",
                 subtitle:
-                "This will mute all notifications alerts for incoming messages",
+                    "This will mute all notifications alerts for incoming messages",
                 on: controller.displayMuteNotificationPreference,
                 onTap: () => controller.mute()),
           ],
@@ -48,5 +50,4 @@ NotificationAlertController createController({String? tag}) => Get.put(Notificat
       }),
     );
   }
-
 }

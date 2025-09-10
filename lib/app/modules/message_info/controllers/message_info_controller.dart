@@ -74,7 +74,8 @@ class MessageInfoController extends GetxController {
         deniedContent: getTranslated("writeStoragePermissionDeniedContent"));
     if (permission) {
       debugPrint("media permission granted");
-      if (Platform.isIOS || await AppPermission.checkPermission(Permission.notification)) {
+      if (Platform.isIOS ||
+          await AppPermission.checkPermission(Permission.notification)) {
         Mirrorfly.downloadMedia(messageId: messageId);
       } else {
         log("Notification permission is not granted !");

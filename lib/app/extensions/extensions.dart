@@ -4,8 +4,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:mirrorfly_uikit_plugin/app/model/arguments.dart' show ChatViewArguments;
-import 'package:mirrorfly_uikit_plugin/mention_text_field/src/mention_tag_text_editing_controller.dart' show MentionTagTextEditingController;
+import 'package:mirrorfly_uikit_plugin/app/model/arguments.dart'
+    show ChatViewArguments;
+import 'package:mirrorfly_uikit_plugin/mention_text_field/src/mention_tag_text_editing_controller.dart'
+    show MentionTagTextEditingController;
 import '../common/constants.dart';
 import '../data/helper.dart';
 import '../data/mention_utils.dart';
@@ -92,7 +94,6 @@ abstract class NavViewStateful<T extends GetxController>
 }
 
 class NavViewState<T extends GetxController> extends State<NavViewStateful<T>> {
-
   @override
   void initState() {
     debugPrint("NavViewState key ${widget.tag}");
@@ -102,7 +103,6 @@ class NavViewState<T extends GetxController> extends State<NavViewStateful<T>> {
     LogMessage.d("NavViewState : initState", T.toString());
     // LogMessage.d("NavViewState : isRegistered", {Get.isRegistered<T>()});
     // LogMessage.d("NavViewState : isRegistered tag", {Get.isRegistered<T>(tag: widget.tag)});
-
   }
 
   @override
@@ -121,10 +121,11 @@ class NavViewState<T extends GetxController> extends State<NavViewStateful<T>> {
     ///
 
     final dynamic navArgs = NavUtils.arguments;
-    final ChatViewArguments? nextArgs = navArgs is ChatViewArguments ? navArgs : null;
-    LogMessage.d("NavViewState: ", "nextArgs?.chatJid: ${nextArgs?.chatJid}" );
+    final ChatViewArguments? nextArgs =
+        navArgs is ChatViewArguments ? navArgs : null;
+    LogMessage.d("NavViewState: ", "nextArgs?.chatJid: ${nextArgs?.chatJid}");
     final bool isSameTag = widget.tag == nextArgs?.chatJid;
-    LogMessage.d("NavViewState: ", "widget.tag: ${widget.tag}" );
+    LogMessage.d("NavViewState: ", "widget.tag: ${widget.tag}");
 
     if (widget.tag != null) {
       bool isControllerAvailable = Get.isRegistered<T>(tag: widget.tag);
@@ -148,17 +149,17 @@ class NavViewState<T extends GetxController> extends State<NavViewStateful<T>> {
   }
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return widget.build(context);
   }
-
 }
 
 extension Regexparesing on RegExp {
-  Iterable<RegExpMatch> matcher(String text){
+  Iterable<RegExpMatch> matcher(String text) {
     return allMatches(text);
   }
-  List<RegExpMatch> findMatchedPosition(String text){
+
+  List<RegExpMatch> findMatchedPosition(String text) {
     var list = <RegExpMatch>[];
     allMatches(text).forEach((match) {
       list.add(match);
@@ -166,13 +167,15 @@ extension Regexparesing on RegExp {
     return list;
   }
 }
+
 extension RegexpMatcharesing on RegExpMatch {
-  String string(){
+  String string() {
     return "groupNames : $groupNames, pattern : $pattern, start : $start, end : $end, input : $input";
   }
 }
 
-extension MentionTagTextEditingControllerExtension on MentionTagTextEditingController{
+extension MentionTagTextEditingControllerExtension
+    on MentionTagTextEditingController {
   String get formattedText {
     const replaceString = "@[?]";
     debugPrint(text);
@@ -184,7 +187,7 @@ extension MentionTagTextEditingControllerExtension on MentionTagTextEditingContr
     var tags = mentions;
     // // Sort tags by startIndex to avoid overlapping replacements
     // tags.sort((a, b) => a.startIndex.compareTo(b.startIndex));
-    return List<String>.from(tags.map((item)=>item));
+    return List<String>.from(tags.map((item) => item));
   }
 
   /*setCustomText(String content,List<ProfileDetails> profileDetails){
@@ -213,17 +216,25 @@ extension MentionTagTextEditingControllerExtension on MentionTagTextEditingContr
 
   }*/
 
-  List<(String, Object?, Widget?)> getInitialMentions(String content,List<ProfileDetails> profileDetails){
+  List<(String, Object?, Widget?)> getInitialMentions(
+      String content, List<ProfileDetails> profileDetails) {
     List<(String, Object?, Widget?)> tuples = [];
     var allMatches = MentionUtils.mentionRegex.allMatches(content).toList();
     int index = 0;
     int lastMatchEnd = 0;
-    var text="";
+    var text = "";
     for (var currentMatch in allMatches) {
-      text += content.substring(lastMatchEnd,currentMatch.start+1);
+      text += content.substring(lastMatchEnd, currentMatch.start + 1);
       String id = profileDetails[index].jid.checkNull().split("@")[0];
       String name = profileDetails[index].getName();
-      tuples.add((name,id,Text('@$name',style: const TextStyle(color: Colors.blueAccent),)));
+      tuples.add((
+        name,
+        id,
+        Text(
+          '@$name',
+          style: const TextStyle(color: Colors.blueAccent),
+        )
+      ));
       lastMatchEnd = currentMatch.end;
       index++;
     }

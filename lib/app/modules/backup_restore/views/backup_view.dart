@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mirrorfly_uikit_plugin/app/modules/backup_restore/controllers/backup_controller.dart' show BackupController;
+import 'package:mirrorfly_uikit_plugin/app/modules/backup_restore/controllers/backup_controller.dart'
+    show BackupController;
 
 import '../../../app_style_config.dart';
 import '../../../common/app_localizations.dart';
@@ -134,7 +135,8 @@ class BackupView extends NavViewStateful<BackupController> {
                                   ),
                                   IconButton(
                                       icon: const Icon(Icons.close),
-                                      onPressed: ()=> controller.cancelRemoteProcess()),
+                                      onPressed: () =>
+                                          controller.cancelRemoteProcess()),
                                 ],
                               ),
                               const SizedBox(
@@ -289,7 +291,8 @@ class BackupView extends NavViewStateful<BackupController> {
                               ),
                               IconButton(
                                   icon: const Icon(Icons.close),
-                                  onPressed: () => controller.cancelLocalProcess()),
+                                  onPressed: () =>
+                                      controller.cancelLocalProcess()),
                             ],
                           ),
                           Row(

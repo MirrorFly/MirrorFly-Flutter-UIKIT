@@ -6,7 +6,8 @@ import 'package:get/get.dart';
 import 'package:mirrorfly_uikit_plugin/app/modules/chat/views/mention_list_view.dart';
 import 'package:mirrorfly_uikit_plugin/app/routes/route_settings.dart';
 import 'package:mirrorfly_uikit_plugin/mention_text_field/src/mention_tag_decoration.dart';
-import 'package:mirrorfly_uikit_plugin/mention_text_field/src/mention_tag_text_field.dart' show MentionTagTextField;
+import 'package:mirrorfly_uikit_plugin/mention_text_field/src/mention_tag_text_field.dart'
+    show MentionTagTextField;
 import '../../../app_style_config.dart';
 import '../../../common/app_localizations.dart';
 import '../../../common/constants.dart';

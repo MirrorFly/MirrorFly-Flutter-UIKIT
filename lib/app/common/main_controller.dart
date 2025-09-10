@@ -8,19 +8,16 @@ import 'package:get/get.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:mirrorfly_plugin/mirrorfly.dart';
 import 'package:mirrorfly_uikit_plugin/app/common/de_bouncer.dart';
-import 'package:mirrorfly_uikit_plugin/app/data/permissions.dart' show AppPermission;
+
 import 'package:permission_handler/permission_handler.dart';
 
 import '../base_controller.dart';
 import '../common/constants.dart';
-import '../data/pushnotification.dart';
 import '../data/session_management.dart';
 import '../data/utils.dart';
 import '../extensions/extensions.dart';
-import '../model/arguments.dart';
 import '../modules/archived_chats/archived_chat_list_controller.dart';
 import '../modules/dashboard/controllers/dashboard_controller.dart';
-// import '../modules/notification/notification_builder.dart';
 import '../routes/route_settings.dart';
 
 class MainController extends FullLifeCycleController
@@ -523,11 +520,11 @@ class MainController extends FullLifeCycleController
   }
 
   void _setBadgeCount(int count) {
-   // FlutterAppBadge.count(count);
+    // FlutterAppBadge.count(count);
   }
 
   void _removeBadge() {
-   // FlutterAppBadge.count(0);
+    // FlutterAppBadge.count(0);
   }
 
   void onMessageDeleteNotifyUI(

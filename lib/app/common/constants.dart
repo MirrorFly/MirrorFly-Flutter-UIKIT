@@ -518,6 +518,6 @@ class Constants {
   static const String chatClosed = "#THIS_CHAT_IS_CLOSED";
 }
 
-
 // Icon Package Name
-String? iconPackageName = Constants.isUIKIT ? 'mirrorfly_uikit_plugin/lib' : null;
+String? iconPackageName =
+    Constants.isUIKIT ? 'mirrorfly_uikit_plugin/lib' : null;

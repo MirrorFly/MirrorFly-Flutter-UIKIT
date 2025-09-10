@@ -201,8 +201,9 @@ class ParticipantsView extends NavViewStateful<AddParticipantsController> {
   Widget callParticipantsView(
       BuildContext context, ParticipantItemStyle style) {
     return Obx(() {
-      return controller.callList.length > 1 ? ListView.builder(
-          shrinkWrap: true,
+      return controller.callList.length > 1
+          ? ListView.builder(
+              shrinkWrap: true,
               itemCount: controller.callList.length,
               physics: const AlwaysScrollableScrollPhysics(),
               itemBuilder: (context, index) {

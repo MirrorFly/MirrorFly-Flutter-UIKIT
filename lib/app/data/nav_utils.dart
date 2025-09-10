@@ -13,9 +13,13 @@ class NavUtils {
   static double get height => size.height;
 
   // Returns the safe area padding of the current media query.
-  static double get safeAreaPadding =>
-      (MediaQuery.of(MirrorflyUikit.instance.globalNavigatorKey!.currentContext!).viewPadding.top +
-          MediaQuery.of(MirrorflyUikit.instance.globalNavigatorKey!.currentContext!).viewPadding.bottom);
+  static double get safeAreaPadding => (MediaQuery.of(
+              MirrorflyUikit.instance.globalNavigatorKey!.currentContext!)
+          .viewPadding
+          .top +
+      MediaQuery.of(MirrorflyUikit.instance.globalNavigatorKey!.currentContext!)
+          .viewPadding
+          .bottom);
 
   // Returns the current BuildContext using the navigator key.
   static BuildContext get currentContext =>
@@ -33,7 +37,7 @@ class NavUtils {
   static dynamic get parameters =>
       MirrorFlyNavigationObserver.current?.settings.name != null
           ? Uri.parse(MirrorFlyNavigationObserver.current!.settings.name!)
-          .queryParameters
+              .queryParameters
           : null;
   static dynamic get arguments =>
       MirrorFlyNavigationObserver.current?.settings.arguments != null
@@ -53,12 +57,12 @@ class NavUtils {
   }
 
   static offNamed(
-      String page, {
-        dynamic arguments,
-        int? id,
-        bool preventDuplicates = true,
-        Map<String, String>? parameters,
-      }) {
+    String page, {
+    dynamic arguments,
+    int? id,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+  }) {
     if (preventDuplicates &&
         page == MirrorFlyNavigationObserver.current?.settings.name) {
       debugPrint("offNamed: $page return null");
@@ -75,9 +79,9 @@ class NavUtils {
 
   static offAllNamed(String newRouteName,
       {RoutePredicate? predicate,
-        dynamic arguments,
-        int? id,
-        Map<String, String>? parameters}) {
+      dynamic arguments,
+      int? id,
+      Map<String, String>? parameters}) {
     if (parameters != null) {
       final uri = Uri(path: newRouteName, queryParameters: parameters);
       newRouteName = uri.toString();
@@ -92,12 +96,12 @@ class NavUtils {
   }
 
   static toNamed(
-      String page, {
-        dynamic arguments,
-        int? id,
-        bool preventDuplicates = true,
-        Map<String, String>? parameters,
-      }) {
+    String page, {
+    dynamic arguments,
+    int? id,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+  }) {
     if (preventDuplicates &&
         page == MirrorFlyNavigationObserver.current?.settings.name) {
       return null;
@@ -111,10 +115,10 @@ class NavUtils {
   }
 
   static to(
-      dynamic page, {
-        dynamic arguments,
-        int? id,
-      }) {
+    dynamic page, {
+    dynamic arguments,
+    int? id,
+  }) {
     return Navigator.push(
       currentContext,
       MaterialPageRoute<void>(

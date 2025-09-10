@@ -205,8 +205,8 @@ class MediaMessageOverlay extends StatelessWidget {
 
 void uploadMedia(String messageId) async {
   if (await AppUtils.isNetConnected()) {
-    if (Platform.isIOS || await AppPermission.checkPermission(
-            Permission.notification)) {
+    if (Platform.isIOS ||
+        await AppPermission.checkPermission(Permission.notification)) {
       Mirrorfly.uploadMedia(messageId: messageId);
     } else {
       log("Notification permission is not granted !");
@@ -225,7 +225,8 @@ void downloadMedia(String messageId) async {
         deniedContent: getTranslated("writeStoragePermissionDeniedContent"));
     if (permission) {
       debugPrint("media permission granted");
-      if (Platform.isIOS || await AppPermission.checkPermission(Permission.notification)) {
+      if (Platform.isIOS ||
+          await AppPermission.checkPermission(Permission.notification)) {
         Mirrorfly.downloadMedia(messageId: messageId);
       } else {
         log("Notification permission is not granted !");

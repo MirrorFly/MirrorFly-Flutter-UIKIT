@@ -20,7 +20,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:googleapis/drive/v3.dart' as drive;
 
-
 import '../../../data/utils.dart';
 import 'backup_utils.dart';
 
@@ -29,10 +28,7 @@ class BackupRestoreManager {
   BackupRestoreManager._internal();
 
   // Singleton instance
-  static final BackupRestoreManager instance =
-      BackupRestoreManager._internal();
-
-
+  static final BackupRestoreManager instance = BackupRestoreManager._internal();
 
   final icloudSyncPlugin = IcloudStorageSync();
 
@@ -83,7 +79,6 @@ class BackupRestoreManager {
 
   Completer<void>? backupCompleter;
 
-
   Future<bool> initialize({required iCloudContainerID}) async {
     if (_isInitialized) {
       LogMessage.d("BackupRestoreManager", "Already initialized.");
@@ -94,7 +89,8 @@ class BackupRestoreManager {
 
     _iCloudContainerID = iCloudContainerID;
     // _clientId = googleClientId;
-    _backupFileName = "Backup_${SessionManagement.getUsername() ?? SessionManagement.getUserJID()?.split("@").first}";
+    _backupFileName =
+        "Backup_${SessionManagement.getUsername() ?? SessionManagement.getUserJID()?.split("@").first}";
     debugPrint("_backupFileName $_backupFileName");
 
     /// WorkManager Initialisation
@@ -155,8 +151,9 @@ class BackupRestoreManager {
       LogMessage.d("BackupRestoreManager", "driveApi $driveApi");
 
       return true;
-    } on PlatformException catch (e){
-      debugPrint("Auth token could not be recovered. Trying re-authentication... Details => $e");
+    } on PlatformException catch (e) {
+      debugPrint(
+          "Auth token could not be recovered. Trying re-authentication... Details => $e");
       // Optionally force sign out and let user sign in again
       await GoogleSignIn().signOut();
       return false;
@@ -197,24 +194,35 @@ class BackupRestoreManager {
         });
       }*/
       // Sort the files by modificationDate in descending order
-      iCloudFiles.sort((a, b) => (b.lastSyncDt ?? DateTime.fromMillisecondsSinceEpoch(0))
+      iCloudFiles.sort((a, b) => (b.lastSyncDt ??
+              DateTime.fromMillisecondsSinceEpoch(0))
           .compareTo(a.lastSyncDt ?? DateTime.fromMillisecondsSinceEpoch(0)));
 
-      CloudFiles? iCloudFile = iCloudFiles.firstWhereOrNull(
-          (file) => file.title == backupFileName);
+      CloudFiles? iCloudFile =
+          iCloudFiles.firstWhereOrNull((file) => file.title == backupFileName);
       if (iCloudFile != null) {
-
-        LogMessage.d("BackupRestoreManager", "===================================================");
-        LogMessage.d("BackupRestoreManager", "iCloudFiles found under the container ID filePath: ${iCloudFile.filePath}");
-        LogMessage.d("BackupRestoreManager", "iCloudFiles found under the container ID file Id: ${iCloudFile.id}");
-        LogMessage.d("BackupRestoreManager", "iCloudFiles found under the container ID file Date: ${iCloudFile.fileDate}");
-        LogMessage.d("BackupRestoreManager", "iCloudFiles found under the container ID file hasUploaded: ${iCloudFile.hasUploaded}");
-        LogMessage.d("BackupRestoreManager", "iCloudFiles found under the container ID file lastSyncDt: ${iCloudFile.lastSyncDt}");
-        LogMessage.d("BackupRestoreManager", "iCloudFiles found under the container ID file relativePath: ${iCloudFile.relativePath}");
-        LogMessage.d("BackupRestoreManager", "iCloudFiles found under the container ID file sizeInBytes: ${iCloudFile.sizeInBytes}");
-        LogMessage.d("BackupRestoreManager", "iCloudFiles found under the container ID file title: ${iCloudFile.title}");
-        LogMessage.d("BackupRestoreManager", "===================================================");
-        LogMessage.d("BackupRestoreManager", "backupFileName to check the file presence $backupFileName");
+        LogMessage.d("BackupRestoreManager",
+            "===================================================");
+        LogMessage.d("BackupRestoreManager",
+            "iCloudFiles found under the container ID filePath: ${iCloudFile.filePath}");
+        LogMessage.d("BackupRestoreManager",
+            "iCloudFiles found under the container ID file Id: ${iCloudFile.id}");
+        LogMessage.d("BackupRestoreManager",
+            "iCloudFiles found under the container ID file Date: ${iCloudFile.fileDate}");
+        LogMessage.d("BackupRestoreManager",
+            "iCloudFiles found under the container ID file hasUploaded: ${iCloudFile.hasUploaded}");
+        LogMessage.d("BackupRestoreManager",
+            "iCloudFiles found under the container ID file lastSyncDt: ${iCloudFile.lastSyncDt}");
+        LogMessage.d("BackupRestoreManager",
+            "iCloudFiles found under the container ID file relativePath: ${iCloudFile.relativePath}");
+        LogMessage.d("BackupRestoreManager",
+            "iCloudFiles found under the container ID file sizeInBytes: ${iCloudFile.sizeInBytes}");
+        LogMessage.d("BackupRestoreManager",
+            "iCloudFiles found under the container ID file title: ${iCloudFile.title}");
+        LogMessage.d("BackupRestoreManager",
+            "===================================================");
+        LogMessage.d("BackupRestoreManager",
+            "backupFileName to check the file presence $backupFileName");
 
         return BackupFile(
             fileId: iCloudFile.id.toString(),
@@ -222,7 +230,8 @@ class BackupRestoreManager {
             fileSize: MediaUtils.fileSize(iCloudFile.sizeInBytes, 2),
             fileCreatedDate:
                 BackupUtils().formatDateTime(iCloudFile.lastSyncDt.toString()),
-        iCloudRelativePath: iCloudFile.relativePath, filePath: iCloudFile.filePath);
+            iCloudRelativePath: iCloudFile.relativePath,
+            filePath: iCloudFile.filePath);
       } else {
         LogMessage.d("BackupRestoreManager",
             "iCloudFiles found under the container ID not found");
@@ -240,7 +249,11 @@ class BackupRestoreManager {
     }
   }
 
-  Future<void> uploadFileToGoogleDrive(String filePath,int fileSize, StreamController<int> progressController, List<String> existingFileIds) async {
+  Future<void> uploadFileToGoogleDrive(
+      String filePath,
+      int fileSize,
+      StreamController<int> progressController,
+      List<String> existingFileIds) async {
     LogMessage.d("BackupRestoreManager", "uploadFileToGoogleDrive Started");
     try {
       File backupFile = File(filePath);
@@ -251,16 +264,15 @@ class BackupRestoreManager {
       var trackedStream = trackProgress(
         backupFile.openRead(),
         fileSize,
-            (progress) {
-              LogMessage.d("BackupRestoreManager", "upload Started $progress");
+        (progress) {
+          LogMessage.d("BackupRestoreManager", "upload Started $progress");
           progressController.add((progress * 100).floor());
         },
       );
       // Upload the file
       var response = await driveApi?.files.create(
         driveFile,
-        uploadMedia:
-            drive.Media(trackedStream, fileSize),
+        uploadMedia: drive.Media(trackedStream, fileSize),
       );
       if (_isgDriveUploadCancelled) {
         LogMessage.d("BackupRestoreManager", "Upload was cancelled.");
@@ -277,7 +289,8 @@ class BackupRestoreManager {
       }
 
       if (uploadedFileId != null) {
-        final filesToDelete = existingFileIds.where((id) => id != uploadedFileId).toList();
+        final filesToDelete =
+            existingFileIds.where((id) => id != uploadedFileId).toList();
         if (filesToDelete.isNotEmpty) {
           for (final fileId in filesToDelete) {
             try {
@@ -290,12 +303,11 @@ class BackupRestoreManager {
                   "Error deleting old file $fileId: $e");
             }
           }
-        }else{
+        } else {
           LogMessage.d(
               "BackupRestoreManager", "No backup files found to delete");
         }
       }
-
     } catch (e) {
       LogMessage.d(
           "BackupRestoreManager", "Error uploading to Google Drive: $e");
@@ -319,7 +331,7 @@ class BackupRestoreManager {
 
       if (fileList != null && fileList.files!.isNotEmpty) {
         final latestFile = fileList.files?.first;
-        if (!isEncryptionEnabled){
+        if (!isEncryptionEnabled) {
           fileFormat = Constants.backupRawFileFormat;
         }
 
@@ -330,10 +342,11 @@ class BackupRestoreManager {
           return BackupFile(
               fileId: latestFile?.id,
               fileName: latestFile?.name,
-              fileSize: MediaUtils.fileSize(int.parse(latestFile?.size ?? "0"), 2),
+              fileSize:
+                  MediaUtils.fileSize(int.parse(latestFile?.size ?? "0"), 2),
               fileCreatedDate: BackupUtils()
                   .formatDateTime(latestFile!.createdTime.toString()));
-        }else{
+        } else {
           LogMessage.d("BackupRestoreManager getLatestFile",
               "No file found with the name $backupFileName matches");
           return null;
@@ -349,31 +362,34 @@ class BackupRestoreManager {
     }
   }
 
-  Stream<int> uploadBackupFile({required String filePath, required int fileSize}) async* {
-     final StreamController<int> progressController = StreamController<int>();
+  Stream<int> uploadBackupFile(
+      {required String filePath, required int fileSize}) async* {
+    final StreamController<int> progressController = StreamController<int>();
 
-     List<String> existingBackupFileIds = [];
+    List<String> existingBackupFileIds = [];
 
-     // await checkAndDeleteExistingBackup();
+    // await checkAndDeleteExistingBackup();
 
-     if (Platform.isAndroid) {
-       final fileList = await driveApi?.files.list(
-         q: "'me' in owners and name contains '$backupFileName.'",
-         spaces: 'drive',
-         $fields: 'files(id, name)',
-       );
+    if (Platform.isAndroid) {
+      final fileList = await driveApi?.files.list(
+        q: "'me' in owners and name contains '$backupFileName.'",
+        spaces: 'drive',
+        $fields: 'files(id, name)',
+      );
 
-       if (fileList != null && fileList.files != null) {
-         existingBackupFileIds = fileList.files!.map((f) => f.id!).toList();
-       }
-       uploadFileToGoogleDrive(filePath, fileSize, progressController, existingBackupFileIds);
+      if (fileList != null && fileList.files != null) {
+        existingBackupFileIds = fileList.files!.map((f) => f.id!).toList();
+      }
+      uploadFileToGoogleDrive(
+          filePath, fileSize, progressController, existingBackupFileIds);
     } else if (Platform.isIOS) {
       debugPrint("Filepath to upload in drive $filePath");
       // final file = File(filePath.replaceFirst('file://', ''));
       final file = File(filePath);
       // debugPrint("Cleaned File Path: $file");
       if (!file.existsSync()) {
-        progressController.addError(Exception("File does not exist at the given path: $filePath"));
+        progressController.addError(
+            Exception("File does not exist at the given path: $filePath"));
         progressController.close();
         yield* progressController.stream;
         return;
@@ -383,11 +399,12 @@ class BackupRestoreManager {
 
       _icloudUploadSubscription = null;
 
-      LogMessage.d("BackupRestoreManager", "Container ID to upload $_iCloudContainerID");
+      LogMessage.d(
+          "BackupRestoreManager", "Container ID to upload $_iCloudContainerID");
 
-      LogMessage.d("BackupRestoreManager", "Starting the upload to the iCLoud Drive");
+      LogMessage.d(
+          "BackupRestoreManager", "Starting the upload to the iCLoud Drive");
       try {
-
         /*final iCloudFiles = await icloudSyncPlugin.getCloudFiles(containerId: _iCloudContainerID);
         LogMessage.d("BackupRestoreManager", "iCloudFiles found under the container ID ${iCloudFiles.length}");
 
@@ -445,8 +462,8 @@ class BackupRestoreManager {
 
                   LogMessage.d("BackupRestoreManager", "iCloudFiles found under the container ID ${iCloudFiles.length}");
 
-                  *//*iCloudFiles.sort((a, b) => (b.lastSyncDt ?? DateTime.fromMillisecondsSinceEpoch(0))
-                      .compareTo(a.lastSyncDt ?? DateTime.fromMillisecondsSinceEpoch(0)));*//*
+                  */ /*iCloudFiles.sort((a, b) => (b.lastSyncDt ?? DateTime.fromMillisecondsSinceEpoch(0))
+                      .compareTo(a.lastSyncDt ?? DateTime.fromMillisecondsSinceEpoch(0)));*/ /*
 
                   String fileFormat = isEncryptionEnabled
                       ? Constants.backupEncryptedFileFormat
@@ -487,9 +504,8 @@ class BackupRestoreManager {
       progressController.addError(Exception("Platform not supported"));
       progressController.close();
     }
-     yield* progressController.stream;
+    yield* progressController.stream;
   }
-
 
   Future<bool> _checkICloudAccess() async {
     try {
@@ -504,26 +520,32 @@ class BackupRestoreManager {
   }
 
   /// This is not used as the iCloud url itself supported by SDK for Restore.
-  Stream<int> startIcloudFileDownload({required String relativePath}) async*{
+  Stream<int> startIcloudFileDownload({required String relativePath}) async* {
     StreamController<int> iCloudProgressController = StreamController<int>();
     _cloudBackUpDownloadPath = "";
     await getBackupUrl().then((result) async {
       final fullFilePath = result != null ? "$result/$relativePath" : '';
-      LogMessage.d("BackupRestoreManager", "download backup url: $fullFilePath");
-      await icloudSyncPlugin.download(containerId: _iCloudContainerID, relativePath: relativePath, destinationFilePath: fullFilePath, onProgress: (value) {
-        value.listen((progress){
-          LogMessage.d("BackupRestoreManager", "Download Progress: $progress");
-          iCloudProgressController.add((progress).floor());
-        }, onDone: () {
-          _cloudBackUpDownloadPath = fullFilePath;
-          iCloudProgressController.add(100);
-          iCloudProgressController.close();
-        }, onError: (error) {
-          _cloudBackUpDownloadPath = "";
-          iCloudProgressController.addError(error);
-          iCloudProgressController.close();
-        });
-      });
+      LogMessage.d(
+          "BackupRestoreManager", "download backup url: $fullFilePath");
+      await icloudSyncPlugin.download(
+          containerId: _iCloudContainerID,
+          relativePath: relativePath,
+          destinationFilePath: fullFilePath,
+          onProgress: (value) {
+            value.listen((progress) {
+              LogMessage.d(
+                  "BackupRestoreManager", "Download Progress: $progress");
+              iCloudProgressController.add((progress).floor());
+            }, onDone: () {
+              _cloudBackUpDownloadPath = fullFilePath;
+              iCloudProgressController.add(100);
+              iCloudProgressController.close();
+            }, onError: (error) {
+              _cloudBackUpDownloadPath = "";
+              iCloudProgressController.addError(error);
+              iCloudProgressController.close();
+            });
+          });
     });
 
     yield* iCloudProgressController.stream;
@@ -632,7 +654,9 @@ class BackupRestoreManager {
     }
   }
 
-  Future<void> startBackup({bool isServerUploadRequired = false, bool enableEncryption = true}) async {
+  Future<void> startBackup(
+      {bool isServerUploadRequired = false,
+      bool enableEncryption = true}) async {
     this.isServerUploadRequired = isServerUploadRequired;
     isEncryptionEnabled = enableEncryption;
     _isgDriveUploadCancelled = false;
@@ -768,11 +792,13 @@ class BackupRestoreManager {
 
       if (sdkVersion < 29) {
         // For Android < Q (29), use external storage directory
-        rootFilePath = "/storage/emulated/0"; // Equivalent to Environment.getExternalStorageDirectory().absolutePath
+        rootFilePath =
+            "/storage/emulated/0"; // Equivalent to Environment.getExternalStorageDirectory().absolutePath
       } else {
         // For Android 10+ (Q), use externalMediaDirs[0]
         Directory? externalDir = (await getExternalStorageDirectories())?.first;
-        rootFilePath = externalDir?.path ?? "/storage/emulated/0"; // Fallback in case of null
+        rootFilePath = externalDir?.path ??
+            "/storage/emulated/0"; // Fallback in case of null
       }
     } else {
       throw UnsupportedError("This function is only for Android");
@@ -782,23 +808,24 @@ class BackupRestoreManager {
     String backupFolderPath = "$rootFilePath/MirrorFly/Backups";
 
     // Logging equivalent
-    LogMessage.d("BackupRestoreManager", "Android Cloud Backup Download Path: $backupFolderPath");
+    LogMessage.d("BackupRestoreManager",
+        "Android Cloud Backup Download Path: $backupFolderPath");
 
     Directory backUpDir = Directory(backupFolderPath);
-    if (await backUpDir.exists()){
+    if (await backUpDir.exists()) {
       return backupFolderPath;
-    }else{
+    } else {
       await backUpDir.create(recursive: true);
       return backupFolderPath;
     }
   }
 
-  Stream<int> downloadAndroidBackupFile(BackupFile backupFile) async*{
+  Stream<int> downloadAndroidBackupFile(BackupFile backupFile) async* {
     final StreamController<int> downloadProgress = StreamController<int>();
     var downloadPath = await getAndroidBackUpFolderPath();
     String fileFormat = Constants.backupEncryptedFileFormat;
 
-    if (!isEncryptionEnabled){
+    if (!isEncryptionEnabled) {
       fileFormat = Constants.backupRawFileFormat;
     }
     final file = File("$downloadPath/$backupFileName.$fileFormat");
@@ -806,13 +833,13 @@ class BackupRestoreManager {
     _cloudBackUpDownloadPath = "";
 
     try {
-
       // Delete the file if already exists
       if (await file.exists()) {
         await file.delete();
         LogMessage.d("BackupRestoreManager", "File deleted: ${file.path}");
-      }else {
-        LogMessage.d("BackupRestoreManager", "File not exists, so proceeding for Download");
+      } else {
+        LogMessage.d("BackupRestoreManager",
+            "File not exists, so proceeding for Download");
       }
 
       // Request the file from Google Drive
@@ -829,25 +856,28 @@ class BackupRestoreManager {
 
         // Stream the file data and write to disk
         _gDriveDownloadSubscription = response.stream.listen(
-              (chunk) {
+          (chunk) {
             sink.add(chunk);
             downloadedSize += chunk.length;
             // Calculate and report progress
             if (totalSize > 0) {
               final progress = (downloadedSize / totalSize) * 100;
-              LogMessage.d("BackupRestoreManager", "Android Backup File Download Progress $progress");
+              LogMessage.d("BackupRestoreManager",
+                  "Android Backup File Download Progress $progress");
               downloadProgress.add((progress * 100).floor());
             }
           },
           onDone: () async {
             await sink.close();
-            LogMessage.d("BackupRestoreManager", "Android Backup File Download complete: ${file.path}");
+            LogMessage.d("BackupRestoreManager",
+                "Android Backup File Download complete: ${file.path}");
             _cloudBackUpDownloadPath = file.path;
             downloadProgress.add(100);
             downloadProgress.close();
           },
           onError: (error) {
-            LogMessage.d("BackupRestoreManager", "Android Backup File Error during file download: $error");
+            LogMessage.d("BackupRestoreManager",
+                "Android Backup File Error during file download: $error");
             sink.close();
             downloadProgress.addError(error);
             downloadProgress.close();
@@ -856,12 +886,14 @@ class BackupRestoreManager {
           cancelOnError: true,
         );
       } else {
-        LogMessage.d("BackupRestoreManager", "Android Backup File Unexpected response type: ${response.runtimeType}");
+        LogMessage.d("BackupRestoreManager",
+            "Android Backup File Unexpected response type: ${response.runtimeType}");
         downloadProgress.addError(response.runtimeType);
         downloadProgress.close();
       }
     } catch (e) {
-      LogMessage.d("BackupRestoreManager", "Android Backup File Error downloading file: $e");
+      LogMessage.d("BackupRestoreManager",
+          "Android Backup File Error downloading file: $e");
       downloadProgress.addError(e);
       downloadProgress.close();
     }
@@ -884,25 +916,26 @@ class BackupRestoreManager {
   }
 
   Future<void> checkAndDeleteExistingBackup() async {
-    if (Platform.isAndroid){
+    if (Platform.isAndroid) {
       await deleteBackupFiles();
-    }else if (Platform.isIOS){
-    /// Delete the existing iCloud file and then proceed to upload
-    List<CloudFiles> iCloudFiles =
-        await icloudSyncPlugin.getCloudFiles(containerId: _iCloudContainerID);
-    if (iCloudFiles.isNotEmpty) {
-      LogMessage.d("BackupRestoreManager", "Deleting the iCLoud Files");
-      List<String> relativePaths = iCloudFiles
-          .where((file) => file.relativePath != null)
-          .map((file) => file.relativePath!)
-          .toList();
+    } else if (Platform.isIOS) {
+      /// Delete the existing iCloud file and then proceed to upload
+      List<CloudFiles> iCloudFiles =
+          await icloudSyncPlugin.getCloudFiles(containerId: _iCloudContainerID);
+      if (iCloudFiles.isNotEmpty) {
+        LogMessage.d("BackupRestoreManager", "Deleting the iCLoud Files");
+        List<String> relativePaths = iCloudFiles
+            .where((file) => file.relativePath != null)
+            .map((file) => file.relativePath!)
+            .toList();
 
-      await icloudSyncPlugin.deleteMultipleFileToICloud(
-          containerId: _iCloudContainerID, relativePathList: relativePaths);
+        await icloudSyncPlugin.deleteMultipleFileToICloud(
+            containerId: _iCloudContainerID, relativePathList: relativePaths);
 
-      LogMessage.d("BackupRestoreManager", "Deletion completed on the iCLoud Files");
-    }
-    }else{
+        LogMessage.d(
+            "BackupRestoreManager", "Deletion completed on the iCLoud Files");
+      }
+    } else {
       LogMessage.d("BackupRestoreManager", "No iCloud Files Found to delete");
     }
   }
@@ -940,7 +973,6 @@ class BackupRestoreManager {
     }
   }
 
-
   void cancelBackup() {
     Mirrorfly.cancelBackup();
   }
@@ -950,12 +982,12 @@ class BackupRestoreManager {
   }
 
   void cancelRemoteBackupUpload() {
-    if(Platform.isAndroid && _gDriveUploadStreamController != null) {
+    if (Platform.isAndroid && _gDriveUploadStreamController != null) {
       _isgDriveUploadCancelled = true;
       _gDriveUploadStreamController?.close();
       _gDriveUploadStreamController = null;
       debugPrint("G-drive upload cancelled");
-    }else if (Platform.isIOS && _icloudUploadSubscription != null) {
+    } else if (Platform.isIOS && _icloudUploadSubscription != null) {
       try {
         _icloudUploadSubscription?.cancel();
         _icloudUploadSubscription = null;
@@ -963,7 +995,7 @@ class BackupRestoreManager {
       } catch (e) {
         debugPrint("Error cancelling iCloud upload: $e");
       }
-    }else{
+    } else {
       debugPrint("G-drive/iCloud upload cancel failed");
     }
   }
@@ -972,22 +1004,23 @@ class BackupRestoreManager {
     if (Platform.isAndroid) {
       _cancelAndroidBackupDownload();
     } else {
-      debugPrint("Remote Download process is not supported for the current platform");
+      debugPrint(
+          "Remote Download process is not supported for the current platform");
     }
   }
 
   Stream<List<int>> trackProgress(
-      Stream<List<int>> inputStream,
-      int totalBytes,
-      Function(double) onProgress,
-      ) {
+    Stream<List<int>> inputStream,
+    int totalBytes,
+    Function(double) onProgress,
+  ) {
     int uploadedBytes = 0;
 
     final controller = StreamController<List<int>>();
     _gDriveUploadStreamController = controller;
 
     inputStream.listen(
-          (chunk) {
+      (chunk) {
         if (_isgDriveUploadCancelled) {
           controller.close(); // cancel the stream
           return;
@@ -1022,12 +1055,12 @@ class BackupRestoreManager {
     if (await file.exists()) {
       try {
         await file.delete();
-        LogMessage.d("BackupRestoreManager",'File deleted: $path');
+        LogMessage.d("BackupRestoreManager", 'File deleted: $path');
       } catch (e) {
         LogMessage.d("BackupRestoreManager", 'Error deleting file: $e');
       }
     } else {
-      LogMessage.d("BackupRestoreManager",'File does not exist: $path');
+      LogMessage.d("BackupRestoreManager", 'File does not exist: $path');
     }
   }
 
@@ -1041,7 +1074,8 @@ class BackupRestoreManager {
         debugPrint("Access token: ${auth.accessToken}");
         return true;
       } else {
-        debugPrint("No valid account found. User may have signed out or account was removed.");
+        debugPrint(
+            "No valid account found. User may have signed out or account was removed.");
         return false;
       }
     } catch (e) {
@@ -1051,11 +1085,7 @@ class BackupRestoreManager {
       return false;
     }
   }
-
 }
-
-
-
 
 /*@pragma('vm:entry-point')
 void callbackDispatcher() {
@@ -1084,9 +1114,6 @@ void callbackDispatcher() {
     return Future.value(true);
   });
 }*/
-
-
-
 
 class BackupFile {
   String? fileId;

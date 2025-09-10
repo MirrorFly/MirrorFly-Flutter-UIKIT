@@ -72,12 +72,11 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
 
   TabController? tabController;
 
-
   var joinViaLink = false;
 
   var isCallDisconnectedClicked = false;
   // static const EventChannel _eventChannel = EventChannel('fl_pip/foreground');
-  var myJid  = SessionManagement.getUserJID();
+  var myJid = SessionManagement.getUserJID();
   @override
   Future<void> onInit() async {
     super.onInit();
@@ -132,9 +131,13 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
         pinnedUserJid(callUserList.first.userJid!.value);
         pinnedUser(callUserList.first);
       }
-      Mirrorfly.isCallConversionRequestAvailable().then((value){
-        if(value.checkNull()){
-          videoCallConversionRequest(callList.where((item)=>item.userJid!.value != myJid).first.userJid!.value);
+      Mirrorfly.isCallConversionRequestAvailable().then((value) {
+        if (value.checkNull()) {
+          videoCallConversionRequest(callList
+              .where((item) => item.userJid!.value != myJid)
+              .first
+              .userJid!
+              .value);
         }
       });
     });
@@ -247,7 +250,8 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
                           NavUtils.back();
                           debugPrint("selected audio item ${audioItem.type}");
                           audioOutputType(audioItem.type);
-                          Mirrorfly.routeAudioTo(routeType: audioItem.type ?? "");
+                          Mirrorfly.routeAudioTo(
+                              routeType: audioItem.type ?? "");
                         } else {
                           LogMessage.d("routeAudioOption",
                               "clicked on same audio type selected");
@@ -1094,7 +1098,8 @@ class CallController extends GetxController with GetTickerProviderStateMixin {
     var indexValid =
         callList.indexWhere((element) => element.userJid?.value == userJid);
     LogMessage.d("callController", "indexValid : $indexValid jid : $userJid");
-    if (indexValid.isNegative && callList.length != Constants.getMaxCallUsersCount) {
+    if (indexValid.isNegative &&
+        callList.length != Constants.getMaxCallUsersCount) {
       callList.insert(
           callList.length - 1,
           CallUserList(
