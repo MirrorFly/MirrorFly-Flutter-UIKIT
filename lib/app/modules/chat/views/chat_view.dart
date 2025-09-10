@@ -320,9 +320,21 @@ class ChatView extends NavViewStateful<ChatController> {
             if (controller.showEmoji.value) {
               controller.showEmoji(false);
             } else if (NavUtils.previousRoute.isEmpty) {
-              NavUtils.offAllNamed(Routes.dashboard);
+              if(!Constants.isUIKIT){
+                NavUtils.offAllNamed(Routes.dashboard);
+              }else{
+                if(NavUtils.canPop){
+                  Navigator.pop(context);
+                }else{
+                  LogMessage.d("Navigation Error", "No previous route found in stack");
+                }
+              }
             } else {
-              Navigator.pop(context);
+              if(NavUtils.canPop){
+                Navigator.pop(context);
+              }else{
+                LogMessage.d("Navigation Error", "No previous route found in stack");
+              }
             }
           },
           child: Row(

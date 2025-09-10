@@ -1,3 +1,6 @@
+## 3.0.0+1
+* Hot Fix for chat navigation issue
+
 ## [3.0.0] Feature Updates
 * Updated Android Compile SDK to 35
 * Bug Fixes
