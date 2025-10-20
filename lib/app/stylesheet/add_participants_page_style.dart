@@ -2,7 +2,8 @@ part of 'stylesheet.dart';
 
 class AddParticipantsPageStyle {
   final AppBarTheme appBarTheme;
-  final TabBarTheme tabBarTheme;
+  // final TabBarTheme tabBarTheme;
+  final TabBarThemeData tabBarTheme;
   final EditTextFieldStyle searchTextFieldStyle;
   final TabItemStyle tabItemStyle;
   final ContactItemStyle contactItemStyle;
@@ -25,10 +26,14 @@ class AddParticipantsPageStyle {
         iconTheme: IconThemeData(color: Color(0xff181818)),
         actionsIconTheme: IconThemeData(color: Color(0xff181818)),
       ),
-      this.tabBarTheme = const TabBarTheme(
-          indicatorColor: AppColor.primaryColor,
-          labelColor: AppColor.primaryColor,
-          unselectedLabelColor: Color(0xff181818)),
+      // this.tabBarTheme = const TabBarTheme(
+      //     indicatorColor: AppColor.primaryColor,
+      //     labelColor: AppColor.primaryColor,
+      //     unselectedLabelColor: Color(0xff181818)),
+        this.tabBarTheme = const TabBarThemeData(
+            indicatorColor: AppColor.primaryColor,
+            labelColor: AppColor.primaryColor,
+            unselectedLabelColor: Color(0xff181818)),
       this.searchTextFieldStyle = const EditTextFieldStyle(),
       this.tabItemStyle = const TabItemStyle(),
       this.contactItemStyle = const ContactItemStyle(),

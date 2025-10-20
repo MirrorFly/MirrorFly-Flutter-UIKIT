@@ -9,7 +9,8 @@ class ProfileViewStyle {
   final EditTextFieldStyle mobileTextFieldStyle;
   final EditTextFieldStyle statusTextFieldStyle;
   final ButtonStyle buttonStyle;
-  final CardTheme bottomSheetCardTheme;
+  // final CardTheme bottomSheetCardTheme;
+  final CardThemeData bottomSheetCardTheme;
   final TextStyle optionStyle;
   final TextStyle optionsTextStyle;
 
@@ -72,7 +73,12 @@ class ProfileViewStyle {
             color: Color(0xff767676),
             fontSize: 13)),
     this.buttonStyle = const ButtonStyle(),
-    this.bottomSheetCardTheme = const CardTheme(
+    // this.bottomSheetCardTheme = const CardTheme(
+    //   shape: RoundedRectangleBorder(
+    //       borderRadius: BorderRadius.only(
+    //           topLeft: Radius.circular(30), topRight: Radius.circular(30))),
+    // ),
+    this.bottomSheetCardTheme = const CardThemeData(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(30), topRight: Radius.circular(30))),

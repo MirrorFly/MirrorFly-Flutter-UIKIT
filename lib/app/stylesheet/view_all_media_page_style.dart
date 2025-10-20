@@ -13,18 +13,24 @@ class ViewAllMediaPageStyle {
         iconTheme: IconThemeData(color: Color(0xff181818)),
         actionsIconTheme: IconThemeData(color: Color(0xff181818)),
       ),
-      this.tabBarTheme = const TabBarTheme(
-          indicatorColor: AppColor.primaryColor,
-          labelColor: AppColor.primaryColor,
-          unselectedLabelColor: Color(0xff181818),
-          indicatorSize: TabBarIndicatorSize.tab),
+      // this.tabBarTheme = const TabBarTheme(
+      //     indicatorColor: AppColor.primaryColor,
+      //     labelColor: AppColor.primaryColor,
+      //     unselectedLabelColor: Color(0xff181818),
+      //     indicatorSize: TabBarIndicatorSize.tab),
+        this.tabBarTheme = const TabBarThemeData(
+            indicatorColor: AppColor.primaryColor,
+            labelColor: AppColor.primaryColor,
+            unselectedLabelColor: Color(0xff181818),
+            indicatorSize: TabBarIndicatorSize.tab),
       this.tabItemStyle = const TabItemStyle(),
       this.noDataTextStyle = const TextStyle(
           fontWeight: FontWeight.w600, color: Color(0xff767676), fontSize: 14),
       this.groupedMediaItem = const GroupedMediaItemStyle()});
 
   final AppBarTheme appBarTheme;
-  final TabBarTheme tabBarTheme;
+  // final TabBarTheme tabBarTheme;
+  final TabBarThemeData tabBarTheme;
   final TabItemStyle tabItemStyle;
   final TextStyle noDataTextStyle;
   final GroupedMediaItemStyle groupedMediaItem;
